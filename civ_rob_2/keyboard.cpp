@@ -1,0 +1,303 @@
+/*
+
+	Civ_rob_2
+	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
+	last modification on this file on version:0.6
+
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+#include "keyboard.h"
+
+using namespace std;
+
+void cinDigit(sysinfo& information, unsigned int& digit, unsigned int x, unsigned int& y){
+	bool continuer = true;
+	SDL_Event event;
+	int SDL_EnableUNICODE(1);
+
+	while (continuer)
+	{
+		SDL_WaitEvent(&event); // attente d'un événement (clavier, souris)
+		switch (event.type) // test sur le type d'événement
+		{
+		case SDL_QUIT:	// permet de quitter le jeu
+			SDL_Quit();
+			break;
+		case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
+			switch (event.key.keysym.sym){
+			case SDLK_ESCAPE:
+				if (digit == 0)
+					digit = 1;
+				continuer = false;
+				break;
+			case SDLK_RETURN:
+				if (digit == 0)
+					digit = 1;
+				continuer = false;
+				break;
+			case SDLK_KP_ENTER:
+				if (digit == 0)
+					digit = 1;
+				continuer = false;
+				break;
+			case SDLK_1:
+				digit = 1;
+				break;
+			case SDLK_2:
+				digit = 2;
+				break;
+			case SDLK_3:
+				digit = 3;
+				break;
+			case SDLK_4:
+				digit = 4;
+				break;
+			case SDLK_5:
+				digit = 5;
+				break;
+			case SDLK_6:
+				digit = 6;
+				break;
+			case SDLK_7:
+				digit = 7;
+				break;
+			case SDLK_8:
+				digit = 8;
+				break;
+			case SDLK_9:
+				digit = 9;
+				break;
+			case SDLK_KP_1:
+				digit = 1;
+				break;
+			case SDLK_KP_2:
+				digit = 2;
+				break;
+			case SDLK_KP_3:
+				digit = 3;
+				break;
+			case SDLK_KP_4:
+				digit = 4;
+				break;
+			case SDLK_KP_5:
+				digit = 5;
+				break;
+			case SDLK_KP_6:
+				digit = 6;
+				break;
+			case SDLK_KP_7:
+				digit = 7;
+				break;
+			case SDLK_KP_8:
+				digit = 8;
+				break;
+			case SDLK_KP_9:
+				digit = 9;
+				break;
+			}
+			writetxtshaded(information, "Number of player(s)" + to_string(digit), { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x, y, center_x);
+			SDL_RenderPresent(information.ecran.renderer);
+			break;
+		}
+	}
+}
+
+void cinAlphabet(sysinfo& information, std::string &name, unsigned int initx, unsigned int& y){
+	bool continuer = true;
+	SDL_Event event;
+	int SDL_EnableUNICODE(1);
+	unsigned int xspace = 12;
+
+	while (continuer)
+	{
+		SDL_WaitEvent(&event); // attente d'un événement (clavier, souris)
+		switch (event.type) // test sur le type d'événement
+		{
+		case SDL_QUIT:	// permet de quitter le jeu
+			SDL_Quit();
+			break;
+		case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
+			switch (event.key.keysym.sym){
+			case SDLK_ESCAPE:
+				if (name.compare("") == 0) {
+					name = "NoName" + to_string(information.variable.nbNoNamePlayer);
+					information.variable.nbNoNamePlayer++;
+				}
+				continuer = false;
+				break;
+			case SDLK_BACKSPACE:
+				if (name.compare("") != 0)
+					name.pop_back();
+				break;
+			case SDLK_RETURN:
+				if (name.compare("") == 0) {
+					name = "NoName" + to_string(information.variable.nbNoNamePlayer);
+					information.variable.nbNoNamePlayer++;
+				}
+				continuer = false;
+				break;
+			case SDLK_KP_ENTER:
+				if (name.compare("") == 0) {
+					name = "NoName" + to_string(information.variable.nbNoNamePlayer);
+					information.variable.nbNoNamePlayer++;
+				}
+				continuer = false;
+				break;
+			case SDLK_a:
+				name = name + 'a';
+				break;
+			case SDLK_b:
+				name = name + 'b';
+				break;
+			case SDLK_c:
+				name = name + 'c';
+				break;
+			case SDLK_d:
+				name = name + 'd';
+				break;
+			case SDLK_e:
+				name = name + 'e';
+				break;
+			case SDLK_f:
+				name = name + 'f';
+				break;
+			case SDLK_g:
+				name = name + 'g';
+				break;
+			case SDLK_h:
+				name = name + 'h';
+				break;
+			case SDLK_i:
+				name = name + 'i';
+				break;
+			case SDLK_j:
+				name = name + 'j';
+				break;
+			case SDLK_k:
+				name = name + 'k';
+				break;
+			case SDLK_l:
+				name = name + 'l';
+				break;
+			case SDLK_m:
+				name = name + 'm';
+				break;
+			case SDLK_n:
+				name = name + 'n';
+				break;
+			case SDLK_o:
+				name = name + 'o';
+				break;
+			case SDLK_p:
+				name = name + 'p';
+				break;
+			case SDLK_q:
+				name = name + 'q';
+				break;
+			case SDLK_r:
+				name = name + 'r';
+				break;
+			case SDLK_s:
+				name = name + 's';
+				break;
+			case SDLK_t:
+				name = name + 't';
+				break;
+			case SDLK_u:
+				name = name + 'u';
+				break;
+			case SDLK_v:
+				name = name + 'v';
+				break;
+			case SDLK_w:
+				name = name + 'w';
+				break;
+			case SDLK_x:
+				name = name + 'x';
+				break;
+			case SDLK_y:
+				name = name + 'y';
+				break;
+			case SDLK_z:
+				name = name + 'z';
+				break;
+			case SDLK_1:
+				name = name + "1";
+				break;
+			case SDLK_2:
+				name = name + "2";
+				break;
+			case SDLK_3:
+				name = name + "3";
+				break;
+			case SDLK_4:
+				name = name + "4";
+				break;
+			case SDLK_5:
+				name = name + "5";
+				break;
+			case SDLK_6:
+				name = name + "6";
+				break;
+			case SDLK_7:
+				name = name + "7";
+				break;
+			case SDLK_8:
+				name = name + "8";
+				break;
+			case SDLK_9:
+				name = name + "9";
+				break;
+			case SDLK_KP_1:
+				name = name + "1";
+				break;
+			case SDLK_KP_2:
+				name = name + "2";
+				break;
+			case SDLK_KP_3:
+				name = name + "3";
+				break;
+			case SDLK_KP_4:
+				name = name + "4";
+				break;
+			case SDLK_KP_5:
+				name = name + "5";
+				break;
+			case SDLK_KP_6:
+				name = name + "6";
+				break;
+			case SDLK_KP_7:
+				name = name + "7";
+				break;
+			case SDLK_KP_8:
+				name = name + "8";
+				break;
+			case SDLK_KP_9:
+				name = name + "9";
+				break;
+			}
+			if (name.size() > 50){
+				name = "par_defaut";
+				logfileconsole("cinAlphabet ERROR : Name to long > 50 char");
+			}
+			writetxtshaded(information, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, center_x);
+			SDL_RenderPresent(information.ecran.renderer);
+			break;
+		}
+	}
+}

@@ -1,0 +1,19 @@
+
+This is a list of major changes in Civ_rob_2 version history.
+
+---------------------------------------------------------------------------
+0.7: 
+---------------------------------------------------------------------------
+
+-> Change:
+	- protected to private in Button.h and Texture.h
+	- how to access private attributes of Texture.h with 'this->GETxxxx()'
+	- all paths to image/ is in variable IPath (calculimage.cpp)
+	- optimize the font array : only the right one (font[size]) is send to the function (sdl.cpp and write.cpp)
+	- contain 32 pixels and 64 pixels for barre de vie and couleur d'apartenance
+	
+-> Add: 
+	- methods to access private attributes in Texture.h (.cpp)
+	- display an error if the path or the image wont charge (write.cpp)
+	- Main colors definition
+	- 32 pixels and 64 pixels for image

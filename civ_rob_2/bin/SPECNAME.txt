@@ -1,0 +1,11 @@
+nbspecname= 9
+
+coal.bmp
+copper.bmp
+iron.bmp
+tree1.bmp
+stone.bmp
+uranium.bmp
+horse.bmp
+fish.bmp
+petroleum.bmp

@@ -1,0 +1,16 @@
+number_of_units= 15
+battleoids
+biter
+bombardier
+car
+ouvrier_tier_1
+ouvrier_tier_2
+ouvrier_tier_3
+robot
+rocket
+rover
+satellite
+settler
+spitter
+tank
+transport_plan
