@@ -2,9 +2,9 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.8
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,23 +21,21 @@
 
 */
 
-#include "button.h"
+#include "mainLoop.h"
 
 #include "sdl.h"
 #include "renduecran.h"
 #include "unit.h"
-#include "save.h"
-#include "reload.h"
+#include "saveAndReload.h"
 #include "newgame.h"
-#include "mouse.h"
-#include "keySDLK.h"
+#include "keyboardAndMouse.h"
 #include "nextTurn.h"
 #include "deleteAll.h"
 
 
 using namespace std;
 
-void button(sysinfo& information, vector<Player*>& tabplayer){
+void mainLoop(sysinfo& information, vector<Player*>& tabplayer){
 	logfileconsole("_Button Start_");
 	SDL_Event event;
 

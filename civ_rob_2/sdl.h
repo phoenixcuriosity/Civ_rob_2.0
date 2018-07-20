@@ -4,7 +4,7 @@
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
 	last modification on this file on version:0.7
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -44,5 +44,14 @@ void logSDLError(std::ostream &os, const std::string &msg);
 void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 SDL_Texture* renderText(SDL_Renderer*&, const std::string&, SDL_Color, TTF_Font*);
 SDL_Texture* renderTextShaded(SDL_Renderer*&, const std::string&, SDL_Color, SDL_Color, TTF_Font*);
+
+void loadImage(sysinfo&, unsigned int&, const std::string&, const std::string&, Uint8, int, int, int = 0);
+void loadwritetxt(sysinfo&, const std::string &msg, SDL_Color, int, unsigned int, unsigned int, int = 0);
+void loadwritetxtshaded(sysinfo&, const std::string &msg, SDL_Color, SDL_Color, int, unsigned int, unsigned int, int = 0);
+
+void writetxt(sysinfo&, const std::string &msg, SDL_Color, int, unsigned int, unsigned int, int = 0);
+void writetxtshaded(sysinfo&, const std::string &msg, SDL_Color, SDL_Color, int, unsigned int, unsigned int, int = 0);
+void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);
+void centrage(int&, int&, int, int, int = 0);
 
 #endif

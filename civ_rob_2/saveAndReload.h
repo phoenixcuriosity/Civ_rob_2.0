@@ -2,9 +2,9 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.8
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,15 +21,20 @@
 
 */
 
-#ifndef loadUnitAndSpec_H
-#define loadUnitAndSpec_H
+#ifndef saveAndReload_H
+#define saveAndReload_H
 
 #include "civ_lib.h"
-#include "write.h"
+#include "Player.h"
+#include "Units.h"
 #include "sdl.h"
+#include "createButton.h"
 
-
-void loadUnitAndSpec(sysinfo& information);
-
+void savemaps(sysinfo&);
+void savePlayer(sysinfo&, std::vector<Player*>&);
+void reload(sysinfo&, std::vector<Player*>&);
+void createSave(sysinfo& information);
+void removeSave(sysinfo& information);
+void clearSave(sysinfo& information);
 
 #endif

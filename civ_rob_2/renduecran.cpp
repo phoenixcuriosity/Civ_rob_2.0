@@ -4,7 +4,7 @@
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
 	last modification on this file on version:0.6
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,8 +23,7 @@
 
 #include "renduecran.h"
 #include "sdl.h"
-#include "button.h"
-#include "write.h"
+#include "mainLoop.h"
 
 using namespace std;
 
@@ -61,7 +60,7 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 		// affiche la texture grise de la toolbar
 		for (unsigned int i = 0; i < toolBarSize; i++){
 			for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++)
-				information.allTextures.tabTexture[2]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
+				information.allTextures.tabTexture[3]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
 		}
 
 		for (unsigned int i = 0; i < information.tabbutton.size(); i++)
@@ -152,10 +151,13 @@ void afficherSuperTiles(sysinfo& information) {
 
 	for (int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++) {
 		for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++) {
+			// attention tabtexture 0,1,2 sont réservés, à changer si nécessaire
 			if (information.maps.tiles[k].tile_ground == grass)
 				information.allTextures.tabTexture[0]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
 			else if (information.maps.tiles[k].tile_ground == water)
 				information.allTextures.tabTexture[1]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
+			else if (information.maps.tiles[k].tile_ground == deepwater)
+				information.allTextures.tabTexture[2]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
 
 
 			if (information.maps.tiles[k].tile_spec != 0) {

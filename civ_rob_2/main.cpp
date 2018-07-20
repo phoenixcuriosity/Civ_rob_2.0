@@ -4,7 +4,7 @@
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
 	last modification on this file on version:0.6
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ Chainage d'appel :
 	4) utilisation de logfileconsole() pour écricre sur la console ainsi que sur le fichier log qui se trouve dans bin/log/log.txt
 	5) check de l'ouverture des fichiers avec initfile() et initialisation de la sdl() dans sdl.cpp
 	6) affichage de l'ecran titre avec ecrantitre() dans renduecran.cpp
-	7) boucle principale avec button() dans button.cpp
+	7) boucle principale avec mainloop() dans mainloop.cpp
 	8) depend de l'utilisateur si click de souris ou touche de clavier enfoncée
 	9) après chaque action de l'utilisateur, la fonction alwaysrender est appellée et permettra à terme de faire du 30 images par seconde
 
@@ -65,7 +65,7 @@ Chainage d'appel :
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	renderTexture(image, information.ecran.renderer, 0, 0);
 
-	les 5 lignes ci dessus sont encapsulées dans les différents write() dans write.cpp
+
 	
 	SDL_RenderClear(renderer);	  Clear the entire screen to our selected color
 */

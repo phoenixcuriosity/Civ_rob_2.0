@@ -4,7 +4,7 @@
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
 	last modification on this file on version:0.6
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -39,7 +39,11 @@
 #define initAndError_H
 
 #include "civ_lib.h"
+#include "Cities.h"
+
+
 
 void initAndError();
+void calculimage(sysinfo&);
 
 #endif

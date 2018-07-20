@@ -55,12 +55,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>SDL2-2.0.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>10000000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,38 +84,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="button.cpp" />
+    <ClCompile Include="mainLoop.cpp" />
     <ClCompile Include="Buttons.cpp" />
-    <ClCompile Include="calculimage.cpp" />
     <ClCompile Include="citie.cpp" />
     <ClCompile Include="Cities.cpp" />
     <ClCompile Include="Citizen.cpp" />
     <ClCompile Include="createButton.cpp" />
     <ClCompile Include="deleteAll.cpp" />
     <ClCompile Include="initAndError.cpp" />
-    <ClCompile Include="keyboard.cpp" />
-    <ClCompile Include="keySDLK.cpp" />
-    <ClCompile Include="loadUnitAndSpec.cpp" />
+    <ClCompile Include="keyboardAndMouse.cpp" />
     <ClCompile Include="LTimer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mouse.cpp" />
     <ClCompile Include="newgame.cpp" />
     <ClCompile Include="nextTurn.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="reload.cpp" />
     <ClCompile Include="renduecran.cpp" />
-    <ClCompile Include="save.cpp" />
+    <ClCompile Include="saveAndReload.cpp" />
     <ClCompile Include="sdl.cpp" />
-    <ClCompile Include="searchcenter.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="unit.cpp" />
     <ClCompile Include="Units.cpp" />
-    <ClCompile Include="write.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="button.h" />
+    <ClInclude Include="mainLoop.h" />
     <ClInclude Include="Buttons.h" />
-    <ClInclude Include="calculimage.h" />
     <ClInclude Include="citie.h" />
     <ClInclude Include="Cities.h" />
     <ClInclude Include="Citizen.h" />
@@ -121,24 +115,18 @@
     <ClInclude Include="createButton.h" />
     <ClInclude Include="deleteAll.h" />
     <ClInclude Include="initAndError.h" />
-    <ClInclude Include="keyboard.h" />
-    <ClInclude Include="keySDLK.h" />
+    <ClInclude Include="keyboardAndMouse.h" />
     <ClInclude Include="LIB.h" />
-    <ClInclude Include="loadUnitAndSpec.h" />
     <ClInclude Include="LTimer.h" />
-    <ClInclude Include="mouse.h" />
     <ClInclude Include="newgame.h" />
     <ClInclude Include="nextTurn.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="reload.h" />
     <ClInclude Include="renduecran.h" />
-    <ClInclude Include="save.h" />
+    <ClInclude Include="saveAndReload.h" />
     <ClInclude Include="sdl.h" />
-    <ClInclude Include="searchcenter.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="unit.h" />
     <ClInclude Include="Units.h" />
-    <ClInclude Include="write.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

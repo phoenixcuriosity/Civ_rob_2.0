@@ -2,9 +2,9 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.8
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 
 #include "sdl.h"
 #include "Buttons.h"
-#include "searchcenter.h"
 
 using namespace std;
 
@@ -50,5 +49,30 @@ void createbutton(sysinfo& information, const string& msg, SDL_Color color, SDL_
 			logfileconsole("Create Button n:" + to_string(i) + " msg = " + information.tabbutton[i]->GETname() + " Success");
 			break;
 		}
+	}
+}
+
+void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton) {
+	switch (centerbutton) {
+	case nocenter:
+		xc = x + iW / 2;
+		yc = y + iH / 2;
+		break;
+	case center_x:
+		xc = x;
+		yc = y + iH / 2;
+		x = x - iW / 2;
+		break;
+	case center_y:
+		xc = x + iW / 2;
+		yc = y;
+		y = y - iH / 2;
+		break;
+	case center:
+		xc = x;
+		yc = y;
+		x = x - iW / 2;
+		y = y - iH / 2;
+		break;
 	}
 }

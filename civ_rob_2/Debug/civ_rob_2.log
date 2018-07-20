@@ -1,2 +1,22 @@
-﻿  calculimage.cpp
-  civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2\Civ_rob_2\Debug\civ_rob_2.exe
+﻿  mainLoop.cpp
+  Buttons.cpp
+  citie.cpp
+  Cities.cpp
+  Citizen.cpp
+  createButton.cpp
+  deleteAll.cpp
+  initAndError.cpp
+  keyboardAndMouse.cpp
+  LTimer.cpp
+  main.cpp
+  newgame.cpp
+  nextTurn.cpp
+  Player.cpp
+  renduecran.cpp
+  saveAndReload.cpp
+  sdl.cpp
+  Texture.cpp
+  unit.cpp
+  Units.cpp
+  Génération de code en cours...
+  civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Debug\civ_rob_2.exe

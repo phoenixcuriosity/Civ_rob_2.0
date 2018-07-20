@@ -2,9 +2,9 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.8
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -40,10 +40,7 @@
 #include "civ_lib.h"
 #include "sdl.h"
 #include "Player.h"
-#include "save.h"
 #include "renduecran.h"
-#include "write.h"
-#include "keyboard.h"
 
 typedef struct randomPos randomPos;
 struct randomPos {
@@ -54,6 +51,7 @@ struct randomPos {
 
 void newgame(sysinfo&, std::vector<Player*>&);
 void groundgen(sysinfo&);
+void tileAffectation(tile& tiles, unsigned int tile_ground, std::string& tile_stringground, unsigned int tile_spec, std::string& tile_stringspec, unsigned int food, unsigned int work, unsigned int gold);
 void newGameSettlerSpawn(sysinfo&, std::vector<Player*>&);
 void makeRandomPosTab(sysinfo& information, std::vector<randomPos>& tabRandom, unsigned int index);
 void makeRandomPos(randomPos& RandomPOS);

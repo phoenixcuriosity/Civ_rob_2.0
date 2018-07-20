@@ -4,7 +4,7 @@
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
 	last modification on this file on version:0.6
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -40,6 +40,6 @@
 #include "SDL2-2.0.8/include/SDL_ttf.h"
 #include "SDL2-2.0.8/include/SDL_image.h"
 
-
+#include <direct.h>
 
 #endif

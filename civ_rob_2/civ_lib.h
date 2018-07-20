@@ -4,7 +4,7 @@
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
 	last modification on this file on version:0.7
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -47,10 +47,11 @@
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1088;
-const int tileSize = 64;
+const int tileSize = 32;
 const unsigned int buildingSize = 128;
 const unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
 const unsigned int minusTiles = (SCREEN_HEIGHT / tileSize) * toolBarSize;
+const unsigned int nbSuperTiles = 9;
 
 const int initSizeView = 7; // taille de la carte transposée dans la citiemap
 const int initSizeInfluence = 2;// taille de l'influence de la citie initialement
@@ -65,7 +66,7 @@ const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 
 enum { normal, shaded, normaltexture};
 enum { nocenter, center_x, center_y, center };
-enum { noground, grass, water, dirt, sand};
+enum { noground, grass, water, deepwater, dirt, sand};
 enum unitclass{ biter, car, ouvrier_tier_1, ouvrier_tier_2, ouvrier_tier_3, robot, rocket, rover ,settler,
 	spitter, tank, transport_plan};
 enum { specnothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; // spécifications du terrain
@@ -100,8 +101,10 @@ struct fichier {
 	const std::string UNITNAME = "bin/UNITNAME.txt";
 	const std::string SPECNAME = "bin/SPECNAME.txt";
 
-	const std::string Savemaps = "save/Savemaps.txt";
-	const std::string SavePlayer = "save/SavePlayer.txt";
+	const std::string SaveInfo = "save/SaveInfo.txt";
+	
+	std::string Savemaps = "save/Savemaps.txt";
+	std::string SavePlayer = "save/SavePlayer.txt";
 };
 
 
@@ -146,6 +149,9 @@ struct var {
 	unsigned int ywheel = 0;
 	unsigned int xwheel = 0;
 
+	unsigned int currentSave = 0;
+	unsigned int nbSave = 0;
+
 	bool continuer = true;
 };
 
@@ -155,9 +161,9 @@ struct tile{
 	unsigned int tile_nb = 0;
 	unsigned int tile_x = 0;
 	unsigned int tile_y = 0;
-	std::string tile_stringground;
+	std::string tile_stringground = "";
 	unsigned int tile_ground = 0; // 1=grass,2=water
-	std::string tile_stringspec;
+	std::string tile_stringspec = "";
 	unsigned int tile_spec = 0;// 0=nothing
 	int appartenance = -1; // appartenance neutre
 
@@ -168,7 +174,11 @@ struct tile{
 
 typedef struct map map;
 struct map {
-	tile tiles[((SCREEN_WIDTH / tileSize)*(SCREEN_HEIGHT / tileSize)) - minusTiles];
+	/*
+		Attention config spéciale de visual studio 2017 pour dépasser 1Mo de données dans un tableau
+		propriété -> éditeur de lien -> système -> taille de la réserve de la pile -> mettre une valeur plus grande que 1Mo
+	*/
+	tile tiles[(((SCREEN_WIDTH / tileSize)*(SCREEN_HEIGHT / tileSize)) - minusTiles)];
 	
 	//unsigned int selectsupertiles = ceil(float(SUPERTILES)/2);
 };

@@ -2,9 +2,9 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.8
 
-	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2
+	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 #include "newgame.h"
 
 #include "unit.h"
-#include "save.h"
-#include "calculimage.h"
+#include "saveAndReload.h"
+#include "keyboardAndMouse.h"
 #include "createButton.h"
 
 using namespace std;
@@ -35,6 +35,8 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 	information.ecran.statescreen = STATEecrannewgame;
 
 	unsigned int nbplayer = 0, initspace = 132, space = 32;
+
+	createSave(information);
 
 	SDL_RenderClear(information.ecran.renderer);
 
@@ -71,156 +73,151 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 
 void groundgen(sysinfo& information){
 	logfileconsole("_Groundgen Start_");
-	unsigned int k = 0, randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0;
+	unsigned int k = 0, randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
 
 	for (unsigned int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++){
 		for (unsigned int j = 0; j < SCREEN_HEIGHT / tileSize; j++){
 			information.maps.tiles[k].tile_nb = k;
 			information.maps.tiles[k].tile_x = tileSize * i;
 			information.maps.tiles[k].tile_y = tileSize * j;
-			randomground = rand() % 100 + 1;//the range 1 to 100
-			if (randomground < 92){
-				information.maps.tiles[k].tile_ground = grass;
-				information.maps.tiles[k].tile_stringground = "grass.bmp";
-				randomspecgrass = rand() % 100 + 1;
-				switch (randomspecgrass){
+
+			/*
+				bord de la map
+			*/
+			if ((i == toolBarSize) || (i == (SCREEN_WIDTH / tileSize) - 1) || (j == 0) || ( j == (SCREEN_HEIGHT / tileSize) - 1))
+					tileAffectation(information.maps.tiles[k], deepwater, (string)"deepwater.bmp", specnothing, (string)"specnothing", 0, 0, 0);
+			else if ((i == toolBarSize + 1) || (i == (SCREEN_WIDTH / tileSize) - 2) || (j == 1) || (j == (SCREEN_HEIGHT / tileSize) - 2) ||
+				(i == toolBarSize + 2) || (i == (SCREEN_WIDTH / tileSize) - 3) || (j == 2) || (j == (SCREEN_HEIGHT / tileSize) - 3) ||
+				(i == toolBarSize + 3) || (i == (SCREEN_WIDTH / tileSize) - 4) || (j == 3) || (j == (SCREEN_HEIGHT / tileSize) - 4)) {
+				randomspecwaterborder = rand() % 50 + 1;
+				switch (randomspecwaterborder) {
 				case 1:
-					information.maps.tiles[k].tile_spec = coal;
-					information.maps.tiles[k].tile_stringspec = "coal.bmp";
+					tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
 					break;
 				case 2:
-					information.maps.tiles[k].tile_spec = copper;
-					information.maps.tiles[k].tile_stringspec = "copper.bmp";
-					break;
-				case 3:
-					information.maps.tiles[k].tile_spec = iron;
-					information.maps.tiles[k].tile_stringspec = "iron.bmp";
-					break;
-				case 4:
-					information.maps.tiles[k].tile_spec = tree;
-					information.maps.tiles[k].tile_stringspec = "tree1.bmp";
-					break;
-				case 5:
-					information.maps.tiles[k].tile_spec = stone;
-					information.maps.tiles[k].tile_stringspec = "stone.bmp";
-					break;
-				case 6:
-					information.maps.tiles[k].tile_spec = uranium;
-					information.maps.tiles[k].tile_stringspec = "uranium.bmp";
-					break;
-				case 7:
-					information.maps.tiles[k].tile_spec = horse;
-					information.maps.tiles[k].tile_stringspec = "horse.bmp";
+					tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
 					break;
 				}
-				if (randomspecgrass > 7 && randomspecgrass <= 32){ // plus de chance d'avoir des arbres
-					information.maps.tiles[k].tile_spec = tree;
-					information.maps.tiles[k].tile_stringspec = "tree1.bmp";
-					information.maps.tiles[k].food = 1;
-					information.maps.tiles[k].work = 2;
-					information.maps.tiles[k].gold = 1;
-				}
-				else if (randomspecgrass > 32){
-					information.maps.tiles[k].tile_spec = specnothing;
-					information.maps.tiles[k].tile_stringspec = "specnothing";
-					information.maps.tiles[k].food = 2;
-					information.maps.tiles[k].work = 1;
-					information.maps.tiles[k].gold = 1;
-				}
-				else if (randomspecgrass <= 7){
-					information.maps.tiles[k].food = 1;
-					information.maps.tiles[k].work = 2;
-					information.maps.tiles[k].gold = 3;
-				}
+				if (randomspecwaterborder > 2)
+					tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
 			}
-			else{
-				information.maps.tiles[k].tile_ground = water;
-				information.maps.tiles[k].tile_stringground = "water.bmp";
-				if (i > toolBarSize){
-					information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_ground = water;
-					information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_stringground = "water.bmp";
-					randomspecwater1 = rand() % 10 + 1;
-					switch (randomspecwater1){
+			/*
+				reste de la map
+			*/
+			else {
+				randomground = rand() % 100 + 1;//the range 1 to 100
+				if (randomground < 92) {
+					information.maps.tiles[k].tile_ground = grass;
+					information.maps.tiles[k].tile_stringground = "grass.bmp";
+					randomspecgrass = rand() % 100 + 1;
+					switch (randomspecgrass) {
 					case 1:
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_spec = fish;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_stringspec = "fish.bmp";
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].food = 3;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].work = 2;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].gold = 2;
+						information.maps.tiles[k].tile_spec = coal;
+						information.maps.tiles[k].tile_stringspec = "coal.bmp";
 						break;
 					case 2:
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_spec = petroleum;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_stringspec = "petroleum.bmp";
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].food = 1;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].work = 3;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].gold = 4;
+						information.maps.tiles[k].tile_spec = copper;
+						information.maps.tiles[k].tile_stringspec = "copper.bmp";
+						break;
+					case 3:
+						information.maps.tiles[k].tile_spec = iron;
+						information.maps.tiles[k].tile_stringspec = "iron.bmp";
+						break;
+					case 4:
+						information.maps.tiles[k].tile_spec = tree;
+						information.maps.tiles[k].tile_stringspec = "tree1.bmp";
+						break;
+					case 5:
+						information.maps.tiles[k].tile_spec = stone;
+						information.maps.tiles[k].tile_stringspec = "stone.bmp";
+						break;
+					case 6:
+						information.maps.tiles[k].tile_spec = uranium;
+						information.maps.tiles[k].tile_stringspec = "uranium.bmp";
+						break;
+					case 7:
+						information.maps.tiles[k].tile_spec = horse;
+						information.maps.tiles[k].tile_stringspec = "horse.bmp";
 						break;
 					}
-					if (randomspecwater1 > 2){
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_spec = specnothing;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].tile_stringspec = "specnothing";
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].food = 1;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].work = 1;
-						information.maps.tiles[k - SCREEN_HEIGHT / tileSize].gold = 1;
+					if (randomspecgrass > 7 && randomspecgrass <= 32) { // plus de chance d'avoir des arbres
+						information.maps.tiles[k].tile_spec = tree;
+						information.maps.tiles[k].tile_stringspec = "tree1.bmp";
+						information.maps.tiles[k].food = 1;
+						information.maps.tiles[k].work = 2;
+						information.maps.tiles[k].gold = 1;
+					}
+					else if (randomspecgrass > 32) {
+						information.maps.tiles[k].tile_spec = specnothing;
+						information.maps.tiles[k].tile_stringspec = "specnothing";
+						information.maps.tiles[k].food = 2;
+						information.maps.tiles[k].work = 1;
+						information.maps.tiles[k].gold = 1;
+					}
+					else if (randomspecgrass <= 7) {
+						information.maps.tiles[k].food = 1;
+						information.maps.tiles[k].work = 2;
+						information.maps.tiles[k].gold = 3;
 					}
 				}
-				if (i > toolBarSize && j > 0){
-					information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_ground = water;
-					information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_stringground = "water.bmp";
-					randomspecwater2 = rand() % 10 + 1;
-					switch (randomspecwater2){
+				else {
+					/*
+						génération de l'eau -> forme en L (3 cases)
+					*/
+					randomspecwater = rand() % 20 + 1;
+					switch (randomspecwater) {
 					case 1:
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_spec = fish;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_stringspec = "fish.bmp";
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].food = 3;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].work = 2;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].gold = 2;
+						tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
 						break;
 					case 2:
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_spec = petroleum;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_stringspec = "petroleum.bmp";
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].food = 1;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].work = 3;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].gold = 4;
+						tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
 						break;
 					}
-					if (randomspecwater2 > 2){
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_spec = specnothing;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].tile_stringspec = "specnothing";
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].food = 1;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].work = 1;
-						information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1].gold = 1;
+					if (randomspecwater > 2)
+						tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
+
+					if (i > toolBarSize) {
+						randomspecwater1 = rand() % 10 + 1;
+						switch (randomspecwater1) {
+						case 1:
+							tileAffectation(information.maps.tiles[k - SCREEN_HEIGHT / tileSize], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
+							break;
+						case 2:
+							tileAffectation(information.maps.tiles[k - SCREEN_HEIGHT / tileSize], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
+							break;
+						}
+						if (randomspecwater1 > 2)
+							tileAffectation(information.maps.tiles[k - SCREEN_HEIGHT / tileSize], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
 					}
-				}
-				randomspecwater = rand() % 10 + 1;
-				switch (randomspecwater){
-				case 1:
-					information.maps.tiles[k].tile_spec = fish;
-					information.maps.tiles[k].tile_stringspec = "fish.bmp";
-					information.maps.tiles[k].food = 3;
-					information.maps.tiles[k].work = 2;
-					information.maps.tiles[k].gold = 2;
-					break;
-				case 2:
-					information.maps.tiles[k].tile_spec = petroleum;
-					information.maps.tiles[k].tile_stringspec = "petroleum.bmp";
-					information.maps.tiles[k].food = 1;
-					information.maps.tiles[k].work = 3;
-					information.maps.tiles[k].gold = 4;
-					break;
-				}
-				if (randomspecwater > 2){
-					information.maps.tiles[k].tile_spec = specnothing;
-					information.maps.tiles[k].tile_stringspec = "specnothing";
-					information.maps.tiles[k].food = 1;
-					information.maps.tiles[k].work = 1;
-					information.maps.tiles[k].gold = 1;
+					if (i > toolBarSize && j > 0) {
+						randomspecwater2 = rand() % 10 + 1;
+						switch (randomspecwater2) {
+						case 1:
+							tileAffectation(information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
+							break;
+						case 2:
+							tileAffectation(information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
+							break;
+						}
+						if (randomspecwater2 > 2)
+							tileAffectation(information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
+					}
 				}
 			}
 			k++;
 		}
 	}
 	logfileconsole("_Groundgen End_");
+}
+
+void tileAffectation(tile& tiles, unsigned int tile_ground, std::string& tile_stringground, unsigned int tile_spec, std::string& tile_stringspec, unsigned int food, unsigned int work, unsigned int gold) {
+	tiles.tile_ground = tile_ground;
+	tiles.tile_stringground = tile_stringground;
+	tiles.tile_spec = tile_spec;
+	tiles.tile_stringspec = tile_stringspec;
+	tiles.food = food;
+	tiles.work = work;
+	tiles.gold = gold;
 }
 
 

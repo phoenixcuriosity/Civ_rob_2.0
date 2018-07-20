@@ -2,6 +2,20 @@
 This is a list of major changes in Civ_rob_2 version history.
 
 ---------------------------------------------------------------------------
+0.8: 
+---------------------------------------------------------------------------
+
+-> Change:
+	
+	
+-> Add: 
+	- The map border is water
+	- Deepwater
+	- the function tileAffectation -> optimization
+	- Save function, to save multiple games
+	
+	
+---------------------------------------------------------------------------
 0.7: 
 ---------------------------------------------------------------------------
 
