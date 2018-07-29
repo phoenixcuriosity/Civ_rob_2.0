@@ -54,9 +54,6 @@
     <ClCompile Include="deleteAll.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="createButton.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Buttons.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
@@ -114,9 +111,6 @@
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
     <ClInclude Include="deleteAll.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="createButton.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Buttons.h">

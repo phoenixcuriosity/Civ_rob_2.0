@@ -35,6 +35,7 @@
 #include "Player.h"
 
 void ecrantitre(sysinfo&);
+void reloadScreen(sysinfo& information);
 void alwaysrender(sysinfo&, std::vector<Player*>& tabplayer);
 void afficherSuperTiles(sysinfo&);
 void citiemap(sysinfo&, std::vector<Player*>& tabplayer);

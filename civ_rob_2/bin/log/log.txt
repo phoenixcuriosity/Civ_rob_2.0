@@ -8,46 +8,51 @@ Create Button n:0 msg = New Game Success
 Create Button n:1 msg = Reload Success
 Create Button n:2 msg = Option Success
 Create Button n:3 msg = Quit Success
-Create Button n:4 msg = Ecran Titre Success
-Create Button n:5 msg = Create Unit Success
-Create Button n:6 msg = Move Unit Success
-Create Button n:7 msg = Inspect Success
-Create Button n:8 msg = Delete Unit Success
-Create Button n:9 msg = Next Turn Success
-Create Button n:10 msg = Map Success
-Create Button n:11 msg = Build Success
-Create Button n:12 msg = Food Success
-Create Button n:13 msg = Place Citizen Success
-Create Button n:14 msg = battleoids Success
-Create Button n:15 msg = biter Success
-Create Button n:16 msg = bombardier Success
-Create Button n:17 msg = car Success
-Create Button n:18 msg = ouvrier_tier_1 Success
-Create Button n:19 msg = ouvrier_tier_2 Success
-Create Button n:20 msg = ouvrier_tier_3 Success
-Create Button n:21 msg = robot Success
-Create Button n:22 msg = rocket Success
-Create Button n:23 msg = rover Success
-Create Button n:24 msg = satellite Success
-Create Button n:25 msg = settler Success
-Create Button n:26 msg = spitter Success
-Create Button n:27 msg = tank Success
-Create Button n:28 msg = transport_plan Success
-temps d'execution de calculimage : 0.088000
+Create Button n:4 msg = Back Success
+Create Button n:5 msg = Remove all saves Success
+Create Button n:6 msg = Load Success
+Create Button n:7 msg = Remove Success
+Create Button n:8 msg = Save : 1 Success
+Create Button n:9 msg = Save : 2 Success
+Create Button n:10 msg = Ecran Titre Success
+Create Button n:11 msg = Create Unit Success
+Create Button n:12 msg = Move Unit Success
+Create Button n:13 msg = Inspect Success
+Create Button n:14 msg = Delete Unit Success
+Create Button n:15 msg = Next Turn Success
+Create Button n:16 msg = Map Success
+Create Button n:17 msg = Build Success
+Create Button n:18 msg = Food Success
+Create Button n:19 msg = Place Citizen Success
+Create Button n:20 msg = battleoids Success
+Create Button n:21 msg = biter Success
+Create Button n:22 msg = bombardier Success
+Create Button n:23 msg = car Success
+Create Button n:24 msg = ouvrier_tier_1 Success
+Create Button n:25 msg = ouvrier_tier_2 Success
+Create Button n:26 msg = ouvrier_tier_3 Success
+Create Button n:27 msg = robot Success
+Create Button n:28 msg = rocket Success
+Create Button n:29 msg = rover Success
+Create Button n:30 msg = satellite Success
+Create Button n:31 msg = settler Success
+Create Button n:32 msg = spitter Success
+Create Button n:33 msg = tank Success
+Create Button n:34 msg = transport_plan Success
+temps d'execution de calculimage : 0.102000
 _Ecrantitres Start_
 _Ecrantitres End_
-_Button Start_
-_Newgame Start_
+_mainLoop Start_
+_reloadScreen Start_
+_reloadScreen End_
+_reloadScreen Start_
+_reloadScreen End_
+_Reload Start_
 Create Player Success
-_Groundgen Start_
-_Groundgen End_
+Create Button n:35 msg = NoName0 Success
 Create Unit: settler Success
-_Save Start_
-_Save End_
-_SavePlayer Start_
-_SavePlayer End_
-Create Button n:29 msg = NoName0 Success
-_Newgame End_
+Create Unit: battleoids Success
+_Reload End_
 _Save Start_
 _Save End_
 _SavePlayer Start_
@@ -55,7 +60,7 @@ _SavePlayer End_
 __________________________
 _Ecrantitres Start_
 _Ecrantitres End_
-_Button End_
+_mainLoop End_
 *********_________ Start DeleteAll _________*********
 Delete Texture n:0 name = grass.bmp Success
 Delete Texture n:1 name = water.bmp Success
@@ -222,35 +227,42 @@ Delete Button n:0 name = New Game Success
 Delete Button n:1 name = Reload Success
 Delete Button n:2 name = Option Success
 Delete Button n:3 name = Quit Success
-Delete Button n:4 name = Ecran Titre Success
-Delete Button n:5 name = Create Unit Success
-Delete Button n:6 name = Move Unit Success
-Delete Button n:7 name = Inspect Success
-Delete Button n:8 name = Delete Unit Success
-Delete Button n:9 name = Next Turn Success
-Delete Button n:10 name = Map Success
-Delete Button n:11 name = Build Success
-Delete Button n:12 name = Food Success
-Delete Button n:13 name = Place Citizen Success
-Delete Button n:14 name = battleoids Success
-Delete Button n:15 name = biter Success
-Delete Button n:16 name = bombardier Success
-Delete Button n:17 name = car Success
-Delete Button n:18 name = ouvrier_tier_1 Success
-Delete Button n:19 name = ouvrier_tier_2 Success
-Delete Button n:20 name = ouvrier_tier_3 Success
-Delete Button n:21 name = robot Success
-Delete Button n:22 name = rocket Success
-Delete Button n:23 name = rover Success
-Delete Button n:24 name = satellite Success
-Delete Button n:25 name = settler Success
-Delete Button n:26 name = spitter Success
-Delete Button n:27 name = tank Success
-Delete Button n:28 name = transport_plan Success
-Delete Button n:29 name = NoName0 Success
+Delete Button n:4 name = Back Success
+Delete Button n:5 name = Remove all saves Success
+Delete Button n:6 name = Load Success
+Delete Button n:7 name = Remove Success
+Delete Button n:8 name = Save : 1 Success
+Delete Button n:9 name = Save : 2 Success
+Delete Button n:10 name = Ecran Titre Success
+Delete Button n:11 name = Create Unit Success
+Delete Button n:12 name = Move Unit Success
+Delete Button n:13 name = Inspect Success
+Delete Button n:14 name = Delete Unit Success
+Delete Button n:15 name = Next Turn Success
+Delete Button n:16 name = Map Success
+Delete Button n:17 name = Build Success
+Delete Button n:18 name = Food Success
+Delete Button n:19 name = Place Citizen Success
+Delete Button n:20 name = battleoids Success
+Delete Button n:21 name = biter Success
+Delete Button n:22 name = bombardier Success
+Delete Button n:23 name = car Success
+Delete Button n:24 name = ouvrier_tier_1 Success
+Delete Button n:25 name = ouvrier_tier_2 Success
+Delete Button n:26 name = ouvrier_tier_3 Success
+Delete Button n:27 name = robot Success
+Delete Button n:28 name = rocket Success
+Delete Button n:29 name = rover Success
+Delete Button n:30 name = satellite Success
+Delete Button n:31 name = settler Success
+Delete Button n:32 name = spitter Success
+Delete Button n:33 name = tank Success
+Delete Button n:34 name = transport_plan Success
+Delete Button n:35 name = NoName0 Success
 Delete ALL Button Success
 Delete player n:0 name = NoName0 Success
 Kill Unit n:0 of Player: NoName0 Success
+Kill Unit n:1 of Player: NoName0 Success
 Kill ALL Unit of Player:NoName0 Success
 Kill ALL Cities of Player:NoName0 Success
 Delete ALL player Success

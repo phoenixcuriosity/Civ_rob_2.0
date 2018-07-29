@@ -32,9 +32,9 @@ void loadUnitAndSpec(sysinfo& information) {
 		tabUnitAndSpec currentUnit;
 
 		UNIT >> destroy;
-		UNIT >> information.variable.unitNameMaxToCreate;
+		UNIT >> information.variable.s_player.unitNameMaxToCreate;
 
-		for (unsigned int i = 0; i < information.variable.unitNameMaxToCreate; i++) {
+		for (unsigned int i = 0; i < information.variable.s_player.unitNameMaxToCreate; i++) {
 			UNIT >> destroy;
 			UNIT >> currentUnit.name;
 
@@ -52,7 +52,7 @@ void loadUnitAndSpec(sysinfo& information) {
 
 			UNIT >> destroy;
 			UNIT >> currentUnit.level;
-			information.variable.s_tabUnitAndSpec.push_back(currentUnit);
+			information.variable.s_player.s_tabUnitAndSpec.push_back(currentUnit);
 		}
 
 	}
@@ -62,16 +62,16 @@ void loadUnitAndSpec(sysinfo& information) {
 
 
 void searchunit(sysinfo& information){
-	information.variable.unitNameToCreate = information.variable.s_tabUnitAndSpec[information.variable.unitToCreate].name;
+	information.variable.s_player.unitNameToCreate = information.variable.s_player.s_tabUnitAndSpec[information.variable.s_player.unitToCreate].name;
 }
 
 
 void searchUnitTile(sysinfo& information, std::vector<Player*>& tabplayer) {
-	for (unsigned int i = 0; i < tabplayer[information.variable.selectplayer]->GETtabunit().size(); i++) {
-		if (tabplayer[information.variable.selectplayer]->GETtheunit(i)->testPos(information.variable.mouse_x, information.variable.mouse_y)) {
-			information.variable.selectunit = i;
-			information.variable.unitNameToMove = tabplayer[information.variable.selectplayer]->GETtheunit(i)->GETname();
-			tabplayer[information.variable.selectplayer]->GETtheunit(i)->SETblit(true);
+	for (unsigned int i = 0; i < tabplayer[information.variable.s_player.selectplayer]->GETtabunit().size(); i++) {
+		if (tabplayer[information.variable.s_player.selectplayer]->GETtheunit(i)->testPos(information.variable.s_wheel.mouse_x, information.variable.s_wheel.mouse_y)) {
+			information.variable.s_player.selectunit = i;
+			information.variable.s_player.unitNameToMove = tabplayer[information.variable.s_player.selectplayer]->GETtheunit(i)->GETname();
+			tabplayer[information.variable.s_player.selectplayer]->GETtheunit(i)->SETblit(true);
 			break;
 		}
 	}
@@ -83,15 +83,15 @@ void tryToMove(sysinfo& information, vector<Player*>& tabplayer, int x, int y){
 	case 0:
 		break;
 	case 1:
-		tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->move(information.variable.select, information.variable.selectunit, x, y);
+		tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->move(information.variable.select, information.variable.s_player.selectunit, x, y);
 		break;
 	case 2:
-		tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->attack(tabplayer[information.variable.selectPlayerToAttack]->GETtheunit(information.variable.selectUnitToAttack));
-		if (tabplayer[information.variable.selectPlayerToAttack]->GETtheunit(information.variable.selectUnitToAttack)->GETalive() ==  false) {
-			tabplayer[information.variable.selectPlayerToAttack]->deleteUnit(information.variable.selectUnitToAttack);
+		tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->attack(tabplayer[information.variable.s_player.selectPlayerToAttack]->GETtheunit(information.variable.s_player.selectUnitToAttack));
+		if (tabplayer[information.variable.s_player.selectPlayerToAttack]->GETtheunit(information.variable.s_player.selectUnitToAttack)->GETalive() ==  false) {
+			tabplayer[information.variable.s_player.selectPlayerToAttack]->deleteUnit(information.variable.s_player.selectUnitToAttack);
 			tryToMove(information, tabplayer, x, y);
 		}
-		tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->SETmovement(0);
+		tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->SETmovement(0);
 		break;
 	}
 }
@@ -109,9 +109,10 @@ int searchToMove(sysinfo& information, vector<Player*>& tabplayer, int x, int y)
 	unsigned int k = 0;
 	bool ground = false;
 
+
 	for (unsigned int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++){
 		for (unsigned int j = 0; j < SCREEN_HEIGHT / tileSize; j++){
-			if (information.maps.tiles[k].tile_x == tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->GETx() + x && information.maps.tiles[k].tile_y == tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->GETy() + y){
+			if (information.maps.tiles[k].tile_x == tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETx() + x && information.maps.tiles[k].tile_y == tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETy() + y){
 				if (information.maps.tiles[k].tile_ground == grass){
 					ground = true;
 					break;
@@ -124,13 +125,13 @@ int searchToMove(sysinfo& information, vector<Player*>& tabplayer, int x, int y)
 	if (ground){
 		for (unsigned int i = 0; i < tabplayer.size(); i++) {
 			for (unsigned int j = 0; j < tabplayer[i]->GETtabunit().size(); j++) {
-				if (tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->GETx() + x == tabplayer[i]->GETtheunit(j)->GETx()) {
-					if (tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->GETy() + y == tabplayer[i]->GETtheunit(j)->GETy()) {
-						if (information.variable.selectplayer == i)
+				if (tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETx() + x == tabplayer[i]->GETtheunit(j)->GETx()) {
+					if (tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETy() + y == tabplayer[i]->GETtheunit(j)->GETy()) {
+						if (information.variable.s_player.selectplayer == i)
 							return 0;
 						else {
-							information.variable.selectPlayerToAttack = i;
-							information.variable.selectUnitToAttack = j;
+							information.variable.s_player.selectPlayerToAttack = i;
+							information.variable.s_player.selectUnitToAttack = j;
 							return 2;
 						}
 					}

@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8
+	last modification on this file on version:0.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,7 +22,7 @@
 */
 
 #include "keyboardAndMouse.h"
-
+#include "renduecran.h"
 #include "unit.h"
 #include "citie.h"
 
@@ -138,8 +138,8 @@ void cinAlphabet(sysinfo& information, std::string &name, unsigned int initx, un
 			switch (event.key.keysym.sym){
 			case SDLK_ESCAPE:
 				if (name.compare("") == 0) {
-					name = "NoName" + to_string(information.variable.nbNoNamePlayer);
-					information.variable.nbNoNamePlayer++;
+					name = "NoName" + to_string(information.variable.s_player.nbNoNamePlayer);
+					information.variable.s_player.nbNoNamePlayer++;
 				}
 				continuer = false;
 				break;
@@ -149,15 +149,15 @@ void cinAlphabet(sysinfo& information, std::string &name, unsigned int initx, un
 				break;
 			case SDLK_RETURN:
 				if (name.compare("") == 0) {
-					name = "NoName" + to_string(information.variable.nbNoNamePlayer);
-					information.variable.nbNoNamePlayer++;
+					name = "NoName" + to_string(information.variable.s_player.nbNoNamePlayer);
+					information.variable.s_player.nbNoNamePlayer++;
 				}
 				continuer = false;
 				break;
 			case SDLK_KP_ENTER:
 				if (name.compare("") == 0) {
-					name = "NoName" + to_string(information.variable.nbNoNamePlayer);
-					information.variable.nbNoNamePlayer++;
+					name = "NoName" + to_string(information.variable.s_player.nbNoNamePlayer);
+					information.variable.s_player.nbNoNamePlayer++;
 				}
 				continuer = false;
 				break;
@@ -307,43 +307,43 @@ void cinAlphabet(sysinfo& information, std::string &name, unsigned int initx, un
 
 
 void keySDLK_b(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		createcitie(information, tabplayer);
 }
 
 void keySDLK_KP_1(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, -tileSize, tileSize);
 }
 void keySDLK_KP_2(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, 0, tileSize);
 }
 void keySDLK_KP_3(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, tileSize, tileSize);
 }
 void keySDLK_KP_4(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, -tileSize, 0);
 }
 void keySDLK_KP_5(sysinfo& information, vector<Player*>& tabplayer) {
 
 }
 void keySDLK_KP_6(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, tileSize, 0);
 }
 void keySDLK_KP_7(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, -tileSize, -tileSize);
 }
 void keySDLK_KP_8(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, 0, -tileSize);
 }
 void keySDLK_KP_9(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.ecran.statescreen == STATEmainmap && information.variable.select == selectmove)
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		tryToMove(information, tabplayer, tileSize, -tileSize);
 }
 
@@ -359,71 +359,71 @@ void mouse(sysinfo& information, vector<Player*>& tabplayer, SDL_Event event) {
 
 	if (event.button.button == SDL_BUTTON_LEFT)
 		cliqueGauche(information, tabplayer, event);
-	else if (event.button.button == SDL_BUTTON_RIGHT && information.ecran.statescreen == STATEmainmap)
+	else if (event.button.button == SDL_BUTTON_RIGHT && information.variable.statescreen == STATEmainmap)
 		cliqueDroit(information, tabplayer, event);
 
 }
 void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Event event) {
 	// inspect citie
-	if (information.ecran.statescreen == STATEmainmap) {
-		if (information.variable.selectplayer > -1) {
-			if (information.variable.select == selectinspect && tabplayer[information.variable.selectplayer]->GETtabcities().size() != 0) {
-				information.variable.mouse_x = (unsigned int)ceil(event.button.x / tileSize) * tileSize;
-				information.variable.mouse_y = (unsigned int)ceil(event.button.y / tileSize) * tileSize;
+	if (information.variable.statescreen == STATEmainmap) {
+		if (information.variable.s_player.selectplayer > -1) {
+			if (information.variable.select == selectinspect && tabplayer[information.variable.s_player.selectplayer]->GETtabcities().size() != 0) {
+				information.variable.s_wheel.mouse_x = (unsigned int)ceil(event.button.x / tileSize) * tileSize;
+				information.variable.s_wheel.mouse_y = (unsigned int)ceil(event.button.y / tileSize) * tileSize;
 				searchCitieTile(information, tabplayer);
 			}
 		}
 	}
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 	for (unsigned int i = 0; i < information.tabbutton.size(); i++) { // recherche si une bouton est dans ces coordonnées
-		switch (information.ecran.statescreen) {
+		switch (information.variable.statescreen) {
 		case STATEmainmap:
-			if (information.tabbutton[i]->searchButton((string)"Ecran Titre", information.ecran.statescreen, event.button.x, event.button.y)) {
+			if (information.tabbutton[i]->searchButton((string)"Ecran Titre", information.variable.statescreen, event.button.x, event.button.y)) {
 				savemaps(information);
 				savePlayer(information, tabplayer);
 				logfileconsole("__________________________");
 				ecrantitre(information);
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Create Unit", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Create Unit", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.tabbutton[i]->changeOn();
 				if (information.variable.select != selectcreate)
 					information.variable.select = selectcreate;
 				else
 					information.variable.select = selectnothing;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Move Unit", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Move Unit", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.tabbutton[i]->changeOn();
 				if (information.variable.select != selectmove)
 					information.variable.select = selectmove;
 				else {
-					information.variable.selectunit = -1;
+					information.variable.s_player.selectunit = -1;
 					information.variable.select = selectnothing;
 				}
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Inspect", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Inspect", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.tabbutton[i]->changeOn();
 				if (information.variable.select != selectinspect)
 					information.variable.select = selectinspect;
 				else {
-					information.variable.selectunit = -1;
+					information.variable.s_player.selectunit = -1;
 					information.variable.select = selectnothing;
 				}
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Next Turn", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Next Turn", information.variable.statescreen, event.button.x, event.button.y)) {
 				nextTurn(information, tabplayer);
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Delete Unit", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Delete Unit", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.tabbutton[i]->SETon(!information.tabbutton[i]->GETon());
 			}
 
 			// player select
 			for (unsigned int l = 0; l < tabplayer.size(); l++) {
-				if (information.tabbutton[i]->searchButton((string)tabplayer[l]->GETname(), information.ecran.statescreen, event.button.x, event.button.y)) {
+				if (information.tabbutton[i]->searchButton((string)tabplayer[l]->GETname(), information.variable.statescreen, event.button.x, event.button.y)) {
 					information.tabbutton[i]->changeOn();
-					if (information.variable.selectplayer != l)
-						information.variable.selectplayer = l;
+					if (information.variable.s_player.selectplayer != l)
+						information.variable.s_player.selectplayer = l;
 					else
-						information.variable.selectplayer = -1;
+						information.variable.s_player.selectplayer = -1;
 					logfileconsole("information.variable.selectplayer = " + tabplayer[l]->GETname());
 					break;
 				}
@@ -431,41 +431,74 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 			// reset de l'affichage On des boutons
 			for (unsigned int l = 0; l < information.tabbutton.size(); l++) {
 				information.tabbutton[l]->resetOnStatescreen(information.variable.select, selectnothing);
-				information.tabbutton[l]->resetOnPlayer(information.variable.selectplayer, information.variable.tabPlayerName);
+				information.tabbutton[l]->resetOnPlayer(information.variable.s_player.selectplayer, information.variable.s_player.tabPlayerName);
 			}
 			break;
 		case STATEecrantitre:
-			if (information.tabbutton[i]->searchButton((string)"New Game", information.ecran.statescreen, event.button.x, event.button.y)) {
+			if (information.tabbutton[i]->searchButton((string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
 				newgame(information, tabplayer);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Reload", information.ecran.statescreen, event.button.x, event.button.y)) {
-				reload(information, tabplayer);
+			else if (information.tabbutton[i]->searchButton((string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
+				reloadScreen(information);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Option", information.ecran.statescreen, event.button.x, event.button.y)) {
-				createSave(information);
+			else if (information.tabbutton[i]->searchButton((string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
+				//clearSave(information);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Quit", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.continuer = false;
 				return;
 			}
 			break;
+		case STATEreload:
+			if (information.tabbutton[i]->searchButton((string)"Back", information.variable.statescreen, event.button.x, event.button.y)) {
+				ecrantitre(information);
+				return;
+			}
+			else if (information.tabbutton[i]->searchButton((string)"Remove all saves", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.tabbutton[i]->changeOn();
+				reloadScreen(information);
+				clearSave(information);
+				return;
+			}
+			else if (information.tabbutton[i]->searchButton((string)"Load", information.variable.statescreen, event.button.x, event.button.y)) {
+				reload(information, tabplayer);
+				return;
+			}
+			else if (information.tabbutton[i]->searchButton((string)"Remove", information.variable.statescreen, event.button.x, event.button.y)) {
+				removeSave(information);
+				reloadScreen(information);
+				return;
+			}
+			else {
+				for (unsigned int j = 0; j < information.variable.s_save.nbSave; j++) {
+					if (information.tabbutton[i]->searchButton((string)"Save : " + to_string(information.variable.s_save.tabSave[j]), information.variable.statescreen, event.button.x, event.button.y)) {
+						information.tabbutton[i]->changeOn();
+						information.variable.s_save.currentSave = information.variable.s_save.tabSave[j];
+						information.file.Savemaps = "save/" + to_string(information.variable.s_save.tabSave[j]) + "/Savemaps.txt";
+						information.file.SavePlayer = "save/" + to_string(information.variable.s_save.tabSave[j]) + "/SavePlayer.txt";
+						reloadScreen(information);
+						return;
+					}
+				}
+			}
+			break;
 		case STATEcitiemap:
-			if (information.tabbutton[i]->searchButton((string)"Map", information.ecran.statescreen, event.button.x, event.button.y)) {
-				information.variable.selectCitie = -1;
-				information.ecran.statescreen = STATEmainmap;
+			if (information.tabbutton[i]->searchButton((string)"Map", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.variable.s_player.selectCitie = -1;
+				information.variable.statescreen = STATEmainmap;
 				information.variable.select = selectnothing;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Build", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Build", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.tabbutton[i]->changeOn();
 				if (information.variable.select != selectcreate)
 					information.variable.select = selectcreate;
 				else
 					information.variable.select = selectnothing;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Place Citizen", information.ecran.statescreen, event.button.x, event.button.y)) {
+			else if (information.tabbutton[i]->searchButton((string)"Place Citizen", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.tabbutton[i]->changeOn();
 				if (information.variable.select != selectmoveCitizen)
 					information.variable.select = selectmoveCitizen;
@@ -473,15 +506,15 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 					information.variable.select = selectnothing;
 			}
 			if (information.variable.select == selectcreate) {
-				for (unsigned int j = 0; j < information.variable.unitNameMaxToCreate; j++) {
-					if (information.tabbutton[i]->searchButton(information.variable.s_tabUnitAndSpec[j].name, information.ecran.statescreen, event.button.x, event.button.y)) {
-						information.variable.toBuild = information.variable.s_tabUnitAndSpec[j].name;
-						tabplayer[information.variable.selectplayer]->addUnit(information.variable.s_tabUnitAndSpec[j].name,
-							tabplayer[information.variable.selectplayer]->GETthecitie(information.variable.selectCitie)->GETx(),
-							tabplayer[information.variable.selectplayer]->GETthecitie(information.variable.selectCitie)->GETy(),
-							information.variable.s_tabUnitAndSpec[j].life, information.variable.s_tabUnitAndSpec[j].atq,
-							information.variable.s_tabUnitAndSpec[j].def, information.variable.s_tabUnitAndSpec[j].movement,
-							information.variable.s_tabUnitAndSpec[j].level);
+				for (unsigned int j = 0; j < information.variable.s_player.unitNameMaxToCreate; j++) {
+					if (information.tabbutton[i]->searchButton(information.variable.s_player.s_tabUnitAndSpec[j].name, information.variable.statescreen, event.button.x, event.button.y)) {
+						information.variable.s_player.toBuild = information.variable.s_player.s_tabUnitAndSpec[j].name;
+						tabplayer[information.variable.s_player.selectplayer]->addUnit(information.variable.s_player.s_tabUnitAndSpec[j].name,
+							tabplayer[information.variable.s_player.selectplayer]->GETthecitie(information.variable.s_player.selectCitie)->GETx(),
+							tabplayer[information.variable.s_player.selectplayer]->GETthecitie(information.variable.s_player.selectCitie)->GETy(),
+							information.variable.s_player.s_tabUnitAndSpec[j].life, information.variable.s_player.s_tabUnitAndSpec[j].atq,
+							information.variable.s_player.s_tabUnitAndSpec[j].def, information.variable.s_player.s_tabUnitAndSpec[j].movement,
+							information.variable.s_player.s_tabUnitAndSpec[j].level);
 
 						information.variable.select = selectnothing;
 						break;
@@ -497,35 +530,35 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 
 void cliqueDroit(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Event event) {
 	unsigned int selectunit = 0;
-	information.variable.mouse_x = (unsigned int)ceil(event.button.x / tileSize) * tileSize;
-	information.variable.mouse_y = (unsigned int)ceil(event.button.y / tileSize) * tileSize;
-	if (information.variable.selectplayer > -1) {
-		switch (information.ecran.statescreen) {
+	information.variable.s_wheel.mouse_x = (unsigned int)ceil(event.button.x / tileSize) * tileSize;
+	information.variable.s_wheel.mouse_y = (unsigned int)ceil(event.button.y / tileSize) * tileSize;
+	if (information.variable.s_player.selectplayer > -1) {
+		switch (information.variable.statescreen) {
 		case STATEmainmap:
 			switch (information.variable.select) {
 			case selectcreate:
-				for (unsigned int p = 0; p < information.variable.unitNameMaxToCreate; p++) {
-					if (information.variable.unitNameToCreate.compare(information.variable.s_tabUnitAndSpec[p].name) == 0) {
+				for (unsigned int p = 0; p < information.variable.s_player.unitNameMaxToCreate; p++) {
+					if (information.variable.s_player.unitNameToCreate.compare(information.variable.s_player.s_tabUnitAndSpec[p].name) == 0) {
 						selectunit = p;
 						break;
 					}
 				}
-				tabplayer[information.variable.selectplayer]->addUnit(information.variable.unitNameToCreate,
-					information.variable.mouse_x, information.variable.mouse_y,
-					information.variable.s_tabUnitAndSpec[selectunit].life, information.variable.s_tabUnitAndSpec[selectunit].atq,
-					information.variable.s_tabUnitAndSpec[selectunit].def, information.variable.s_tabUnitAndSpec[selectunit].movement,
-					information.variable.s_tabUnitAndSpec[selectunit].level);
+				tabplayer[information.variable.s_player.selectplayer]->addUnit(information.variable.s_player.unitNameToCreate,
+					information.variable.s_wheel.mouse_x, information.variable.s_wheel.mouse_y,
+					information.variable.s_player.s_tabUnitAndSpec[selectunit].life, information.variable.s_player.s_tabUnitAndSpec[selectunit].atq,
+					information.variable.s_player.s_tabUnitAndSpec[selectunit].def, information.variable.s_player.s_tabUnitAndSpec[selectunit].movement,
+					information.variable.s_player.s_tabUnitAndSpec[selectunit].level);
 				break;
 			case selectmove:
-				if (tabplayer[information.variable.selectplayer]->GETtabunit().size() != 0) {
+				if (tabplayer[information.variable.s_player.selectplayer]->GETtabunit().size() != 0) {
 					searchUnitTile(information, tabplayer);
-					logfileconsole("Unit select to move n:" + to_string(information.variable.selectunit));
+					logfileconsole("Unit select to move n:" + to_string(information.variable.s_player.selectunit));
 				}
 				break;
 			case selectinspect:
-				if (tabplayer[information.variable.selectplayer]->GETtabunit().size() != 0) {
+				if (tabplayer[information.variable.s_player.selectplayer]->GETtabunit().size() != 0) {
 					searchUnitTile(information, tabplayer);
-					logfileconsole("Unit select to move n:" + to_string(information.variable.selectunit));
+					logfileconsole("Unit select to move n:" + to_string(information.variable.s_player.selectunit));
 				}
 				break;
 			}
@@ -536,13 +569,25 @@ void cliqueDroit(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Even
 void wheel(sysinfo& information, int& wheel) {
 	if (information.variable.select == selectcreate) {
 		if (wheel == 1) {
-			if (information.variable.unitToCreate > 0)
-				information.variable.unitToCreate--;
+			if (information.variable.s_player.unitToCreate > 0)
+				information.variable.s_player.unitToCreate--;
 		}
 		else if (wheel == -1) {
-			if (information.variable.unitToCreate < information.variable.unitNameMaxToCreate - 1)
-				information.variable.unitToCreate++;
+			if (information.variable.s_player.unitToCreate < information.variable.s_player.unitNameMaxToCreate - 1)
+				information.variable.s_player.unitToCreate++;
 		}
 		searchunit(information);
 	}
+	/*
+	else if (information.variable.statescreen == STATEreload) {
+		if (wheel == 1) {
+			if (information.variable.currentSave > 0)
+				information.variable.currentSave--;
+		}
+		else if (wheel == -1) {
+			if (information.variable.currentSave < information.variable.nbSave)
+				information.variable.currentSave++;
+		}
+	}
+	*/
 }

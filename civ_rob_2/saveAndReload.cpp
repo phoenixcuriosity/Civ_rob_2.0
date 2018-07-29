@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8
+	last modification on this file on version:0.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -23,6 +23,7 @@
 
 #include "saveAndReload.h"
 #include "sdl.h"
+#include "initAndError.h"
 
 using namespace std;
 
@@ -98,7 +99,7 @@ void savePlayer(sysinfo& information, std::vector<Player*>& tabplayer){
 
 void reload(sysinfo& information, vector<Player*>& tabplayer) {
 	logfileconsole("_Reload Start_");
-	information.ecran.statescreen = STATEmainmap;
+	information.variable.statescreen = STATEmainmap;
 
 	string destroy;
 	int k = 0;
@@ -222,67 +223,157 @@ void reload(sysinfo& information, vector<Player*>& tabplayer) {
 }
 
 void createSave(sysinfo& information) {
-	ifstream loadInfo(information.file.SaveInfo);
+	logfileconsole("_createSave Start_");
 	string destroy;
-	
 	unsigned int currentSave = 0;
-	
-	vector<unsigned int> tab;
 
-	if (loadInfo) {
-		loadInfo >> destroy;
-		loadInfo >> information.variable.nbSave;
-
-		loadInfo >> destroy;
-		for (unsigned int i = 0; i < information.variable.nbSave; i++) {
-			loadInfo >> currentSave;
-			if ((i + 1) != currentSave) {
-				information.variable.currentSave = currentSave;
-				break;
-			}
-			tab.push_back(currentSave);
+	for (unsigned int i = 0; i < information.variable.s_save.nbSave; i++) {
+		if ((i + 1) != information.variable.s_save.tabSave[i]) {
+			information.variable.s_save.currentSave = i + 1;
+			information.variable.s_save.tabSave.push_back(information.variable.s_save.currentSave);
+			break;
 		}
 	}
-	else
-		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveInfo);
 
-	if (information.variable.currentSave == 0) {
-		information.variable.currentSave = information.variable.nbSave + 1;
-		tab.push_back(information.variable.currentSave);
+	if (information.variable.s_save.currentSave == 0) {
+		information.variable.s_save.currentSave = information.variable.s_save.nbSave + 1;
+		information.variable.s_save.tabSave.push_back(information.variable.s_save.currentSave);
 	}
 
 	ofstream saveInfo(information.file.SaveInfo);
 	if (saveInfo) {
 		saveInfo << "NbSave=";
-		saveInfo << endl << information.variable.nbSave + 1;
+		saveInfo << endl << information.variable.s_save.nbSave + 1;
 		saveInfo << endl << "SaveUse=";
-		for (unsigned int i = 0; i < information.variable.currentSave; i++)
-			saveInfo << endl << tab[i];
+		for (unsigned int i = 0; i < information.variable.s_save.nbSave + 1; i++)
+			saveInfo << endl << information.variable.s_save.tabSave[i];
 	}
 	else
 		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveInfo);
 
-	string save = "save/" + to_string(information.variable.currentSave);
+	string save = "save/" + to_string(information.variable.s_save.currentSave);
 	_mkdir(save.c_str());
-	information.variable.nbSave++;
+	information.variable.s_save.nbSave++;
 
-	information.file.Savemaps = "save/" + to_string(information.variable.currentSave) + "/Savemaps.txt";
-	information.file.SavePlayer = "save/" + to_string(information.variable.currentSave) + "/SavePlayer.txt";
+	information.file.Savemaps = "save/" + to_string(information.variable.s_save.currentSave) + "/Savemaps.txt";
+	information.file.SavePlayer = "save/" + to_string(information.variable.s_save.currentSave) + "/SavePlayer.txt";
+
+	logfileconsole("_createSave Start_");
 }
 void removeSave(sysinfo& information) {
-	string destroy;
+	logfileconsole("_removeSave Start_");
+	string file;
+	bool condition = false;
 
-	fstream loadInfo(information.file.SaveInfo);
-	if (loadInfo) {
-		loadInfo >> destroy;
+	if (information.variable.s_save.currentSave != 0) {
 
+		for (unsigned int i = 0; i < information.variable.s_save.nbSave; i++) {
+			if (information.variable.s_save.currentSave == information.variable.s_save.tabSave[i]) {
+				condition = true;
+				break;
+			}
+		}
+
+
+		if (condition) {
+			file = "save/" + to_string(information.variable.s_save.currentSave) + "/Savemaps.txt";
+			if (remove(file.c_str()) != 0)
+				logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+			else
+				logfileconsole("file : " + file + " successfully remove");
+
+			file = "save/" + to_string(information.variable.s_save.currentSave) + "/SavePlayer.txt";
+			if (remove(file.c_str()) != 0)
+				logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+			else
+				logfileconsole("file : " + file + " successfully remove");
+
+			file = "save/" + to_string(information.variable.s_save.currentSave);
+			if (_rmdir(file.c_str()) != 0)
+				logfileconsole("ERREUR: Impossible d'effacer le dossier " + file);
+			else
+				logfileconsole("directory : " + file + " successfully remove");
+
+			information.variable.s_save.nbSave--;
+			if (information.variable.s_save.nbSave == 0)
+				information.variable.s_save.tabSave.clear();
+			else
+				information.variable.s_save.tabSave.erase(information.variable.s_save.tabSave.begin() + information.variable.s_save.currentSave - 1);
+
+			for (unsigned int i = 0; i < information.tabbutton.size(); i++) {
+				if (information.tabbutton[i]->searchButtonName("Save : " + to_string(information.variable.s_save.currentSave), information.variable.statescreen)) {
+					delete information.tabbutton[i];
+					information.tabbutton.erase(information.tabbutton.begin() + i);
+					break;
+				}
+			}
+
+			ofstream saveInfo(information.file.SaveInfo);
+			if (saveInfo) {
+				saveInfo << "NbSave=";
+				saveInfo << endl << information.variable.s_save.nbSave;
+				saveInfo << endl << "SaveUse=";
+				for (unsigned int i = 0; i < information.variable.s_save.nbSave; i++)
+					saveInfo << endl << information.variable.s_save.tabSave[i];
+			}
+			else
+				logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveInfo);
+		}
+	}
+	else
+		logfileconsole("ERREUR: currentSave = 0");
+
+	logfileconsole("_removeSave End_");
+}
+void clearSave(sysinfo& information) {
+	logfileconsole("_clearSave Start_");
+
+
+	for (unsigned int i = 0; i < information.tabbutton.size(); i++) {
+		for (unsigned int j = 0; j < information.variable.s_save.nbSave; j++) {
+			if (information.tabbutton[i]->searchButtonName("Save : " + to_string(information.variable.s_save.tabSave[j]), information.variable.statescreen)) {
+				delete information.tabbutton[i];
+				information.tabbutton.erase(information.tabbutton.begin() + i);
+			}
+		}
+	}
+
+	string file;
+	for (unsigned int i = 0; i < information.variable.s_save.nbSave; i++) {	
+		
+
+		file = "save/" + to_string(information.variable.s_save.tabSave[i]) + "/Savemaps.txt";
+		if(remove(file.c_str()) != 0)
+			logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+		else
+			logfileconsole("file : " + file + " successfully remove");
+
+		file = "save/" + to_string(information.variable.s_save.tabSave[i]) + "/SavePlayer.txt";
+		if (remove(file.c_str()) != 0)
+			logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+		else
+			logfileconsole("file : " + file + " successfully remove");
+
+		file = "save/" + to_string(information.variable.s_save.tabSave[i]);
+		if(_rmdir(file.c_str()) != 0)
+			logfileconsole("ERREUR: Impossible d'effacer le dossier " + file);
+		else
+			logfileconsole("directory : " + file + " successfully remove");
+	}
+
+	ofstream saveInfo(information.file.SaveInfo);
+	if (saveInfo) {
+		saveInfo << "NbSave=";
+		saveInfo << endl << "0";
+		saveInfo << endl << "SaveUse=";
 	}
 	else
 		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveInfo);
 
-	string save = "save/" + to_string(1);
-	_rmdir(save.c_str());
-}
-void clearSave(sysinfo& information) {
+	information.variable.s_save.nbSave = 0;
+	information.variable.s_save.currentSave = 0;
+	information.variable.s_save.tabSave.clear();
+	
 
+	logfileconsole("_clearSave End_");
 }

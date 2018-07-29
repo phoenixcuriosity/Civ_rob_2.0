@@ -27,11 +27,11 @@
 using namespace std;
 
 void createcitie(sysinfo& information, vector<Player*>& tabplayer) {
-	if (information.variable.unitNameToMove.compare("settler") == 0) {
+	if (information.variable.s_player.unitNameToMove.compare("settler") == 0) {
 
-		string name = information.variable.tabCitieName[(information.variable.selectplayer * 5) + tabplayer[information.variable.selectplayer]->GETtabcities().size()];
-		int x = tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->GETx();
-		int y = tabplayer[information.variable.selectplayer]->GETtheunit(information.variable.selectunit)->GETy();
+		string name = information.variable.s_player.tabCitieName[(information.variable.s_player.selectplayer * 5) + tabplayer[information.variable.s_player.selectplayer]->GETtabcities().size()];
+		int x = tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETx();
+		int y = tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETy();
 
 		unsigned int k = 0, middleTile = 0;
 		
@@ -50,18 +50,18 @@ void createcitie(sysinfo& information, vector<Player*>& tabplayer) {
 			o = (int)floor((double)initSizeView / 2.0);
 			for (int i = (initSizeView * (z + (int)floor((double)initSizeView / 2.0))); i < (initSizeView * (z + (int)ceil((double)initSizeView / 2.0))); i++) {
 				if (o > -initSizeInfluence && o < initSizeInfluence && z > -initSizeInfluence && z < initSizeInfluence)
-					information.maps.tiles[middleTile - z - (o * (SCREEN_HEIGHT / tileSize))].appartenance = information.variable.selectplayer;
+					information.maps.tiles[middleTile - z - (o * (SCREEN_HEIGHT / tileSize))].appartenance = information.variable.s_player.selectplayer;
 				tabtile[i] = information.maps.tiles[middleTile - z - (o * (SCREEN_HEIGHT / tileSize))];
 				tabtile[i].tile_x = (SCREEN_WIDTH / 2) - (o * tileSize);
 				tabtile[i].tile_y = (SCREEN_HEIGHT / 2) - (z * tileSize);
 				o--;
 			}
 		}
-		tabplayer[information.variable.selectplayer]->addCitie(name, x, y, tabtile);
+		tabplayer[information.variable.s_player.selectplayer]->addCitie(name, x, y, tabtile);
 
-		tabplayer[information.variable.selectplayer]->deleteUnit(information.variable.selectunit);
-		information.variable.selectunit = -1;
-		information.variable.unitNameToMove = "";
+		tabplayer[information.variable.s_player.selectplayer]->deleteUnit(information.variable.s_player.selectunit);
+		information.variable.s_player.selectunit = -1;
+		information.variable.s_player.unitNameToMove = "";
 	}
 }
 
@@ -71,10 +71,10 @@ void createcitie(sysinfo& information, vector<Player*>& tabplayer) {
 
 
 void searchCitieTile(sysinfo& information, std::vector<Player*>& tabplayer) {
-	for (unsigned int i = 0; i < tabplayer[information.variable.selectplayer]->GETtabcities().size(); i++) {
-		if (tabplayer[information.variable.selectplayer]->GETthecitie(i)->testPos(information.variable.mouse_x, information.variable.mouse_y)) {
-			information.variable.selectCitie = i;
-			information.ecran.statescreen = STATEcitiemap;
+	for (unsigned int i = 0; i < tabplayer[information.variable.s_player.selectplayer]->GETtabcities().size(); i++) {
+		if (tabplayer[information.variable.s_player.selectplayer]->GETthecitie(i)->testPos(information.variable.s_wheel.mouse_x, information.variable.s_wheel.mouse_y)) {
+			information.variable.s_player.selectCitie = i;
+			information.variable.statescreen = STATEcitiemap;
 			information.variable.select = selectnothing;
 			break;
 		}

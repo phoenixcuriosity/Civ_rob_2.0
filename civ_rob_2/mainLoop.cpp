@@ -36,7 +36,7 @@
 using namespace std;
 
 void mainLoop(sysinfo& information, vector<Player*>& tabplayer){
-	logfileconsole("_Button Start_");
+	logfileconsole("_mainLoop Start_");
 	SDL_Event event;
 
 	int countedFrames = 0;
@@ -120,6 +120,6 @@ void mainLoop(sysinfo& information, vector<Player*>& tabplayer){
 		
 		
 	}
-	logfileconsole("_Button End_");
+	logfileconsole("_mainLoop End_");
 }
 

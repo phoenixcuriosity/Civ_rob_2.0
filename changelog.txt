@@ -2,6 +2,19 @@
 This is a list of major changes in Civ_rob_2 version history.
 
 ---------------------------------------------------------------------------
+0.9: 
+---------------------------------------------------------------------------
+
+-> Change:
+	- Unit.cpp : move : check twice movement in case of movement = 0
+	
+-> Add: 
+	- load and remove save Button
+	- Save functions (END), delete all saves or just one
+	- Button : searchButtonName
+
+	
+---------------------------------------------------------------------------
 0.8: 
 ---------------------------------------------------------------------------
 

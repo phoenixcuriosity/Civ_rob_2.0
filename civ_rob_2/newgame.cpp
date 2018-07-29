@@ -26,13 +26,13 @@
 #include "unit.h"
 #include "saveAndReload.h"
 #include "keyboardAndMouse.h"
-#include "createButton.h"
+#include "initAndError.h"
 
 using namespace std;
 
 void newgame(sysinfo& information, vector<Player*>& tabplayer){
 	logfileconsole("_Newgame Start_");
-	information.ecran.statescreen = STATEecrannewgame;
+	information.variable.statescreen = STATEecrannewgame;
 
 	unsigned int nbplayer = 0, initspace = 132, space = 32;
 
@@ -42,17 +42,17 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 
 	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
 		information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "Press Return or kpad_Enter to valid selection");
-		information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "How may player(s) (max 9):");
+		information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "How many player(s) (max 9):");
 	}
 	SDL_RenderPresent(information.ecran.renderer);
 	cinDigit(information, nbplayer, SCREEN_WIDTH / 2, initspace += space);
 
 	for (unsigned int i = 1; i < nbplayer + 1; i++){
-		information.variable.tabPlayerName.push_back("");
+		information.variable.s_player.tabPlayerName.push_back("");
 		writetxt(information, "Name of player nb:" + to_string(i), { 255, 0, 0, 255 }, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
 		SDL_RenderPresent(information.ecran.renderer);
-		cinAlphabet(information, information.variable.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
-		tabplayer.push_back(new Player(information.variable.tabPlayerName[i - 1]));
+		cinAlphabet(information, information.variable.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
+		tabplayer.push_back(new Player(information.variable.s_player.tabPlayerName[i - 1]));
 	}
 	groundgen(information);
 	newGameSettlerSpawn(information, tabplayer);
@@ -60,9 +60,9 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 	savePlayer(information, tabplayer);
 	
 	int initspacename = 200, spacename = 24;
-	information.ecran.statescreen = STATEmainmap;
+	information.variable.statescreen = STATEmainmap;
 	for(unsigned int i = 0; i < tabplayer.size(); i++)
-		createbutton(information, information.variable.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
+		createbutton(information, information.variable.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
 
 	
 	information.ecran.enableFPS = true;
@@ -227,8 +227,8 @@ void newGameSettlerSpawn(sysinfo& information, std::vector<Player*>& tabplayer){
 		association des vecteurs de position (x,y) avec les settlers de départ
 	*/
 	unsigned int selectunit = 0;
-	for (unsigned int p = 0; p < information.variable.unitNameMaxToCreate; p++){
-		if (information.variable.s_tabUnitAndSpec[p].name.compare("settler") == 0){
+	for (unsigned int p = 0; p < information.variable.s_player.unitNameMaxToCreate; p++){
+		if (information.variable.s_player.s_tabUnitAndSpec[p].name.compare("settler") == 0){
 			selectunit = p;
 			break;
 		}
@@ -238,9 +238,9 @@ void newGameSettlerSpawn(sysinfo& information, std::vector<Player*>& tabplayer){
 	for (unsigned int i = 0; i < tabplayer.size(); i++){
 		makeRandomPosTab(information, tabRandom, i);
 		tabplayer[i]->addUnit("settler", tabRandom[i].x, tabRandom[i].y,
-			information.variable.s_tabUnitAndSpec[selectunit].life, information.variable.s_tabUnitAndSpec[selectunit].atq,
-			information.variable.s_tabUnitAndSpec[selectunit].def, information.variable.s_tabUnitAndSpec[selectunit].movement,
-			information.variable.s_tabUnitAndSpec[selectunit].level);
+			information.variable.s_player.s_tabUnitAndSpec[selectunit].life, information.variable.s_player.s_tabUnitAndSpec[selectunit].atq,
+			information.variable.s_player.s_tabUnitAndSpec[selectunit].def, information.variable.s_player.s_tabUnitAndSpec[selectunit].movement,
+			information.variable.s_player.s_tabUnitAndSpec[selectunit].level);
 	}
 }
 

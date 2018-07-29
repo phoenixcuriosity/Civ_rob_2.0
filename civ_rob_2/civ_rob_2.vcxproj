@@ -89,7 +89,6 @@
     <ClCompile Include="citie.cpp" />
     <ClCompile Include="Cities.cpp" />
     <ClCompile Include="Citizen.cpp" />
-    <ClCompile Include="createButton.cpp" />
     <ClCompile Include="deleteAll.cpp" />
     <ClCompile Include="initAndError.cpp" />
     <ClCompile Include="keyboardAndMouse.cpp" />
@@ -112,7 +111,6 @@
     <ClInclude Include="Cities.h" />
     <ClInclude Include="Citizen.h" />
     <ClInclude Include="civ_lib.h" />
-    <ClInclude Include="createButton.h" />
     <ClInclude Include="deleteAll.h" />
     <ClInclude Include="initAndError.h" />
     <ClInclude Include="keyboardAndMouse.h" />

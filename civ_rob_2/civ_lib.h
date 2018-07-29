@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.7
+	last modification on this file on version:0.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -70,7 +70,7 @@ enum { noground, grass, water, deepwater, dirt, sand};
 enum unitclass{ biter, car, ouvrier_tier_1, ouvrier_tier_2, ouvrier_tier_3, robot, rocket, rover ,settler,
 	spitter, tank, transport_plan};
 enum { specnothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; // spécifications du terrain
-enum { STATEnothing, STATEecrantitre, STATEecrannewgame, STATEmainmap, STATEscience, STATEcitiemap };  // différents état de l'écran
+enum { STATEnothing, STATEecrantitre, STATEecrannewgame, STATEreload, STATEmainmap, STATEscience, STATEcitiemap };  // différents état de l'écran
 enum { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };	// spécifications de la séléction
 enum { cottage, hameau, village, ville, metropole, megalopole };
 
@@ -80,7 +80,6 @@ struct screen {
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
 
-	unsigned int statescreen = 0; // selectnothing par défaut
 	int optiontileSize = 32; // par défaut
 	std::string stringTileSize = std::to_string(optiontileSize);
 
@@ -121,11 +120,8 @@ struct tabUnitAndSpec {
 
 };
 
-typedef struct var var;
-struct var {
-	unsigned int nbturn = 0;
-
-	unsigned int select = selectnothing;
+typedef struct subcatPlayer subcatPlayer;
+struct subcatPlayer {
 	int selectTile = -1;
 	int selectCitie = -1;
 	int selectplayer = -1;
@@ -142,17 +138,32 @@ struct var {
 	unsigned int nbNoNamePlayer = 0;
 	unsigned int unitNameMaxToCreate = 0;
 	unsigned int citieNameMaxToCreate = 0;
-
-
+};
+typedef struct subcatSave subcatSave;
+struct subcatSave {
+	std::vector<unsigned int> tabSave;
+	unsigned int currentSave = 0;
+	unsigned int nbSave = 0;
+};
+typedef struct subcatWheel subcatWheel;
+struct subcatWheel {
 	unsigned int mouse_x = 0;
 	unsigned int mouse_y = 0;
 	unsigned int ywheel = 0;
 	unsigned int xwheel = 0;
+};
 
-	unsigned int currentSave = 0;
-	unsigned int nbSave = 0;
+typedef struct var var;
+struct var {
 
 	bool continuer = true;
+	unsigned int nbturn = 0;
+	unsigned int select = selectnothing;
+	unsigned int statescreen = 0; // selectnothing par défaut
+
+	subcatPlayer s_player;
+	subcatWheel s_wheel;
+	subcatSave s_save;
 };
 
 

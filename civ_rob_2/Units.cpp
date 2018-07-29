@@ -93,8 +93,9 @@ void Units::move(unsigned int& select, int& selectunit, int x, int y){
 		_x += x;
 		_y += y;
 		_movement--;
+		
 	}
-	else {
+	if (_movement == 0) {
 		select = selectnothing;
 		selectunit = -1;
 		_blit = 0;

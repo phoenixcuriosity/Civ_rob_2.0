@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.7
+	last modification on this file on version:0.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,10 +22,10 @@
 */
 
 #include "Buttons.h"
-#include "createButton.h"
+#include "sdl.h"
+#include "initAndError.h"
 
 using namespace std;
-
 
 
 Buttons::Buttons(SDL_Texture* image, const string& msg, unsigned int statescreen, unsigned int select, int xc, int yc, int w, int h,
@@ -63,6 +63,13 @@ unsigned int Buttons::searchButton(string& msg, unsigned int statescreen, signed
 					return 1;
 			}
 		}
+	}
+	return 0;
+}
+unsigned int Buttons::searchButtonName(string& msg, unsigned int statescreen) {
+	if (statescreen == this->GETstatescreen()) {
+		if (this->GETname().compare(msg) == 0)
+			return 1;
 	}
 	return 0;
 }
