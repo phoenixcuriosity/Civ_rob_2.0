@@ -310,6 +310,10 @@ void keySDLK_b(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
 		createcitie(information, tabplayer);
 }
+void keySDLK_i(sysinfo& information, vector<Player*>& tabplayer) {
+	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
+		irrigate(information, tabplayer);
+}
 
 void keySDLK_KP_1(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
@@ -375,24 +379,25 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 		}
 	}
 	// recherche du bouton par comparaison de string et des positions x et y du clic
-	for (unsigned int i = 0; i < information.tabbutton.size(); i++) { // recherche si une bouton est dans ces coordonnées
-		switch (information.variable.statescreen) {
-		case STATEmainmap:
-			if (information.tabbutton[i]->searchButton((string)"Ecran Titre", information.variable.statescreen, event.button.x, event.button.y)) {
+
+	switch (information.variable.statescreen) {
+	case STATEmainmap:
+		for (unsigned int i = 0; i < information.allButton.mainmap.size(); i++) {
+			if (information.allButton.mainmap[i]->searchButton((string)"Ecran Titre", information.variable.statescreen, event.button.x, event.button.y)) {
 				savemaps(information);
 				savePlayer(information, tabplayer);
 				logfileconsole("__________________________");
 				ecrantitre(information);
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Create Unit", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.tabbutton[i]->changeOn();
+			else if (information.allButton.mainmap[i]->searchButton((string)"Create Unit", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.mainmap[i]->changeOn();
 				if (information.variable.select != selectcreate)
 					information.variable.select = selectcreate;
 				else
 					information.variable.select = selectnothing;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Move Unit", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.tabbutton[i]->changeOn();
+			else if (information.allButton.mainmap[i]->searchButton((string)"Move Unit", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.mainmap[i]->changeOn();
 				if (information.variable.select != selectmove)
 					information.variable.select = selectmove;
 				else {
@@ -400,8 +405,8 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 					information.variable.select = selectnothing;
 				}
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Inspect", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.tabbutton[i]->changeOn();
+			else if (information.allButton.mainmap[i]->searchButton((string)"Inspect", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.mainmap[i]->changeOn();
 				if (information.variable.select != selectinspect)
 					information.variable.select = selectinspect;
 				else {
@@ -409,17 +414,25 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 					information.variable.select = selectnothing;
 				}
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Next Turn", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.mainmap[i]->searchButton((string)"Next Turn", information.variable.statescreen, event.button.x, event.button.y)) {
 				nextTurn(information, tabplayer);
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Delete Unit", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.tabbutton[i]->SETon(!information.tabbutton[i]->GETon());
+			else if (information.allButton.mainmap[i]->searchButton((string)"Delete Unit", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.mainmap[i]->SETon(!information.allButton.mainmap[i]->GETon());
 			}
 
+	
+			// reset de l'affichage On des boutons
+			for (unsigned int l = 0; l < information.allButton.mainmap.size(); l++) {
+				information.allButton.mainmap[l]->resetOnStatescreen(information.variable.select, selectnothing);
+				information.allButton.mainmap[l]->resetOnPlayer(information.variable.s_player.selectplayer, information.variable.s_player.tabPlayerName);
+			}
+		}
+		for (unsigned int i = 0; i < information.allButton.player.size(); i++) {
 			// player select
 			for (unsigned int l = 0; l < tabplayer.size(); l++) {
-				if (information.tabbutton[i]->searchButton((string)tabplayer[l]->GETname(), information.variable.statescreen, event.button.x, event.button.y)) {
-					information.tabbutton[i]->changeOn();
+				if (information.allButton.player[i]->searchButton((string)tabplayer[l]->GETname(), information.variable.statescreen, event.button.x, event.button.y)) {
+					information.allButton.player[i]->changeOn();
 					if (information.variable.s_player.selectplayer != l)
 						information.variable.s_player.selectplayer = l;
 					else
@@ -428,54 +441,57 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 					break;
 				}
 			}
-			// reset de l'affichage On des boutons
-			for (unsigned int l = 0; l < information.tabbutton.size(); l++) {
-				information.tabbutton[l]->resetOnStatescreen(information.variable.select, selectnothing);
-				information.tabbutton[l]->resetOnPlayer(information.variable.s_player.selectplayer, information.variable.s_player.tabPlayerName);
+			for (unsigned int l = 0; l < information.allButton.player.size(); l++) {
+				information.allButton.player[l]->resetOnStatescreen(information.variable.select, selectnothing);
+				information.allButton.player[l]->resetOnPlayer(information.variable.s_player.selectplayer, information.variable.s_player.tabPlayerName);
 			}
-			break;
-		case STATEecrantitre:
-			if (information.tabbutton[i]->searchButton((string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
+		}
+		break;
+	case STATEecrantitre:
+		for (unsigned int i = 0; i < information.allButton.ecrantitre.size(); i++) {
+			if (information.allButton.ecrantitre[i]->searchButton((string)"New Game", information.variable.statescreen, event.button.x, event.button.y)) {
 				newgame(information, tabplayer);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.ecrantitre[i]->searchButton((string)"Reload", information.variable.statescreen, event.button.x, event.button.y)) {
 				reloadScreen(information);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.ecrantitre[i]->searchButton((string)"Option", information.variable.statescreen, event.button.x, event.button.y)) {
 				//clearSave(information);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.ecrantitre[i]->searchButton((string)"Quit", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.continuer = false;
 				return;
 			}
-			break;
-		case STATEreload:
-			if (information.tabbutton[i]->searchButton((string)"Back", information.variable.statescreen, event.button.x, event.button.y)) {
+		}
+		break;
+	case STATEreload:
+		for (unsigned int i = 0; i < information.allButton.reload.size(); i++) {
+			if (information.allButton.reload[i]->searchButton((string)"Back", information.variable.statescreen, event.button.x, event.button.y)) {
 				ecrantitre(information);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Remove all saves", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.tabbutton[i]->changeOn();
-				reloadScreen(information);
+			else if (information.allButton.reload[i]->searchButton((string)"Remove all saves", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.reload[i]->changeOn();
 				clearSave(information);
+				reloadScreen(information);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Load", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.reload[i]->searchButton((string)"Load", information.variable.statescreen, event.button.x, event.button.y)) {
 				reload(information, tabplayer);
 				return;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Remove", information.variable.statescreen, event.button.x, event.button.y)) {
+			else if (information.allButton.reload[i]->searchButton((string)"Remove", information.variable.statescreen, event.button.x, event.button.y)) {
 				removeSave(information);
 				reloadScreen(information);
 				return;
 			}
 			else {
 				for (unsigned int j = 0; j < information.variable.s_save.nbSave; j++) {
-					if (information.tabbutton[i]->searchButton((string)"Save : " + to_string(information.variable.s_save.tabSave[j]), information.variable.statescreen, event.button.x, event.button.y)) {
-						information.tabbutton[i]->changeOn();
+					if (information.allButton.reload[i]->searchButton((string)"Save : " + to_string(information.variable.s_save.tabSave[j]), information.variable.statescreen, event.button.x, event.button.y)) {
+						information.allButton.reload[i]->changeOn();
 						information.variable.s_save.currentSave = information.variable.s_save.tabSave[j];
 						information.file.Savemaps = "save/" + to_string(information.variable.s_save.tabSave[j]) + "/Savemaps.txt";
 						information.file.SavePlayer = "save/" + to_string(information.variable.s_save.tabSave[j]) + "/SavePlayer.txt";
@@ -484,22 +500,24 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 					}
 				}
 			}
-			break;
-		case STATEcitiemap:
-			if (information.tabbutton[i]->searchButton((string)"Map", information.variable.statescreen, event.button.x, event.button.y)) {
+		}
+		break;
+	case STATEcitiemap:
+		for (unsigned int i = 0; i < information.allButton.citie.size(); i++) {
+			if (information.allButton.citie[i]->searchButton((string)"Map", information.variable.statescreen, event.button.x, event.button.y)) {
 				information.variable.s_player.selectCitie = -1;
 				information.variable.statescreen = STATEmainmap;
 				information.variable.select = selectnothing;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Build", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.tabbutton[i]->changeOn();
+			else if (information.allButton.citie[i]->searchButton((string)"Build", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.citie[i]->changeOn();
 				if (information.variable.select != selectcreate)
 					information.variable.select = selectcreate;
 				else
 					information.variable.select = selectnothing;
 			}
-			else if (information.tabbutton[i]->searchButton((string)"Place Citizen", information.variable.statescreen, event.button.x, event.button.y)) {
-				information.tabbutton[i]->changeOn();
+			else if (information.allButton.citie[i]->searchButton((string)"Place Citizen", information.variable.statescreen, event.button.x, event.button.y)) {
+				information.allButton.citie[i]->changeOn();
 				if (information.variable.select != selectmoveCitizen)
 					information.variable.select = selectmoveCitizen;
 				else
@@ -507,7 +525,7 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 			}
 			if (information.variable.select == selectcreate) {
 				for (unsigned int j = 0; j < information.variable.s_player.unitNameMaxToCreate; j++) {
-					if (information.tabbutton[i]->searchButton(information.variable.s_player.s_tabUnitAndSpec[j].name, information.variable.statescreen, event.button.x, event.button.y)) {
+					if (information.allButton.citie[i]->searchButton(information.variable.s_player.s_tabUnitAndSpec[j].name, information.variable.statescreen, event.button.x, event.button.y)) {
 						information.variable.s_player.toBuild = information.variable.s_player.s_tabUnitAndSpec[j].name;
 						tabplayer[information.variable.s_player.selectplayer]->addUnit(information.variable.s_player.s_tabUnitAndSpec[j].name,
 							tabplayer[information.variable.s_player.selectplayer]->GETthecitie(information.variable.s_player.selectCitie)->GETx(),
@@ -521,8 +539,8 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 					}
 				}
 			}
-			for (unsigned int l = 0; l < information.tabbutton.size(); l++)
-				information.tabbutton[l]->resetOnStatescreen(information.variable.select, selectnothing);
+			for (unsigned int l = 0; l < information.allButton.citie.size(); l++)
+				information.allButton.citie[l]->resetOnStatescreen(information.variable.select, selectnothing);
 			break;
 		}
 	}

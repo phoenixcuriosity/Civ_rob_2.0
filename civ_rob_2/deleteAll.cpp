@@ -32,8 +32,24 @@ void deleteAll(sysinfo& information, vector<Player*>& tabplayer){
 	for (unsigned int i = 1; i < 80; i++) 
 		TTF_CloseFont(information.allTextures.font[i]);
 
-	deleteDyTabPlayerAndTextures(information.allTextures.tabTexture, "Texture");
-	deleteDyTabPlayerAndTextures(information.tabbutton, "Button");
+	deleteDyTabPlayerAndTextures(information.allTextures.ground, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.groundSpec, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.unit, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.barLife, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.colorapp, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.colorappTile, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.miscTexture, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.txtecrantitre, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.txtnewgame, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.txtmainmap, "Texture");
+	deleteDyTabPlayerAndTextures(information.allTextures.txtcitiemap, "Texture");
+
+	deleteDyTabPlayerAndTextures(information.allButton.ecrantitre, "Button");
+	deleteDyTabPlayerAndTextures(information.allButton.player, "Button");
+	deleteDyTabPlayerAndTextures(information.allButton.reload, "Button");
+	deleteDyTabPlayerAndTextures(information.allButton.mainmap, "Button");
+	deleteDyTabPlayerAndTextures(information.allButton.citie, "Button");
+
 	deleteDyTabPlayerAndTextures(tabplayer, "player");
 	SDL_DestroyRenderer(information.ecran.renderer);
 	SDL_DestroyWindow(information.ecran.window);

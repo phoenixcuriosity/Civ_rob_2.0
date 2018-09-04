@@ -1,8 +1,16 @@
-grenier
-1
-0
-0
-0
+Number_Of_Buildings= 3
 
-2
-5
+name= barrack
+pv= 20
+workToBuild= 50
+maintenance= 1
+
+name= granary
+pv= 10
+workToBuild= 50
+maintenance= 1
+
+name= palace
+pv= 100
+workToBuild= 500
+maintenance= 10

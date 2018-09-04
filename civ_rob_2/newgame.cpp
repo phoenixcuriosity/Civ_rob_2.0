@@ -40,9 +40,9 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 
 	SDL_RenderClear(information.ecran.renderer);
 
-	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++) {
-		information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "Press Return or kpad_Enter to valid selection");
-		information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "How many player(s) (max 9):");
+	for (unsigned int i = 0; i < information.allTextures.txtnewgame.size(); i++) {
+		information.allTextures.txtnewgame[i]->renderTextureTestString(information.ecran.renderer, "Press Return or kpad_Enter to valid selection");
+		information.allTextures.txtnewgame[i]->renderTextureTestString(information.ecran.renderer, "How many player(s) (max 9):");
 	}
 	SDL_RenderPresent(information.ecran.renderer);
 	cinDigit(information, nbplayer, SCREEN_WIDTH / 2, initspace += space);
@@ -62,7 +62,7 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 	int initspacename = 200, spacename = 24;
 	information.variable.statescreen = STATEmainmap;
 	for(unsigned int i = 0; i < tabplayer.size(); i++)
-		createbutton(information, information.variable.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
+		createbutton(information, information.allButton.player,information.variable.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
 
 	
 	information.ecran.enableFPS = true;

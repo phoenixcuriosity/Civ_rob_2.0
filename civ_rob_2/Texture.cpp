@@ -68,6 +68,16 @@ void Texture::renderTextureTestStates(SDL_Renderer*& renderer, unsigned int stat
 		render(renderer, xc, yc);
 }
 
+void Texture::renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc, int yc, unsigned int angle) {
+	if (_statescreen == statescreen) {
+		if (xc != -1 && yc != -1) {
+			_dst.x = xc;
+			_dst.y = yc;
+		}
+		SDL_RenderCopyEx(renderer, _texture, NULL, &_dst, angle, NULL, SDL_FLIP_NONE);
+	}
+}
+
 void Texture::renderTextureTestString(SDL_Renderer*& renderer, const std::string& msg, int xc, int yc) {
 	if (_name == msg)
 		render(renderer, xc, yc);

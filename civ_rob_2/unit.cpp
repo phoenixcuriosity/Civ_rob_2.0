@@ -144,4 +144,8 @@ int searchToMove(sysinfo& information, vector<Player*>& tabplayer, int x, int y)
 	return 1;
 }
 
+bool irrigate(sysinfo&, std::vector<Player*>&) {
+	return false;
+}
+
 

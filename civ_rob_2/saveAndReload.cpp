@@ -191,7 +191,7 @@ void reload(sysinfo& information, vector<Player*>& tabplayer) {
 					savePlayer >> destroy;
 					savePlayer >> name;
 					tabplayer.push_back(new Player(name));
-					createbutton(information, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename);
+					createbutton(information, information.allButton.player,name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename);
 
 					savePlayer >> destroy;
 					savePlayer >> nbunit;
@@ -300,10 +300,10 @@ void removeSave(sysinfo& information) {
 			else
 				information.variable.s_save.tabSave.erase(information.variable.s_save.tabSave.begin() + information.variable.s_save.currentSave - 1);
 
-			for (unsigned int i = 0; i < information.tabbutton.size(); i++) {
-				if (information.tabbutton[i]->searchButtonName("Save : " + to_string(information.variable.s_save.currentSave), information.variable.statescreen)) {
-					delete information.tabbutton[i];
-					information.tabbutton.erase(information.tabbutton.begin() + i);
+			for (unsigned int i = 0; i < information.allButton.reload.size(); i++) {
+				if (information.allButton.reload[i]->searchButtonName("Save : " + to_string(information.variable.s_save.currentSave), information.variable.statescreen)) {
+					delete information.allButton.reload[i];
+					information.allButton.reload.erase(information.allButton.reload.begin() + i);
 					break;
 				}
 			}
@@ -329,11 +329,11 @@ void clearSave(sysinfo& information) {
 	logfileconsole("_clearSave Start_");
 
 
-	for (unsigned int i = 0; i < information.tabbutton.size(); i++) {
+	for (unsigned int i = 0; i < information.allButton.reload.size(); i++) {
 		for (unsigned int j = 0; j < information.variable.s_save.nbSave; j++) {
-			if (information.tabbutton[i]->searchButtonName("Save : " + to_string(information.variable.s_save.tabSave[j]), information.variable.statescreen)) {
-				delete information.tabbutton[i];
-				information.tabbutton.erase(information.tabbutton.begin() + i);
+			if (information.allButton.reload[i]->searchButtonName("Save : " + to_string(information.variable.s_save.tabSave[j]), information.variable.statescreen)) {
+				delete information.allButton.reload[i];
+				information.allButton.reload.erase(information.allButton.reload.begin() + i);
 			}
 		}
 	}

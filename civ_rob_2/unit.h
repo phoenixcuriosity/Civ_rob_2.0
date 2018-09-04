@@ -34,5 +34,6 @@ void searchunit(sysinfo&);
 void searchUnitTile(sysinfo&, std::vector<Player*>&);
 void tryToMove(sysinfo&, std::vector<Player*>&, int, int);
 int searchToMove(sysinfo&, std::vector<Player*>&, int, int);
+bool irrigate(sysinfo&, std::vector<Player*>&);
 
 #endif

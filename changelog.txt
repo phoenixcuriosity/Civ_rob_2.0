@@ -1,3 +1,15 @@
+This is a list of major changes in Civ_rob_2 version history.
+
+---------------------------------------------------------------------------
+0.10: 
+---------------------------------------------------------------------------
+
+-> Change:
+	- allButton
+	- allTexture
+	
+
+
 
 This is a list of major changes in Civ_rob_2 version history.
 

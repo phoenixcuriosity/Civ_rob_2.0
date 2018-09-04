@@ -70,6 +70,9 @@ void mainLoop(sysinfo& information, vector<Player*>& tabplayer){
 				case SDLK_b:
 					keySDLK_b(information, tabplayer);
 					break;
+				case SDLK_i:
+					keySDLK_i(information, tabplayer);
+					break;
 				case SDLK_KP_1:
 					keySDLK_KP_1(information, tabplayer);
 					break;

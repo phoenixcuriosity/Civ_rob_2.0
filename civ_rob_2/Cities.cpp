@@ -56,27 +56,27 @@ std::vector<Citizen> createCitizen(tile tiles){
 
 
 void Cities::afficher(sysinfo& information) {
-	for (unsigned int i = information.allTextures.indexEndColorAppTileStartMiscTexture; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-		information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, _image, _x, _y);
-	for (unsigned int i = information.allTextures.indexEndMiscTextureStartWrite; i < information.allTextures.tabTexture.size(); i++)
-		information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, _name, _x, _y + tileSize);
+	for (unsigned int i = 0; i < information.allTextures.miscTexture.size(); i++)
+		information.allTextures.miscTexture[i]->renderTextureTestString(information.ecran.renderer, _image, _x, _y);
+	for (unsigned int i = 0; i < information.allTextures.txtcitiemap.size(); i++)
+		information.allTextures.txtcitiemap[i]->renderTextureTestString(information.ecran.renderer, _name, _x, _y + tileSize);
 }
 
 
 void Cities::affichercitiemap(sysinfo& information) {
 	for (unsigned int i = 0; i < initSizeView*initSizeView; i++) {
 		if (_tiles[i].tile_stringground.compare("grass.bmp") == 0)
-			information.allTextures.tabTexture[0]->renderTexture(information.ecran.renderer, _tiles[i].tile_x, _tiles[i].tile_y);
+			information.allTextures.ground[0]->renderTexture(information.ecran.renderer, _tiles[i].tile_x, _tiles[i].tile_y);
 		else if (_tiles[i].tile_stringground.compare("water.bmp") == 0)
-			information.allTextures.tabTexture[1]->renderTexture(information.ecran.renderer, _tiles[i].tile_x, _tiles[i].tile_y);
+			information.allTextures.ground[1]->renderTexture(information.ecran.renderer, _tiles[i].tile_x, _tiles[i].tile_y);
 
 		if (_tiles[i].tile_spec != 0) {
-			for (unsigned int l = information.allTextures.indexEndGroundStartSpec; l < information.allTextures.indexEndSpecStartUnit; l++)
-				information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, _tiles[i].tile_stringspec, _tiles[i].tile_x, _tiles[i].tile_y);
+			for (unsigned int l = 0; l < information.allTextures.groundSpec.size(); l++)
+				information.allTextures.groundSpec[l]->renderTextureTestString(information.ecran.renderer, _tiles[i].tile_stringspec, _tiles[i].tile_x, _tiles[i].tile_y);
 		}
 		if (_tiles[i].appartenance != -1) {
-			for (unsigned int l = information.allTextures.indexEndColorAppStartColorAppTile; l < information.allTextures.indexEndColorAppTileStartMiscTexture; l++)
-				information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, "ColorPlayerTile" + to_string(_tiles[i].appartenance) + ".bmp", _tiles[i].tile_x, _tiles[i].tile_y);
+			for (unsigned int l = 0; l < information.allTextures.colorappTile.size(); l++)
+				information.allTextures.colorappTile[l]->renderTextureTestString(information.ecran.renderer, "ColorPlayerTile" + to_string(_tiles[i].appartenance) + ".bmp", _tiles[i].tile_x, _tiles[i].tile_y);
 		}
 	}
 }

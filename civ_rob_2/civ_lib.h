@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	last modification on this file on version:0.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,7 +47,7 @@
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1088;
-const int tileSize = 32;
+const int tileSize = 64;
 const unsigned int buildingSize = 128;
 const unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
 const unsigned int minusTiles = (SCREEN_HEIGHT / tileSize) * toolBarSize;
@@ -80,8 +80,7 @@ struct screen {
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
 
-	int optiontileSize = 32; // par défaut
-	std::string stringTileSize = std::to_string(optiontileSize);
+	std::string stringTileSize = std::to_string(tileSize);
 
 	bool enableFPS = false;
 	LTimer fpsTimer;
@@ -198,15 +197,29 @@ struct map {
 
 typedef struct texture texture;
 struct texture {
-	std::vector<Texture*> tabTexture;
+	std::vector<Texture*> ground;
+	std::vector<Texture*> groundSpec;
+	std::vector<Texture*> unit;
+	std::vector<Texture*> barLife;
+	std::vector<Texture*> colorapp;
+	std::vector<Texture*> colorappTile;
+	std::vector<Texture*> miscTexture;
+
+	std::vector<Texture*> txtecrantitre;
+	std::vector<Texture*> txtnewgame;
+	std::vector<Texture*> txtmainmap;
+	std::vector<Texture*> txtcitiemap;
+
 	TTF_Font *font[80];
-	unsigned int indexEndGroundStartSpec = 0;
-	unsigned int indexEndSpecStartUnit = 0;
-	unsigned int indexEndUnitStartBarLife = 0;
-	unsigned int indexEndBarLifeStartColorApp = 0;
-	unsigned int indexEndColorAppStartColorAppTile = 0;
-	unsigned int indexEndColorAppTileStartMiscTexture = 0;
-	unsigned int indexEndMiscTextureStartWrite = 0;
+};
+
+typedef struct button button;
+struct button {
+	std::vector<Buttons*> ecrantitre;
+	std::vector<Buttons*> player;
+	std::vector<Buttons*> reload;
+	std::vector<Buttons*> mainmap;
+	std::vector<Buttons*> citie;
 };
 
 typedef struct sysinfo sysinfo;
@@ -215,7 +228,7 @@ struct sysinfo {
 	fichier file;
 	var variable;
 	map maps;
-	std::vector<Buttons*> tabbutton;
+	button allButton;
 	texture allTextures;
 };
 

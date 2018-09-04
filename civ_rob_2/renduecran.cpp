@@ -38,10 +38,10 @@ void ecrantitre(sysinfo& information){
 	information.variable.statescreen = STATEecrantitre;
 	SDL_RenderClear(information.ecran.renderer);
 
-	for (unsigned int i = 0; i < information.allTextures.tabTexture.size(); i++)
-		information.allTextures.tabTexture[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
-	for (unsigned int i = 0; i < information.tabbutton.size(); i++)
-		information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+	for (unsigned int i = 0; i < information.allTextures.txtecrantitre.size(); i++)
+		information.allTextures.txtecrantitre[i]->renderTextureTestStates(information.ecran.renderer, information.variable.statescreen, information.variable.select);
+	for (unsigned int i = 0; i < information.allButton.ecrantitre.size(); i++)
+		information.allButton.ecrantitre[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 	
 	
 	SDL_RenderPresent(information.ecran.renderer);
@@ -53,8 +53,8 @@ void reloadScreen(sysinfo& information) {
 	information.variable.statescreen = STATEreload;
 	SDL_RenderClear(information.ecran.renderer);
 
-	for (unsigned int i = 0; i < information.tabbutton.size(); i++)
-		information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+	for (unsigned int i = 0; i < information.allButton.reload.size(); i++)
+		information.allButton.reload[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 
 
 	SDL_RenderPresent(information.ecran.renderer);
@@ -73,11 +73,13 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 		// affiche la texture grise de la toolbar
 		for (unsigned int i = 0; i < toolBarSize; i++){
 			for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++)
-				information.allTextures.tabTexture[3]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
+				information.allTextures.ground[3]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
 		}
 
-		for (unsigned int i = 0; i < information.tabbutton.size(); i++)
-			information.tabbutton[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+		for (unsigned int i = 0; i < information.allButton.mainmap.size(); i++)
+			information.allButton.mainmap[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
+		for (unsigned int i = 0; i < information.allButton.player.size(); i++)
+			information.allButton.player[i]->renderButton(information.ecran.renderer, information.variable.statescreen);
 
 
 
@@ -85,37 +87,37 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 
 		// affiche les unités pour rendre l'unité à créer
 		if (information.variable.select == selectcreate) {
-			for (unsigned int i = information.allTextures.indexEndSpecStartUnit; i < information.allTextures.indexEndUnitStartBarLife; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, information.variable.s_player.unitNameToCreate);
+			for (unsigned int i = 0; i < information.allTextures.unit.size(); i++)
+				information.allTextures.unit[i]->renderTextureTestString(information.ecran.renderer, information.variable.s_player.unitNameToCreate);
 		}
 
 		// affiche tous les textes selectionnés
-		for (unsigned int i = information.allTextures.indexEndMiscTextureStartWrite; i < information.allTextures.tabTexture.size(); i++) {
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Select:", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Turn :", information.variable.statescreen);
+		for (unsigned int i = 0; i < information.allTextures.txtmainmap.size(); i++) {
+			information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Select:", information.variable.statescreen);
+			information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Turn :", information.variable.statescreen);
 
 			switch (information.variable.select){
 			case selectnothing:
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "selectnothing");
+				information.allTextures.txtmainmap[i]->renderTextureTestString(information.ecran.renderer, "selectnothing");
 				break;
 			case selectcreate:
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Scroll up or down", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Right click to create", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "create : ", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectcreate", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, information.variable.s_player.unitNameToCreate);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Scroll up or down", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Right click to create", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "create : ", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectcreate", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestString(information.ecran.renderer, information.variable.s_player.unitNameToCreate);
 				break;
 			case selectmove:
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Pick the unit to move", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "with Right click", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectmove", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Pick the unit to move", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "with Right click", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectmove", information.variable.statescreen);
 				if (information.variable.s_player.selectunit != -1)
 					tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->cmpblit();
 				break;
 			case selectinspect:
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Pick the unit to inspect", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "with Right click", information.variable.statescreen);
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectinspect", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Pick the unit to inspect", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "with Right click", information.variable.statescreen);
+				information.allTextures.txtmainmap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectinspect", information.variable.statescreen);
 				if (information.variable.s_player.selectunit != -1)
 					tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->afficherstat(information);
 				break;
@@ -129,8 +131,8 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 						// affiche pour chaque joueurs les unités existantes (avec les stats)
 						tabplayer[i]->GETtheunit(j)->afficher(information);
 						tabplayer[i]->GETtheunit(j)->afficherBardeVie(information);
-						for (unsigned int h = information.allTextures.indexEndBarLifeStartColorApp; h < information.allTextures.indexEndColorAppTileStartMiscTexture; h++)
-							information.allTextures.tabTexture[h]->renderTextureTestString(information.ecran.renderer, "ColorPlayer" + to_string(i) + ".bmp", tabplayer[i]->GETtheunit(j)->GETx(), tabplayer[i]->GETtheunit(j)->GETy() + tileSize);
+						for (unsigned int h = 0; h < information.allTextures.colorapp.size(); h++)
+							information.allTextures.colorapp[h]->renderTextureTestString(information.ecran.renderer, "ColorPlayer" + to_string(i) + ".bmp", tabplayer[i]->GETtheunit(j)->GETx(), tabplayer[i]->GETtheunit(j)->GETy() + tileSize);
 					}
 				}
 				if (tabplayer[i]->GETtabcities().size() != 0) {
@@ -166,20 +168,20 @@ void afficherSuperTiles(sysinfo& information) {
 		for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++) {
 			// attention tabtexture 0,1,2 sont réservés, à changer si nécessaire
 			if (information.maps.tiles[k].tile_ground == grass)
-				information.allTextures.tabTexture[0]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
+				information.allTextures.ground[0]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
 			else if (information.maps.tiles[k].tile_ground == water)
-				information.allTextures.tabTexture[1]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
+				information.allTextures.ground[1]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
 			else if (information.maps.tiles[k].tile_ground == deepwater)
-				information.allTextures.tabTexture[2]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
+				information.allTextures.ground[2]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
 
 
 			if (information.maps.tiles[k].tile_spec != 0) {
-				for (unsigned int l = information.allTextures.indexEndGroundStartSpec; l < information.allTextures.indexEndSpecStartUnit; l++)
-					information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, information.maps.tiles[k].tile_stringspec, information.maps.tiles[k].tile_x, information.maps.tiles[k].tile_y);
+				for (unsigned int l = 0; l < information.allTextures.groundSpec.size(); l++)
+					information.allTextures.groundSpec[l]->renderTextureTestString(information.ecran.renderer, information.maps.tiles[k].tile_stringspec, information.maps.tiles[k].tile_x, information.maps.tiles[k].tile_y);
 			}
 			if (information.maps.tiles[k].appartenance != -1) {
-				for (unsigned int l = information.allTextures.indexEndColorAppStartColorAppTile; l < information.allTextures.indexEndColorAppTileStartMiscTexture; l++)
-					information.allTextures.tabTexture[l]->renderTextureTestString(information.ecran.renderer, "ColorPlayerTile" + to_string(information.maps.tiles[k].appartenance) + ".bmp", information.maps.tiles[k].tile_x, information.maps.tiles[k].tile_y);
+				for (unsigned int l = 0; l < information.allTextures.colorappTile.size(); l++)
+					information.allTextures.colorappTile[l]->renderTextureTestString(information.ecran.renderer, "ColorPlayerTile" + to_string(information.maps.tiles[k].appartenance) + ".bmp", information.maps.tiles[k].tile_x, information.maps.tiles[k].tile_y);
 			}
 			
 			k++;
@@ -198,11 +200,11 @@ void citiemap(sysinfo& information, std::vector<Player*>& tabplayer) {
 	if (information.variable.select != selectcreate)
 		valid = 2;
 
-	for (unsigned int i = 0; i < information.tabbutton.size(); i++){
-		if (information.tabbutton[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Map")){ i++; checkButton++; }
-		if (information.tabbutton[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Build")){ i++; checkButton++; }
-		if (information.tabbutton[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Food")){ i++; checkButton++; }
-		if (information.tabbutton[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Place Citizen")){ i++; checkButton++; }
+	for (unsigned int i = 0; i < information.allButton.citie.size(); i++){
+		if (information.allButton.citie[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Map")){ i++; checkButton++; }
+		if (information.allButton.citie[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Build")){ i++; checkButton++; }
+		if (information.allButton.citie[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Food")){ i++; checkButton++; }
+		if (information.allButton.citie[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, (string)"Place Citizen")){ i++; checkButton++; }
 
 		if (information.variable.select == selectcreate){
 			initspace = 96;
@@ -211,45 +213,43 @@ void citiemap(sysinfo& information, std::vector<Player*>& tabplayer) {
 					buildName = information.variable.s_player.s_tabUnitAndSpec[information.variable.s_player.unitToCreate + j].name;
 				else
 					break;
-				if (information.tabbutton[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, buildName, SCREEN_WIDTH / 2, initspace += space)){ i++; checkButton++; }
+				if (information.allButton.citie[i]->renderButtonTestString(information.ecran.renderer, information.variable.statescreen, buildName, SCREEN_WIDTH / 2, initspace += space)){ i++; checkButton++; }
 			}
 		}
 		if (checkButton == valid) break;
 	}
 
-	for (unsigned int i = information.allTextures.indexEndMiscTextureStartWrite; i < information.allTextures.tabTexture.size(); i++) {
+	for (unsigned int i = 0; i < information.allTextures.txtcitiemap.size(); i++) {
 		initspace = 96;
 		switch (information.variable.select){
 		case selectcreate:
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Scroll up or down", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Left click to Select", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "create : ", information.variable.statescreen);
-			information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectcreate", information.variable.statescreen);
-			
-			
+			information.allTextures.txtcitiemap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Scroll up or down", information.variable.statescreen);
+			information.allTextures.txtcitiemap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "Left click to Select", information.variable.statescreen);
+			information.allTextures.txtcitiemap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "create : ", information.variable.statescreen);
+			information.allTextures.txtcitiemap[i]->renderTextureTestStringAndStates(information.ecran.renderer, "selectcreate", information.variable.statescreen);
 			break;
 		}
 	}
 
 	if (information.variable.select == selectcreate){
-		for (unsigned int i = information.allTextures.indexEndSpecStartUnit; i < information.allTextures.indexEndUnitStartBarLife; i++){
+		for (unsigned int i = 0; i < information.allTextures.unit.size(); i++){
 			initspace = 96;
 			for (unsigned int j = 0; j < 10; j++){
 				if (information.variable.s_player.unitToCreate + j < information.variable.s_player.unitNameMaxToCreate)
 					buildName = information.variable.s_player.s_tabUnitAndSpec[information.variable.s_player.unitToCreate + j].name;
 				else
 					break;
-				information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer, buildName, STATEnothing, (SCREEN_WIDTH / 2) - 50, initspace += space);
+				information.allTextures.unit[i]->renderTextureTestStringAndStates(information.ecran.renderer, buildName, STATEnothing, (SCREEN_WIDTH / 2) - 50, initspace += space);
 			}
 		}
-		for (unsigned int i = information.allTextures.indexEndMiscTextureStartWrite; i < information.allTextures.tabTexture.size(); i++){
+		for (unsigned int i = 0; i < information.allTextures.txtcitiemap.size(); i++){
 			initspace = 96;
 			for (unsigned int j = 0; j < 10; j++){
 				if (information.variable.s_player.unitToCreate + j < information.variable.s_player.unitNameMaxToCreate)
 					buildName = information.variable.s_player.s_tabUnitAndSpec[information.variable.s_player.unitToCreate + j].name;
 				else
 					break;
-				if (information.allTextures.tabTexture[i]->renderTextureTestStringAndStates(information.ecran.renderer,
+				if (information.allTextures.txtcitiemap[i]->renderTextureTestStringAndStates(information.ecran.renderer,
 					"life:" + to_string(information.variable.s_player.s_tabUnitAndSpec[information.variable.s_player.unitToCreate + j].life) +
 					"/atq:" + to_string(information.variable.s_player.s_tabUnitAndSpec[information.variable.s_player.unitToCreate + j].atq) +
 					"/def:" + to_string(information.variable.s_player.s_tabUnitAndSpec[information.variable.s_player.unitToCreate + j].def) +

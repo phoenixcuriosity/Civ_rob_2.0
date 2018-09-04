@@ -37,6 +37,7 @@ void cinDigit(sysinfo&, unsigned int&, unsigned int, unsigned int&);
 void cinAlphabet(sysinfo&, std::string&, unsigned int, unsigned int&);
 
 void keySDLK_b(sysinfo&, std::vector<Player*>&);
+void keySDLK_i(sysinfo&, std::vector<Player*>&);
 
 void keySDLK_KP_1(sysinfo&, std::vector<Player*>&);
 void keySDLK_KP_2(sysinfo&, std::vector<Player*>&);

@@ -56,6 +56,7 @@ public:
 	virtual void render(SDL_Renderer*&, int = -1, int = -1);
 	virtual void renderTexture(SDL_Renderer*&, int = -1, int = -1);
 	virtual void renderTextureTestStates(SDL_Renderer*&,unsigned int, unsigned int, int = -1, int = -1);
+	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc = -1, int yc = -1, unsigned int angle = 0);
 	virtual void renderTextureTestString(SDL_Renderer*&, const std::string&, int = -1, int = -1);
 	virtual bool renderTextureTestStringAndStates(SDL_Renderer*&, const std::string&, unsigned int, int = -1, int = -1);
 

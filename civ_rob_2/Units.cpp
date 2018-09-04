@@ -127,8 +127,8 @@ int Units::testPos(int mouse_x, int mouse_y) {
 
 void Units::afficher(sysinfo& information){
 	if (_show) {
-		for (unsigned int i = information.allTextures.indexEndSpecStartUnit; i < information.allTextures.indexEndUnitStartBarLife; i++)
-			information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, _name, _x, _y);
+		for (unsigned int i = 0; i < information.allTextures.unit.size(); i++)
+			information.allTextures.unit[i]->renderTextureTestString(information.ecran.renderer, _name, _x, _y);
 		//logfileconsole("Afficher Unit Success");
 	}
 }
@@ -136,48 +136,48 @@ void Units::afficher(sysinfo& information){
 void Units::afficherBardeVie(sysinfo& information){
 	if (_show) {
 		if (_life == _maxlife) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "maxlife.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "maxlife.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1))){
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.9life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.9life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.8life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.8life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.7life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.7life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.6life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.6life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.5life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.5life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.4life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.4life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.3life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.3life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.2life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.2life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.1life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.1life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.9))) {
-			for (unsigned int i = information.allTextures.indexEndUnitStartBarLife; i < information.allTextures.indexEndMiscTextureStartWrite; i++)
-				information.allTextures.tabTexture[i]->renderTextureTestString(information.ecran.renderer, "0.0life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.0life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
 		}
 	}
 }
