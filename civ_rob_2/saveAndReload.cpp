@@ -191,7 +191,8 @@ void reload(sysinfo& information, vector<Player*>& tabplayer) {
 					savePlayer >> destroy;
 					savePlayer >> name;
 					tabplayer.push_back(new Player(name));
-					createbutton(information, information.allButton.player,name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename);
+					createbutton(information, information.allButton.player,
+						shaded, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename);
 
 					savePlayer >> destroy;
 					savePlayer >> nbunit;

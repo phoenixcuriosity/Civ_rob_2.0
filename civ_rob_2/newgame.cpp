@@ -49,7 +49,7 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 
 	for (unsigned int i = 1; i < nbplayer + 1; i++){
 		information.variable.s_player.tabPlayerName.push_back("");
-		writetxt(information, "Name of player nb:" + to_string(i), { 255, 0, 0, 255 }, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
+		writetxt(information, blended,"Name of player nb:" + to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
 		SDL_RenderPresent(information.ecran.renderer);
 		cinAlphabet(information, information.variable.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
 		tabplayer.push_back(new Player(information.variable.s_player.tabPlayerName[i - 1]));
@@ -62,7 +62,8 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 	int initspacename = 200, spacename = 24;
 	information.variable.statescreen = STATEmainmap;
 	for(unsigned int i = 0; i < tabplayer.size(); i++)
-		createbutton(information, information.allButton.player,information.variable.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
+		createbutton(information, information.allButton.player,
+			shaded, information.variable.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
 
 	
 	information.ecran.enableFPS = true;
@@ -113,15 +114,15 @@ void groundgen(sysinfo& information){
 					switch (randomspecgrass) {
 					case 1:
 						information.maps.tiles[k].tile_spec = coal;
-						information.maps.tiles[k].tile_stringspec = "coal.bmp";
+						information.maps.tiles[k].tile_stringspec = "coal.png";
 						break;
 					case 2:
 						information.maps.tiles[k].tile_spec = copper;
-						information.maps.tiles[k].tile_stringspec = "copper.bmp";
+						information.maps.tiles[k].tile_stringspec = "copper.png";
 						break;
 					case 3:
 						information.maps.tiles[k].tile_spec = iron;
-						information.maps.tiles[k].tile_stringspec = "iron.bmp";
+						information.maps.tiles[k].tile_stringspec = "iron.png";
 						break;
 					case 4:
 						information.maps.tiles[k].tile_spec = tree;
@@ -129,11 +130,11 @@ void groundgen(sysinfo& information){
 						break;
 					case 5:
 						information.maps.tiles[k].tile_spec = stone;
-						information.maps.tiles[k].tile_stringspec = "stone.bmp";
+						information.maps.tiles[k].tile_stringspec = "stone.png";
 						break;
 					case 6:
 						information.maps.tiles[k].tile_spec = uranium;
-						information.maps.tiles[k].tile_stringspec = "uranium.bmp";
+						information.maps.tiles[k].tile_stringspec = "uranium.png";
 						break;
 					case 7:
 						information.maps.tiles[k].tile_spec = horse;

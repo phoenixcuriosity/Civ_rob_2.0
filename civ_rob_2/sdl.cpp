@@ -108,19 +108,14 @@ void initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]){
 
 
 
-SDL_Texture* renderText(SDL_Renderer*& renderer, const std::string &message, SDL_Color color, TTF_Font* font){
-	
-	SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), color);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
-	if (texture == nullptr)
-		logfileconsole("___________ERROR : renderText nullptr for : " + message);
-	SDL_FreeSurface(surf);
-	return texture;
-}
+SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font) {
+	SDL_Surface *surf = nullptr;
 
-SDL_Texture* renderTextShaded(SDL_Renderer*& renderer, const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font){
+	if (type == blended)
+		surf = TTF_RenderText_Blended(font, message.c_str(), color);
+	else if (type == shaded)
+		surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
 
-	SDL_Surface *surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
 	if (texture == nullptr)
 		logfileconsole("___________ERROR : renderTextShaded nullptr for : " + message);
@@ -128,25 +123,35 @@ SDL_Texture* renderTextShaded(SDL_Renderer*& renderer, const std::string &messag
 	return texture;
 }
 
-void loadImage(sysinfo& information, std::vector<Texture*>& tabTexture, const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, int cnt) {
+void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
+	const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt) {
 
 
-	int iW = 0, iH = 0, xc = 0, yc = 0;
+	int xc = 0, yc = 0, wt = 0, ht = 0;
 	if (x != -1 && y != -1)
 		xc = x, yc = y;
 
 	SDL_Texture* newTexture = NULL;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (w == 0 && h == 0) {
+		wt = loadedSurface->w;
+		ht = loadedSurface->h;
+	}
+	else {
+		wt = w;
+		ht = h;
+	}
+
 	if (loadedSurface != NULL) {
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
-		newTexture = SDL_CreateTextureFromSurface(information.ecran.renderer, loadedSurface);
+		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 		if (newTexture != NULL) {
 			if (alpha != (Uint8)255) {
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 					logSDLError(cout, "alpha : ");
 			}
-			centrage(xc, yc, loadedSurface->w, loadedSurface->h, cnt);
-			tabTexture.push_back(new Texture(newTexture, msg, information.variable.statescreen, information.variable.select, xc, yc, loadedSurface->w, loadedSurface->h));
+			centrage(xc, yc, wt, ht, cnt);
+			tabTexture.push_back(new Texture(newTexture, msg, statescreen, select, xc, yc, wt, ht));
 		}
 		else
 			logfileconsole("___________ERROR : loadImage : cannot create Texture from : " + path);
@@ -156,31 +161,65 @@ void loadImage(sysinfo& information, std::vector<Texture*>& tabTexture, const st
 		logfileconsole("___________ERROR : loadImage : path or image are corrupt : " + path);
 }
 
-void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture,const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderText(information.ecran.renderer, msg, color, information.allTextures.font[size]);
-	int xc = x, yc = y, iW = 0, iH = 0;
-	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-	centrage(xc, yc, iW, iH, cnt);
-	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
-}
-void loadwritetxtshaded(sysinfo& information, std::vector<Texture*>& tabTexture,const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
+void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt) {
+	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
 	int xc = x, yc = y, iW = 0, iH = 0;
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
 	tabTexture.push_back(new Texture(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH));
 }
 
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton) {
+	int iW = 0, iH = 0;
+	unsigned int i = 0;
+	int xc = 0, yc = 0;
+	SDL_Texture *image = nullptr;
+	SDL_Texture *imageOn = nullptr;
 
+	if (tabbutton.size() > 0) {
+		i++;
+	}
+	for (i; i <= tabbutton.size(); i++) {
+		if (i == tabbutton.size()) {
+			image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
+			imageOn = renderText(information.ecran.renderer, type, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
+			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+			searchcenter(x, y, xc, yc, iW, iH, centerbutton);
+			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, xc, yc, iW, iH, imageOn, x, y, size, color, backcolor));
 
-void writetxt(sysinfo& information, const std::string &msg, SDL_Color color, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderText(information.ecran.renderer, msg, color, information.allTextures.font[size]);
-	loadAndWriteImage(information.ecran.renderer, image, x, y, cnt);
-	SDL_DestroyTexture(image);
+			logfileconsole("Create Button n:" + to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
+			break;
+		}
+	}
 }
 
-void writetxtshaded(sysinfo& information, const std::string &msg, SDL_Color color, SDL_Color backcolor, int size, unsigned int x, unsigned int y, int cnt) {
-	SDL_Texture *image = renderTextShaded(information.ecran.renderer, msg, color, backcolor, information.allTextures.font[size]);
+void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton) {
+	switch (centerbutton) {
+	case nocenter:
+		xc = x + iW / 2;
+		yc = y + iH / 2;
+		break;
+	case center_x:
+		xc = x;
+		yc = y + iH / 2;
+		x = x - iW / 2;
+		break;
+	case center_y:
+		xc = x + iW / 2;
+		yc = y;
+		y = y - iH / 2;
+		break;
+	case center:
+		xc = x;
+		yc = y;
+		x = x - iW / 2;
+		y = y - iH / 2;
+		break;
+	}
+}
+
+void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt) {
+	SDL_Texture *image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
 	loadAndWriteImage(information.ecran.renderer, image, x, y, cnt);
 	SDL_DestroyTexture(image);
 }

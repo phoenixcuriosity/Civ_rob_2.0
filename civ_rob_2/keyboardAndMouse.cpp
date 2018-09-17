@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	last modification on this file on version:0.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -113,7 +113,7 @@ void cinDigit(sysinfo& information, unsigned int& digit, unsigned int x, unsigne
 				digit = 9;
 				break;
 			}
-			writetxtshaded(information, "Number of player(s)" + to_string(digit), { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x, y, center_x);
+			writetxt(information, shaded, "Number of player(s)" + to_string(digit), { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x, y, center_x);
 			SDL_RenderPresent(information.ecran.renderer);
 			break;
 		}
@@ -298,7 +298,7 @@ void cinAlphabet(sysinfo& information, std::string &name, unsigned int initx, un
 				name = "par_defaut";
 				logfileconsole("cinAlphabet ERROR : Name to long > 50 char");
 			}
-			writetxtshaded(information, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, center_x);
+			writetxt(information, shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, center_x);
 			SDL_RenderPresent(information.ecran.renderer);
 			break;
 		}
@@ -539,10 +539,10 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 					}
 				}
 			}
-			for (unsigned int l = 0; l < information.allButton.citie.size(); l++)
-				information.allButton.citie[l]->resetOnStatescreen(information.variable.select, selectnothing);
-			break;
 		}
+		for (unsigned int l = 0; l < information.allButton.citie.size(); l++)
+			information.allButton.citie[l]->resetOnStatescreen(information.variable.select, selectnothing);
+		break;
 	}
 }
 

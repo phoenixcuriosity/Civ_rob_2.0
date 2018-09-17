@@ -47,7 +47,7 @@
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1088;
-const int tileSize = 64;
+const int tileSize = 32;
 const unsigned int buildingSize = 128;
 const unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
 const unsigned int minusTiles = (SCREEN_HEIGHT / tileSize) * toolBarSize;
@@ -63,8 +63,9 @@ const SDL_Color Green = { 0, 255, 0, 255 };
 const SDL_Color Blue = { 0, 0, 255, 255 };
 const SDL_Color WriteColorButton = { 255, 64, 0, 255 }; // orange
 const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
+const SDL_Color NoColor = { 0, 0, 0, 0 };
 
-enum { normal, shaded, normaltexture};
+enum { normal, blended, shaded };
 enum { nocenter, center_x, center_y, center };
 enum { noground, grass, water, deepwater, dirt, sand};
 enum unitclass{ biter, car, ouvrier_tier_1, ouvrier_tier_2, ouvrier_tier_3, robot, rocket, rover ,settler,
@@ -200,6 +201,7 @@ struct texture {
 	std::vector<Texture*> ground;
 	std::vector<Texture*> groundSpec;
 	std::vector<Texture*> unit;
+	std::vector<Texture*> citie;
 	std::vector<Texture*> barLife;
 	std::vector<Texture*> colorapp;
 	std::vector<Texture*> colorappTile;

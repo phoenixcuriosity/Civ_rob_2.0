@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.9
+	last modification on this file on version:0.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -83,7 +83,7 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 
 
 
-		writetxt(information, to_string(information.variable.nbturn), { 0, 64, 255, 255 }, 24, 80, 850);
+		writetxt(information, blended,to_string(information.variable.nbturn), { 0, 64, 255, 255 }, NoColor, 24, 80, 850);
 
 		// affiche les unités pour rendre l'unité à créer
 		if (information.variable.select == selectcreate) {
@@ -153,7 +153,7 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 		}
 		break;
 	}
-	writetxt(information, to_string(information.ecran.avgFPS), { 0, 64, 255, 255 }, 24, SCREEN_WIDTH / 2, 50, center_x);
+	writetxt(information, blended, to_string(information.ecran.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 50, center_x);
 
 	SDL_RenderPresent(information.ecran.renderer);
 	//t2 = clock();

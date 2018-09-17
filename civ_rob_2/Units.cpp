@@ -187,14 +187,14 @@ void Units::afficherBardeVie(sysinfo& information){
 void Units::afficherstat(sysinfo& information) {
 	if (_show) {
 		int initspace = _y, space = 14;
-		writetxtshaded(information, "Name: "  + _name, { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace);
-		writetxtshaded(information, "X: " + to_string(_x), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxtshaded(information, "Y: " + to_string(_y), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxtshaded(information, "life: " + to_string(_life), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxtshaded(information, "atq: " + to_string(_atq), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxtshaded(information, "def: " + to_string(_def), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxtshaded(information, "movement: " + to_string(_movement), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxtshaded(information, "level: " + to_string(_level), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		writetxt(information, blended, "Name: "  + _name, { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace);
+		writetxt(information, blended, "X: " + to_string(_x), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		writetxt(information, blended, "Y: " + to_string(_y), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		writetxt(information, blended, "life: " + to_string(_life), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		writetxt(information, blended, "atq: " + to_string(_atq), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		writetxt(information, blended, "def: " + to_string(_def), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		writetxt(information, blended, "movement: " + to_string(_movement), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		writetxt(information, blended, "level: " + to_string(_level), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
 	}
 }
 

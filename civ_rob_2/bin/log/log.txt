@@ -16,6 +16,12 @@ Create Button n:4 msg = Save : 1 Success
 Create Button n:5 msg = Save : 2 Success
 Create Button n:6 msg = Save : 3 Success
 Create Button n:7 msg = Save : 4 Success
+Create Button n:8 msg = Save : 5 Success
+Create Button n:9 msg = Save : 6 Success
+Create Button n:10 msg = Save : 7 Success
+Create Button n:11 msg = Save : 8 Success
+Create Button n:12 msg = Save : 9 Success
+Create Button n:13 msg = Save : 10 Success
 Create Button n:0 msg = Ecran Titre Success
 Create Button n:1 msg = Create Unit Success
 Create Button n:2 msg = Move Unit Success
@@ -41,7 +47,7 @@ Create Button n:15 msg = settler Success
 Create Button n:16 msg = spitter Success
 Create Button n:17 msg = tank Success
 Create Button n:18 msg = transport_plan Success
-temps d'execution de calculimage : 0.105000
+temps d'execution de calculimage : 0.177000
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
@@ -75,14 +81,14 @@ _mainLoop End_
 Delete Texture name = grass.bmp Success
 Delete Texture name = water.bmp Success
 Delete Texture name = water.bmp Success
-Delete Texture name = toolbar64.bmp Success
+Delete Texture name = toolbar32.bmp Success
 Delete ALL Texture Success
-Delete Texture name = coal.bmp Success
-Delete Texture name = copper.bmp Success
-Delete Texture name = iron.bmp Success
+Delete Texture name = coal.png Success
+Delete Texture name = copper.png Success
+Delete Texture name = iron.png Success
 Delete Texture name = tree1.bmp Success
-Delete Texture name = stone.bmp Success
-Delete Texture name = uranium.bmp Success
+Delete Texture name = stone.png Success
+Delete Texture name = uranium.png Success
 Delete Texture name = horse.bmp Success
 Delete Texture name = fish.bmp Success
 Delete Texture name = petroleum.bmp Success
@@ -135,11 +141,11 @@ Delete Texture name = ColorPlayerTile6.bmp Success
 Delete Texture name = ColorPlayerTile7.bmp Success
 Delete Texture name = ColorPlayerTile8.bmp Success
 Delete ALL Texture Success
+Delete Texture name = citie.png Success
+Delete ALL Texture Success
 Delete Texture name = earth.jpg Success
 Delete Texture name = sdl_icone.bmp Success
 Delete Texture name = destroyed.bmp Success
-Delete Texture name = citie.png Success
-Delete ALL Texture Success
 Delete Texture name = Game dev in c++ with SDL2.0.8 Success
 Delete Texture name = La mort n'est que le commencement Success
 Delete Texture name = Je suis devenu la mort, Success
@@ -201,21 +207,6 @@ Delete Texture name = Scroll up or down Success
 Delete Texture name = Right click to create Success
 Delete Texture name = create :  Success
 Delete Texture name = selectcreate Success
-Delete Texture name = battleoids Success
-Delete Texture name = biter Success
-Delete Texture name = bombardier Success
-Delete Texture name = car Success
-Delete Texture name = ouvrier_tier_1 Success
-Delete Texture name = ouvrier_tier_2 Success
-Delete Texture name = ouvrier_tier_3 Success
-Delete Texture name = robot Success
-Delete Texture name = rocket Success
-Delete Texture name = rover Success
-Delete Texture name = satellite Success
-Delete Texture name = settler Success
-Delete Texture name = spitter Success
-Delete Texture name = tank Success
-Delete Texture name = transport_plan Success
 Delete Texture name = Pick the unit to move Success
 Delete Texture name = with Right click Success
 Delete Texture name = selectmove Success
@@ -258,6 +249,12 @@ Delete Button name = Save : 1 Success
 Delete Button name = Save : 2 Success
 Delete Button name = Save : 3 Success
 Delete Button name = Save : 4 Success
+Delete Button name = Save : 5 Success
+Delete Button name = Save : 6 Success
+Delete Button name = Save : 7 Success
+Delete Button name = Save : 8 Success
+Delete Button name = Save : 9 Success
+Delete Button name = Save : 10 Success
 Delete ALL Button Success
 Delete Button name = Ecran Titre Success
 Delete Button name = Create Unit Success

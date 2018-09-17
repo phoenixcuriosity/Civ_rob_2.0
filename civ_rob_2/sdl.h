@@ -42,15 +42,18 @@ void initfile(sysinfo&);
 void logfileconsole(const std::string &msg);
 void logSDLError(std::ostream &os, const std::string &msg);
 void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
-SDL_Texture* renderText(SDL_Renderer*&, const std::string&, SDL_Color, TTF_Font*);
-SDL_Texture* renderTextShaded(SDL_Renderer*&, const std::string&, SDL_Color, SDL_Color, TTF_Font*);
 
-void loadImage(sysinfo&, std::vector<Texture*>& tabTexture, const std::string&, const std::string&, Uint8, int, int, int = 0);
-void loadwritetxt(sysinfo&, std::vector<Texture*>& tabTexture, const std::string &msg, SDL_Color, int, unsigned int, unsigned int, int = 0);
-void loadwritetxtshaded(sysinfo&, std::vector<Texture*>& tabTexture, const std::string &msg, SDL_Color, SDL_Color, int, unsigned int, unsigned int, int = 0);
+SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type, const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
 
-void writetxt(sysinfo&, const std::string &msg, SDL_Color, int, unsigned int, unsigned int, int = 0);
-void writetxtshaded(sysinfo&, const std::string &msg, SDL_Color, SDL_Color, int, unsigned int, unsigned int, int = 0);
+void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
+	const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt = 0);
+void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg,
+	SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
+void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
+	SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
+void searchcenter(int &x, int &y, int &xc, int &yc, int iW, int iH, int centerbutton);
+void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color,
+	SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
 void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);
 void centrage(int&, int&, int, int, int = 0);
 
