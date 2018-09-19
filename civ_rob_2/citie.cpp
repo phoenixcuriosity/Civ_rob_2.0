@@ -33,16 +33,13 @@ void createcitie(sysinfo& information, vector<Player*>& tabplayer) {
 		int x = tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETx();
 		int y = tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETy();
 
-		unsigned int k = 0, middleTile = 0;
+		unsigned int middleTile = 0;
 		
 		tile tabtile[initSizeView*initSizeView];
-		for (int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++) {
-			for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++) {
-				if (information.maps.tiles[k].tile_x == x && information.maps.tiles[k].tile_y == y) {
-					middleTile = k;
-					break;
-				}
-				k++;
+		for (unsigned int i = 0; i < information.maps.screen.size(); i++) {
+			if (information.maps.screen[i].tile_x == x && information.maps.screen[i].tile_y == y) {
+				middleTile = i;
+				break;
 			}
 		}
 		int o = (int)floor((double)initSizeView / 2.0);
@@ -50,10 +47,10 @@ void createcitie(sysinfo& information, vector<Player*>& tabplayer) {
 			o = (int)floor((double)initSizeView / 2.0);
 			for (int i = (initSizeView * (z + (int)floor((double)initSizeView / 2.0))); i < (initSizeView * (z + (int)ceil((double)initSizeView / 2.0))); i++) {
 				if (o > -initSizeInfluence && o < initSizeInfluence && z > -initSizeInfluence && z < initSizeInfluence)
-					information.maps.tiles[middleTile - z - (o * (SCREEN_HEIGHT / tileSize))].appartenance = information.variable.s_player.selectplayer;
-				tabtile[i] = information.maps.tiles[middleTile - z - (o * (SCREEN_HEIGHT / tileSize))];
-				tabtile[i].tile_x = (SCREEN_WIDTH / 2) - (o * tileSize);
-				tabtile[i].tile_y = (SCREEN_HEIGHT / 2) - (z * tileSize);
+					information.maps.screen[middleTile - z - (o * (SCREEN_HEIGHT / information.maps.tileSize))].appartenance = information.variable.s_player.selectplayer;
+				tabtile[i] = information.maps.screen[middleTile - z - (o * (SCREEN_HEIGHT / information.maps.tileSize))];
+				tabtile[i].tile_x = (SCREEN_WIDTH / 2) - (o * information.maps.tileSize);
+				tabtile[i].tile_y = (SCREEN_HEIGHT / 2) - (z * information.maps.tileSize);
 				o--;
 			}
 		}

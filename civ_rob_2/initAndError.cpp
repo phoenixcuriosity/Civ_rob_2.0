@@ -24,7 +24,6 @@
 #include "initAndError.h"
 
 #include "mainLoop.h"
-#include "sdl.h"
 #include "renduecran.h"
 #include "Player.h"
 #include "unit.h"
@@ -47,6 +46,7 @@ void initAndError(){
 
 	try{
 		initfile(information);
+		initTile(information);
 	}
 	catch (exception const& e){
 		cerr << "ERREUR : " << e.what() << endl; 
@@ -78,7 +78,97 @@ void initAndError(){
 }
 
 
+void initTile(sysinfo& information) {
+	unsigned int k = 0;
+	tile kTile;
 
+	for (unsigned int i = information.maps.toolBarSize; i < SCREEN_WIDTH / information.maps.tileSize; i++) {
+		for (unsigned int j = 0; j < SCREEN_HEIGHT / information.maps.tileSize; j++) {
+			information.maps.screen.push_back(kTile);
+			k++;
+		}
+	}
+}
+
+void initfile(sysinfo& information) {
+	ofstream log(information.file.log);
+	if (log) {}
+	else
+		cout << endl << "ERREUR: Impossible d'ouvrir le fichier : " << information.file.log;
+}
+
+
+
+void logfileconsole(const std::string &msg) {
+	const std::string logtxt = "bin/log/log.txt";
+	ofstream log(logtxt, ios::app);
+
+	//std::time_t result = std::time(nullptr);
+	//<< std::asctime(std::localtime(&result))
+
+	if (log) {
+		cout << endl << msg;
+		log << endl << msg;
+	}
+	else
+		cout << endl << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt;
+}
+
+void logSDLError(std::ostream &os, const std::string &msg) {
+	const std::string logtxt = "bin/log/log.txt";
+	ofstream log(logtxt, ios::app);
+	if (log) {
+		os << msg << " error: " << SDL_GetError() << std::endl;
+		log << msg << " error: " << SDL_GetError() << std::endl;
+	}
+	else
+		cout << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt << endl;
+}
+
+void initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]) {
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+		cout << endl << "SDL could not initialize! SDL_Error: " << SDL_GetError();
+	else {
+		window = SDL_CreateWindow("Civ_rob_2",
+			0, 0,
+			SCREEN_WIDTH, SCREEN_HEIGHT,
+			SDL_WINDOW_OPENGL);
+
+		//	SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_FULLSCREEN
+		if (window == nullptr) {
+			logSDLError(cout, "CreateWindow");
+			SDL_Quit();
+		}
+		else
+			logfileconsole("CreateWindow Success");
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		//| SDL_RENDERER_PRESENTVSYNC
+		if (renderer == nullptr) {
+			logSDLError(cout, "CreateRenderer");
+			SDL_DestroyWindow(window);
+			SDL_Quit();
+		}
+		else
+			logfileconsole("CreateRenderer Success");
+
+		if (TTF_Init() != 0) {
+			logSDLError(std::cout, "TTF_Init");
+			SDL_DestroyRenderer(renderer);
+			SDL_DestroyWindow(window);
+			SDL_Quit();
+		}
+		else
+			logfileconsole("TTF_Init Success");
+
+
+		const std::string fontFile = "arial.ttf";
+
+		for (unsigned int i = 1; i < 80; i++)
+			font[i] = TTF_OpenFont(fontFile.c_str(), i);
+
+		logfileconsole("SDL_Init Success");
+	}
+}
 
 
 void calculimage(sysinfo& information) {
@@ -91,20 +181,19 @@ void calculimage(sysinfo& information) {
 
 	unsigned int nbspecname = 0, nbcitie = 0;
 	unsigned int ground = 0, spec = 0, unit = 0, barLife = 0, colorapp = 0, colorappTile = 0, miscTexture = 0;
-	string inttostringTileSize = to_string(tileSize);
 	string destroy, name, citie;
 	const string IPath = "image/"; // répertoire de base de l'image
 
 	// chargement des images du sol de la map
-	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
-		IPath + "ground/grass.bmp", "grass.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
-	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
-		IPath + "ground/water.bmp", "water.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
-	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
-		IPath + "ground/deepwater.bmp", "water.bmp", (Uint8)255, -1, -1, tileSize, tileSize);
+	Texture::loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+		IPath + "ground/grass.bmp", "grass.bmp", (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize);
+	Texture::loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+		IPath + "ground/water.bmp", "water.bmp", (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize);
+	Texture::loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+		IPath + "ground/deepwater.bmp", "water.bmp", (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize);
 	// chargement de l'image de la toolbar
-	loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
-		IPath + "toolbar.bmp", "toolbar" + inttostringTileSize + ".bmp", (Uint8)255, -1, -1, tileSize, tileSize);
+	Texture::loadImage(information.ecran.renderer, information.allTextures.ground, information.variable.statescreen, information.variable.select,
+		IPath + "toolbar.bmp", "toolbar.bmp", (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize);
 
 	// chargement des spécifications du sol de la map
 	ifstream SPECNAME(information.file.SPECNAME);
@@ -114,8 +203,8 @@ void calculimage(sysinfo& information) {
 		for (unsigned int i = 0; i < nbspecname; i++) {
 			name = "";
 			SPECNAME >> name;
-			loadImage(information.ecran.renderer, information.allTextures.groundSpec, information.variable.statescreen, information.variable.select,
-				IPath + "spec/" + name, name, (Uint8)255, -1, -1, tileSize, tileSize);
+			Texture::loadImage(information.ecran.renderer, information.allTextures.groundSpec, information.variable.statescreen, information.variable.select,
+				IPath + "spec/" + name, name, (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize);
 		}
 	}
 	else
@@ -123,36 +212,36 @@ void calculimage(sysinfo& information) {
 
 	// chargement du nombre d'unités ainsi que leur nom
 	for (unsigned int i = 0; i < information.variable.s_player.unitNameMaxToCreate; i++)
-		loadImage(information.ecran.renderer, information.allTextures.unit, information.variable.statescreen, information.variable.select,
+		Texture::loadImage(information.ecran.renderer, information.allTextures.unit, information.variable.statescreen, information.variable.select,
 			IPath + "units/" + information.variable.s_player.s_tabUnitAndSpec[i].name + ".bmp",
-			information.variable.s_player.s_tabUnitAndSpec[i].name, (Uint8)255, 100, 432, tileSize, tileSize);
+			information.variable.s_player.s_tabUnitAndSpec[i].name, (Uint8)255, 100, 432, information.maps.tileSize, information.maps.tileSize);
 
 
 	information.variable.statescreen = STATEmainmap;
-	loadImage(information.ecran.renderer, information.allTextures.barLife, information.variable.statescreen, information.variable.select,
-		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", (Uint8)255, -1, -1, tileSize, tileSize / 10);
+	Texture::loadImage(information.ecran.renderer, information.allTextures.barLife, information.variable.statescreen, information.variable.select,
+		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize / 10);
 	for (unsigned int i = 0; i < 10; i++)
-		loadImage(information.ecran.renderer, information.allTextures.barLife, information.variable.statescreen, information.variable.select,
-			IPath + "barre de vie/0." + to_string(i) + "life.bmp", "0." + to_string(i) + "life.bmp", (Uint8)255, -1, -1, tileSize, tileSize / 10);
+		Texture::loadImage(information.ecran.renderer, information.allTextures.barLife, information.variable.statescreen, information.variable.select,
+			IPath + "barre de vie/0." + to_string(i) + "life.bmp", "0." + to_string(i) + "life.bmp", (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize / 10);
 
 	for (unsigned int i = 0; i < 9; i++)
-		loadImage(information.ecran.renderer, information.allTextures.colorapp, information.variable.statescreen, information.variable.select,
-			IPath + "couleur d'apartenance/ColorPlayer" + to_string(i) + ".bmp", "ColorPlayer" + to_string(i) + ".bmp", (Uint8)255, -1, -1, tileSize / 4, tileSize / 4);
+		Texture::loadImage(information.ecran.renderer, information.allTextures.colorapp, information.variable.statescreen, information.variable.select,
+			IPath + "couleur d'apartenance/ColorPlayer" + to_string(i) + ".bmp", "ColorPlayer" + to_string(i) + ".bmp", (Uint8)255, -1, -1, information.maps.tileSize / 4, information.maps.tileSize / 4);
 	for (unsigned int i = 0; i < 9; i++)
-		loadImage(information.ecran.renderer, information.allTextures.colorappTile, information.variable.statescreen, information.variable.select,
-			IPath + "couleur d'apartenance/ColorPlayer" + to_string(i) + ".bmp", "ColorPlayerTile" + to_string(i) + ".bmp", (Uint8)96, -1, -1, tileSize, tileSize);
+		Texture::loadImage(information.ecran.renderer, information.allTextures.colorappTile, information.variable.statescreen, information.variable.select,
+			IPath + "couleur d'apartenance/ColorPlayer" + to_string(i) + ".bmp", "ColorPlayerTile" + to_string(i) + ".bmp", (Uint8)96, -1, -1, information.maps.tileSize, information.maps.tileSize);
 
 	information.variable.statescreen = STATEecrantitre;
-	loadImage(information.ecran.renderer, information.allTextures.txtecrantitre, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(information.ecran.renderer, information.allTextures.txtecrantitre, information.variable.statescreen, information.variable.select,
 		IPath + "earth.jpg", "earth.jpg", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, NULL, NULL, center);
-	loadImage(information.ecran.renderer, information.allTextures.txtecrantitre, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(information.ecran.renderer, information.allTextures.txtecrantitre, information.variable.statescreen, information.variable.select,
 		IPath + "sdl_icone.bmp", "sdl_icone.bmp", (Uint8)255, SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, NULL, NULL, center_x);
-	loadImage(information.ecran.renderer, information.allTextures.txtecrantitre, information.variable.statescreen, information.variable.select,
+	Texture::loadImage(information.ecran.renderer, information.allTextures.txtecrantitre, information.variable.statescreen, information.variable.select,
 		IPath + "signal/destroyed.bmp", "destroyed.bmp", (Uint8)255, SCREEN_WIDTH / 2, 0, NULL, NULL, center_x);
 
 	information.variable.statescreen = STATEmainmap;
-	loadImage(information.ecran.renderer, information.allTextures.miscTexture, information.variable.statescreen, information.variable.select,
-		IPath + "citie/citie.png", "citie.png", (Uint8)255, -1, -1, tileSize, tileSize);
+	Texture::loadImage(information.ecran.renderer, information.allTextures.miscTexture, information.variable.statescreen, information.variable.select,
+		IPath + "citie/citie.png", "citie.png", (Uint8)255, -1, -1, information.maps.tileSize, information.maps.tileSize);
 
 	// chargement du nombre de ville ainsi que leur nom
 	ifstream CITIENAME(information.file.CITIENAME);
@@ -186,63 +275,63 @@ void calculimage(sysinfo& information) {
 
 	// ______Buttons_____
 	information.variable.statescreen = STATEecrantitre;
-	createbutton(information, information.allButton.ecrantitre,
+	Buttons::createbutton(information, information.allButton.ecrantitre,
 		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, center);
-	createbutton(information, information.allButton.ecrantitre,
+	Buttons::createbutton(information, information.allButton.ecrantitre,
 		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	createbutton(information, information.allButton.ecrantitre,
+	Buttons::createbutton(information, information.allButton.ecrantitre,
 		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
-	createbutton(information, information.allButton.ecrantitre,
+	Buttons::createbutton(information, information.allButton.ecrantitre,
 		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
 
 	information.variable.statescreen = STATEreload;
 	initspacemenu = 300;
-	createbutton(information, information.allButton.reload, 
+	Buttons::createbutton(information, information.allButton.reload,
 		shaded, "Back", WriteColorButton, BackColorButton, 24, 96, 0, center_x);
-	createbutton(information, information.allButton.reload,
+	Buttons::createbutton(information, information.allButton.reload,
 		shaded, "Remove all saves", WriteColorButton, BackColorButton, 24, 256, 0, center_x);
-	createbutton(information, information.allButton.reload,
+	Buttons::createbutton(information, information.allButton.reload,
 		shaded, "Load", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2 - 200, 256, center_x);
-	createbutton(information, information.allButton.reload,
+	Buttons::createbutton(information, information.allButton.reload,
 		shaded, "Remove", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2 + 200, 256, center_x);
 	for (unsigned int i = 0; i < information.variable.s_save.nbSave; i++) 
-		createbutton(information, information.allButton.reload,
+		Buttons::createbutton(information, information.allButton.reload,
 			shaded, "Save : " + to_string(information.variable.s_save.tabSave[i]), WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu, center);
 
 
 	information.variable.statescreen = STATEmainmap;
-	createbutton(information, information.allButton.mainmap, 
+	Buttons::createbutton(information, information.allButton.mainmap,
 		shaded, "Ecran Titre", WriteColorButton, BackColorButton, 24, 96, 0, center_x);
 	information.variable.select = selectcreate;
-	createbutton(information, information.allButton.mainmap, 
+	Buttons::createbutton(information, information.allButton.mainmap,
 		shaded, "Create Unit", WriteColorButton, BackColorButton, 24, 0, 50);
 	information.variable.select = selectmove;
-	createbutton(information, information.allButton.mainmap, 
+	Buttons::createbutton(information, information.allButton.mainmap,
 		shaded, "Move Unit", WriteColorButton, BackColorButton, 24, 0, 82);
 	information.variable.select = selectinspect;
-	createbutton(information, information.allButton.mainmap,
+	Buttons::createbutton(information, information.allButton.mainmap,
 		shaded, "Inspect", WriteColorButton, BackColorButton, 24, 0, 114);
 	information.variable.select = selectnothing;
-	createbutton(information, information.allButton.mainmap, 
+	Buttons::createbutton(information, information.allButton.mainmap,
 		shaded, "Delete Unit", WriteColorButton, BackColorButton, 24, 0, 146);
-	createbutton(information, information.allButton.mainmap, 
+	Buttons::createbutton(information, information.allButton.mainmap,
 		shaded, "Next Turn", WriteColorButton, BackColorButton, 24, 0, 800);
 
 	information.variable.statescreen = STATEcitiemap;
 	information.variable.select = selectnothing;
-	createbutton(information, information.allButton.citie, 
+	Buttons::createbutton(information, information.allButton.citie,
 		shaded, "Map", WriteColorButton, BackColorButton, 24, 96, 0, center_x);
 	information.variable.select = selectcreate;
-	createbutton(information, information.allButton.citie, 
+	Buttons::createbutton(information, information.allButton.citie,
 		shaded, "Build", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 100, center_x);
 	information.variable.select = selectnothing;
-	createbutton(information, information.allButton.citie,
+	Buttons::createbutton(information, information.allButton.citie,
 		shaded, "Food", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 132, center_x);
 	information.variable.select = selectmoveCitizen;
-	createbutton(information, information.allButton.citie, 
+	Buttons::createbutton(information, information.allButton.citie,
 		shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 164, center_x);
 	for (unsigned int i = 0; i < information.variable.s_player.unitNameMaxToCreate; i++)
-		createbutton(information, information.allButton.citie,
+		Buttons::createbutton(information, information.allButton.citie,
 			shaded, information.variable.s_player.s_tabUnitAndSpec[i].name, { 255, 64, 0, 255 }, BackColorButton, 24, 64, 400);
 	information.variable.select = selectnothing;
 
@@ -253,80 +342,80 @@ void calculimage(sysinfo& information) {
 
 	// ______Writetxt_____ 
 	information.variable.statescreen = STATEecrantitre;
-	loadwritetxt(information, information.allTextures.txtecrantitre, 
+	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
 		blended ,"Game dev in c++ with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 24, 0, 0);
-	loadwritetxt(information, information.allTextures.txtecrantitre,
+	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
 		blended, "La mort n'est que le commencement", { 127, 255, 127, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 800, center_x);
-	loadwritetxt(information, information.allTextures.txtecrantitre, 
+	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
 		blended, "Je suis devenu la mort,", { 127, 255, 127, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 832, center_x);
-	loadwritetxt(information, information.allTextures.txtecrantitre, 
+	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
 		blended, "le destructeur des Mondes", { 127, 255, 127, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 864, center_x);
-	loadwritetxt(information, information.allTextures.txtecrantitre, 
+	Texture::loadwritetxt(information, information.allTextures.txtecrantitre,
 		blended, "CIVILIZATION", { 0, 64, 255, 255 }, NoColor, 70, SCREEN_WIDTH / 2, 100, center_x);
 
 	information.variable.statescreen = STATEecrannewgame;
-	loadwritetxt(information, information.allTextures.txtnewgame,
+	Texture::loadwritetxt(information, information.allTextures.txtnewgame,
 		blended, "Press Return or kpad_Enter to valid selection", { 255, 64, 64, 255 }, NoColor, 24, 0, 100);
-	loadwritetxt(information, information.allTextures.txtnewgame,
+	Texture::loadwritetxt(information, information.allTextures.txtnewgame,
 		blended, "How many player(s) (max 9):", { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 132, center_x);
 
 	
 	
 	information.variable.statescreen = STATEmainmap;
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "Select:", { 0, 64, 255, 255 }, NoColor, 24, 0, 600);
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "Turn :", { 0, 64, 255, 255 }, NoColor, 24, 0, 850);
 	information.variable.select = selectnothing;
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "selectnothing", { 0, 64, 255, 255 }, NoColor, 16, 78, 616, center_y);
 	information.variable.select = NotToSelect;
 	for (unsigned int i = 0; i < nbcitie; i++)
-		loadwritetxt(information, information.allTextures.txtmainmap,
+		Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 			blended, information.variable.s_player.tabCitieName[i], { 255, 64, 0, 255 }, NoColor, 12, -1, -1);
 	
 	information.variable.select = selectcreate;
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "Scroll up or down", { 0, 64, 255, 255 }, NoColor, 20, 0, 332);
-	loadwritetxt(information, information.allTextures.txtmainmap, 
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "Right click to create", { 0, 64, 255, 255 }, NoColor, 18, 0, 364);
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "create : ", { 0, 64, 255, 255 }, NoColor, 18, 0, 400);
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "selectcreate", { 0, 64, 255, 255 }, NoColor, 16, 78, 616, center_y);
 	for (unsigned int i = 0; i < information.variable.s_player.unitNameMaxToCreate; i++)
-		loadwritetxt(information, information.allTextures.citie,
+		Texture::loadwritetxt(information, information.allTextures.citie,
 			blended, information.variable.s_player.s_tabUnitAndSpec[i].name, { 0, 64, 255, 255 }, NoColor, 18, 64, 400);
 	
 	
 	information.variable.select = selectmove;
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "Pick the unit to move", { 0, 64, 255, 255 }, NoColor, 20, 0, 332);
-	loadwritetxt(information, information.allTextures.txtmainmap, 
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "with Right click", { 0, 64, 255, 255 }, NoColor, 20, 0, 364);
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "selectmove", { 0, 64, 255, 255 }, NoColor, 16, 78, 616, center_y);
 	information.variable.select = selectinspect;
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "selectinspect", { 0, 64, 255, 255 }, NoColor, 16, 78, 616, center_y);
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "Pick the unit to inspect", { 0, 64, 255, 255 }, NoColor, 20, 0, 332);
-	loadwritetxt(information, information.allTextures.txtmainmap,
+	Texture::loadwritetxt(information, information.allTextures.txtmainmap,
 		blended, "with Right click", { 0, 64, 255, 255 }, NoColor, 20, 0, 364);
 
 	
 	information.variable.statescreen = STATEcitiemap;
 	information.variable.select = selectcreate;
-	loadwritetxt(information, information.allTextures.txtcitiemap,
+	Texture::loadwritetxt(information, information.allTextures.txtcitiemap,
 		blended, "Scroll up or down", { 64, 64, 255, 255 }, NoColor, 20, SCREEN_WIDTH - 300, 0);
-	loadwritetxt(information, information.allTextures.txtcitiemap,
+	Texture::loadwritetxt(information, information.allTextures.txtcitiemap,
 		blended, "Left click to Select", { 64, 64, 255, 255 }, NoColor, 20, SCREEN_WIDTH - 300, 32);
-	loadwritetxt(information, information.allTextures.txtcitiemap,
+	Texture::loadwritetxt(information, information.allTextures.txtcitiemap,
 		blended, "create : ", { 64, 64, 255, 255 }, NoColor, 20, SCREEN_WIDTH - 300, 64);
-	loadwritetxt(information, information.allTextures.txtcitiemap,
+	Texture::loadwritetxt(information, information.allTextures.txtcitiemap,
 		blended, "selectcreate", { 64, 64, 255, 255 }, NoColor, 16, SCREEN_WIDTH - 300, 96);
 	for (unsigned int i = 0; i < information.variable.s_player.unitNameMaxToCreate; i++)
-		loadwritetxt(information, information.allTextures.txtcitiemap,
+		Texture::loadwritetxt(information, information.allTextures.txtcitiemap,
 			blended, "life:" + to_string(information.variable.s_player.s_tabUnitAndSpec[i].life) +
 			"/atq:" + to_string(information.variable.s_player.s_tabUnitAndSpec[i].atq) +
 			"/def:" + to_string(information.variable.s_player.s_tabUnitAndSpec[i].def) +

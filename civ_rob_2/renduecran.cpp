@@ -22,7 +22,7 @@
 */
 
 #include "renduecran.h"
-#include "sdl.h"
+#include "initAndError.h"
 #include "mainLoop.h"
 
 using namespace std;
@@ -71,9 +71,9 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 		afficherSuperTiles(information);
 
 		// affiche la texture grise de la toolbar
-		for (unsigned int i = 0; i < toolBarSize; i++){
-			for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++)
-				information.allTextures.ground[3]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
+		for (unsigned int i = 0; i < information.maps.toolBarSize; i++){
+			for (unsigned int j = 0; j < SCREEN_HEIGHT / information.maps.tileSize; j++)
+				information.allTextures.ground[3]->renderTexture(information.ecran.renderer, i * information.maps.tileSize, j * information.maps.tileSize);
 		}
 
 		for (unsigned int i = 0; i < information.allButton.mainmap.size(); i++)
@@ -83,7 +83,7 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 
 
 
-		writetxt(information, blended,to_string(information.variable.nbturn), { 0, 64, 255, 255 }, NoColor, 24, 80, 850);
+		Texture::writetxt(information, blended,to_string(information.variable.nbturn), { 0, 64, 255, 255 }, NoColor, 24, 80, 850);
 
 		// affiche les unités pour rendre l'unité à créer
 		if (information.variable.select == selectcreate) {
@@ -132,7 +132,7 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 						tabplayer[i]->GETtheunit(j)->afficher(information);
 						tabplayer[i]->GETtheunit(j)->afficherBardeVie(information);
 						for (unsigned int h = 0; h < information.allTextures.colorapp.size(); h++)
-							information.allTextures.colorapp[h]->renderTextureTestString(information.ecran.renderer, "ColorPlayer" + to_string(i) + ".bmp", tabplayer[i]->GETtheunit(j)->GETx(), tabplayer[i]->GETtheunit(j)->GETy() + tileSize);
+							information.allTextures.colorapp[h]->renderTextureTestString(information.ecran.renderer, "ColorPlayer" + to_string(i) + ".bmp", tabplayer[i]->GETtheunit(j)->GETx(), tabplayer[i]->GETtheunit(j)->GETy() + information.maps.tileSize);
 					}
 				}
 				if (tabplayer[i]->GETtabcities().size() != 0) {
@@ -153,7 +153,7 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 		}
 		break;
 	}
-	writetxt(information, blended, to_string(information.ecran.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 50, center_x);
+	Texture::writetxt(information, blended, to_string(information.ecran.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 50, center_x);
 
 	SDL_RenderPresent(information.ecran.renderer);
 	//t2 = clock();
@@ -162,30 +162,24 @@ void alwaysrender(sysinfo& information, vector<Player*>& tabplayer){
 
 
 void afficherSuperTiles(sysinfo& information) {
-	int k = 0;
+	for (unsigned int i = 0; i < information.maps.screen.size(); i++) {
+		// attention tabtexture 0,1,2 sont réservés, à changer si nécessaire
+		if (information.maps.screen[i].tile_ground == grass)
+			information.allTextures.ground[0]->renderTexture(information.ecran.renderer, information.maps.screen[i].tile_x, information.maps.screen[i].tile_y);
+		else if (information.maps.screen[i].tile_ground == water)
+			information.allTextures.ground[1]->renderTexture(information.ecran.renderer, information.maps.screen[i].tile_x, information.maps.screen[i].tile_y);
+		else if (information.maps.screen[i].tile_ground == deepwater)
+				information.allTextures.ground[2]->renderTexture(information.ecran.renderer, information.maps.screen[i].tile_x, information.maps.screen[i].tile_y);
 
-	for (int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++) {
-		for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++) {
-			// attention tabtexture 0,1,2 sont réservés, à changer si nécessaire
-			if (information.maps.tiles[k].tile_ground == grass)
-				information.allTextures.ground[0]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
-			else if (information.maps.tiles[k].tile_ground == water)
-				information.allTextures.ground[1]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
-			else if (information.maps.tiles[k].tile_ground == deepwater)
-				information.allTextures.ground[2]->renderTexture(information.ecran.renderer, i * tileSize, j * tileSize);
-
-
-			if (information.maps.tiles[k].tile_spec != 0) {
-				for (unsigned int l = 0; l < information.allTextures.groundSpec.size(); l++)
-					information.allTextures.groundSpec[l]->renderTextureTestString(information.ecran.renderer, information.maps.tiles[k].tile_stringspec, information.maps.tiles[k].tile_x, information.maps.tiles[k].tile_y);
-			}
-			if (information.maps.tiles[k].appartenance != -1) {
-				for (unsigned int l = 0; l < information.allTextures.colorappTile.size(); l++)
-					information.allTextures.colorappTile[l]->renderTextureTestString(information.ecran.renderer, "ColorPlayerTile" + to_string(information.maps.tiles[k].appartenance) + ".bmp", information.maps.tiles[k].tile_x, information.maps.tiles[k].tile_y);
-			}
-			
-			k++;
+		if (information.maps.screen[i].tile_spec != 0) {
+			for (unsigned int l = 0; l < information.allTextures.groundSpec.size(); l++)
+				information.allTextures.groundSpec[l]->renderTextureTestString(information.ecran.renderer, information.maps.screen[i].tile_stringspec, information.maps.screen[i].tile_x, information.maps.screen[i].tile_y);
 		}
+		if (information.maps.screen[i].appartenance != -1) {
+			for (unsigned int l = 0; l < information.allTextures.colorappTile.size(); l++)
+				information.allTextures.colorappTile[l]->renderTextureTestString(information.ecran.renderer, "ColorPlayerTile" + to_string(information.maps.screen[i].appartenance) + ".bmp", information.maps.screen[i].tile_x, information.maps.screen[i].tile_y);
+		}
+			
 	}
 }
 

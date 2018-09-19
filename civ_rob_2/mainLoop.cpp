@@ -23,7 +23,6 @@
 
 #include "mainLoop.h"
 
-#include "sdl.h"
 #include "renduecran.h"
 #include "unit.h"
 #include "saveAndReload.h"
@@ -31,6 +30,7 @@
 #include "keyboardAndMouse.h"
 #include "nextTurn.h"
 #include "deleteAll.h"
+#include "initAndError.h"
 
 
 using namespace std;

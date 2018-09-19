@@ -42,4 +42,17 @@
 
 #include <direct.h>
 
+typedef struct screen screen;
+typedef struct fichier fichier;
+typedef struct tabUnitAndSpec tabUnitAndSpec;
+typedef struct subcatPlayer subcatPlayer;
+typedef struct subcatSave subcatSave;
+typedef struct subcatWheel subcatWheel;
+typedef struct var var;
+typedef struct tile tile;
+typedef struct map map;
+typedef struct texture texture;
+typedef struct button button;
+typedef struct sysinfo sysinfo;
+
 #endif

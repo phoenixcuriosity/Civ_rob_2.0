@@ -47,39 +47,50 @@
 
 #include "LIB.h"
 
-class Texture{
+class Texture {
 public:
-	Texture(){};
+	Texture() {};
 	Texture(SDL_Texture*, const std::string&, unsigned int, unsigned int, unsigned int, unsigned int, int, int);
 	~Texture();
 
+	static SDL_Texture* renderText(SDL_Renderer*& renderer, unsigned int type,
+		const std::string &message, SDL_Color color, SDL_Color colorback, TTF_Font* font);
+	static void loadImage(SDL_Renderer*& renderer, std::vector<Texture*>& tabTexture, unsigned int statescreen, unsigned int select,
+		const std::string &path, const std::string &msg, Uint8 alpha, int x, int y, unsigned int w, unsigned int h, int cnt = 0);
+	static void loadwritetxt(sysinfo& information, std::vector<Texture*>& tabTexture, unsigned int type, const std::string &msg,
+		SDL_Color color, SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
+	static void writetxt(sysinfo& information, unsigned int type, const std::string &msg, SDL_Color color,
+		SDL_Color backcolor, unsigned int size, unsigned int x, unsigned int y, int cnt = 0);
+	static void loadAndWriteImage(SDL_Renderer*&, SDL_Texture*, unsigned int, unsigned int, int = 0);
+	static void centrage(int&, int&, int, int, int = 0);
+
 	virtual void render(SDL_Renderer*&, int = -1, int = -1);
 	virtual void renderTexture(SDL_Renderer*&, int = -1, int = -1);
-	virtual void renderTextureTestStates(SDL_Renderer*&,unsigned int, unsigned int, int = -1, int = -1);
-	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, unsigned int select, int xc = -1, int yc = -1, unsigned int angle = 0);
+	virtual void renderTextureTestStates(SDL_Renderer*& renderer, unsigned int statescreen, int xc = -1, int yc = -1);
+	virtual void renderTextureTestStatesAngle(SDL_Renderer*& renderer, unsigned int statescreen, int xc = -1, int yc = -1, unsigned int angle = 0);
 	virtual void renderTextureTestString(SDL_Renderer*&, const std::string&, int = -1, int = -1);
 	virtual bool renderTextureTestStringAndStates(SDL_Renderer*&, const std::string&, unsigned int, int = -1, int = -1);
+	virtual bool TextureTestString(const std::string&);
 
 	virtual void changeAlpha(Uint8);
 
 	virtual SDL_Texture* GETtexture() const;
 	virtual SDL_Rect GETdst()const;
+	virtual int GETdstx()const;
+	virtual int GETdsty()const;
+	virtual int GETdstw()const;
+	virtual int GETdsth()const;
 	virtual std::string GETname() const;
 	virtual unsigned int GETstatescreen() const;
 	virtual unsigned int GETselect()const;
-	virtual int GETxc() const;
-	virtual int GETyc() const;
-	virtual int GETw() const;
-	virtual int GETh() const;
+
 
 	virtual void SETdstx(int x);
 	virtual void SETdsty(int y);
-	virtual void SETxc(int xc);
-	virtual void SETyc(int yc);
-	virtual void SETw(int w);
-	virtual void SETh(int h);
+	virtual void SETdstw(int w);
+	virtual void SETdsth(int h);
 
-	friend SDL_Rect rectangle(int xc, int yc, int w, int h);
+	SDL_Rect rectangle(int xc, int yc, int w, int h);
 
 private:
 	SDL_Texture* _texture;
@@ -87,10 +98,6 @@ private:
 	std::string _name;
 	unsigned int _statescreen;
 	unsigned int _select;
-	int _xc;
-	int _yc;
-	int _w;
-	int _h;
 };
 
 

@@ -54,25 +54,25 @@
 class Buttons : public Texture {
 public:
 	Buttons() {};
-	Buttons(SDL_Texture*, const std::string&, unsigned int, unsigned int, int, int, int, int,
-		SDL_Texture*, int, int, int, SDL_Color, SDL_Color, bool = false);
+	Buttons(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, int x, int y, int w, int h,
+		SDL_Texture* imageOn, SDL_Color txtcolor, SDL_Color backcolor, bool on = false);
 	~Buttons();
 
+	static void createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg,
+		SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int centerbutton = 0);
+
 	virtual unsigned int testcolor(SDL_Color, SDL_Color) const;
-	virtual unsigned int searchButton(std::string& msg, unsigned int statescreen, signed int x, signed int y);
+	virtual unsigned int searchButton(std::string msg, unsigned int statescreen, signed int x, signed int y);
 	virtual unsigned int searchButtonName(std::string& msg, unsigned int statescreen);
 
 	virtual void resetOnStatescreen(unsigned int, unsigned int);
-	virtual void resetOnPlayer(unsigned int, std::vector<std::string> );
+	virtual void resetOnPlayer(unsigned int, std::vector<std::string>);
 	virtual bool renderButton(SDL_Renderer*&, unsigned int);
 	virtual bool renderButtonTestString(SDL_Renderer*&, unsigned int, std::string& msg, int newx = -1, int newy = -1, int center = 0);
 
 	virtual void changeOn();
 
 	virtual SDL_Texture* GETimageOn() const;
-	virtual int GETx() const;
-	virtual int GETy() const;
-	virtual int GETsize() const;
 	virtual SDL_Color GETtxtcolor() const;
 	virtual SDL_Color GETbackcolor() const;
 	virtual bool GETon() const;
@@ -81,9 +81,6 @@ public:
 
 private:
 	SDL_Texture* _imageOn;
-	int _x;
-	int _y;
-	int _size;
 	SDL_Color _txtcolor;
 	SDL_Color _backcolor;
 	bool _on;

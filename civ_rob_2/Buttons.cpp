@@ -22,16 +22,15 @@
 */
 
 #include "Buttons.h"
-#include "sdl.h"
 #include "initAndError.h"
 
 using namespace std;
 
 
-Buttons::Buttons(SDL_Texture* image, const string& msg, unsigned int statescreen, unsigned int select, int xc, int yc, int w, int h,
-	SDL_Texture* imageOn, int x, int y, int size, SDL_Color txtcolor, SDL_Color backcolor, bool on)
-	: Texture(image, msg, statescreen, select, xc, yc, w, h),
-	_imageOn(imageOn), _x(x), _y(y), _size(size), _txtcolor(txtcolor), _backcolor(backcolor), _on(on)
+Buttons::Buttons(SDL_Texture* image, const std::string& msg, unsigned int statescreen, unsigned int select, int x, int y, int w, int h,
+	SDL_Texture* imageOn, SDL_Color txtcolor, SDL_Color backcolor, bool on)
+	: Texture(image, msg, statescreen, select, x, y, w, h),
+	_imageOn(imageOn), _txtcolor(txtcolor), _backcolor(backcolor), _on(on)
 {
 
 }
@@ -45,6 +44,29 @@ Buttons::~Buttons() {
 
 
 
+void Buttons::createbutton(sysinfo& information, std::vector<Buttons*>& tabbutton, unsigned int type, const std::string& msg, SDL_Color color, SDL_Color backcolor, unsigned int size, int x, int y, int cnt) {
+	int iW = 0, iH = 0;
+	unsigned int i = 0;
+
+	SDL_Texture *image = nullptr;
+	SDL_Texture *imageOn = nullptr;
+
+	if (tabbutton.size() > 0) {
+		i++;
+	}
+	for (i; i <= tabbutton.size(); i++) {
+		if (i == tabbutton.size()) {
+			image = renderText(information.ecran.renderer, type, msg, color, backcolor, information.allTextures.font[size]);
+			imageOn = renderText(information.ecran.renderer, type, msg, color, { 64,128,64,255 }, information.allTextures.font[size]);
+			SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+			centrage(x, y, iW, iH, cnt);
+			tabbutton.push_back(new Buttons(image, msg, information.variable.statescreen, information.variable.select, x, y, iW, iH, imageOn, color, backcolor));
+
+			logfileconsole("Create Button n:" + to_string(i) + " msg = " + tabbutton[i]->GETname() + " Success");
+			break;
+		}
+	}
+}
 
 
 unsigned int Buttons::testcolor(SDL_Color txt, SDL_Color back) const {
@@ -55,10 +77,10 @@ unsigned int Buttons::testcolor(SDL_Color txt, SDL_Color back) const {
 		return 0;
 }
 
-unsigned int Buttons::searchButton(string& msg, unsigned int statescreen, signed int x, signed int y) {
+unsigned int Buttons::searchButton(string msg, unsigned int statescreen, signed int x, signed int y) {
 	if (statescreen == this->GETstatescreen()) {
-		if (x >= this->GETxc() - this->GETw() / 2 && x <= this->GETxc() + this->GETw() / 2) {
-			if (y >= this->GETy() - this->GETh() / 2 && y <= this->GETyc() + this->GETh() / 2) {
+		if (x >= this->GETdstx() && x <= this->GETdstx() + this->GETdstw()) {
+			if (y >= this->GETdsty() && y <= this->GETdsty() + this->GETdsth()) {
 				if (this->GETname().compare(msg) == 0)
 					return 1;
 			}
@@ -83,7 +105,7 @@ void Buttons::resetOnStatescreen(unsigned int select, unsigned int selectnothing
 }
 
 void Buttons::resetOnPlayer(unsigned int selectplayer, std::vector<std::string> tabPlayerName) {
-	for(unsigned int i = 0; i < tabPlayerName.size(); i++){
+	for (unsigned int i = 0; i < tabPlayerName.size(); i++) {
 		if (i != selectplayer && this->GETname().compare(tabPlayerName[i]) == 0)
 			_on = false;
 	}
@@ -91,8 +113,6 @@ void Buttons::resetOnPlayer(unsigned int selectplayer, std::vector<std::string> 
 
 bool Buttons::renderButton(SDL_Renderer*& renderer, unsigned int statescreen) {
 	if (this->GETstatescreen() == statescreen) {
-		this->SETdstx(_x);
-		this->SETdsty(_y);
 		if (_on)
 			SDL_RenderCopy(renderer, _imageOn, NULL, &this->GETdst());
 		else
@@ -102,23 +122,13 @@ bool Buttons::renderButton(SDL_Renderer*& renderer, unsigned int statescreen) {
 	return false;
 }
 
-bool Buttons::renderButtonTestString(SDL_Renderer*& renderer, unsigned int statescreen, std::string& msg, int newx, int newy, int center) {
+bool Buttons::renderButtonTestString(SDL_Renderer*& renderer, unsigned int statescreen, std::string& msg, int newx, int newy, int cnt) {
 	if (this->GETstatescreen() == statescreen && this->GETname().compare(msg) == 0) {
 		if (newx != -1 && newy != -1) {
-			_x = newx;
-			_y = newy;
-			int xc = this->GETxc();
-			int yc = this->GETyc();
-			int w = this->GETw();
-			int h = this->GETh();
-			searchcenter(_x, _y, xc, yc, w, h, center);
-			this->SETxc(xc);
-			this->SETyc(yc);
-			this->SETw(w);
-			this->SETh(h);
+			centrage(newx, newy, this->GETdstw(), this->GETdsth(), cnt);
+			this->SETdstx(newx);
+			this->SETdstx(newx);
 		}
-		this->SETdstx(_x);
-		this->SETdsty(_y);
 		if (_on)
 			SDL_RenderCopy(renderer, _imageOn, NULL, &this->GETdst());
 		else
@@ -139,16 +149,6 @@ void Buttons::changeOn() {
 
 SDL_Texture* Buttons::GETimageOn() const {
 	return _imageOn;
-}
-
-int Buttons::GETx() const {
-	return _x;
-}
-int Buttons::GETy() const {
-	return _y;
-}
-int Buttons::GETsize() const {
-	return _size;
 }
 SDL_Color Buttons::GETtxtcolor() const {
 	return _txtcolor;

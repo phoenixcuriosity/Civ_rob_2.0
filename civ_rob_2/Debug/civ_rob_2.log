@@ -13,7 +13,6 @@
   Player.cpp
   renduecran.cpp
   saveAndReload.cpp
-  sdl.cpp
   Texture.cpp
   unit.cpp
   Units.cpp

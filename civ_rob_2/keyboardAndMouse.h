@@ -25,7 +25,6 @@
 #define keyboardAndMouse_H
 
 #include "civ_lib.h"
-#include "sdl.h"
 #include "saveAndReload.h"
 #include "newgame.h"
 #include "nextTurn.h"

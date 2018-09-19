@@ -38,7 +38,6 @@
 #define Units_H
 
 #include "civ_lib.h"
-#include "sdl.h"
 
 class Units{
 	public:
@@ -51,7 +50,7 @@ class Units{
 		virtual void attack(Units*);
 		virtual void defend(unsigned int);
 		virtual void move(unsigned int&, int&, int, int);
-		virtual void heal(tile[], unsigned int);
+		virtual void heal(std::vector<tile> tiles, unsigned int selectplayer);
 		virtual void levelup();
 		virtual void RESETmovement();
 

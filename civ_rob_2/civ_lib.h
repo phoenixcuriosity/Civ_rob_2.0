@@ -47,11 +47,6 @@
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1088;
-const int tileSize = 32;
-const unsigned int buildingSize = 128;
-const unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
-const unsigned int minusTiles = (SCREEN_HEIGHT / tileSize) * toolBarSize;
-const unsigned int nbSuperTiles = 9;
 
 const int initSizeView = 7; // taille de la carte transposée dans la citiemap
 const int initSizeInfluence = 2;// taille de l'influence de la citie initialement
@@ -75,21 +70,16 @@ enum { STATEnothing, STATEecrantitre, STATEecrannewgame, STATEreload, STATEmainm
 enum { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };	// spécifications de la séléction
 enum { cottage, hameau, village, ville, metropole, megalopole };
 
-
-typedef struct screen screen;
 struct screen {
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
 
-	std::string stringTileSize = std::to_string(tileSize);
 
 	bool enableFPS = false;
 	LTimer fpsTimer;
 	int avgFPS = 0;
 
 };
-
-typedef struct fichier fichier;
 struct fichier {
 	const std::string log = "bin/log/log.txt";
 	const std::string readme = "bin/readme.txt";
@@ -105,9 +95,6 @@ struct fichier {
 	std::string Savemaps = "save/Savemaps.txt";
 	std::string SavePlayer = "save/SavePlayer.txt";
 };
-
-
-typedef struct tabUnitAndSpec tabUnitAndSpec;
 struct tabUnitAndSpec {
 	std::string name;
 
@@ -119,8 +106,6 @@ struct tabUnitAndSpec {
 	unsigned int nbturnToBuild = 0;
 
 };
-
-typedef struct subcatPlayer subcatPlayer;
 struct subcatPlayer {
 	int selectTile = -1;
 	int selectCitie = -1;
@@ -139,35 +124,29 @@ struct subcatPlayer {
 	unsigned int unitNameMaxToCreate = 0;
 	unsigned int citieNameMaxToCreate = 0;
 };
-typedef struct subcatSave subcatSave;
 struct subcatSave {
 	std::vector<unsigned int> tabSave;
 	unsigned int currentSave = 0;
 	unsigned int nbSave = 0;
 };
-typedef struct subcatWheel subcatWheel;
 struct subcatWheel {
 	unsigned int mouse_x = 0;
 	unsigned int mouse_y = 0;
 	unsigned int ywheel = 0;
 	unsigned int xwheel = 0;
 };
-
-typedef struct var var;
 struct var {
 
 	bool continuer = true;
 	unsigned int nbturn = 0;
 	unsigned int select = selectnothing;
 	unsigned int statescreen = 0; // selectnothing par défaut
+	
 
 	subcatPlayer s_player;
 	subcatWheel s_wheel;
 	subcatSave s_save;
 };
-
-
-typedef struct tile tile;
 struct tile{
 	unsigned int tile_nb = 0;
 	unsigned int tile_x = 0;
@@ -182,21 +161,17 @@ struct tile{
 	unsigned int work = -1;
 	unsigned int gold = -1;
 };
-
-typedef struct map map;
 struct map {
 	/*
 		Attention config spéciale de visual studio 2017 pour dépasser 1Mo de données dans un tableau
 		propriété -> éditeur de lien -> système -> taille de la réserve de la pile -> mettre une valeur plus grande que 1Mo
 	*/
-	tile tiles[(((SCREEN_WIDTH / tileSize)*(SCREEN_HEIGHT / tileSize)) - minusTiles)];
-	
-	//unsigned int selectsupertiles = ceil(float(SUPERTILES)/2);
+	unsigned int tileSize = 64;
+	unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
+	unsigned int minusTiles = (SCREEN_HEIGHT / tileSize) * toolBarSize;
+	std::vector<tile> screen;
+	std::vector<tile> maps;
 };
-
-
-
-typedef struct texture texture;
 struct texture {
 	std::vector<Texture*> ground;
 	std::vector<Texture*> groundSpec;
@@ -214,8 +189,6 @@ struct texture {
 
 	TTF_Font *font[80];
 };
-
-typedef struct button button;
 struct button {
 	std::vector<Buttons*> ecrantitre;
 	std::vector<Buttons*> player;
@@ -223,8 +196,6 @@ struct button {
 	std::vector<Buttons*> mainmap;
 	std::vector<Buttons*> citie;
 };
-
-typedef struct sysinfo sysinfo;
 struct sysinfo {
 	screen ecran;
 	fichier file;

@@ -22,6 +22,7 @@
 */
 
 #include "Player.h"
+#include "initAndError.h"
 
 using namespace std;
 

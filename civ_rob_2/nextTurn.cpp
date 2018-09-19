@@ -29,7 +29,7 @@ void nextTurn(sysinfo& information, vector<Player*>& tabplayer) {
 	for (unsigned int i = 0; i < tabplayer.size(); i++) {
 		for (unsigned int j = 0; j < tabplayer[i]->GETtabunit().size(); j++) {
 			tabplayer[i]->GETtheunit(j)->RESETmovement();
-			tabplayer[i]->GETtheunit(j)->heal(information.maps.tiles, i);
+			tabplayer[i]->GETtheunit(j)->heal(information.maps.screen, i);
 		}
 		for (unsigned int j = 0; j < tabplayer[i]->GETtabcities().size(); j++) {
 			tabplayer[i]->GETthecitie(j)->foodNextTurn();

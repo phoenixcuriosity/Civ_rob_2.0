@@ -38,7 +38,6 @@
 #define newgame_H
 
 #include "civ_lib.h"
-#include "sdl.h"
 #include "Player.h"
 #include "renduecran.h"
 
@@ -54,8 +53,8 @@ void groundgen(sysinfo&);
 void tileAffectation(tile& tiles, unsigned int tile_ground, std::string& tile_stringground, unsigned int tile_spec, std::string& tile_stringspec, unsigned int food, unsigned int work, unsigned int gold);
 void newGameSettlerSpawn(sysinfo&, std::vector<Player*>&);
 void makeRandomPosTab(sysinfo& information, std::vector<randomPos>& tabRandom, unsigned int index);
-void makeRandomPos(randomPos& RandomPOS);
-bool conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int i);
+void makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize);
+bool conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i);
 bool conditionground(sysinfo& information, randomPos& RandomPOS);
 
 

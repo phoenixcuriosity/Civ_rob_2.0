@@ -22,7 +22,7 @@
 */
 
 #include "Cities.h"
-#include "sdl.h"
+#include "initAndError.h"
 
 using namespace std;
 
@@ -59,7 +59,7 @@ void Cities::afficher(sysinfo& information) {
 	for (unsigned int i = 0; i < information.allTextures.miscTexture.size(); i++)
 		information.allTextures.miscTexture[i]->renderTextureTestString(information.ecran.renderer, _image, _x, _y);
 	for (unsigned int i = 0; i < information.allTextures.txtmainmap.size(); i++)
-		information.allTextures.txtmainmap[i]->renderTextureTestString(information.ecran.renderer, _name, _x, _y + tileSize);
+		information.allTextures.txtmainmap[i]->renderTextureTestString(information.ecran.renderer, _name, _x, _y + information.maps.tileSize);
 }
 
 

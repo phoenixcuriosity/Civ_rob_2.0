@@ -49,7 +49,7 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 
 	for (unsigned int i = 1; i < nbplayer + 1; i++){
 		information.variable.s_player.tabPlayerName.push_back("");
-		writetxt(information, blended,"Name of player nb:" + to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
+		Texture::writetxt(information, blended,"Name of player nb:" + to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
 		SDL_RenderPresent(information.ecran.renderer);
 		cinAlphabet(information, information.variable.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
 		tabplayer.push_back(new Player(information.variable.s_player.tabPlayerName[i - 1]));
@@ -62,7 +62,7 @@ void newgame(sysinfo& information, vector<Player*>& tabplayer){
 	int initspacename = 200, spacename = 24;
 	information.variable.statescreen = STATEmainmap;
 	for(unsigned int i = 0; i < tabplayer.size(); i++)
-		createbutton(information, information.allButton.player,
+		Buttons::createbutton(information, information.allButton.player,
 			shaded, information.variable.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
 
 	
@@ -76,31 +76,31 @@ void groundgen(sysinfo& information){
 	logfileconsole("_Groundgen Start_");
 	unsigned int k = 0, randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
 
-	for (unsigned int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++){
-		for (unsigned int j = 0; j < SCREEN_HEIGHT / tileSize; j++){
-			information.maps.tiles[k].tile_nb = k;
-			information.maps.tiles[k].tile_x = tileSize * i;
-			information.maps.tiles[k].tile_y = tileSize * j;
-
+	for (unsigned int i = information.maps.toolBarSize; i < SCREEN_WIDTH / information.maps.tileSize; i++){
+		for (unsigned int j = 0; j < SCREEN_HEIGHT / information.maps.tileSize; j++){
+			information.maps.screen[k].tile_nb = k;
+			information.maps.screen[k].tile_x = information.maps.tileSize * i;
+			information.maps.screen[k].tile_y = information.maps.tileSize * j;
+			
 			/*
 				bord de la map
 			*/
-			if ((i == toolBarSize) || (i == (SCREEN_WIDTH / tileSize) - 1) || (j == 0) || ( j == (SCREEN_HEIGHT / tileSize) - 1))
-					tileAffectation(information.maps.tiles[k], deepwater, (string)"deepwater.bmp", specnothing, (string)"specnothing", 0, 0, 0);
-			else if ((i == toolBarSize + 1) || (i == (SCREEN_WIDTH / tileSize) - 2) || (j == 1) || (j == (SCREEN_HEIGHT / tileSize) - 2) ||
-				(i == toolBarSize + 2) || (i == (SCREEN_WIDTH / tileSize) - 3) || (j == 2) || (j == (SCREEN_HEIGHT / tileSize) - 3) ||
-				(i == toolBarSize + 3) || (i == (SCREEN_WIDTH / tileSize) - 4) || (j == 3) || (j == (SCREEN_HEIGHT / tileSize) - 4)) {
+			if ((i == information.maps.toolBarSize) || (i == (SCREEN_WIDTH / information.maps.tileSize) - 1) || (j == 0) || ( j == (SCREEN_HEIGHT / information.maps.tileSize) - 1))
+					tileAffectation(information.maps.screen[k], deepwater, (string)"deepwater.bmp", specnothing, (string)"specnothing", 0, 0, 0);
+			else if ((i == information.maps.toolBarSize + 1) || (i == (SCREEN_WIDTH / information.maps.tileSize) - 2) || (j == 1) || (j == (SCREEN_HEIGHT / information.maps.tileSize) - 2) ||
+				(i == information.maps.toolBarSize + 2) || (i == (SCREEN_WIDTH / information.maps.tileSize) - 3) || (j == 2) || (j == (SCREEN_HEIGHT / information.maps.tileSize) - 3) ||
+				(i == information.maps.toolBarSize + 3) || (i == (SCREEN_WIDTH / information.maps.tileSize) - 4) || (j == 3) || (j == (SCREEN_HEIGHT / information.maps.tileSize) - 4)) {
 				randomspecwaterborder = rand() % 50 + 1;
 				switch (randomspecwaterborder) {
 				case 1:
-					tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
+					tileAffectation(information.maps.screen[k], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
 					break;
 				case 2:
-					tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
+					tileAffectation(information.maps.screen[k], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
 					break;
 				}
 				if (randomspecwaterborder > 2)
-					tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
+					tileAffectation(information.maps.screen[k], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
 			}
 			/*
 				reste de la map
@@ -108,57 +108,57 @@ void groundgen(sysinfo& information){
 			else {
 				randomground = rand() % 100 + 1;//the range 1 to 100
 				if (randomground < 92) {
-					information.maps.tiles[k].tile_ground = grass;
-					information.maps.tiles[k].tile_stringground = "grass.bmp";
+					information.maps.screen[k].tile_ground = grass;
+					information.maps.screen[k].tile_stringground = "grass.bmp";
 					randomspecgrass = rand() % 100 + 1;
 					switch (randomspecgrass) {
 					case 1:
-						information.maps.tiles[k].tile_spec = coal;
-						information.maps.tiles[k].tile_stringspec = "coal.png";
+						information.maps.screen[k].tile_spec = coal;
+						information.maps.screen[k].tile_stringspec = "coal.png";
 						break;
 					case 2:
-						information.maps.tiles[k].tile_spec = copper;
-						information.maps.tiles[k].tile_stringspec = "copper.png";
+						information.maps.screen[k].tile_spec = copper;
+						information.maps.screen[k].tile_stringspec = "copper.png";
 						break;
 					case 3:
-						information.maps.tiles[k].tile_spec = iron;
-						information.maps.tiles[k].tile_stringspec = "iron.png";
+						information.maps.screen[k].tile_spec = iron;
+						information.maps.screen[k].tile_stringspec = "iron.png";
 						break;
 					case 4:
-						information.maps.tiles[k].tile_spec = tree;
-						information.maps.tiles[k].tile_stringspec = "tree1.bmp";
+						information.maps.screen[k].tile_spec = tree;
+						information.maps.screen[k].tile_stringspec = "tree1.bmp";
 						break;
 					case 5:
-						information.maps.tiles[k].tile_spec = stone;
-						information.maps.tiles[k].tile_stringspec = "stone.png";
+						information.maps.screen[k].tile_spec = stone;
+						information.maps.screen[k].tile_stringspec = "stone.png";
 						break;
 					case 6:
-						information.maps.tiles[k].tile_spec = uranium;
-						information.maps.tiles[k].tile_stringspec = "uranium.png";
+						information.maps.screen[k].tile_spec = uranium;
+						information.maps.screen[k].tile_stringspec = "uranium.png";
 						break;
 					case 7:
-						information.maps.tiles[k].tile_spec = horse;
-						information.maps.tiles[k].tile_stringspec = "horse.bmp";
+						information.maps.screen[k].tile_spec = horse;
+						information.maps.screen[k].tile_stringspec = "horse.bmp";
 						break;
 					}
 					if (randomspecgrass > 7 && randomspecgrass <= 32) { // plus de chance d'avoir des arbres
-						information.maps.tiles[k].tile_spec = tree;
-						information.maps.tiles[k].tile_stringspec = "tree1.bmp";
-						information.maps.tiles[k].food = 1;
-						information.maps.tiles[k].work = 2;
-						information.maps.tiles[k].gold = 1;
+						information.maps.screen[k].tile_spec = tree;
+						information.maps.screen[k].tile_stringspec = "tree1.bmp";
+						information.maps.screen[k].food = 1;
+						information.maps.screen[k].work = 2;
+						information.maps.screen[k].gold = 1;
 					}
 					else if (randomspecgrass > 32) {
-						information.maps.tiles[k].tile_spec = specnothing;
-						information.maps.tiles[k].tile_stringspec = "specnothing";
-						information.maps.tiles[k].food = 2;
-						information.maps.tiles[k].work = 1;
-						information.maps.tiles[k].gold = 1;
+						information.maps.screen[k].tile_spec = specnothing;
+						information.maps.screen[k].tile_stringspec = "specnothing";
+						information.maps.screen[k].food = 2;
+						information.maps.screen[k].work = 1;
+						information.maps.screen[k].gold = 1;
 					}
 					else if (randomspecgrass <= 7) {
-						information.maps.tiles[k].food = 1;
-						information.maps.tiles[k].work = 2;
-						information.maps.tiles[k].gold = 3;
+						information.maps.screen[k].food = 1;
+						information.maps.screen[k].work = 2;
+						information.maps.screen[k].gold = 3;
 					}
 				}
 				else {
@@ -168,40 +168,40 @@ void groundgen(sysinfo& information){
 					randomspecwater = rand() % 20 + 1;
 					switch (randomspecwater) {
 					case 1:
-						tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
+						tileAffectation(information.maps.screen[k], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
 						break;
 					case 2:
-						tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
+						tileAffectation(information.maps.screen[k], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
 						break;
 					}
 					if (randomspecwater > 2)
-						tileAffectation(information.maps.tiles[k], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
+						tileAffectation(information.maps.screen[k], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
 
-					if (i > toolBarSize) {
+					if (i > information.maps.toolBarSize) {
 						randomspecwater1 = rand() % 10 + 1;
 						switch (randomspecwater1) {
 						case 1:
-							tileAffectation(information.maps.tiles[k - SCREEN_HEIGHT / tileSize], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
+							tileAffectation(information.maps.screen[k - SCREEN_HEIGHT / information.maps.tileSize], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
 							break;
 						case 2:
-							tileAffectation(information.maps.tiles[k - SCREEN_HEIGHT / tileSize], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
+							tileAffectation(information.maps.screen[k - SCREEN_HEIGHT / information.maps.tileSize], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
 							break;
 						}
 						if (randomspecwater1 > 2)
-							tileAffectation(information.maps.tiles[k - SCREEN_HEIGHT / tileSize], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
+							tileAffectation(information.maps.screen[k - SCREEN_HEIGHT / information.maps.tileSize], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
 					}
-					if (i > toolBarSize && j > 0) {
+					if (i > information.maps.toolBarSize && j > 0) {
 						randomspecwater2 = rand() % 10 + 1;
 						switch (randomspecwater2) {
 						case 1:
-							tileAffectation(information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
+							tileAffectation(information.maps.screen[k - (SCREEN_HEIGHT / information.maps.tileSize) - 1], water, (string)"water.bmp", fish, (string)"fish.bmp", 3, 2, 1);
 							break;
 						case 2:
-							tileAffectation(information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
+							tileAffectation(information.maps.screen[k - (SCREEN_HEIGHT / information.maps.tileSize) - 1], water, (string)"water.bmp", petroleum, (string)"petroleum.bmp", 1, 3, 4);
 							break;
 						}
 						if (randomspecwater2 > 2)
-							tileAffectation(information.maps.tiles[k - (SCREEN_HEIGHT / tileSize) - 1], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
+							tileAffectation(information.maps.screen[k - (SCREEN_HEIGHT / information.maps.tileSize) - 1], water, (string)"water.bmp", specnothing, (string)"specnothing", 1, 1, 1);
 					}
 				}
 			}
@@ -260,12 +260,12 @@ void makeRandomPosTab(sysinfo& information, vector<randomPos>& tabRandom, unsign
 			logfileconsole("__________ERROR : makeRandomPosTab, Too many Iterations");
 			break;
 		}
-		makeRandomPos(RandomPOS);
+		makeRandomPos(RandomPOS, information.maps.toolBarSize, information.maps.tileSize);
 		if (conditionground(information, RandomPOS)){
 			if (tabRandom.size() > 1){
 				nbConditionCheck = 0;
 				for (unsigned int i = 0; i < tabRandom.size(); i++){
-					if (conditionspace(RandomPOS, tabRandom, i)){
+					if (conditionspace(RandomPOS, tabRandom, information.maps.tileSize, i)){
 						nbConditionCheck++;
 						if (nbConditionCheck == tabRandom.size()){
 							continuer = false;
@@ -284,7 +284,7 @@ void makeRandomPosTab(sysinfo& information, vector<randomPos>& tabRandom, unsign
 
 
 
-void makeRandomPos(randomPos& RandomPOS){
+void makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize){
 	/*
 		créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
 	*/
@@ -294,7 +294,7 @@ void makeRandomPos(randomPos& RandomPOS){
 	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;
 }
 
-bool conditionspace(randomPos& RandomPOS, vector<randomPos>& tabRandom, unsigned int i){
+bool conditionspace(randomPos& RandomPOS, vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i){
 	/*
 		condition pour valider les coordonnées crées:
 					- etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
@@ -318,15 +318,11 @@ bool conditionground(sysinfo& information, randomPos& RandomPOS){
 		condition pour valider les coordonnées crées:
 			- etre sur une tile possédant la caractéristique d'etre du sol
 	*/
-	unsigned int k = 0;
-	for (unsigned int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++){
-		for (unsigned int j = 0; j < SCREEN_HEIGHT / tileSize; j++){
-			if (information.maps.tiles[k].tile_x == RandomPOS.x && information.maps.tiles[k].tile_y == RandomPOS.y){
-				if (information.maps.tiles[k].tile_ground == grass)
-					return true;
-				return false;
-			}
-			k++;
+	for (unsigned int i = 0; i <information.maps.screen.size(); i++){
+		if (information.maps.screen[i].tile_x == RandomPOS.x && information.maps.screen[i].tile_y == RandomPOS.y){
+			if (information.maps.screen[i].tile_ground == grass)
+				return true;
+			return false;
 		}
 	}
 	return false;

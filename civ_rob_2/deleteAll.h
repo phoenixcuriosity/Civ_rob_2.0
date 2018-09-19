@@ -40,7 +40,6 @@
 
 #include "civ_lib.h"
 #include "Player.h"
-#include "sdl.h"
 
 void deleteAll(sysinfo&, std::vector<Player*>&);
 

@@ -44,6 +44,11 @@
 
 
 void initAndError();
+void initTile(sysinfo&);
+void initfile(sysinfo&);
+void logfileconsole(const std::string &msg);
+void logSDLError(std::ostream &os, const std::string &msg);
+void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
 void calculimage(sysinfo&);
 
 

@@ -27,7 +27,6 @@
 #include "civ_lib.h"
 #include "Player.h"
 #include "Units.h"
-#include "sdl.h"
 
 
 void savemaps(sysinfo&);

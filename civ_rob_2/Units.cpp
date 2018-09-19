@@ -22,6 +22,7 @@
 */
 
 #include "Units.h"
+#include "initAndError.h"
 
 using namespace std;
 
@@ -63,27 +64,23 @@ void Units::defend(unsigned int dmg){
 	}	
 }
 
-void Units::heal(tile tiles[], unsigned int selectplayer){
-	unsigned int k = 0;
-	for (int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++) {
-		for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++) {
-			if (_x == tiles[k].tile_x && _y == tiles[k].tile_y) {
-				if (tiles[k].appartenance == -1) {
-					_life += (unsigned int)ceil(_maxlife / 20);
-					if (_life > _maxlife)
-						_life = _maxlife;
-					return;
-				}
-				else if (tiles[k].appartenance == selectplayer) {
-					_life += (unsigned int)ceil(_maxlife / 5);
-					if (_life > _maxlife)
-						_life = _maxlife;
-					return;
-				}
-				else
-					return;
+void Units::heal(std::vector<tile> tiles, unsigned int selectplayer){
+	for (unsigned int i = 0; i < tiles.size(); i++) {
+		if (_x == tiles[i].tile_x && _y == tiles[i].tile_y) {
+			if (tiles[i].appartenance == -1) {
+				_life += (unsigned int)ceil(_maxlife / 20);
+				if (_life > _maxlife)
+					_life = _maxlife;
+				return;
 			}
-			k++;
+			else if (tiles[i].appartenance == selectplayer) {
+				_life += (unsigned int)ceil(_maxlife / 5);
+				if (_life > _maxlife)
+					_life = _maxlife;
+				return;
+			}
+			else
+				return;
 		}
 	}
 }
@@ -137,47 +134,47 @@ void Units::afficherBardeVie(sysinfo& information){
 	if (_show) {
 		if (_life == _maxlife) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "maxlife.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "maxlife.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1))){
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.9life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.9life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.8life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.8life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.7life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.7life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.6life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.6life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.5life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.5life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.4life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.4life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.3life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.3life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.2life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.2life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.1life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.1life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.9))) {
 			for (unsigned int i = 0; i < information.allTextures.barLife.size(); i++)
-				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.0life.bmp", _x + (tileSize / 2) - 4, _y + tileSize);
+				information.allTextures.barLife[i]->renderTextureTestString(information.ecran.renderer, "0.0life.bmp", _x + (information.maps.tileSize / 2) - 4, _y + information.maps.tileSize);
 		}
 	}
 }
@@ -187,14 +184,14 @@ void Units::afficherBardeVie(sysinfo& information){
 void Units::afficherstat(sysinfo& information) {
 	if (_show) {
 		int initspace = _y, space = 14;
-		writetxt(information, blended, "Name: "  + _name, { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace);
-		writetxt(information, blended, "X: " + to_string(_x), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxt(information, blended, "Y: " + to_string(_y), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxt(information, blended, "life: " + to_string(_life), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxt(information, blended, "atq: " + to_string(_atq), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxt(information, blended, "def: " + to_string(_def), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxt(information, blended, "movement: " + to_string(_movement), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
-		writetxt(information, blended, "level: " + to_string(_level), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + tileSize, initspace += space);
+		Texture::writetxt(information, blended, "Name: "  + _name, { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace);
+		Texture::writetxt(information, blended, "X: " + to_string(_x), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace += space);
+		Texture::writetxt(information, blended, "Y: " + to_string(_y), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace += space);
+		Texture::writetxt(information, blended, "life: " + to_string(_life), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace += space);
+		Texture::writetxt(information, blended, "atq: " + to_string(_atq), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace += space);
+		Texture::writetxt(information, blended, "def: " + to_string(_def), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace += space);
+		Texture::writetxt(information, blended, "movement: " + to_string(_movement), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace += space);
+		Texture::writetxt(information, blended, "level: " + to_string(_level), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + information.maps.tileSize, initspace += space);
 	}
 }
 

@@ -22,7 +22,7 @@
 */
 
 #include "Citizen.h"
-#include "sdl.h"
+#include "initAndError.h"
 
 using namespace std;
 

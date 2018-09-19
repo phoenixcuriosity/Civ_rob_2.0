@@ -22,6 +22,7 @@
 */
 
 #include "unit.h"
+#include "initAndError.h"
 
 using namespace std;
 
@@ -105,20 +106,15 @@ int searchToMove(sysinfo& information, vector<Player*>& tabplayer, int x, int y)
 					- ou que la case cible est occupée par un ennemi susceptible de mourrir par l'attaque
 
 	*/
-
-	unsigned int k = 0;
 	bool ground = false;
 
-
-	for (unsigned int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++){
-		for (unsigned int j = 0; j < SCREEN_HEIGHT / tileSize; j++){
-			if (information.maps.tiles[k].tile_x == tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETx() + x && information.maps.tiles[k].tile_y == tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETy() + y){
-				if (information.maps.tiles[k].tile_ground == grass){
-					ground = true;
-					break;
-				}
+	for (unsigned int i = 0; i < information.maps.screen.size(); i++){
+		if (information.maps.screen[i].tile_x == tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETx() + x &&
+			information.maps.screen[i].tile_y == tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETy() + y){
+			if (information.maps.screen[i].tile_ground == grass){
+				ground = true;
+				break;
 			}
-			k++;
 		}
 	}
 

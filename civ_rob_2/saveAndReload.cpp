@@ -22,7 +22,6 @@
 */
 
 #include "saveAndReload.h"
-#include "sdl.h"
 #include "initAndError.h"
 
 using namespace std;
@@ -34,23 +33,18 @@ void savemaps(sysinfo& information){
 	else
 		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.Savemaps);
 
-
-	int k = 0;
-	for (int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++){
-		for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++){
-			savemaps << "nb= " << information.maps.tiles[k].tile_nb << endl;
-			savemaps << "x= " << information.maps.tiles[k].tile_x << endl;
-			savemaps << "y= " << information.maps.tiles[k].tile_y << endl;
-			savemaps << "stringground= " << information.maps.tiles[k].tile_stringground << endl;
-			savemaps << "ground= " << information.maps.tiles[k].tile_ground << endl;
-			savemaps << "stringspec= " << information.maps.tiles[k].tile_stringspec << endl;
-			savemaps << "spec= " << information.maps.tiles[k].tile_spec << endl;
-			savemaps << "appartenance= " << information.maps.tiles[k].appartenance << endl;
-			savemaps << "food= " << information.maps.tiles[k].food << endl;
-			savemaps << "work= " << information.maps.tiles[k].work << endl;
-			savemaps << "gold= " << information.maps.tiles[k].gold << endl << endl;
-			k++;
-		}
+	for (unsigned int i = 0; i < information.maps.screen.size(); i++){
+		savemaps << "nb= " << information.maps.screen[i].tile_nb << endl;
+		savemaps << "x= " << information.maps.screen[i].tile_x << endl;
+		savemaps << "y= " << information.maps.screen[i].tile_y << endl;
+		savemaps << "stringground= " << information.maps.screen[i].tile_stringground << endl;
+		savemaps << "ground= " << information.maps.screen[i].tile_ground << endl;
+		savemaps << "stringspec= " << information.maps.screen[i].tile_stringspec << endl;
+		savemaps << "spec= " << information.maps.screen[i].tile_spec << endl;
+		savemaps << "appartenance= " << information.maps.screen[i].appartenance << endl;
+		savemaps << "food= " << information.maps.screen[i].food << endl;
+		savemaps << "work= " << information.maps.screen[i].work << endl;
+		savemaps << "gold= " << information.maps.screen[i].gold << endl << endl;
 	}
 	logfileconsole("_Save End_");
 }
@@ -102,71 +96,67 @@ void reload(sysinfo& information, vector<Player*>& tabplayer) {
 	information.variable.statescreen = STATEmainmap;
 
 	string destroy;
-	int k = 0;
-	string inttostringTileSize = to_string(tileSize);
+	string inttostringTileSize = to_string(information.maps.tileSize);
 
 	ifstream savemaps(information.file.Savemaps);
 	if (savemaps) {
-		for (int i = toolBarSize; i < SCREEN_WIDTH / tileSize; i++) {
-			for (int j = 0; j < SCREEN_HEIGHT / tileSize; j++) {
-				savemaps >> destroy;
-				if (destroy.compare("nb=") == 0)
-					savemaps >> information.maps.tiles[k].tile_nb;
-				else
-					logfileconsole("reload ERROR : comparaison string nb= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("x=") == 0)
-					savemaps >> information.maps.tiles[k].tile_x;
-				else
-					logfileconsole("reload ERROR : comparaison string x= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("y=") == 0)
-					savemaps >> information.maps.tiles[k].tile_y;
-				else
-					logfileconsole("reload ERROR : comparaison string y= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("stringground=") == 0)
-					savemaps >> information.maps.tiles[k].tile_stringground;
-				else
-					logfileconsole("reload ERROR : comparaison string stringground= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("ground=") == 0)
-					savemaps >> information.maps.tiles[k].tile_ground;
-				else
-					logfileconsole("reload ERROR : comparaison string ground= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("stringspec=") == 0)
-					savemaps >> information.maps.tiles[k].tile_stringspec;
-				else
-					logfileconsole("reload ERROR : comparaison string stringspec= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("spec=") == 0)
-					savemaps >> information.maps.tiles[k].tile_spec;
-				else
-					logfileconsole("reload ERROR : comparaison string spec= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("appartenance=") == 0)
-					savemaps >> information.maps.tiles[k].appartenance;
-				else
-					logfileconsole("reload ERROR : comparaison string appartenance= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("food=") == 0)
-					savemaps >> information.maps.tiles[k].food;
-				else
-					logfileconsole("reload ERROR : comparaison string food= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("work=") == 0)
-					savemaps >> information.maps.tiles[k].work;
-				else
-					logfileconsole("reload ERROR : comparaison string work= non identique");
-				savemaps >> destroy;
-				if (destroy.compare("gold=") == 0)
-					savemaps >> information.maps.tiles[k].gold;
-				else
-					logfileconsole("reload ERROR : comparaison string gold= non identique");
+		for (unsigned int i = 0; i < information.maps.screen.size(); i++) {
+			savemaps >> destroy;
+			if (destroy.compare("nb=") == 0)
+				savemaps >> information.maps.screen[i].tile_nb;
+			else
+				logfileconsole("reload ERROR : comparaison string nb= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("x=") == 0)
+				savemaps >> information.maps.screen[i].tile_x;
+			else
+				logfileconsole("reload ERROR : comparaison string x= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("y=") == 0)
+				savemaps >> information.maps.screen[i].tile_y;
+			else
+				logfileconsole("reload ERROR : comparaison string y= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("stringground=") == 0)
+				savemaps >> information.maps.screen[i].tile_stringground;
+			else
+				logfileconsole("reload ERROR : comparaison string stringground= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("ground=") == 0)
+				savemaps >> information.maps.screen[i].tile_ground;
+			else
+				logfileconsole("reload ERROR : comparaison string ground= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("stringspec=") == 0)
+				savemaps >> information.maps.screen[i].tile_stringspec;
+			else
+				logfileconsole("reload ERROR : comparaison string stringspec= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("spec=") == 0)
+				savemaps >> information.maps.screen[i].tile_spec;
+			else
+				logfileconsole("reload ERROR : comparaison string spec= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("appartenance=") == 0)
+				savemaps >> information.maps.screen[i].appartenance;
+			else
+				logfileconsole("reload ERROR : comparaison string appartenance= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("food=") == 0)
+				savemaps >> information.maps.screen[i].food;
+			else
+				logfileconsole("reload ERROR : comparaison string food= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("work=") == 0)
+				savemaps >> information.maps.screen[i].work;
+			else
+				logfileconsole("reload ERROR : comparaison string work= non identique");
+			savemaps >> destroy;
+			if (destroy.compare("gold=") == 0)
+				savemaps >> information.maps.screen[i].gold;
+			else
+				logfileconsole("reload ERROR : comparaison string gold= non identique");
 
-				k++;
-			}
 		}
 	}
 	else
@@ -191,7 +181,7 @@ void reload(sysinfo& information, vector<Player*>& tabplayer) {
 					savePlayer >> destroy;
 					savePlayer >> name;
 					tabplayer.push_back(new Player(name));
-					createbutton(information, information.allButton.player,
+					Buttons::createbutton(information, information.allButton.player,
 						shaded, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename);
 
 					savePlayer >> destroy;

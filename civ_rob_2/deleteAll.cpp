@@ -22,6 +22,7 @@
 */
 
 #include "deleteAll.h"
+#include "initAndError.h"
 
 using namespace std;
 

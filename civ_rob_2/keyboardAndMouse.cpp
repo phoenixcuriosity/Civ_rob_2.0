@@ -25,6 +25,7 @@
 #include "renduecran.h"
 #include "unit.h"
 #include "citie.h"
+#include "initAndError.h"
 
 using namespace std;
 
@@ -113,7 +114,7 @@ void cinDigit(sysinfo& information, unsigned int& digit, unsigned int x, unsigne
 				digit = 9;
 				break;
 			}
-			writetxt(information, shaded, "Number of player(s)" + to_string(digit), { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x, y, center_x);
+			Texture::writetxt(information, shaded, "Number of player(s)" + to_string(digit), { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x, y, center_x);
 			SDL_RenderPresent(information.ecran.renderer);
 			break;
 		}
@@ -298,7 +299,7 @@ void cinAlphabet(sysinfo& information, std::string &name, unsigned int initx, un
 				name = "par_defaut";
 				logfileconsole("cinAlphabet ERROR : Name to long > 50 char");
 			}
-			writetxt(information, shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, center_x);
+			Texture::writetxt(information, shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, center_x);
 			SDL_RenderPresent(information.ecran.renderer);
 			break;
 		}
@@ -317,47 +318,48 @@ void keySDLK_i(sysinfo& information, vector<Player*>& tabplayer) {
 
 void keySDLK_KP_1(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, -tileSize, tileSize);
+		tryToMove(information, tabplayer, -(int)(information.maps.tileSize), information.maps.tileSize);
 }
 void keySDLK_KP_2(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, 0, tileSize);
+		tryToMove(information, tabplayer, 0, information.maps.tileSize);
 }
 void keySDLK_KP_3(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, tileSize, tileSize);
+		tryToMove(information, tabplayer, information.maps.tileSize, information.maps.tileSize);
 }
 void keySDLK_KP_4(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, -tileSize, 0);
+		tryToMove(information, tabplayer, -(int)(information.maps.tileSize), 0);
 }
 void keySDLK_KP_5(sysinfo& information, vector<Player*>& tabplayer) {
 
 }
 void keySDLK_KP_6(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, tileSize, 0);
+		tryToMove(information, tabplayer, information.maps.tileSize, 0);
 }
 void keySDLK_KP_7(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, -tileSize, -tileSize);
+		tryToMove(information, tabplayer, -(int)(information.maps.tileSize), -(int)(information.maps.tileSize));
 }
 void keySDLK_KP_8(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, 0, -tileSize);
+		tryToMove(information, tabplayer, 0, -(int)(information.maps.tileSize));
 }
 void keySDLK_KP_9(sysinfo& information, vector<Player*>& tabplayer) {
 	if (information.variable.statescreen == STATEmainmap && information.variable.select == selectmove)
-		tryToMove(information, tabplayer, tileSize, -tileSize);
+		tryToMove(information, tabplayer, information.maps.tileSize, -(int)(information.maps.tileSize));
 }
 
 
 
 void mouse(sysinfo& information, vector<Player*>& tabplayer, SDL_Event event) {
 	/*
-	Handle Mouse Event
-	BUTTON_LEFT
-	BUTTON_RIGHT
+
+		Handle Mouse Event
+		BUTTON_LEFT
+		BUTTON_RIGHT
 
 	*/
 
@@ -372,8 +374,8 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 	if (information.variable.statescreen == STATEmainmap) {
 		if (information.variable.s_player.selectplayer > -1) {
 			if (information.variable.select == selectinspect && tabplayer[information.variable.s_player.selectplayer]->GETtabcities().size() != 0) {
-				information.variable.s_wheel.mouse_x = (unsigned int)ceil(event.button.x / tileSize) * tileSize;
-				information.variable.s_wheel.mouse_y = (unsigned int)ceil(event.button.y / tileSize) * tileSize;
+				information.variable.s_wheel.mouse_x = (unsigned int)ceil(event.button.x / information.maps.tileSize) * information.maps.tileSize;
+				information.variable.s_wheel.mouse_y = (unsigned int)ceil(event.button.y / information.maps.tileSize) * information.maps.tileSize;
 				searchCitieTile(information, tabplayer);
 			}
 		}
@@ -548,8 +550,8 @@ void cliqueGauche(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Eve
 
 void cliqueDroit(sysinfo& information, std::vector<Player*>& tabplayer, SDL_Event event) {
 	unsigned int selectunit = 0;
-	information.variable.s_wheel.mouse_x = (unsigned int)ceil(event.button.x / tileSize) * tileSize;
-	information.variable.s_wheel.mouse_y = (unsigned int)ceil(event.button.y / tileSize) * tileSize;
+	information.variable.s_wheel.mouse_x = (unsigned int)ceil(event.button.x / information.maps.tileSize) * information.maps.tileSize;
+	information.variable.s_wheel.mouse_y = (unsigned int)ceil(event.button.y / information.maps.tileSize) * information.maps.tileSize;
 	if (information.variable.s_player.selectplayer > -1) {
 		switch (information.variable.statescreen) {
 		case STATEmainmap:
