@@ -1,20 +1,11 @@
-﻿  mainLoop.cpp
-  Buttons.cpp
-  citie.cpp
-  Cities.cpp
-  Citizen.cpp
-  deleteAll.cpp
-  initAndError.cpp
-  keyboardAndMouse.cpp
-  LTimer.cpp
-  main.cpp
-  newgame.cpp
-  nextTurn.cpp
+﻿  Cities.cpp
+  GamePlay.cpp
+  IHM.cpp
+  KeyboardMouse.cpp
   Player.cpp
-  renduecran.cpp
-  saveAndReload.cpp
+  SaveReload.cpp
   Texture.cpp
-  unit.cpp
   Units.cpp
+  main.cpp
   Génération de code en cours...
   civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Debug\civ_rob_2.exe

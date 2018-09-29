@@ -47,6 +47,13 @@ class Units{
 			unsigned int def, unsigned int move, unsigned int level);
 		~Units();
 
+		static void loadUnitAndSpec(sysinfo& information);
+		static void searchunit(sysinfo&);
+		static void searchUnitTile(sysinfo&, std::vector<Player*>&);
+		static void tryToMove(sysinfo&, std::vector<Player*>&, int, int);
+		static int searchToMove(sysinfo&, std::vector<Player*>&, int, int);
+		static bool irrigate(sysinfo&, std::vector<Player*>&);
+
 		virtual void attack(Units*);
 		virtual void defend(unsigned int);
 		virtual void move(unsigned int&, int&, int, int);

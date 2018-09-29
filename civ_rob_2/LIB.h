@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,13 +46,23 @@ typedef struct screen screen;
 typedef struct fichier fichier;
 typedef struct tabUnitAndSpec tabUnitAndSpec;
 typedef struct subcatPlayer subcatPlayer;
-typedef struct subcatSave subcatSave;
-typedef struct subcatWheel subcatWheel;
 typedef struct var var;
 typedef struct tile tile;
 typedef struct map map;
 typedef struct texture texture;
 typedef struct button button;
 typedef struct sysinfo sysinfo;
+
+class IHM;
+class SaveReload;
+class KeyboardMouse;
+class GamePlay;
+class Buttons;
+class Cities;
+class Citizen;
+class LTimer;
+class Player;
+class Texture;
+class Units;
 
 #endif

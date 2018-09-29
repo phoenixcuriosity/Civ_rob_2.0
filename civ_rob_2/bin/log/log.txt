@@ -15,10 +15,6 @@ Create Button n:3 msg = Remove Success
 Create Button n:4 msg = Save : 1 Success
 Create Button n:5 msg = Save : 2 Success
 Create Button n:6 msg = Save : 3 Success
-Create Button n:7 msg = Save : 4 Success
-Create Button n:8 msg = Save : 5 Success
-Create Button n:9 msg = Save : 6 Success
-Create Button n:10 msg = Save : 7 Success
 Create Button n:0 msg = Ecran Titre Success
 Create Button n:1 msg = Create Unit Success
 Create Button n:2 msg = Move Unit Success
@@ -44,28 +40,28 @@ Create Button n:15 msg = settler Success
 Create Button n:16 msg = spitter Success
 Create Button n:17 msg = tank Success
 Create Button n:18 msg = transport_plan Success
-temps d'execution de calculimage : 0.203000
+temps d'execution de l'initialisation : 1.478000
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop Start_
-_Newgame Start_
-_createSave Start_
-_createSave Start_
-Create Player Success
-_Groundgen Start_
-_Groundgen End_
-Create Unit: settler Success
-_Save Start_
-_Save End_
-_SavePlayer Start_
-_SavePlayer End_
-Create Button n:0 msg = NoName0 Success
-_Newgame End_
-_Save Start_
-_Save End_
-_SavePlayer Start_
-_SavePlayer End_
-__________________________
+_reloadScreen Start_
+_reloadScreen End_
+_clearSave Start_
+file : save/1/SaveScreen.txt successfully remove
+file : save/1/SaveMaps.txt successfully remove
+file : save/1/SavePlayer.txt successfully remove
+directory : save/1 successfully remove
+file : save/2/SaveScreen.txt successfully remove
+file : save/2/SaveMaps.txt successfully remove
+file : save/2/SavePlayer.txt successfully remove
+directory : save/2 successfully remove
+file : save/3/SaveScreen.txt successfully remove
+file : save/3/SaveMaps.txt successfully remove
+file : save/3/SavePlayer.txt successfully remove
+directory : save/3 successfully remove
+_clearSave End_
+_reloadScreen Start_
+_reloadScreen End_
 _Ecrantitres Start_
 _Ecrantitres End_
 _mainLoop End_
@@ -231,19 +227,11 @@ Delete Button name = Reload Success
 Delete Button name = Option Success
 Delete Button name = Quit Success
 Delete ALL Button Success
-Delete Button name = NoName0 Success
 Delete ALL Button Success
 Delete Button name = Back Success
 Delete Button name = Remove all saves Success
 Delete Button name = Load Success
 Delete Button name = Remove Success
-Delete Button name = Save : 1 Success
-Delete Button name = Save : 2 Success
-Delete Button name = Save : 3 Success
-Delete Button name = Save : 4 Success
-Delete Button name = Save : 5 Success
-Delete Button name = Save : 6 Success
-Delete Button name = Save : 7 Success
 Delete ALL Button Success
 Delete Button name = Ecran Titre Success
 Delete Button name = Create Unit Success
@@ -272,10 +260,6 @@ Delete Button name = spitter Success
 Delete Button name = tank Success
 Delete Button name = transport_plan Success
 Delete ALL Button Success
-Delete player name = NoName0 Success
-Kill Unit n:0 of Player: NoName0 Success
-Kill ALL Unit of Player:NoName0 Success
-Kill ALL Cities of Player:NoName0 Success
 Delete ALL player Success
 *********_________ End DeleteAll _________*********
 SDL_Quit Success

@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -21,42 +21,36 @@
 
 */
 
-#ifndef Citizen_H
-#define Citizen_H
+#ifndef SaveReload_H
+#define SaveReload_H
 
-#include "civ_lib.h"
+#include "LIB.h"
 
-class Citizen{
+class SaveReload {
 public:
-	Citizen();
-	Citizen(tile tiles);
-	Citizen(std::vector<tile> tiles, std::vector<Citizen> citizens);
-	~Citizen();
+	static void savemaps(sysinfo&);
+	static void savePlayer(sysinfo&, std::vector<Player*>&);
+	static void reload(sysinfo&, std::vector<Player*>&);
+	static void createSave(sysinfo& information);
+	static void removeSave(sysinfo& information);
+	static void clearSave(sysinfo& information);
 
-	friend unsigned int placeCitizen(std::vector<tile> tiles, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold);
+	SaveReload();
+	~SaveReload();
 
-	void placeCitizenWithMouse();
+	std::vector<unsigned int>& GETtabSave(); // attention n'est pas const
+	unsigned int GETcurrentSave()const;
+	unsigned int GETnbSave()const;
 
-	unsigned int GETtileOccupied()const;
-	int GETfood()const;
-	int GETwork()const;
-	int GETgold()const;
+	void SETtabSave(std::vector<unsigned int>& tab);
+	void SETcurrentSave(unsigned int currentSave);
+	void SETnbSave(unsigned int nbSave);
 
 private:
-	unsigned int _tileOccupied;
-	int _happiness;
-	int _food;
-	int _work; 
-	int _gold;
-	int _revolt;
-	
-	bool _religious;
-	bool _place;
+	std::vector<unsigned int> _tabSave;
+	unsigned int _currentSave;
+	unsigned int _nbSave;
 };
-
-
-
-
 
 
 

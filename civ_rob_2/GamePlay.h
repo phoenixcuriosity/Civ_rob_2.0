@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.8
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -34,12 +34,11 @@
 
 */
 
-#ifndef newgame_H
-#define newgame_H
+#ifndef GamePlay_H
+#define GamePlay_H
 
 #include "civ_lib.h"
 #include "Player.h"
-#include "renduecran.h"
 
 typedef struct randomPos randomPos;
 struct randomPos {
@@ -47,15 +46,18 @@ struct randomPos {
 	int y;
 };
 
+class GamePlay {
+public:
+	static void newgame(sysinfo&, std::vector<Player*>&);
+	static void groundgen(sysinfo&);
+	static void tileAffectation(tile& tiles, unsigned int tile_ground, std::string& tile_stringground, unsigned int tile_spec, std::string& tile_stringspec, unsigned int food, unsigned int work, unsigned int gold);
+	static void newGameSettlerSpawn(sysinfo&, std::vector<Player*>&);
+	static void makeRandomPosTab(sysinfo& information, std::vector<randomPos>& tabRandom, unsigned int index);
+	static void makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize);
+	static bool conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i);
+	static bool conditionground(sysinfo& information, randomPos& RandomPOS);
 
-void newgame(sysinfo&, std::vector<Player*>&);
-void groundgen(sysinfo&);
-void tileAffectation(tile& tiles, unsigned int tile_ground, std::string& tile_stringground, unsigned int tile_spec, std::string& tile_stringspec, unsigned int food, unsigned int work, unsigned int gold);
-void newGameSettlerSpawn(sysinfo&, std::vector<Player*>&);
-void makeRandomPosTab(sysinfo& information, std::vector<randomPos>& tabRandom, unsigned int index);
-void makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize);
-bool conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i);
-bool conditionground(sysinfo& information, randomPos& RandomPOS);
-
+	static void nextTurn(sysinfo&, std::vector<Player*>&);
+};
 
 #endif

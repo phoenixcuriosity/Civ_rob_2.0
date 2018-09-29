@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,20 +24,7 @@
 #ifndef LTimer_H
 #define LTimer_H
 
-#include <iostream>
-#include <ostream>
-#include <fstream>
-#include <stdexcept>
-#include <sstream>
-#include <string>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
-#include <vector>
-
-#include "SDL2-2.0.8/include/SDL.h"
-#include "SDL2-2.0.8/include/SDL_ttf.h"
-#include "SDL2-2.0.8/include/SDL_image.h"
+#include "LIB.h"
 
 class LTimer
 {

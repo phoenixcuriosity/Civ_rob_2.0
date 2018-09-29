@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -21,41 +21,43 @@
 
 */
 
-/*
+#ifndef IHM_H
+#define IHM_H
 
-	deleteAll :
-	Ce module permet de faire le nettoyage lors de l'arret du jeu
-	celui-ci comprend par ordre d'apparition :
-		- la destruction du tableau des noms des unités
-		- la destrucution du tableau contenant les différentes polices de la font
-		- la destruction du tableau de textures
-		- la destruction du tableau de boutons
-		- la destruction des joueurs, ce qui comprend la destruction des unités et des cités
-		- la destruction de la fenetre de rendue
-
-*/
-
-#ifndef deleteAll_H
-#define deleteAll_H
-
-#include "civ_lib.h"
+#include "LIB.h"
 #include "Player.h"
 
-void deleteAll(sysinfo&, std::vector<Player*>&);
+class IHM {
+public:
+	static void initTile(sysinfo&);
+	static void initfile(sysinfo&);
+	static void logfileconsole(const std::string &msg);
+	static void logSDLError(std::ostream &os, const std::string &msg);
+	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
+	static void calculimage(sysinfo&);
 
+	static void ecrantitre(sysinfo&);
+	static void reloadScreen(sysinfo& information);
+	static void alwaysrender(sysinfo&, std::vector<Player*>& tabplayer);
+	static void afficherSuperTiles(sysinfo&);
+	static void citiemap(sysinfo&, std::vector<Player*>& tabplayer);
+
+	static void deleteAll(sysinfo&, std::vector<Player*>&);
+};
 template<class T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 	unsigned int size = dytab.size();
 	for (unsigned int i = 0; i < size; i++) {
-		logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
+		IHM::logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
 		delete dytab[i];
 	}
 	for (unsigned int i = 0; i < size; i++)
 		dytab.pop_back();
 	if (dytab.size() != 0)
-		logfileconsole("___________ERROR : " + name + ".size() != 0");
+		IHM::logfileconsole("___________ERROR : " + name + ".size() != 0");
 	else
-		logfileconsole("Delete ALL " + name + " Success");
+		IHM::logfileconsole("Delete ALL " + name + " Success");
 }
 
-#endif 
+
+#endif

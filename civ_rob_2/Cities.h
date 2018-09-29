@@ -25,13 +25,16 @@
 #define Cities_H
 
 #include "civ_lib.h"
-#include "Citizen.h"
+#include "Player.h"
 
 class Cities {
 public:
 	Cities() {}; // garder le constructeur par défaut
 	Cities(const std::string &, unsigned int, unsigned int, tile[]);
 	~Cities();
+
+	static void createcitie(sysinfo& information, std::vector<Player*>& tabplayer);
+	static void searchCitieTile(sysinfo& information, std::vector<Player*>& tabplayer);
 
 	friend std::vector<tile> createTiles(tile tiles[]);
 	friend std::vector<Citizen> createCitizen(tile tiles);
@@ -66,6 +69,36 @@ private:
 
 	double _foodStock;
 	double _foodBalance;
+};
+
+
+
+class Citizen {
+public:
+	Citizen();
+	Citizen(tile tiles);
+	Citizen(std::vector<tile> tiles, std::vector<Citizen> citizens);
+	~Citizen();
+
+	friend unsigned int placeCitizen(std::vector<tile> tiles, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold);
+
+	void placeCitizenWithMouse();
+
+	unsigned int GETtileOccupied()const;
+	int GETfood()const;
+	int GETwork()const;
+	int GETgold()const;
+
+private:
+	unsigned int _tileOccupied;
+	int _happiness;
+	int _food;
+	int _work;
+	int _gold;
+	int _revolt;
+
+	bool _religious;
+	bool _place;
 };
 
 #endif

@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.10
+	last modification on this file on version:0.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,10 +40,10 @@
 #define civ_lib_H
 
 #include "LIB.h"
-
-#include "Buttons.h"
 #include "Texture.h"
 #include "LTimer.h"
+#include "SaveReload.h"
+#include "KeyboardMouse.h"
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1088;
@@ -92,7 +92,8 @@ struct fichier {
 
 	const std::string SaveInfo = "save/SaveInfo.txt";
 	
-	std::string Savemaps = "save/Savemaps.txt";
+	std::string SaveScreen = "save/SaveScreen.txt";
+	std::string SaveMaps = "save/SaveMaps.txt";
 	std::string SavePlayer = "save/SavePlayer.txt";
 };
 struct tabUnitAndSpec {
@@ -124,17 +125,6 @@ struct subcatPlayer {
 	unsigned int unitNameMaxToCreate = 0;
 	unsigned int citieNameMaxToCreate = 0;
 };
-struct subcatSave {
-	std::vector<unsigned int> tabSave;
-	unsigned int currentSave = 0;
-	unsigned int nbSave = 0;
-};
-struct subcatWheel {
-	unsigned int mouse_x = 0;
-	unsigned int mouse_y = 0;
-	unsigned int ywheel = 0;
-	unsigned int xwheel = 0;
-};
 struct var {
 
 	bool continuer = true;
@@ -142,10 +132,9 @@ struct var {
 	unsigned int select = selectnothing;
 	unsigned int statescreen = 0; // selectnothing par défaut
 	
-
 	subcatPlayer s_player;
-	subcatWheel s_wheel;
-	subcatSave s_save;
+	KeyboardMouse mouse;
+	SaveReload save;
 };
 struct tile{
 	unsigned int tile_nb = 0;
@@ -166,9 +155,9 @@ struct map {
 		Attention config spéciale de visual studio 2017 pour dépasser 1Mo de données dans un tableau
 		propriété -> éditeur de lien -> système -> taille de la réserve de la pile -> mettre une valeur plus grande que 1Mo
 	*/
+	unsigned int mapSize = 4096; // en pixels
 	unsigned int tileSize = 64;
 	unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
-	unsigned int minusTiles = (SCREEN_HEIGHT / tileSize) * toolBarSize;
 	std::vector<tile> screen;
 	std::vector<tile> maps;
 };

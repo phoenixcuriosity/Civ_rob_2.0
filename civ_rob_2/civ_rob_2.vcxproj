@@ -84,44 +84,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="mainLoop.cpp" />
-    <ClCompile Include="Buttons.cpp" />
-    <ClCompile Include="citie.cpp" />
+    <ClCompile Include="IHM.cpp" />
     <ClCompile Include="Cities.cpp" />
-    <ClCompile Include="Citizen.cpp" />
-    <ClCompile Include="deleteAll.cpp" />
-    <ClCompile Include="initAndError.cpp" />
-    <ClCompile Include="keyboardAndMouse.cpp" />
+    <ClCompile Include="KeyboardMouse.cpp" />
     <ClCompile Include="LTimer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="newgame.cpp" />
-    <ClCompile Include="nextTurn.cpp" />
+    <ClCompile Include="GamePlay.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="renduecran.cpp" />
-    <ClCompile Include="saveAndReload.cpp" />
+    <ClCompile Include="SaveReload.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="unit.cpp" />
     <ClCompile Include="Units.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mainLoop.h" />
-    <ClInclude Include="Buttons.h" />
-    <ClInclude Include="citie.h" />
+    <ClInclude Include="IHM.h" />
     <ClInclude Include="Cities.h" />
-    <ClInclude Include="Citizen.h" />
     <ClInclude Include="civ_lib.h" />
-    <ClInclude Include="deleteAll.h" />
-    <ClInclude Include="initAndError.h" />
-    <ClInclude Include="keyboardAndMouse.h" />
+    <ClInclude Include="KeyboardMouse.h" />
     <ClInclude Include="LIB.h" />
     <ClInclude Include="LTimer.h" />
-    <ClInclude Include="newgame.h" />
-    <ClInclude Include="nextTurn.h" />
+    <ClInclude Include="GamePlay.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="renduecran.h" />
-    <ClInclude Include="saveAndReload.h" />
+    <ClInclude Include="SaveReload.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="unit.h" />
     <ClInclude Include="Units.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

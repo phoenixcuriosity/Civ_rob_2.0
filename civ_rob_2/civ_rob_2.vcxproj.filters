@@ -24,15 +24,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="renduecran.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="unit.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="newgame.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
@@ -42,51 +33,27 @@
     <ClCompile Include="Cities.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="initAndError.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="deleteAll.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Buttons.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
     <ClCompile Include="LTimer.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="nextTurn.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="citie.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Citizen.cpp">
+    <ClCompile Include="IHM.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="mainLoop.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="SaveReload.cpp">
+      <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="saveAndReload.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="KeyboardMouse.cpp">
+      <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="keyboardAndMouse.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="GamePlay.cpp">
+      <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="civ_lib.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="renduecran.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="unit.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="newgame.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Cities.h">
@@ -98,41 +65,26 @@
     <ClInclude Include="Player.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="initAndError.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="deleteAll.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Buttons.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
     <ClInclude Include="LTimer.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="nextTurn.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="citie.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Citizen.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
     <ClInclude Include="LIB.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="mainLoop.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="IHM.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="saveAndReload.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="SaveReload.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="keyboardAndMouse.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="KeyboardMouse.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlay.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
