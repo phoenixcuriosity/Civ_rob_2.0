@@ -83,7 +83,7 @@ void Player::deleteUnit(unsigned int index){
 	}
 	_tabunit.pop_back();
 }
-void Player::addCitie(const std::string &name, unsigned int x, unsigned int y, tile tiles[]) {
+void Player::addCitie(const std::string &name, unsigned int x, unsigned int y, Tile tiles[]) {
 	_tabcities.push_back(new Cities(name, x, y, tiles));
 }
 void Player::deleteCitie(unsigned int index){

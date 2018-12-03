@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,10 +40,10 @@ _Class_ :
 Chainage d'appel :
 	1) main() dans main.cpp
 	2) initAndError() dans initAndError.cpp
-	3) instanciation de "information" et "tabplayer"
+	3) instanciation de "sysinfo" et "tabplayer"
 	4) utilisation de logfileconsole() pour écricre sur la console ainsi que sur le fichier log qui se trouve dans bin/log/log.txt
 	5) check de l'ouverture des fichiers avec initfile() et initialisation de la sdl() dans sdl.cpp
-	6) affichage de l'ecran titre avec ecrantitre() dans renduecran.cpp
+	6) affichage de l'screen titre avec titleScreen() dans renduscreen.cpp
 	7) boucle principale avec mainloop() dans mainloop.cpp
 	8) depend de l'utilisateur si click de souris ou touche de clavier enfoncée
 	9) après chaque action de l'utilisateur, la fonction alwaysrender est appellée et permettra à terme de faire du 30 images par seconde
@@ -56,9 +56,9 @@ Chainage d'appel :
 
 	const string resPath = "image/";
 	int iW, iH;
-	SDL_Texture *image = loadTexture(information, resPath + "fish.bmp", information.ecran.renderer);
+	SDL_Texture *image = loadTexture(sysinfo, resPath + "fish.bmp", sysinfo.screen.renderer);
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-	renderTexture(image, information.ecran.renderer, 0, 0);
+	renderTexture(image, sysinfo.screen.renderer, 0, 0);
 
 
 
@@ -69,11 +69,10 @@ Chainage d'appel :
 #include "GamePlay.h"
 #include "KeyboardMouse.h"
 
-void mainLoop(sysinfo& information, std::vector<Player*>& tabplayer);
+void mainLoop(Sysinfo& sysinfo);
 
 int main(int, char**){
-	sysinfo information;
-	std::vector<Player*> tabplayer;
+	Sysinfo sysinfo;
 
 	srand((unsigned int)time(NULL));
 
@@ -81,8 +80,8 @@ int main(int, char**){
 	t1 = clock();
 
 	try {
-		IHM::initfile(information);
-		IHM::initTile(information);
+		IHM::initfile(sysinfo);
+		IHM::inittile(sysinfo);
 	}
 	catch (std::exception const& e) {
 		std::cerr << "ERREUR : " << e.what() << std::endl;
@@ -90,22 +89,22 @@ int main(int, char**){
 	IHM::logfileconsole("________PROGRAMME START________");
 
 	try {
-		IHM::initsdl(information.ecran.window, information.ecran.renderer, information.allTextures.font);
+		IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font);
 	}
 	catch (std::exception const& e) {
 		std::cerr << "ERREUR : " << e.what() << std::endl;
 	}
 
 
-	Units::loadUnitAndSpec(information);
-	IHM::calculimage(information);
+	Units::loadUnitAndSpec(sysinfo);
+	IHM::calculimage(sysinfo);
 	t2 = clock();
 	IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));
 
-	IHM::ecrantitre(information);
-	mainLoop(information, tabplayer);	// fonction principale (bloquante)
+	IHM::titleScreen(sysinfo);
+	mainLoop(sysinfo);	// fonction principale (bloquante)
 
-	IHM::deleteAll(information, tabplayer);
+	IHM::deleteAll(sysinfo);
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
@@ -114,7 +113,7 @@ int main(int, char**){
 	return 0;
 }
 
-void mainLoop(sysinfo& information, std::vector<Player*>& tabplayer) {
+void mainLoop(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_mainLoop Start_");
 	SDL_Event event;
 
@@ -122,83 +121,103 @@ void mainLoop(sysinfo& information, std::vector<Player*>& tabplayer) {
 
 	int SDL_EnableUNICODE(1); // on azerty
 
-	while (information.variable.continuer) {
+	while (sysinfo.var.continuer) {
 		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_QUIT:	// permet de quitter le jeu
-				information.variable.continuer = 0;
+				sysinfo.var.continuer = 0;
 				break;
 			case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
 				switch (event.key.keysym.sym) {
 				case SDLK_F5:
-					GamePlay::groundgen(information);
+					GamePlay::groundgen(sysinfo);
 					break;
 				case SDLK_F6:
-					deleteDyTabPlayerAndTextures(tabplayer, "player");
+					deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");
 					for (unsigned int i = 0; i < 4; i++) {
-						tabplayer.push_back(new Player("NoName" + std::to_string(i)));
+						sysinfo.tabplayer.push_back(new Player("NoName" + std::to_string(i)));
 					}
-					GamePlay::newGameSettlerSpawn(information, tabplayer);
+					GamePlay::newGameSettlerSpawn(sysinfo);
 					break;
 				case SDLK_ESCAPE:
-					information.variable.continuer = 0;
+					sysinfo.var.continuer = 0;
+					break;
+				case SDLK_UP:
+					if (sysinfo.map.screenOffsetY > 0)
+						sysinfo.map.screenOffsetY -= sysinfo.map.tileSize;
+					IHM::changeScreenOffset(sysinfo);
+					break;
+				case SDLK_LEFT:
+					if (sysinfo.map.screenOffsetX > 0)
+						sysinfo.map.screenOffsetX -= sysinfo.map.tileSize;
+					IHM::changeScreenOffset(sysinfo);
+					break;
+				case SDLK_DOWN:
+					if (sysinfo.map.screenOffsetY < (sysinfo.map.mapSize - SCREEN_HEIGHT))
+						sysinfo.map.screenOffsetY += sysinfo.map.tileSize;
+					IHM::changeScreenOffset(sysinfo);
+					break;
+				case SDLK_RIGHT:
+					if (sysinfo.map.screenOffsetX < sysinfo.map.mapSize - SCREEN_WIDTH)
+						sysinfo.map.screenOffsetX += sysinfo.map.tileSize;
+					IHM::changeScreenOffset(sysinfo);
 					break;
 				case SDLK_SPACE:
-					GamePlay::nextTurn(information, tabplayer);
+					GamePlay::nextTurn(sysinfo);
 					break;
 				case SDLK_b:
-					KeyboardMouse::keySDLK_b(information, tabplayer);
+					KeyboardMouse::keySDLK_b(sysinfo);
 					break;
 				case SDLK_i:
-					KeyboardMouse::keySDLK_i(information, tabplayer);
+					KeyboardMouse::keySDLK_i(sysinfo);
 					break;
 				case SDLK_KP_1:
-					KeyboardMouse::keySDLK_KP_1(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_1(sysinfo);
 					break;
 				case SDLK_KP_2:
-					KeyboardMouse::keySDLK_KP_2(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_2(sysinfo);
 					break;
 				case SDLK_KP_3:
-					KeyboardMouse::keySDLK_KP_3(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_3(sysinfo);
 					break;
 				case SDLK_KP_4:
-					KeyboardMouse::keySDLK_KP_4(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_4(sysinfo);
 					break;
 				case SDLK_KP_5:
-					KeyboardMouse::keySDLK_KP_5(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_5(sysinfo);
 					break;
 				case SDLK_KP_6:
-					KeyboardMouse::keySDLK_KP_6(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_6(sysinfo);
 					break;
 				case SDLK_KP_7:
-					KeyboardMouse::keySDLK_KP_7(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_7(sysinfo);
 					break;
 				case SDLK_KP_8:
-					KeyboardMouse::keySDLK_KP_8(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_8(sysinfo);
 					break;
 				case SDLK_KP_9:
-					KeyboardMouse::keySDLK_KP_9(information, tabplayer);
+					KeyboardMouse::keySDLK_KP_9(sysinfo);
 					break;
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN: // test sur le type d'événement click souris (enfoncé)
-				KeyboardMouse::mouse(information, tabplayer, event);
+				KeyboardMouse::mouse(sysinfo, event);
 				break;
 			case SDL_MOUSEWHEEL:
-				KeyboardMouse::wheel(information, event.wheel.y);
+				KeyboardMouse::wheel(sysinfo, event.wheel.y);
 
 				break;
 			}
 
 		}
 
-		if (information.ecran.enableFPS) {
-			information.ecran.avgFPS = (int)ceil(countedFrames / (information.ecran.fpsTimer.getTicks() / 1000.f));
-			if (information.ecran.avgFPS > 20000)
-				information.ecran.avgFPS = 0;
+		if (sysinfo.screen.enableFPS) {
+			sysinfo.screen.avgFPS = (int)ceil(countedFrames / (sysinfo.screen.fpsTimer.getTicks() / 1000.f));
+			if (sysinfo.screen.avgFPS > 20000)
+				sysinfo.screen.avgFPS = 0;
 			++countedFrames;
 		}
-		IHM::alwaysrender(information, tabplayer);
+		IHM::alwaysrender(sysinfo);
 
 
 	}

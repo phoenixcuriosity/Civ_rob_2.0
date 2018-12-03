@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,10 +24,10 @@
 #include "Cities.h"
 #include "IHM.h"
 
-Cities::Cities(const std::string& name, unsigned int x, unsigned int y, tile tiles[]) : _image("citie.png"),
-_name(name), _x(x), _y(y), _tiles(createTiles(tiles)), _citizens(createCitizen(tiles[(unsigned int)ceil((initSizeView*initSizeView) / 2)])),
+Cities::Cities(const std::string& name, unsigned int x, unsigned int y, Tile tile[]) : _image("citie.png"),
+_name(name), _x(x), _y(y), _tile(createtiles(tile)), _citizens(createCitizen(tile[(unsigned int)ceil((initSizeView*initSizeView) / 2)])),
 _influenceLevel(1),_nbpop(1), _atq(0), _def(0), _nbhappy(0), _nbsad(0), _nbstructurebuild(0),
-_foodStock(0), _foodBalance(tiles[(unsigned int)ceil((initSizeView*initSizeView) / 2)].food)
+_foodStock(0), _foodBalance(tile[(unsigned int)ceil((initSizeView*initSizeView) / 2)].food)
 {
 	IHM::logfileconsole("Create Citie: " + _name + " Success");
 }
@@ -36,83 +36,86 @@ Cities::~Cities()
 	IHM::logfileconsole("Destroy Citie: " + _name + " Success");
 }
 
-void Cities::createcitie(sysinfo& information, std::vector<Player*>& tabplayer) {
-	if (information.variable.s_player.unitNameToMove.compare("settler") == 0) {
+void Cities::createcitie(Sysinfo& sysinfo) {
+	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == 0) {
 
-		std::string name = information.variable.s_player.tabCitieName[(information.variable.s_player.selectplayer * 5) + tabplayer[information.variable.s_player.selectplayer]->GETtabcities().size()];
-		int x = tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETx();
-		int y = tabplayer[information.variable.s_player.selectplayer]->GETtheunit(information.variable.s_player.selectunit)->GETy();
+		std::string name = sysinfo.var.s_player.tabCitieName[(sysinfo.var.s_player.selectplayer * 5) + sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size()];
+		unsigned int x = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx();
+		unsigned int y = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy();
 
-		unsigned int middleTile = 0;
+		unsigned int middletileX = 0, middletileY = 0;
 
-		tile tabtile[initSizeView*initSizeView];
-		for (unsigned int i = 0; i < information.maps.maps.size(); i++) {
-			if (information.maps.maps[i].tile_x == x && information.maps.maps[i].tile_y == y) {
-				middleTile = i;
-				break;
+		Tile tabtile[initSizeView*initSizeView];
+		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) {
+			for (unsigned int j = 0; j < sysinfo.map.maps.size(); j++) {
+				if (sysinfo.map.maps[i][j].tile_x == x && sysinfo.map.maps[i][j].tile_y == y) {
+					middletileX = i;
+					middletileY = j;
+					break;
+				}
 			}
 		}
-		int o = (int)floor((double)initSizeView / 2.0);
-		for (int z = -(int)floor((double)initSizeView / 2.0); z < (int)ceil((double)initSizeView / 2.0); z++) {
-			o = (int)floor((double)initSizeView / 2.0);
-			for (int i = (initSizeView * (z + (int)floor((double)initSizeView / 2.0))); i < (initSizeView * (z + (int)ceil((double)initSizeView / 2.0))); i++) {
-				if (o > -initSizeInfluence && o < initSizeInfluence && z > -initSizeInfluence && z < initSizeInfluence)
-					information.maps.maps[middleTile - z - (o * (information.maps.mapSize / information.maps.tileSize))].appartenance = information.variable.s_player.selectplayer;
-				tabtile[i] = information.maps.maps[middleTile - z - (o * (information.maps.mapSize / information.maps.tileSize))];
-				tabtile[i].tile_x = (SCREEN_WIDTH / 2) - (o * information.maps.tileSize);
-				tabtile[i].tile_y = (SCREEN_HEIGHT / 2) - (z * information.maps.tileSize);
-				o--;
+		unsigned int k = 0;
+		for (int o = -(int)ceil(initSizeView / 2); o <= (int)ceil(initSizeView / 2); o++) {
+			for (int p = -(int)ceil(initSizeView / 2); p <= (int)ceil(initSizeView / 2); p++) {
+				if (o > -initSizeInfluence && o < initSizeInfluence && p > -initSizeInfluence && p < initSizeInfluence)
+					sysinfo.map.maps[middletileX + o][middletileY + p].appartenance = sysinfo.var.s_player.selectplayer;
+				tabtile[k] = sysinfo.map.maps[middletileX + o][middletileY + p];
+				tabtile[k].tile_x = (SCREEN_WIDTH / 2) - (-o * sysinfo.map.tileSize);
+				tabtile[k].tile_y = (SCREEN_HEIGHT / 2) - (-p * sysinfo.map.tileSize);
+				k++;
 			}
 		}
-		tabplayer[information.variable.s_player.selectplayer]->addCitie(name, x, y, tabtile);
 
-		tabplayer[information.variable.s_player.selectplayer]->deleteUnit(information.variable.s_player.selectunit);
-		information.variable.s_player.selectunit = -1;
-		information.variable.s_player.unitNameToMove = "";
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addCitie(name, x, y, tabtile);
+
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->deleteUnit(sysinfo.var.s_player.selectunit);
+		sysinfo.var.s_player.selectunit = -1;
+		sysinfo.var.s_player.unitNameToMove = "";
 	}
 }
-void Cities::searchCitieTile(sysinfo& information, std::vector<Player*>& tabplayer) {
-	for (unsigned int i = 0; i < tabplayer[information.variable.s_player.selectplayer]->GETtabcities().size(); i++) {
-		if (tabplayer[information.variable.s_player.selectplayer]->GETthecitie(i)->testPos(information.variable.mouse.GETmouse_x(), information.variable.mouse.GETmouse_y())) {
-			information.variable.s_player.selectCitie = i;
-			information.variable.statescreen = STATEcitiemap;
-			information.variable.select = selectnothing;
+void Cities::searchCitietile(Sysinfo& sysinfo) {
+	for (unsigned int i = 0; i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size(); i++) {
+		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(i)->testPos(sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y())) {
+			sysinfo.var.s_player.selectCitie = i;
+			sysinfo.var.statescreen = STATEcitiemap;
+			sysinfo.var.select = selectnothing;
 			break;
 		}
 	}
 }
-std::vector<tile> createTiles(tile tiles[]){
-	std::vector<tile> Atiles;
+std::vector<Tile> createtiles(Tile tiles[]){
+	std::vector<Tile> Atiles;
 	for (unsigned int i = 0; i < initSizeView*initSizeView; i++)
 		Atiles.push_back(tiles[i]);
 	return Atiles;
 }
-std::vector<Citizen> createCitizen(tile tiles){
+std::vector<Citizen> createCitizen(Tile tiles){
 	std::vector<Citizen> Acitizen;
 	Citizen acitizen(tiles);
 	Acitizen.push_back(acitizen);	
 	return Acitizen;
 }
-void Cities::afficher(sysinfo& information) {
-	for (unsigned int i = 0; i < information.allTextures.miscTexture.size(); i++)
-		information.allTextures.miscTexture[i]->renderTextureTestString(information.ecran.renderer, _image, _x, _y);
-	for (unsigned int i = 0; i < information.allTextures.txtmainmap.size(); i++)
-		information.allTextures.txtmainmap[i]->renderTextureTestString(information.ecran.renderer, _name, _x, _y + information.maps.tileSize);
+void Cities::afficher(Sysinfo& sysinfo) {
+	for (unsigned int i = 0; i < sysinfo.allTextures.miscTexture.size(); i++)
+		sysinfo.allTextures.miscTexture[i]->renderTextureTestString(sysinfo.screen.renderer, _image, _x, _y);
+	for (unsigned int i = 0; i < sysinfo.allTextes.mainMap.size(); i++)
+		sysinfo.allTextes.mainMap[i]->renderTextureTestString(sysinfo.screen.renderer, _name, _x, _y + sysinfo.map.tileSize);
 }
-void Cities::affichercitiemap(sysinfo& information) {
+void Cities::affichercitiemap(Sysinfo& sysinfo) {
 	for (unsigned int i = 0; i < initSizeView*initSizeView; i++) {
-		if (_tiles[i].tile_stringground.compare("grass.bmp") == 0)
-			information.allTextures.ground[0]->render(information.ecran.renderer, _tiles[i].tile_x, _tiles[i].tile_y);
-		else if (_tiles[i].tile_stringground.compare("water.bmp") == 0)
-			information.allTextures.ground[1]->render(information.ecran.renderer, _tiles[i].tile_x, _tiles[i].tile_y);
+		if (_tile[i].tile_stringground.compare("grass.bmp") == 0)
+			sysinfo.allTextures.ground[0]->render(sysinfo.screen.renderer, _tile[i].tile_x, _tile[i].tile_y);
+		else if (_tile[i].tile_stringground.compare("water.bmp") == 0)
+			sysinfo.allTextures.ground[1]->render(sysinfo.screen.renderer, _tile[i].tile_x, _tile[i].tile_y);
 
-		if (_tiles[i].tile_spec != 0) {
-			for (unsigned int l = 0; l < information.allTextures.groundSpec.size(); l++)
-				information.allTextures.groundSpec[l]->renderTextureTestString(information.ecran.renderer, _tiles[i].tile_stringspec, _tiles[i].tile_x, _tiles[i].tile_y);
+		if (_tile[i].tile_spec != 0) {
+			for (unsigned int l = 0; l < sysinfo.allTextures.groundSpec.size(); l++)
+				sysinfo.allTextures.groundSpec[l]->renderTextureTestString(sysinfo.screen.renderer, _tile[i].tile_stringspec, _tile[i].tile_x, _tile[i].tile_y);
 		}
-		if (_tiles[i].appartenance != -1) {
-			for (unsigned int l = 0; l < information.allTextures.colorappTile.size(); l++)
-				information.allTextures.colorappTile[l]->renderTextureTestString(information.ecran.renderer, "ColorPlayerTile" + std::to_string(_tiles[i].appartenance) + ".bmp", _tiles[i].tile_x, _tiles[i].tile_y);
+		if (_tile[i].appartenance != -1) {
+			for (unsigned int l = 0; l < sysinfo.allTextures.colorapptile.size(); l++)
+				sysinfo.allTextures.colorapptile[l]->renderTextureTestString(sysinfo.screen.renderer, "ColorPlayertile" + std::to_string(_tile[i].appartenance) + ".bmp", _tile[i].tile_x, _tile[i].tile_y);
 		}
 	}
 }
@@ -136,7 +139,7 @@ void Cities::foodNextTurn(){
 	}
 	else if (_foodStock >= foodLimitPerLevelCurrent){
 		_nbpop++;
-		Citizen c(_tiles, _citizens);
+		Citizen c(_tile, _citizens);
 		_citizens.push_back(c);
 		_foodStock -= foodLimitPerLevelCurrent;
 		change = true;
@@ -147,7 +150,7 @@ void Cities::foodNextTurn(){
 		_foodBalance = sommeFoodCitizen - (2 * (_nbpop - 1));
 	}
 }
-int Cities::testPos(int mouse_x, int mouse_y) {
+int Cities::testPos(unsigned int mouse_x, unsigned int mouse_y) {
 	if (_x == mouse_x && _y == mouse_y)
 		return 1;
 	return 0;
@@ -167,11 +170,11 @@ Citizen::Citizen() : _tileOccupied((unsigned int)ceil((initSizeView*initSizeView
 {
 	IHM::logfileconsole("Create Citizen par défaut Success");
 }
-Citizen::Citizen(tile tiles) : _tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)), _happiness(1), _food(tiles.food), _work(tiles.work), _gold(tiles.gold), _revolt(0), _religious(false), _place(true)
+Citizen::Citizen(Tile tile) : _tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)), _happiness(1), _food(tile.food), _work(tile.work), _gold(tile.gold), _revolt(0), _religious(false), _place(true)
 {
 	IHM::logfileconsole("Create Citizen Success");
 }
-Citizen::Citizen(std::vector<tile> tiles, std::vector<Citizen> citizens) : _tileOccupied(placeCitizen(tiles, citizens, _food, _work, _gold)), _happiness(1), _revolt(0), _religious(false), _place(true)
+Citizen::Citizen(std::vector<Tile> tile, std::vector<Citizen> citizens) : _tileOccupied(placeCitizen(tile, citizens, _food, _work, _gold)), _happiness(1), _revolt(0), _religious(false), _place(true)
 {
 	IHM::logfileconsole("Create Citizen Success");
 }
@@ -179,7 +182,7 @@ Citizen::~Citizen()
 {
 	IHM::logfileconsole("Kill Citizen Success");
 }
-unsigned int placeCitizen(std::vector<tile> tiles, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold) {
+unsigned int placeCitizen(std::vector<Tile> tile, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold) {
 	unsigned int condition = citizens.size();
 	unsigned int checkcondition = 0;
 	unsigned int place = 0;
@@ -197,9 +200,9 @@ unsigned int placeCitizen(std::vector<tile> tiles, std::vector<Citizen> citizens
 				place = i;
 		}
 	}
-	_food = tiles[place].food;
-	_work = tiles[place].work;
-	_gold = tiles[place].gold;
+	_food = tile[place].food;
+	_work = tile[place].work;
+	_gold = tile[place].gold;
 	return place;
 }
 unsigned int Citizen::GETtileOccupied()const {

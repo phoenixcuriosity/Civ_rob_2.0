@@ -47,26 +47,26 @@ class Units{
 			unsigned int def, unsigned int move, unsigned int level);
 		~Units();
 
-		static void loadUnitAndSpec(sysinfo& information);
-		static void searchunit(sysinfo&);
-		static void searchUnitTile(sysinfo&, std::vector<Player*>&);
-		static void tryToMove(sysinfo&, std::vector<Player*>&, int, int);
-		static int searchToMove(sysinfo&, std::vector<Player*>&, int, int);
-		static bool irrigate(sysinfo&, std::vector<Player*>&);
+		static void loadUnitAndSpec(Sysinfo& sysinfo);
+		static void searchunit(Sysinfo&);
+		static void searchUnittile(Sysinfo&);
+		static void tryToMove(Sysinfo&, int, int);
+		static int searchToMove(Sysinfo&, int, int);
+		static bool irrigate(Sysinfo&);
 
 		virtual void attack(Units*);
 		virtual void defend(unsigned int);
-		virtual void move(unsigned int&, int&, int, int);
-		virtual void heal(std::vector<tile> tiles, unsigned int selectplayer);
+		virtual void move(Uint8&, int&, int, int);
+		virtual void heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer);
 		virtual void levelup();
 		virtual void RESETmovement();
 
-		virtual int testPos(int, int);
+		virtual int testPos(unsigned int mouse_x, unsigned int mouse_y);
 
 
-		virtual void afficher(sysinfo&);
-		virtual void afficherBardeVie(sysinfo&);
-		virtual void afficherstat(sysinfo&);
+		virtual void afficher(Sysinfo&);
+		virtual void afficherBardeVie(Sysinfo&);
+		virtual void afficherstat(Sysinfo&);
 		virtual void cmpblit();
 
 		std::string GETname() const;

@@ -38,7 +38,7 @@ class Player{
 		virtual void addUnit(const std::string &, unsigned int, unsigned int, unsigned int,
 			unsigned int, unsigned int, unsigned int, unsigned int);
 		virtual void deleteUnit(unsigned int);
-		virtual void addCitie(const std::string &, unsigned int, unsigned int, tile[]);
+		virtual void addCitie(const std::string &, unsigned int, unsigned int, Tile[]);
 		virtual void deleteCitie(unsigned int);
 
 		virtual const std::string GETname() const;

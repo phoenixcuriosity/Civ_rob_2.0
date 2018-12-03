@@ -29,20 +29,21 @@
 
 class IHM {
 public:
-	static void initTile(sysinfo&);
-	static void initfile(sysinfo&);
-	static void logfileconsole(const std::string &msg);
+	static void inittile(Sysinfo&);
+	static void initfile(Sysinfo&);
+	static void logfileconsole(const std::string msg);
 	static void logSDLError(std::ostream &os, const std::string &msg);
 	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
-	static void calculimage(sysinfo&);
+	static void calculimage(Sysinfo&);
 
-	static void ecrantitre(sysinfo&);
-	static void reloadScreen(sysinfo& information);
-	static void alwaysrender(sysinfo&, std::vector<Player*>& tabplayer);
-	static void afficherSuperTiles(sysinfo&);
-	static void citiemap(sysinfo&, std::vector<Player*>& tabplayer);
+	static void titleScreen(Sysinfo&);
+	static void reloadScreen(Sysinfo& sysinfo);
+	static void changeScreenOffset(Sysinfo& sysinfo);
+	static void alwaysrender(Sysinfo&);
+	static void afficherSupertiles(Sysinfo&);
+	static void citiemap(Sysinfo&);
 
-	static void deleteAll(sysinfo&, std::vector<Player*>&);
+	static void deleteAll(Sysinfo&);
 };
 template<class T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {

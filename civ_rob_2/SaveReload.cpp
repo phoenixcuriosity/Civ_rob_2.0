@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,71 +28,77 @@
 
 ///////////////////////////// SaveReload //////////////////////////////
 /* SaveReload :: STATIC */
-void SaveReload::savemaps(sysinfo& information) {
+void SaveReload::savemaps(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_Save Start_");
 
-	std::ofstream saveScreen(information.file.SaveScreen);
+	std::ofstream saveScreen(sysinfo.file.SaveScreen);
 	if (saveScreen) {
-		for (unsigned int i = 0; i < information.maps.screen.size(); i++) {
-			saveScreen << "nb= " << information.maps.screen[i].tile_nb << std::endl;
-			saveScreen << "x= " << information.maps.screen[i].tile_x << std::endl;
-			saveScreen << "y= " << information.maps.screen[i].tile_y << std::endl;
-			saveScreen << "stringground= " << information.maps.screen[i].tile_stringground << std::endl;
-			saveScreen << "ground= " << information.maps.screen[i].tile_ground << std::endl;
-			saveScreen << "stringspec= " << information.maps.screen[i].tile_stringspec << std::endl;
-			saveScreen << "spec= " << information.maps.screen[i].tile_spec << std::endl;
-			saveScreen << "appartenance= " << information.maps.screen[i].appartenance << std::endl;
-			saveScreen << "food= " << information.maps.screen[i].food << std::endl;
-			saveScreen << "work= " << information.maps.screen[i].work << std::endl;
-			saveScreen << "gold= " << information.maps.screen[i].gold << std::endl << std::endl;
+		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) {
+			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) {
+				saveScreen << "nbX= " << (unsigned int)sysinfo.map.screen[i][j].indexX << std::endl;
+				saveScreen << "nbY= " << (unsigned int)sysinfo.map.screen[i][j].indexY << std::endl;
+				saveScreen << "x= " << sysinfo.map.screen[i][j].tile_x << std::endl;
+				saveScreen << "y= " << sysinfo.map.screen[i][j].tile_y << std::endl;
+				saveScreen << "stringground= " << sysinfo.map.screen[i][j].tile_stringground << std::endl;
+				saveScreen << "ground= " << sysinfo.map.screen[i][j].tile_ground << std::endl;
+				saveScreen << "stringspec= " << sysinfo.map.screen[i][j].tile_stringspec << std::endl;
+				saveScreen << "spec= " << sysinfo.map.screen[i][j].tile_spec << std::endl;
+				saveScreen << "appartenance= " << sysinfo.map.screen[i][j].appartenance << std::endl;
+				saveScreen << "food= " << (unsigned int)sysinfo.map.screen[i][j].food << std::endl;
+				saveScreen << "work= " << (unsigned int)sysinfo.map.screen[i][j].work << std::endl;
+				saveScreen << "gold= " << (unsigned int)sysinfo.map.screen[i][j].gold << std::endl << std::endl;
+			}
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveScreen);
+		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveScreen);
 
 
-	std::ofstream saveMaps(information.file.SaveMaps);
+	std::ofstream saveMaps(sysinfo.file.SaveMaps);
 	if (saveMaps) {
-		for (unsigned int i = 0; i < information.maps.maps.size(); i++) {
-			saveMaps << "nb= " << information.maps.maps[i].tile_nb << std::endl;
-			saveMaps << "x= " << information.maps.maps[i].tile_x << std::endl;
-			saveMaps << "y= " << information.maps.maps[i].tile_y << std::endl;
-			saveMaps << "stringground= " << information.maps.maps[i].tile_stringground << std::endl;
-			saveMaps << "ground= " << information.maps.maps[i].tile_ground << std::endl;
-			saveMaps << "stringspec= " << information.maps.maps[i].tile_stringspec << std::endl;
-			saveMaps << "spec= " << information.maps.maps[i].tile_spec << std::endl;
-			saveMaps << "appartenance= " << information.maps.maps[i].appartenance << std::endl;
-			saveMaps << "food= " << information.maps.maps[i].food << std::endl;
-			saveMaps << "work= " << information.maps.maps[i].work << std::endl;
-			saveMaps << "gold= " << information.maps.maps[i].gold << std::endl << std::endl;
+		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) {
+			for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++) {
+				saveMaps << "nbX= " << (unsigned int)sysinfo.map.maps[i][j].indexX << std::endl;
+				saveMaps << "nbY= " << (unsigned int)sysinfo.map.maps[i][j].indexY << std::endl;
+				saveMaps << "x= " << sysinfo.map.maps[i][j].tile_x << std::endl;
+				saveMaps << "y= " << sysinfo.map.maps[i][j].tile_y << std::endl;
+				saveMaps << "stringground= " << sysinfo.map.maps[i][j].tile_stringground << std::endl;
+				saveMaps << "ground= " << sysinfo.map.maps[i][j].tile_ground << std::endl;
+				saveMaps << "stringspec= " << sysinfo.map.maps[i][j].tile_stringspec << std::endl;
+				saveMaps << "spec= " << sysinfo.map.maps[i][j].tile_spec << std::endl;
+				saveMaps << "appartenance= " << sysinfo.map.maps[i][j].appartenance << std::endl;
+				saveMaps << "food= " << (unsigned int)sysinfo.map.maps[i][j].food << std::endl;
+				saveMaps << "work= " << (unsigned int)sysinfo.map.maps[i][j].work << std::endl;
+				saveMaps << "gold= " << (unsigned int)sysinfo.map.maps[i][j].gold << std::endl << std::endl;
+			}
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveMaps);
+		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
 
 	IHM::logfileconsole("_Save End_");
 }
-void SaveReload::savePlayer(sysinfo& information, std::vector<Player*>& tabplayer) {
+void SaveReload::savePlayer(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_SavePlayer Start_");
-	std::ofstream savePlayer(information.file.SavePlayer);
+	std::ofstream savePlayer(sysinfo.file.SavePlayer);
 	if (savePlayer) {
-		savePlayer << "nbPlayer= " << tabplayer.size();
-		if (tabplayer.size() != 0) {
-			for (unsigned int i = 0; i < tabplayer.size(); i++) {
+		savePlayer << "nbPlayer= " << sysinfo.tabplayer.size();
+		if (sysinfo.tabplayer.size() != 0) {
+			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) {
 				savePlayer << std::endl << std::endl << "player= " + std::to_string(i);
-				savePlayer << std::endl << "name= " << tabplayer[i]->GETname();
-				savePlayer << std::endl << "nbunitTotal= " << tabplayer[i]->GETtabunit().size();
-				if (tabplayer[i]->GETtabunit().size() != 0) {
-					for (unsigned int j = 0; j < tabplayer[i]->GETtabunit().size(); j++) {
+				savePlayer << std::endl << "name= " << sysinfo.tabplayer[i]->GETname();
+				savePlayer << std::endl << "nbunitTotal= " << sysinfo.tabplayer[i]->GETtabunit().size();
+				if (sysinfo.tabplayer[i]->GETtabunit().size() != 0) {
+					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) {
 						savePlayer << std::endl << std::endl << "\tunit= " << j;
-						savePlayer << std::endl << "\tname= " << tabplayer[i]->GETtheunit(j)->GETname();
-						savePlayer << std::endl << "\tx= " << tabplayer[i]->GETtheunit(j)->GETx();
-						savePlayer << std::endl << "\ty= " << tabplayer[i]->GETtheunit(j)->GETy();
-						savePlayer << std::endl << "\tlife= " << tabplayer[i]->GETtheunit(j)->GETlife();
-						savePlayer << std::endl << "\tatq= " << tabplayer[i]->GETtheunit(j)->GETatq();
-						savePlayer << std::endl << "\tdef= " << tabplayer[i]->GETtheunit(j)->GETdef();
-						savePlayer << std::endl << "\tmovement= " << tabplayer[i]->GETtheunit(j)->GETmovement();
-						savePlayer << std::endl << "\tlevel= " << tabplayer[i]->GETtheunit(j)->GETlevel();
+						savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETname();
+						savePlayer << std::endl << "\tx= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETx();
+						savePlayer << std::endl << "\ty= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETy();
+						savePlayer << std::endl << "\tlife= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETlife();
+						savePlayer << std::endl << "\tatq= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETatq();
+						savePlayer << std::endl << "\tdef= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETdef();
+						savePlayer << std::endl << "\tmovement= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETmovement();
+						savePlayer << std::endl << "\tlevel= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETlevel();
 					}
 				}
 				//savePlayer << endl << "nbcitie= " << tabplayer[i]->GETtabcities().size();
@@ -109,80 +115,87 @@ void SaveReload::savePlayer(sysinfo& information, std::vector<Player*>& tabplaye
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SavePlayer);
+		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 
 	IHM::logfileconsole("_SavePlayer End_");
 }
-void SaveReload::reload(sysinfo& information, std::vector<Player*>& tabplayer) {
+void SaveReload::reload(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_Reload Start_");
-	information.variable.statescreen = STATEmainmap;
+	sysinfo.var.statescreen = STATEmainmap;
 
 	std::string destroy;
-	std::string inttostringTileSize = std::to_string(information.maps.tileSize);
+	std::string inttostringtileSize = std::to_string(sysinfo.map.tileSize);
 
-	std::ifstream saveScreen(information.file.SaveScreen);
+	std::ifstream saveScreen(sysinfo.file.SaveScreen);
 	if (saveScreen) {
-		for (unsigned int i = 0; i < information.maps.screen.size(); i++) {
-			saveScreen >> destroy;
-			if (destroy.compare("nb=") == 0)
-				saveScreen >> information.maps.screen[i].tile_nb;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string nb= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("x=") == 0)
-				saveScreen >> information.maps.screen[i].tile_x;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string x= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("y=") == 0)
-				saveScreen >> information.maps.screen[i].tile_y;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string y= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("stringground=") == 0)
-				saveScreen >> information.maps.screen[i].tile_stringground;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string stringground= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("ground=") == 0)
-				saveScreen >> information.maps.screen[i].tile_ground;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string ground= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("stringspec=") == 0)
-				saveScreen >> information.maps.screen[i].tile_stringspec;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string stringspec= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("spec=") == 0)
-				saveScreen >> information.maps.screen[i].tile_spec;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string spec= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("appartenance=") == 0)
-				saveScreen >> information.maps.screen[i].appartenance;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string appartenance= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("food=") == 0)
-				saveScreen >> information.maps.screen[i].food;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string food= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("work=") == 0)
-				saveScreen >> information.maps.screen[i].work;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string work= non identique");
-			saveScreen >> destroy;
-			if (destroy.compare("gold=") == 0)
-				saveScreen >> information.maps.screen[i].gold;
-			else
-				IHM::logfileconsole("reload ERROR : comparaison string gold= non identique");
+		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) {
+			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) {
+				saveScreen >> destroy;
+				if (destroy.compare("nbX=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].indexX;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string nb= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("nbX=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].indexY;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string nb= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("x=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].tile_x;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string x= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("y=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].tile_y;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string y= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("stringground=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].tile_stringground;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string stringground= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("ground=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].tile_ground;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string ground= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("stringspec=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].tile_stringspec;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string stringspec= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("spec=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].tile_spec;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string spec= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("appartenance=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].appartenance;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string appartenance= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("food=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].food;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string food= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("work=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].work;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string work= non identique");
+				saveScreen >> destroy;
+				if (destroy.compare("gold=") == 0)
+					saveScreen >> sysinfo.map.screen[i][j].gold;
+				else
+					IHM::logfileconsole("reload ERROR : comparaison string gold= non identique");
 
+			}
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveScreen);
+		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveScreen);
 
 	unsigned int nbplayer = 0, nbunit = 0, test = 0, test1 = 0;
 	unsigned int var[7];
@@ -190,7 +203,7 @@ void SaveReload::reload(sysinfo& information, std::vector<Player*>& tabplayer) {
 	int initspacename = 200, spacename = 32;
 
 
-	std::ifstream savePlayer(information.file.SavePlayer);
+	std::ifstream savePlayer(sysinfo.file.SavePlayer);
 	if (savePlayer) {
 		savePlayer >> destroy;
 		savePlayer >> nbplayer;
@@ -202,9 +215,9 @@ void SaveReload::reload(sysinfo& information, std::vector<Player*>& tabplayer) {
 				if (test == i) {
 					savePlayer >> destroy;
 					savePlayer >> name;
-					tabplayer.push_back(new Player(name));
-					Buttons::createbutton(information, information.allButton.player,
-						shaded, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename);
+					sysinfo.tabplayer.push_back(new Player(name));
+					ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
+						shaded, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename, nonTransparent);
 
 					savePlayer >> destroy;
 					savePlayer >> nbunit;
@@ -220,7 +233,7 @@ void SaveReload::reload(sysinfo& information, std::vector<Player*>& tabplayer) {
 									savePlayer >> destroy;
 									savePlayer >> var[k];
 								}
-								tabplayer[i]->addUnit(unitname, var[0], var[1], var[2], var[3], var[4], var[5], var[6]);
+								sysinfo.tabplayer[i]->addUnit(unitname, var[0], var[1], var[2], var[3], var[4], var[5], var[6]);
 							}
 						}
 					}
@@ -229,59 +242,57 @@ void SaveReload::reload(sysinfo& information, std::vector<Player*>& tabplayer) {
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SavePlayer);
+		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 
-	SDL_RenderPresent(information.ecran.renderer);
+	SDL_RenderPresent(sysinfo.screen.renderer);
 	IHM::logfileconsole("_Reload End_");
 }
-void SaveReload::createSave(sysinfo& information) {
+void SaveReload::createSave(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_createSave Start_");
 	std::string destroy;
-	unsigned int currentSave = 0;
 
-
-	for (unsigned int i = 0; i < information.variable.save.GETnbSave(); i++) {
-		if ((i + 1) != information.variable.save.GETtabSave()[i]) {
-			information.variable.save.SETcurrentSave(i + 1);
-			information.variable.save.GETtabSave().push_back(information.variable.save.GETcurrentSave());
+	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++) {
+		if ((i + 1) != sysinfo.var.save.GETtabSave()[i]) {
+			sysinfo.var.save.SETcurrentSave(i + 1);
+			sysinfo.var.save.GETtabSave().push_back(sysinfo.var.save.GETcurrentSave());
 			break;
 		}
 	}
-	if (information.variable.save.GETcurrentSave() == 0) {
-		information.variable.save.SETcurrentSave(information.variable.save.GETnbSave() + 1);
-		information.variable.save.GETtabSave().push_back(information.variable.save.GETcurrentSave());
+	if (sysinfo.var.save.GETcurrentSave() == 0) {
+		sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETnbSave() + 1);
+		sysinfo.var.save.GETtabSave().push_back(sysinfo.var.save.GETcurrentSave());
 	}
 
-	std::ofstream saveInfo(information.file.SaveInfo);
+	std::ofstream saveInfo(sysinfo.file.SaveInfo);
 	if (saveInfo) {
 		saveInfo << "NbSave=";
-		saveInfo << std::endl << information.variable.save.GETnbSave() + 1;
+		saveInfo << std::endl << sysinfo.var.save.GETnbSave() + 1;
 		saveInfo << std::endl << "SaveUse=";
-		for (unsigned int i = 0; i < information.variable.save.GETnbSave() + 1; i++)
-			saveInfo << std::endl << information.variable.save.GETtabSave()[i];
+		for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave() + 1; i++)
+			saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveInfo);
+		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 
-	std::string save = "save/" + std::to_string(information.variable.save.GETcurrentSave());
+	std::string save = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave());
 	_mkdir(save.c_str());
-	information.variable.save.SETnbSave(information.variable.save.GETnbSave() + 1);
+	sysinfo.var.save.SETnbSave(sysinfo.var.save.GETnbSave() + 1);
 
-	information.file.SaveScreen = "save/" + std::to_string(information.variable.save.GETcurrentSave()) + "/SaveScreen.txt";
-	information.file.SaveMaps = "save/" + std::to_string(information.variable.save.GETcurrentSave()) + "/SaveMaps.txt";
-	information.file.SavePlayer = "save/" + std::to_string(information.variable.save.GETcurrentSave()) + "/SavePlayer.txt";
+	sysinfo.file.SaveScreen = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveScreen.txt";
+	sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
+	sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
 
 	IHM::logfileconsole("_createSave Start_");
 }
-void SaveReload::removeSave(sysinfo& information) {
+void SaveReload::removeSave(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_removeSave Start_");
 	std::string file;
 	bool condition = false;
 
-	if (information.variable.save.GETcurrentSave() != 0) {
+	if (sysinfo.var.save.GETcurrentSave() != 0) {
 
-		for (unsigned int i = 0; i < information.variable.save.GETnbSave(); i++) {
-			if (information.variable.save.GETcurrentSave() == information.variable.save.GETtabSave()[i]) {
+		for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++) {
+			if (sysinfo.var.save.GETcurrentSave() == sysinfo.var.save.GETtabSave()[i]) {
 				condition = true;
 				break;
 			}
@@ -289,54 +300,54 @@ void SaveReload::removeSave(sysinfo& information) {
 
 
 		if (condition) {
-			file = "save/" + std::to_string(information.variable.save.GETcurrentSave()) + "/SaveScreen.txt";
+			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveScreen.txt";
 			if (remove(file.c_str()) != 0)
 				IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
 			else
 				IHM::logfileconsole("file : " + file + " successfully remove");
 
-			file = "save/" + std::to_string(information.variable.save.GETcurrentSave()) + "/SaveMaps.txt";
+			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
 			if (remove(file.c_str()) != 0)
 				IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
 			else
 				IHM::logfileconsole("file : " + file + " successfully remove");
 
-			file = "save/" + std::to_string(information.variable.save.GETcurrentSave()) + "/SavePlayer.txt";
+			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
 			if (remove(file.c_str()) != 0)
 				IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
 			else
 				IHM::logfileconsole("file : " + file + " successfully remove");
 
-			file = "save/" + std::to_string(information.variable.save.GETcurrentSave());
+			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave());
 			if (_rmdir(file.c_str()) != 0)
 				IHM::logfileconsole("ERREUR: Impossible d'effacer le dossier " + file);
 			else
 				IHM::logfileconsole("directory : " + file + " successfully remove");
 
-			information.variable.save.SETnbSave(information.variable.save.GETnbSave() - 1);
-			if (information.variable.save.GETnbSave() == 0)
-				information.variable.save.GETtabSave().clear();
+			sysinfo.var.save.SETnbSave(sysinfo.var.save.GETnbSave() - 1);
+			if (sysinfo.var.save.GETnbSave() == 0)
+				sysinfo.var.save.GETtabSave().clear();
 			else
-				information.variable.save.GETtabSave().erase(information.variable.save.GETtabSave().begin() + information.variable.save.GETcurrentSave() - 1);
+				sysinfo.var.save.GETtabSave().erase(sysinfo.var.save.GETtabSave().begin() + sysinfo.var.save.GETcurrentSave() - 1);
 
-			for (unsigned int i = 0; i < information.allButton.reload.size(); i++) {
-				if (information.allButton.reload[i]->searchButtonName("Save : " + std::to_string(information.variable.save.GETcurrentSave()), information.variable.statescreen)) {
-					delete information.allButton.reload[i];
-					information.allButton.reload.erase(information.allButton.reload.begin() + i);
+			for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++) {
+				if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETcurrentSave()), sysinfo.var.statescreen)) {
+					delete sysinfo.allButton.reload[i];
+					sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + i);
 					break;
 				}
 			}
 
-			std::ofstream saveInfo(information.file.SaveInfo);
+			std::ofstream saveInfo(sysinfo.file.SaveInfo);
 			if (saveInfo) {
 				saveInfo << "NbSave=";
-				saveInfo << std::endl << information.variable.save.GETnbSave();
+				saveInfo << std::endl << sysinfo.var.save.GETnbSave();
 				saveInfo << std::endl << "SaveUse=";
-				for (unsigned int i = 0; i < information.variable.save.GETnbSave(); i++)
-					saveInfo << std::endl << information.variable.save.GETtabSave()[i];
+				for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+					saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 			}
 			else
-				IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveInfo);
+				IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 		}
 	}
 	else
@@ -344,60 +355,60 @@ void SaveReload::removeSave(sysinfo& information) {
 
 	IHM::logfileconsole("_removeSave End_");
 }
-void SaveReload::clearSave(sysinfo& information) {
+void SaveReload::clearSave(Sysinfo& sysinfo) {
 	IHM::logfileconsole("_clearSave Start_");
 
 
-	for (unsigned int i = 0; i < information.allButton.reload.size(); i++) {
-		for (unsigned int j = 0; j < information.variable.save.GETnbSave(); j++) {
-			if (information.allButton.reload[i]->searchButtonName("Save : " + std::to_string(information.variable.save.GETtabSave()[j]), information.variable.statescreen)) {
-				delete information.allButton.reload[i];
-				information.allButton.reload.erase(information.allButton.reload.begin() + i);
+	for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++) {
+		for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) {
+			if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]), sysinfo.var.statescreen)) {
+				delete sysinfo.allButton.reload[i];
+				sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + i);
 			}
 		}
 	}
 
 	std::string file;
-	for (unsigned int i = 0; i < information.variable.save.GETnbSave(); i++) {
+	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++) {
 
 
-		file = "save/" + std::to_string(information.variable.save.GETtabSave()[i]) + "/SaveScreen.txt";
+		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SaveScreen.txt";
 		if (remove(file.c_str()) != 0)
 			IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
 		else
 			IHM::logfileconsole("file : " + file + " successfully remove");
 
-		file = "save/" + std::to_string(information.variable.save.GETtabSave()[i]) + "/SaveMaps.txt";
+		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SaveMaps.txt";
 		if (remove(file.c_str()) != 0)
 			IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
 		else
 			IHM::logfileconsole("file : " + file + " successfully remove");
 
-		file = "save/" + std::to_string(information.variable.save.GETtabSave()[i]) + "/SavePlayer.txt";
+		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SavePlayer.txt";
 		if (remove(file.c_str()) != 0)
 			IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
 		else
 			IHM::logfileconsole("file : " + file + " successfully remove");
 
-		file = "save/" + std::to_string(information.variable.save.GETtabSave()[i]);
+		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]);
 		if (_rmdir(file.c_str()) != 0)
 			IHM::logfileconsole("ERREUR: Impossible d'effacer le dossier " + file);
 		else
 			IHM::logfileconsole("directory : " + file + " successfully remove");
 	}
 
-	std::ofstream saveInfo(information.file.SaveInfo);
+	std::ofstream saveInfo(sysinfo.file.SaveInfo);
 	if (saveInfo) {
 		saveInfo << "NbSave=";
 		saveInfo << std::endl << "0";
 		saveInfo << std::endl << "SaveUse=";
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + information.file.SaveInfo);
+		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 
-	information.variable.save.SETnbSave(0);
-	information.variable.save.SETcurrentSave(0);
-	information.variable.save.GETtabSave().clear();
+	sysinfo.var.save.SETnbSave(0);
+	sysinfo.var.save.SETcurrentSave(0);
+	sysinfo.var.save.GETtabSave().clear();
 
 	IHM::logfileconsole("_clearSave End_");
 }

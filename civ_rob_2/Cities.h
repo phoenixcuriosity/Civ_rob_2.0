@@ -30,22 +30,22 @@
 class Cities {
 public:
 	Cities() {}; // garder le constructeur par défaut
-	Cities(const std::string &, unsigned int, unsigned int, tile[]);
+	Cities(const std::string &, unsigned int, unsigned int, Tile[]);
 	~Cities();
 
-	static void createcitie(sysinfo& information, std::vector<Player*>& tabplayer);
-	static void searchCitieTile(sysinfo& information, std::vector<Player*>& tabplayer);
+	friend std::vector<Tile> createtiles(Tile tile[]);
+	friend std::vector<Citizen> createCitizen(Tile tile);
 
-	friend std::vector<tile> createTiles(tile tiles[]);
-	friend std::vector<Citizen> createCitizen(tile tiles);
+	static void createcitie(Sysinfo& sysinfo);
+	static void searchCitietile(Sysinfo& sysinfo);
 
-	virtual void afficher(sysinfo&);
-	virtual void affichercitiemap(sysinfo&);
+	virtual void afficher(Sysinfo&);
+	virtual void affichercitiemap(Sysinfo&);
 
 
 	virtual void foodNextTurn();
 
-	virtual int testPos(int, int);
+	virtual int testPos(unsigned int, unsigned int);
 
 	virtual unsigned int GETx()const;
 	virtual unsigned int GETy()const;
@@ -57,7 +57,7 @@ private:
 	std::string _name;
 	unsigned int _x;
 	unsigned int _y;
-	std::vector<tile> _tiles;
+	std::vector<Tile> _tile;
 	std::vector<Citizen> _citizens;
 	unsigned int _influenceLevel;
 	unsigned int _nbpop;
@@ -76,11 +76,11 @@ private:
 class Citizen {
 public:
 	Citizen();
-	Citizen(tile tiles);
-	Citizen(std::vector<tile> tiles, std::vector<Citizen> citizens);
+	Citizen(Tile tiles);
+	Citizen(std::vector<Tile> tile, std::vector<Citizen> citizens);
 	~Citizen();
 
-	friend unsigned int placeCitizen(std::vector<tile> tiles, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold);
+	friend unsigned int placeCitizen(std::vector<Tile> tile, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold);
 
 	void placeCitizenWithMouse();
 

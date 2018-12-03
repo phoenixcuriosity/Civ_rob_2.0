@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -42,22 +42,22 @@
 
 typedef struct randomPos randomPos;
 struct randomPos {
-	int x;
-	int y;
+	unsigned int x;
+	unsigned int y;
 };
 
 class GamePlay {
 public:
-	static void newgame(sysinfo&, std::vector<Player*>&);
-	static void groundgen(sysinfo&);
-	static void tileAffectation(tile& tiles, unsigned int tile_ground, std::string& tile_stringground, unsigned int tile_spec, std::string& tile_stringspec, unsigned int food, unsigned int work, unsigned int gold);
-	static void newGameSettlerSpawn(sysinfo&, std::vector<Player*>&);
-	static void makeRandomPosTab(sysinfo& information, std::vector<randomPos>& tabRandom, unsigned int index);
+	static void newgame(Sysinfo&);
+	static void groundgen(Sysinfo&);
+	static void tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold);
+	static void newGameSettlerSpawn(Sysinfo&);
+	static void makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom);
 	static void makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize);
 	static bool conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i);
-	static bool conditionground(sysinfo& information, randomPos& RandomPOS);
+	static bool conditionground(Sysinfo& sysinfo, randomPos& RandomPOS);
 
-	static void nextTurn(sysinfo&, std::vector<Player*>&);
+	static void nextTurn(Sysinfo&);
 };
 
 #endif

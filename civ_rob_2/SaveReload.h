@@ -28,12 +28,12 @@
 
 class SaveReload {
 public:
-	static void savemaps(sysinfo&);
-	static void savePlayer(sysinfo&, std::vector<Player*>&);
-	static void reload(sysinfo&, std::vector<Player*>&);
-	static void createSave(sysinfo& information);
-	static void removeSave(sysinfo& information);
-	static void clearSave(sysinfo& information);
+	static void savemaps(Sysinfo&);
+	static void savePlayer(Sysinfo&);
+	static void reload(Sysinfo&);
+	static void createSave(Sysinfo& sysinfo);
+	static void removeSave(Sysinfo& sysinfo);
+	static void clearSave(Sysinfo& sysinfo);
 
 	SaveReload();
 	~SaveReload();

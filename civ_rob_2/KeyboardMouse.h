@@ -28,26 +28,26 @@
 
 class KeyboardMouse {
 public:
-	static void cinDigit(sysinfo&, unsigned int&, unsigned int, unsigned int&);
-	static void cinAlphabet(sysinfo&, std::string&, unsigned int, unsigned int&);
+	static void cinDigit(Sysinfo&, unsigned int&, unsigned int, unsigned int&);
+	static void cinAlphabet(Sysinfo&, std::string&, unsigned int, unsigned int&);
 
-	static void keySDLK_b(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_i(sysinfo&, std::vector<Player*>&);
+	static void keySDLK_b(Sysinfo&);
+	static void keySDLK_i(Sysinfo&);
 
-	static void keySDLK_KP_1(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_2(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_3(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_4(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_5(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_6(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_7(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_8(sysinfo&, std::vector<Player*>&);
-	static void keySDLK_KP_9(sysinfo&, std::vector<Player*>&);
+	static void keySDLK_KP_1(Sysinfo&);
+	static void keySDLK_KP_2(Sysinfo&);
+	static void keySDLK_KP_3(Sysinfo&);
+	static void keySDLK_KP_4(Sysinfo&);
+	static void keySDLK_KP_5(Sysinfo&);
+	static void keySDLK_KP_6(Sysinfo&);
+	static void keySDLK_KP_7(Sysinfo&);
+	static void keySDLK_KP_8(Sysinfo&);
+	static void keySDLK_KP_9(Sysinfo&);
 
-	static void mouse(sysinfo&, std::vector<Player*>&, SDL_Event);
-	static void cliqueGauche(sysinfo&, std::vector<Player*>&, SDL_Event);
-	static void cliqueDroit(sysinfo&, std::vector<Player*>&, SDL_Event);
-	static void wheel(sysinfo&, int&);
+	static void mouse(Sysinfo&, SDL_Event);
+	static void cliqueGauche(Sysinfo&, SDL_Event);
+	static void cliqueDroit(Sysinfo&, SDL_Event);
+	static void wheel(Sysinfo&, int&);
 
 	KeyboardMouse();
 	~KeyboardMouse() {};

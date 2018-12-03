@@ -1,6 +1,20 @@
 This is a list of major changes in Civ_rob_2 version history.
 
 ---------------------------------------------------------------------------
+0.13: "Through the map"
+---------------------------------------------------------------------------
+-> Add:
+	- New :	std::vector<std::vector<Tile>> screen;	represents the part only visible to the user
+			std::vector<std::vector<Tile>> maps;	represents the complete map
+	- The possibility to move on the map, new bug : the units are moving with it
+	- Comments
+
+-> Change:
+	- Adapt to new Texture.h and Texture.cpp
+	- Replacement of the names of the structures : more adapted
+
+
+---------------------------------------------------------------------------
 0.12: 
 ---------------------------------------------------------------------------
 -> Change:

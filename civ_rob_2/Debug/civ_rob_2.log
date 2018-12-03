@@ -1,11 +1,24 @@
-﻿  Cities.cpp
-  GamePlay.cpp
-  IHM.cpp
+﻿  IHM.cpp
+  Cities.cpp
   KeyboardMouse.cpp
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\keyboardmouse.cpp(34): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\keyboardmouse.cpp(126): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\keyboardmouse.cpp(332): warning C4100: 'sysinfo' : paramètre formel non référencé
+  LTimer.cpp
+  main.cpp
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\main.cpp(122): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+  GamePlay.cpp
   Player.cpp
   SaveReload.cpp
   Texture.cpp
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(435): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(437): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(450): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(452): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(556): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(558): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(571): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(573): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
   Units.cpp
-  main.cpp
   Génération de code en cours...
   civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Debug\civ_rob_2.exe

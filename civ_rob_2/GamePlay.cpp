@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	last modification on this file on version:0.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,78 +26,80 @@
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
 
-void GamePlay::newgame(sysinfo& information, std::vector<Player*>& tabplayer){
+void GamePlay::newgame(Sysinfo& sysinfo){
 	IHM::logfileconsole("_Newgame Start_");
-	information.variable.statescreen = STATEecrannewgame;
+	sysinfo.var.statescreen = STATEscreennewgame;
 
 	unsigned int nbplayer = 0, initspace = 132, space = 32;
 
-	SaveReload::createSave(information);
+	SaveReload::createSave(sysinfo);
 
-	SDL_RenderClear(information.ecran.renderer);
+	SDL_RenderClear(sysinfo.screen.renderer);
 
-	for (unsigned int i = 0; i < information.allTextures.txtnewgame.size(); i++) {
-		information.allTextures.txtnewgame[i]->renderTextureTestString(information.ecran.renderer, "Press Return or kpad_Enter to valid selection");
-		information.allTextures.txtnewgame[i]->renderTextureTestString(information.ecran.renderer, "How many player(s) (max 9):");
+	for (unsigned int i = 0; i < sysinfo.allTextes.newGame.size(); i++) {
+		sysinfo.allTextes.newGame[i]->renderTextureTestString(sysinfo.screen.renderer, "Press Return or kpad_Enter to valid selection");
+		sysinfo.allTextes.newGame[i]->renderTextureTestString(sysinfo.screen.renderer, "How many player(s) (max 9):");
 	}
-	SDL_RenderPresent(information.ecran.renderer);
-	KeyboardMouse::cinDigit(information, nbplayer, SCREEN_WIDTH / 2, initspace += space);
+	SDL_RenderPresent(sysinfo.screen.renderer);
+	KeyboardMouse::cinDigit(sysinfo, nbplayer, SCREEN_WIDTH / 2, initspace += space);
 
 	for (unsigned int i = 1; i < nbplayer + 1; i++){
-		information.variable.s_player.tabPlayerName.push_back("");
-		Texture::writetxt(information, blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
-		SDL_RenderPresent(information.ecran.renderer);
-		KeyboardMouse::cinAlphabet(information, information.variable.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
-		tabplayer.push_back(new Player(information.variable.s_player.tabPlayerName[i - 1]));
+		sysinfo.var.s_player.tabPlayerName.push_back("");
+		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
+			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
+		SDL_RenderPresent(sysinfo.screen.renderer);
+		KeyboardMouse::cinAlphabet(sysinfo, sysinfo.var.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
+		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i - 1]));
 	}
-	groundgen(information);
-	newGameSettlerSpawn(information, tabplayer);
-	SaveReload::savemaps(information);
-	SaveReload::savePlayer(information, tabplayer);
+	groundgen(sysinfo);
+	newGameSettlerSpawn(sysinfo);
+	SaveReload::savemaps(sysinfo);
+	SaveReload::savePlayer(sysinfo);
 	
 	int initspacename = 200, spacename = 24;
-	information.variable.statescreen = STATEmainmap;
-	for(unsigned int i = 0; i < tabplayer.size(); i++)
-		Buttons::createbutton(information, information.allButton.player,
-			shaded, information.variable.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename);
+	sysinfo.var.statescreen = STATEmainmap;
+	for(unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
+			shaded, sysinfo.var.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename, nonTransparent);
 
 	
-	information.ecran.enableFPS = true;
-	information.ecran.fpsTimer.start();
+	sysinfo.screen.enableFPS = true;
+	sysinfo.screen.fpsTimer.start();
 
 	IHM::logfileconsole("_Newgame End_");
 }
-void GamePlay::groundgen(sysinfo& information){
+void GamePlay::groundgen(Sysinfo& sysinfo){
 	IHM::logfileconsole("_Groundgen Start_");
-	unsigned int k = 0, randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
+	unsigned int randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
 
-	for (unsigned int i = 0; i < information.maps.mapSize / information.maps.tileSize; i++){
-		for (unsigned int j = 0; j < information.maps.mapSize / information.maps.tileSize; j++){
+	for (Uint8 i = 0; i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++){
+		for (Uint8 j = 0; j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++){
 			
-			information.maps.maps[k].tile_nb = k;
-			information.maps.maps[k].tile_x = information.maps.tileSize * i;
-			information.maps.maps[k].tile_y = information.maps.tileSize * j;
+			sysinfo.map.maps[i][j].indexX = i;
+			sysinfo.map.maps[i][j].indexY = j;
+			sysinfo.map.maps[i][j].tile_x = sysinfo.map.tileSize * i;
+			sysinfo.map.maps[i][j].tile_y = sysinfo.map.tileSize * j;
 			
 			/*
 				bord de la map
 			*/
-			if ((i == 0) || (i == (information.maps.mapSize / information.maps.tileSize) - 1) || (j == 0) || ( j == (information.maps.mapSize / information.maps.tileSize) - 1))
-					tileAffectation(information.maps.maps[k], deepwater, (std::string)"deepwater.bmp", specnothing, (std::string)"specnothing", 0, 0, 0);
-			else if ((i ==  1) || (i == (information.maps.mapSize / information.maps.tileSize) - 2) || (j == 1) || (j == (information.maps.mapSize / information.maps.tileSize) - 2) ||
-				(i == 2) || (i == (information.maps.mapSize / information.maps.tileSize) - 3) || (j == 2) || (j == (information.maps.mapSize / information.maps.tileSize) - 3) ||
-				(i == 3) || (i == (information.maps.mapSize / information.maps.tileSize) - 4) || (j == 3) || (j == (information.maps.mapSize / information.maps.tileSize) - 4)) {
+			if ((i == 0) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 1) || (j == 0) || ( j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 1))
+					tileAffectation(sysinfo.map.maps[i][j], deepwater, (std::string)"deepwater.bmp", specnothing, (std::string)"specnothing", 0, 0, 0);
+			else if ((i ==  1) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 2) || (j == 1) || (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 2) ||
+				(i == 2) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 3) || (j == 2) || (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 3) ||
+				(i == 3) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4) || (j == 3) || (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4)) {
 				
 				randomspecwaterborder = rand() % 50 + 1;
 				switch (randomspecwaterborder) {
 				case 1:
-					tileAffectation(information.maps.maps[k], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
+					tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
 					break;
 				case 2:
-					tileAffectation(information.maps.maps[k], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
+					tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 					break;
 				}
 				if (randomspecwaterborder > 2)
-					tileAffectation(information.maps.maps[k], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
+					tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 			}
 			/*
 				reste de la map
@@ -105,57 +107,57 @@ void GamePlay::groundgen(sysinfo& information){
 			else {
 				randomground = rand() % 100 + 1;//the range 1 to 100
 				if (randomground < 92) {
-					information.maps.maps[k].tile_ground = grass;
-					information.maps.maps[k].tile_stringground = "grass.bmp";
+					sysinfo.map.maps[i][j].tile_ground = grass;
+					sysinfo.map.maps[i][j].tile_stringground = "grass.bmp";
 					randomspecgrass = rand() % 100 + 1;
 					switch (randomspecgrass) {
 					case 1:
-						information.maps.maps[k].tile_spec = coal;
-						information.maps.maps[k].tile_stringspec = "coal.png";
+						sysinfo.map.maps[i][j].tile_spec = coal;
+						sysinfo.map.maps[i][j].tile_stringspec = "coal.png";
 						break;
 					case 2:
-						information.maps.maps[k].tile_spec = copper;
-						information.maps.maps[k].tile_stringspec = "copper.png";
+						sysinfo.map.maps[i][j].tile_spec = copper;
+						sysinfo.map.maps[i][j].tile_stringspec = "copper.png";
 						break;
 					case 3:
-						information.maps.maps[k].tile_spec = iron;
-						information.maps.maps[k].tile_stringspec = "iron.png";
+						sysinfo.map.maps[i][j].tile_spec = iron;
+						sysinfo.map.maps[i][j].tile_stringspec = "iron.png";
 						break;
 					case 4:
-						information.maps.maps[k].tile_spec = tree;
-						information.maps.maps[k].tile_stringspec = "tree1.bmp";
+						sysinfo.map.maps[i][j].tile_spec = tree;
+						sysinfo.map.maps[i][j].tile_stringspec = "tree1.bmp";
 						break;
 					case 5:
-						information.maps.maps[k].tile_spec = stone;
-						information.maps.maps[k].tile_stringspec = "stone.png";
+						sysinfo.map.maps[i][j].tile_spec = stone;
+						sysinfo.map.maps[i][j].tile_stringspec = "stone.png";
 						break;
 					case 6:
-						information.maps.maps[k].tile_spec = uranium;
-						information.maps.maps[k].tile_stringspec = "uranium.png";
+						sysinfo.map.maps[i][j].tile_spec = uranium;
+						sysinfo.map.maps[i][j].tile_stringspec = "uranium.png";
 						break;
 					case 7:
-						information.maps.maps[k].tile_spec = horse;
-						information.maps.maps[k].tile_stringspec = "horse.bmp";
+						sysinfo.map.maps[i][j].tile_spec = horse;
+						sysinfo.map.maps[i][j].tile_stringspec = "horse.bmp";
 						break;
 					}
 					if (randomspecgrass > 7 && randomspecgrass <= 32) { // plus de chance d'avoir des arbres
-						information.maps.maps[k].tile_spec = tree;
-						information.maps.maps[k].tile_stringspec = "tree1.bmp";
-						information.maps.maps[k].food = 1;
-						information.maps.maps[k].work = 2;
-						information.maps.maps[k].gold = 1;
+						sysinfo.map.maps[i][j].tile_spec = tree;
+						sysinfo.map.maps[i][j].tile_stringspec = "tree1.bmp";
+						sysinfo.map.maps[i][j].food = 1;
+						sysinfo.map.maps[i][j].work = 2;
+						sysinfo.map.maps[i][j].gold = 1;
 					}
 					else if (randomspecgrass > 32) {
-						information.maps.maps[k].tile_spec = specnothing;
-						information.maps.maps[k].tile_stringspec = "specnothing";
-						information.maps.maps[k].food = 2;
-						information.maps.maps[k].work = 1;
-						information.maps.maps[k].gold = 1;
+						sysinfo.map.maps[i][j].tile_spec = specnothing;
+						sysinfo.map.maps[i][j].tile_stringspec = "specnothing";
+						sysinfo.map.maps[i][j].food = 2;
+						sysinfo.map.maps[i][j].work = 1;
+						sysinfo.map.maps[i][j].gold = 1;
 					}
 					else if (randomspecgrass <= 7) {
-						information.maps.maps[k].food = 1;
-						information.maps.maps[k].work = 2;
-						information.maps.maps[k].gold = 3;
+						sysinfo.map.maps[i][j].food = 1;
+						sysinfo.map.maps[i][j].work = 2;
+						sysinfo.map.maps[i][j].gold = 3;
 					}
 				}
 				else {
@@ -166,90 +168,93 @@ void GamePlay::groundgen(sysinfo& information){
 						randomspecwater = rand() % 20 + 1;
 						switch (randomspecwater) {
 						case 1:
-							tileAffectation(information.maps.maps[k], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
+							tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
 							break;
 						case 2:
-							tileAffectation(information.maps.maps[k], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
+							tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 							break;
 						}
 						if (randomspecwater > 2)
-							tileAffectation(information.maps.maps[k], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
+							tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 					}
-					if (information.maps.maps[k - SCREEN_HEIGHT / information.maps.tileSize].tile_ground != deepwater) {
+					if (sysinfo.map.maps[i - 1][j].tile_ground != deepwater) {
 						randomspecwater1 = rand() % 10 + 1;
 						switch (randomspecwater1) {
 						case 1:
-							tileAffectation(information.maps.maps[k - SCREEN_HEIGHT / information.maps.tileSize], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
+							tileAffectation(sysinfo.map.maps[i - 1][j], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
 							break;
 						case 2:
-							tileAffectation(information.maps.maps[k - SCREEN_HEIGHT / information.maps.tileSize], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
+							tileAffectation(sysinfo.map.maps[i - 1][j], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 							break;
 						}
 						if (randomspecwater1 > 2)
-							tileAffectation(information.maps.maps[k - SCREEN_HEIGHT / information.maps.tileSize], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
+							tileAffectation(sysinfo.map.maps[i - 1][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 					}
-					if (information.maps.maps[k - (SCREEN_HEIGHT / information.maps.tileSize) - 1].tile_ground != deepwater) {
+					if (sysinfo.map.maps[i - 1][j - 1].tile_ground != deepwater) {
 						randomspecwater2 = rand() % 10 + 1;
 						switch (randomspecwater2) {
 						case 1:
-							tileAffectation(information.maps.maps[k - (SCREEN_HEIGHT / information.maps.tileSize) - 1], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
+							tileAffectation(sysinfo.map.maps[i - 1][j - 1], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
 							break;
 						case 2:
-							tileAffectation(information.maps.maps[k - (SCREEN_HEIGHT / information.maps.tileSize) - 1], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
+							tileAffectation(sysinfo.map.maps[i - 1][j - 1], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 							break;
 						}
 						if (randomspecwater2 > 2)
-							tileAffectation(information.maps.maps[k - (SCREEN_HEIGHT / information.maps.tileSize) - 1], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
+							tileAffectation(sysinfo.map.maps[i - 1][j - 1], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 					}
 				}
 			}
-			k++;
 		}
 	}
-	unsigned int l = 0;
-	for (unsigned int i = 0; i < information.maps.maps.size(); i++) {
-		if (information.maps.maps[i].tile_x >= 0 && information.maps.maps[i].tile_x < SCREEN_WIDTH ) {
-			if (information.maps.maps[i].tile_y >= 0 && information.maps.maps[i].tile_y < SCREEN_HEIGHT) {
-				information.maps.screen[l] = information.maps.maps[i];
-				information.maps.screen[l].tile_nb = l;
-				information.maps.screen[l].tile_x = information.maps.maps[i].tile_x;
-				l++;
+	Uint8 m = 0, n = 0;
+	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) {
+		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++) {
+			if (sysinfo.map.maps[i][j].tile_x >= 0 && sysinfo.map.maps[i][j].tile_x < SCREEN_WIDTH) {
+				if (sysinfo.map.maps[i][j].tile_y >= 0 && sysinfo.map.maps[i][j].tile_y < SCREEN_HEIGHT) {
+					sysinfo.map.screen[m][n] = sysinfo.map.maps[i][j];
+					sysinfo.map.screen[m][n].indexX = m;
+					sysinfo.map.screen[m][n].indexY = n;
+					n = (n + 1) % sysinfo.map.screen[m].size();
+					if (n == 0)
+						m++;
+				}
 			}
 		}
 	}
 	IHM::logfileconsole("_Groundgen End_");
 }
-void GamePlay::tileAffectation(tile& tiles, unsigned int tile_ground, std::string& tile_stringground, unsigned int tile_spec, std::string& tile_stringspec, unsigned int food, unsigned int work, unsigned int gold) {
-	tiles.tile_ground = tile_ground;
-	tiles.tile_stringground = tile_stringground;
-	tiles.tile_spec = tile_spec;
-	tiles.tile_stringspec = tile_stringspec;
-	tiles.food = food;
-	tiles.work = work;
-	tiles.gold = gold;
+void GamePlay::tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold) {
+	tile.tile_ground = tile_ground;
+	tile.tile_stringground = tile_stringground;
+	tile.tile_spec = tile_spec;
+	tile.tile_stringspec = tile_stringspec;
+	tile.food = food;
+	tile.work = work;
+	tile.gold = gold;
 }
-void GamePlay::newGameSettlerSpawn(sysinfo& information, std::vector<Player*>& tabplayer){
+void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo){
 	/*
 		association des vecteurs de position (x,y) avec les settlers de départ
 	*/
 	unsigned int selectunit = 0;
-	for (unsigned int p = 0; p < information.variable.s_player.unitNameMaxToCreate; p++){
-		if (information.variable.s_player.s_tabUnitAndSpec[p].name.compare("settler") == 0){
+	for (unsigned int p = 0; p < sysinfo.var.s_player.unitNameMaxToCreate; p++){
+		if (sysinfo.var.s_player.tabUnit_Struct[p].name.compare("settler") == 0){
 			selectunit = p;
 			break;
 		}
 	}
 
 	std::vector<randomPos> tabRandom;
-	for (unsigned int i = 0; i < tabplayer.size(); i++){
-		makeRandomPosTab(information, tabRandom, i);
-		tabplayer[i]->addUnit("settler", tabRandom[i].x, tabRandom[i].y,
-			information.variable.s_player.s_tabUnitAndSpec[selectunit].life, information.variable.s_player.s_tabUnitAndSpec[selectunit].atq,
-			information.variable.s_player.s_tabUnitAndSpec[selectunit].def, information.variable.s_player.s_tabUnitAndSpec[selectunit].movement,
-			information.variable.s_player.s_tabUnitAndSpec[selectunit].level);
+	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++){
+		makeRandomPosTab(sysinfo, tabRandom);
+		sysinfo.tabplayer[i]->addUnit("settler", tabRandom[i].x, tabRandom[i].y,
+			sysinfo.var.s_player.tabUnit_Struct[selectunit].life, sysinfo.var.s_player.tabUnit_Struct[selectunit].atq,
+			sysinfo.var.s_player.tabUnit_Struct[selectunit].def, sysinfo.var.s_player.tabUnit_Struct[selectunit].movement,
+			sysinfo.var.s_player.tabUnit_Struct[selectunit].level);
 	}
 }
-void GamePlay::makeRandomPosTab(sysinfo& information, std::vector<randomPos>& tabRandom, unsigned int index){
+void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom){
 	/*
 		créér autant de vecteur de position (x,y) que de joueur initial
 	*/
@@ -264,12 +269,12 @@ void GamePlay::makeRandomPosTab(sysinfo& information, std::vector<randomPos>& ta
 			IHM::logfileconsole("__________ERROR : makeRandomPosTab, Too many Iterations");
 			break;
 		}
-		makeRandomPos(RandomPOS, information.maps.toolBarSize, information.maps.tileSize);
-		if (conditionground(information, RandomPOS)){
+		makeRandomPos(RandomPOS, sysinfo.map.toolBarSize, sysinfo.map.tileSize);
+		if (conditionground(sysinfo, RandomPOS)){
 			if (tabRandom.size() > 1){
 				nbConditionCheck = 0;
 				for (unsigned int i = 0; i < tabRandom.size(); i++){
-					if (conditionspace(RandomPOS, tabRandom, information.maps.tileSize, i)){
+					if (conditionspace(RandomPOS, tabRandom, sysinfo.map.tileSize, i)){
 						nbConditionCheck++;
 						if (nbConditionCheck == tabRandom.size()){
 							continuer = false;
@@ -311,29 +316,31 @@ bool GamePlay::conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabR
 	else
 		return false;
 }
-bool GamePlay::conditionground(sysinfo& information, randomPos& RandomPOS){
+bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS){
 	/*
 		condition pour valider les coordonnées crées:
 			- etre sur une tile possédant la caractéristique d'etre du sol
 	*/
-	for (unsigned int i = 0; i <information.maps.screen.size(); i++){
-		if (information.maps.screen[i].tile_x == RandomPOS.x && information.maps.screen[i].tile_y == RandomPOS.y){
-			if (information.maps.screen[i].tile_ground == grass)
-				return true;
-			return false;
+	for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) {
+		for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) {
+			if (sysinfo.map.screen[i][j].tile_x == RandomPOS.x && sysinfo.map.screen[i][j].tile_y == RandomPOS.y) {
+				if (sysinfo.map.screen[i][j].tile_ground == grass)
+					return true;
+				return false;
+			}
 		}
 	}
 	return false;
 }
-void GamePlay::nextTurn(sysinfo& information, std::vector<Player*>& tabplayer) {
-	for (unsigned int i = 0; i < tabplayer.size(); i++) {
-		for (unsigned int j = 0; j < tabplayer[i]->GETtabunit().size(); j++) {
-			tabplayer[i]->GETtheunit(j)->RESETmovement();
-			tabplayer[i]->GETtheunit(j)->heal(information.maps.maps, i);
+void GamePlay::nextTurn(Sysinfo& sysinfo) {
+	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) {
+		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) {
+			sysinfo.tabplayer[i]->GETtheunit(j)->RESETmovement();
+			sysinfo.tabplayer[i]->GETtheunit(j)->heal(sysinfo.map.maps, i);
 		}
-		for (unsigned int j = 0; j < tabplayer[i]->GETtabcities().size(); j++) {
-			tabplayer[i]->GETthecitie(j)->foodNextTurn();
+		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabcities().size(); j++) {
+			sysinfo.tabplayer[i]->GETthecitie(j)->foodNextTurn();
 		}
 	}
-	information.variable.nbturn++;
+	sysinfo.var.nbturn++;
 }
