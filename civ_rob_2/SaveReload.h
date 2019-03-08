@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,7 +27,8 @@
 
 #include "LIB.h"
 
-class SaveReload {
+class SaveReload
+{
 public:
 	static void savemaps(Sysinfo&);
 	static void savePlayer(Sysinfo&);
@@ -55,3 +57,7 @@ private:
 
 
 #endif
+
+/*
+*	End Of File
+*/

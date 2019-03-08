@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,7 +29,8 @@
 #include "GamePlay.h"
 
 
-void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int x, unsigned int& y) {
+void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int x, unsigned int& y)
+{
 	bool continuer = true;
 	SDL_Event event;
 	int SDL_EnableUNICODE(1);
@@ -114,13 +116,14 @@ void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int
 				break;
 			}
 			Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-				shaded, "Number of player(s)" + std::to_string(digit), { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x, y, center_x);
+				shaded, "Number of player(s)" + std::to_string(digit), { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x, y, no_angle, center_x);
 			SDL_RenderPresent(sysinfo.screen.renderer);
 			break;
 		}
 	}
 }
-void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned int initx, unsigned int& y) {
+void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned int initx, unsigned int& y)
+{
 	bool continuer = true;
 	SDL_Event event;
 	int SDL_EnableUNICODE(1);
@@ -135,9 +138,11 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 			SDL_Quit();
 			break;
 		case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
-			switch (event.key.keysym.sym) {
+			switch (event.key.keysym.sym)
+			{
 			case SDLK_ESCAPE:
-				if (name.compare("") == 0) {
+				if (name.compare("") == 0)
+				{
 					name = "NoName" + std::to_string(sysinfo.var.s_player.nbNoNamePlayer);
 					sysinfo.var.s_player.nbNoNamePlayer++;
 				}
@@ -148,14 +153,16 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 					name.pop_back();
 				break;
 			case SDLK_RETURN:
-				if (name.compare("") == 0) {
+				if (name.compare("") == 0)
+				{
 					name = "NoName" + std::to_string(sysinfo.var.s_player.nbNoNamePlayer);
 					sysinfo.var.s_player.nbNoNamePlayer++;
 				}
 				continuer = false;
 				break;
 			case SDLK_KP_ENTER:
-				if (name.compare("") == 0) {
+				if (name.compare("") == 0)
+				{
 					name = "NoName" + std::to_string(sysinfo.var.s_player.nbNoNamePlayer);
 					sysinfo.var.s_player.nbNoNamePlayer++;
 				}
@@ -294,61 +301,74 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 				name += "9";
 				break;
 			}
-			if (name.size() > 50) {
+			if (name.size() > 50)
+			{
 				name = "par_defaut";
 				IHM::logfileconsole("cinAlphabet ERROR : Name to long > 50 char");
 			}
 			Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-				shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, center_x);
+				shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, no_angle, center_x);
 			SDL_RenderPresent(sysinfo.screen.renderer);
 			break;
 		}
 	}
 }
-void KeyboardMouse::keySDLK_b(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_b(Sysinfo& sysinfo)
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Cities::createcitie(sysinfo);
 }
-void KeyboardMouse::keySDLK_i(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_i(Sysinfo& sysinfo)
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::irrigate(sysinfo);
 }
-void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), sysinfo.map.tileSize);
 }
-void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, 0, sysinfo.map.tileSize);
 }
-void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo) 
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, sysinfo.map.tileSize, sysinfo.map.tileSize);
 }
-void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), 0);
 }
-void KeyboardMouse::keySDLK_KP_5(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_5(Sysinfo& sysinfo) 
+{
 
 }
-void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo) 
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, sysinfo.map.tileSize, 0);
 }
-void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo) 
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), -(int)(sysinfo.map.tileSize));
 }
-void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, 0, -(int)(sysinfo.map.tileSize));
 }
-void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo) {
+void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo) 
+{
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
 		Units::tryToMove(sysinfo, sysinfo.map.tileSize, -(int)(sysinfo.map.tileSize));
 }
-void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event) {
+void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event)
+{
 	/*
 
 		Handle Mouse Event
@@ -363,11 +383,15 @@ void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event) {
 		cliqueDroit(sysinfo, event);
 
 }
-void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
+void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) 
+{
 	// inspect citie
-	if (sysinfo.var.statescreen == STATEmainmap) {
-		if (sysinfo.var.s_player.selectplayer > -1) {
-			if (sysinfo.var.select == selectinspect && sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size() != 0) {
+	if (sysinfo.var.statescreen == STATEmainmap)
+	{
+		if (sysinfo.var.s_player.selectplayer > -1) 
+		{
+			if (sysinfo.var.select == selectinspect && sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size() != 0) 
+			{
 				sysinfo.var.mouse.SETmouse_x((unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize);
 				sysinfo.var.mouse.SETmouse_y((unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize);
 				Cities::searchCitietile(sysinfo);
@@ -376,23 +400,27 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 	}
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 
-	switch (sysinfo.var.statescreen) {
+	switch (sysinfo.var.statescreen)
+	{
 	case STATEmainmap:
 		for (unsigned int i = 0; i < sysinfo.allButton.mainmap.size(); i++) {
-			if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"screen Titre", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"screen Titre", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				SaveReload::savemaps(sysinfo);
 				SaveReload::savePlayer(sysinfo);
 				IHM::logfileconsole("__________________________");
 				IHM::titleScreen(sysinfo);
 			}
-			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Create Unit", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Create Unit", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.allButton.mainmap[i]->changeOn();
 				if (sysinfo.var.select != selectcreate)
 					sysinfo.var.select = selectcreate;
 				else
 					sysinfo.var.select = selectnothing;
 			}
-			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Move Unit", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Move Unit", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.allButton.mainmap[i]->changeOn();
 				if (sysinfo.var.select != selectmove)
 					sysinfo.var.select = selectmove;
@@ -401,25 +429,30 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 					sysinfo.var.select = selectnothing;
 				}
 			}
-			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Inspect", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Inspect", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.allButton.mainmap[i]->changeOn();
 				if (sysinfo.var.select != selectinspect)
 					sysinfo.var.select = selectinspect;
-				else {
+				else
+				{
 					sysinfo.var.s_player.selectunit = -1;
 					sysinfo.var.select = selectnothing;
 				}
 			}
-			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Next Turn", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Next Turn", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				GamePlay::nextTurn(sysinfo);
 			}
-			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Delete Unit", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.mainmap[i]->searchButtonTexte((std::string)"Delete Unit", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.allButton.mainmap[i]->SETon(!sysinfo.allButton.mainmap[i]->GETon());
 			}
 
 
 			// reset de l'affichage On des boutons
-			for (unsigned int l = 0; l < sysinfo.allButton.mainmap.size(); l++) {
+			for (unsigned int l = 0; l < sysinfo.allButton.mainmap.size(); l++) 
+			{
 				sysinfo.allButton.mainmap[l]->resetOnstateScreen(sysinfo.var.select, selectnothing);
 				sysinfo.allButton.mainmap[l]->resetOnPlayer(sysinfo.var.s_player.selectplayer, sysinfo.var.s_player.tabPlayerName);
 			}
@@ -427,7 +460,8 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 		for (unsigned int i = 0; i < sysinfo.allButton.player.size(); i++) {
 			// player select
 			for (unsigned int l = 0; l < sysinfo.tabplayer.size(); l++) {
-				if (sysinfo.allButton.player[i]->searchButtonTexte((std::string)sysinfo.tabplayer[l]->GETname(), sysinfo.var.statescreen, event.button.x, event.button.y)) {
+				if (sysinfo.allButton.player[i]->searchButtonTexte((std::string)sysinfo.tabplayer[l]->GETname(), sysinfo.var.statescreen, event.button.x, event.button.y))
+				{
 					sysinfo.allButton.player[i]->changeOn();
 					if (sysinfo.var.s_player.selectplayer != (int)l)
 						sysinfo.var.s_player.selectplayer = (int)l;
@@ -437,56 +471,71 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 					break;
 				}
 			}
-			for (unsigned int l = 0; l < sysinfo.allButton.player.size(); l++) {
+			for (unsigned int l = 0; l < sysinfo.allButton.player.size(); l++)
+			{
 				sysinfo.allButton.player[l]->resetOnstateScreen(sysinfo.var.select, selectnothing);
 				sysinfo.allButton.player[l]->resetOnPlayer(sysinfo.var.s_player.selectplayer, sysinfo.var.s_player.tabPlayerName);
 			}
 		}
 		break;
 	case STATEtitleScreen:
-		for (unsigned int i = 0; i < sysinfo.allButton.titleScreen.size(); i++) {
-			if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"New Game", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+		for (unsigned int i = 0; i < sysinfo.allButton.titleScreen.size(); i++) 
+		{
+			if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"New Game", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				GamePlay::newgame(sysinfo);
 				return;
 			}
-			else if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"Reload", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"Reload", sysinfo.var.statescreen, event.button.x, event.button.y)) 
+			{
 				IHM::reloadScreen(sysinfo);
 				return;
 			}
-			else if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"Option", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"Option", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				//clearSave(sysinfo);
 				return;
 			}
-			else if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"Quit", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.titleScreen[i]->searchButtonTexte((std::string)"Quit", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.var.continuer = false;
 				return;
 			}
 		}
 		break;
 	case STATEreload:
-		for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++) {
-			if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Back", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+		for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++)
+		{
+			if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Back", sysinfo.var.statescreen, event.button.x, event.button.y)) 
+			{
 				IHM::titleScreen(sysinfo);
 				return;
 			}
-			else if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Remove all saves", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Remove all saves", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.allButton.reload[i]->changeOn();
 				SaveReload::clearSave(sysinfo);
 				IHM::reloadScreen(sysinfo);
 				return;
 			}
-			else if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Load", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Load", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				SaveReload::reload(sysinfo);
 				return;
 			}
-			else if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Remove", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Remove", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				SaveReload::removeSave(sysinfo);
 				IHM::reloadScreen(sysinfo);
 				return;
 			}
-			else {
-				for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) {
-					if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]), sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else
+			{
+				for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++)
+				{
+					if (sysinfo.allButton.reload[i]->searchButtonTexte((std::string)"Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]),
+						sysinfo.var.statescreen, event.button.x, event.button.y))
+					{
 						sysinfo.allButton.reload[i]->changeOn();
 						sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
 						sysinfo.file.SaveScreen = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveScreen.txt";
@@ -500,29 +549,37 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 		}
 		break;
 	case STATEcitiemap:
-		for (unsigned int i = 0; i < sysinfo.allButton.citie.size(); i++) {
-			if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Map", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+		for (unsigned int i = 0; i < sysinfo.allButton.citie.size(); i++)
+		{
+			if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Map", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.var.s_player.selectCitie = -1;
 				sysinfo.var.statescreen = STATEmainmap;
 				sysinfo.var.select = selectnothing;
 			}
-			else if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Build", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Build", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.allButton.citie[i]->changeOn();
 				if (sysinfo.var.select != selectcreate)
 					sysinfo.var.select = selectcreate;
 				else
 					sysinfo.var.select = selectnothing;
 			}
-			else if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Place Citizen", sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			else if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Place Citizen", sysinfo.var.statescreen, event.button.x, event.button.y))
+			{
 				sysinfo.allButton.citie[i]->changeOn();
 				if (sysinfo.var.select != selectmoveCitizen)
 					sysinfo.var.select = selectmoveCitizen;
 				else
 					sysinfo.var.select = selectnothing;
 			}
-			if (sysinfo.var.select == selectcreate) {
-				for (unsigned int j = 0; j < sysinfo.var.s_player.unitNameMaxToCreate; j++) {
-					if (sysinfo.allButton.citie[i]->searchButtonTexte(sysinfo.var.s_player.tabUnit_Struct[j].name, sysinfo.var.statescreen, event.button.x, event.button.y)) {
+			if (sysinfo.var.select == selectcreate)
+			{
+				for (unsigned int j = 0; j < sysinfo.var.s_player.unitNameMaxToCreate; j++)
+				{
+					if (sysinfo.allButton.citie[i]->searchButtonTexte(sysinfo.var.s_player.tabUnit_Struct[j].name,
+						sysinfo.var.statescreen, event.button.x, event.button.y))
+					{
 						sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Struct[j].name;
 						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Struct[j].name,
 							sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->GETx(),
@@ -542,17 +599,22 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) {
 		break;
 	}
 }
-void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event) {
+void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
+{
 	unsigned int selectunit = 0;
 	sysinfo.var.mouse.SETmouse_x((unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize);
 	sysinfo.var.mouse.SETmouse_y((unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize);
-	if (sysinfo.var.s_player.selectplayer > -1) {
-		switch (sysinfo.var.statescreen) {
+	if (sysinfo.var.s_player.selectplayer > -1)
+	{
+		switch (sysinfo.var.statescreen)
+		{
 		case STATEmainmap:
-			switch (sysinfo.var.select) {
+			switch (sysinfo.var.select) 
+			{
 			case selectcreate:
 				for (unsigned int p = 0; p < sysinfo.var.s_player.unitNameMaxToCreate; p++) {
-					if (sysinfo.var.s_player.unitNameToCreate.compare(sysinfo.var.s_player.tabUnit_Struct[p].name) == 0) {
+					if (sysinfo.var.s_player.unitNameToCreate.compare(sysinfo.var.s_player.tabUnit_Struct[p].name) == 0)
+					{
 						selectunit = p;
 						break;
 					}
@@ -564,13 +626,15 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event) {
 					sysinfo.var.s_player.tabUnit_Struct[selectunit].level);
 				break;
 			case selectmove:
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size() != 0) {
+				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size() != 0)
+				{
 					Units::searchUnittile(sysinfo);
 					IHM::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
 			case selectinspect:
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size() != 0) {
+				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size() != 0) 
+				{
 					Units::searchUnittile(sysinfo);
 					IHM::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
@@ -580,25 +644,32 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event) {
 		}
 	}
 }
-void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel) {
-	if (sysinfo.var.select == selectcreate) {
-		if (wheel == 1) {
+void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
+{
+	if (sysinfo.var.select == selectcreate)
+	{
+		if (wheel == 1)
+		{
 			if (sysinfo.var.s_player.unitToCreate > 0)
 				sysinfo.var.s_player.unitToCreate--;
 		}
-		else if (wheel == -1) {
+		else if (wheel == -1) 
+		{
 			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.unitNameMaxToCreate - 1)
 				sysinfo.var.s_player.unitToCreate++;
 		}
 		Units::searchunit(sysinfo);
 	}
 	/*
-	else if (sysinfo.var.statescreen == STATEreload) {
-		if (wheel == 1) {
+	else if (sysinfo.var.statescreen == STATEreload)
+	{
+		if (wheel == 1)
+		{
 			if (sysinfo.var.currentSave > 0)
 				sysinfo.var.currentSave--;
 		}
-		else if (wheel == -1) {
+		else if (wheel == -1)
+		{
 			if (sysinfo.var.currentSave < sysinfo.var.nbSave)
 				sysinfo.var.currentSave++;
 		}
@@ -612,27 +683,39 @@ KeyboardMouse::KeyboardMouse(): _mouse_x(0), _mouse_y(0), _ywheel(0), _xwheel(0)
 {
 }
 
-unsigned int KeyboardMouse::GETmouse_x()const {
+unsigned int KeyboardMouse::GETmouse_x()const
+{
 	return _mouse_x;
 }
-unsigned int KeyboardMouse::GETmouse_y()const {
+unsigned int KeyboardMouse::GETmouse_y()const
+{
 	return _mouse_y;
 }
-unsigned int KeyboardMouse::GETywheel()const {
+unsigned int KeyboardMouse::GETywheel()const 
+{
 	return _ywheel;
 }
-unsigned int KeyboardMouse::GETxwheel()const {
+unsigned int KeyboardMouse::GETxwheel()const
+{
 	return _xwheel;
 }
-void KeyboardMouse::SETmouse_x(unsigned int mouse_x) {
+void KeyboardMouse::SETmouse_x(unsigned int mouse_x)
+{
 	_mouse_x = mouse_x;
 }
-void KeyboardMouse::SETmouse_y(unsigned int mouse_y) {
+void KeyboardMouse::SETmouse_y(unsigned int mouse_y)
+{
 	_mouse_y = mouse_y;
 }
-void KeyboardMouse::SETywheel(unsigned int ywheel) {
+void KeyboardMouse::SETywheel(unsigned int ywheel)
+{
 	_ywheel = ywheel;
 }
-void KeyboardMouse::SETxwheel(unsigned int xwheel) {
+void KeyboardMouse::SETxwheel(unsigned int xwheel)
+{
 	_xwheel = xwheel;
 }
+
+/*
+*	End Of File
+*/

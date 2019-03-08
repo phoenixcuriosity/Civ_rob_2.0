@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,8 +34,13 @@ public:
 	static void initfile(Sysinfo&);
 	static void logfileconsole(const std::string msg);
 	static void logSDLError(std::ostream &os, const std::string &msg);
-	static void initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
+	static bool initsdl(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
+
+
+
 	static void calculimage(Sysinfo&);
+
+	static void eventSDL(Sysinfo& sysinfo);
 
 	static void titleScreen(Sysinfo&);
 	static void reloadScreen(Sysinfo& sysinfo);
@@ -62,3 +68,7 @@ void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
 
 
 #endif
+
+/*
+*	End Of File
+*/

@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,13 +29,17 @@
 
 ///////////////////////////// SaveReload //////////////////////////////
 /* SaveReload :: STATIC */
-void SaveReload::savemaps(Sysinfo& sysinfo) {
+void SaveReload::savemaps(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_Save Start_");
 
 	std::ofstream saveScreen(sysinfo.file.SaveScreen);
-	if (saveScreen) {
-		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) {
-			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) {
+	if (saveScreen) 
+	{
+		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++)
+		{
+			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) 
+			{
 				saveScreen << "nbX= " << (unsigned int)sysinfo.map.screen[i][j].indexX << std::endl;
 				saveScreen << "nbY= " << (unsigned int)sysinfo.map.screen[i][j].indexY << std::endl;
 				saveScreen << "x= " << sysinfo.map.screen[i][j].tile_x << std::endl;
@@ -55,9 +60,12 @@ void SaveReload::savemaps(Sysinfo& sysinfo) {
 
 
 	std::ofstream saveMaps(sysinfo.file.SaveMaps);
-	if (saveMaps) {
-		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) {
-			for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++) {
+	if (saveMaps)
+	{
+		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
+		{
+			for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
+			{
 				saveMaps << "nbX= " << (unsigned int)sysinfo.map.maps[i][j].indexX << std::endl;
 				saveMaps << "nbY= " << (unsigned int)sysinfo.map.maps[i][j].indexY << std::endl;
 				saveMaps << "x= " << sysinfo.map.maps[i][j].tile_x << std::endl;
@@ -78,18 +86,23 @@ void SaveReload::savemaps(Sysinfo& sysinfo) {
 
 	IHM::logfileconsole("_Save End_");
 }
-void SaveReload::savePlayer(Sysinfo& sysinfo) {
+void SaveReload::savePlayer(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_SavePlayer Start_");
 	std::ofstream savePlayer(sysinfo.file.SavePlayer);
 	if (savePlayer) {
 		savePlayer << "nbPlayer= " << sysinfo.tabplayer.size();
-		if (sysinfo.tabplayer.size() != 0) {
-			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) {
+		if (sysinfo.tabplayer.size() != 0)
+		{
+			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+			{
 				savePlayer << std::endl << std::endl << "player= " + std::to_string(i);
 				savePlayer << std::endl << "name= " << sysinfo.tabplayer[i]->GETname();
 				savePlayer << std::endl << "nbunitTotal= " << sysinfo.tabplayer[i]->GETtabunit().size();
-				if (sysinfo.tabplayer[i]->GETtabunit().size() != 0) {
-					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) {
+				if (sysinfo.tabplayer[i]->GETtabunit().size() != 0)
+				{
+					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++)
+					{
 						savePlayer << std::endl << std::endl << "\tunit= " << j;
 						savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETname();
 						savePlayer << std::endl << "\tx= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETx();
@@ -119,7 +132,8 @@ void SaveReload::savePlayer(Sysinfo& sysinfo) {
 
 	IHM::logfileconsole("_SavePlayer End_");
 }
-void SaveReload::reload(Sysinfo& sysinfo) {
+void SaveReload::reload(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_Reload Start_");
 	sysinfo.var.statescreen = STATEmainmap;
 
@@ -127,9 +141,12 @@ void SaveReload::reload(Sysinfo& sysinfo) {
 	std::string inttostringtileSize = std::to_string(sysinfo.map.tileSize);
 
 	std::ifstream saveScreen(sysinfo.file.SaveScreen);
-	if (saveScreen) {
-		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) {
-			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) {
+	if (saveScreen)
+	{
+		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++)
+		{
+			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++)
+			{
 				saveScreen >> destroy;
 				if (destroy.compare("nbX=") == 0)
 					saveScreen >> sysinfo.map.screen[i][j].indexX;
@@ -204,32 +221,37 @@ void SaveReload::reload(Sysinfo& sysinfo) {
 
 
 	std::ifstream savePlayer(sysinfo.file.SavePlayer);
-	if (savePlayer) {
+	if (savePlayer)
+	{
 		savePlayer >> destroy;
 		savePlayer >> nbplayer;
 
 		if (nbplayer > 0) {
-			for (unsigned int i = 0; i < nbplayer; i++) {
+			for (unsigned int i = 0; i < nbplayer; i++)
+			{
 				savePlayer >> destroy;
 				savePlayer >> test;
-				if (test == i) {
+				if (test == i)
+				{
 					savePlayer >> destroy;
 					savePlayer >> name;
 					sysinfo.tabplayer.push_back(new Player(name));
 					ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
-						shaded, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename, nonTransparent);
+						shaded, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename, nonTransparent, no_angle);
 
 					savePlayer >> destroy;
 					savePlayer >> nbunit;
 					if (nbunit > 0) {
-						for (unsigned int j = 0; j < nbunit; j++) {
+						for (unsigned int j = 0; j < nbunit; j++)
+						{
 							savePlayer >> destroy;
 							savePlayer >> test1;
 							if (test1 == j) {
 								savePlayer >> destroy;
 								savePlayer >> unitname;
 
-								for (unsigned int k = 0; k < 7; k++) {
+								for (unsigned int k = 0; k < 7; k++)
+								{
 									savePlayer >> destroy;
 									savePlayer >> var[k];
 								}
@@ -247,24 +269,29 @@ void SaveReload::reload(Sysinfo& sysinfo) {
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	IHM::logfileconsole("_Reload End_");
 }
-void SaveReload::createSave(Sysinfo& sysinfo) {
+void SaveReload::createSave(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_createSave Start_");
 	std::string destroy;
 
-	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++) {
-		if ((i + 1) != sysinfo.var.save.GETtabSave()[i]) {
+	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+	{
+		if ((i + 1) != sysinfo.var.save.GETtabSave()[i])
+		{
 			sysinfo.var.save.SETcurrentSave(i + 1);
 			sysinfo.var.save.GETtabSave().push_back(sysinfo.var.save.GETcurrentSave());
 			break;
 		}
 	}
-	if (sysinfo.var.save.GETcurrentSave() == 0) {
+	if (sysinfo.var.save.GETcurrentSave() == 0)
+	{
 		sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETnbSave() + 1);
 		sysinfo.var.save.GETtabSave().push_back(sysinfo.var.save.GETcurrentSave());
 	}
 
 	std::ofstream saveInfo(sysinfo.file.SaveInfo);
-	if (saveInfo) {
+	if (saveInfo) 
+	{
 		saveInfo << "NbSave=";
 		saveInfo << std::endl << sysinfo.var.save.GETnbSave() + 1;
 		saveInfo << std::endl << "SaveUse=";
@@ -284,22 +311,27 @@ void SaveReload::createSave(Sysinfo& sysinfo) {
 
 	IHM::logfileconsole("_createSave Start_");
 }
-void SaveReload::removeSave(Sysinfo& sysinfo) {
+void SaveReload::removeSave(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_removeSave Start_");
 	std::string file;
 	bool condition = false;
 
-	if (sysinfo.var.save.GETcurrentSave() != 0) {
+	if (sysinfo.var.save.GETcurrentSave() != 0) 
+	{
 
-		for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++) {
-			if (sysinfo.var.save.GETcurrentSave() == sysinfo.var.save.GETtabSave()[i]) {
+		for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+		{
+			if (sysinfo.var.save.GETcurrentSave() == sysinfo.var.save.GETtabSave()[i]) 
+			{
 				condition = true;
 				break;
 			}
 		}
 
 
-		if (condition) {
+		if (condition) 
+		{
 			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveScreen.txt";
 			if (remove(file.c_str()) != 0)
 				IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
@@ -330,8 +362,10 @@ void SaveReload::removeSave(Sysinfo& sysinfo) {
 			else
 				sysinfo.var.save.GETtabSave().erase(sysinfo.var.save.GETtabSave().begin() + sysinfo.var.save.GETcurrentSave() - 1);
 
-			for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++) {
-				if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETcurrentSave()), sysinfo.var.statescreen)) {
+			for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++) 
+			{
+				if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETcurrentSave()), sysinfo.var.statescreen))
+				{
 					delete sysinfo.allButton.reload[i];
 					sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + i);
 					break;
@@ -339,7 +373,8 @@ void SaveReload::removeSave(Sysinfo& sysinfo) {
 			}
 
 			std::ofstream saveInfo(sysinfo.file.SaveInfo);
-			if (saveInfo) {
+			if (saveInfo)
+			{
 				saveInfo << "NbSave=";
 				saveInfo << std::endl << sysinfo.var.save.GETnbSave();
 				saveInfo << std::endl << "SaveUse=";
@@ -355,13 +390,17 @@ void SaveReload::removeSave(Sysinfo& sysinfo) {
 
 	IHM::logfileconsole("_removeSave End_");
 }
-void SaveReload::clearSave(Sysinfo& sysinfo) {
+void SaveReload::clearSave(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_clearSave Start_");
 
 
-	for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++) {
-		for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) {
-			if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]), sysinfo.var.statescreen)) {
+	for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++)
+	{
+		for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) 
+		{
+			if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]), sysinfo.var.statescreen))
+			{
 				delete sysinfo.allButton.reload[i];
 				sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + i);
 			}
@@ -369,7 +408,8 @@ void SaveReload::clearSave(Sysinfo& sysinfo) {
 	}
 
 	std::string file;
-	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++) {
+	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+	{
 
 
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SaveScreen.txt";
@@ -398,7 +438,8 @@ void SaveReload::clearSave(Sysinfo& sysinfo) {
 	}
 
 	std::ofstream saveInfo(sysinfo.file.SaveInfo);
-	if (saveInfo) {
+	if (saveInfo)
+	{
 		saveInfo << "NbSave=";
 		saveInfo << std::endl << "0";
 		saveInfo << std::endl << "SaveUse=";
@@ -422,22 +463,32 @@ SaveReload::SaveReload(): _nbSave(0), _currentSave(0)
 SaveReload::~SaveReload()
 {
 }
-std::vector<unsigned int>& SaveReload::GETtabSave(){
+std::vector<unsigned int>& SaveReload::GETtabSave()
+{
 	return _tabSave;
 }
-unsigned int SaveReload::GETcurrentSave()const {
+unsigned int SaveReload::GETcurrentSave()const
+{
 	return _currentSave;
 }
-unsigned int SaveReload::GETnbSave()const {
+unsigned int SaveReload::GETnbSave()const
+{
 	return _nbSave;
 }
-void SaveReload::SETtabSave(std::vector<unsigned int>& tab) {
+void SaveReload::SETtabSave(std::vector<unsigned int>& tab)
+{
 	_tabSave = tab;
 }
 
-void SaveReload::SETcurrentSave(unsigned int currentSave) {
+void SaveReload::SETcurrentSave(unsigned int currentSave)
+{
 	_currentSave = currentSave;
 }
-void SaveReload::SETnbSave(unsigned int nbSave) {
+void SaveReload::SETnbSave(unsigned int nbSave)
+{
 	_nbSave = nbSave;
 }
+
+/*
+*	End Of File
+*/

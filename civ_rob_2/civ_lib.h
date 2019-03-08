@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -20,7 +21,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
 /*
 
 	civ_lib :
@@ -52,71 +52,63 @@
 
 //--- Constantes concernant l'ecran et la dimension de la fenetre  -----------------------------------------------------------------------------------
 
-// longueur de la fenetre en pixel
-const unsigned int SCREEN_WIDTH = 1920;
-
-// hauteur de la fenetre en pixel
-const unsigned int SCREEN_HEIGHT = 1088;
-
-// taille de la carte transposée dans la citiemap
-const int initSizeView = 7; 
-
-// taille de l'influence de la citie initialement
-const int initSizeInfluence = 2;
-
-//--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
-
-// nombre maximal de polices de la font (ici arial)
-const Uint8 MAX_FONT = 160;
-
-//--- Constantes concernant la SDL  -----------------------------------------------------------------------------------------------------------------
-
 /*
-	SDL_Color name {Red, Green, Blue, Alpha (transparance)}
-	chaque parametre est codé sur 8 bit -> Uint8  (de 0 à 255)
+	Pendant le développement du jeux, les parametres optimaux ont été:
+	*	-> SCREEN_WIDTH = 1920 pixels
+	*	-> SCREEN_HEIGHT = 1088 pixels
+	*	-> SCREEN_REFRESH_RATE = 60 Hz
 */
 
-const SDL_Color Black = { 0, 0, 0, 255 };
-const SDL_Color White = { 255, 255, 255, 255 };
-const SDL_Color Red = { 255, 0, 0, 255 };
-const SDL_Color Green = { 0, 255, 0, 255 };
-const SDL_Color Blue = { 0, 0, 255, 255 };
-const SDL_Color WriteColorButton = { 255, 64, 0, 255 }; // orange
-const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
-const SDL_Color NoColor = { 0, 0, 0, 0 };
 
-// font utilisée pour ce programme
-const std::string fontFile = "arial.ttf";
+/* *********************************************************
+			Calcul des Constantes
+  ********************************************************* */
+
+// Donne la valeur en pixel de la longueur et de la largeur de l'écran
+inline Uint16 getHorizontal()
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.right % 64)) == 0)
+		return (Uint16)desktop.right;
+	return (Uint16)desktop.right + (64 - complete);
+}
+// longueur de la fenetre en pixel
+const Uint16 SCREEN_WIDTH = getHorizontal();
+
+inline Uint16 getVertical()
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.bottom % 64)) == 0)
+		return (Uint16)desktop.bottom;
+	return (Uint16)desktop.bottom + (64 - complete);
+}
+// hauteur de la fenetre en pixel
+const Uint16 SCREEN_HEIGHT = getVertical();
+
+// Donne la fréquence de rafraichissement de l'écran en Hz
+inline Uint8 getRefreshRate()
+{
+	DEVMODE screen;
+	memset(&screen, 0, sizeof(DEVMODE));
+	if (EnumDisplaySettings(NULL, 0, &screen))
+	{
+		return (Uint8)screen.dmDisplayFrequency;
+	}
+	return 0;
+}
+// fréquence de rafraichissement de l'écran en Hz
+const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
 
 /* *********************************************************
 						 Enum
   ********************************************************* */
-
-//--- enum concernant les objets Texture  -----------------------------------------------------------------------------------------------------------
-
-/*
-	* type de texte :
-	*	-> blended : sans couleur de fond
-	*	-> shaded : avec une couleur de fond
-*/
-enum Texte_Type : Uint8 { NA, blended, shaded };
-
-/*
-	* type de transparance :
-	*	-> 0 transparance totale
-	*	-> 255 totalement visible
-*/
-enum Transparance_Type : Uint8 { transparent = 0, semiTransparent = 128, nonTransparent = 255 };
-
-/*
-	* type de centrage :
-	*	-> nocenter : les positions x et y ne changent pas
-	*	-> center_x : la position y ne change pas et centre la position x en focntion de la longueur du texte
-	*	-> center_y : la position x ne change pas et centre la position y en focntion de hauteur du texte
-	*	-> center : centre totalement le texte en fonction de sa longueur et de sa hauteur
-*/
-enum Center_Type : Uint8 { nocenter, center_x, center_y, center };
 
 // type de sol
 enum Ground_Type : Uint8 { noGround, grass, water, deepwater, dirt, sand};
@@ -357,25 +349,33 @@ struct AllButtons {
 };
 //---------------------- Structure niveau 0 ---------------------------------------------------------------------------------------------------------
 struct Sysinfo {
+	// contient les données en rapport à la SDL 
 	Screen screen;
+
+	// contient les noms et le chemins des fichiers .txt 
 	File file;
+
+	// contient des variables non organisées
 	Var var;
-	Map map;
-	AllButtons allButton;
+
+	// contient toutes les images
 	AllTextures allTextures;
+
+	// contient tous les textes
 	AllTextes allTextes;
+
+	// contient tous les boutons
+	AllButtons allButton;
+
+	// contient les données en rapport à la map
+	Map map;
+
+	// tableau de ptr sur les objets Player
 	std::vector<Player*> tabplayer;
 };
 
-
-
-
-
-
-
-
-
-
-
-
 #endif
+
+/*
+*	End Of File
+*/

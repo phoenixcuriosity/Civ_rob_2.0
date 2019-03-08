@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,12 +42,14 @@
 #include "Player.h"
 
 typedef struct randomPos randomPos;
-struct randomPos {
+struct randomPos
+{
 	unsigned int x;
 	unsigned int y;
 };
 
-class GamePlay {
+class GamePlay
+{
 public:
 	static void newgame(Sysinfo&);
 	static void groundgen(Sysinfo&);
@@ -61,3 +64,7 @@ public:
 };
 
 #endif
+
+/*
+*	End Of File
+*/

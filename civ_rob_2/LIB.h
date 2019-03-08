@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,6 +36,7 @@
 #include <vector>
 #include <exception>
 #include <stdexcept>
+#include "wtypes.h"
 
 #include "SDL2-2.0.8/include/SDL.h"
 #include "SDL2-2.0.8/include/SDL_ttf.h"
@@ -69,3 +71,8 @@ class Player;
 class Units;
 
 #endif
+
+
+/*
+*	End Of File
+*/

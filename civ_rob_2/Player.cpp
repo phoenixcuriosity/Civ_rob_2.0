@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.12
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,10 +33,12 @@ Player::Player(const std::string &msg) : _name(msg)
 {
 	IHM::logfileconsole("Create Player Success");
 }
-Player::~Player() {
+Player::~Player()
+{
 	unsigned int size = _tabunit.size();
 
-	for (unsigned int i = 0; i < size; i++) {
+	for (unsigned int i = 0; i < size; i++)
+	{
 		delete _tabunit[i];
 
 		IHM::logfileconsole("Kill Unit n:" + std::to_string(i) + " of Player: " + _name + " Success");
@@ -52,7 +55,8 @@ Player::~Player() {
 
 	size = _tabcities.size();
 
-	for (unsigned int i = 0; i < size; i++) {
+	for (unsigned int i = 0; i < size; i++)
+	{
 		delete _tabcities[i];
 
 		IHM::logfileconsole("Kill Citie n:" + std::to_string(i) + " of Player: " + _name + " Success");
@@ -68,47 +72,64 @@ Player::~Player() {
 
 	
 }
-void Player::addEmptyUnit(){
+void Player::addEmptyUnit()
+{
 	_tabunit.push_back(new Units());
 }
 void Player::addUnit(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
-	unsigned int def, unsigned int move, unsigned int level) {
+	unsigned int def, unsigned int move, unsigned int level) 
+{
 	_tabunit.push_back(new Units(name, x, y, life, atq, def, move, level));
 }
-void Player::deleteUnit(unsigned int index){
+void Player::deleteUnit(unsigned int index)
+{
 	delete _tabunit[index];
-	if (_tabunit.size() > 1 && index < _tabunit.size() - 1) {
+	if (_tabunit.size() > 1 && index < _tabunit.size() - 1)
+	{
 		for (unsigned int i = index; i < (_tabunit.size() - 1); i++)
 			_tabunit[i] = _tabunit[i + 1];
 	}
 	_tabunit.pop_back();
 }
-void Player::addCitie(const std::string &name, unsigned int x, unsigned int y, Tile tiles[]) {
+void Player::addCitie(const std::string &name, unsigned int x, unsigned int y, Tile tiles[])
+{
 	_tabcities.push_back(new Cities(name, x, y, tiles));
 }
-void Player::deleteCitie(unsigned int index){
+void Player::deleteCitie(unsigned int index)
+{
 	delete _tabcities[index];
-	if (_tabcities.size() > 1 && index < _tabcities.size() - 1) {
+	if (_tabcities.size() > 1 && index < _tabcities.size() - 1)
+	{
 		for (unsigned int i = index; i < (_tabcities.size() - 1); i++)
 			_tabcities[i] = _tabcities[i + 1];
 	}
 	_tabcities.pop_back();
 }
-const std::string Player::GETname() const{
+const std::string Player::GETname() const
+{
 	return _name;
 }
-Units* Player::GETtheunit(unsigned int index) const{
+Units* Player::GETtheunit(unsigned int index) const
+{
 	return _tabunit[index];
 }
-std::vector<Units*> Player::GETtabunit() const{
+std::vector<Units*> Player::GETtabunit() const
+{
 	return _tabunit;
 }
-Cities* Player::GETthecitie(unsigned int index) const{
+Cities* Player::GETthecitie(unsigned int index) const
+{
 	return _tabcities[index];
 }
-std::vector<Cities*> Player::GETtabcities() const{
+std::vector<Cities*> Player::GETtabcities() const
+{
 	return _tabcities;
 }
-void Player::SETname(const std::string &msg){
+void Player::SETname(const std::string &msg)
+{
 	_name = msg;
 }
+
+/*
+*	End Of File
+*/

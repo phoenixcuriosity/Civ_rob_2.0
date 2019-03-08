@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.6
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,7 +28,24 @@
 #include "civ_lib.h"
 #include "Player.h"
 
-class Cities {
+
+/* *********************************************************
+						 Constantes
+  ********************************************************* */
+
+// taille de la carte transposée dans la citiemap
+const int initSizeView = 7;
+
+// taille de l'influence de la citie initialement
+const int initSizeInfluence = 2;
+
+/* *********************************************************
+						 Classes
+  ********************************************************* */
+
+
+class Cities 
+{
 public:
 	Cities() {}; // garder le constructeur par défaut
 	Cities(const std::string &, unsigned int, unsigned int, Tile[]);
@@ -73,7 +91,8 @@ private:
 
 
 
-class Citizen {
+class Citizen
+{
 public:
 	Citizen();
 	Citizen(Tile tiles);
@@ -102,3 +121,7 @@ private:
 };
 
 #endif
+
+/*
+*	End Of File
+*/

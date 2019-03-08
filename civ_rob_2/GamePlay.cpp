@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,7 +27,8 @@
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
 
-void GamePlay::newgame(Sysinfo& sysinfo){
+void GamePlay::newgame(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_Newgame Start_");
 	sysinfo.var.statescreen = STATEscreennewgame;
 
@@ -36,17 +38,19 @@ void GamePlay::newgame(Sysinfo& sysinfo){
 
 	SDL_RenderClear(sysinfo.screen.renderer);
 
-	for (unsigned int i = 0; i < sysinfo.allTextes.newGame.size(); i++) {
-		sysinfo.allTextes.newGame[i]->renderTextureTestString(sysinfo.screen.renderer, "Press Return or kpad_Enter to valid selection");
-		sysinfo.allTextes.newGame[i]->renderTextureTestString(sysinfo.screen.renderer, "How many player(s) (max 9):");
+	for (unsigned int i = 0; i < sysinfo.allTextes.newGame.size(); i++)
+	{
+		sysinfo.allTextes.newGame[i]->renderTextureTestString("Press Return or kpad_Enter to valid selection");
+		sysinfo.allTextes.newGame[i]->renderTextureTestString("How many player(s) (max 9):");
 	}
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	KeyboardMouse::cinDigit(sysinfo, nbplayer, SCREEN_WIDTH / 2, initspace += space);
 
-	for (unsigned int i = 1; i < nbplayer + 1; i++){
+	for (unsigned int i = 1; i < nbplayer + 1; i++)
+	{
 		sysinfo.var.s_player.tabPlayerName.push_back("");
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, center_x);
+			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, no_angle, center_x);
 		SDL_RenderPresent(sysinfo.screen.renderer);
 		KeyboardMouse::cinAlphabet(sysinfo, sysinfo.var.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
 		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i - 1]));
@@ -60,7 +64,7 @@ void GamePlay::newgame(Sysinfo& sysinfo){
 	sysinfo.var.statescreen = STATEmainmap;
 	for(unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
-			shaded, sysinfo.var.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename, nonTransparent);
+			shaded, sysinfo.var.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename, nonTransparent, no_angle);
 
 	
 	sysinfo.screen.enableFPS = true;
@@ -68,12 +72,15 @@ void GamePlay::newgame(Sysinfo& sysinfo){
 
 	IHM::logfileconsole("_Newgame End_");
 }
-void GamePlay::groundgen(Sysinfo& sysinfo){
+void GamePlay::groundgen(Sysinfo& sysinfo)
+{
 	IHM::logfileconsole("_Groundgen Start_");
 	unsigned int randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
 
-	for (Uint8 i = 0; i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++){
-		for (Uint8 j = 0; j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++){
+	for (Uint8 i = 0; i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
+	{
+		for (Uint8 j = 0; j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
+		{
 			
 			sysinfo.map.maps[i][j].indexX = i;
 			sysinfo.map.maps[i][j].indexY = j;
@@ -87,7 +94,8 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 					tileAffectation(sysinfo.map.maps[i][j], deepwater, (std::string)"deepwater.bmp", specnothing, (std::string)"specnothing", 0, 0, 0);
 			else if ((i ==  1) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 2) || (j == 1) || (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 2) ||
 				(i == 2) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 3) || (j == 2) || (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 3) ||
-				(i == 3) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4) || (j == 3) || (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4)) {
+				(i == 3) || (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4) || (j == 3) || (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4))
+			{
 				
 				randomspecwaterborder = rand() % 50 + 1;
 				switch (randomspecwaterborder) {
@@ -104,13 +112,16 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 			/*
 				reste de la map
 			*/
-			else {
+			else
+			{
 				randomground = rand() % 100 + 1;//the range 1 to 100
-				if (randomground < 92) {
+				if (randomground < 92)
+				{
 					sysinfo.map.maps[i][j].tile_ground = grass;
 					sysinfo.map.maps[i][j].tile_stringground = "grass.bmp";
 					randomspecgrass = rand() % 100 + 1;
-					switch (randomspecgrass) {
+					switch (randomspecgrass)
+					{
 					case 1:
 						sysinfo.map.maps[i][j].tile_spec = coal;
 						sysinfo.map.maps[i][j].tile_stringspec = "coal.png";
@@ -140,21 +151,24 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 						sysinfo.map.maps[i][j].tile_stringspec = "horse.bmp";
 						break;
 					}
-					if (randomspecgrass > 7 && randomspecgrass <= 32) { // plus de chance d'avoir des arbres
+					if (randomspecgrass > 7 && randomspecgrass <= 32)
+					{ // plus de chance d'avoir des arbres
 						sysinfo.map.maps[i][j].tile_spec = tree;
 						sysinfo.map.maps[i][j].tile_stringspec = "tree1.bmp";
 						sysinfo.map.maps[i][j].food = 1;
 						sysinfo.map.maps[i][j].work = 2;
 						sysinfo.map.maps[i][j].gold = 1;
 					}
-					else if (randomspecgrass > 32) {
+					else if (randomspecgrass > 32)
+					{
 						sysinfo.map.maps[i][j].tile_spec = specnothing;
 						sysinfo.map.maps[i][j].tile_stringspec = "specnothing";
 						sysinfo.map.maps[i][j].food = 2;
 						sysinfo.map.maps[i][j].work = 1;
 						sysinfo.map.maps[i][j].gold = 1;
 					}
-					else if (randomspecgrass <= 7) {
+					else if (randomspecgrass <= 7) 
+					{
 						sysinfo.map.maps[i][j].food = 1;
 						sysinfo.map.maps[i][j].work = 2;
 						sysinfo.map.maps[i][j].gold = 3;
@@ -164,9 +178,11 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 					/*
 						génération de l'eau -> forme en L (3 cases)
 					*/
-					if (i > 2 && j > 2) {
+					if (i > 2 && j > 2)
+					{
 						randomspecwater = rand() % 20 + 1;
-						switch (randomspecwater) {
+						switch (randomspecwater)
+						{
 						case 1:
 							tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
 							break;
@@ -177,9 +193,11 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 						if (randomspecwater > 2)
 							tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 					}
-					if (sysinfo.map.maps[i - 1][j].tile_ground != deepwater) {
+					if (sysinfo.map.maps[i - 1][j].tile_ground != deepwater)
+					{
 						randomspecwater1 = rand() % 10 + 1;
-						switch (randomspecwater1) {
+						switch (randomspecwater1)
+						{
 						case 1:
 							tileAffectation(sysinfo.map.maps[i - 1][j], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
 							break;
@@ -190,9 +208,11 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 						if (randomspecwater1 > 2)
 							tileAffectation(sysinfo.map.maps[i - 1][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 					}
-					if (sysinfo.map.maps[i - 1][j - 1].tile_ground != deepwater) {
+					if (sysinfo.map.maps[i - 1][j - 1].tile_ground != deepwater)
+					{
 						randomspecwater2 = rand() % 10 + 1;
-						switch (randomspecwater2) {
+						switch (randomspecwater2)
+						{
 						case 1:
 							tileAffectation(sysinfo.map.maps[i - 1][j - 1], water, (std::string)"water.bmp", fish, (std::string)"fish.bmp", 3, 2, 1);
 							break;
@@ -208,10 +228,13 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 		}
 	}
 	Uint8 m = 0, n = 0;
-	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) {
+	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
+	{
 		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++) {
-			if (sysinfo.map.maps[i][j].tile_x >= 0 && sysinfo.map.maps[i][j].tile_x < SCREEN_WIDTH) {
-				if (sysinfo.map.maps[i][j].tile_y >= 0 && sysinfo.map.maps[i][j].tile_y < SCREEN_HEIGHT) {
+			if (sysinfo.map.maps[i][j].tile_x >= 0 && sysinfo.map.maps[i][j].tile_x < SCREEN_WIDTH)
+			{
+				if (sysinfo.map.maps[i][j].tile_y >= 0 && sysinfo.map.maps[i][j].tile_y < SCREEN_HEIGHT)
+				{
 					sysinfo.map.screen[m][n] = sysinfo.map.maps[i][j];
 					sysinfo.map.screen[m][n].indexX = m;
 					sysinfo.map.screen[m][n].indexY = n;
@@ -224,7 +247,8 @@ void GamePlay::groundgen(Sysinfo& sysinfo){
 	}
 	IHM::logfileconsole("_Groundgen End_");
 }
-void GamePlay::tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold) {
+void GamePlay::tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold)
+{
 	tile.tile_ground = tile_ground;
 	tile.tile_stringground = tile_stringground;
 	tile.tile_spec = tile_spec;
@@ -233,20 +257,24 @@ void GamePlay::tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_s
 	tile.work = work;
 	tile.gold = gold;
 }
-void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo){
+void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
+{
 	/*
 		association des vecteurs de position (x,y) avec les settlers de départ
 	*/
 	unsigned int selectunit = 0;
-	for (unsigned int p = 0; p < sysinfo.var.s_player.unitNameMaxToCreate; p++){
-		if (sysinfo.var.s_player.tabUnit_Struct[p].name.compare("settler") == 0){
+	for (unsigned int p = 0; p < sysinfo.var.s_player.unitNameMaxToCreate; p++)
+	{
+		if (sysinfo.var.s_player.tabUnit_Struct[p].name.compare("settler") == 0)
+		{
 			selectunit = p;
 			break;
 		}
 	}
 
 	std::vector<randomPos> tabRandom;
-	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++){
+	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+	{
 		makeRandomPosTab(sysinfo, tabRandom);
 		sysinfo.tabplayer[i]->addUnit("settler", tabRandom[i].x, tabRandom[i].y,
 			sysinfo.var.s_player.tabUnit_Struct[selectunit].life, sysinfo.var.s_player.tabUnit_Struct[selectunit].atq,
@@ -254,7 +282,8 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo){
 			sysinfo.var.s_player.tabUnit_Struct[selectunit].level);
 	}
 }
-void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom){
+void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom)
+{
 	/*
 		créér autant de vecteur de position (x,y) que de joueur initial
 	*/
@@ -263,20 +292,27 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 	unsigned int nbConditionCheck = 0;
 	unsigned int iteration = 0;
 
-	while (continuer){
+	while (continuer)
+	{
 		iteration++;
-		if (iteration > 10000){
+		if (iteration > 10000)
+		{
 			IHM::logfileconsole("__________ERROR : makeRandomPosTab, Too many Iterations");
 			break;
 		}
 		makeRandomPos(RandomPOS, sysinfo.map.toolBarSize, sysinfo.map.tileSize);
-		if (conditionground(sysinfo, RandomPOS)){
-			if (tabRandom.size() > 1){
+		if (conditionground(sysinfo, RandomPOS))
+		{
+			if (tabRandom.size() > 1)
+			{
 				nbConditionCheck = 0;
-				for (unsigned int i = 0; i < tabRandom.size(); i++){
-					if (conditionspace(RandomPOS, tabRandom, sysinfo.map.tileSize, i)){
+				for (unsigned int i = 0; i < tabRandom.size(); i++)
+				{
+					if (conditionspace(RandomPOS, tabRandom, sysinfo.map.tileSize, i))
+					{
 						nbConditionCheck++;
-						if (nbConditionCheck == tabRandom.size()){
+						if (nbConditionCheck == tabRandom.size())
+						{
 							continuer = false;
 							break;
 						}
@@ -289,7 +325,8 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 	}
 	tabRandom.push_back(RandomPOS);
 }
-void GamePlay::makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize){
+void GamePlay::makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize)
+{
 	/*
 		créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
 	*/
@@ -298,7 +335,8 @@ void GamePlay::makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, uns
 	RandomPOS.x = (int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;
 }
-bool GamePlay::conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i){
+bool GamePlay::conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i)
+{
 	/*
 		condition pour valider les coordonnées crées:
 					- etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
@@ -316,14 +354,18 @@ bool GamePlay::conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabR
 	else
 		return false;
 }
-bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS){
+bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
+{
 	/*
 		condition pour valider les coordonnées crées:
 			- etre sur une tile possédant la caractéristique d'etre du sol
 	*/
-	for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) {
-		for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) {
-			if (sysinfo.map.screen[i][j].tile_x == RandomPOS.x && sysinfo.map.screen[i][j].tile_y == RandomPOS.y) {
+	for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) 
+	{
+		for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) 
+		{
+			if (sysinfo.map.screen[i][j].tile_x == RandomPOS.x && sysinfo.map.screen[i][j].tile_y == RandomPOS.y) 
+			{
 				if (sysinfo.map.screen[i][j].tile_ground == grass)
 					return true;
 				return false;
@@ -332,15 +374,23 @@ bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS){
 	}
 	return false;
 }
-void GamePlay::nextTurn(Sysinfo& sysinfo) {
-	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) {
-		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) {
+void GamePlay::nextTurn(Sysinfo& sysinfo)
+{
+	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
+	{
+		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) 
+		{
 			sysinfo.tabplayer[i]->GETtheunit(j)->RESETmovement();
 			sysinfo.tabplayer[i]->GETtheunit(j)->heal(sysinfo.map.maps, i);
 		}
-		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabcities().size(); j++) {
+		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabcities().size(); j++)
+		{
 			sysinfo.tabplayer[i]->GETthecitie(j)->foodNextTurn();
 		}
 	}
 	sysinfo.var.nbturn++;
 }
+
+/*
+*	End Of File
+*/

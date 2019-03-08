@@ -1,8 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
-	last modification on this file on version:0.13
+	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	last modification on this file on version:0.14
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,20 +38,24 @@ Units::Units(const std::string &name, unsigned int x, unsigned int y, unsigned i
 	IHM::logfileconsole("Create Unit:  Success");
 }
 
-Units::~Units(){
+Units::~Units()
+{
 
 }
 
-void Units::loadUnitAndSpec(Sysinfo& sysinfo) {
+void Units::loadUnitAndSpec(Sysinfo& sysinfo)
+{
 	std::ifstream UNIT("bin/UNIT.txt");
-	if (UNIT) {
+	if (UNIT) 
+	{
 		std::string destroy;
 		Unit_Struct currentUnit;
 
 		UNIT >> destroy;
 		UNIT >> sysinfo.var.s_player.unitNameMaxToCreate;
 
-		for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++) {
+		for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
+		{
 			UNIT >> destroy;
 			UNIT >> currentUnit.name;
 
@@ -75,12 +80,16 @@ void Units::loadUnitAndSpec(Sysinfo& sysinfo) {
 	else
 		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier bin/UNIT.txt");
 }
-void Units::searchunit(Sysinfo& sysinfo) {
+void Units::searchunit(Sysinfo& sysinfo)
+{
 	sysinfo.var.s_player.unitNameToCreate = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate].name;
 }
-void Units::searchUnittile(Sysinfo& sysinfo) {
-	for (unsigned int i = 0; i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size(); i++) {
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(i)->testPos(sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y())) {
+void Units::searchUnittile(Sysinfo& sysinfo)
+{
+	for (unsigned int i = 0; i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size(); i++)
+	{
+		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(i)->testPos(sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+		{
 			sysinfo.var.s_player.selectunit = i;
 			sysinfo.var.s_player.unitNameToMove = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(i)->GETname();
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(i)->SETblit(true);
@@ -88,8 +97,10 @@ void Units::searchUnittile(Sysinfo& sysinfo) {
 		}
 	}
 }
-void Units::tryToMove(Sysinfo& sysinfo, int x, int y) {
-	switch (searchToMove(sysinfo, x, y)) {
+void Units::tryToMove(Sysinfo& sysinfo, int x, int y)
+{
+	switch (searchToMove(sysinfo, x, y))
+	{
 	case 0:
 		break;
 	case 1:
@@ -97,7 +108,8 @@ void Units::tryToMove(Sysinfo& sysinfo, int x, int y) {
 		break;
 	case 2:
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheunit(sysinfo.var.s_player.selectUnitToAttack));
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheunit(sysinfo.var.s_player.selectUnitToAttack)->GETalive() == false) {
+		if (sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheunit(sysinfo.var.s_player.selectUnitToAttack)->GETalive() == false)
+		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->deleteUnit(sysinfo.var.s_player.selectUnitToAttack);
 			tryToMove(sysinfo, x, y);
 		}
@@ -105,7 +117,8 @@ void Units::tryToMove(Sysinfo& sysinfo, int x, int y) {
 		break;
 	}
 }
-int Units::searchToMove(Sysinfo& sysinfo, int x, int y) {
+int Units::searchToMove(Sysinfo& sysinfo, int x, int y)
+{
 	/*
 		conditions de mouvement :
 			- que la case cible soit du sol et
@@ -115,11 +128,15 @@ int Units::searchToMove(Sysinfo& sysinfo, int x, int y) {
 	*/
 	bool ground = false;
 
-	for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) {
-		for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) {
+	for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++)
+	{
+		for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++)
+		{
 			if (sysinfo.map.screen[i][j].tile_x == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx() + x &&
-				sysinfo.map.screen[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y) {
-				if (sysinfo.map.screen[i][j].tile_ground == grass) {
+				sysinfo.map.screen[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y)
+			{
+				if (sysinfo.map.screen[i][j].tile_ground == grass)
+				{
 					ground = true;
 					break;
 				}
@@ -127,14 +144,20 @@ int Units::searchToMove(Sysinfo& sysinfo, int x, int y) {
 		}
 	}
 
-	if (ground) {
-		for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) {
-			for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) {
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx() + x == sysinfo.tabplayer[i]->GETtheunit(j)->GETx()) {
-					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheunit(j)->GETy()) {
+	if (ground)
+	{
+		for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
+		{
+			for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) 
+			{
+				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx() + x == sysinfo.tabplayer[i]->GETtheunit(j)->GETx())
+				{
+					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheunit(j)->GETy())
+					{
 						if (sysinfo.var.s_player.selectplayer == (int)i)
 							return 0;
-						else {
+						else
+						{
 							sysinfo.var.s_player.selectPlayerToAttack = (int)i;
 							sysinfo.var.s_player.selectUnitToAttack = (int)j;
 							return 2;
@@ -148,7 +171,8 @@ int Units::searchToMove(Sysinfo& sysinfo, int x, int y) {
 		return 0;
 	return 1;
 }
-bool Units::irrigate(Sysinfo&) {
+bool Units::irrigate(Sysinfo&)
+{
 	return false;
 }
 
@@ -156,14 +180,18 @@ bool Units::irrigate(Sysinfo&) {
 
 
 
-void Units::attack(Units* cible){
+void Units::attack(Units* cible)
+{
 	if (_movement > 0) 
 		cible->defend(_atq);
 }
-void Units::defend(unsigned int dmg){
+void Units::defend(unsigned int dmg)
+{
 	int test = 0;
-	if (dmg > _def) {
-		if ((test = (_life - (dmg - _def))) <= 0) {
+	if (dmg > _def)
+	{
+		if ((test = (_life - (dmg - _def))) <= 0) 
+		{
 			_life = 0;
 			_alive = false;
 		}
@@ -171,17 +199,23 @@ void Units::defend(unsigned int dmg){
 			_life -= (dmg - _def);
 	}	
 }
-void Units::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer){
-	for (unsigned int i = 0; i < tiles.size(); i++) {
-		for (unsigned int j = 0; j < tiles[i].size(); j++) {
-			if (_x == tiles[i][j].tile_x && _y == tiles[i][j].tile_y) {
-				if (tiles[i][j].appartenance == -1) {
+void Units::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer)
+{
+	for (unsigned int i = 0; i < tiles.size(); i++) 
+	{
+		for (unsigned int j = 0; j < tiles[i].size(); j++)
+		{
+			if (_x == tiles[i][j].tile_x && _y == tiles[i][j].tile_y)
+			{
+				if (tiles[i][j].appartenance == -1) 
+				{
 					_life += (unsigned int)ceil(_maxlife / 20);
 					if (_life > _maxlife)
 						_life = _maxlife;
 					return;
 				}
-				else if (tiles[i][j].appartenance == (int)selectplayer) {
+				else if (tiles[i][j].appartenance == (int)selectplayer)
+				{
 					_life += (unsigned int)ceil(_maxlife / 5);
 					if (_life > _maxlife)
 						_life = _maxlife;
@@ -193,14 +227,17 @@ void Units::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplaye
 		}
 	}
 }
-void Units::move(Uint8& select, int& selectunit, int x, int y){
-	if (_movement > 0) {
+void Units::move(Uint8& select, int& selectunit, int x, int y)
+{
+	if (_movement > 0)
+	{
 		_x += x;
 		_y += y;
 		_movement--;
 		
 	}
-	if (_movement == 0) {
+	if (_movement == 0)
+	{
 		select = selectnothing;
 		selectunit = -1;
 		_blit = 0;
@@ -208,182 +245,233 @@ void Units::move(Uint8& select, int& selectunit, int x, int y){
 	}
 		
 }
-void Units::levelup(){
+void Units::levelup()
+{
 	_level++;
 	//heal();
 }
-void Units::RESETmovement() {
+void Units::RESETmovement()
+{
 	_movement = _maxmovement;
 }
-int Units::testPos(unsigned int mouse_x, unsigned int mouse_y) {
+int Units::testPos(unsigned int mouse_x, unsigned int mouse_y) 
+{
 	if (_x == mouse_x && _y == mouse_y)
 		return 1;
 	return 0;
 }
 void Units::afficher(Sysinfo& sysinfo){
-	if (_show) {
+	if (_show)
+	{
 		for (unsigned int i = 0; i < sysinfo.allTextures.unit.size(); i++)
-			sysinfo.allTextures.unit[i]->renderTextureTestString(sysinfo.screen.renderer, _name, _x, _y);
+			sysinfo.allTextures.unit[i]->renderTextureTestString(_name, _x, _y);
 		//logfileconsole("Afficher Unit Success");
 	}
 }
-void Units::afficherBardeVie(Sysinfo& sysinfo){
-	if (_show) {
-		if (_life == _maxlife) {
+void Units::afficherBardeVie(Sysinfo& sysinfo)
+{
+	if (_show)
+	{
+		if (_life == _maxlife)
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "maxlife.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("maxlife.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1))){
+		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1)))
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.9life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.9life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) 
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.8life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.8life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3)))
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.7life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.7life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4)))
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.6life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.6life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5)))
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.5life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.5life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) 
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.4life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.4life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) 
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.3life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.3life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8)))
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.2life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.2life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9)))
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.1life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.1life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.9))) {
+		else if (_life < (_maxlife - ceil(_maxlife * 0.9)))
+		{
 			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString(sysinfo.screen.renderer, "0.0life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.0life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 	}
 }
-void Units::afficherstat(Sysinfo& sysinfo) {
-	if (_show) {
+void Units::afficherstat(Sysinfo& sysinfo)
+{
+	if (_show)
+	{
 		int initspace = _y, space = 14;
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "Name: "  + _name, { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace);
+			blended, "Name: "  + _name, { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "X: " + std::to_string(_x), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space);
+			blended, "X: " + std::to_string(_x), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "Y: " + std::to_string(_y), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space);
+			blended, "Y: " + std::to_string(_y), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "life: " + std::to_string(_life), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space);
+			blended, "life: " + std::to_string(_life), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "atq: " + std::to_string(_atq), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space);
+			blended, "atq: " + std::to_string(_atq), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "def: " + std::to_string(_def), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space);
+			blended, "def: " + std::to_string(_def), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "movement: " + std::to_string(_movement), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space);
+			blended, "movement: " + std::to_string(_movement), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "level: " + std::to_string(_level), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space);
+			blended, "level: " + std::to_string(_level), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 	}
 }
-void Units::cmpblit() {
+void Units::cmpblit() 
+{
 	/*
 		50% off 50% on , environ 1s le cycle
 		probablement à changer dans le futur???
 	*/
-	if (_blit < 2000) {
+	if (_blit < 2000)
+	{
 		_blit++;
 		_show = false;
 	}
-	else if (_blit >= 2000 && _blit < 4000) {
+	else if (_blit >= 2000 && _blit < 4000)
+	{
 		_blit++;
 		_show = true;
 	}
 	else if(_blit >= 4000)
 		_blit = 0;
 }
-std::string Units::GETname() const{
+std::string Units::GETname() const
+{
 	return _name;
 }
-unsigned int Units::GETx() const {
+unsigned int Units::GETx() const
+{
 	return _x;
 }
-unsigned int Units::GETy() const {
+unsigned int Units::GETy() const
+{
 	return _y;
 }
-unsigned int Units::GETmaxlife() const {
+unsigned int Units::GETmaxlife() const
+{
 	return _maxlife;
 }
-unsigned int Units::GETmaxatq() const {
+unsigned int Units::GETmaxatq() const 
+{
 	return _maxatq;
 }
-unsigned int Units::GETmaxdef() const {
+unsigned int Units::GETmaxdef() const
+{
 	return _maxdef;
 }
-unsigned int Units::GETmaxmovement() const {
+unsigned int Units::GETmaxmovement() const
+{
 	return _maxmovement;
 }
-unsigned int Units::GETmaxlevel() const {
+unsigned int Units::GETmaxlevel() const 
+{
 	return _maxlevel;
 }
-unsigned int Units::GETlife() const{
+unsigned int Units::GETlife() const
+{
 	return _life;
 }
-unsigned int Units::GETatq() const{
+unsigned int Units::GETatq() const
+{
 	return _atq;
 }
-unsigned int Units::GETdef() const{
+unsigned int Units::GETdef() const
+{
 	return _def;
 }
-unsigned int Units::GETmovement() const{
+unsigned int Units::GETmovement() const
+{
 	return _movement;
 }
-unsigned int Units::GETlevel() const{
+unsigned int Units::GETlevel() const
+{
 	return _level;
 }
-bool Units::GETalive() const{
+bool Units::GETalive() const
+{
 	return _life; //Renvoie true is m_life > 0 et false sinon.
 }
-bool Units::GETblit() const {
+bool Units::GETblit() const 
+{
 	return _blit;
 }
-void Units::SETname(const std::string &msg){
+void Units::SETname(const std::string &msg)
+{
 	_name = msg;
 }
-void Units::SETlife(unsigned int life){
+void Units::SETlife(unsigned int life)
+{
 	_life = life;
 }
-void Units::SETx(unsigned int x) {
+void Units::SETx(unsigned int x)
+{
 	_x = x;
 }
-void Units::SETy(unsigned int y){
+void Units::SETy(unsigned int y)
+{
 	_y = y;
 }
-void Units::SETatq(unsigned int atq){
+void Units::SETatq(unsigned int atq)
+{
 	_atq = atq;
 }
-void Units::SETdef(unsigned int def){
+void Units::SETdef(unsigned int def)
+{
 	_def = def;
 }
-void Units::SETmovement(unsigned int movement){
+void Units::SETmovement(unsigned int movement)
+{
 	_movement = movement;
 }
-void Units::SETlevel(unsigned int level){
+void Units::SETlevel(unsigned int level)
+{
 	_level = level;
 }
-void Units::SETalive(bool alive){
+void Units::SETalive(bool alive)
+{
 	_alive = alive;
 }
-void Units::SETblit(bool blit) {
+void Units::SETblit(bool blit) 
+{
 	_blit = blit;
 }
+
+/*
+*	End Of File
+*/
