@@ -28,7 +28,8 @@
 #include "LIB.h"
 #include "Player.h"
 
-class IHM {
+class IHM
+{
 public:
 	static void inittile(Sysinfo&);
 	static void initfile(Sysinfo&);
@@ -52,11 +53,16 @@ public:
 	static void deleteAll(Sysinfo&);
 };
 template<class T>
-void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name) {
+void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name)
+{
 	unsigned int size = dytab.size();
-	for (unsigned int i = 0; i < size; i++) {
-		IHM::logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
-		delete dytab[i];
+	for (unsigned int i = 0; i < size; i++)
+	{
+		if (dytab[i] != nullptr)
+		{
+			IHM::logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
+			delete dytab[i];
+		}
 	}
 	for (unsigned int i = 0; i < size; i++)
 		dytab.pop_back();

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -370,106 +370,6 @@ void Units::cmpblit()
 	}
 	else if(_blit >= 4000)
 		_blit = 0;
-}
-std::string Units::GETname() const
-{
-	return _name;
-}
-unsigned int Units::GETx() const
-{
-	return _x;
-}
-unsigned int Units::GETy() const
-{
-	return _y;
-}
-unsigned int Units::GETmaxlife() const
-{
-	return _maxlife;
-}
-unsigned int Units::GETmaxatq() const 
-{
-	return _maxatq;
-}
-unsigned int Units::GETmaxdef() const
-{
-	return _maxdef;
-}
-unsigned int Units::GETmaxmovement() const
-{
-	return _maxmovement;
-}
-unsigned int Units::GETmaxlevel() const 
-{
-	return _maxlevel;
-}
-unsigned int Units::GETlife() const
-{
-	return _life;
-}
-unsigned int Units::GETatq() const
-{
-	return _atq;
-}
-unsigned int Units::GETdef() const
-{
-	return _def;
-}
-unsigned int Units::GETmovement() const
-{
-	return _movement;
-}
-unsigned int Units::GETlevel() const
-{
-	return _level;
-}
-bool Units::GETalive() const
-{
-	return _life; //Renvoie true is m_life > 0 et false sinon.
-}
-bool Units::GETblit() const 
-{
-	return _blit;
-}
-void Units::SETname(const std::string &msg)
-{
-	_name = msg;
-}
-void Units::SETlife(unsigned int life)
-{
-	_life = life;
-}
-void Units::SETx(unsigned int x)
-{
-	_x = x;
-}
-void Units::SETy(unsigned int y)
-{
-	_y = y;
-}
-void Units::SETatq(unsigned int atq)
-{
-	_atq = atq;
-}
-void Units::SETdef(unsigned int def)
-{
-	_def = def;
-}
-void Units::SETmovement(unsigned int movement)
-{
-	_movement = movement;
-}
-void Units::SETlevel(unsigned int level)
-{
-	_level = level;
-}
-void Units::SETalive(bool alive)
-{
-	_alive = alive;
-}
-void Units::SETblit(bool blit) 
-{
-	_blit = blit;
 }
 
 /*

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -476,6 +476,62 @@ private:
 	bool _on;
 };
 #endif ButtonTexte_H
+
+
+#ifndef HashTable_H
+#define HashTable_H
+
+
+const unsigned int INIT_SIZE = 100;
+const unsigned int MAX_CHARS = 20;
+const unsigned int MIN_CHIFFRE = 48;
+const unsigned int MIN_MAJ = 65;
+const unsigned int MAX_MAJ = 90;
+const unsigned int MIN_MIN = 97;
+const unsigned int MAX_MIN = 122;
+
+
+
+enum prog_Type : unsigned int { prog, doubleName, progdeletePos };
+
+class HashTable
+{
+
+public:
+
+	static unsigned int hash(const std::string& name, const unsigned int prime, const unsigned int length);
+
+	static void fillTabHachage(std::vector<Texture*>& tabPos);
+
+	static int checkDoubleName(std::string name, std::vector<Texture*>& tabPos);
+
+	static int searchIndex(std::string msg, const std::vector<Texture*>& tabPos, unsigned int program);
+
+	static Texture* searchPos(std::string msg, const std::vector<Texture*>& tabPos);
+
+	static void addPos(std::vector<Texture*>& tabPos, std::string msg, int x, int y);
+
+	static void deletePos(std::vector<Texture*>& tabPos, std::string msg);
+
+
+public:
+
+	inline static bool assertNULL(Texture* cell)
+	{
+		if (cell != NULL)
+		{
+			return true;
+		}
+		return false;
+	};
+
+private:
+
+	unsigned int nbItem;
+
+};
+
+#endif HashTable_H
 
 /*
 *	End Of File

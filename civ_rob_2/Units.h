@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -71,32 +71,32 @@ class Units
 		virtual void afficherstat(Sysinfo&);
 		virtual void cmpblit();
 
-		std::string GETname() const;
-		unsigned int GETx() const;
-		unsigned int GETy() const;
-		unsigned int GETmaxlife() const;
-		unsigned int GETmaxatq() const;
-		unsigned int GETmaxdef() const;
-		unsigned int GETmaxmovement() const;
-		unsigned int GETmaxlevel() const;
-		unsigned int GETlife() const;
-		unsigned int GETatq() const;
-		unsigned int GETdef() const;
-		unsigned int GETmovement() const;
-		unsigned int GETlevel() const;
-		bool GETalive() const;
-		bool GETblit() const;
+		inline std::string GETname()			const { return _name; };
+		inline unsigned int GETx()				const { return _x; };
+		inline unsigned int GETy()				const { return _y; };
+		inline unsigned int GETmaxlife()		const { return _maxlife; };
+		inline unsigned int GETmaxatq()			const { return _maxatq; };
+		inline unsigned int GETmaxdef()			const { return _maxdef; };
+		inline unsigned int GETmaxmovement()	const { return _maxmovement; };
+		inline unsigned int GETmaxlevel()		const { return _maxlevel; };
+		inline unsigned int GETlife()			const { return _life; };
+		inline unsigned int GETatq()			const { return _atq; };
+		inline unsigned int GETdef()			const { return _def; };
+		inline unsigned int GETmovement()		const { return _movement; };
+		inline unsigned int GETlevel()			const { return _level; };
+		inline bool GETalive()					const { return _alive; };
+		inline bool GETblit()					const { return _blit; };
 
-		void SETname(const std::string &msg);
-		void SETx(unsigned int);
-		void SETy(unsigned int);
-		void SETlife(unsigned int);
-		void SETatq(unsigned int);
-		void SETdef(unsigned int);
-		void SETmovement(unsigned int);
-		void SETlevel(unsigned int);
-		void SETalive(bool);
-		void SETblit(bool);
+		inline void SETname(const std::string &name)		{ _name = name; };
+		inline void SETx(unsigned int x)					{ _x = x; };
+		inline void SETy(unsigned int y)					{ _y = y; };
+		inline void SETlife(unsigned int life)				{ _life = life; };
+		inline void SETatq(unsigned int atq)				{ _atq = atq; };
+		inline void SETdef(unsigned int def)				{ _def = def; };
+		inline void SETmovement(unsigned int movement)		{ _movement = movement; };
+		inline void SETlevel(unsigned int level)			{ _level = level; };
+		inline void SETalive(bool alive)					{ _alive = alive; };
+		inline void SETblit(bool blit)						{ _blit = blit; };
 		
 	private:
 		std::string _name;

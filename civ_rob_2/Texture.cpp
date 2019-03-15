@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -623,6 +623,137 @@ void ButtonTexte::SETalpha(Uint8 alpha)
 		IHM::logSDLError(std::cout, "alpha : ");
 	if (SDL_SetTextureAlphaMod(_imageOn, this->GETalpha()) != 0)
 		IHM::logSDLError(std::cout, "alpha : ");
+}
+
+
+
+///////////////////////////// HashTable //////////////////////////////
+/* HashTable :: STATIC */
+
+unsigned int HashTable::hash(const std::string& name, const unsigned int prime, const unsigned int length)
+{
+	long hash = 0;
+	const unsigned int len_s = name.size();
+	for (unsigned int i = 0; i < len_s; i++)
+	{
+		hash += (long)pow(prime, len_s - (i + 1)) * name[i];
+		hash = hash % length;
+	}
+	return (unsigned int)hash;
+}
+void HashTable::fillTabHachage(std::vector<Texture*>& tabPos)
+{
+	std::vector<Texture*> temp;
+	temp.resize(tabPos.size());
+
+	unsigned int nombreHache = 0;
+	for (unsigned int i = 0; i < tabPos.size(); i++)
+	{
+
+		if (assertNULL(tabPos[i]))
+		{
+			nombreHache = hash(tabPos[i]->GETname(), 151, tabPos.size());
+			if (temp[nombreHache] == NULL)
+			{
+				temp[nombreHache] = tabPos[i];
+			}
+			else
+			{
+				while (true)
+				{
+					++nombreHache %= temp.size();
+					if (temp[nombreHache] == NULL)
+					{
+						temp[nombreHache] = tabPos[i];
+						break;
+					}
+				}
+			}
+		}
+	}
+	tabPos = temp;
+}
+int HashTable::checkDoubleName(std::string name, std::vector<Texture*>& tabPos)
+{
+	if (searchIndex(name, tabPos, doubleName) > 0)
+	{
+		std::cout << std::endl << "____WARNING:checkDoubleName(): " + name + " already found" << std::endl;
+		return -1;
+	}
+	return 0;
+}
+int HashTable::searchIndex(std::string msg, const std::vector<Texture*>& tabPos, unsigned int program)
+{
+	unsigned int nb = hash(msg, 151, tabPos.size());
+
+	unsigned int iteration = 0;
+	while (true)
+	{
+		if (assertNULL(tabPos[nb]))
+		{
+			if (tabPos[nb]->GETname().compare(msg) == 0)
+			{
+				return nb;
+			}
+		}
+
+
+		++nb %= tabPos.size();
+		iteration++;
+
+		if (iteration >= (tabPos.size() * 2))
+		{
+			if (program == 0)
+				std::cout << std::endl << "____WARNING:SearchIndex():Max Iteration: " + msg + " not found" << std::endl;
+			return -1;
+		}
+	}
+}
+Texture* HashTable::searchPos(std::string msg, const std::vector<Texture*>& tabPos)
+{
+	unsigned int nb = hash(msg, 151, tabPos.size());
+
+	unsigned int iteration = 0;
+	while (true)
+	{
+		if (tabPos[nb]->GETname().compare(msg) == 0)
+		{
+			return tabPos[nb];
+		}
+
+		++nb %= tabPos.size();
+		iteration++;
+
+		if (iteration >= (tabPos.size() * 2))
+		{
+			Texture* blank = NULL;
+			std::cout << std::endl << "____WARNING:SearchPos():Max Iteration: " + msg + " not found" << std::endl;
+			return blank;
+		}
+	}
+}
+void HashTable::addPos(std::vector<Texture*>& tabPos, std::string msg, int x, int y)
+{
+	if (checkDoubleName(msg, tabPos) >= 0)
+	{
+		//tabPos.push_back(new Pos(msg, x, y));
+		fillTabHachage(tabPos);
+	}
+}
+void HashTable::deletePos(std::vector<Texture*>& tabPos, std::string msg)
+{
+	int index = searchIndex(msg, tabPos, progdeletePos);
+	if (index < 0)
+	{
+		std::cout << std::endl << "____WARNING:DeletePos():Request not completed: " + msg + " not found" << std::endl;
+	}
+	else
+	{
+		delete tabPos[index];
+		tabPos[index] = NULL;
+		tabPos.erase(tabPos.begin() + index);
+		fillTabHachage(tabPos);
+	}
 }
 
 /*
