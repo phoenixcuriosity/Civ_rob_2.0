@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -343,7 +343,9 @@ struct AllTextes {
 	std::vector<Texte*> citieMap;
 
 	std::vector<unsigned int> titleScreenIndex;
+	std::vector<unsigned int> newGameIndex;
 	std::vector<unsigned int> mainMapIndex;
+	std::vector<unsigned int> citieMapIndex;
 };
 struct AllButtons {
 	std::vector<ButtonTexte*> titleScreen;

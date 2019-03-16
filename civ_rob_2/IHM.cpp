@@ -138,47 +138,41 @@ bool IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		return true;
 	}
 }
-
-
-
-
-/*
-int main(int argc, char* argv[])
-{
-	pos tabpos[MAX_POS] = {};
-	pos tabPos[MAX_POS] = {};
-	init(tabpos);
-	init(tabPos);
-	fillTab(tabpos);
-	fillTabHachage(tabpos, tabPos);
-
-	unsigned int index = search("Epsilo", tabPos);
-
-	cout << "Index = " << index << ", Name : " + tabPos[index].name + ", x = " << tabPos[index].x << ", y = " << tabPos[index].y << endl;
-
-	return 0;
-}
-*/
-
 void IHM::calculimage(Sysinfo& sysinfo)
 {
+	// répertoire de base de l'image
+	const std::string IPath = "image/"; 
 
-	unsigned int nbspecname = 0, nbcitie = 0;
-	std::string destroy, name, citie;
-	const std::string IPath = "image/"; // répertoire de base de l'image
 
+	/* *********************************************************
+		*				sysinfo.allTextures
+	 ********************************************************* */
 	// chargement des images du sol de la map
+	/*
+		sysinfo.allTextures.ground
+	*/
+
+
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ground/water.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ground/deepwater.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
+	
+	
 	// chargement de l'image de la toolbar
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "toolbar.bmp", "toolbar.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 
+
+
 	// chargement des spécifications du sol de la map
+	/*
+		sysinfo.allTextures.groundSpec
+	*/
+	unsigned int nbspecname = 0;
+	std::string destroy = "", name = "";
 	std::ifstream SPECNAME(sysinfo.file.SPECNAME);
 	if (SPECNAME)
 	{
@@ -195,13 +189,22 @@ void IHM::calculimage(Sysinfo& sysinfo)
 	else
 		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SPECNAME);
 
+
+
 	// chargement du nombre d'unités ainsi que leur nom
+	/*
+		sysinfo.allTextures.unit
+	*/
 	for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.unit, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "units/" + sysinfo.var.s_player.tabUnit_Struct[i].name + ".bmp",
 			sysinfo.var.s_player.tabUnit_Struct[i].name, nonTransparent, 100, 432, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 
 
+	
+	/*
+		sysinfo.allTextures.barLife
+	*/
 	sysinfo.var.statescreen = STATEmainmap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
@@ -210,15 +213,29 @@ void IHM::calculimage(Sysinfo& sysinfo)
 			IPath + "barre de vie/0." + std::to_string(i) + "life.bmp", "0." + std::to_string(i) + "life.bmp", nonTransparent,
 			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
 
+
+
+	/*
+		sysinfo.allTextures.colorapp
+	*/
 	for (unsigned int i = 0; i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapp, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayer" + std::to_string(i) + ".bmp", nonTransparent,
 			-1, -1, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle);
+
+
+	/*
+		sysinfo.allTextures.colorapptile
+	*/
 	for (unsigned int i = 0; i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapptile, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayertile" + std::to_string(i) + ".bmp", (Uint8)96,
 			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 
+
+	/*
+		sysinfo.allTextures.titleScreen
+	*/
 	sysinfo.var.statescreen = STATEtitleScreen;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "earth.jpg", "earth.jpg", nonTransparent, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, NULL, NULL, no_angle, center);
@@ -227,11 +244,20 @@ void IHM::calculimage(Sysinfo& sysinfo)
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "signal/destroyed.bmp", "destroyed.bmp", nonTransparent, SCREEN_WIDTH / 2, 0, NULL, NULL, no_angle, center_x);
 
+
+
+	/*
+		sysinfo.allTextures.miscTexture
+	*/
 	sysinfo.var.statescreen = STATEmainmap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscTexture, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "citie/citie.png", "citie.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 
+
+
 	// chargement du nombre de ville ainsi que leur nom
+	unsigned int nbcitie = 0;
+	std::string citie = "";
 	std::ifstream CITIENAME(sysinfo.file.CITIENAME);
 	if (CITIENAME)
 	{
@@ -266,7 +292,14 @@ void IHM::calculimage(Sysinfo& sysinfo)
 		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 	int spacemenu = 64, initspacemenu = 300;
 
-	// ______Buttons_____
+	
+	
+	
+	/* *********************************************************
+		*				sysinfo.allButtons
+	 ********************************************************* */
+
+
 	sysinfo.var.statescreen = STATEtitleScreen;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
 		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu, nonTransparent, no_angle, center);
@@ -330,11 +363,14 @@ void IHM::calculimage(Sysinfo& sysinfo)
 	sysinfo.var.select = selectnothing;
 
 
-	// ______Writetxtshaded_____
+	
+	
+	
+	/* *********************************************************
+		*				sysinfo.allTexte
+	 ********************************************************* */
 
 
-
-	// ______Writetxt_____ 
 	sysinfo.var.statescreen = STATEtitleScreen;
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.titleScreen,
 		blended, "Game dev in c++ with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 24, 0, 0, nonTransparent, no_angle);
@@ -415,23 +451,70 @@ void IHM::calculimage(Sysinfo& sysinfo)
 			"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].def) +
 			"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].movement), { 255, 64, 0, 255 }, NoColor, 24, 0, 0, nonTransparent, no_angle);
 
-	sysinfo.allTextes.mainMap.resize(sysinfo.allTextes.mainMap.size() + sysinfo.allTextes.mainMap.size() * 5);
+	
+	
+
+	/* *********************************************************
+		*				HashTable
+	 ********************************************************* */
+	
+	/*
+		Attention : Optimisation de cherche par nom, complexité en O(1) au lieu de O(n)
+		*	NE PAS UTILISER pour :	-> sysinfo.allTextures.ground : déja optimal en O(1)
+		*							-> ### mettre ici les autres cas  
+
+
+	*/
+
+	/*** sysinfo.allTextures ***/
+
+	/*
+	std::vector<Texture*> ground;
+	std::vector<Texture*> groundSpec;
+	std::vector<Texture*> unit;
+	std::vector<Texture*> citie;
+	std::vector<Texture*> barLife;
+	std::vector<Texture*> colorapp;
+	std::vector<Texture*> colorapptile;
+	std::vector<Texture*> miscTexture;
+
+	std::vector<Texture*> titleScreen;
+	*/
+
+
+	/*** sysinfo.allTextes ***/
+
+
+	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
+
+	sysinfo.allTextes.mainMap.resize(sysinfo.allTextes.mainMap.size() + sysinfo.allTextes.mainMap.size() * INIT_SIZE_MULTIPLIER);
 	fillTabHachage(sysinfo.allTextes.mainMap, sysinfo.allTextes.mainMapIndex);
 
-	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * 5);
-	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
-	
-	for (unsigned int i = 0; i < sysinfo.allTextes.mainMapIndex.size(); i++)
-	{
-		std::cout << std::endl << "Index : " << i << " , name " + sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->GETname();
-	}
-	for (unsigned int i = 0; i < sysinfo.allTextes.titleScreenIndex.size(); i++)
-	{
-		std::cout << std::endl << "Index : " << i << " , name " + sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]->GETname();
-	}
+	sysinfo.allTextes.newGame.resize(sysinfo.allTextes.newGame.size() + sysinfo.allTextes.newGame.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextes.newGame, sysinfo.allTextes.newGameIndex);
 
+	sysinfo.allTextes.citieMap.resize(sysinfo.allTextes.citieMap.size() + sysinfo.allTextes.citieMap.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextes.citieMap, sysinfo.allTextes.citieMapIndex);
+
+	
+	
+	/*** sysinfo.allButtons ***/
+
+	/*
+	std::vector<ButtonTexte*> titleScreen;
+	std::vector<ButtonTexte*> player;
+	std::vector<ButtonTexte*> reload;
+	std::vector<ButtonTexte*> mainmap;
+	std::vector<ButtonTexte*> citie;
+	*/
+
+
+	/* title screen init */
 	sysinfo.var.select = selectnothing;
 	sysinfo.var.statescreen = STATEtitleScreen;
+
+	/* ### Don't put code below here ### */
 }
 void IHM::eventSDL(Sysinfo& sysinfo)
 {
@@ -555,7 +638,7 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 	for (unsigned int i = 0; i < sysinfo.allButton.titleScreen.size(); i++)
 		sysinfo.allButton.titleScreen[i]->renderButtonTexte(sysinfo.var.statescreen);
 
-	sysinfo.allTextes.mainMap[searchIndex("Pick the unit to move", sysinfo.allTextes.mainMap, 0)]->render();
+	sysinfo.allTextes.mainMap[searchIndex("Pick the unit to move", sysinfo.allTextes.mainMap)]->render();
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	logfileconsole("_titleScreens End_");
 }
@@ -592,8 +675,12 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 				sysinfo.allTextures.ground[3]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
 		}
 
-		for (unsigned int i = 0; i < sysinfo.allTextes.mainMap.size(); i++)
-			sysinfo.allTextes.mainMap[i]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+
+
+		for (unsigned int i = 0; i < sysinfo.allTextes.mainMapIndex.size(); i++)
+		{
+			sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+		}
 		for (unsigned int i = 0; i < sysinfo.allButton.mainmap.size(); i++)
 			sysinfo.allButton.mainmap[i]->renderButtonTexte(sysinfo.var.statescreen);
 		for (unsigned int i = 0; i < sysinfo.allButton.player.size(); i++)

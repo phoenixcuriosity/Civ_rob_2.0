@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -34,41 +34,57 @@ void GamePlay::newgame(Sysinfo& sysinfo)
 
 	unsigned int nbplayer = 0, initspace = 132, space = 32;
 
+	// création d'une sauvegarde concernant la nouvelle partie
 	SaveReload::createSave(sysinfo);
 
+	// Fond noir
 	SDL_RenderClear(sysinfo.screen.renderer);
 
-	for (unsigned int i = 0; i < sysinfo.allTextes.newGame.size(); i++)
-	{
-		sysinfo.allTextes.newGame[i]->renderTextureTestString("Press Return or kpad_Enter to valid selection");
-		sysinfo.allTextes.newGame[i]->renderTextureTestString("How many player(s) (max 9):");
-	}
+
+	// Première demande au joueur : Le nombre de joueurs ?
+	sysinfo.allTextes.newGame[searchIndex("Press Return or kpad_Enter to valid selection", sysinfo.allTextes.newGame)]->render();
+	sysinfo.allTextes.newGame[searchIndex("How many player(s) (max 9):", sysinfo.allTextes.newGame)]->render();
 	SDL_RenderPresent(sysinfo.screen.renderer);
+
+
+	// Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1
 	KeyboardMouse::cinDigit(sysinfo, nbplayer, SCREEN_WIDTH / 2, initspace += space);
 
+	// Deuxième demande au joueur : Le nom des joueurs
 	for (unsigned int i = 1; i < nbplayer + 1; i++)
 	{
 		sysinfo.var.s_player.tabPlayerName.push_back("");
+
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, no_angle, center_x);
 		SDL_RenderPresent(sysinfo.screen.renderer);
+
+		// valeur par défaut avec incrémentation en fonction du nombre de joueur : noName 
 		KeyboardMouse::cinAlphabet(sysinfo, sysinfo.var.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
 		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i - 1]));
 	}
+
+	
 	groundgen(sysinfo);
 	newGameSettlerSpawn(sysinfo);
+
+	/*** Sauvegarde des paramètres appliqués et de la génération de la map ***/
 	SaveReload::savemaps(sysinfo);
 	SaveReload::savePlayer(sysinfo);
 	
+	// Création des boutons pour séléctionner les joueurs
 	int initspacename = 200, spacename = 24;
 	sysinfo.var.statescreen = STATEmainmap;
-	for(unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
 			shaded, sysinfo.var.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename, nonTransparent, no_angle);
-
+	}
 	
 	sysinfo.screen.enableFPS = true;
 	sysinfo.screen.fpsTimer.start();
+
+	/* ### Don't put code below here ### */
 
 	IHM::logfileconsole("_Newgame End_");
 }
@@ -174,7 +190,8 @@ void GamePlay::groundgen(Sysinfo& sysinfo)
 						sysinfo.map.maps[i][j].gold = 3;
 					}
 				}
-				else {
+				else
+				{
 					/*
 						génération de l'eau -> forme en L (3 cases)
 					*/

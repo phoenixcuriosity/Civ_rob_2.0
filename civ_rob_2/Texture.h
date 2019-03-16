@@ -481,19 +481,17 @@ private:
 #ifndef HashTable_H
 #define HashTable_H
 
+// coefficient multiplieur de taille initiale 
+const unsigned int INIT_SIZE_MULTIPLIER = 5;
 
-const unsigned int INIT_SIZE = 100;
-const unsigned int MAX_CHARS = 20;
-const unsigned int MIN_CHIFFRE = 48;
-const unsigned int MIN_MAJ = 65;
-const unsigned int MAX_MAJ = 90;
-const unsigned int MIN_MIN = 97;
-const unsigned int MAX_MIN = 122;
+//--- HashTable ---------------------------------------------------------------------------------------------------------------------------------------
+/*
 
+	HashTable :
+	Cette classe permet :
+	*	static -> Hash
 
-
-enum prog_Type : unsigned int { prog, doubleName, progdeletePos };
-
+*/
 class HashTable
 {
 
@@ -549,10 +547,10 @@ void fillTabHachage(T& tabPos, std::vector<unsigned int>& tabIndex)
 	for (unsigned int i = 0; i < tabPos.size(); i++)
 	{
 
-		if (HashTable::assertNULL(tabPos[i]))
+		if (tabPos[i] != nullptr)
 		{
 			nombreHache = HashTable::hash(tabPos[i]->GETname(), tabPos.size());
-			if (temp[nombreHache] == NULL)
+			if (temp[nombreHache] == nullptr)
 			{
 				temp[nombreHache] = tabPos[i];
 				tabIndex.push_back(nombreHache);
@@ -562,7 +560,7 @@ void fillTabHachage(T& tabPos, std::vector<unsigned int>& tabIndex)
 				while (true)
 				{
 					++nombreHache %= temp.size();
-					if (temp[nombreHache] == NULL)
+					if (temp[nombreHache] == nullptr)
 					{
 						temp[nombreHache] = tabPos[i];
 						tabIndex.push_back(nombreHache);
@@ -575,14 +573,14 @@ void fillTabHachage(T& tabPos, std::vector<unsigned int>& tabIndex)
 	tabPos = temp;
 }
 template<class T>
-int searchIndex(std::string msg, const T& tabPos, unsigned int program)
+unsigned int searchIndex(std::string msg, const T& tabPos)
 {
 	unsigned int nb = HashTable::hash(msg, tabPos.size());
 
 	unsigned int iteration = 0;
 	while (true)
 	{
-		if (HashTable::assertNULL(tabPos[nb]))
+		if (tabPos[nb] != nullptr)
 		{
 			if (tabPos[nb]->GETname().compare(msg) == 0)
 			{
@@ -594,11 +592,10 @@ int searchIndex(std::string msg, const T& tabPos, unsigned int program)
 		++nb %= tabPos.size();
 		iteration++;
 
-		if (iteration >= (tabPos.size() * 2))
+		if (iteration >= tabPos.size())
 		{
-			if (program == 0)
-				std::cout << std::endl << "____WARNING:SearchIndex():Max Iteration: " + msg + " not found" << std::endl;
-			return -1;
+			std::cout << std::endl << "____WARNING:SearchIndex():Max Iteration: " + msg + " not found" << std::endl;
+			return 0;
 		}
 	}
 }

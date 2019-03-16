@@ -643,7 +643,7 @@ unsigned int HashTable::hash(const std::string& name, const unsigned int length)
 }
 int HashTable::checkDoubleName(std::string name, std::vector<Texture*>& tabPos)
 {
-	if (searchIndex(name, tabPos, doubleName) > 0)
+	if (searchIndex(name, tabPos) > 0)
 	{
 		std::cout << std::endl << "____WARNING:checkDoubleName(): " + name + " already found" << std::endl;
 		return -1;
@@ -683,7 +683,7 @@ void HashTable::addPos(std::vector<Texture*>& tabPos, std::string msg, int x, in
 }
 void HashTable::deletePos(std::vector<Texture*>& tabPos, std::string msg)
 {
-	int index = searchIndex(msg, tabPos, progdeletePos);
+	int index = searchIndex(msg, tabPos);
 	if (index < 0)
 	{
 		std::cout << std::endl << "____WARNING:DeletePos():Request not completed: " + msg + " not found" << std::endl;
