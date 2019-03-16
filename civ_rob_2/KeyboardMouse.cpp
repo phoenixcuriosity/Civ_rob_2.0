@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -549,25 +549,25 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		}
 		break;
 	case STATEcitiemap:
-		for (unsigned int i = 0; i < sysinfo.allButton.citie.size(); i++)
+		for (unsigned int i = 0; i < sysinfo.allButton.citieMap.size(); i++)
 		{
-			if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Map", sysinfo.var.statescreen, event.button.x, event.button.y))
+			if (sysinfo.allButton.citieMap[i]->searchButtonTexte((std::string)"Map", sysinfo.var.statescreen, event.button.x, event.button.y))
 			{
 				sysinfo.var.s_player.selectCitie = -1;
 				sysinfo.var.statescreen = STATEmainmap;
 				sysinfo.var.select = selectnothing;
 			}
-			else if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Build", sysinfo.var.statescreen, event.button.x, event.button.y))
+			else if (sysinfo.allButton.citieMap[i]->searchButtonTexte((std::string)"Build", sysinfo.var.statescreen, event.button.x, event.button.y))
 			{
-				sysinfo.allButton.citie[i]->changeOn();
+				sysinfo.allButton.citieMap[i]->changeOn();
 				if (sysinfo.var.select != selectcreate)
 					sysinfo.var.select = selectcreate;
 				else
 					sysinfo.var.select = selectnothing;
 			}
-			else if (sysinfo.allButton.citie[i]->searchButtonTexte((std::string)"Place Citizen", sysinfo.var.statescreen, event.button.x, event.button.y))
+			else if (sysinfo.allButton.citieMap[i]->searchButtonTexte((std::string)"Place Citizen", sysinfo.var.statescreen, event.button.x, event.button.y))
 			{
-				sysinfo.allButton.citie[i]->changeOn();
+				sysinfo.allButton.citieMap[i]->changeOn();
 				if (sysinfo.var.select != selectmoveCitizen)
 					sysinfo.var.select = selectmoveCitizen;
 				else
@@ -577,7 +577,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			{
 				for (unsigned int j = 0; j < sysinfo.var.s_player.unitNameMaxToCreate; j++)
 				{
-					if (sysinfo.allButton.citie[i]->searchButtonTexte(sysinfo.var.s_player.tabUnit_Struct[j].name,
+					if (sysinfo.allButton.citieMap[i]->searchButtonTexte(sysinfo.var.s_player.tabUnit_Struct[j].name,
 						sysinfo.var.statescreen, event.button.x, event.button.y))
 					{
 						sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Struct[j].name;
@@ -594,8 +594,8 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 				}
 			}
 		}
-		for (unsigned int l = 0; l < sysinfo.allButton.citie.size(); l++)
-			sysinfo.allButton.citie[l]->resetOnstateScreen(sysinfo.var.select, selectnothing);
+		for (unsigned int l = 0; l < sysinfo.allButton.citieMap.size(); l++)
+			sysinfo.allButton.citieMap[l]->resetOnstateScreen(sysinfo.var.select, selectnothing);
 		break;
 	}
 }

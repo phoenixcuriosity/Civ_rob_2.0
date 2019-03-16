@@ -1,2 +1,30 @@
-﻿  GamePlay.cpp
+﻿  IHM.cpp
+  Cities.cpp
+  KeyboardMouse.cpp
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\keyboardmouse.cpp(36): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\keyboardmouse.cpp(129): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\keyboardmouse.cpp(346): warning C4100: 'sysinfo' : paramètre formel non référencé
+  LTimer.cpp
+  main.cpp
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\main.cpp(32): warning C4100: 'argv' : paramètre formel non référencé
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\main.cpp(32): warning C4100: 'argc' : paramètre formel non référencé
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\main.cpp(56): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+  GamePlay.cpp
+  Player.cpp
+  SaveReload.cpp
+  Texture.cpp
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(416): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(418): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(424): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(426): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(444): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(446): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(571): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(573): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(589): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(591): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(676): warning C4100: 'y' : paramètre formel non référencé
+c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\texture.cpp(676): warning C4100: 'x' : paramètre formel non référencé
+  Units.cpp
+  Génération de code en cours...
   civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Debug\civ_rob_2.exe

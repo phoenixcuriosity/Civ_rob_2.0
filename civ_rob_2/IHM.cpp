@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,36 +26,36 @@
 #include "GamePlay.h"
 #include "SaveReload.h"
 
-void IHM::inittile(Sysinfo& sysinfo)
+void IHM::initTile(Map& map)
 {
 	Tile blankTile;
 	std::vector<Tile> blank;
-	for (unsigned int i = 0; i < SCREEN_WIDTH / sysinfo.map.tileSize; i++)
+	for (unsigned int i = 0; i < SCREEN_WIDTH / map.tileSize; i++)
 	{
-		sysinfo.map.screen.push_back(blank);
-		for (unsigned int j = 0; j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
+		map.screen.push_back(blank);
+		for (unsigned int j = 0; j < SCREEN_HEIGHT / map.tileSize; j++)
 		{
-			sysinfo.map.screen[i].push_back(blankTile);
+			map.screen[i].push_back(blankTile);
 		}
 	}
-	for (unsigned int i = 0; i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
+	for (unsigned int i = 0; i < map.mapSize / map.tileSize; i++)
 	{
-		sysinfo.map.maps.push_back(blank);
-		for (unsigned int j = 0; j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++) 
+		map.maps.push_back(blank);
+		for (unsigned int j = 0; j < map.mapSize / map.tileSize; j++) 
 		{
-			sysinfo.map.maps[i].push_back(blankTile);
+			map.maps[i].push_back(blankTile);
 		}
 	}
 
 }
-void IHM::initfile(Sysinfo& sysinfo)
+void IHM::initFile(File& file)
 {
-	std::ofstream log(sysinfo.file.log);
+	std::ofstream log(file.log);
 	if (log) 
 	{
 	}
 	else
-		std::cout << std::endl << "ERREUR: Impossible d'ouvrir le fichier : " << sysinfo.file.log;
+		std::cout << std::endl << "ERREUR: Impossible d'ouvrir le fichier : " << file.log;
 }
 void IHM::logfileconsole(const std::string msg)
 {
@@ -85,7 +85,7 @@ void IHM::logSDLError(std::ostream &os, const std::string &msg)
 	else
 		std::cout << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt << std::endl;
 }
-bool IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[])
+bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[])
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
@@ -138,7 +138,7 @@ bool IHM::initsdl(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		return true;
 	}
 }
-void IHM::calculimage(Sysinfo& sysinfo)
+void IHM::calculImage(Sysinfo& sysinfo)
 {
 	// répertoire de base de l'image
 	const std::string IPath = "image/"; 
@@ -346,19 +346,19 @@ void IHM::calculimage(Sysinfo& sysinfo)
 
 	sysinfo.var.statescreen = STATEcitiemap;
 	sysinfo.var.select = selectnothing;
-	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citie,
+	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
 		shaded, "Map", WriteColorButton, BackColorButton, 24, 96, 0, nonTransparent, no_angle, center_x);
 	sysinfo.var.select = selectcreate;
-	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citie,
+	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
 		shaded, "Build", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 100, nonTransparent, no_angle, center_x);
 	sysinfo.var.select = selectnothing;
-	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citie,
+	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
 		shaded, "Food", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 132, nonTransparent, no_angle, center_x);
 	sysinfo.var.select = selectmoveCitizen;
-	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citie,
+	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
 		shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 164, nonTransparent, no_angle, center_x);
 	for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
-		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citie,
+		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
 			shaded, sysinfo.var.s_player.tabUnit_Struct[i].name, { 255, 64, 0, 255 }, BackColorButton, 24, 64, 400, nonTransparent, no_angle);
 	sysinfo.var.select = selectnothing;
 
@@ -852,12 +852,12 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	if (sysinfo.var.select != selectcreate)
 		valid = 2;
 
-	for (unsigned int i = 0; i < sysinfo.allButton.citie.size(); i++)
+	for (unsigned int i = 0; i < sysinfo.allButton.citieMap.size(); i++)
 	{
-		if (sysinfo.allButton.citie[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Map")) { i++; checkButton++; }
-		if (sysinfo.allButton.citie[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Build")) { i++; checkButton++; }
-		if (sysinfo.allButton.citie[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Food")) { i++; checkButton++; }
-		if (sysinfo.allButton.citie[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Place Citizen")) { i++; checkButton++; }
+		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Map")) { i++; checkButton++; }
+		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Build")) { i++; checkButton++; }
+		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Food")) { i++; checkButton++; }
+		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Place Citizen")) { i++; checkButton++; }
 
 		if (sysinfo.var.select == selectcreate
 			) {
@@ -868,7 +868,7 @@ void IHM::citiemap(Sysinfo& sysinfo)
 					buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
 				else
 					break;
-				if (sysinfo.allButton.citie[i]->renderButtonTexteTestString(sysinfo.var.statescreen, buildName, SCREEN_WIDTH / 2, initspace += space)) { i++; checkButton++; }
+				if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, buildName, SCREEN_WIDTH / 2, initspace += space)) { i++; checkButton++; }
 			}
 		}
 		if (checkButton == valid) break;
@@ -964,7 +964,7 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.player, "Button");
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.reload, "Button");
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.mainmap, "Button");
-	deleteDyTabPlayerAndTextures(sysinfo.allButton.citie, "Button");
+	deleteDyTabPlayerAndTextures(sysinfo.allButton.citieMap, "Button");
 
 	deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");
 	SDL_DestroyRenderer(sysinfo.screen.renderer);

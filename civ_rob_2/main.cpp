@@ -38,15 +38,15 @@ int main(int argc, char* argv[])
 	clock_t t1, t2; // calcul du temps pour calculimage
 	t1 = clock();
 
-	IHM::initfile(sysinfo);
-	IHM::inittile(sysinfo);
+	IHM::initFile(sysinfo.file);
+	IHM::initTile(sysinfo.map);
 
 	IHM::logfileconsole("________PROGRAMME START________");
 
-	if (IHM::initsdl(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font))
+	if (IHM::initSDL(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font))
 	{
 		Units::loadUnitAndSpec(sysinfo);
-		IHM::calculimage(sysinfo);
+		IHM::calculImage(sysinfo);
 		
 		t2 = clock();
 		IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));

@@ -349,10 +349,17 @@ struct AllTextes {
 };
 struct AllButtons {
 	std::vector<ButtonTexte*> titleScreen;
-	std::vector<ButtonTexte*> player;
 	std::vector<ButtonTexte*> reload;
 	std::vector<ButtonTexte*> mainmap;
-	std::vector<ButtonTexte*> citie;
+	std::vector<ButtonTexte*> citieMap;
+
+	std::vector<ButtonTexte*> player; // init in GamePlay.cpp
+
+	std::vector<unsigned int> titleScreenIndex;
+	std::vector<unsigned int> reloadIndex;
+	std::vector<unsigned int> mainMapIndex;
+	std::vector<unsigned int> citieMapIndex;
+	std::vector<unsigned int> playerIndex;
 };
 //---------------------- Structure niveau 0 ---------------------------------------------------------------------------------------------------------
 struct Sysinfo {
