@@ -630,48 +630,16 @@ void ButtonTexte::SETalpha(Uint8 alpha)
 ///////////////////////////// HashTable //////////////////////////////
 /* HashTable :: STATIC */
 
-unsigned int HashTable::hash(const std::string& name, const unsigned int prime, const unsigned int length)
+unsigned int HashTable::hash(const std::string& name, const unsigned int length)
 {
 	long hash = 0;
 	const unsigned int len_s = name.size();
 	for (unsigned int i = 0; i < len_s; i++)
 	{
-		hash += (long)pow(prime, len_s - (i + 1)) * name[i];
+		hash += (long)pow(151, len_s - (i + 1)) * name[i];
 		hash = hash % length;
 	}
 	return (unsigned int)hash;
-}
-void HashTable::fillTabHachage(std::vector<Texture*>& tabPos)
-{
-	std::vector<Texture*> temp;
-	temp.resize(tabPos.size());
-
-	unsigned int nombreHache = 0;
-	for (unsigned int i = 0; i < tabPos.size(); i++)
-	{
-
-		if (assertNULL(tabPos[i]))
-		{
-			nombreHache = hash(tabPos[i]->GETname(), 151, tabPos.size());
-			if (temp[nombreHache] == NULL)
-			{
-				temp[nombreHache] = tabPos[i];
-			}
-			else
-			{
-				while (true)
-				{
-					++nombreHache %= temp.size();
-					if (temp[nombreHache] == NULL)
-					{
-						temp[nombreHache] = tabPos[i];
-						break;
-					}
-				}
-			}
-		}
-	}
-	tabPos = temp;
 }
 int HashTable::checkDoubleName(std::string name, std::vector<Texture*>& tabPos)
 {
@@ -682,36 +650,9 @@ int HashTable::checkDoubleName(std::string name, std::vector<Texture*>& tabPos)
 	}
 	return 0;
 }
-int HashTable::searchIndex(std::string msg, const std::vector<Texture*>& tabPos, unsigned int program)
-{
-	unsigned int nb = hash(msg, 151, tabPos.size());
-
-	unsigned int iteration = 0;
-	while (true)
-	{
-		if (assertNULL(tabPos[nb]))
-		{
-			if (tabPos[nb]->GETname().compare(msg) == 0)
-			{
-				return nb;
-			}
-		}
-
-
-		++nb %= tabPos.size();
-		iteration++;
-
-		if (iteration >= (tabPos.size() * 2))
-		{
-			if (program == 0)
-				std::cout << std::endl << "____WARNING:SearchIndex():Max Iteration: " + msg + " not found" << std::endl;
-			return -1;
-		}
-	}
-}
 Texture* HashTable::searchPos(std::string msg, const std::vector<Texture*>& tabPos)
 {
-	unsigned int nb = hash(msg, 151, tabPos.size());
+	unsigned int nb = hash(msg, tabPos.size());
 
 	unsigned int iteration = 0;
 	while (true)
@@ -737,7 +678,7 @@ void HashTable::addPos(std::vector<Texture*>& tabPos, std::string msg, int x, in
 	if (checkDoubleName(msg, tabPos) >= 0)
 	{
 		//tabPos.push_back(new Pos(msg, x, y));
-		fillTabHachage(tabPos);
+		//fillTabHachage(tabPos);
 	}
 }
 void HashTable::deletePos(std::vector<Texture*>& tabPos, std::string msg)
@@ -752,7 +693,7 @@ void HashTable::deletePos(std::vector<Texture*>& tabPos, std::string msg)
 		delete tabPos[index];
 		tabPos[index] = NULL;
 		tabPos.erase(tabPos.begin() + index);
-		fillTabHachage(tabPos);
+		//fillTabHachage(tabPos);
 	}
 }
 

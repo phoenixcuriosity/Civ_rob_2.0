@@ -50,6 +50,8 @@ public:
 	static void afficherSupertiles(Sysinfo&);
 	static void citiemap(Sysinfo&);
 
+	static void countFrame(Screen& screen);
+
 	static void deleteAll(Sysinfo&);
 };
 template<class T>

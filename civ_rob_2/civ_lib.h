@@ -259,6 +259,8 @@ struct Screen {
 
 	// fps moyen
 	int avgFPS = 0;
+
+	int countedFrames = 0;
 };
 struct File {
 	const std::string log = "bin/log/log.txt";
@@ -339,6 +341,9 @@ struct AllTextes {
 	std::vector<Texte*> newGame;
 	std::vector<Texte*> mainMap;
 	std::vector<Texte*> citieMap;
+
+	std::vector<unsigned int> titleScreenIndex;
+	std::vector<unsigned int> mainMapIndex;
 };
 struct AllButtons {
 	std::vector<ButtonTexte*> titleScreen;

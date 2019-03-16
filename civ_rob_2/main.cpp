@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -53,24 +53,15 @@ int main(int argc, char* argv[])
 
 		IHM::titleScreen(sysinfo);
 
-		int countedFrames = 0;
-
 		int SDL_EnableUNICODE(1); // on azerty
 
 		while (sysinfo.var.continuer)
 		{
-
 			IHM::eventSDL(sysinfo);
-			if (sysinfo.screen.enableFPS)
-			{
-				sysinfo.screen.avgFPS = (int)ceil(countedFrames / (sysinfo.screen.fpsTimer.getTicks() / 1000.f));
-				if (sysinfo.screen.avgFPS > 20000)
-					sysinfo.screen.avgFPS = 0;
-				++countedFrames;
-			}
+
+			IHM::countFrame(sysinfo.screen);
+
 			IHM::alwaysrender(sysinfo);
-
-
 		}	
 	}
 	IHM::deleteAll(sysinfo);

@@ -415,6 +415,21 @@ void IHM::calculimage(Sysinfo& sysinfo)
 			"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].def) +
 			"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].movement), { 255, 64, 0, 255 }, NoColor, 24, 0, 0, nonTransparent, no_angle);
 
+	sysinfo.allTextes.mainMap.resize(sysinfo.allTextes.mainMap.size() + sysinfo.allTextes.mainMap.size() * 5);
+	fillTabHachage(sysinfo.allTextes.mainMap, sysinfo.allTextes.mainMapIndex);
+
+	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * 5);
+	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
+	
+	for (unsigned int i = 0; i < sysinfo.allTextes.mainMapIndex.size(); i++)
+	{
+		std::cout << std::endl << "Index : " << i << " , name " + sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->GETname();
+	}
+	for (unsigned int i = 0; i < sysinfo.allTextes.titleScreenIndex.size(); i++)
+	{
+		std::cout << std::endl << "Index : " << i << " , name " + sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]->GETname();
+	}
+
 	sysinfo.var.select = selectnothing;
 	sysinfo.var.statescreen = STATEtitleScreen;
 }
@@ -527,14 +542,20 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 	sysinfo.var.statescreen = STATEtitleScreen;
 	SDL_RenderClear(sysinfo.screen.renderer);
 
+
+
 	for (unsigned int i = 0; i < sysinfo.allTextures.titleScreen.size(); i++)
 		sysinfo.allTextures.titleScreen[i]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
-	for (unsigned int i = 0; i < sysinfo.allTextes.titleScreen.size(); i++)
-		sysinfo.allTextes.titleScreen[i]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+
+	for (unsigned int i = 0; i < sysinfo.allTextes.titleScreenIndex.size(); i++)
+	{
+		sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+	}
+
 	for (unsigned int i = 0; i < sysinfo.allButton.titleScreen.size(); i++)
 		sysinfo.allButton.titleScreen[i]->renderButtonTexte(sysinfo.var.statescreen);
 
-
+	sysinfo.allTextes.mainMap[searchIndex("Pick the unit to move", sysinfo.allTextes.mainMap, 0)]->render();
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	logfileconsole("_titleScreens End_");
 }
@@ -819,6 +840,16 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	}
 
 	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
+}
+void IHM::countFrame(Screen& screen)
+{
+	if (screen.enableFPS)
+	{
+		screen.avgFPS = (int)ceil(screen.countedFrames / (screen.fpsTimer.getTicks() / 1000.f));
+		if (screen.avgFPS > 20000)
+			screen.avgFPS = 0;
+		++screen.countedFrames;
+	}
 }
 void IHM::deleteAll(Sysinfo& sysinfo)
 {

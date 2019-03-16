@@ -499,19 +499,27 @@ class HashTable
 
 public:
 
-	static unsigned int hash(const std::string& name, const unsigned int prime, const unsigned int length);
-
-	static void fillTabHachage(std::vector<Texture*>& tabPos);
+	static unsigned int hash(const std::string& name, const unsigned int length);
 
 	static int checkDoubleName(std::string name, std::vector<Texture*>& tabPos);
-
-	static int searchIndex(std::string msg, const std::vector<Texture*>& tabPos, unsigned int program);
 
 	static Texture* searchPos(std::string msg, const std::vector<Texture*>& tabPos);
 
 	static void addPos(std::vector<Texture*>& tabPos, std::string msg, int x, int y);
 
 	static void deletePos(std::vector<Texture*>& tabPos, std::string msg);
+
+
+public:
+
+	inline unsigned int GETnbItem()const { return _nbItem; };
+
+
+public:
+
+	inline void incrementItem() { _nbItem++; };
+
+	inline void decrementItem() { _nbItem--; };
 
 
 public:
@@ -527,9 +535,78 @@ public:
 
 private:
 
-	unsigned int nbItem;
+	unsigned int _nbItem;
 
 };
+
+template<class T>
+void fillTabHachage(T& tabPos, std::vector<unsigned int>& tabIndex)
+{
+	T temp;
+	temp.resize(tabPos.size());
+
+	unsigned int nombreHache = 0;
+	for (unsigned int i = 0; i < tabPos.size(); i++)
+	{
+
+		if (HashTable::assertNULL(tabPos[i]))
+		{
+			nombreHache = HashTable::hash(tabPos[i]->GETname(), tabPos.size());
+			if (temp[nombreHache] == NULL)
+			{
+				temp[nombreHache] = tabPos[i];
+				tabIndex.push_back(nombreHache);
+			}
+			else
+			{
+				while (true)
+				{
+					++nombreHache %= temp.size();
+					if (temp[nombreHache] == NULL)
+					{
+						temp[nombreHache] = tabPos[i];
+						tabIndex.push_back(nombreHache);
+						break;
+					}
+				}
+			}
+		}
+	}
+	tabPos = temp;
+}
+template<class T>
+int searchIndex(std::string msg, const T& tabPos, unsigned int program)
+{
+	unsigned int nb = HashTable::hash(msg, tabPos.size());
+
+	unsigned int iteration = 0;
+	while (true)
+	{
+		if (HashTable::assertNULL(tabPos[nb]))
+		{
+			if (tabPos[nb]->GETname().compare(msg) == 0)
+			{
+				return nb;
+			}
+		}
+
+
+		++nb %= tabPos.size();
+		iteration++;
+
+		if (iteration >= (tabPos.size() * 2))
+		{
+			if (program == 0)
+				std::cout << std::endl << "____WARNING:SearchIndex():Max Iteration: " + msg + " not found" << std::endl;
+			return -1;
+		}
+	}
+}
+
+
+
+
+
 
 #endif HashTable_H
 
