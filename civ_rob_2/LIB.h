@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,6 +25,10 @@
 #ifndef LIB_H
 #define LIB_H
 
+/* *********************************************************
+	*				Include Standard
+********************************************************* */
+
 #include <iostream>
 #include <ostream>
 #include <fstream>
@@ -37,12 +41,22 @@
 #include <exception>
 #include <stdexcept>
 #include "wtypes.h"
+#include <direct.h>
+
+
+/* *********************************************************
+	*				Include SDL
+********************************************************* */
+
 
 #include "SDL2-2.0.8/include/SDL.h"
 #include "SDL2-2.0.8/include/SDL_ttf.h"
 #include "SDL2-2.0.8/include/SDL_image.h"
 
-#include <direct.h>
+
+/* *********************************************************
+	*				Structures
+********************************************************* */
 
 typedef struct Unit_Struct Unit_Struct;
 typedef struct SubcatPlayer SubcatPlayer;
@@ -55,6 +69,11 @@ typedef struct AllTextures AllTextures;
 typedef struct AllTextes AllTextes;
 typedef struct AllButtons AllButtons;
 typedef struct Sysinfo Sysinfo;
+
+
+/* *********************************************************
+	*				Classes
+********************************************************* */
 
 class IHM;
 class SaveReload;

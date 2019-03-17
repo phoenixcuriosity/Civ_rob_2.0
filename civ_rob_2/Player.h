@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,30 +31,30 @@
 
 class Player
 {
-	public:
-		Player();
-		Player(const std::string&);
-		~Player();
+public:
+	Player();
+	Player(const std::string&);
+	~Player();
 
-		virtual void addEmptyUnit();
-		virtual void addUnit(const std::string &, unsigned int, unsigned int, unsigned int,
-			unsigned int, unsigned int, unsigned int, unsigned int);
-		virtual void deleteUnit(unsigned int);
-		virtual void addCitie(const std::string &, unsigned int, unsigned int, Tile[]);
-		virtual void deleteCitie(unsigned int);
+	virtual void addEmptyUnit();
+	virtual void addUnit(const std::string &, unsigned int, unsigned int, unsigned int,
+		unsigned int, unsigned int, unsigned int, unsigned int);
+	virtual void deleteUnit(unsigned int);
+	virtual void addCitie(const std::string &, unsigned int, unsigned int, Tile[]);
+	virtual void deleteCitie(unsigned int);
 
-		virtual const std::string GETname() const;
-		virtual Units* GETtheunit(unsigned int) const;
-		virtual std::vector<Units*> GETtabunit() const;
-		virtual Cities* GETthecitie(unsigned int) const;
-		virtual std::vector<Cities*> GETtabcities() const;
+	inline virtual std::string GETname() const					{ return _name; };
+	inline virtual Units* GETtheunit(unsigned int index) const	{ return _tabunit[index]; };
+	inline virtual std::vector<Units*> GETtabunit() const		{ return _tabunit; };
+	inline virtual Cities* GETthecitie(unsigned int index) const{ return _tabcities[index]; };
+	inline virtual std::vector<Cities*> GETtabcities() const	{ return _tabcities; };
 
-		virtual void SETname(const std::string&);
+	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
 
-	private:
-		std::string _name;
-		std::vector<Units*> _tabunit;
-		std::vector<Cities*> _tabcities;
+private:
+	std::string _name;
+	std::vector<Units*> _tabunit;
+	std::vector<Cities*> _tabcities;
 };
 
 

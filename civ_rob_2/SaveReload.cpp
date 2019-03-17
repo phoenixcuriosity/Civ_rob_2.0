@@ -45,9 +45,9 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 				saveScreen << "x= " << sysinfo.map.screen[i][j].tile_x << std::endl;
 				saveScreen << "y= " << sysinfo.map.screen[i][j].tile_y << std::endl;
 				saveScreen << "stringground= " << sysinfo.map.screen[i][j].tile_stringground << std::endl;
-				saveScreen << "ground= " << sysinfo.map.screen[i][j].tile_ground << std::endl;
+				saveScreen << "ground= " << (unsigned int)sysinfo.map.screen[i][j].tile_ground << std::endl;
 				saveScreen << "stringspec= " << sysinfo.map.screen[i][j].tile_stringspec << std::endl;
-				saveScreen << "spec= " << sysinfo.map.screen[i][j].tile_spec << std::endl;
+				saveScreen << "spec= " << (unsigned int)sysinfo.map.screen[i][j].tile_spec << std::endl;
 				saveScreen << "appartenance= " << sysinfo.map.screen[i][j].appartenance << std::endl;
 				saveScreen << "food= " << (unsigned int)sysinfo.map.screen[i][j].food << std::endl;
 				saveScreen << "work= " << (unsigned int)sysinfo.map.screen[i][j].work << std::endl;
@@ -71,9 +71,9 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 				saveMaps << "x= " << sysinfo.map.maps[i][j].tile_x << std::endl;
 				saveMaps << "y= " << sysinfo.map.maps[i][j].tile_y << std::endl;
 				saveMaps << "stringground= " << sysinfo.map.maps[i][j].tile_stringground << std::endl;
-				saveMaps << "ground= " << sysinfo.map.maps[i][j].tile_ground << std::endl;
+				saveMaps << "ground= " << (unsigned int)sysinfo.map.maps[i][j].tile_ground << std::endl;
 				saveMaps << "stringspec= " << sysinfo.map.maps[i][j].tile_stringspec << std::endl;
-				saveMaps << "spec= " << sysinfo.map.maps[i][j].tile_spec << std::endl;
+				saveMaps << "spec= " << (unsigned int)sysinfo.map.maps[i][j].tile_spec << std::endl;
 				saveMaps << "appartenance= " << sysinfo.map.maps[i][j].appartenance << std::endl;
 				saveMaps << "food= " << (unsigned int)sysinfo.map.maps[i][j].food << std::endl;
 				saveMaps << "work= " << (unsigned int)sysinfo.map.maps[i][j].work << std::endl;

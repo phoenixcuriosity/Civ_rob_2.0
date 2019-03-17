@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -104,30 +104,6 @@ void Player::deleteCitie(unsigned int index)
 			_tabcities[i] = _tabcities[i + 1];
 	}
 	_tabcities.pop_back();
-}
-const std::string Player::GETname() const
-{
-	return _name;
-}
-Units* Player::GETtheunit(unsigned int index) const
-{
-	return _tabunit[index];
-}
-std::vector<Units*> Player::GETtabunit() const
-{
-	return _tabunit;
-}
-Cities* Player::GETthecitie(unsigned int index) const
-{
-	return _tabcities[index];
-}
-std::vector<Cities*> Player::GETtabcities() const
-{
-	return _tabcities;
-}
-void Player::SETname(const std::string &msg)
-{
-	_name = msg;
 }
 
 /*

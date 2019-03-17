@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,7 +29,7 @@
 #include "GamePlay.h"
 
 
-void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int x, unsigned int& y)
+void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int x, unsigned int y)
 {
 	bool continuer = true;
 	SDL_Event event;
@@ -122,7 +122,7 @@ void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int
 		}
 	}
 }
-void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned int initx, unsigned int& y)
+void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned int x, unsigned int y)
 {
 	bool continuer = true;
 	SDL_Event event;
@@ -307,7 +307,7 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 				IHM::logfileconsole("cinAlphabet ERROR : Name to long > 50 char");
 			}
 			Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-				shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, initx + xspace, y, no_angle, center_x);
+				shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x + xspace, y, no_angle, center_x);
 			SDL_RenderPresent(sysinfo.screen.renderer);
 			break;
 		}
@@ -683,38 +683,7 @@ KeyboardMouse::KeyboardMouse(): _mouse_x(0), _mouse_y(0), _ywheel(0), _xwheel(0)
 {
 }
 
-unsigned int KeyboardMouse::GETmouse_x()const
-{
-	return _mouse_x;
-}
-unsigned int KeyboardMouse::GETmouse_y()const
-{
-	return _mouse_y;
-}
-unsigned int KeyboardMouse::GETywheel()const 
-{
-	return _ywheel;
-}
-unsigned int KeyboardMouse::GETxwheel()const
-{
-	return _xwheel;
-}
-void KeyboardMouse::SETmouse_x(unsigned int mouse_x)
-{
-	_mouse_x = mouse_x;
-}
-void KeyboardMouse::SETmouse_y(unsigned int mouse_y)
-{
-	_mouse_y = mouse_y;
-}
-void KeyboardMouse::SETywheel(unsigned int ywheel)
-{
-	_ywheel = ywheel;
-}
-void KeyboardMouse::SETxwheel(unsigned int xwheel)
-{
-	_xwheel = xwheel;
-}
+
 
 /*
 *	End Of File

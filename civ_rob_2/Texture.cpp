@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -130,10 +130,14 @@ void Texture::render(int x, int y)
 	else
 		SDL_RenderCopyEx(_renderer, _texture, NULL, &_dst, _angle, NULL, SDL_FLIP_NONE);
 }
-void Texture::renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x, int y)
+bool Texture::renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x, int y)
 {
 	if (_stateScreen == stateScreen && _select == select)
+	{
 		render(x, y);
+		return true;
+	}
+	return false;
 }
 bool Texture::renderTextureTestString(std::string msg, int xc, int yc)
 {

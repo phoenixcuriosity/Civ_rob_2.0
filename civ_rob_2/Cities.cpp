@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -111,10 +111,9 @@ std::vector<Citizen> createCitizen(Tile tiles)
 }
 void Cities::afficher(Sysinfo& sysinfo)
 {
-	for (unsigned int i = 0; i < sysinfo.allTextures.miscTexture.size(); i++)
-		sysinfo.allTextures.miscTexture[i]->renderTextureTestString(_image, _x, _y);
-	for (unsigned int i = 0; i < sysinfo.allTextes.mainMap.size(); i++)
-		sysinfo.allTextes.mainMap[i]->renderTextureTestString(_name, _x, _y + sysinfo.map.tileSize);
+	sysinfo.allTextures.miscTexture[searchIndex(_image, sysinfo.allTextures.miscTexture)]->render(_x, _y);
+
+	sysinfo.allTextes.mainMap[searchIndex(_name, sysinfo.allTextes.mainMap)]->render(_x, _y);
 }
 void Cities::affichercitiemap(Sysinfo& sysinfo)
 {
@@ -178,14 +177,7 @@ int Cities::testPos(unsigned int mouse_x, unsigned int mouse_y)
 		return 1;
 	return 0;
 }
-unsigned int Cities::GETx()const
-{
-	return _x;
-}
-unsigned int Cities::GETy()const
-{
-	return _y;
-}
+
 
 
 
@@ -234,22 +226,7 @@ unsigned int placeCitizen(std::vector<Tile> tile, std::vector<Citizen> citizens,
 	_gold = tile[place].gold;
 	return place;
 }
-unsigned int Citizen::GETtileOccupied()const
-{
-	return _tileOccupied;
-}
-int Citizen::GETfood()const
-{
-	return _food;
-}
-int Citizen::GETwork()const 
-{
-	return _work;
-}
-int Citizen::GETgold()const
-{
-	return _gold;
-}
+
 
 /*
 *	End Of File

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -156,7 +156,7 @@ public: // opérations sur l'objet et affichage
 	virtual void render(int = -1, int = -1);
 
 	// Test les attributs _stateScreen et _select qui correspondent au moment de l'appel puis permet de rendre la Texture au coordonnées voulues
-	virtual void renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x = -1, int y = -1);
+	virtual bool renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x = -1, int y = -1);
 
 	// Test l'attribut _name qui correspond au moment de l'appel puis permet de rendre la Texture au coordonnées voulues
 	virtual bool renderTextureTestString(std::string msg, int xc = -1, int yc = -1);

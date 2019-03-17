@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -65,11 +65,13 @@ public:
 
 	virtual int testPos(unsigned int, unsigned int);
 
-	virtual unsigned int GETx()const;
-	virtual unsigned int GETy()const;
+
+public:
+
+	inline virtual unsigned int GETx()const { return _x; };
+	inline virtual unsigned int GETy()const { return _y; };
 
 	
-
 private:
 	std::string _image;
 	std::string _name;
@@ -103,10 +105,15 @@ public:
 
 	void placeCitizenWithMouse();
 
-	unsigned int GETtileOccupied()const;
-	int GETfood()const;
-	int GETwork()const;
-	int GETgold()const;
+
+
+public:
+
+	inline unsigned int GETtileOccupied()const		{ return _tileOccupied; };
+	inline int GETfood()const						{ return _food; };
+	inline int GETwork()const						{ return _work; };
+	inline int GETgold()const						{ return _gold; };
+
 
 private:
 	unsigned int _tileOccupied;
