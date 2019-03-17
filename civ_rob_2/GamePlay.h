@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,15 +51,110 @@ struct randomPos
 class GamePlay
 {
 public:
-	static void newgame(Sysinfo&);
-	static void groundgen(Sysinfo&);
+	/* *********************************************************
+		*					NEW-GAME
+	 ********************************************************* */
+
+
+	/*
+	* NAME : newGame
+	* ROLE : Initialisation de la nouvelle partie
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : Noms des joueurs, groundGen, positions des settlers
+	* RETURNED VALUE    : void
+	*/
+	static void newGame(Sysinfo&);
+
+	/*
+	* NAME : groundGen
+	* ROLE : Génération du sol et des spec de la map
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : Génération du sol et des spec de la map
+	* RETURNED VALUE    : void
+	*/
+	static void groundGen(Sysinfo&);
+
+	/*
+	* NAME : tileAffectation
+	* ROLE : Affectation des caractéristiques à une case
+	* INPUT  PARAMETERS : Tile& tile, : la case à affecter
+	* INPUT  PARAMETERS : Uint8 tile_ground, std::string tile_stringground,
+	* INPUT  PARAMETERS : Uint8 tile_spec, std::string tile_stringspec,
+	* INPUT  PARAMETERS : int8_t food, int8_t work, int8_t gold
+	* OUTPUT PARAMETERS : Affectation
+	* RETURNED VALUE    : void
+	*/
 	static void tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold);
+	
+	/*
+	* NAME : newGameSettlerSpawn
+	* ROLE : Création des position pour les settlers de chaque joueurs
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : position pour les settlers de chaque joueurs
+	* RETURNED VALUE    : void
+	*/
 	static void newGameSettlerSpawn(Sysinfo&);
+	
+	/*
+	* NAME : makeRandomPosTab
+	* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+	* OUTPUT PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+	* RETURNED VALUE    : void
+	*/
 	static void makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom);
+	
+	/*
+	* NAME : makeRandomPos
+	* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
+	* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
+	* INPUT  PARAMETERS : unsigned int toolBarSize: taille de la barre d'outil
+	* INPUT  PARAMETERS : unsigned int tileSize
+	* OUTPUT PARAMETERS : un vecteur de position
+	* RETURNED VALUE    : void
+	*/
 	static void makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize);
+	
+	/*
+	* NAME : conditionspace
+	* ROLE : condition pour valider les coordonnées crées:
+	* ROLE : - etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
+	* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
+	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+	* INPUT  PARAMETERS : unsigned int tileSize
+	* INPUT  PARAMETERS : couple de positions courant
+	* OUTPUT PARAMETERS : validation des positions
+	* RETURNED VALUE    : true -> condition de position validée / false -> non valide
+	*/
 	static bool conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i);
+	
+	/*
+	* NAME : conditionground
+	* ROLE : condition pour valider les coordonnées crées:
+	* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+	* OUTPUT PARAMETERS : validation des positions
+	* RETURNED VALUE    : true -> condition de position validée / false -> non valide
+	*/
 	static bool conditionground(Sysinfo& sysinfo, randomPos& RandomPOS);
 
+
+
+public:
+	/* *********************************************************
+		*					NEW-GAME
+	 ********************************************************* */
+
+
+	/*
+	* NAME : nextTurn
+	* ROLE : Action à réaliser lors du passage à un nouveau tour 
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : passage à un nouveau tour 
+	* RETURNED VALUE    : void
+	*/
 	static void nextTurn(Sysinfo&);
 };
 

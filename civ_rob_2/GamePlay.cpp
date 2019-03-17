@@ -28,7 +28,7 @@
 #include "KeyboardMouse.h"
 #include "HashTable.h"
 
-void GamePlay::newgame(Sysinfo& sysinfo)
+void GamePlay::newGame(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_Newgame Start_");
 	sysinfo.var.statescreen = STATEscreennewgame;
@@ -65,7 +65,7 @@ void GamePlay::newgame(Sysinfo& sysinfo)
 		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i - 1]));
 	}
 	
-	groundgen(sysinfo);
+	groundGen(sysinfo);
 	newGameSettlerSpawn(sysinfo);
 
 	/*** Sauvegarde des paramètres appliqués et de la génération de la map ***/
@@ -92,7 +92,7 @@ void GamePlay::newgame(Sysinfo& sysinfo)
 
 	IHM::logfileconsole("_Newgame End_");
 }
-void GamePlay::groundgen(Sysinfo& sysinfo)
+void GamePlay::groundGen(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_Groundgen Start_");
 	unsigned int randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;

@@ -141,6 +141,8 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 }
 void IHM::calculImage(Sysinfo& sysinfo)
 {
+	logfileconsole("_calculImage Start_");
+
 	// répertoire de base de l'image
 	const std::string IPath = "image/"; 
 
@@ -685,11 +687,14 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/* Ne pas mettre allButton.player car initialisé dans NewGame */
 
 
+	/* ### Don't put code below here ### */
+
+
 	/* title screen init */
 	sysinfo.var.select = selectnothing;
 	sysinfo.var.statescreen = STATEtitleScreen;
 
-	/* ### Don't put code below here ### */
+	logfileconsole("_calculImage End_");
 }
 void IHM::eventSDL(Sysinfo& sysinfo)
 {
@@ -705,7 +710,7 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 			switch (event.key.keysym.sym)
 			{
 			case SDLK_F5:
-				GamePlay::groundgen(sysinfo);
+				GamePlay::groundGen(sysinfo);
 				break;
 			case SDLK_F6:
 				deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");
@@ -790,11 +795,6 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 
 void IHM::titleScreen(Sysinfo& sysinfo)
 {
-	/*
-
-		affiche toutes les textures ainsi que les boutons ayant l'attribut _statescreen == STATEtitleScreen
-
-	*/
 	logfileconsole("_titleScreens Start_");
 
 	sysinfo.var.statescreen = STATEtitleScreen;
@@ -815,16 +815,6 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 	{
 		sysinfo.allButton.titleScreen[sysinfo.allButton.titleScreenIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
 	}
-		
-
-
-
-	/* // test bug
-	for (unsigned int i = 0; i < sysinfo.allTextes.titleScreenIndex.size(); i++)
-	{
-		std::cout << std::endl << "Index" << sysinfo.allTextes.titleScreenIndex[i] << " , Name : " + sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]->GETname();
-	}
-	*/
 
 	/* ### Don't put code below here ### */
 
