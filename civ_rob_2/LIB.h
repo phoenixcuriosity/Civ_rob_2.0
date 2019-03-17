@@ -83,6 +83,7 @@ class Texture;
 class Texte;
 class ButtonImage;
 class ButtonTexte;
+class HashTable;
 class Cities;
 class Citizen;
 class LTimer;

@@ -23,6 +23,7 @@
 */
 
 #include "Cities.h"
+#include "HashTable.h"
 #include "IHM.h"
 
 Cities::Cities(const std::string& name, unsigned int x, unsigned int y, Tile tile[]) : _image("citie.png"),

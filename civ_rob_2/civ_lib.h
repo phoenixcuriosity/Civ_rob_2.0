@@ -350,7 +350,7 @@ struct AllTextes {
 struct AllButtons {
 	std::vector<ButtonTexte*> titleScreen;
 	std::vector<ButtonTexte*> reload;
-	std::vector<ButtonTexte*> mainmap;
+	std::vector<ButtonTexte*> mainMap;
 	std::vector<ButtonTexte*> citieMap;
 
 	std::vector<ButtonTexte*> player; // init in GamePlay.cpp

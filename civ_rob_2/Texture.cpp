@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.4
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -530,7 +530,7 @@ ButtonTexte::~ButtonTexte()
 		_imageOn = nullptr;
 	}
 }
-bool ButtonTexte::searchButtonTexte(std::string msg, Uint8 stateScreen, signed int x, signed int y)
+bool ButtonTexte::searchButtonTexte(Uint8 stateScreen, signed int x, signed int y)
 {
 	if (stateScreen == this->GETstateScreen())
 	{
@@ -538,19 +538,11 @@ bool ButtonTexte::searchButtonTexte(std::string msg, Uint8 stateScreen, signed i
 		{
 			if (y >= this->GETdsty() && y <= this->GETdsty() + this->GETdsth())
 			{
-				if (this->GETname().compare(msg) == 0)
-					return true;
+				return true;
 			}
+			return false;
 		}
-	}
-	return false;
-}
-bool ButtonTexte::searchButtonTexteName(std::string msg, Uint8 stateScreen)
-{
-	if (stateScreen == this->GETstateScreen())
-	{
-		if (this->GETname().compare(msg) == 0)
-			return true;
+		return false;
 	}
 	return false;
 }
@@ -567,28 +559,17 @@ void ButtonTexte::resetOnPlayer(unsigned int selectplayer, std::vector<std::stri
 			_on = false;
 	}
 }
-bool ButtonTexte::renderButtonTexte(Uint8 stateScreen)
+bool ButtonTexte::renderButtonTexte(Uint8 stateScreen, int x, int y, Uint8 center)
 {
 	if (this->GETstateScreen() == stateScreen)
 	{
-		if (_on)
-			SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
-		else
-			SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, &this->GETdst());
-		return true;
-	}
-	return false;
-}
-bool ButtonTexte::renderButtonTexteTestString(Uint8 stateScreen, std::string msg, int newx, int newy, Uint8 cnt)
-{
-	if (this->GETstateScreen() == stateScreen && this->GETname().compare(msg) == 0)
-	{
-		if (newx != -1 && newy != -1)
+		if (x != -1 && y != -1)
 		{
-			centrage(newx, newy, this->GETdstw(), this->GETdsth(), cnt);
-			this->SETdstx(newx);
-			this->SETdstx(newx);
+			centrage(x, y, this->GETdstw(), this->GETdsth(), center);
+			this->SETdstx(x);
+			this->SETdsty(y);
 		}
+
 		if (_on)
 			SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
 		else
@@ -629,77 +610,6 @@ void ButtonTexte::SETalpha(Uint8 alpha)
 		IHM::logSDLError(std::cout, "alpha : ");
 }
 
-
-
-///////////////////////////// HashTable //////////////////////////////
-/* HashTable :: STATIC */
-
-unsigned int HashTable::hash(const std::string& name, const unsigned int length)
-{
-	long hash = 0;
-	const unsigned int len_s = name.size();
-	for (unsigned int i = 0; i < len_s; i++)
-	{
-		hash += (long)pow(151, len_s - (i + 1)) * name[i];
-		hash = hash % length;
-	}
-	return (unsigned int)hash;
-}
-int HashTable::checkDoubleName(std::string name, std::vector<Texture*>& tabPos)
-{
-	if (searchIndex(name, tabPos) > 0)
-	{
-		std::cout << std::endl << "____WARNING:checkDoubleName(): " + name + " already found" << std::endl;
-		return -1;
-	}
-	return 0;
-}
-Texture* HashTable::searchPos(std::string msg, const std::vector<Texture*>& tabPos)
-{
-	unsigned int nb = hash(msg, tabPos.size());
-
-	unsigned int iteration = 0;
-	while (true)
-	{
-		if (tabPos[nb]->GETname().compare(msg) == 0)
-		{
-			return tabPos[nb];
-		}
-
-		++nb %= tabPos.size();
-		iteration++;
-
-		if (iteration >= (tabPos.size() * 2))
-		{
-			Texture* blank = NULL;
-			std::cout << std::endl << "____WARNING:SearchPos():Max Iteration: " + msg + " not found" << std::endl;
-			return blank;
-		}
-	}
-}
-void HashTable::addPos(std::vector<Texture*>& tabPos, std::string msg, int x, int y)
-{
-	if (checkDoubleName(msg, tabPos) >= 0)
-	{
-		//tabPos.push_back(new Pos(msg, x, y));
-		//fillTabHachage(tabPos);
-	}
-}
-void HashTable::deletePos(std::vector<Texture*>& tabPos, std::string msg)
-{
-	int index = searchIndex(msg, tabPos);
-	if (index < 0)
-	{
-		std::cout << std::endl << "____WARNING:DeletePos():Request not completed: " + msg + " not found" << std::endl;
-	}
-	else
-	{
-		delete tabPos[index];
-		tabPos[index] = NULL;
-		tabPos.erase(tabPos.begin() + index);
-		//fillTabHachage(tabPos);
-	}
-}
 
 /*
 *	End Of File

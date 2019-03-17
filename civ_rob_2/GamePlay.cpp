@@ -26,6 +26,7 @@
 #include "IHM.h"
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
+#include "HashTable.h"
 
 void GamePlay::newgame(Sysinfo& sysinfo)
 {
@@ -63,7 +64,6 @@ void GamePlay::newgame(Sysinfo& sysinfo)
 		KeyboardMouse::cinAlphabet(sysinfo, sysinfo.var.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
 		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i - 1]));
 	}
-
 	
 	groundgen(sysinfo);
 	newGameSettlerSpawn(sysinfo);
@@ -80,6 +80,10 @@ void GamePlay::newgame(Sysinfo& sysinfo)
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
 			shaded, sysinfo.var.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename, nonTransparent, no_angle);
 	}
+
+	/* Hachage du tableau player */
+	sysinfo.allButton.player.resize(sysinfo.allButton.player.size() + sysinfo.allButton.player.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allButton.player, sysinfo.allButton.playerIndex);
 	
 	sysinfo.screen.enableFPS = true;
 	sysinfo.screen.fpsTimer.start();

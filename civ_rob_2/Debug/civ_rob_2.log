@@ -1,4 +1,2 @@
 ﻿  IHM.cpp
-c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\ihm.cpp(831): warning C4189: 'validBarreSpec' : variable locale initialisée mais non référencée
-c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\ihm.cpp(831): warning C4189: 'checkBarre' : variable locale initialisée mais non référencée
   civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Debug\civ_rob_2.exe

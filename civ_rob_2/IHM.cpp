@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.3
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,6 +25,7 @@
 #include "IHM.h"
 #include "GamePlay.h"
 #include "SaveReload.h"
+#include "HashTable.h"
 
 void IHM::initTile(Map& map)
 {
@@ -365,36 +366,36 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	sysinfo.var.statescreen = STATEmainmap;
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainmap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
 		shaded, "screen Titre", WriteColorButton, BackColorButton, 24, 0, 0,
 		nonTransparent, no_angle);
 
 	sysinfo.var.select = selectcreate;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainmap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
 		shaded, "Create Unit", WriteColorButton, BackColorButton, 24, 0, 50,
 		nonTransparent, no_angle);
 
 	sysinfo.var.select = selectmove;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainmap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
 		shaded, "Move Unit", WriteColorButton, BackColorButton, 24, 0, 82,
 		nonTransparent, no_angle);
 
 	sysinfo.var.select = selectinspect;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainmap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
 		shaded, "Inspect", WriteColorButton, BackColorButton, 24, 0, 114,
 		nonTransparent, no_angle);
 
 	sysinfo.var.select = selectnothing;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainmap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
 		shaded, "Delete Unit", WriteColorButton, BackColorButton, 24, 0, 146,
 		nonTransparent, no_angle);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainmap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
 		shaded, "Next Turn", WriteColorButton, BackColorButton, 24, 0, 800,
 		nonTransparent, no_angle);
 
@@ -669,13 +670,19 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	
 	/*** sysinfo.allButtons ***/
 
-	/*
-	std::vector<ButtonTexte*> titleScreen;
-	std::vector<ButtonTexte*> player;
-	std::vector<ButtonTexte*> reload;
-	std::vector<ButtonTexte*> mainmap;
-	std::vector<ButtonTexte*> citie;
-	*/
+	sysinfo.allButton.titleScreen.resize(sysinfo.allButton.titleScreen.size() + sysinfo.allButton.titleScreen.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allButton.titleScreen, sysinfo.allButton.titleScreenIndex);
+
+	sysinfo.allButton.reload.resize(sysinfo.allButton.reload.size() + sysinfo.allButton.reload.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allButton.reload, sysinfo.allButton.reloadIndex);
+
+	sysinfo.allButton.mainMap.resize(sysinfo.allButton.mainMap.size() + sysinfo.allButton.mainMap.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allButton.mainMap, sysinfo.allButton.mainMapIndex);
+
+	sysinfo.allButton.citieMap.resize(sysinfo.allButton.citieMap.size() + sysinfo.allButton.citieMap.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allButton.citieMap, sysinfo.allButton.citieMapIndex);
+
+	/* Ne pas mettre allButton.player car initialisé dans NewGame */
 
 
 	/* title screen init */
@@ -804,8 +811,11 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 		sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 	}
 
-	for (unsigned int i = 0; i < sysinfo.allButton.titleScreen.size(); i++)
-		sysinfo.allButton.titleScreen[i]->renderButtonTexte(sysinfo.var.statescreen);
+	for (unsigned int i = 0; i < sysinfo.allButton.titleScreenIndex.size(); i++)
+	{
+		sysinfo.allButton.titleScreen[sysinfo.allButton.titleScreenIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+	}
+		
 
 
 
@@ -828,9 +838,11 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 
-	for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++)
-		sysinfo.allButton.reload[i]->renderButtonTexte(sysinfo.var.statescreen);
-
+	for (unsigned int i = 0; i < sysinfo.allButton.reloadIndex.size(); i++)
+	{
+		sysinfo.allButton.reload[sysinfo.allButton.reloadIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+	}
+		
 
 	/* ### Don't put code below here ### */
 
@@ -861,10 +873,17 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 		}
-		for (unsigned int i = 0; i < sysinfo.allButton.mainmap.size(); i++)
-			sysinfo.allButton.mainmap[i]->renderButtonTexte(sysinfo.var.statescreen);
-		for (unsigned int i = 0; i < sysinfo.allButton.player.size(); i++)
-			sysinfo.allButton.player[i]->renderButtonTexte(sysinfo.var.statescreen);
+
+		for (unsigned int i = 0; i < sysinfo.allButton.mainMapIndex.size(); i++)
+		{
+			sysinfo.allButton.mainMap[sysinfo.allButton.mainMapIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+		}
+			
+		for (unsigned int i = 0; i < sysinfo.allButton.playerIndex.size(); i++)
+		{
+			sysinfo.allButton.player[sysinfo.allButton.playerIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+		}
+			
 
 
 
@@ -995,58 +1014,29 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	SDL_RenderClear(sysinfo.screen.renderer);
 	std::string buildName;
 	unsigned int initspace = 96, space = 32;
-	unsigned int valid = 12, checkButton = 0; // optimisation de la boucle for 
-	unsigned int validBarreSpec = 10, checkBarre = 0;
 
-	if (sysinfo.var.select != selectcreate)
-		valid = 2;
-
-	for (unsigned int i = 0; i < sysinfo.allButton.citieMap.size(); i++)
-	{
-		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Map")) { i++; checkButton++; }
-		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Build")) { i++; checkButton++; }
-		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Food")) { i++; checkButton++; }
-		if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, (std::string)"Place Citizen")) { i++; checkButton++; }
-
-		if (sysinfo.var.select == selectcreate)
-		{
-			initspace = 96;
-			for (unsigned int j = 0; j < 10; j++)
-			{
-				if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.unitNameMaxToCreate)
-					buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
-				else
-					break;
-				if (sysinfo.allButton.citieMap[i]->renderButtonTexteTestString(sysinfo.var.statescreen, buildName, SCREEN_WIDTH / 2, initspace += space)) { i++; checkButton++; }
-			}
-		}
-		if (checkButton == valid) break;
-	}
-
-
-	for (unsigned int i = 0; i < sysinfo.allTextes.citieMapIndex.size(); i++)
-	{
-		sysinfo.allTextes.citieMap[sysinfo.allTextes.citieMapIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
-	}
-
-	/*
-	for (unsigned int i = 0; i < sysinfo.allTextes.citieMap.size(); i++)
-	{
-		initspace = 96;
-		switch (sysinfo.var.select)
-		{
-		case selectcreate:
-			sysinfo.allTextes.citieMap[i]->renderTextureTestStringAndStates("Scroll up or down", sysinfo.var.statescreen);
-			sysinfo.allTextes.citieMap[i]->renderTextureTestStringAndStates("Left click to Select", sysinfo.var.statescreen);
-			sysinfo.allTextes.citieMap[i]->renderTextureTestStringAndStates("create : ", sysinfo.var.statescreen);
-			sysinfo.allTextes.citieMap[i]->renderTextureTestStringAndStates( "selectcreate", sysinfo.var.statescreen);
-			break;
-		}
-	}
-	*/
+	
+	sysinfo.allButton.citieMap[searchIndex("Map", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.citieMap[searchIndex("Build", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.citieMap[searchIndex("Food", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.citieMap[searchIndex("Place Citizen", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
 
 	if (sysinfo.var.select == selectcreate)
 	{
+		initspace = 96;
+		for (unsigned int j = 0; j < 10; j++)
+		{
+			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.unitNameMaxToCreate)
+				buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
+			else
+				break;
+
+			sysinfo.allButton.citieMap[searchIndex(buildName, sysinfo.allButton.citieMap)]
+				->renderButtonTexte(sysinfo.var.statescreen, SCREEN_WIDTH / 2, initspace += space);
+		}
+
+
+		
 		for (unsigned int i = 0; i < sysinfo.allTextures.unit.size(); i++)
 		{
 			initspace = 96;
@@ -1059,9 +1049,13 @@ void IHM::citiemap(Sysinfo& sysinfo)
 				sysinfo.allTextures.unit[i]->renderTextureTestStringAndStates(buildName, STATEnothing, (SCREEN_WIDTH / 2) - 50, initspace += space);
 			}
 		}
-		initspace = 96;
 
-		/*
+		sysinfo.allTextes.citieMap[searchIndex("Scroll up or down", sysinfo.allTextes.citieMap)]->render();
+		sysinfo.allTextes.citieMap[searchIndex("Left click to Select", sysinfo.allTextes.citieMap)]->render();
+		sysinfo.allTextes.citieMap[searchIndex("create : ", sysinfo.allTextes.citieMap)]->render();
+		sysinfo.allTextes.citieMap[searchIndex("selectcreate", sysinfo.allTextes.citieMap)]->render();
+
+		initspace = 96;
 		for (unsigned int j = 0; j < 10; j++) 
 		{
 			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.unitNameMaxToCreate)
@@ -1080,7 +1074,6 @@ void IHM::citiemap(Sysinfo& sysinfo)
 				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].movement),
 				sysinfo.allTextes.citieMap)]->render((SCREEN_WIDTH / 2) + 200, initspace += space);
 		}
-		*/
 	}
 
 	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
@@ -1120,7 +1113,7 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.titleScreen, "Button");
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.player, "Button");
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.reload, "Button");
-	deleteDyTabPlayerAndTextures(sysinfo.allButton.mainmap, "Button");
+	deleteDyTabPlayerAndTextures(sysinfo.allButton.mainMap, "Button");
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.citieMap, "Button");
 
 	deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");

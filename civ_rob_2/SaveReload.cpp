@@ -25,6 +25,7 @@
 #include "SaveReload.h"
 #include "civ_lib.h"
 #include "IHM.h"
+#include "HashTable.h"
 
 
 ///////////////////////////// SaveReload //////////////////////////////
@@ -362,15 +363,15 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 			else
 				sysinfo.var.save.GETtabSave().erase(sysinfo.var.save.GETtabSave().begin() + sysinfo.var.save.GETcurrentSave() - 1);
 
-			for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++) 
-			{
-				if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETcurrentSave()), sysinfo.var.statescreen))
-				{
-					delete sysinfo.allButton.reload[i];
-					sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + i);
-					break;
-				}
-			}
+
+			// suppression du pointeur vers la sauvegarde courante
+			unsigned int index = searchIndex("Save : " + std::to_string(sysinfo.var.save.GETcurrentSave()), sysinfo.allButton.reload);
+			delete sysinfo.allButton.reload[index];
+			sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + index);
+
+			// Hachage du tableau avec une case en moins
+			fillTabHachage(sysinfo.allButton.reload, sysinfo.allButton.reloadIndex);
+			
 
 			std::ofstream saveInfo(sysinfo.file.SaveInfo);
 			if (saveInfo)
@@ -394,18 +395,15 @@ void SaveReload::clearSave(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_clearSave Start_");
 
-
-	for (unsigned int i = 0; i < sysinfo.allButton.reload.size(); i++)
+	unsigned int index = 0;
+	for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) 
 	{
-		for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) 
-		{
-			if (sysinfo.allButton.reload[i]->searchButtonTexteName("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]), sysinfo.var.statescreen))
-			{
-				delete sysinfo.allButton.reload[i];
-				sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + i);
-			}
-		}
+		index = searchIndex("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]), sysinfo.allButton.reload);
+		delete sysinfo.allButton.reload[index];
+		sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + index);
 	}
+
+	fillTabHachage(sysinfo.allButton.reload, sysinfo.allButton.reloadIndex);
 
 	std::string file;
 	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)

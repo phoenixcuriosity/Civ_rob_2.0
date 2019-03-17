@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -155,6 +155,33 @@ public:
 	* RETURNED VALUE    : void
 	*/
 	static void wheel(Sysinfo&, int& wheel);
+
+	/*
+	* NAME : resetButtonOn
+	* ROLE : reset de l'affichage On des boutons
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : reset de l'affichage On des boutons
+	* RETURNED VALUE    : void
+	*/
+	static void resetButtonOn(Sysinfo& sysinfo);
+
+	/*
+	* NAME : resetButtonPlayerOn
+	* ROLE : reset de l'affichage On des boutons player
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : reset de l'affichage On des boutons player
+	* RETURNED VALUE    : void
+	*/
+	static void resetButtonPlayerOn(Sysinfo& sysinfo);
+
+	/*
+	* NAME : resetButtonCitieMap
+	* ROLE : reset de l'affichage On des boutons citieMap
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : reset de l'affichage On des boutons citieMap
+	* RETURNED VALUE    : void
+	*/
+	static void resetButtonCitieMap(Sysinfo& sysinfo);
 
 
 

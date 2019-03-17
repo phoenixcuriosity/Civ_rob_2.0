@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="IHM.cpp" />
     <ClCompile Include="Cities.cpp" />
     <ClCompile Include="KeyboardMouse.cpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="Units.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="IHM.h" />
     <ClInclude Include="Cities.h" />
     <ClInclude Include="civ_lib.h" />

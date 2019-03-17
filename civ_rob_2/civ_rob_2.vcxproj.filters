@@ -19,6 +19,12 @@
     <Filter Include="Fichiers sources\Class">
       <UniqueIdentifier>{74c143cd-8ddb-4ca1-a852-6c225201ecd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Class\Misc">
+      <UniqueIdentifier>{c0404c2b-c3e0-45be-a272-8c5471056f13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Class\Misc">
+      <UniqueIdentifier>{4280d12b-6397-40e2-8ac8-45e00e5a2d6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,9 +42,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="LTimer.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
     <ClCompile Include="IHM.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
@@ -50,6 +53,12 @@
     </ClCompile>
     <ClCompile Include="GamePlay.cpp">
       <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="LTimer.cpp">
+      <Filter>Fichiers sources\Class\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="HashTable.cpp">
+      <Filter>Fichiers sources\Class\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,9 +77,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="LTimer.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
     <ClInclude Include="LIB.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -85,6 +91,12 @@
     </ClInclude>
     <ClInclude Include="GamePlay.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="LTimer.h">
+      <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
