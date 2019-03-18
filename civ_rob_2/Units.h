@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -66,8 +66,7 @@ class Units
 		virtual int testPos(unsigned int mouse_x, unsigned int mouse_y);
 
 
-		virtual void afficher(Sysinfo&);
-		virtual void afficherBardeVie(Sysinfo&);
+		virtual void afficher(Sysinfo&, unsigned int iPlayer);
 		virtual void afficherstat(Sysinfo&);
 		virtual void cmpblit();
 

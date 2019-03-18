@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,6 +24,7 @@
 
 #include "Units.h"
 #include "IHM.h"
+#include "HashTable.h"
 
 Units::Units() : _name(""), _x(0), _y(0), _life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true)
 {
@@ -260,73 +261,58 @@ int Units::testPos(unsigned int mouse_x, unsigned int mouse_y)
 		return 1;
 	return 0;
 }
-void Units::afficher(Sysinfo& sysinfo){
+void Units::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
 	if (_show)
 	{
-		for (unsigned int i = 0; i < sysinfo.allTextures.unit.size(); i++)
-			sysinfo.allTextures.unit[i]->renderTextureTestString(_name, _x, _y);
-		//logfileconsole("Afficher Unit Success");
-	}
-}
-void Units::afficherBardeVie(Sysinfo& sysinfo)
-{
-	if (_show)
-	{
+		sysinfo.allTextures.unit[searchIndex(_name, sysinfo.allTextures.unit)]->render( _x, _y);
+	
 		if (_life == _maxlife)
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("maxlife.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[0]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1)))
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.9life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[1]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) 
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.8life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[2]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3)))
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.7life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[3]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4)))
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.6life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[4]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5)))
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.5life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[5]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) 
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.4life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[6]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) 
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.3life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[7]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8)))
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.2life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[8]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9)))
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.1life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[9]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.9)))
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.barLife.size(); i++)
-				sysinfo.allTextures.barLife[i]->renderTextureTestString("0.0life.bmp", _x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[10]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
 		}
+
+
+		sysinfo.allTextures.colorapp[iPlayer]->render(_x, _y + sysinfo.map.tileSize);
 	}
 }
 void Units::afficherstat(Sysinfo& sysinfo)
@@ -335,41 +321,33 @@ void Units::afficherstat(Sysinfo& sysinfo)
 	{
 		int initspace = _y, space = 14;
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "Name: "  + _name, { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace, no_angle);
+			blended, "Name: "  + _name, Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "X: " + std::to_string(_x), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+			blended, "X: " + std::to_string(_x), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "Y: " + std::to_string(_y), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+			blended, "Y: " + std::to_string(_y), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "life: " + std::to_string(_life), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+			blended, "life: " + std::to_string(_life), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "atq: " + std::to_string(_atq), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+			blended, "atq: " + std::to_string(_atq), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "def: " + std::to_string(_def), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+			blended, "def: " + std::to_string(_def), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "movement: " + std::to_string(_movement), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+			blended, "movement: " + std::to_string(_movement), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "level: " + std::to_string(_level), { 0, 64, 255, 255 }, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+			blended, "level: " + std::to_string(_level), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 	}
 }
 void Units::cmpblit() 
 {
 	/*
 		50% off 50% on , environ 1s le cycle
-		probablement à changer dans le futur???
 	*/
-	if (_blit < 2000)
+	++_blit %= 30;
+	if(_blit == 0)
 	{
-		_blit++;
-		_show = false;
+		_show = !_show;
 	}
-	else if (_blit >= 2000 && _blit < 4000)
-	{
-		_blit++;
-		_show = true;
-	}
-	else if(_blit >= 4000)
-		_blit = 0;
 }
 
 /*

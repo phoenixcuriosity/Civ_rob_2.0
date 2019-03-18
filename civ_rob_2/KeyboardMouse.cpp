@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -316,32 +316,38 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 }
 void KeyboardMouse::keySDLK_b(Sysinfo& sysinfo)
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Cities::createcitie(sysinfo);
 }
 void KeyboardMouse::keySDLK_i(Sysinfo& sysinfo)
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::irrigate(sysinfo);
 }
 void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove 
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), sysinfo.map.tileSize);
 }
 void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, 0, sysinfo.map.tileSize);
 }
 void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo) 
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, sysinfo.map.tileSize, sysinfo.map.tileSize);
 }
 void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), 0);
 }
 void KeyboardMouse::keySDLK_KP_5(Sysinfo& sysinfo) 
@@ -350,22 +356,26 @@ void KeyboardMouse::keySDLK_KP_5(Sysinfo& sysinfo)
 }
 void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo) 
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, sysinfo.map.tileSize, 0);
 }
 void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo) 
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), -(int)(sysinfo.map.tileSize));
 }
 void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, 0, -(int)(sysinfo.map.tileSize));
 }
 void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo) 
 {
-	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove)
+	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
+		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		Units::tryToMove(sysinfo, sysinfo.map.tileSize, -(int)(sysinfo.map.tileSize));
 }
 void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event)
@@ -497,7 +507,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		if (sysinfo.allButton.titleScreen[searchIndex("New Game", sysinfo.allButton.titleScreen)]
 			->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
-			GamePlay::newgame(sysinfo);
+			GamePlay::newGame(sysinfo);
 			return;
 		}
 		if (sysinfo.allButton.titleScreen[searchIndex("Reload", sysinfo.allButton.titleScreen)]
@@ -658,7 +668,7 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size() != 0) 
 				{
 					Units::searchUnittile(sysinfo);
-					IHM::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
+					IHM::logfileconsole("Unit select to Inspect n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
 			}

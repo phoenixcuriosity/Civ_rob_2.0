@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.5
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,16 +51,13 @@ void IHM::initTile(Map& map)
 }
 void IHM::initFile(File& file)
 {
-	std::ofstream log(file.log);
-	if (log) 
-	{
-	}
-	else
-		std::cout << std::endl << "ERREUR: Impossible d'ouvrir le fichier : " << file.log;
+	std::ofstream log;
+	log.open(file.log, std::ofstream::out | std::ofstream::trunc);
+	log.close();
 }
 void IHM::logfileconsole(const std::string msg)
 {
-	const std::string logtxt = "log.txt";
+	const std::string logtxt = "bin/log/log.txt";
 	std::ofstream log(logtxt, std::ios::app);
 
 	//std::time_t result = std::time(nullptr);
@@ -211,7 +208,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	sysinfo.var.statescreen = STATEmainmap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
-	for (unsigned int i = 0; i < 10; i++)
+	for (int i = 9; i >= 0; i--)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "barre de vie/0." + std::to_string(i) + "life.bmp", "0." + std::to_string(i) + "life.bmp", nonTransparent,
 			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
@@ -639,17 +636,25 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 	/*** sysinfo.allTextures ***/
 
-	/*
-	std::vector<Texture*> ground;
-	std::vector<Texture*> groundSpec;
-	std::vector<Texture*> unit;
-	std::vector<Texture*> citie;
-	std::vector<Texture*> barLife;
-	std::vector<Texture*> colorapp;
-	std::vector<Texture*> colorapptile;
-	std::vector<Texture*> miscTexture;
 
-	std::vector<Texture*> titleScreen;
+	sysinfo.allTextures.titleScreen.resize(sysinfo.allTextures.titleScreen.size() + sysinfo.allTextures.titleScreen.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextures.titleScreen, sysinfo.allTextures.titleScreenIndex);
+
+	sysinfo.allTextures.unit.resize(sysinfo.allTextures.unit.size() + sysinfo.allTextures.unit.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextures.unit, sysinfo.allTextures.unitIndex);
+
+	/*
+	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
+
+	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
+	*/
+
+	/*
+	std::vector<Texture*> citie;
+	std::vector<Texture*> miscTexture;
+	
 	*/
 
 
@@ -792,7 +797,6 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 
 	}
 }
-
 void IHM::titleScreen(Sysinfo& sysinfo)
 {
 	logfileconsole("_titleScreens Start_");
@@ -803,17 +807,23 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 
 
 
-	for (unsigned int i = 0; i < sysinfo.allTextures.titleScreen.size(); i++)
-		sysinfo.allTextures.titleScreen[i]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+	for (unsigned int i = 0; i < sysinfo.allTextures.titleScreenIndex.size(); i++)
+	{
+		sysinfo.allTextures.titleScreen[sysinfo.allTextures.titleScreenIndex[i]]
+			->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+	}
+		
 
 	for (unsigned int i = 0; i < sysinfo.allTextes.titleScreenIndex.size(); i++)
 	{
-		sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+		sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]
+			->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 	}
 
 	for (unsigned int i = 0; i < sysinfo.allButton.titleScreenIndex.size(); i++)
 	{
-		sysinfo.allButton.titleScreen[sysinfo.allButton.titleScreenIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+		sysinfo.allButton.titleScreen[sysinfo.allButton.titleScreenIndex[i]]
+			->renderButtonTexte(sysinfo.var.statescreen);
 	}
 
 	/* ### Don't put code below here ### */
@@ -883,10 +893,26 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		// affiche les unités pour rendre l'unité à créer
 		if (sysinfo.var.select == selectcreate)
 		{
-			for (unsigned int i = 0; i < sysinfo.allTextures.unit.size(); i++)
-				sysinfo.allTextures.unit[i]->renderTextureTestString(sysinfo.var.s_player.unitNameToCreate);
+			if (sysinfo.var.s_player.unitNameToCreate.compare("") != 0)
+			{
+				sysinfo.allTextures.unit[searchIndex(sysinfo.var.s_player.unitNameToCreate, sysinfo.allTextures.unit)]->render(100, 432);
+			}
 		}
-		
+		else if (sysinfo.var.select == selectmove)
+		{
+			if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
+			{
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->cmpblit();
+			}
+		}
+		else if (sysinfo.var.select == selectinspect)
+		{
+			// affiche les stats de l'unité inspecté
+			if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
+			{
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->afficherstat(sysinfo);
+			}
+		}
 
 		if (sysinfo.tabplayer.size() != 0)
 		{
@@ -896,10 +922,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++)
 					{
 						// affiche pour chaque joueurs les unités existantes (avec les stats)
-						sysinfo.tabplayer[i]->GETtheunit(j)->afficher(sysinfo);
-						sysinfo.tabplayer[i]->GETtheunit(j)->afficherBardeVie(sysinfo);
-						for (unsigned int h = 0; h < sysinfo.allTextures.colorapp.size(); h++)
-							sysinfo.allTextures.colorapp[h]->renderTextureTestString("ColorPlayer" + std::to_string(i) + ".bmp", sysinfo.tabplayer[i]->GETtheunit(j)->GETx(), sysinfo.tabplayer[i]->GETtheunit(j)->GETy() + sysinfo.map.tileSize);
+						sysinfo.tabplayer[i]->GETtheunit(j)->afficher(sysinfo, i);
 					}
 				}
 				if (sysinfo.tabplayer[i]->GETtabcities().size() != 0)
@@ -982,16 +1005,15 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 				break;
 			}
 
-			if (sysinfo.map.screen[m][n].tile_spec != 0)
+			if (sysinfo.map.screen[m][n].tile_spec > 0)
 			{
-						for (unsigned int l = 0; l < sysinfo.allTextures.groundSpec.size(); l++)
-							sysinfo.allTextures.groundSpec[l]->renderTextureTestString(sysinfo.map.screen[m][n].tile_stringspec, sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.groundSpec[sysinfo.map.screen[m][n].tile_spec - 1]
+					->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
 			}
 			if (sysinfo.map.screen[m][n].appartenance != -1)
 			{
-				for (unsigned int l = 0; l < sysinfo.allTextures.colorapptile.size(); l++)
-					sysinfo.allTextures.colorapptile[l]->renderTextureTestString("ColorPlayertile" +
-						std::to_string(sysinfo.map.screen[m][n].appartenance) + ".bmp", sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.colorapptile[sysinfo.map.screen[m][n].appartenance]
+					->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
 			}
 		}
 	}
@@ -1023,47 +1045,21 @@ void IHM::citiemap(Sysinfo& sysinfo)
 
 			sysinfo.allButton.citieMap[searchIndex(buildName, sysinfo.allButton.citieMap)]
 				->renderButtonTexte(sysinfo.var.statescreen, SCREEN_WIDTH / 2, initspace += space);
-		}
-
-
-		
-		for (unsigned int i = 0; i < sysinfo.allTextures.unit.size(); i++)
-		{
-			initspace = 96;
-			for (unsigned int j = 0; j < 10; j++)
-			{
-				if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.unitNameMaxToCreate)
-					buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
-				else
-					break;
-				sysinfo.allTextures.unit[i]->renderTextureTestStringAndStates(buildName, STATEnothing, (SCREEN_WIDTH / 2) - 50, initspace += space);
-			}
+			sysinfo.allTextures.unit[searchIndex(buildName, sysinfo.allTextures.unit)]
+				->render((SCREEN_WIDTH / 2) - 50, initspace);
+			sysinfo.allTextes.citieMap[searchIndex(
+				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].life) +
+				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].atq) +
+				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].def) +
+				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].movement),
+				sysinfo.allTextes.citieMap)]
+				->render((SCREEN_WIDTH / 2) + 200, initspace);
 		}
 
 		sysinfo.allTextes.citieMap[searchIndex("Scroll up or down", sysinfo.allTextes.citieMap)]->render();
 		sysinfo.allTextes.citieMap[searchIndex("Left click to Select", sysinfo.allTextes.citieMap)]->render();
 		sysinfo.allTextes.citieMap[searchIndex("create : ", sysinfo.allTextes.citieMap)]->render();
 		sysinfo.allTextes.citieMap[searchIndex("selectcreate", sysinfo.allTextes.citieMap)]->render();
-
-		initspace = 96;
-		for (unsigned int j = 0; j < 10; j++) 
-		{
-			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.unitNameMaxToCreate)
-			{
-				buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
-			}
-			else
-			{
-				break;
-			}
-					
-			sysinfo.allTextes.citieMap[searchIndex(
-				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].life) +
-				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].atq) +
-				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].def) +
-				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].movement),
-				sysinfo.allTextes.citieMap)]->render((SCREEN_WIDTH / 2) + 200, initspace += space);
-		}
 	}
 
 	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);

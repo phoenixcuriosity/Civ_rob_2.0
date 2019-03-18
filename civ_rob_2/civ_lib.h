@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.14
-	file version : 1.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -323,18 +323,25 @@ struct Map {
 	std::vector<std::vector<Tile>> maps;
 };
 struct AllTextures {
+	TTF_Font *font[MAX_FONT];
+
+	/* déjà en O(1) pas besoin d'index */
 	std::vector<Texture*> ground;
 	std::vector<Texture*> groundSpec;
-	std::vector<Texture*> unit;
-	std::vector<Texture*> citie;
-	std::vector<Texture*> barLife;
 	std::vector<Texture*> colorapp;
 	std::vector<Texture*> colorapptile;
-	std::vector<Texture*> miscTexture;
+	std::vector<Texture*> barLife;
+
 
 	std::vector<Texture*> titleScreen;
-
-	TTF_Font *font[MAX_FONT];
+	std::vector<Texture*> unit;
+	std::vector<Texture*> citie;
+	std::vector<Texture*> miscTexture;
+	
+	std::vector<unsigned int> titleScreenIndex;
+	std::vector<unsigned int> unitIndex;
+	std::vector<unsigned int> citieIndex;
+	std::vector<unsigned int> miscTextureIndex;
 };
 struct AllTextes {
 	std::vector<Texte*> titleScreen;
