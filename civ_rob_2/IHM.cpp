@@ -106,7 +106,7 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		}
 		else
 			logfileconsole("CreateWindow Success");
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		//| SDL_RENDERER_PRESENTVSYNC
 		if (renderer == nullptr)
 		{
@@ -145,7 +145,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 
 	/* *********************************************************
-		*				sysinfo.allTextures
+		*				START sysinfo.allTextures
 	 ********************************************************* */
 	// chargement des images du sol de la map
 	/*
@@ -247,10 +247,10 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 
 	/*
-		sysinfo.allTextures.miscTexture
+		sysinfo.allTextures.citieMap
 	*/
 	sysinfo.var.statescreen = STATEmainmap;
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.miscTexture, sysinfo.var.statescreen, sysinfo.var.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "citie/citie.png", "citie.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 
 
@@ -293,10 +293,13 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	int spacemenu = 64, initspacemenu = 300;
 
 	
-	
-	
 	/* *********************************************************
-		*				sysinfo.allButtons
+		*				END sysinfo.allTextures
+	 ********************************************************* */
+
+
+	/* *********************************************************
+		*				START sysinfo.allButtons
 	 ********************************************************* */
 
 
@@ -438,11 +441,13 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	sysinfo.var.select = selectnothing;
 
 
-	
+	/* *********************************************************
+		*				END sysinfo.allButtons
+	 ********************************************************* */
 	
 	
 	/* *********************************************************
-		*				sysinfo.allTexte
+		*				START sysinfo.allTexte
 	 ********************************************************* */
 
 
@@ -617,12 +622,14 @@ void IHM::calculImage(Sysinfo& sysinfo)
 			{ 255, 64, 0, 255 }, NoColor, 24, 0, 0, nonTransparent, no_angle);
 	}
 		
-
+	/* *********************************************************
+		*				END sysinfo.allTexte
+	 ********************************************************* */
 	
 	
 
 	/* *********************************************************
-		*				HashTable
+		*				START HashTable
 	 ********************************************************* */
 	
 	/*
@@ -643,19 +650,8 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	sysinfo.allTextures.unit.resize(sysinfo.allTextures.unit.size() + sysinfo.allTextures.unit.size() * INIT_SIZE_MULTIPLIER);
 	fillTabHachage(sysinfo.allTextures.unit, sysinfo.allTextures.unitIndex);
 
-	/*
-	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
-
-	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
-	*/
-
-	/*
-	std::vector<Texture*> citie;
-	std::vector<Texture*> miscTexture;
-	
-	*/
+	sysinfo.allTextures.citieMap.resize(sysinfo.allTextures.citieMap.size() + sysinfo.allTextures.citieMap.size() * INIT_SIZE_MULTIPLIER);
+	fillTabHachage(sysinfo.allTextures.citieMap, sysinfo.allTextures.citieMapIndex);
 
 
 	/*** sysinfo.allTextes ***/
@@ -692,12 +688,12 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/* Ne pas mettre allButton.player car initialisé dans NewGame */
 
 
+	/* *********************************************************
+		*				END HashTable
+	 ********************************************************* */
+
+
 	/* ### Don't put code below here ### */
-
-
-	/* title screen init */
-	sysinfo.var.select = selectnothing;
-	sysinfo.var.statescreen = STATEtitleScreen;
 
 	logfileconsole("_calculImage End_");
 }
@@ -801,10 +797,12 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 {
 	logfileconsole("_titleScreens Start_");
 
+	/* title screen init */
 	sysinfo.var.statescreen = STATEtitleScreen;
 	sysinfo.var.select = selectnothing;
-	SDL_RenderClear(sysinfo.screen.renderer);
 
+	// applique une surface de la taille de l'écran de couleur noir
+	SDL_RenderClear(sysinfo.screen.renderer);
 
 
 	for (unsigned int i = 0; i < sysinfo.allTextures.titleScreenIndex.size(); i++)
@@ -1083,12 +1081,13 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.ground, "Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.groundSpec, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.unit, "Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.barLife, "Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.colorapp, "Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.colorapptile, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.miscTexture, "Texture");
+
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.titleScreen, "Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.unit, "Texture");
+	deleteDyTabPlayerAndTextures(sysinfo.allTextures.citieMap, "Texture");
 
 
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.titleScreen, "Texte");

@@ -17,6 +17,9 @@ Create ButtonTexte n:4 msg = Save : 1 Success
 Create ButtonTexte n:5 msg = Save : 2 Success
 Create ButtonTexte n:6 msg = Save : 3 Success
 Create ButtonTexte n:7 msg = Save : 4 Success
+Create ButtonTexte n:8 msg = Save : 5 Success
+Create ButtonTexte n:9 msg = Save : 6 Success
+Create ButtonTexte n:10 msg = Save : 7 Success
 Create ButtonTexte n:0 msg = screen Titre Success
 Create ButtonTexte n:1 msg = Create Unit Success
 Create ButtonTexte n:2 msg = Move Unit Success
@@ -43,7 +46,7 @@ Create ButtonTexte n:16 msg = spitter Success
 Create ButtonTexte n:17 msg = tank Success
 Create ButtonTexte n:18 msg = transport_plan Success
 _calculImage End_
-temps d'execution de l'initialisation : 1.373000
+temps d'execution de l'initialisation : 1.338000
 _titleScreens Start_
 _titleScreens End_
 _Newgame Start_
@@ -64,6 +67,14 @@ Unit select to move n:0
 Create Citizen Success
 Kill Citizen Success
 Create Citie: Paris Success
+sysinfo.var.selectplayer = NoName0
+_Save Start_
+_Save End_
+_SavePlayer Start_
+_SavePlayer End_
+__________________________
+_titleScreens Start_
+_titleScreens End_
 *********_________ Start DeleteAll _________*********
 Delete Texture name = grass.bmp Success
 Delete Texture name = water.bmp Success
@@ -79,22 +90,6 @@ Delete Texture name = uranium.png Success
 Delete Texture name = horse.bmp Success
 Delete Texture name = fish.bmp Success
 Delete Texture name = petroleum.bmp Success
-Delete ALL Texture Success
-Delete Texture name = car Success
-Delete Texture name = battleoids Success
-Delete Texture name = spitter Success
-Delete Texture name = tank Success
-Delete Texture name = ouvrier_tier_1 Success
-Delete Texture name = ouvrier_tier_2 Success
-Delete Texture name = ouvrier_tier_3 Success
-Delete Texture name = bombardier Success
-Delete Texture name = satellite Success
-Delete Texture name = transport_plan Success
-Delete Texture name = robot Success
-Delete Texture name = settler Success
-Delete Texture name = rover Success
-Delete Texture name = rocket Success
-Delete Texture name = biter Success
 Delete ALL Texture Success
 Delete Texture name = maxlife.bmp Success
 Delete Texture name = 0.9life.bmp Success
@@ -128,11 +123,27 @@ Delete Texture name = ColorPlayertile6.bmp Success
 Delete Texture name = ColorPlayertile7.bmp Success
 Delete Texture name = ColorPlayertile8.bmp Success
 Delete ALL Texture Success
-Delete Texture name = citie.png Success
-Delete ALL Texture Success
 Delete Texture name = sdl_icone.bmp Success
 Delete Texture name = earth.jpg Success
 Delete Texture name = destroyed.bmp Success
+Delete ALL Texture Success
+Delete Texture name = car Success
+Delete Texture name = battleoids Success
+Delete Texture name = spitter Success
+Delete Texture name = tank Success
+Delete Texture name = ouvrier_tier_1 Success
+Delete Texture name = ouvrier_tier_2 Success
+Delete Texture name = ouvrier_tier_3 Success
+Delete Texture name = bombardier Success
+Delete Texture name = satellite Success
+Delete Texture name = transport_plan Success
+Delete Texture name = robot Success
+Delete Texture name = settler Success
+Delete Texture name = rover Success
+Delete Texture name = rocket Success
+Delete Texture name = biter Success
+Delete ALL Texture Success
+Delete Texture name = citie.png Success
 Delete ALL Texture Success
 Delete Texte name = Game dev in c++ with SDL2.0.8 Success
 Delete Texte name = le destructeur des Mondes Success
@@ -244,14 +255,17 @@ Delete Button name = Quit Success
 Delete ALL Button Success
 Delete Button name = NoName0 Success
 Delete ALL Button Success
+Delete Button name = Remove Success
+Delete Button name = Back Success
+Delete Button name = Remove all saves Success
 Delete Button name = Save : 1 Success
 Delete Button name = Save : 2 Success
 Delete Button name = Save : 3 Success
 Delete Button name = Save : 4 Success
-Delete Button name = Remove all saves Success
-Delete Button name = Back Success
+Delete Button name = Save : 5 Success
 Delete Button name = Load Success
-Delete Button name = Remove Success
+Delete Button name = Save : 6 Success
+Delete Button name = Save : 7 Success
 Delete ALL Button Success
 Delete Button name = Inspect Success
 Delete Button name = Next Turn Success

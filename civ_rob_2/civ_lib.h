@@ -335,13 +335,11 @@ struct AllTextures {
 
 	std::vector<Texture*> titleScreen;
 	std::vector<Texture*> unit;
-	std::vector<Texture*> citie;
-	std::vector<Texture*> miscTexture;
+	std::vector<Texture*> citieMap;
 	
 	std::vector<unsigned int> titleScreenIndex;
 	std::vector<unsigned int> unitIndex;
-	std::vector<unsigned int> citieIndex;
-	std::vector<unsigned int> miscTextureIndex;
+	std::vector<unsigned int> citieMapIndex;
 };
 struct AllTextes {
 	std::vector<Texte*> titleScreen;

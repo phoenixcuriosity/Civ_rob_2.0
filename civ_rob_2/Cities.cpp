@@ -112,7 +112,7 @@ std::vector<Citizen> createCitizen(Tile tiles)
 }
 void Cities::afficher(Sysinfo& sysinfo)
 {
-	sysinfo.allTextures.miscTexture[searchIndex(_image, sysinfo.allTextures.miscTexture)]->render(_x, _y);
+	sysinfo.allTextures.citieMap[searchIndex(_image, sysinfo.allTextures.citieMap)]->render(_x, _y);
 
 	sysinfo.allTextes.mainMap[searchIndex(_name, sysinfo.allTextes.mainMap)]->render(_x, _y);
 }
