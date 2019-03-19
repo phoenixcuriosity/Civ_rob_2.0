@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.14
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -102,9 +102,9 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 		for (Uint8 j = 0; j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
 		{
 			
-			sysinfo.map.maps[i][j].indexX = i + (SCREEN_WIDTH / 10) / sysinfo.map.tileSize;
+			sysinfo.map.maps[i][j].indexX = i;
 			sysinfo.map.maps[i][j].indexY = j;
-			sysinfo.map.maps[i][j].tile_x = sysinfo.map.tileSize * i + (SCREEN_WIDTH / 10);
+			sysinfo.map.maps[i][j].tile_x = sysinfo.map.tileSize * i;
 			sysinfo.map.maps[i][j].tile_y = sysinfo.map.tileSize * j;
 			
 			/*
@@ -248,6 +248,24 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			}
 		}
 	}
+	Uint8 m = 0, n = 0;
+	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
+	{
+		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++) {
+			if (sysinfo.map.maps[i][j].tile_x >= 0 && sysinfo.map.maps[i][j].tile_x < SCREEN_WIDTH)
+			{
+				if (sysinfo.map.maps[i][j].tile_y >= 0 && sysinfo.map.maps[i][j].tile_y < SCREEN_HEIGHT)
+				{
+					sysinfo.map.screen[m][n] = sysinfo.map.maps[i][j];
+					sysinfo.map.screen[m][n].indexX = m;
+					sysinfo.map.screen[m][n].indexY = n;
+					n = (n + 1) % sysinfo.map.screen[m].size();
+					if (n == 0)
+						m++;
+				}
+			}
+		}
+	}
 	IHM::logfileconsole("_Groundgen End_");
 }
 void GamePlay::tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold)
@@ -363,13 +381,13 @@ bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
 		condition pour valider les coordonnées crées:
 			- etre sur une tile possédant la caractéristique d'etre du sol
 	*/
-	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) 
+	for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++) 
 	{
-		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++) 
+		for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) 
 		{
-			if (sysinfo.map.maps[i][j].tile_x == RandomPOS.x && sysinfo.map.maps[i][j].tile_y == RandomPOS.y) 
+			if (sysinfo.map.screen[i][j].tile_x == RandomPOS.x && sysinfo.map.screen[i][j].tile_y == RandomPOS.y) 
 			{
-				if (sysinfo.map.maps[i][j].tile_ground == grass)
+				if (sysinfo.map.screen[i][j].tile_ground == grass)
 					return true;
 				return false;
 			}

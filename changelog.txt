@@ -1,30 +1,6 @@
 This is a list of major changes in Civ_rob_2 version history.
 
 ---------------------------------------------------------------------------
-0.15: "Through the map v2.0"
----------------------------------------------------------------------------
-
--> Change:
-	- Adapt std::vector<std::vector<Tile>> maps;
-		 to only represents the part only visible to the user
-	- fix bug : the units are moving with it
-
-
-
----------------------------------------------------------------------------
-0.14: Compexity O(1)
----------------------------------------------------------------------------
--> Add:
-	- New :	HashTable 
-	- Comments
-
--> Change:
-	- Adapt to new Texture.h and Texture.cpp
-	- Adapt searchIndex (HashTable -> O(1)) for Texture, Texte and Button
-
-
-
----------------------------------------------------------------------------
 0.13: "Through the map"
 ---------------------------------------------------------------------------
 -> Add:

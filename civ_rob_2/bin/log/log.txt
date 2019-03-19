@@ -20,10 +20,6 @@ Create ButtonTexte n:7 msg = Save : 4 Success
 Create ButtonTexte n:8 msg = Save : 5 Success
 Create ButtonTexte n:9 msg = Save : 6 Success
 Create ButtonTexte n:10 msg = Save : 7 Success
-Create ButtonTexte n:11 msg = Save : 8 Success
-Create ButtonTexte n:12 msg = Save : 9 Success
-Create ButtonTexte n:13 msg = Save : 10 Success
-Create ButtonTexte n:14 msg = Save : 11 Success
 Create ButtonTexte n:0 msg = screen Titre Success
 Create ButtonTexte n:1 msg = Create Unit Success
 Create ButtonTexte n:2 msg = Move Unit Success
@@ -50,7 +46,7 @@ Create ButtonTexte n:16 msg = spitter Success
 Create ButtonTexte n:17 msg = tank Success
 Create ButtonTexte n:18 msg = transport_plan Success
 _calculImage End_
-temps d'execution de l'initialisation : 1.385000
+temps d'execution de l'initialisation : 1.338000
 _titleScreens Start_
 _titleScreens End_
 _Newgame Start_
@@ -66,6 +62,19 @@ _SavePlayer Start_
 _SavePlayer End_
 Create ButtonTexte n:0 msg = NoName0 Success
 _Newgame End_
+sysinfo.var.selectplayer = NoName0
+Unit select to move n:0
+Create Citizen Success
+Kill Citizen Success
+Create Citie: Paris Success
+sysinfo.var.selectplayer = NoName0
+_Save Start_
+_Save End_
+_SavePlayer Start_
+_SavePlayer End_
+__________________________
+_titleScreens Start_
+_titleScreens End_
 *********_________ Start DeleteAll _________*********
 Delete Texture name = grass.bmp Success
 Delete Texture name = water.bmp Success
@@ -246,6 +255,7 @@ Delete Button name = Quit Success
 Delete ALL Button Success
 Delete Button name = NoName0 Success
 Delete ALL Button Success
+Delete Button name = Remove Success
 Delete Button name = Back Success
 Delete Button name = Remove all saves Success
 Delete Button name = Save : 1 Success
@@ -253,14 +263,9 @@ Delete Button name = Save : 2 Success
 Delete Button name = Save : 3 Success
 Delete Button name = Save : 4 Success
 Delete Button name = Save : 5 Success
+Delete Button name = Load Success
 Delete Button name = Save : 6 Success
 Delete Button name = Save : 7 Success
-Delete Button name = Save : 8 Success
-Delete Button name = Save : 9 Success
-Delete Button name = Save : 10 Success
-Delete Button name = Save : 11 Success
-Delete Button name = Remove Success
-Delete Button name = Load Success
 Delete ALL Button Success
 Delete Button name = Inspect Success
 Delete Button name = Next Turn Success
@@ -290,8 +295,10 @@ Delete Button name = satellite Success
 Delete Button name = biter Success
 Delete ALL Button Success
 Delete player name = NoName0 Success
-Kill Unit n:0 of Player: NoName0 Success
 Kill ALL Unit of Player:NoName0 Success
+Destroy Citie: Paris Success
+Kill Citizen Success
+Kill Citie n:0 of Player: NoName0 Success
 Kill ALL Cities of Player:NoName0 Success
 Delete ALL player Success
 *********_________ End DeleteAll _________*********
