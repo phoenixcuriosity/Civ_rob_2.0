@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.2
+	last modification on this file on version:0.15
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -129,14 +129,14 @@ int Units::searchToMove(Sysinfo& sysinfo, int x, int y)
 	*/
 	bool ground = false;
 
-	for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++)
+	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
 	{
-		for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++)
+		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
 		{
-			if (sysinfo.map.screen[i][j].tile_x == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx() + x &&
-				sysinfo.map.screen[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y)
+			if (sysinfo.map.maps[i][j].tile_x == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx() + x &&
+				sysinfo.map.maps[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y)
 			{
-				if (sysinfo.map.screen[i][j].tile_ground == grass)
+				if (sysinfo.map.maps[i][j].tile_ground == grass)
 				{
 					ground = true;
 					break;
@@ -264,55 +264,57 @@ int Units::testPos(unsigned int mouse_x, unsigned int mouse_y)
 void Units::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
 	if (_show)
 	{
-		sysinfo.allTextures.unit[searchIndex(_name, sysinfo.allTextures.unit)]->render( _x, _y);
+		unsigned int x = _x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
+		unsigned int y = _y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize;
+		sysinfo.allTextures.unit[searchIndex(_name, sysinfo.allTextures.unit)]->render( x, y);
 	
 		if (_life == _maxlife)
 		{
-			sysinfo.allTextures.barLife[0]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[0]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1)))
 		{
-			sysinfo.allTextures.barLife[1]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[1]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) 
 		{
-			sysinfo.allTextures.barLife[2]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[2]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3)))
 		{
-			sysinfo.allTextures.barLife[3]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[3]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4)))
 		{
-			sysinfo.allTextures.barLife[4]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[4]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5)))
 		{
-			sysinfo.allTextures.barLife[5]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[5]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) 
 		{
-			sysinfo.allTextures.barLife[6]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[6]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) 
 		{
-			sysinfo.allTextures.barLife[7]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[7]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8)))
 		{
-			sysinfo.allTextures.barLife[8]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[8]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9)))
 		{
-			sysinfo.allTextures.barLife[9]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[9]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.9)))
 		{
-			sysinfo.allTextures.barLife[10]->render(_x + (sysinfo.map.tileSize / 2) - 4, _y + sysinfo.map.tileSize);
+			sysinfo.allTextures.barLife[10]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
 
 
-		sysinfo.allTextures.colorapp[iPlayer]->render(_x, _y + sysinfo.map.tileSize);
+		sysinfo.allTextures.colorapp[iPlayer]->render(x, y + sysinfo.map.tileSize);
 	}
 }
 void Units::afficherstat(Sysinfo& sysinfo)

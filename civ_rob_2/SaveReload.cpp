@@ -34,30 +34,6 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_Save Start_");
 
-	std::ofstream saveScreen(sysinfo.file.SaveScreen);
-	if (saveScreen) 
-	{
-		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++)
-		{
-			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++) 
-			{
-				saveScreen << "nbX= " << (unsigned int)sysinfo.map.screen[i][j].indexX << std::endl;
-				saveScreen << "nbY= " << (unsigned int)sysinfo.map.screen[i][j].indexY << std::endl;
-				saveScreen << "x= " << sysinfo.map.screen[i][j].tile_x << std::endl;
-				saveScreen << "y= " << sysinfo.map.screen[i][j].tile_y << std::endl;
-				saveScreen << "stringground= " << sysinfo.map.screen[i][j].tile_stringground << std::endl;
-				saveScreen << "ground= " << (unsigned int)sysinfo.map.screen[i][j].tile_ground << std::endl;
-				saveScreen << "stringspec= " << sysinfo.map.screen[i][j].tile_stringspec << std::endl;
-				saveScreen << "spec= " << (unsigned int)sysinfo.map.screen[i][j].tile_spec << std::endl;
-				saveScreen << "appartenance= " << sysinfo.map.screen[i][j].appartenance << std::endl;
-				saveScreen << "food= " << (unsigned int)sysinfo.map.screen[i][j].food << std::endl;
-				saveScreen << "work= " << (unsigned int)sysinfo.map.screen[i][j].work << std::endl;
-				saveScreen << "gold= " << (unsigned int)sysinfo.map.screen[i][j].gold << std::endl << std::endl;
-			}
-		}
-	}
-	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveScreen);
 
 
 	std::ofstream saveMaps(sysinfo.file.SaveMaps);
@@ -141,80 +117,7 @@ void SaveReload::reload(Sysinfo& sysinfo)
 	std::string destroy;
 	std::string inttostringtileSize = std::to_string(sysinfo.map.tileSize);
 
-	std::ifstream saveScreen(sysinfo.file.SaveScreen);
-	if (saveScreen)
-	{
-		for (unsigned int i = 0; i < sysinfo.map.screen.size(); i++)
-		{
-			for (unsigned int j = 0; j < sysinfo.map.screen[i].size(); j++)
-			{
-				saveScreen >> destroy;
-				if (destroy.compare("nbX=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].indexX;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string nb= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("nbX=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].indexY;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string nb= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("x=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].tile_x;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string x= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("y=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].tile_y;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string y= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("stringground=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].tile_stringground;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string stringground= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("ground=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].tile_ground;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string ground= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("stringspec=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].tile_stringspec;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string stringspec= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("spec=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].tile_spec;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string spec= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("appartenance=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].appartenance;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string appartenance= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("food=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].food;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string food= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("work=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].work;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string work= non identique");
-				saveScreen >> destroy;
-				if (destroy.compare("gold=") == 0)
-					saveScreen >> sysinfo.map.screen[i][j].gold;
-				else
-					IHM::logfileconsole("reload ERROR : comparaison string gold= non identique");
-
-			}
-		}
-	}
-	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveScreen);
-
+	
 	unsigned int nbplayer = 0, nbunit = 0, test = 0, test1 = 0;
 	unsigned int var[7];
 	std::string name, unitname;

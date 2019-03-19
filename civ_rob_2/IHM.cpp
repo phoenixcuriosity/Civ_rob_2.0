@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.6
+	last modification on this file on version:0.15
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,14 +31,6 @@ void IHM::initTile(Map& map)
 {
 	Tile blankTile;
 	std::vector<Tile> blank;
-	for (unsigned int i = 0; i < SCREEN_WIDTH / map.tileSize; i++)
-	{
-		map.screen.push_back(blank);
-		for (unsigned int j = 0; j < SCREEN_HEIGHT / map.tileSize; j++)
-		{
-			map.screen[i].push_back(blankTile);
-		}
-	}
 	for (unsigned int i = 0; i < map.mapSize / map.tileSize; i++)
 	{
 		map.maps.push_back(blank);
@@ -725,24 +717,32 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 				sysinfo.var.continuer = 0;
 				break;
 			case SDLK_UP:
-				if (sysinfo.map.screenOffsetY > 0)
-					sysinfo.map.screenOffsetY -= sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetYIndexMin > 0)
+				{
+					sysinfo.map.screenOffsetYIndexMin--;
+					sysinfo.map.screenOffsetYIndexMax--;
+				}
 				break;
 			case SDLK_LEFT:
-				if (sysinfo.map.screenOffsetX > 0)
-					sysinfo.map.screenOffsetX -= sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetXIndexMin > 0)
+				{
+					sysinfo.map.screenOffsetXIndexMin--;
+					sysinfo.map.screenOffsetXIndexMax--;
+				}
 				break;
 			case SDLK_DOWN:
-				if (sysinfo.map.screenOffsetY < (sysinfo.map.mapSize - SCREEN_HEIGHT))
-					sysinfo.map.screenOffsetY += sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetYIndexMax < sysinfo.map.maps[0].size())
+				{
+					sysinfo.map.screenOffsetYIndexMin++;
+					sysinfo.map.screenOffsetYIndexMax++;
+				}
 				break;
 			case SDLK_RIGHT:
-				if (sysinfo.map.screenOffsetX < sysinfo.map.mapSize - SCREEN_WIDTH)
-					sysinfo.map.screenOffsetX += sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetXIndexMax < sysinfo.map.maps.size())
+				{
+					sysinfo.map.screenOffsetXIndexMin++;
+					sysinfo.map.screenOffsetXIndexMax++;
+				}
 				break;
 			case SDLK_SPACE:
 				GamePlay::nextTurn(sysinfo);
@@ -866,7 +866,6 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		}
 
 
-
 		for (unsigned int i = 0; i < sysinfo.allTextes.mainMapIndex.size(); i++)
 		{
 			sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
@@ -954,64 +953,40 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 	//t2 = clock();
 	//cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 }
-void IHM::changeScreenOffset(Sysinfo& sysinfo)
-{
-	Uint8 m = 0, n = 0;
-	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) 
-	{
-		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
-		{
-			if (sysinfo.map.maps[i][j].tile_x >= sysinfo.map.screenOffsetX && sysinfo.map.maps[i][j].tile_x < (sysinfo.map.screenOffsetX + SCREEN_WIDTH)) 
-			{
-				if (sysinfo.map.maps[i][j].tile_y >= sysinfo.map.screenOffsetY && sysinfo.map.maps[i][j].tile_y < (sysinfo.map.screenOffsetY + SCREEN_HEIGHT))
-				{
-					sysinfo.map.screen[m][n] = sysinfo.map.maps[i][j];
-					sysinfo.map.screen[m][n].indexX = m;
-					sysinfo.map.screen[m][n].indexY = n;
-					sysinfo.map.screen[m][n].tile_x -= sysinfo.map.screenOffsetX;
-					sysinfo.map.screen[m][n].tile_y -= sysinfo.map.screenOffsetY;
-
-					n = (n + 1) % sysinfo.map.screen[m].size();
-					if (n == 0)
-						m++;
-					if (m == (sysinfo.map.screen.size() - 1) && (n == sysinfo.map.screen[m].size()))
-						return;
-				}
-			}
-		}
-	}
-}
 void IHM::afficherSupertiles(Sysinfo& sysinfo)
 {
 	//clock_t t1, t2;
 	//t1 = clock();
 	
-	for (unsigned int m = 0; m < sysinfo.map.screen.size(); m++)
+	unsigned int x = 0, y = 0;
+
+	for (unsigned int m = sysinfo.map.screenOffsetXIndexMin; m < sysinfo.map.screenOffsetXIndexMax; m++)
 	{
-		for (unsigned int n = 0; n < sysinfo.map.screen[m].size(); n++)
+		for (unsigned int n = sysinfo.map.screenOffsetYIndexMin; n < sysinfo.map.screenOffsetYIndexMax; n++)
 		{
-			switch (sysinfo.map.screen[m][n].tile_ground)
+			x = sysinfo.map.maps[m][n].tile_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
+			y = sysinfo.map.maps[m][n].tile_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize;
+
+			switch (sysinfo.map.maps[m][n].tile_ground)
 			{
 			case grass:
-				sysinfo.allTextures.ground[0]->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.ground[0]->render(x, y);
 				break;
 			case water:
-				sysinfo.allTextures.ground[1]->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.ground[1]->render(x, y);
 				break;
 			case deepwater:
-				sysinfo.allTextures.ground[2]->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.ground[2]->render(x, y);
 				break;
 			}
 
-			if (sysinfo.map.screen[m][n].tile_spec > 0)
+			if (sysinfo.map.maps[m][n].tile_spec > 0)
 			{
-				sysinfo.allTextures.groundSpec[sysinfo.map.screen[m][n].tile_spec - 1]
-					->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_spec - 1]->render(x, y);
 			}
-			if (sysinfo.map.screen[m][n].appartenance != -1)
+			if (sysinfo.map.maps[m][n].appartenance != -1)
 			{
-				sysinfo.allTextures.colorapptile[sysinfo.map.screen[m][n].appartenance]
-					->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.colorapptile[sysinfo.map.maps[m][n].appartenance]->render(x, y);
 			}
 		}
 	}
