@@ -1,7 +1,2 @@
-﻿  IHM.cpp
-  main.cpp
-c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\main.cpp(40): warning C4100: 'argv' : paramètre formel non référencé
-c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\main.cpp(40): warning C4100: 'argc' : paramètre formel non référencé
-c:\users\robin\documents\github\civ_rob_2.0\civ_rob_2\main.cpp(64): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
-  Génération de code en cours...
+﻿  Cities.cpp
   civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Debug\civ_rob_2.exe

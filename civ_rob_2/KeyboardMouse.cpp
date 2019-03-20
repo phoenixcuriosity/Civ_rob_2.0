@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.4
+	last modification on this file on version:0.15
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -403,8 +403,12 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		{
 			if (sysinfo.var.select == selectinspect && sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size() != 0) 
 			{
-				sysinfo.var.mouse.SETmouse_x((unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize);
-				sysinfo.var.mouse.SETmouse_y((unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize);
+				sysinfo.var.mouse.SETmouse_x((
+					(unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize)
+					+ sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
+				sysinfo.var.mouse.SETmouse_y((
+					(unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize)
+					+ sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
 				Cities::searchCitietile(sysinfo);
 			}
 		}
@@ -566,7 +570,6 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			{
 				sysinfo.allButton.reload[index]->changeOn();
 				sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
-				sysinfo.file.SaveScreen = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveScreen.txt";
 				sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveMaps.txt";
 				sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SavePlayer.txt";
 				IHM::reloadScreen(sysinfo);

@@ -114,7 +114,7 @@ public:
 	* OUTPUT PARAMETERS : un vecteur de position
 	* RETURNED VALUE    : void
 	*/
-	static void makeRandomPos(randomPos& RandomPOS, unsigned int toolBarSize, unsigned int tileSize);
+	static void makeRandomPos(randomPos& RandomPOS, std::vector<std::vector<Tile>> maps, unsigned int toolBarSize, unsigned int tileSize);
 	
 	/*
 	* NAME : conditionspace

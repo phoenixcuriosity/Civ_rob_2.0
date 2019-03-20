@@ -14,12 +14,6 @@ Create ButtonTexte n:1 msg = Remove all saves Success
 Create ButtonTexte n:2 msg = Load Success
 Create ButtonTexte n:3 msg = Remove Success
 Create ButtonTexte n:4 msg = Save : 1 Success
-Create ButtonTexte n:5 msg = Save : 2 Success
-Create ButtonTexte n:6 msg = Save : 3 Success
-Create ButtonTexte n:7 msg = Save : 4 Success
-Create ButtonTexte n:8 msg = Save : 5 Success
-Create ButtonTexte n:9 msg = Save : 6 Success
-Create ButtonTexte n:10 msg = Save : 7 Success
 Create ButtonTexte n:0 msg = screen Titre Success
 Create ButtonTexte n:1 msg = Create Unit Success
 Create ButtonTexte n:2 msg = Move Unit Success
@@ -46,7 +40,7 @@ Create ButtonTexte n:16 msg = spitter Success
 Create ButtonTexte n:17 msg = tank Success
 Create ButtonTexte n:18 msg = transport_plan Success
 _calculImage End_
-temps d'execution de l'initialisation : 1.338000
+temps d'execution de l'initialisation : 1.297000
 _titleScreens Start_
 _titleScreens End_
 _Newgame Start_
@@ -73,6 +67,20 @@ _Save End_
 _SavePlayer Start_
 _SavePlayer End_
 __________________________
+_titleScreens Start_
+_titleScreens End_
+_reloadScreen Start_
+_reloadScreen End_
+_clearSave Start_
+file : save/1/SaveMaps.txt successfully remove
+file : save/1/SavePlayer.txt successfully remove
+directory : save/1 successfully remove
+file : save/2/SaveMaps.txt successfully remove
+file : save/2/SavePlayer.txt successfully remove
+directory : save/2 successfully remove
+_clearSave End_
+_reloadScreen Start_
+_reloadScreen End_
 _titleScreens Start_
 _titleScreens End_
 *********_________ Start DeleteAll _________*********
@@ -255,17 +263,10 @@ Delete Button name = Quit Success
 Delete ALL Button Success
 Delete Button name = NoName0 Success
 Delete ALL Button Success
-Delete Button name = Remove Success
+Delete Button name = Load Success
 Delete Button name = Back Success
 Delete Button name = Remove all saves Success
-Delete Button name = Save : 1 Success
-Delete Button name = Save : 2 Success
-Delete Button name = Save : 3 Success
-Delete Button name = Save : 4 Success
-Delete Button name = Save : 5 Success
-Delete Button name = Load Success
-Delete Button name = Save : 6 Success
-Delete Button name = Save : 7 Success
+Delete Button name = Remove Success
 Delete ALL Button Success
 Delete Button name = Inspect Success
 Delete Button name = Next Turn Success

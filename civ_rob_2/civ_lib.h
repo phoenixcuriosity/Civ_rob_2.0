@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.2
+	last modification on this file on version:0.15
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -274,7 +274,6 @@ struct File {
 
 	const std::string SaveInfo = "save/SaveInfo.txt";
 
-	std::string SaveScreen = "save/SaveScreen.txt";
 	std::string SaveMaps = "save/SaveMaps.txt";
 	std::string SavePlayer = "save/SavePlayer.txt";
 };
@@ -314,12 +313,13 @@ struct Map {
 		Attention config spéciale de visual studio 2017 pour dépasser 1Mo de données dans un tableau
 		propriété -> éditeur de lien -> système -> taille de la réserve de la pile -> mettre une valeur plus grande que 1Mo
 	*/
-	unsigned int mapSize = 4096; // en pixels
+	unsigned int mapSize = 2048; // en pixels
 	unsigned int tileSize = 64;
 	unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
-	unsigned int screenOffsetX = 0; // en pixels
-	unsigned int screenOffsetY = 0; // en pixels
-	std::vector<std::vector<Tile>> screen;
+	unsigned int screenOffsetXIndexMin = 0;
+	unsigned int screenOffsetYIndexMin = 0;
+	unsigned int screenOffsetXIndexMax = ((SCREEN_WIDTH * 9) / 10) / tileSize;
+	unsigned int screenOffsetYIndexMax = SCREEN_HEIGHT / tileSize;
 	std::vector<std::vector<Tile>> maps;
 };
 struct AllTextures {

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.1
+	last modification on this file on version:0.15
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -112,9 +112,12 @@ std::vector<Citizen> createCitizen(Tile tiles)
 }
 void Cities::afficher(Sysinfo& sysinfo)
 {
-	sysinfo.allTextures.citieMap[searchIndex(_image, sysinfo.allTextures.citieMap)]->render(_x, _y);
+	unsigned int x = _x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
+	unsigned int y = _y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize;
 
-	sysinfo.allTextes.mainMap[searchIndex(_name, sysinfo.allTextes.mainMap)]->render(_x, _y);
+	sysinfo.allTextures.citieMap[searchIndex(_image, sysinfo.allTextures.citieMap)]->render(x, y);
+
+	sysinfo.allTextes.mainMap[searchIndex(_name, sysinfo.allTextes.mainMap)]->render(x + sysinfo.map.tileSize / 2, y + sysinfo.map.tileSize);
 }
 void Cities::affichercitiemap(Sysinfo& sysinfo)
 {

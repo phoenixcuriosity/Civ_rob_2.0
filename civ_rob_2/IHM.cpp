@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.6
+	last modification on this file on version:0.15
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,18 +27,24 @@
 #include "SaveReload.h"
 #include "HashTable.h"
 
+
+
+/* *********************************************************
+	*			START INITIALISATION
+ ********************************************************* */
+
+
+/*
+* NAME : initTile
+* ROLE : Initialisation des cases de la map en fonction de sa taille
+* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
+* RETURNED VALUE    : void
+*/
 void IHM::initTile(Map& map)
 {
 	Tile blankTile;
 	std::vector<Tile> blank;
-	for (unsigned int i = 0; i < SCREEN_WIDTH / map.tileSize; i++)
-	{
-		map.screen.push_back(blank);
-		for (unsigned int j = 0; j < SCREEN_HEIGHT / map.tileSize; j++)
-		{
-			map.screen[i].push_back(blankTile);
-		}
-	}
 	for (unsigned int i = 0; i < map.mapSize / map.tileSize; i++)
 	{
 		map.maps.push_back(blank);
@@ -49,12 +55,30 @@ void IHM::initTile(Map& map)
 	}
 
 }
+
+
+/*
+* NAME : initFile
+* ROLE : Initialisation des fichiers : log
+* INPUT  PARAMETERS : struct File& : nom des fichiers
+* OUTPUT PARAMETERS : Initialisation de log.txt
+* RETURNED VALUE    : void
+*/
 void IHM::initFile(File& file)
 {
 	std::ofstream log;
 	log.open(file.log, std::ofstream::out | std::ofstream::trunc);
 	log.close();
 }
+
+
+/*
+* NAME : logfileconsole
+* ROLE : Transmission du message sur la console et dans le fichier log.txt
+* INPUT  PARAMETERS : const std::string msg : message
+* OUTPUT PARAMETERS : message dans la console et le log.txt
+* RETURNED VALUE    : void
+*/
 void IHM::logfileconsole(const std::string msg)
 {
 	const std::string logtxt = "bin/log/log.txt";
@@ -71,6 +95,15 @@ void IHM::logfileconsole(const std::string msg)
 	else
 		std::cout << std::endl << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt;
 }
+
+
+/*
+* NAME : logSDLError
+* ROLE : SDL erreur
+* INPUT  PARAMETERS : std::ostream &os, const std::string &msg
+* OUTPUT PARAMETERS : message d'erreur dans la console
+* RETURNED VALUE    : void
+*/
 void IHM::logSDLError(std::ostream &os, const std::string &msg)
 {
 	const std::string logtxt = "bin/log/log.txt";
@@ -83,6 +116,17 @@ void IHM::logSDLError(std::ostream &os, const std::string &msg)
 	else
 		std::cout << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt << std::endl;
 }
+
+
+/*
+* NAME : initSDL
+* ROLE : Initialisation de la SDL fenetre et renderer ainsi que le tableau de police de font
+* INPUT  PARAMETERS : SDL_Window*& : pointeur sur la fenetre de la SDL
+* INPUT  PARAMETERS : SDL_Renderer*& : pointeur sur le Renderer de la SDL
+* INPUT  PARAMETERS : TTF_Font*[] : pointeur sur le tableau de police de font
+* OUTPUT PARAMETERS : message dans la console et le log.txt
+* RETURNED VALUE    : bool : true = pas de d'erreur lors de l'initialisation de la SDL
+*/
 bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[])
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -136,6 +180,17 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		return true;
 	}
 }
+
+
+/*
+* NAME : calculImage
+* ROLE : Initialisation des Textures, des Textes et des Buttons
+* ROLE : Enregistrement des pointeurs dans des tableaux
+* ROLE : Hachage des noms des Textures (et classes filles) pour une recherche en complexité en O(1)
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Tableaux de pointeurs vers les Textures (et classes filles)
+* RETURNED VALUE    : void
+*/
 void IHM::calculImage(Sysinfo& sysinfo)
 {
 	logfileconsole("_calculImage Start_");
@@ -147,12 +202,12 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/* *********************************************************
 		*				START sysinfo.allTextures
 	 ********************************************************* */
+
+
 	// chargement des images du sol de la map
 	/*
 		sysinfo.allTextures.ground
 	*/
-
-
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
@@ -636,6 +691,10 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		Attention : Optimisation de cherche par nom,
 		* complexité en O(1) au lieu de O(n)
 		* NE PAS UTILISER pour : -> sysinfo.allTextures.ground : déja optimal en O(1)
+		*						 -> std::vector<Texture*> groundSpec;
+		*						 -> std::vector<Texture*> colorapp;
+		*						 -> std::vector<Texture*> colorapptile;
+		*						 -> std::vector<Texture*> barLife;
 		*						 -> ### mettre ici les autres cas  
 
 
@@ -697,6 +756,30 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 	logfileconsole("_calculImage End_");
 }
+
+
+/* *********************************************************
+	*				END INITIALISATION
+ ********************************************************* */
+
+
+
+
+
+
+
+/* *********************************************************
+	*				START IN-GAME
+ ********************************************************* */
+
+
+/*
+* NAME : eventSDL
+* ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : évenements d'entré utilisateur
+* RETURNED VALUE    : void
+*/
 void IHM::eventSDL(Sysinfo& sysinfo)
 {
 	SDL_Event event;
@@ -725,24 +808,32 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 				sysinfo.var.continuer = 0;
 				break;
 			case SDLK_UP:
-				if (sysinfo.map.screenOffsetY > 0)
-					sysinfo.map.screenOffsetY -= sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetYIndexMin > 0)
+				{
+					sysinfo.map.screenOffsetYIndexMin--;
+					sysinfo.map.screenOffsetYIndexMax--;
+				}
 				break;
 			case SDLK_LEFT:
-				if (sysinfo.map.screenOffsetX > 0)
-					sysinfo.map.screenOffsetX -= sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetXIndexMin > 0)
+				{
+					sysinfo.map.screenOffsetXIndexMin--;
+					sysinfo.map.screenOffsetXIndexMax--;
+				}
 				break;
 			case SDLK_DOWN:
-				if (sysinfo.map.screenOffsetY < (sysinfo.map.mapSize - SCREEN_HEIGHT))
-					sysinfo.map.screenOffsetY += sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetYIndexMax < sysinfo.map.maps[0].size())
+				{
+					sysinfo.map.screenOffsetYIndexMin++;
+					sysinfo.map.screenOffsetYIndexMax++;
+				}
 				break;
 			case SDLK_RIGHT:
-				if (sysinfo.map.screenOffsetX < sysinfo.map.mapSize - SCREEN_WIDTH)
-					sysinfo.map.screenOffsetX += sysinfo.map.tileSize;
-				IHM::changeScreenOffset(sysinfo);
+				if (sysinfo.map.screenOffsetXIndexMax < sysinfo.map.maps.size())
+				{
+					sysinfo.map.screenOffsetXIndexMin++;
+					sysinfo.map.screenOffsetXIndexMax++;
+				}
 				break;
 			case SDLK_SPACE:
 				GamePlay::nextTurn(sysinfo);
@@ -793,6 +884,16 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 
 	}
 }
+
+
+/*
+* NAME : titleScreen
+* ROLE : Desciption de la fenetre "titleScreen"
+* ROLE : fonctionnement selon l'état : enum State_Type = STATEtitleScreen
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Ouverture de la fenetre "titleScreen"
+* RETURNED VALUE    : void
+*/
 void IHM::titleScreen(Sysinfo& sysinfo)
 {
 	logfileconsole("_titleScreens Start_");
@@ -829,6 +930,16 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	logfileconsole("_titleScreens End_");
 }
+
+
+/*
+ * NAME : reloadScreen
+ * ROLE : Desciption de la fenetre "reloadScreen"
+ * ROLE : fonctionnement selon l'état : enum State_Type = STATEreload
+ * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+ * OUTPUT PARAMETERS : Ouverture de la fenetre "reloadScreen"
+ * RETURNED VALUE    : void
+ */
 void IHM::reloadScreen(Sysinfo& sysinfo)
 {
 	logfileconsole("_reloadScreen Start_");
@@ -847,6 +958,17 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	logfileconsole("_reloadScreen End_");
 }
+
+
+/*
+ * NAME : alwaysrender
+ * ROLE : Tous les 1/SCREEN_REFRESH_RATE cette fonction permet ...
+ * ROLE : ... la désciption de la fenetre "STATEmainmap" ou "STATEcitiemap"
+ * ROLE : fonctionnement selon l'état : enum State_Type = STATEmainmap ou STATEcitiemap
+ * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+ * OUTPUT PARAMETERS : Ouverture de la fenetre "STATEmainmap" ou "STATEcitiemap"
+ * RETURNED VALUE    : void
+ */
 void IHM::alwaysrender(Sysinfo& sysinfo)
 {
 	//clock_t t1, t2;
@@ -856,21 +978,50 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 	{
 	case STATEmainmap:
 		SDL_RenderClear(sysinfo.screen.renderer);
+
+		/* *********************************************************
+		 *				START background
+		 ********************************************************* */
+
 		afficherSupertiles(sysinfo);
 
 		// affiche la texture grise de la toolbar
 		for (unsigned int i = 0; i < sysinfo.map.toolBarSize; i++)
 		{
 			for (unsigned int j = 0; j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
+			{
 				sysinfo.allTextures.ground[3]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
+			}
+				
 		}
 
+		/* *********************************************************
+		 *				END background
+		 ********************************************************* */
 
+
+		/* *********************************************************
+		 *				START Texte
+		 ********************************************************* */
 
 		for (unsigned int i = 0; i < sysinfo.allTextes.mainMapIndex.size(); i++)
 		{
 			sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 		}
+
+
+
+		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
+			blended, std::to_string(sysinfo.var.nbturn), { 0, 64, 255, 255 }, NoColor, 24, 80, 850, no_angle);
+
+		/* *********************************************************
+		 *				END Texte
+		 ********************************************************* */
+
+
+		/* *********************************************************
+		 *				START Button
+		 ********************************************************* */
 
 		for (unsigned int i = 0; i < sysinfo.allButton.mainMapIndex.size(); i++)
 		{
@@ -881,12 +1032,15 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			sysinfo.allButton.player[sysinfo.allButton.playerIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
 		}
-			
 
+		/* *********************************************************
+		 *				END Button
+		 ********************************************************* */
 
-
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, std::to_string(sysinfo.var.nbturn), { 0, 64, 255, 255 }, NoColor, 24, 80, 850, no_angle);
+		
+		/* *********************************************************
+		 *				START UnitInfo
+		 ********************************************************* */
 
 		// affiche les unités pour rendre l'unité à créer
 		if (sysinfo.var.select == selectcreate)
@@ -912,6 +1066,16 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 			}
 		}
 
+		/* *********************************************************
+		 *				END UnitInfo
+		 ********************************************************* */
+
+
+
+		/* *********************************************************
+		 *			START Affichage Unit/Citie/Player
+		 ********************************************************* */
+
 		if (sysinfo.tabplayer.size() != 0)
 		{
 			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
@@ -933,8 +1097,19 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 				}
 			}
 		}
+
+		/* *********************************************************
+		 *			END Affichage Unit/Citie/Player
+		 ********************************************************* */
+
+
 		break;
 	case STATEcitiemap:
+
+		/* *********************************************************
+		 *				START Affichage citieMap
+		 ********************************************************* */
+
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size() > 0)
 		{
 			if (sysinfo.var.s_player.selectCitie != -1)
@@ -943,6 +1118,12 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 					citiemap(sysinfo);
 			}
 		}
+
+		/* *********************************************************
+		 *				END Affichage citieMap
+		 ********************************************************* */
+
+
 		break;
 	}
 	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
@@ -954,64 +1135,49 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 	//t2 = clock();
 	//cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 }
-void IHM::changeScreenOffset(Sysinfo& sysinfo)
-{
-	Uint8 m = 0, n = 0;
-	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) 
-	{
-		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
-		{
-			if (sysinfo.map.maps[i][j].tile_x >= sysinfo.map.screenOffsetX && sysinfo.map.maps[i][j].tile_x < (sysinfo.map.screenOffsetX + SCREEN_WIDTH)) 
-			{
-				if (sysinfo.map.maps[i][j].tile_y >= sysinfo.map.screenOffsetY && sysinfo.map.maps[i][j].tile_y < (sysinfo.map.screenOffsetY + SCREEN_HEIGHT))
-				{
-					sysinfo.map.screen[m][n] = sysinfo.map.maps[i][j];
-					sysinfo.map.screen[m][n].indexX = m;
-					sysinfo.map.screen[m][n].indexY = n;
-					sysinfo.map.screen[m][n].tile_x -= sysinfo.map.screenOffsetX;
-					sysinfo.map.screen[m][n].tile_y -= sysinfo.map.screenOffsetY;
 
-					n = (n + 1) % sysinfo.map.screen[m].size();
-					if (n == 0)
-						m++;
-					if (m == (sysinfo.map.screen.size() - 1) && (n == sysinfo.map.screen[m].size()))
-						return;
-				}
-			}
-		}
-	}
-}
+
+/*
+ * NAME : afficherSupertiles
+ * ROLE : Affichage de la map (tiles, spec, appartenance) aux dimensions map.screen
+ * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+ * OUTPUT PARAMETERS : Affichage de la map sur la fenetre "mainMap"
+ * RETURNED VALUE    : void
+ */
 void IHM::afficherSupertiles(Sysinfo& sysinfo)
 {
 	//clock_t t1, t2;
 	//t1 = clock();
 	
-	for (unsigned int m = 0; m < sysinfo.map.screen.size(); m++)
+	unsigned int x = 0, y = 0;
+
+	for (unsigned int m = sysinfo.map.screenOffsetXIndexMin; m < sysinfo.map.screenOffsetXIndexMax; m++)
 	{
-		for (unsigned int n = 0; n < sysinfo.map.screen[m].size(); n++)
+		for (unsigned int n = sysinfo.map.screenOffsetYIndexMin; n < sysinfo.map.screenOffsetYIndexMax; n++)
 		{
-			switch (sysinfo.map.screen[m][n].tile_ground)
+			x = sysinfo.map.maps[m][n].tile_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
+			y = sysinfo.map.maps[m][n].tile_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize;
+
+			switch (sysinfo.map.maps[m][n].tile_ground)
 			{
 			case grass:
-				sysinfo.allTextures.ground[0]->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.ground[0]->render(x, y);
 				break;
 			case water:
-				sysinfo.allTextures.ground[1]->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.ground[1]->render(x, y);
 				break;
 			case deepwater:
-				sysinfo.allTextures.ground[2]->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.ground[2]->render(x, y);
 				break;
 			}
 
-			if (sysinfo.map.screen[m][n].tile_spec > 0)
+			if (sysinfo.map.maps[m][n].tile_spec > 0)
 			{
-				sysinfo.allTextures.groundSpec[sysinfo.map.screen[m][n].tile_spec - 1]
-					->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_spec - 1]->render(x, y);
 			}
-			if (sysinfo.map.screen[m][n].appartenance != -1)
+			if (sysinfo.map.maps[m][n].appartenance != -1)
 			{
-				sysinfo.allTextures.colorapptile[sysinfo.map.screen[m][n].appartenance]
-					->render(sysinfo.map.screen[m][n].tile_x, sysinfo.map.screen[m][n].tile_y);
+				sysinfo.allTextures.colorapptile[sysinfo.map.maps[m][n].appartenance]->render(x, y);
 			}
 		}
 	}
@@ -1019,18 +1185,40 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 	//std::cout << std::endl << "temps d'execution de alwaysrender : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	
 }
+
+
+/*
+ * NAME : citiemap
+ * ROLE : Affichage de la fenetre citiemap
+ * ROLE : fonctionnement selon l'état : enum State_Type = STATEcitiemap
+ * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+ * OUTPUT PARAMETERS :  Affichage de la map sur la fenetre "citieMap"
+ * RETURNED VALUE    : void
+ */
 void IHM::citiemap(Sysinfo& sysinfo)
 {
 	SDL_RenderClear(sysinfo.screen.renderer);
-	std::string buildName;
-	unsigned int initspace = 96, space = 32;
-
+	
+	/* *********************************************************
+	 *				START Button
+	 ********************************************************* */
 	
 	sysinfo.allButton.citieMap[searchIndex("Map", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
 	sysinfo.allButton.citieMap[searchIndex("Build", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
 	sysinfo.allButton.citieMap[searchIndex("Food", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
 	sysinfo.allButton.citieMap[searchIndex("Place Citizen", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
 
+
+	/* *********************************************************
+	 *				END Button
+	 ********************************************************* */
+
+	/* *********************************************************
+	 *			 START select = selectcreate
+	 ********************************************************* */
+
+	std::string buildName;
+	unsigned int initspace = 96, space = 32;
 	if (sysinfo.var.select == selectcreate)
 	{
 		initspace = 96;
@@ -1060,8 +1248,23 @@ void IHM::citiemap(Sysinfo& sysinfo)
 		sysinfo.allTextes.citieMap[searchIndex("selectcreate", sysinfo.allTextes.citieMap)]->render();
 	}
 
+	/* *********************************************************
+	 *			 END select = selectcreate
+	 ********************************************************* */
+
 	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
+
 }
+
+
+/*
+ * NAME : countFrame
+ * ROLE : Compteur de frames durant le programme
+ * ROLE : Début : à la fin de la fonction newGame(...)
+ * INPUT  PARAMETERS : Screen& screen : données concernant la fenetre SDL
+ * OUTPUT PARAMETERS : Incrémentation du nombre de frames comptées
+ * RETURNED VALUE    : void
+ */
 void IHM::countFrame(Screen& screen)
 {
 	if (screen.enableFPS)
@@ -1072,12 +1275,47 @@ void IHM::countFrame(Screen& screen)
 		++screen.countedFrames;
 	}
 }
+
+
+/* *********************************************************
+	*					END IN-GAME
+ ********************************************************* */
+
+
+
+
+/* *********************************************************
+ *					START END-GAME
+ ********************************************************* */
+
+
+/*
+ * NAME : deleteAll
+ * ROLE : Destruction des allocations dynamique du programme
+ * ROLE : Destruction de la fenetre et du Renderer de la SDL
+ * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+ * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
+ * RETURNED VALUE    : void
+ */
 void IHM::deleteAll(Sysinfo& sysinfo)
 {
 	logfileconsole("*********_________ Start DeleteAll _________*********");
 
+	/* *********************************************************
+	 *					START delete font*
+	 ********************************************************* */
+
 	for (unsigned int i = 1; i < MAX_FONT; i++)
 		TTF_CloseFont(sysinfo.allTextures.font[i]);
+
+	/* *********************************************************
+	 *					END delete font*
+	 ********************************************************* */
+
+
+	/* *********************************************************
+	 *				 START delete Texture*
+	 ********************************************************* */
 
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.ground, "Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.groundSpec, "Texture");
@@ -1089,11 +1327,28 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.unit, "Texture");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextures.citieMap, "Texture");
 
+	/* *********************************************************
+	 *				 END delete Texture*
+	 ********************************************************* */
+
+
+	/**********************************************************
+	 *				 START delete Texte*
+	 ********************************************************* */
 
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.titleScreen, "Texte");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.newGame, "Texte");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.mainMap, "Texte");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.citieMap, "Texte");
+
+	/* *********************************************************
+	 *					END delete Texte*
+	 ********************************************************* */
+
+
+	/* *********************************************************
+	 *				 START delete Button*
+	 ********************************************************* */
 
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.titleScreen, "Button");
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.player, "Button");
@@ -1101,7 +1356,16 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.mainMap, "Button");
 	deleteDyTabPlayerAndTextures(sysinfo.allButton.citieMap, "Button");
 
+	/* *********************************************************
+	 *				 END delete Button*
+	 ********************************************************* */
+
 	deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");
+
+	/* *********************************************************
+	 *				 START delete SDL
+	 ********************************************************* */
+
 	SDL_DestroyRenderer(sysinfo.screen.renderer);
 	SDL_DestroyWindow(sysinfo.screen.window);
 	sysinfo.screen.renderer = nullptr;
@@ -1111,10 +1375,18 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	IMG_Quit();
 	SDL_Quit();
 
+	/* *********************************************************
+	 *				 END delete SDL
+	 ********************************************************* */
+
 	/* ### Don't put code below here ### */
 
 	logfileconsole("*********_________ End DeleteAll _________*********");
 }
+
+/* *********************************************************
+ *						END END-GAME
+ ********************************************************* */
 
 /*
 *	End Of File
