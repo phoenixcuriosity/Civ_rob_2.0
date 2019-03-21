@@ -1054,7 +1054,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 			{
-				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->cmpblit();
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
 			}
 		}
 		else if (sysinfo.var.select == selectinspect)
@@ -1062,7 +1062,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 			// affiche les stats de l'unité inspecté
 			if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 			{
-				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->afficherstat(sysinfo);
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->afficherstat(sysinfo);
 			}
 		}
 
@@ -1080,19 +1080,19 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
 			{
-				if (sysinfo.tabplayer[i]->GETtabunit().size() != 0) {
-					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++)
+				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0) {
+					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 					{
 						// affiche pour chaque joueurs les unités existantes (avec les stats)
-						sysinfo.tabplayer[i]->GETtheunit(j)->afficher(sysinfo, i);
+						sysinfo.tabplayer[i]->GETtheUnit(j)->afficher(sysinfo, i);
 					}
 				}
-				if (sysinfo.tabplayer[i]->GETtabcities().size() != 0)
+				if (sysinfo.tabplayer[i]->GETtabCity().size() != 0)
 				{
-					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabcities().size(); j++)
+					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 					{
 						// affiche pour chaque joueurs les cités existantes
-						sysinfo.tabplayer[i]->GETthecitie(j)->afficher(sysinfo);
+						sysinfo.tabplayer[i]->GETtheCity(j)->afficher(sysinfo);
 					}
 				}
 			}
@@ -1110,11 +1110,11 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		 *				START Affichage citieMap
 		 ********************************************************* */
 
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size() > 0)
+		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() > 0)
 		{
 			if (sysinfo.var.s_player.selectCitie != -1)
 			{
-				if (sysinfo.var.s_player.selectCitie < (int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size())
+				if (sysinfo.var.s_player.selectCitie < (int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size())
 					citiemap(sysinfo);
 			}
 		}
@@ -1252,7 +1252,7 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	 *			 END select = selectcreate
 	 ********************************************************* */
 
-	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
+	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
 
 }
 
@@ -1389,5 +1389,5 @@ void IHM::deleteAll(Sysinfo& sysinfo)
  ********************************************************* */
 
 /*
-*	End Of File
+*	End Of File : IHM.cpp
 */

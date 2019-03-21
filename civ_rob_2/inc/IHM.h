@@ -221,5 +221,5 @@ void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name)
 #endif
 
 /*
-*	End Of File
+*	End Of File : IHM.h
 */

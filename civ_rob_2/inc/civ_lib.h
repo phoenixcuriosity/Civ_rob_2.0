@@ -393,8 +393,8 @@ struct Sysinfo {
 	std::vector<Player*> tabplayer;
 };
 
-#endif
+#endif /* civ_lib_H */
 
 /*
-*	End Of File
+*	End Of File : civ_lib.h
 */

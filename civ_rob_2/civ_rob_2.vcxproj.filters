@@ -20,83 +20,83 @@
       <UniqueIdentifier>{74c143cd-8ddb-4ca1-a852-6c225201ecd6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Fichiers d%27en-tête\Class\Misc">
-      <UniqueIdentifier>{c0404c2b-c3e0-45be-a272-8c5471056f13}</UniqueIdentifier>
+      <UniqueIdentifier>{8f587093-7031-4885-aac8-b43792ab7499}</UniqueIdentifier>
     </Filter>
     <Filter Include="Fichiers sources\Class\Misc">
-      <UniqueIdentifier>{4280d12b-6397-40e2-8ac8-45e00e5a2d6c}</UniqueIdentifier>
+      <UniqueIdentifier>{4fb640a5-d334-4ae5-bd2d-d84543acd05b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="Units.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="Cities.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="IHM.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="SaveReload.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyboardMouse.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePlay.cpp">
-      <Filter>Fichiers sources\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="LTimer.cpp">
-      <Filter>Fichiers sources\Class\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="HashTable.cpp">
-      <Filter>Fichiers sources\Class\Misc</Filter>
-    </ClCompile>
+    <ClInclude Include="inc\City.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GamePlay.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\IHM.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\KeyboardMouse.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Player.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\SaveReload.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Texture.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Unit.h">
+      <Filter>Fichiers d%27en-tête\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\civ_lib.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\LIB.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\HashTable.h">
+      <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\LTimer.h">
+      <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="civ_lib.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Cities.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="Units.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="LIB.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="IHM.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="SaveReload.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyboardMouse.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="GamePlay.h">
-      <Filter>Fichiers d%27en-tête\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="LTimer.h">
-      <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="HashTable.h">
-      <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
-    </ClInclude>
+    <ClCompile Include="src\City.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GamePlay.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IHM.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyboardMouse.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SaveReload.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Unit.cpp">
+      <Filter>Fichiers sources\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HashTable.cpp">
+      <Filter>Fichiers sources\Class\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LTimer.cpp">
+      <Filter>Fichiers sources\Class\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

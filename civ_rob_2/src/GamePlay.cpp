@@ -28,6 +28,18 @@
 #include "KeyboardMouse.h"
 #include "HashTable.h"
 
+/* *********************************************************
+ *			START GamePlay::STATIC::NEW-GAME
+ ********************************************************* */
+
+ 
+/*
+* NAME : newGame
+* ROLE : Initialisation de la nouvelle partie
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Noms des joueurs, groundGen, positions des settlers
+* RETURNED VALUE    : void
+*/
 void GamePlay::newGame(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_Newgame Start_");
@@ -92,6 +104,14 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 
 	IHM::logfileconsole("_Newgame End_");
 }
+
+/*
+* NAME : groundGen
+* ROLE : Génération du sol et des spec de la map
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Génération du sol et des spec de la map
+* RETURNED VALUE    : void
+*/
 void GamePlay::groundGen(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_Groundgen Start_");
@@ -102,7 +122,7 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 		for (Uint8 j = 0; j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
 		{
 			
-			sysinfo.map.maps[i][j].indexX = i + (SCREEN_WIDTH / 10) / sysinfo.map.tileSize;
+			sysinfo.map.maps[i][j].indexX = i + (Uint8)((SCREEN_WIDTH / 10) / sysinfo.map.tileSize);
 			sysinfo.map.maps[i][j].indexY = j;
 			sysinfo.map.maps[i][j].tile_x = sysinfo.map.tileSize * i + (SCREEN_WIDTH / 10);
 			sysinfo.map.maps[i][j].tile_y = sysinfo.map.tileSize * j;
@@ -250,6 +270,17 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 	}
 	IHM::logfileconsole("_Groundgen End_");
 }
+
+/*
+* NAME : tileAffectation
+* ROLE : Affectation des caractéristiques à une case
+* INPUT  PARAMETERS : Tile& tile, : la case à affecter
+* INPUT  PARAMETERS : Uint8 tile_ground, std::string tile_stringground,
+* INPUT  PARAMETERS : Uint8 tile_spec, std::string tile_stringspec,
+* INPUT  PARAMETERS : int8_t food, int8_t work, int8_t gold
+* OUTPUT PARAMETERS : Affectation
+* RETURNED VALUE    : void
+*/
 void GamePlay::tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold)
 {
 	tile.tile_ground = tile_ground;
@@ -260,6 +291,14 @@ void GamePlay::tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_s
 	tile.work = work;
 	tile.gold = gold;
 }
+
+/*
+* NAME : newGameSettlerSpawn
+* ROLE : Création des position pour les settlers de chaque joueurs
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : position pour les settlers de chaque joueurs
+* RETURNED VALUE    : void
+*/
 void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 {
 	/*
@@ -285,6 +324,15 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 			sysinfo.var.s_player.tabUnit_Struct[selectunit].level);
 	}
 }
+
+/*
+* NAME : makeRandomPosTab
+* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+* OUTPUT PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+* RETURNED VALUE    : void
+*/
 void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom)
 {
 	/*
@@ -328,6 +376,16 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 	}
 	tabRandom.push_back(RandomPOS);
 }
+
+/*
+* NAME : makeRandomPos
+* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
+* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
+* INPUT  PARAMETERS : unsigned int toolBarSize: taille de la barre d'outil
+* INPUT  PARAMETERS : unsigned int tileSize
+* OUTPUT PARAMETERS : un vecteur de position
+* RETURNED VALUE    : void
+*/
 void GamePlay::makeRandomPos(randomPos& RandomPOS, std::vector<std::vector<Tile>> maps, unsigned int toolBarSize, unsigned int tileSize)
 {
 	/*
@@ -338,6 +396,18 @@ void GamePlay::makeRandomPos(randomPos& RandomPOS, std::vector<std::vector<Tile>
 	RandomPOS.x = (int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;
 }
+
+/*
+* NAME : conditionspace
+* ROLE : condition pour valider les coordonnées crées:
+* ROLE : - etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
+* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
+* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+* INPUT  PARAMETERS : unsigned int tileSize
+* INPUT  PARAMETERS : couple de positions courant
+* OUTPUT PARAMETERS : validation des positions
+* RETURNED VALUE    : true -> condition de position validée / false -> non valide
+*/
 bool GamePlay::conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i)
 {
 	/*
@@ -354,6 +424,16 @@ bool GamePlay::conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabR
 	else
 		return false;
 }
+
+/*
+* NAME : conditionground
+* ROLE : condition pour valider les coordonnées crées:
+* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
+* OUTPUT PARAMETERS : validation des positions
+* RETURNED VALUE    : true -> condition de position validée / false -> non valide
+*/
 bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
 {
 	/*
@@ -374,23 +454,48 @@ bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
 	}
 	return false;
 }
+
+/* *********************************************************
+ *			 END GamePlay::STATIC::NEW-GAME
+ ********************************************************* */
+
+
+ 
+ 
+/* *********************************************************
+ *			 START GamePlay::STATIC::NextTurn
+ ********************************************************* */
+
+
+/*
+* NAME : nextTurn
+* ROLE : Action à réaliser lors du passage à un nouveau tour 
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : passage à un nouveau tour 
+* RETURNED VALUE    : void
+*/
 void GamePlay::nextTurn(Sysinfo& sysinfo)
 {
 	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
 	{
-		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) 
+		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
 		{
-			sysinfo.tabplayer[i]->GETtheunit(j)->RESETmovement();
-			sysinfo.tabplayer[i]->GETtheunit(j)->heal(sysinfo.map.maps, i);
+			sysinfo.tabplayer[i]->GETtheUnit(j)->RESETmovement();
+			sysinfo.tabplayer[i]->GETtheUnit(j)->heal(sysinfo.map.maps, i);
 		}
-		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabcities().size(); j++)
+		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 		{
-			sysinfo.tabplayer[i]->GETthecitie(j)->foodNextTurn();
+			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn();
 		}
 	}
 	sysinfo.var.nbturn++;
 }
 
+
+/* *********************************************************
+ *				END GamePlay::STATIC::NextTurn
+ ********************************************************* */
+
 /*
-*	End Of File
+*	End Of File : GamePlay.cpp
 */

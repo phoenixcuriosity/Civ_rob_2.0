@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.0
+	last modification on this file on version:0.15
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,8 +28,19 @@
 #include "HashTable.h"
 
 
-///////////////////////////// SaveReload //////////////////////////////
-/* SaveReload :: STATIC */
+/* *********************************************************
+ *				START SaveReload::STATIC
+ ********************************************************* */
+ 
+ 
+/*
+* NAME : savemaps
+* ROLE : Sauvegardes des sys map.map et map.screen
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Sauvegardes des maps : map.map dans SaveMap.txt
+* OUTPUT PARAMETERS : et map.screen dans SaveScreen.txt
+* RETURNED VALUE    : void
+*/
 void SaveReload::savemaps(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_Save Start_");
@@ -63,6 +74,14 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 
 	IHM::logfileconsole("_Save End_");
 }
+
+/*
+* NAME : savePlayer
+* ROLE : Sauvegarde des joueurs (units et cities)
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt
+* RETURNED VALUE    : void
+*/
 void SaveReload::savePlayer(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_SavePlayer Start_");
@@ -75,20 +94,20 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 			{
 				savePlayer << std::endl << std::endl << "player= " + std::to_string(i);
 				savePlayer << std::endl << "name= " << sysinfo.tabplayer[i]->GETname();
-				savePlayer << std::endl << "nbunitTotal= " << sysinfo.tabplayer[i]->GETtabunit().size();
-				if (sysinfo.tabplayer[i]->GETtabunit().size() != 0)
+				savePlayer << std::endl << "nbunitTotal= " << sysinfo.tabplayer[i]->GETtabUnit().size();
+				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0)
 				{
-					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++)
+					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 					{
 						savePlayer << std::endl << std::endl << "\tunit= " << j;
-						savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETname();
-						savePlayer << std::endl << "\tx= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETx();
-						savePlayer << std::endl << "\ty= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETy();
-						savePlayer << std::endl << "\tlife= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETlife();
-						savePlayer << std::endl << "\tatq= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETatq();
-						savePlayer << std::endl << "\tdef= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETdef();
-						savePlayer << std::endl << "\tmovement= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETmovement();
-						savePlayer << std::endl << "\tlevel= " << sysinfo.tabplayer[i]->GETtheunit(j)->GETlevel();
+						savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETname();
+						savePlayer << std::endl << "\tx= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETx();
+						savePlayer << std::endl << "\ty= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETy();
+						savePlayer << std::endl << "\tlife= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlife();
+						savePlayer << std::endl << "\tatq= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETatq();
+						savePlayer << std::endl << "\tdef= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETdef();
+						savePlayer << std::endl << "\tmovement= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETmovement();
+						savePlayer << std::endl << "\tlevel= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlevel();
 					}
 				}
 				//savePlayer << endl << "nbcitie= " << tabplayer[i]->GETtabcities().size();
@@ -109,6 +128,14 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 
 	IHM::logfileconsole("_SavePlayer End_");
 }
+
+/*
+* NAME : reload
+* ROLE : Chargement de la partie à patir des fichiers de sauvegarde
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Chargement de la partie
+* RETURNED VALUE    : void
+*/
 void SaveReload::reload(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_Reload Start_");
@@ -173,6 +200,14 @@ void SaveReload::reload(Sysinfo& sysinfo)
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	IHM::logfileconsole("_Reload End_");
 }
+
+/*
+* NAME : createSave
+* ROLE : Création d'un emplacement de fichier de sauvegarde (courant)
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Création d'un emplacement de fichier de sauvegarde
+* RETURNED VALUE    : void
+*/
 void SaveReload::createSave(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_createSave Start_");
@@ -214,6 +249,14 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 
 	IHM::logfileconsole("_createSave Start_");
 }
+
+/*
+* NAME : removeSave
+* ROLE : Supprime une sauvegarde du dossier de sauvegarde
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Supprime une sauvegarde
+* RETURNED VALUE    : void
+*/
 void SaveReload::removeSave(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_removeSave Start_");
@@ -288,6 +331,14 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 
 	IHM::logfileconsole("_removeSave End_");
 }
+
+/*
+* NAME : clearSave
+* ROLE : Supprime toutes les sauvegardes du dossier
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Supprime toutes les sauvegardes du dossier
+* RETURNED VALUE    : void
+*/
 void SaveReload::clearSave(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_clearSave Start_");
@@ -342,7 +393,15 @@ void SaveReload::clearSave(Sysinfo& sysinfo)
 }
 
 
-/* SaveReload :: METHODES */
+/* *********************************************************
+ *				END SaveReload::STATIC
+ ********************************************************* */
+ 
+ 
+ 
+ /* *********************************************************
+ *				START SaveReload::METHODS
+ ********************************************************* */
 
 SaveReload::SaveReload(): _nbSave(0), _currentSave(0)
 {
@@ -350,32 +409,12 @@ SaveReload::SaveReload(): _nbSave(0), _currentSave(0)
 SaveReload::~SaveReload()
 {
 }
-std::vector<unsigned int>& SaveReload::GETtabSave()
-{
-	return _tabSave;
-}
-unsigned int SaveReload::GETcurrentSave()const
-{
-	return _currentSave;
-}
-unsigned int SaveReload::GETnbSave()const
-{
-	return _nbSave;
-}
-void SaveReload::SETtabSave(std::vector<unsigned int>& tab)
-{
-	_tabSave = tab;
-}
 
-void SaveReload::SETcurrentSave(unsigned int currentSave)
-{
-	_currentSave = currentSave;
-}
-void SaveReload::SETnbSave(unsigned int nbSave)
-{
-	_nbSave = nbSave;
-}
+
+/* *********************************************************
+ *				END SaveReload::METHODS
+ ********************************************************* */
 
 /*
-*	End Of File
+*	End Of File : SaveReload.cpp
 */

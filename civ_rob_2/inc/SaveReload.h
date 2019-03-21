@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.1
+	last modification on this file on version:0.15
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,7 @@ class SaveReload
 {
 public:
 	/* *********************************************************
-		*					STATIC
+	 *					SaveReload::STATIC
 	 ********************************************************* */
 
 
@@ -94,30 +94,43 @@ public:
 
 public:
 	/* *********************************************************
-		*					CLASSE
+	 *				SaveReload::METHODS
 	 ********************************************************* */
 
+	 
 	SaveReload();
 	~SaveReload();
+	
+	
+public:
+	/* *********************************************************
+	 *			SaveReload::METHODS::GET/SET
+	 ********************************************************* */
 
-	std::vector<unsigned int>& GETtabSave(); // attention n'est pas const
-	unsigned int GETcurrentSave()const;
-	unsigned int GETnbSave()const;
+	inline std::vector<unsigned int>& GETtabSave() 		{ return _tabSave;}; 
+	inline unsigned int GETcurrentSave()const			{ return _currentSave;}; 
+	inline unsigned int GETnbSave()const				{ return _nbSave;}; 
 
-	void SETtabSave(std::vector<unsigned int>& tab);
-	void SETcurrentSave(unsigned int currentSave);
-	void SETnbSave(unsigned int nbSave);
+	inline void SETtabSave(std::vector<unsigned int>& tab) 	{_tabSave = tab;};
+	inline void SETcurrentSave(unsigned int currentSave)	{_currentSave = currentSave;};
+	inline void SETnbSave(unsigned int nbSave)				{_nbSave = nbSave;};
+	
 
+	
 private:
+	/* *********************************************************
+	 *				SaveReload::ATTRIBUTS
+	 ********************************************************* */
+	 
+	 
 	std::vector<unsigned int> _tabSave;
 	unsigned int _currentSave;
 	unsigned int _nbSave;
 };
 
 
-
-#endif
+#endif /* SaveReload_H */
 
 /*
-*	End Of File
+*	End Of File : SaveReload.h
 */

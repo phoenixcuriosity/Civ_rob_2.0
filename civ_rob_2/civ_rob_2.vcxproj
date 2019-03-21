@@ -10,6 +10,33 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\City.h" />
+    <ClInclude Include="inc\civ_lib.h" />
+    <ClInclude Include="inc\GamePlay.h" />
+    <ClInclude Include="inc\HashTable.h" />
+    <ClInclude Include="inc\IHM.h" />
+    <ClInclude Include="inc\KeyboardMouse.h" />
+    <ClInclude Include="inc\LIB.h" />
+    <ClInclude Include="inc\LTimer.h" />
+    <ClInclude Include="inc\Player.h" />
+    <ClInclude Include="inc\SaveReload.h" />
+    <ClInclude Include="inc\Texture.h" />
+    <ClInclude Include="inc\Unit.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\City.cpp" />
+    <ClCompile Include="src\GamePlay.cpp" />
+    <ClCompile Include="src\HashTable.cpp" />
+    <ClCompile Include="src\IHM.cpp" />
+    <ClCompile Include="src\KeyboardMouse.cpp" />
+    <ClCompile Include="src\LTimer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\SaveReload.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Unit.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A15AE4CE-95CA-408A-8C30-95B265B08828}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -42,6 +69,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\civ_rob_2\inc;$(IncludePath)</IncludePath>
+    <SourcePath>C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\civ_rob_2\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -83,33 +112,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="HashTable.cpp" />
-    <ClCompile Include="IHM.cpp" />
-    <ClCompile Include="Cities.cpp" />
-    <ClCompile Include="KeyboardMouse.cpp" />
-    <ClCompile Include="LTimer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="GamePlay.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SaveReload.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Units.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="HashTable.h" />
-    <ClInclude Include="IHM.h" />
-    <ClInclude Include="Cities.h" />
-    <ClInclude Include="civ_lib.h" />
-    <ClInclude Include="KeyboardMouse.h" />
-    <ClInclude Include="LIB.h" />
-    <ClInclude Include="LTimer.h" />
-    <ClInclude Include="GamePlay.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="SaveReload.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Units.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

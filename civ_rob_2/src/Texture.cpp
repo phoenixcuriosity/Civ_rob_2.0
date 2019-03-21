@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.5
+	last modification on this file on version:0.15
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -135,24 +135,6 @@ bool Texture::renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x, in
 	if (_stateScreen == stateScreen && _select == select)
 	{
 		render(x, y);
-		return true;
-	}
-	return false;
-}
-bool Texture::renderTextureTestString(std::string msg, int xc, int yc)
-{
-	if (_name.compare(msg) == 0)
-	{
-		render(xc, yc);
-		return true;
-	}
-	return false;
-}
-bool Texture::renderTextureTestStringAndStates(std::string msg, Uint8 stateScreen, int xc, int yc)
-{
-	if (_name.compare(msg) == 0 && _stateScreen == stateScreen)
-	{
-		render(xc, yc);
 		return true;
 	}
 	return false;
@@ -386,7 +368,7 @@ ButtonImage::~ButtonImage()
 		_imageOn = nullptr;
 	}
 }
-unsigned int ButtonImage::searchButtonImage(std::string msg, Uint8 stateScreen, signed int x, signed int y)
+bool ButtonImage::searchButtonImage(Uint8 stateScreen, signed int x, signed int y)
 {
 	if (stateScreen == this->GETstateScreen())
 	{
@@ -394,22 +376,13 @@ unsigned int ButtonImage::searchButtonImage(std::string msg, Uint8 stateScreen, 
 		{
 			if (y >= this->GETdsty() && y <= this->GETdsty() + this->GETdsth())
 			{
-				if (this->GETname().compare(msg) == 0)
-					return 1;
+				return true;
 			}
 		}
 	}
-	return 0;
+	return false;
 }
-unsigned int ButtonImage::searchButtonImageName(std::string& msg, Uint8 stateScreen)
-{
-	if (stateScreen == this->GETstateScreen())
-	{
-		if (this->GETname().compare(msg) == 0)
-			return 1;
-	}
-	return 0;
-}
+
 bool ButtonImage::renderButtonImage(Uint8 stateScreen)
 {
 	if (this->GETstateScreen() == stateScreen)
@@ -434,55 +407,11 @@ bool ButtonImage::renderButtonImage(Uint8 stateScreen)
 	}
 	return false;
 }
-bool ButtonImage::renderButtonImageTestString(Uint8 stateScreen, std::string& msg, int newx, int newy, Uint8 cnt)
-{
-	if (this->GETstateScreen() == stateScreen && this->GETname().compare(msg) == 0)
-	{
-		if (newx != -1 && newy != -1)
-		{
-			centrage(newx, newy, this->GETdstw(), this->GETdsth(), cnt);
-			this->SETdstx(newx);
-			this->SETdstx(newx);
-		}
-		if (_on)
-			SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
-		else
-			SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, &this->GETdst());
-		return true;
-	}
-	return false;
-}
 void ButtonImage::changeOn()
 {
 	_on = !_on;
 }
-SDL_Texture* ButtonImage::GETimageOn() const
-{
-	return _imageOn;
-}
-bool ButtonImage::GETon() const
-{
-	return _on;
-}
-void ButtonImage::SETname(std::string msg)
-{
-	if (this->GETname().compare(msg) != 0)
-	{
-		IHM::logfileconsole("___ERROR : ButtonTexte::SETname() : Le nom d'un bouton ne peut pas changer après initialisation");
-	}
-}
-void ButtonImage::SETon(bool state)
-{
-	_on = state;
-}
-void ButtonImage::SETalpha(Uint8 alpha)
-{
-	this->SETalpha(alpha);
-	if (SDL_SetTextureAlphaMod(this->GETtextureNonConst(), this->GETalpha()) != 0)
-		IHM::logSDLError(std::cout, "alpha : ");
-	if (SDL_SetTextureAlphaMod(_imageOn, this->GETalpha()) != 0)
-		IHM::logSDLError(std::cout, "alpha : ");
-}
+
 
 
 
@@ -582,35 +511,9 @@ void ButtonTexte::changeOn()
 {
 	_on = !_on;
 }
-SDL_Texture* ButtonTexte::GETimageOn() const
-{
-	return _imageOn;
-}
-bool ButtonTexte::GETon() const
-{
-	return _on;
-}
-void ButtonTexte::SETname(std::string msg)
-{
-	if (this->GETname().compare(msg) != 0)
-	{
-		IHM::logfileconsole("___ERROR : ButtonTexte::SETname() : Le nom d'un bouton ne peut pas changer après initialisation");
-	}
-}
-void ButtonTexte::SETon(bool state)
-{
-	_on = state;
-}
-void ButtonTexte::SETalpha(Uint8 alpha)
-{
-	this->SETalpha(alpha);
-	if (SDL_SetTextureAlphaMod(this->GETtextureNonConst(), this->GETalpha()) != 0)
-		IHM::logSDLError(std::cout, "alpha : ");
-	if (SDL_SetTextureAlphaMod(_imageOn, this->GETalpha()) != 0)
-		IHM::logSDLError(std::cout, "alpha : ");
-}
+
 
 
 /*
-*	End Of File
+*	End Of File : Texture.cpp
 */

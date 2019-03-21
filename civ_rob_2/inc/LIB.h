@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.1
+	last modification on this file on version:0.15
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,8 +26,8 @@
 #define LIB_H
 
 /* *********************************************************
-	*				Include Standard
-********************************************************* */
+ *				Include Standard
+ ********************************************************* */
 
 #include <iostream>
 #include <ostream>
@@ -45,18 +45,18 @@
 
 
 /* *********************************************************
-	*				Include SDL
-********************************************************* */
+ *				Include SDL
+ ********************************************************* */
 
 
-#include "SDL2-2.0.8/include/SDL.h"
-#include "SDL2-2.0.8/include/SDL_ttf.h"
-#include "SDL2-2.0.8/include/SDL_image.h"
+#include "../SDL2-2.0.8/include/SDL.h"
+#include "../SDL2-2.0.8/include/SDL_ttf.h"
+#include "../SDL2-2.0.8/include/SDL_image.h"
 
 
 /* *********************************************************
-	*				Structures
-********************************************************* */
+ *				Structures
+ ********************************************************* */
 
 typedef struct Unit_Struct Unit_Struct;
 typedef struct SubcatPlayer SubcatPlayer;
@@ -72,8 +72,8 @@ typedef struct Sysinfo Sysinfo;
 
 
 /* *********************************************************
-	*				Classes
-********************************************************* */
+ *				Classes
+ ********************************************************* */
 
 class IHM;
 class SaveReload;
@@ -84,15 +84,15 @@ class Texte;
 class ButtonImage;
 class ButtonTexte;
 class HashTable;
-class Cities;
+class City;
 class Citizen;
 class LTimer;
 class Player;
-class Units;
+class Unit;
 
 #endif
 
 
 /*
-*	End Of File
+*	End Of File : LIB.h
 */

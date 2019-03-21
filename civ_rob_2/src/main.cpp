@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.1
+	last modification on this file on version:0.15
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
 	if (IHM::initSDL(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font))
 	{
-		Units::loadUnitAndSpec(sysinfo);
+		Unit::loadUnitAndSpec(sysinfo);
 		IHM::calculImage(sysinfo);
 		
 		t2 = clock();
@@ -71,5 +71,5 @@ int main(int argc, char* argv[])
 }
 
 /*
-*	End Of File
+*	End Of File : main.cpp
 */

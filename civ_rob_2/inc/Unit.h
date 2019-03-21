@@ -35,16 +35,16 @@
 
 */
 
-#ifndef Units_H
-#define Units_H
+#ifndef Unit_H
+#define Unit_H
 
 #include "civ_lib.h"
 
-class Units
+class Unit
 {
 public:
 	/* *********************************************************
-	 *					Units::STATIC
+	 *					Unit::STATIC
 	 ********************************************************* */
 
 	/*
@@ -63,7 +63,7 @@ public:
 	* OUTPUT PARAMETERS : nom de l'unité
 	* RETURNED VALUE    : void
 	*/
-	static void searchunit(Sysinfo&);
+	static void searchUnit(Sysinfo&);
 
 	/*
 	* NAME : searchUnittile
@@ -73,7 +73,7 @@ public:
 	* OUTPUT PARAMETERS : activation de la méthode blit (clignotement)
 	* RETURNED VALUE    : void
 	*/
-	static void searchUnittile(Sysinfo&);
+	static void searchUnitTile(Sysinfo&);
 
 	/*
 	* NAME : tryToMove
@@ -107,13 +107,13 @@ public:
 
 public:
 	/* *********************************************************
-	 *					Units::METHODS
+	 *					Unit::METHODS
 	 ********************************************************* */
 
-	Units();
-	Units::Units(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
+	Unit();
+	Unit::Unit(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
 		unsigned int def, unsigned int move, unsigned int level);
-	~Units();
+	~Unit();
 
 
 	/*
@@ -123,7 +123,7 @@ public:
 	* OUTPUT PARAMETERS : Attaque d'une unité
 	* RETURNED VALUE    : void
 	*/
-	virtual void attack(Units*);
+	virtual void attack(Unit*);
 
 	/*
 	* NAME : defend
@@ -187,7 +187,7 @@ public:
 
 public:
 	/* *********************************************************
-	 *				Units::METHODS::AFFICHAGE
+	 *				Unit::METHODS::AFFICHAGE
 	 ********************************************************* */
 
 	/*
@@ -222,7 +222,7 @@ public:
 
 public:
 	/* *********************************************************
-	 *				Units::METHODS::GET/SET
+	 *				Unit::METHODS::GET/SET
 	 ********************************************************* */
 
 	inline std::string GETname()			const { return _name; };
@@ -254,7 +254,7 @@ public:
 		
 private:
 	/* *********************************************************
-	 *					Units::ATTRIBUTS
+	 *					Unit::ATTRIBUTS
 	 ********************************************************* */
 	std::string _name;
 	unsigned int _x;
@@ -279,8 +279,8 @@ private:
 
 
 
-#endif
+#endif /* Unit_H */
 
 /*
-*	End Of File
+*	End Of File : Unit.h
 */

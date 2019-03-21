@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.2
+	last modification on this file on version:0.15
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,7 @@ class KeyboardMouse
 {
 public:
 	/* *********************************************************
-		*					CLAVIER : CIN
+	 *			KeyboardMouse::STATIC::CIN
 	 ********************************************************* */
 
 	/*
@@ -61,7 +61,7 @@ public:
 
 public:
 	/* *********************************************************
-		*			CLAVIER : UNE TOUCHE
+	 *			KeyboardMouse::STATIC::UNE TOUCHE
 	 ********************************************************* */
 
 
@@ -111,7 +111,7 @@ public:
 
 public:
 	/* *********************************************************
-		*				SOURIS
+	 *			KeyboardMouse::STATIC::SOURIS
 	 ********************************************************* */
 
 	 /*
@@ -187,13 +187,21 @@ public:
 
 public:
 	/* *********************************************************
-		*			Classe KeyboardMouse
+	 *				KeyboardMouse::METHODS
 	 ********************************************************* */
 
 
 	KeyboardMouse();
 	~KeyboardMouse() {};
 
+	
+	
+public:
+	/* *********************************************************
+	 *			KeyboardMouse::METHODS::GET/SET
+	 ********************************************************* */
+	 
+	 
 	inline unsigned int GETmouse_x()const	{ return _mouse_x; };
 	inline unsigned int GETmouse_y()const	{ return _mouse_y; };
 	inline unsigned int GETywheel()const	{ return _ywheel; };
@@ -203,17 +211,22 @@ public:
 	inline void SETmouse_y(unsigned int mouse_y)	{ _mouse_y = mouse_y; };
 	inline void SETywheel(unsigned int ywheel)		{ _ywheel = ywheel; };
 	inline void SETxwheel(unsigned int xwheel)		{ _xwheel = xwheel; };
+	
 
 private:
+	/* *********************************************************
+	 *				KeyboardMouse::ATTIBUTS
+	 ********************************************************* */
+
 	unsigned int _mouse_x;
 	unsigned int _mouse_y;
 	unsigned int _ywheel;
 	unsigned int _xwheel;
 };
 
-#endif
+#endif /* KeyboardMouse_H */
 
 
 /*
-*	End Of File
+*	End Of File : KeyboardMouse.h
 */

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.14
-	file version : 1.1
+	last modification on this file on version:0.15
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,6 +41,11 @@
 #include "civ_lib.h"
 #include "Player.h"
 
+
+/*
+* Structure d'un couple de positions
+* Positions en x et y permettant le spawn des settlers	
+*/
 typedef struct randomPos randomPos;
 struct randomPos
 {
@@ -52,7 +57,7 @@ class GamePlay
 {
 public:
 	/* *********************************************************
-		*					NEW-GAME
+	 *				GamePlay::STATIC::NEW-GAME
 	 ********************************************************* */
 
 
@@ -144,7 +149,7 @@ public:
 
 public:
 	/* *********************************************************
-		*					NEW-GAME
+	 *				GamePlay::STATIC::NextTurn
 	 ********************************************************* */
 
 
@@ -158,8 +163,8 @@ public:
 	static void nextTurn(Sysinfo&);
 };
 
-#endif
+#endif /* GamePlay_H */
 
 /*
-*	End Of File
+*	End Of File : GamePlay.h
 */

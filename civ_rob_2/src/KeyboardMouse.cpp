@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.15
-	file version : 1.5
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,21 @@
 #include "HashTable.h"
 
 
+/* *********************************************************
+ *			START KeyboardMouse::STATIC::CIN
+ ********************************************************* */
+ 
+
+/*
+* NAME : cinDigit
+* ROLE : Recherche d'un digit rentré par le joueur
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : unsigned int& digit : le digit a retourner
+* INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage du digit
+* INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage du digit
+* OUTPUT PARAMETERS : le digit
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int x, unsigned int y)
 {
 	bool continuer = true;
@@ -123,6 +138,17 @@ void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int
 		}
 	}
 }
+
+/*
+* NAME : cinAlphabet
+* ROLE : Recherche d'une chaine de caractères (finisant par \0) rentré par le joueur
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::string &name : la chaine de caractères a retourner
+* INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage
+* INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage
+* OUTPUT PARAMETERS : la chaine de caractères a retourner
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned int x, unsigned int y)
 {
 	bool continuer = true;
@@ -314,41 +340,87 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 		}
 	}
 }
+
+ 
+ 
+ /* *********************************************************
+ *			END KeyboardMouse::STATIC::CIN
+ ********************************************************* */
+
+ 
+
+
+/* *********************************************************
+ *		START KeyboardMouse::STATIC::UNE TOUCHE
+ ********************************************************* */
+ 
+ 
+/*
+* NAME : cinAlphabet
+* ROLE : Recherche d'une chaine de caractères (finisant par \0) rentré par le joueur
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::string &name : la chaine de caractères a retourner
+* INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage
+* INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage
+* OUTPUT PARAMETERS : la chaine de caractères a retourner
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::keySDLK_b(Sysinfo& sysinfo)
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Cities::createcitie(sysinfo);
+		City::createCity(sysinfo);
 }
+
+/*
+* NAME : cinAlphabet
+* ROLE : Recherche d'une chaine de caractères (finisant par \0) rentré par le joueur
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::string &name : la chaine de caractères a retourner
+* INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage
+* INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage
+* OUTPUT PARAMETERS : la chaine de caractères a retourner
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::keySDLK_i(Sysinfo& sysinfo)
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::irrigate(sysinfo);
+		Unit::irrigate(sysinfo);
 }
+
+
+/*
+* comm 0.14e : ce commentaire est commun au 9 boutons 
+* NAME : keySDLK_KP_1
+* ROLE : Appel la fonction dans le contexte de l'appuie sur la touche
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Appel une fonction
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove 
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), sysinfo.map.tileSize);
+		Unit::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), sysinfo.map.tileSize);
 }
 void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, 0, sysinfo.map.tileSize);
+		Unit::tryToMove(sysinfo, 0, sysinfo.map.tileSize);
 }
 void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo) 
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, sysinfo.map.tileSize, sysinfo.map.tileSize);
+		Unit::tryToMove(sysinfo, sysinfo.map.tileSize, sysinfo.map.tileSize);
 }
 void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), 0);
+		Unit::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), 0);
 }
 void KeyboardMouse::keySDLK_KP_5(Sysinfo& sysinfo) 
 {
@@ -358,26 +430,48 @@ void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo)
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, sysinfo.map.tileSize, 0);
+		Unit::tryToMove(sysinfo, sysinfo.map.tileSize, 0);
 }
 void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo) 
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), -(int)(sysinfo.map.tileSize));
+		Unit::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), -(int)(sysinfo.map.tileSize));
 }
 void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, 0, -(int)(sysinfo.map.tileSize));
+		Unit::tryToMove(sysinfo, 0, -(int)(sysinfo.map.tileSize));
 }
 void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo) 
 {
 	if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
 		&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-		Units::tryToMove(sysinfo, sysinfo.map.tileSize, -(int)(sysinfo.map.tileSize));
+		Unit::tryToMove(sysinfo, sysinfo.map.tileSize, -(int)(sysinfo.map.tileSize));
 }
+
+
+/* *********************************************************
+ *			END KeyboardMouse::STATIC::UNE TOUCHE
+ ********************************************************* */
+
+
+ 
+
+/* *********************************************************
+ *			START KeyboardMouse::STATIC::SOURIS
+ ********************************************************* */
+
+ 
+/*
+* NAME : mouse
+* ROLE : Dispatch entre clique droit ou clique gauche
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
+* OUTPUT PARAMETERS : choix du clique
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event)
 {
 	/*
@@ -394,6 +488,16 @@ void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event)
 		cliqueDroit(sysinfo, event);
 
 }
+
+/*
+* NAME : cliqueGauche
+* ROLE : Recherche de la zone ou le clique à lieu
+* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
+* OUTPUT PARAMETERS : la chaine de caractères a retourner
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) 
 {
 	// inspect citie
@@ -401,7 +505,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 	{
 		if (sysinfo.var.s_player.selectplayer > -1) 
 		{
-			if (sysinfo.var.select == selectinspect && sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabcities().size() != 0) 
+			if (sysinfo.var.select == selectinspect && sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() != 0) 
 			{
 				sysinfo.var.mouse.SETmouse_x((
 					(unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize)
@@ -409,7 +513,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 				sysinfo.var.mouse.SETmouse_y((
 					(unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize)
 					+ sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
-				Cities::searchCitietile(sysinfo);
+				City::searchCityTile(sysinfo);
 			}
 		}
 	}
@@ -620,8 +724,8 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 				{
 					sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Struct[i].name;
 					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Struct[i].name,
-						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->GETx(),
-						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETthecitie(sysinfo.var.s_player.selectCitie)->GETy(),
+						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETx(),
+						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETy(),
 						sysinfo.var.s_player.tabUnit_Struct[i].life, sysinfo.var.s_player.tabUnit_Struct[i].atq,
 						sysinfo.var.s_player.tabUnit_Struct[i].def, sysinfo.var.s_player.tabUnit_Struct[i].movement,
 						sysinfo.var.s_player.tabUnit_Struct[i].level);
@@ -634,6 +738,16 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		break;
 	}
 }
+
+/*
+* NAME : cliqueDroit
+* ROLE : Recherche de la zone ou le clique à lieu
+* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
+* OUTPUT PARAMETERS : la chaine de caractères a retourner
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 {
 	unsigned int selectunit = 0;
@@ -661,16 +775,16 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 					sysinfo.var.s_player.tabUnit_Struct[selectunit].level);
 				break;
 			case selectmove:
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size() != 0)
+				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0)
 				{
-					Units::searchUnittile(sysinfo);
+					Unit::searchUnitTile(sysinfo);
 					IHM::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
 			case selectinspect:
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size() != 0) 
+				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0) 
 				{
-					Units::searchUnittile(sysinfo);
+					Unit::searchUnitTile(sysinfo);
 					IHM::logfileconsole("Unit select to Inspect n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
@@ -679,6 +793,15 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 		}
 	}
 }
+
+/*
+* NAME : wheel
+* ROLE : Recherche l'incrémentation ou décrémentation du contexte
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : int& wheel : l'évenement de scroll de la souris
+* OUTPUT PARAMETERS : une action suivant l'incrémentation ou décrémentation du contexte
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 {
 	if (sysinfo.var.select == selectcreate)
@@ -693,7 +816,7 @@ void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.unitNameMaxToCreate - 1)
 				sysinfo.var.s_player.unitToCreate++;
 		}
-		Units::searchunit(sysinfo);
+		Unit::searchUnit(sysinfo);
 	}
 	/*
 	else if (sysinfo.var.statescreen == STATEreload)
@@ -711,6 +834,14 @@ void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 	}
 	*/
 }
+
+/*
+* NAME : resetButtonOn
+* ROLE : reset de l'affichage On des boutons
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : reset de l'affichage On des boutons
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::resetButtonOn(Sysinfo& sysinfo)
 {
 	for (unsigned int i = 0; i < sysinfo.allButton.mainMapIndex.size(); i++)
@@ -721,6 +852,14 @@ void KeyboardMouse::resetButtonOn(Sysinfo& sysinfo)
 			->resetOnPlayer(sysinfo.var.s_player.selectplayer, sysinfo.var.s_player.tabPlayerName);
 	}
 }
+
+/*
+* NAME : resetButtonPlayerOn
+* ROLE : reset de l'affichage On des boutons player
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : reset de l'affichage On des boutons player
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::resetButtonPlayerOn(Sysinfo& sysinfo)
 {
 	for (unsigned int i = 0; i < sysinfo.allButton.playerIndex.size(); i++)
@@ -731,6 +870,14 @@ void KeyboardMouse::resetButtonPlayerOn(Sysinfo& sysinfo)
 			->resetOnPlayer(sysinfo.var.s_player.selectplayer, sysinfo.var.s_player.tabPlayerName);
 	}
 }
+
+/*
+* NAME : resetButtonCitieMap
+* ROLE : reset de l'affichage On des boutons citieMap
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : reset de l'affichage On des boutons citieMap
+* RETURNED VALUE    : void
+*/
 void KeyboardMouse::resetButtonCitieMap(Sysinfo& sysinfo)
 {
 	for (unsigned int i = 0; i < sysinfo.allButton.citieMapIndex.size(); i++)
@@ -740,15 +887,26 @@ void KeyboardMouse::resetButtonCitieMap(Sysinfo& sysinfo)
 }
 
 
+/* *********************************************************
+ *			END KeyboardMouse::STATIC::SOURIS
+ ********************************************************* */
 
+ 
 
+/* *********************************************************
+ *				START KeyboardMouse::METHODS
+ ********************************************************* */
+ 
 
 KeyboardMouse::KeyboardMouse(): _mouse_x(0), _mouse_y(0), _ywheel(0), _xwheel(0)
 {
 }
 
 
+/* *********************************************************
+ *				END KeyboardMouse::METHODS
+ ********************************************************* */
 
 /*
-*	End Of File
+*	End Of File : KeyboardMouse.cpp
 */

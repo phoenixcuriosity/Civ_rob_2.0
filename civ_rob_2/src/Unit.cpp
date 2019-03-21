@@ -22,13 +22,13 @@
 
 */
 
-#include "Units.h"
+#include "Unit.h"
 #include "IHM.h"
 #include "HashTable.h"
 
 
 /* *********************************************************
- *				START Units::STATIC
+ *				START Unit::STATIC
  ********************************************************* */
 
 
@@ -39,7 +39,7 @@
 * OUTPUT PARAMETERS : tableau de nom et spec concernant les unités
 * RETURNED VALUE    : void
 */
-void Units::loadUnitAndSpec(Sysinfo& sysinfo)
+void Unit::loadUnitAndSpec(Sysinfo& sysinfo)
 {
 	std::ifstream UNIT("bin/UNIT.txt");
 	if (UNIT) 
@@ -85,31 +85,31 @@ void Units::loadUnitAndSpec(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : nom de l'unité
 * RETURNED VALUE    : void
 */
-void Units::searchunit(Sysinfo& sysinfo)
+void Unit::searchUnit(Sysinfo& sysinfo)
 {
 	sysinfo.var.s_player.unitNameToCreate = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate].name;
 }
 
 
 /*
-* NAME : searchUnittile
+* NAME : searchUnitTile
 * ROLE : Cherche l'unité étant dans la case séléctionné
 * INPUT  PARAMETERS : struct Map& : données générale de la map : taille
 * OUTPUT PARAMETERS : index et nom de l'unité sélectionnée
 * OUTPUT PARAMETERS : activation de la méthode blit (clignotement)
 * RETURNED VALUE    : void
 */
-void Units::searchUnittile(Sysinfo& sysinfo)
+void Unit::searchUnitTile(Sysinfo& sysinfo)
 {
-	for (unsigned int i = 0; i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabunit().size(); i++)
+	for (unsigned int i = 0; i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size(); i++)
 	{
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(i)
+		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)
 			->testPos(sysinfo.var.mouse.GETmouse_x() + sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize,
 				sysinfo.var.mouse.GETmouse_y() + sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize))
 		{
 			sysinfo.var.s_player.selectunit = i;
-			sysinfo.var.s_player.unitNameToMove = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(i)->GETname();
-			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(i)->SETblit(true);
+			sysinfo.var.s_player.unitNameToMove = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->GETname();
+			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->SETblit(true);
 			break;
 		}
 	}
@@ -124,23 +124,23 @@ void Units::searchUnittile(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : l'unité reste à sa place ou bouge en fonction du contexte
 * RETURNED VALUE    : void
 */
-void Units::tryToMove(Sysinfo& sysinfo, int x, int y)
+void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 {
 	switch (searchToMove(sysinfo, x, y))
 	{
 	case 0:
 		break;
 	case 1:
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->move(sysinfo.var.select, sysinfo.var.s_player.selectunit, x, y);
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->move(sysinfo.var.select, sysinfo.var.s_player.selectunit, x, y);
 		break;
 	case 2:
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheunit(sysinfo.var.s_player.selectUnitToAttack));
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheunit(sysinfo.var.s_player.selectUnitToAttack)->GETalive() == false)
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack));
+		if (sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack)->GETalive() == false)
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->deleteUnit(sysinfo.var.s_player.selectUnitToAttack);
 			tryToMove(sysinfo, x, y);
 		}
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->SETmovement(0);
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->SETmovement(0);
 		break;
 	}
 }
@@ -155,7 +155,7 @@ void Units::tryToMove(Sysinfo& sysinfo, int x, int y)
 * RETURNED VALUE    : int : 0 : ne bouge pas / 1 : case libre : peut bouger / 2 : ennemi : ne bouge pas
 *
 */
-int Units::searchToMove(Sysinfo& sysinfo, int x, int y)
+int Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 {
 	/*
 		conditions de mouvement :
@@ -170,8 +170,8 @@ int Units::searchToMove(Sysinfo& sysinfo, int x, int y)
 	{
 		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
 		{
-			if (sysinfo.map.maps[i][j].tile_x == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx() + x &&
-				sysinfo.map.maps[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y)
+			if (sysinfo.map.maps[i][j].tile_x == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx() + x &&
+				sysinfo.map.maps[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y)
 			{
 				if (sysinfo.map.maps[i][j].tile_ground == grass)
 				{
@@ -186,11 +186,11 @@ int Units::searchToMove(Sysinfo& sysinfo, int x, int y)
 	{
 		for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
 		{
-			for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabunit().size(); j++) 
+			for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
 			{
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETx() + x == sysinfo.tabplayer[i]->GETtheunit(j)->GETx())
+				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx() + x == sysinfo.tabplayer[i]->GETtheUnit(j)->GETx())
 				{
-					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheunit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheunit(j)->GETy())
+					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheUnit(j)->GETy())
 					{
 						if (sysinfo.var.s_player.selectplayer == (int)i)
 							return 0;
@@ -218,7 +218,7 @@ int Units::searchToMove(Sysinfo& sysinfo, int x, int y)
 * OUTPUT PARAMETERS :
 * RETURNED VALUE    : bool
 */
-bool Units::irrigate(Sysinfo&)
+bool Unit::irrigate(Sysinfo&)
 {
 	return false;
 }
@@ -232,11 +232,11 @@ bool Units::irrigate(Sysinfo&)
  *				START Units::METHODS
  ********************************************************* */
 
-Units::Units() : _name(""), _x(0), _y(0), _life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true)
+Unit::Unit() : _name(""), _x(0), _y(0), _life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true)
 {
 	IHM::logfileconsole("Create Unit Par Defaut Success");
 }
-Units::Units(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
+Unit::Unit(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
 	unsigned int def, unsigned int move, unsigned int level)
 	: _name(name), _x(x), _y(y),
 	_maxlife(life), _maxatq(atq), _maxdef(def), _maxmovement(move), _maxlevel(level),
@@ -244,7 +244,7 @@ Units::Units(const std::string &name, unsigned int x, unsigned int y, unsigned i
 {
 	IHM::logfileconsole("Create Unit:  Success");
 }
-Units::~Units()
+Unit::~Unit()
 {
 }
 
@@ -256,7 +256,7 @@ Units::~Units()
 * OUTPUT PARAMETERS : Attaque d'une unité
 * RETURNED VALUE    : void
 */
-void Units::attack(Units* cible)
+void Unit::attack(Unit* cible)
 {
 	if (_movement > 0) 
 		cible->defend(_atq);
@@ -270,7 +270,7 @@ void Units::attack(Units* cible)
 * OUTPUT PARAMETERS : l'unité peut prendre des dommage et/ou mourrir
 * RETURNED VALUE    : void
 */
-void Units::defend(unsigned int dmg)
+void Unit::defend(unsigned int dmg)
 {
 	int test = 0;
 	if (dmg > _def)
@@ -297,7 +297,7 @@ void Units::defend(unsigned int dmg)
 * OUTPUT PARAMETERS : Application du mouvement à l'unité
 * RETURNED VALUE    : void
 */
-void Units::move(Uint8& select, int& selectunit, int x, int y)
+void Unit::move(Uint8& select, int& selectunit, int x, int y)
 {
 	if (_movement > 0)
 	{
@@ -325,7 +325,7 @@ void Units::move(Uint8& select, int& selectunit, int x, int y)
 * OUTPUT PARAMETERS : Soigne l'unité en fonction du contexte
 * RETURNED VALUE    : void
 */
-void Units::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer)
+void Unit::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer)
 {
 	for (unsigned int i = 0; i < tiles.size(); i++) 
 	{
@@ -362,7 +362,7 @@ void Units::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplaye
 * OUTPUT PARAMETERS : levelup
 * RETURNED VALUE    : void
 */
-void Units::levelup()
+void Unit::levelup()
 {
 	_level++;
 	//heal();
@@ -376,7 +376,7 @@ void Units::levelup()
 * OUTPUT PARAMETERS : RESETmovement
 * RETURNED VALUE    : void
 */
-void Units::RESETmovement()
+void Unit::RESETmovement()
 {
 	_movement = _maxmovement;
 }
@@ -389,7 +389,7 @@ void Units::RESETmovement()
 * OUTPUT PARAMETERS : unsigned int mouse_y : position y
 * RETURNED VALUE    : int : 0 : pas sélectioné / 1 : sélectionné
 */
-int Units::testPos(unsigned int mouse_x, unsigned int mouse_y) 
+int Unit::testPos(unsigned int mouse_x, unsigned int mouse_y) 
 {
 	if (_x == mouse_x && _y == mouse_y)
 		return 1;
@@ -414,7 +414,7 @@ int Units::testPos(unsigned int mouse_x, unsigned int mouse_y)
 * OUTPUT PARAMETERS : Affichage de l'unité
 * RETURNED VALUE    : void
 */
-void Units::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
+void Unit::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
 	if (_show)
 	{
 		unsigned int x = _x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
@@ -479,7 +479,7 @@ void Units::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
 * OUTPUT PARAMETERS : Affichage des statistiques de l'unité
 * RETURNED VALUE    : void
 */
-void Units::afficherstat(Sysinfo& sysinfo)
+void Unit::afficherstat(Sysinfo& sysinfo)
 {
 	if (_show)
 	{
@@ -512,7 +512,7 @@ void Units::afficherstat(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Compteur permettant de faire clignoter l'unité
 * RETURNED VALUE    : void
 */
-void Units::cmpblit() 
+void Unit::cmpblit() 
 {
 	/*
 		50% off 50% on , environ 1s le cycle
@@ -531,5 +531,5 @@ void Units::cmpblit()
 
 
 /*
-*	End Of File
+*	End Of File Unit.cpp
 */
