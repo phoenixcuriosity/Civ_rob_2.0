@@ -11,49 +11,49 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\City.h" />
-    <ClInclude Include="inc\civ_lib.h" />
-    <ClInclude Include="inc\GamePlay.h" />
-    <ClInclude Include="inc\HashTable.h" />
-    <ClInclude Include="inc\IHM.h" />
-    <ClInclude Include="inc\KeyboardMouse.h" />
-    <ClInclude Include="inc\LIB.h" />
-    <ClInclude Include="inc\LTimer.h" />
-    <ClInclude Include="inc\Player.h" />
-    <ClInclude Include="inc\SaveReload.h" />
-    <ClInclude Include="inc\Texture.h" />
-    <ClInclude Include="inc\Unit.h" />
+    <ClInclude Include="dev\inc\City.h" />
+    <ClInclude Include="dev\inc\civ_lib.h" />
+    <ClInclude Include="dev\inc\GamePlay.h" />
+    <ClInclude Include="dev\inc\HashTable.h" />
+    <ClInclude Include="dev\inc\IHM.h" />
+    <ClInclude Include="dev\inc\KeyboardMouse.h" />
+    <ClInclude Include="dev\inc\LIB.h" />
+    <ClInclude Include="dev\inc\LTimer.h" />
+    <ClInclude Include="dev\inc\Player.h" />
+    <ClInclude Include="dev\inc\SaveReload.h" />
+    <ClInclude Include="dev\inc\Texture.h" />
+    <ClInclude Include="dev\inc\Unit.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\City.cpp" />
-    <ClCompile Include="src\GamePlay.cpp" />
-    <ClCompile Include="src\HashTable.cpp" />
-    <ClCompile Include="src\IHM.cpp" />
-    <ClCompile Include="src\KeyboardMouse.cpp" />
-    <ClCompile Include="src\LTimer.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\SaveReload.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\Unit.cpp" />
+    <ClCompile Include="dev\src\City.cpp" />
+    <ClCompile Include="dev\src\GamePlay.cpp" />
+    <ClCompile Include="dev\src\HashTable.cpp" />
+    <ClCompile Include="dev\src\IHM.cpp" />
+    <ClCompile Include="dev\src\KeyboardMouse.cpp" />
+    <ClCompile Include="dev\src\LTimer.cpp" />
+    <ClCompile Include="dev\src\main.cpp" />
+    <ClCompile Include="dev\src\Player.cpp" />
+    <ClCompile Include="dev\src\SaveReload.cpp" />
+    <ClCompile Include="dev\src\Texture.cpp" />
+    <ClCompile Include="dev\src\Unit.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A15AE4CE-95CA-408A-8C30-95B265B08828}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>civ_rob_2</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -69,8 +69,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\civ_rob_2\inc;$(IncludePath)</IncludePath>
-    <SourcePath>C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\civ_rob_2\src;$(SourcePath)</SourcePath>
+    <IncludePath>dev\SDL2-2.0.9\lib\x86;dev\inc;inc;$(IncludePath)</IncludePath>
+    <SourcePath>dev\src;$(SourcePath)</SourcePath>
+    <LibraryPath>dev\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -83,13 +84,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>dev\SDL2-2.0.9\lib\x86;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>SDL2-2.0.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>dev\SDL2-2.0.9\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <StackReserveSize>10000000</StackReserveSize>
     </Link>

@@ -20,82 +20,82 @@
       <UniqueIdentifier>{74c143cd-8ddb-4ca1-a852-6c225201ecd6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Fichiers d%27en-tête\Class\Misc">
-      <UniqueIdentifier>{8f587093-7031-4885-aac8-b43792ab7499}</UniqueIdentifier>
+      <UniqueIdentifier>{5027458d-965f-4759-97ea-0c0c68666a4b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Fichiers sources\Class\Misc">
-      <UniqueIdentifier>{4fb640a5-d334-4ae5-bd2d-d84543acd05b}</UniqueIdentifier>
+      <UniqueIdentifier>{9eab5521-bb50-4713-bb5e-fd830b8d4e87}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\City.h">
+    <ClInclude Include="dev\inc\City.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GamePlay.h">
+    <ClInclude Include="dev\inc\GamePlay.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\IHM.h">
+    <ClInclude Include="dev\inc\IHM.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\KeyboardMouse.h">
+    <ClInclude Include="dev\inc\KeyboardMouse.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Player.h">
+    <ClInclude Include="dev\inc\Player.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\SaveReload.h">
+    <ClInclude Include="dev\inc\SaveReload.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Texture.h">
+    <ClInclude Include="dev\inc\Texture.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Unit.h">
+    <ClInclude Include="dev\inc\Unit.h">
       <Filter>Fichiers d%27en-tête\Class</Filter>
     </ClInclude>
-    <ClInclude Include="inc\civ_lib.h">
+    <ClInclude Include="dev\inc\civ_lib.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="inc\LIB.h">
+    <ClInclude Include="dev\inc\LIB.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="inc\HashTable.h">
+    <ClInclude Include="dev\inc\HashTable.h">
       <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="inc\LTimer.h">
+    <ClInclude Include="dev\inc\LTimer.h">
       <Filter>Fichiers d%27en-tête\Class\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\City.cpp">
+    <ClCompile Include="dev\src\City.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\GamePlay.cpp">
+    <ClCompile Include="dev\src\GamePlay.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\IHM.cpp">
+    <ClCompile Include="dev\src\IHM.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\KeyboardMouse.cpp">
+    <ClCompile Include="dev\src\KeyboardMouse.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\Player.cpp">
+    <ClCompile Include="dev\src\Player.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\SaveReload.cpp">
+    <ClCompile Include="dev\src\SaveReload.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
+    <ClCompile Include="dev\src\Texture.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\Unit.cpp">
+    <ClCompile Include="dev\src\Unit.cpp">
       <Filter>Fichiers sources\Class</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="dev\src\main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\HashTable.cpp">
+    <ClCompile Include="dev\src\HashTable.cpp">
       <Filter>Fichiers sources\Class\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="src\LTimer.cpp">
+    <ClCompile Include="dev\src\LTimer.cpp">
       <Filter>Fichiers sources\Class\Misc</Filter>
     </ClCompile>
   </ItemGroup>
