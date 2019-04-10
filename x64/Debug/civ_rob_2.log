@@ -1,0 +1,110 @@
+﻿  City.cpp
+D:\Downloads\civ_rob_2\dev\src\City.cpp(311): warning C4267: 'initialisation' : conversion de 'size_t' en 'unsigned int', perte possible de données
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(126): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\City.cpp(244): note: voir la référence à l'instanciation de la fonction modèle 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' en cours de compilation
+          with
+          [
+              _Ty=Texture *,
+              T=std::vector<Texture *,std::allocator<Texture *>>
+          ]
+  GamePlay.cpp
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(126): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\GamePlay.cpp(58): note: voir la référence à l'instanciation de la fonction modèle 'unsigned int searchIndex<std::vector<Texte *,std::allocator<_Ty>>>(std::string,const T &)' en cours de compilation
+          with
+          [
+              _Ty=Texte *,
+              T=std::vector<Texte *,std::allocator<Texte *>>
+          ]
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(100): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\GamePlay.cpp(98): note: voir la référence à l'instanciation de la fonction modèle 'void fillTabHachage<std::vector<ButtonTexte *,std::allocator<_Ty>>>(T &,std::vector<unsigned int,std::allocator<unsigned int>> &)' en cours de compilation
+          with
+          [
+              _Ty=ButtonTexte *,
+              T=std::vector<ButtonTexte *,std::allocator<ButtonTexte *>>
+          ]
+  HashTable.cpp
+D:\Downloads\civ_rob_2\dev\src\HashTable.cpp(34): warning C4267: 'initialisation' : conversion de 'size_t' en 'unsigned int', perte possible de données
+D:\Downloads\civ_rob_2\dev\src\HashTable.cpp(34): warning C4267: 'initialisation' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+D:\Downloads\civ_rob_2\dev\src\HashTable.cpp(53): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+D:\Downloads\civ_rob_2\dev\src\HashTable.cpp(74): warning C4100: 'y' : paramètre formel non référencé
+D:\Downloads\civ_rob_2\dev\src\HashTable.cpp(74): warning C4100: 'x' : paramètre formel non référencé
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(126): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\HashTable.cpp(44): note: voir la référence à l'instanciation de la fonction modèle 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' en cours de compilation
+          with
+          [
+              _Ty=Texture *,
+              T=std::vector<Texture *,std::allocator<Texture *>>
+          ]
+  IHM.cpp
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(100): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\IHM.cpp(719): note: voir la référence à l'instanciation de la fonction modèle 'void fillTabHachage<std::vector<Texture *,std::allocator<_Ty>>>(T &,std::vector<unsigned int,std::allocator<unsigned int>> &)' en cours de compilation
+          with
+          [
+              _Ty=Texture *,
+              T=std::vector<Texture *,std::allocator<Texture *>>
+          ]
+D:\Downloads\civ_rob_2\dev\inc\IHM.h(203): warning C4267: 'initialisation' : conversion de 'size_t' en 'unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\IHM.cpp(812): note: voir la référence à l'instanciation de la fonction modèle 'void deleteDyTabPlayerAndTextures<std::vector<Player *,std::allocator<_Ty>>>(T &,const std::string &)' en cours de compilation
+          with
+          [
+              _Ty=Player *,
+              T=std::vector<Player *,std::allocator<Player *>>
+          ]
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(126): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\IHM.cpp(1062): note: voir la référence à l'instanciation de la fonction modèle 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' en cours de compilation
+          with
+          [
+              _Ty=Texture *,
+              T=std::vector<Texture *,std::allocator<Texture *>>
+          ]
+  KeyboardMouse.cpp
+D:\Downloads\civ_rob_2\dev\src\KeyboardMouse.cpp(52): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+D:\Downloads\civ_rob_2\dev\src\KeyboardMouse.cpp(156): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+D:\Downloads\civ_rob_2\dev\src\KeyboardMouse.cpp(425): warning C4100: 'sysinfo' : paramètre formel non référencé
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(126): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\KeyboardMouse.cpp(528): note: voir la référence à l'instanciation de la fonction modèle 'unsigned int searchIndex<std::vector<ButtonTexte *,std::allocator<_Ty>>>(std::string,const T &)' en cours de compilation
+          with
+          [
+              _Ty=ButtonTexte *,
+              T=std::vector<ButtonTexte *,std::allocator<ButtonTexte *>>
+          ]
+  LTimer.cpp
+  main.cpp
+D:\Downloads\civ_rob_2\dev\src\main.cpp(31): warning C4100: 'argv' : paramètre formel non référencé
+D:\Downloads\civ_rob_2\dev\src\main.cpp(31): warning C4100: 'argc' : paramètre formel non référencé
+D:\Downloads\civ_rob_2\dev\src\main.cpp(55): warning C4189: 'SDL_EnableUNICODE' : variable locale initialisée mais non référencée
+  Player.cpp
+D:\Downloads\civ_rob_2\dev\src\Player.cpp(43): warning C4267: 'initialisation' : conversion de 'size_t' en 'unsigned int', perte possible de données
+D:\Downloads\civ_rob_2\dev\src\Player.cpp(61): warning C4267: '=' : conversion de 'size_t' en 'unsigned int', perte possible de données
+  SaveReload.cpp
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(126): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\SaveReload.cpp(308): note: voir la référence à l'instanciation de la fonction modèle 'unsigned int searchIndex<std::vector<ButtonTexte *,std::allocator<_Ty>>>(std::string,const T &)' en cours de compilation
+          with
+          [
+              _Ty=ButtonTexte *,
+              T=std::vector<ButtonTexte *,std::allocator<ButtonTexte *>>
+          ]
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(100): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\SaveReload.cpp(313): note: voir la référence à l'instanciation de la fonction modèle 'void fillTabHachage<std::vector<ButtonTexte *,std::allocator<_Ty>>>(T &,std::vector<unsigned int,std::allocator<unsigned int>> &)' en cours de compilation
+          with
+          [
+              _Ty=ButtonTexte *,
+              T=std::vector<ButtonTexte *,std::allocator<ButtonTexte *>>
+          ]
+  Texture.cpp
+D:\Downloads\civ_rob_2\dev\src\Texture.cpp(644): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+D:\Downloads\civ_rob_2\dev\src\Texture.cpp(646): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+D:\Downloads\civ_rob_2\dev\src\Texture.cpp(652): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+D:\Downloads\civ_rob_2\dev\src\Texture.cpp(654): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+D:\Downloads\civ_rob_2\dev\src\Texture.cpp(841): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+D:\Downloads\civ_rob_2\dev\src\Texture.cpp(843): warning C4238: extension non standard utilisée : classe rvalue utilisée comme lvalue
+  Unit.cpp
+D:\Downloads\civ_rob_2\dev\inc\HashTable.h(126): warning C4267: 'argument' : conversion de 'size_t' en 'const unsigned int', perte possible de données
+  D:\Downloads\civ_rob_2\dev\src\Unit.cpp(422): note: voir la référence à l'instanciation de la fonction modèle 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' en cours de compilation
+          with
+          [
+              _Ty=Texture *,
+              T=std::vector<Texture *,std::allocator<Texture *>>
+          ]
+  Génération de code en cours...
+  civ_rob_2.vcxproj -> D:\Downloads\civ_rob_2\x64\Debug\civ_rob_2.exe

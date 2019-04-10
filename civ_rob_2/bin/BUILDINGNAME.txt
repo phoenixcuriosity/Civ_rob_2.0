@@ -1,7 +1,0 @@
-granary
-field
-library
-couthouse
-dock
-caserne
-lab
