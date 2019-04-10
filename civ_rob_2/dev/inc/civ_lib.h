@@ -106,6 +106,16 @@ inline Uint8 getRefreshRate()
 const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
 
+
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
+
+
+
+
+
+
 /* *********************************************************
  *						 Enum							   *
  ********************************************************* */
@@ -342,6 +352,10 @@ struct AllTextures {
 	std::vector<unsigned int> citieMapIndex;
 };
 struct AllTextes {
+
+	/* déjà en O(1) pas besoin d'index */
+	std::vector<Texte*> number;
+
 	std::vector<Texte*> titleScreen;
 	std::vector<Texte*> newGame;
 	std::vector<Texte*> mainMap;

@@ -149,7 +149,8 @@ Texture::~Texture()
 	if (_renderer != nullptr)
 		_renderer = nullptr;
 
-	if (_texture != nullptr) {
+	if (_texture != nullptr) 
+	{
 		SDL_DestroyTexture(_texture);
 		_texture = nullptr;
 	}
@@ -368,7 +369,7 @@ Texte::Texte(SDL_Renderer*& renderer, TTF_Font* font[],
 	Uint8 type, SDL_Color txtcolor, SDL_Color backcolor, Uint8 size, Uint8 alpha, Uint16 angle, Uint8 center) :
 	Texture(renderer, image, msg, stateScreen, select, x, y, w, h, alpha, angle, center),
 	_type(type), _txtcolor(txtcolor), _backcolor(backcolor),
-	_size(size)
+	_size(size), _font()
 {
 	for (unsigned int i = 0; i < MAX_FONT; i++)
 		_font[i] = font[i];

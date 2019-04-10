@@ -41,6 +41,8 @@ const int initSizeView = 7;
 // taille de l'influence de la citie initialement
 const int initSizeInfluence = 2;
 
+const unsigned int MAX_POP = 50;
+
 
 
 

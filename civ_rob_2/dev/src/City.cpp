@@ -244,6 +244,8 @@ void City::afficher(Sysinfo& sysinfo)
 	sysinfo.allTextures.citieMap[searchIndex(_image, sysinfo.allTextures.citieMap)]->render(x, y);
 
 	sysinfo.allTextes.mainMap[searchIndex(_name, sysinfo.allTextes.mainMap)]->render(x + sysinfo.map.tileSize / 2, y + sysinfo.map.tileSize);
+
+	sysinfo.allTextes.number[floor(_nbpop)]->render(x + sysinfo.map.tileSize / 2 - 20, y + sysinfo.map.tileSize - 6);
 }
 
 /*

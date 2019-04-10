@@ -553,8 +553,16 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		nonTransparent, no_angle, center_x);
 
 
-	/*** STATEscreennewgame ***/
+	/*** STATEmainmap ***/
 	sysinfo.var.statescreen = STATEmainmap;
+
+	for (unsigned int i = 0; i < MAX_POP; i++)
+	{
+		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
+			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.number,
+			blended, std::to_string(i), { 255, 255, 255, 255 }, NoColor, 18, 1000, 1000,
+			nonTransparent, no_angle);
+	}
 
 	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.mainMap,
@@ -1340,6 +1348,7 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	 *				 START delete Texte*					   *
 	 ********************************************************* */
 
+	deleteDyTabPlayerAndTextures(sysinfo.allTextes.number, "Texte");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.titleScreen, "Texte");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.newGame, "Texte");
 	deleteDyTabPlayerAndTextures(sysinfo.allTextes.mainMap, "Texte");
