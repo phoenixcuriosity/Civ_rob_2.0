@@ -80,19 +80,6 @@ Player::~Player()
 
 
 /*
-* NAME : addEmptyUnit
-* ROLE : Initialisation d'une Unit vide
-* INPUT  PARAMETERS : void
-* OUTPUT PARAMETERS : Initialisation d'une Unit vide
-* RETURNED VALUE    : void
-*/
-void Player::addEmptyUnit()
-{
-	_tabUnit.push_back(new Unit());
-}
-
-
-/*
 * NAME : addUnit
 * ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)
 * INPUT  PARAMETERS : Spécifications demandées (nom, positions, ...)

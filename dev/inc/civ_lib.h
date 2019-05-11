@@ -120,17 +120,16 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
  *						 Enum							   *
  ********************************************************* */
 
+ // type de sol Textures
+enum GroundTexture_Type : Uint8 { grassT, waterT, deepwaterT, toolbarT};
+
 // type de sol
 enum Ground_Type : Uint8 { noGround, grass, water, deepwater, dirt, sand};
 
 // spécifications du terrain
 enum GroundSpec_Type : Uint8 { specnothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; 
 
-// différents état de l'écran
-enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame, STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
 
-// spécifications de la séléction
-enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };
 
 
 
@@ -301,14 +300,14 @@ struct Var {
 		état de la sélection du joueur
 		enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };
 	*/
-	Uint8 select = selectnothing;
+	Select_Type select = selectnothing;
 
 	/* 
 		état de l'écran du joueur
 		enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame,
 		STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
 	*/
-	Uint8 statescreen = 0;
+	State_Type statescreen = STATEnothing;
 
 
 

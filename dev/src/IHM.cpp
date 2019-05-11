@@ -288,7 +288,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	*/
 	for (unsigned int i = 0; i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapptile, sysinfo.var.statescreen, sysinfo.var.select,
-			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayertile" + std::to_string(i) + ".bmp", (Uint8)96,
+			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayertile" + std::to_string(i) + ".bmp", (Transparance_Type)96,
 			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle);
 
 
@@ -1002,7 +1002,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			for (unsigned int j = 0; j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
 			{
-				sysinfo.allTextures.ground[3]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
+				sysinfo.allTextures.ground[toolbarT]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
 			}
 				
 		}
@@ -1139,7 +1139,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		break;
 	}
 	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		blended, std::to_string(sysinfo.screen.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 50, center_x);
+		blended, std::to_string(sysinfo.screen.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 50, no_angle, center_x);
 
 	/* ### Don't put code below here ### */
 
@@ -1173,13 +1173,13 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 			switch (sysinfo.map.maps[m][n].tile_ground)
 			{
 			case grass:
-				sysinfo.allTextures.ground[0]->render(x, y);
+				sysinfo.allTextures.ground[grassT]->render(x, y);
 				break;
 			case water:
-				sysinfo.allTextures.ground[1]->render(x, y);
+				sysinfo.allTextures.ground[waterT]->render(x, y);
 				break;
 			case deepwater:
-				sysinfo.allTextures.ground[2]->render(x, y);
+				sysinfo.allTextures.ground[deepwaterT]->render(x, y);
 				break;
 			}
 

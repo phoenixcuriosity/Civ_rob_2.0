@@ -38,6 +38,7 @@
 #include <ctime>
 #include <cmath>
 #include <vector>
+#include <map>
 #include <exception>
 #include <stdexcept>
 #include "wtypes.h"

@@ -27,31 +27,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dev\src\City.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\GamePlay.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\IHM.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\KeyboardMouse.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="dev\src\main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\Player.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\SaveReload.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\Texture.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\Unit.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="dev\src\LTimer.cpp">
@@ -60,36 +36,36 @@
     <ClCompile Include="dev\src\HashTable.cpp">
       <Filter>Fichiers sources\Classes\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="dev\src\Unit.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\src\Texture.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\src\SaveReload.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\src\Player.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\src\KeyboardMouse.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\src\IHM.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\src\GamePlay.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dev\src\City.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dev\inc\City.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="dev\inc\civ_lib.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="dev\inc\GamePlay.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\IHM.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\KeyboardMouse.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="dev\inc\LIB.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\Player.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\SaveReload.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\Texture.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\Unit.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="dev\inc\HashTable.h">
@@ -97,6 +73,30 @@
     </ClInclude>
     <ClInclude Include="dev\inc\LTimer.h">
       <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\Unit.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\Texture.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\SaveReload.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\Player.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\KeyboardMouse.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\IHM.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\GamePlay.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="dev\inc\City.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

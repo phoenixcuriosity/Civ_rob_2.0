@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
 	IHM::initFile(sysinfo.file);
 	IHM::initTile(sysinfo.map);
 
+
 	IHM::logfileconsole("________PROGRAMME START________");
 
 	if (IHM::initSDL(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font))

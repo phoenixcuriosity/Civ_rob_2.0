@@ -40,16 +40,6 @@ public:
 	Player();
 	Player(const std::string&);
 	~Player();
-
-	
-	/*
-	 * NAME : addEmptyUnit
-	 * ROLE : Initialisation d'une Unit vide
-	 * INPUT  PARAMETERS : void
-	 * OUTPUT PARAMETERS : Initialisation d'une Unit vide
-	 * RETURNED VALUE    : void
-	 */
-	virtual void addEmptyUnit();
 	
 	
 	/*
