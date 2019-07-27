@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.3
+	last modification on this file on version:0.16
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -92,6 +92,16 @@ public:
 	* RETURNED VALUE    : void
 	*/
 	static void calculImage(Sysinfo&);
+
+	/*
+	* NAME : readXmlTexte
+	* ROLE : Initialisation des Textes par la lecture du fichier Texte.xml
+	* ROLE : Enregistrement des pointeurs dans des tableaux
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
+	* RETURNED VALUE    : void
+	*/
+	static void readXmlTexte(tinyxml2::XMLDocument& texteFile, SDL_Renderer*& renderer, TTF_Font* font[],AllTextes& allTextes);
 
 
 public:
@@ -205,16 +215,16 @@ void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name)
 	{
 		if (dytab[i] != nullptr)
 		{
-			IHM::logfileconsole("Delete " + name + " name = " + dytab[i]->GETname() + " Success");
+			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + dytab[i]->GETname() + " Success");
 			delete dytab[i];
 		}
 	}
 	for (unsigned int i = 0; i < size; i++)
 		dytab.pop_back();
 	if (dytab.size() != 0)
-		IHM::logfileconsole("___________ERROR : " + name + ".size() != 0");
+		IHM::logfileconsole("[ERROR]___:___________ERROR : " + name + ".size() != 0");
 	else
-		IHM::logfileconsole("Delete ALL " + name + " Success");
+		IHM::logfileconsole("[INFO]___: Delete ALL " + name + " Success");
 }
 
 

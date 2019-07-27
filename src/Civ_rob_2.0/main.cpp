@@ -23,6 +23,7 @@
 */
 
 #include "IHM.h"
+#include "LoadConfig.h"
 
 /* *********************************************************
  *						MAIN							   *
@@ -34,22 +35,28 @@ int main(int argc, char* argv[])
 
 	srand((unsigned int)time(NULL));
 
-	clock_t t1, t2; // calcul du temps pour calculimage
-	t1 = clock();
+	auto start = std::chrono::system_clock::now();
+	auto end = std::chrono::system_clock::now();
+	std::chrono::duration<double> elapsed_seconds = end - start;
 
 	IHM::initFile(sysinfo.file);
+
+	IHM::logfileconsole("[INFO]___: ________PROGRAMME START________");
+
+	LoadConfig::initMain(sysinfo);
+
 	IHM::initTile(sysinfo.map);
 
-
-	IHM::logfileconsole("________PROGRAMME START________");
+	
 
 	if (IHM::initSDL(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font))
 	{
 		Unit::loadUnitAndSpec(sysinfo);
 		IHM::calculImage(sysinfo);
 		
-		t2 = clock();
-		IHM::logfileconsole("temps d'execution de l'initialisation : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC));
+		end = std::chrono::system_clock::now();
+		elapsed_seconds = end - start;
+		IHM::logfileconsole("[INFO]___: temps d'execution de l'initialisation : " + std::to_string(elapsed_seconds.count()));
 
 		IHM::titleScreen(sysinfo);
 
@@ -66,8 +73,7 @@ int main(int argc, char* argv[])
 	}
 	IHM::deleteAll(sysinfo);
 
-	IHM::logfileconsole("SDL_Quit Success");
-	IHM::logfileconsole("________PROGRAMME FINISH________");
+
 	return 0;
 }
 

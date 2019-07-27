@@ -93,11 +93,7 @@ enum Center_Type : Uint8 { nocenter, center_x, center_y, center };
 */
 enum Rotation_Type : Uint16 { no_angle, inverse = 180 };
 
-// différents état de l'écran
-enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame, STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
 
-// spécifications de la séléction
-enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };
 
 
 
@@ -140,11 +136,10 @@ public:
 	 * OUTPUT PARAMETERS : Allocation dynamique d'une Texture dans le tableau correspondant
 	 * RETURNED VALUE    : void
 	 */
-	static void loadImage(	
-							SDL_Renderer*& renderer,
+	static void loadImage(	SDL_Renderer*& renderer,
 							std::vector<Texture*>& tabTexture,
-							State_Type stateScreen,
-							Select_Type select,
+							Uint8 stateScreen,
+							Uint8 select,
 							std::string path,
 							std::string msg,
 							Transparance_Type alpha,
@@ -166,8 +161,7 @@ public:
 	 * OUTPUT PARAMETERS : Permet de centrer la Texture
 	 * RETURNED VALUE    : void
 	 */
-	static void centrage(	
-							int& xc,
+	static void centrage(	int& xc,
 							int& yc,
 							int iW,
 							int iH,
@@ -181,12 +175,11 @@ public:
 	 *					Texture::METHODES					   *
 	 ********************************************************* */
 
-	Texture(	
-				SDL_Renderer*& renderer,
+	Texture(	SDL_Renderer*& renderer,
 				SDL_Texture* image,
 				std::string msg,
-				State_Type stateScreen,
-				Select_Type select,
+				Uint8 stateScreen,
+				Uint8 select,
 				unsigned int x,
 				unsigned int y,
 				int w,
@@ -195,7 +188,6 @@ public:
 				Rotation_Type angle,
 				Center_Type center = nocenter
 			);
-
 	~Texture();
 
 
@@ -206,11 +198,10 @@ public:
 	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
 	 * RETURNED VALUE    : SDL_Rect : Rectangle
 	 */
-	SDL_Rect rectangle	(	
-							int xc,
-							int yc,
-							int w,
-							int h
+	SDL_Rect rectangle(	int xc,
+						int yc,
+						int w, 
+						int h
 						);
 
 	
@@ -226,7 +217,9 @@ public:
 	 * OUTPUT PARAMETERS : rendre la Texture
 	 * RETURNED VALUE    : void
 	 */
-	virtual void render(int = -1, int = -1);
+	virtual void render(	int = -1,
+							int = -1
+						);
 
 	/*
 	 * NAME : renderTextureTestStates
@@ -235,9 +228,8 @@ public:
 	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
 	 * RETURNED VALUE    : void
 	 */
-	virtual bool renderTextureTestStates(	
-											State_Type stateScreen,
-											Select_Type select,
+	virtual bool renderTextureTestStates(	Uint8 stateScreen,
+											Uint8 select,
 											int x = -1,
 											int y = -1
 										);
@@ -258,16 +250,18 @@ public:
 	inline virtual int GETdstw()const { return _dst.w; };
 	inline virtual int GETdsth()const { return _dst.h; };
 	inline virtual std::string GETname() const { return _name; };
-	inline virtual State_Type GETstateScreen() const { return _stateScreen; };
-	inline virtual Select_Type GETselect()const { return _select; };
+	inline virtual Uint8 GETstateScreen() const { return _stateScreen; };
+	inline virtual Uint8 GETselect()const { return _select; };
 	inline virtual Transparance_Type GETalpha()const { return _alpha; };
 	inline virtual Center_Type GETcenter()const { return _center; };
 	inline virtual Rotation_Type GETangle()const { return _angle; };
 
 	inline virtual void SETtexture(SDL_Texture* texture)
 	{
-		if (_texture != texture) {
-			if (_texture != nullptr) {
+		if (_texture != texture)
+		{
+			if (_texture != nullptr)
+			{
 				SDL_DestroyTexture(_texture);
 				_texture = nullptr;
 			}
@@ -281,16 +275,18 @@ public:
 	inline virtual void SETname(std::string msg) { _name = msg; };
 	inline virtual void SETalpha(Transparance_Type alpha)
 	{
-		if (_alpha != alpha) {
+		if (_alpha != alpha)
+		{
 			_alpha = alpha;
 			if (SDL_SetTextureAlphaMod(_texture, _alpha) != 0)
 				_alpha = (Transparance_Type)255;
 		}
 	}
-	inline virtual void SETcenter(Center_Type center)
+	inline virtual void SETcenter(Center_Type cen)
 	{
-		if (_center != center) {
-			_center = center;
+		if (_center != cen)
+		{
+			_center = cen;
 			centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
 		}
 	};
@@ -318,10 +314,10 @@ private:
 	std::string _name;
 
 	// ecran dans le quel la Texture s'affiche (titre, play, score)
-	State_Type _stateScreen;
+	Uint8 _stateScreen;
 
 	// selection pour l'affichage (selectnothing, pause, win, lost)
-	Select_Type _select;
+	Uint8 _select;
 
 	// transparance de la Texture
 	Transparance_Type _alpha;
@@ -367,13 +363,12 @@ public:
 	 * OUTPUT PARAMETERS : Permet de créer un ptr sur une SDL_Texture
 	 * RETURNED VALUE    : SDL_Texture*
 	 */
-	static SDL_Texture* createSDL_TextureFromTexte	(
-														SDL_Renderer*& renderer,
-														Texte_Type type,
-														std::string message,
-														SDL_Color color,
-														SDL_Color colorback,
-														TTF_Font* font
+	static SDL_Texture* createSDL_TextureFromTexte(	SDL_Renderer*& renderer,
+													Texte_Type type,
+													std::string message,
+													SDL_Color color,
+													SDL_Color colorback,
+													TTF_Font* font
 													);
 
 		
@@ -396,16 +391,15 @@ public:
 	 * OUTPUT PARAMETERS : création et ajout d'un objet Texte
 	 * RETURNED VALUE    : void
 	 */
-	static void loadTexte(	
-							SDL_Renderer*& renderer,
+	static void loadTexte(	SDL_Renderer*& renderer,
 							TTF_Font* font[],
-							State_Type stateScreen,
-							Select_Type select,
+							Uint8 stateScreen,
+							Uint8 select,
 							std::vector<Texte*>& tabTexte,
 							Texte_Type type,
 							std::string msg,
 							SDL_Color color,
-							SDL_Color backcolor, 
+							SDL_Color backcolor,
 							Uint8 size,
 							int x,
 							int y,
@@ -433,19 +427,18 @@ public:
 	 * OUTPUT PARAMETERS : créer un ptr sur SDL_Texture temporaire pour afficher le texte à l'écran
 	 * RETURNED VALUE    : void
 	 */
-	static void writeTexte	(	
-								SDL_Renderer*& renderer,
-								TTF_Font* font[],
-								Texte_Type type,
-								std::string msg,
-								SDL_Color color,
-								SDL_Color backcolor,
-								Uint8 size,
-								unsigned int x,
-								unsigned int y, 
-								Rotation_Type angle,
-								Center_Type cnt = nocenter
-							);
+	static void writeTexte(	SDL_Renderer*& renderer,
+							TTF_Font* font[],
+							Texte_Type type,
+							std::string msg,
+							SDL_Color color,
+							SDL_Color backcolor,
+							Uint8 size,
+							unsigned int x,
+							unsigned int y,
+							Rotation_Type angle,
+							Center_Type cnt = nocenter
+						);
 
 
 
@@ -454,25 +447,24 @@ public:
 	 *				Texte::METHODES							   *
 	 ********************************************************* */
 
-	Texte	(	
-				SDL_Renderer*& renderer,
-				TTF_Font* font[],
-				SDL_Texture* image,
-				std::string msg,
-				State_Type stateScreen,
-				Select_Type select,
-				int x,
-				int y,
-				int w,
-				int h,
-				Texte_Type type,
-				SDL_Color txtcolor,
-				SDL_Color backcolor,
-				Uint8 size,
-				Transparance_Type alpha,
-				Rotation_Type angle,
-				Center_Type center = nocenter
-			);
+	Texte(	SDL_Renderer*& renderer,
+			TTF_Font* font[],
+			SDL_Texture* image,
+			std::string msg,
+			Uint8 stateScreen,
+			Uint8 select,
+			int x,
+			int y,
+			int w,
+			int h,
+			Texte_Type type,
+			SDL_Color txtcolor,
+			SDL_Color backcolor,
+			Uint8 size,
+			Transparance_Type alpha,
+			Rotation_Type angle,
+			Center_Type center = nocenter
+		);
 	~Texte();
 
 	
@@ -483,7 +475,9 @@ public:
 	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
 	 * RETURNED VALUE    : bool : false = pas les meme/ true = meme couleur
 	 */
-	virtual bool isSameColor(SDL_Color, SDL_Color) const;
+	virtual bool isSameColor(	SDL_Color,
+								SDL_Color
+							) const;
 
 
 	/*
@@ -509,7 +503,7 @@ public:
 
 	virtual void SETname(std::string msg);
 	virtual void SETtype(Texte_Type type);
-	virtual void SETsize(Uint8 size);
+	virtual void SETsize(Uint8 type);
 	virtual void SETtxtcolor(SDL_Color txtcolor);
 	virtual void SETbackcolor(SDL_Color backcolor);
 
@@ -581,18 +575,17 @@ public:
 	 * OUTPUT PARAMETERS : création et ajout d'un objet ButtonTexte
 	 * RETURNED VALUE    : void
 	 */
-	static void createButtonImage(	
-									SDL_Renderer*& renderer,
+	static void createButtonImage(	SDL_Renderer*& renderer,
 									std::vector<ButtonImage*>& tabButtonImage,
-									State_Type stateScreen,
-									Select_Type select,
+									Uint8 stateScreen,
+									Uint8 select,
 									std::string path,
 									std::string msg,
 									Transparance_Type alpha,
 									int x,
 									int y,
 									unsigned int w,
-									unsigned int h, 
+									unsigned int h,
 									Rotation_Type angle,
 									Center_Type cnt = nocenter
 								);
@@ -603,17 +596,16 @@ public:
 	 *					ButtonImage::METHODES				   *
 	 ********************************************************* */
 
-	ButtonImage	(	
-					SDL_Renderer*& renderer,
+	ButtonImage(	SDL_Renderer*& renderer,
 					SDL_Texture* image,
-					const std::string& msg, 
-					State_Type stateScreen,
-					Select_Type select,
+					const std::string& msg,
+					Uint8 stateScreen,
+					Uint8 select,
 					int x,
-					int y,
+					int y, 
 					int w, 
 					int h,
-					Transparance_Type alpha,
+					Transparance_Type alpha, 
 					Rotation_Type angle,
 					SDL_Texture* imageOn,
 					Center_Type center = nocenter
@@ -629,11 +621,10 @@ public:
 	 * OUTPUT PARAMETERS : Validation ou non du bouton
 	 * RETURNED VALUE    : bool : false = pas valide / true = valide
 	 */
-	virtual bool searchButtonImage	(
-										State_Type stateScreen,
-										signed int x, 
-										signed int y
-									);
+	virtual bool searchButtonImage(	Uint8 stateScreen,
+									signed int x,
+									signed int y
+								   );
 
 
 	/*
@@ -643,7 +634,7 @@ public:
 	 * OUTPUT PARAMETERS : Affiche le bouton
 	 * RETURNED VALUE    : bool : false = non affiché / true = affichage
 	 */
-	virtual bool renderButtonImage(State_Type stateScreen);
+	virtual bool renderButtonImage(Uint8 stateScreen);
 
 
 	/*
@@ -742,23 +733,22 @@ public:
 	 * OUTPUT PARAMETERS : création et ajout d'un objet ButtonTexte
 	 * RETURNED VALUE    : void
 	 */
-	static void createButtonTexte	(	
-										SDL_Renderer*& renderer, 
-										TTF_Font* font[],
-										State_Type stateScreen,
-										Select_Type select,
-										std::vector<ButtonTexte*>& tabButtonTexte,
-										Texte_Type type,
-										std::string msg,
-										SDL_Color color,
-										SDL_Color backcolor,
-										Uint8 size,
-										int x,
-										int y,
-										Transparance_Type alpha,
-										Rotation_Type angle,
-										Center_Type centerButtonTexte = nocenter
-									);
+	static void createButtonTexte(	SDL_Renderer*& renderer,
+									TTF_Font* font[],
+									Uint8 stateScreen,
+									Uint8 select,
+									std::vector<ButtonTexte*>& tabButtonTexte,
+									Texte_Type type,
+									std::string msg,
+									SDL_Color color,
+									SDL_Color backcolor,
+									Uint8 size,
+									int x,
+									int y,
+									Transparance_Type alpha,
+									Rotation_Type angle,
+									Center_Type centerButtonTexte = nocenter
+								);
 
 
 
@@ -767,13 +757,12 @@ public:
 	 *				ButtonTexte::METHODES					   *
 	 ********************************************************* */
 
-	ButtonTexte	(
-					SDL_Renderer *renderer,
+	ButtonTexte(	SDL_Renderer *renderer,
 					TTF_Font *font[],
 					SDL_Texture* image,
 					std::string msg,
-					State_Type stateScreen,
-					Select_Type select,
+					Uint8 stateScreen,
+					Uint8 select,
 					int x,
 					int y,
 					int w,
@@ -798,10 +787,9 @@ public:
 	 * OUTPUT PARAMETERS : Validation ou non
 	 * RETURNED VALUE    : bool : false = non valide / true = valide
 	 */
-	virtual bool searchButtonTexte	(	
-										State_Type stateScreen, 
-										signed int x, 
-										signed int y
+	virtual bool searchButtonTexte(	Uint8 stateScreen,
+									signed int x,
+									signed int y
 									);
 
 
@@ -812,8 +800,7 @@ public:
 	 * OUTPUT PARAMETERS : Reset l'état _on des boutons
 	 * RETURNED VALUE    : void
 	 */
-	virtual void resetOnstateScreen	(
-										Select_Type select,
+	virtual void resetOnstateScreen(	Uint8 select,
 										unsigned int selectnothing
 									);
 
@@ -826,9 +813,8 @@ public:
 	 * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
 	 * RETURNED VALUE    : void
 	 */
-	virtual void resetOnPlayer	(	
-									unsigned int selectplayer,
-									std::vector<std::string> tabPlayerName
+	virtual void resetOnPlayer(	unsigned int selectplayer,
+								std::vector<std::string> tabPlayerName
 								);
 
 
@@ -841,12 +827,11 @@ public:
 	 * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
 	 * RETURNED VALUE    : bool : false = non afficher / true = affichage
 	 */
-	virtual bool renderButtonTexte	(	
-										State_Type stateScreen, 
-										int x = -1,
-										int y = -1,
-										Center_Type center = nocenter
-									);
+	virtual bool renderButtonTexte(	Uint8 stateScreen,
+									int x = -1,
+									int y = -1,
+									Center_Type center = nocenter
+								);
 
 
 	/*

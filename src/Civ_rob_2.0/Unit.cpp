@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.15
-	file version : 1.5
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -128,13 +128,12 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 {
 	switch (searchToMove(sysinfo, x, y))
 	{
-	case cantMove:
-		/* Aucune Action */
+	case 0:
 		break;
-	case canMove:
+	case 1:
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->move(sysinfo.var.select, sysinfo.var.s_player.selectunit, x, y);
 		break;
-	case attackMove:
+	case 2:
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack));
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack)->GETalive() == false)
 		{
@@ -193,19 +192,13 @@ int Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 				{
 					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheUnit(j)->GETy())
 					{
-						/* Check si l'unité est alliée ou ennemi */
-						
 						if (sysinfo.var.s_player.selectplayer == (int)i)
-						{
-							/* alliée */
-							return cantMove;
-						}
+							return 0;
 						else
 						{
-							/* ennemi */
 							sysinfo.var.s_player.selectPlayerToAttack = (int)i;
 							sysinfo.var.s_player.selectUnitToAttack = (int)j;
-							return attackMove;
+							return 2;
 						}
 					}
 				}
@@ -213,10 +206,8 @@ int Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 		}
 	}
 	else
-	{
-		return cantMove;
-	}
-	return canMove;
+		return 0;
+	return 1;
 }
 
 
@@ -241,6 +232,10 @@ bool Unit::irrigate(Sysinfo&)
  *				START Units::METHODS					   *
  ********************************************************* */
 
+Unit::Unit() : _name(""), _x(0), _y(0), _life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true)
+{
+	IHM::logfileconsole("Create Unit Par Defaut Success");
+}
 Unit::Unit(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
 	unsigned int def, unsigned int move, unsigned int level)
 	: _name(name), _x(x), _y(y),
@@ -302,7 +297,7 @@ void Unit::defend(unsigned int dmg)
 * OUTPUT PARAMETERS : Application du mouvement à l'unité
 * RETURNED VALUE    : void
 */
-void Unit::move(Select_Type& select, int& selectunit, int x, int y)
+void Unit::move(Uint8& select, int& selectunit, int x, int y)
 {
 	if (_movement > 0)
 	{

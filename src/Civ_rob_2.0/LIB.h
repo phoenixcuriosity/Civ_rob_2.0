@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.15
-	file version : 1.2
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,9 +36,10 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
+#include <iomanip>
 #include <cmath>
 #include <vector>
-#include <map>
 #include <exception>
 #include <stdexcept>
 #include "wtypes.h"
@@ -46,13 +47,21 @@
 
 
 /* *********************************************************
- *					Include SDL							   *
+ *						Include SDL						   *
  ********************************************************* */
 
 
 #include "../SDL2-2.0.9/include/SDL.h"
 #include "../SDL2-2.0.9/include/SDL_ttf.h"
 #include "../SDL2-2.0.9/include/SDL_image.h"
+
+
+/* *********************************************************
+ *					Include tinyxml2					   *
+ ********************************************************* */
+
+
+#include "../tinyxml2/tinyxml2.h"
 
 
 /* *********************************************************
@@ -90,6 +99,7 @@ class Citizen;
 class LTimer;
 class Player;
 class Unit;
+class LoadConfig;
 
 #endif
 

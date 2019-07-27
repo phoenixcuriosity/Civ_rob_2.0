@@ -27,76 +27,88 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dev\src\main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\LTimer.cpp">
-      <Filter>Fichiers sources\Classes\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\HashTable.cpp">
-      <Filter>Fichiers sources\Classes\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\Unit.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\Texture.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\SaveReload.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\Player.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\KeyboardMouse.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\IHM.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\GamePlay.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="dev\src\City.cpp">
-      <Filter>Fichiers sources\Classes</Filter>
-    </ClCompile>
+    <ClInclude Include="src\Civ_rob_2.0\City.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\GamePlay.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\IHM.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\KeyboardMouse.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\LoadConfig.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\Player.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\SaveReload.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\Texture.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\Unit.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\civ_lib.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\LIB.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\LTimer.h">
+      <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\HashTable.h">
+      <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tinyxml2\tinyxml2.h">
+      <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dev\inc\civ_lib.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\LIB.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\HashTable.h">
-      <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\LTimer.h">
-      <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\Unit.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\Texture.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\SaveReload.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\Player.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\KeyboardMouse.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\IHM.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\GamePlay.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="dev\inc\City.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
+    <ClCompile Include="src\tinyxml2\tinyxml2.cpp">
+      <Filter>Fichiers sources\Classes\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\main.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\City.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\GamePlay.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\IHM.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\KeyboardMouse.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\LoadConfig.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\Player.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\SaveReload.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\Texture.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\Unit.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\LTimer.cpp">
+      <Filter>Fichiers sources\Classes\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\HashTable.cpp">
+      <Filter>Fichiers sources\Classes\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

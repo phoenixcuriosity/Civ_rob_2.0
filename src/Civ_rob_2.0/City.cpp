@@ -154,11 +154,11 @@ _name(name), _x(x), _y(y), _tile(createTiles(tile)), _citizens(createCitizen(til
 _influenceLevel(1),_nbpop(1), _atq(0), _def(0), _nbhappy(0), _nbsad(0), _nbstructurebuild(0),
 _foodStock(0), _foodBalance(tile[(unsigned int)ceil((initSizeView*initSizeView) / 2)].food)
 {
-	IHM::logfileconsole("Create Citie: " + _name + " Success");
+	IHM::logfileconsole("[INFO]___: Create Citie: " + _name + " Success");
 }
 City::~City()
 {
-	IHM::logfileconsole("Destroy Citie: " + _name + " Success");
+	IHM::logfileconsole("[INFO]___: Destroy Citie: " + _name + " Success");
 }
 
 /*
@@ -347,19 +347,19 @@ unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> 
  
 Citizen::Citizen() : _tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)), _happiness(1), _food(2), _work(1), _gold(1), _revolt(0), _religious(false), _place(false)
 {
-	IHM::logfileconsole("Create Citizen par défaut Success");
+	IHM::logfileconsole("[INFO]___: Create Citizen par défaut Success");
 }
 Citizen::Citizen(Tile tile) : _tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)), _happiness(1), _food(tile.food), _work(tile.work), _gold(tile.gold), _revolt(0), _religious(false), _place(true)
 {
-	IHM::logfileconsole("Create Citizen Success");
+	IHM::logfileconsole("[INFO]___: Create Citizen Success");
 }
 Citizen::Citizen(std::vector<Tile> tile, std::vector<Citizen> citizens) : _tileOccupied(placeCitizen(tile, citizens, _food, _work, _gold)), _happiness(1), _revolt(0), _religious(false), _place(true)
 {
-	IHM::logfileconsole("Create Citizen Success");
+	IHM::logfileconsole("[INFO]___: Create Citizen Success");
 }
 Citizen::~Citizen()
 {
-	IHM::logfileconsole("Kill Citizen Success");
+	IHM::logfileconsole("[INFO]___: Kill Citizen Success");
 }
 
 /* *********************************************************

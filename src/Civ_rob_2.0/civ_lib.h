@@ -111,7 +111,7 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
  *						Constantes						   *
  ********************************************************* */
 
-
+#define configFilePath "bin/config.xml"
 
 
 
@@ -120,16 +120,17 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
  *						 Enum							   *
  ********************************************************* */
 
- // type de sol Textures
-enum GroundTexture_Type : Uint8 { grassT, waterT, deepwaterT, toolbarT};
-
 // type de sol
 enum Ground_Type : Uint8 { noGround, grass, water, deepwater, dirt, sand};
 
 // spécifications du terrain
 enum GroundSpec_Type : Uint8 { specnothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; 
 
+// différents état de l'écran
+enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame, STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
 
+// spécifications de la séléction
+enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };
 
 
 
@@ -273,18 +274,20 @@ struct Screen {
 };
 struct File {
 	const std::string log = "bin/log/log.txt";
-	const std::string readme = "bin/readme.txt";
-	const std::string BUILDING = "bin/BUILDING.txt";
-	const std::string BUILDINGNAME = "bin/BUILDINGNAME.txt";
-	const std::string CITIENAME = "bin/CITIENAME.txt";
-	const std::string UNIT = "bin/UNIT.txt";
-	const std::string UNITNAME = "bin/UNITNAME.txt";
-	const std::string SPECNAME = "bin/SPECNAME.txt";
 
-	const std::string SaveInfo = "save/SaveInfo.txt";
+	std::string readme = "";
+	std::string Texte = "";
+	std::string BUILDING = "";
+	std::string BUILDINGNAME = "";
+	std::string CITIENAME = "";
+	std::string UNIT = "";
+	std::string UNITNAME = "";
+	std::string SPECNAME = "";
 
-	std::string SaveMaps = "save/SaveMaps.txt";
-	std::string SavePlayer = "save/SavePlayer.txt";
+	std::string SaveInfo = "";
+
+	std::string SaveMaps = "";
+	std::string SavePlayer = "";
 };
 struct Var {
 
@@ -300,14 +303,14 @@ struct Var {
 		état de la sélection du joueur
 		enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };
 	*/
-	Select_Type select = selectnothing;
+	Uint8 select = selectnothing;
 
 	/* 
 		état de l'écran du joueur
 		enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame,
 		STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
 	*/
-	State_Type statescreen = STATEnothing;
+	Uint8 statescreen = 0;
 
 
 
@@ -322,13 +325,13 @@ struct Map {
 		Attention config spéciale de visual studio 2017 pour dépasser 1Mo de données dans un tableau
 		propriété -> éditeur de lien -> système -> taille de la réserve de la pile -> mettre une valeur plus grande que 1Mo
 	*/
-	unsigned int mapSize = 2048; // en pixels
-	unsigned int tileSize = 64;
-	unsigned int toolBarSize = (SCREEN_WIDTH / 10) / tileSize;
+	unsigned int mapSize = 0; // en pixels
+	unsigned int tileSize = 0;
+	unsigned int toolBarSize = 0;
 	unsigned int screenOffsetXIndexMin = 0;
 	unsigned int screenOffsetYIndexMin = 0;
-	unsigned int screenOffsetXIndexMax = ((SCREEN_WIDTH * 9) / 10) / tileSize;
-	unsigned int screenOffsetYIndexMax = SCREEN_HEIGHT / tileSize;
+	unsigned int screenOffsetXIndexMax = 0;
+	unsigned int screenOffsetYIndexMax = 0;
 	std::vector<std::vector<Tile>> maps;
 };
 struct AllTextures {

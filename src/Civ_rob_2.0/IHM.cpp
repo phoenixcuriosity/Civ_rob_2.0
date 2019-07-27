@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.10
+	last modification on this file on version:0.16
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,11 @@
 #include "HashTable.h"
 
 
+/* *********************************************************
+ *					Variable Globale					   *
+ ********************************************************* */
+
+std::ofstream logger;
 
 /* *********************************************************
  *				START INITIALISATION					   *
@@ -56,6 +61,221 @@ void IHM::initTile(Map& map)
 
 }
 
+Uint8 xmlGiveStateType(std::string type)
+{
+	if (type.compare("STATEnothing") == 0)
+	{
+		return STATEnothing;
+	}
+	else if(type.compare("STATEtitleScreen") == 0)
+	{
+		return STATEtitleScreen;
+	}
+	else if (type.compare("STATEscreennewgame") == 0)
+	{
+		return STATEscreennewgame;
+	}
+	else if (type.compare("STATEreload") == 0)
+	{
+		return STATEreload;
+	}
+	else if (type.compare("STATEmainmap") == 0)
+	{
+		return STATEmainmap;
+	}
+	else if (type.compare("STATEscience") == 0)
+	{
+		return STATEscience;
+	}
+	else if (type.compare("STATEcitiemap") == 0)
+	{
+		return STATEcitiemap;
+	}
+	else
+	{
+		return STATEnothing;
+	}
+}
+
+Uint8 xmlGiveSelectType(std::string type)
+{
+	if (type.compare("selectnothing") == 0)
+	{
+		return selectnothing;
+	}
+	else if (type.compare("NotToSelect") == 0)
+	{
+		return NotToSelect;
+	}
+	else if (type.compare("selectcreate") == 0)
+	{
+		return selectcreate;
+	}
+	else if (type.compare("selectinspect") == 0)
+	{
+		return selectinspect;
+	}
+	else if (type.compare("selectmove") == 0)
+	{
+		return selectmove;
+	}
+	else if (type.compare("selectmoveCitizen") == 0)
+	{
+		return selectmoveCitizen;
+	}
+	else
+	{
+		return selectnothing;
+	}
+}
+
+std::vector<Texte*>& xmlGiveTexteConteneur(AllTextes& allTextes, std::string type)
+{
+	if (type.compare("titleScreen") == 0)
+	{
+		return allTextes.titleScreen;
+	}
+	else if (type.compare("newGame") == 0)
+	{
+		return allTextes.newGame;
+	}
+	else if (type.compare("mainMap") == 0)
+	{
+		return allTextes.mainMap;
+	}
+	else if (type.compare("citieMap") == 0)
+	{
+		return allTextes.citieMap;
+	}
+	else
+	{
+		return allTextes.titleScreen;
+	}
+}
+
+Texte_Type xmlGiveTexteType(std::string type)
+{
+	if (type.compare("blended") == 0)
+	{
+		return blended;
+	}
+	else if (type.compare("shaded") == 0)
+	{
+		return shaded;
+	}
+	else
+	{
+		return blended;
+	}
+}
+
+SDL_Color xmlGiveColor(std::string type)
+{
+	if (type.compare("Black") == 0)
+	{
+		return Black;
+	}
+	else if (type.compare("White") == 0)
+	{
+		return White;
+	}
+	else if (type.compare("Red") == 0)
+	{
+		return Red;
+	}
+	else if (type.compare("Green") == 0)
+	{
+		return Green;
+	}
+	else if (type.compare("Blue") == 0)
+	{
+		return Blue;
+	}
+	else if (type.compare("Blue") == 0)
+	{
+		return Blue;
+	}
+	else if (type.compare("Yellow") == 0)
+	{
+		return Yellow;
+	}
+	else if (type.compare("WriteColorButton") == 0)
+	{
+		return WriteColorButton;
+	}
+	else if (type.compare("BackColorButton") == 0)
+	{
+		return BackColorButton;
+	}
+	else if (type.compare("NoColor") == 0)
+	{
+		return NoColor;
+	}
+	else
+	{
+		return NoColor;
+	}
+}
+
+Transparance_Type xmlGiveAlpha(std::string type)
+{
+	if (type.compare("nonTransparent") == 0)
+	{
+		return nonTransparent;
+	}
+	else if (type.compare("semiTransparent") == 0)
+	{
+		return semiTransparent;
+	}
+	else if (type.compare("transparent") == 0)
+	{
+		return transparent;
+	}
+	else
+	{
+		return nonTransparent;
+	}
+}
+
+Rotation_Type xmlGiveAngle(std::string type)
+{
+	if (type.compare("no_angle") == 0)
+	{
+		return no_angle;
+	}
+	else if (type.compare("inverse") == 0)
+	{
+		return inverse;
+	}
+	else
+	{
+		return no_angle;
+	}
+}
+
+Center_Type xmlGiveCenter(std::string type)
+{
+	if (type.compare("nocenter") == 0)
+	{
+		return nocenter;
+	}
+	else if (type.compare("center_x") == 0)
+	{
+		return center_x;
+	}
+	else if (type.compare("center_y") == 0)
+	{
+		return center_y;
+	}
+	else if (type.compare("center") == 0)
+	{
+		return center;
+	}
+	else
+	{
+		return nocenter;
+	}
+}
 
 /*
 * NAME : initFile
@@ -66,9 +286,11 @@ void IHM::initTile(Map& map)
 */
 void IHM::initFile(File& file)
 {
-	std::ofstream log;
-	log.open(file.log, std::ofstream::out | std::ofstream::trunc);
-	log.close();
+	logger.open(file.log, std::ofstream::out | std::ofstream::trunc);
+	if (!logger.is_open())
+	{
+		exit(EXIT_FAILURE);
+	}
 }
 
 
@@ -81,23 +303,15 @@ void IHM::initFile(File& file)
 */
 void IHM::logfileconsole(const std::string msg)
 {
-	const std::string logtxt = "bin/log/log.txt";
-	std::ofstream log(logtxt, std::ios::app);
-
 	time_t now = time(0);
 	struct tm  tstruct;
 	char  buf[80];
 	tstruct = *localtime(&now);
 	strftime(buf, sizeof(buf), "%F %X", &tstruct);
 
+	std::cout << std::endl << buf << "      " << msg;
+	logger << std::endl << buf << "      " << msg;
 
-	if (log)
-	{
-		std::cout << std::endl << buf << "\t" << msg;
-		log << std::endl << buf << "\t" << msg;
-	}
-	else
-		std::cout << std::endl << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt;
 }
 
 
@@ -110,15 +324,10 @@ void IHM::logfileconsole(const std::string msg)
 */
 void IHM::logSDLError(std::ostream &os, const std::string &msg)
 {
-	const std::string logtxt = "bin/log/log.txt";
-	std::ofstream log(logtxt, std::ios::app);
-	if (log)
-	{
-		os << msg << " error: " << SDL_GetError() << std::endl;
-		log << msg << " error: " << SDL_GetError() << std::endl;
-	}
-	else
-		std::cout << "ERREUR: Impossible d'ouvrir le fichier : " << logtxt << std::endl;
+	
+	os << msg << " error: " << SDL_GetError() << std::endl;
+	logger << msg << " error: " << SDL_GetError() << std::endl;
+	
 }
 
 
@@ -164,7 +373,7 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 			return false;
 		}
 		else
-			logfileconsole("CreateRenderer Success");
+			logfileconsole("[INFO]___: CreateRenderer Success");
 
 		if (TTF_Init() != 0)
 		{
@@ -175,12 +384,12 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 			return false;
 		}
 		else
-			logfileconsole("TTF_Init Success");
+			logfileconsole("[INFO]___: TTF_Init Success");
 
 		for (Uint8 i = 1; i < MAX_FONT; i++)
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
 
-		logfileconsole("SDL_Init Success");
+		logfileconsole("[INFO]___: SDL_Init Success");
 		return true;
 	}
 }
@@ -197,7 +406,7 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 */
 void IHM::calculImage(Sysinfo& sysinfo)
 {
-	logfileconsole("_calculImage Start_");
+	logfileconsole("[INFO]___: [START] : calculImage");
 
 	// répertoire de base de l'image
 	const std::string IPath = "bin/image/"; 
@@ -506,52 +715,17 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	
 	
 	/* *********************************************************
-	*				START sysinfo.allTexte					   *
+	 *				START sysinfo.allTexte					   *
 	 ********************************************************* */
 
 
-	/*** STATEtitleScreen ***/
-	sysinfo.var.statescreen = STATEtitleScreen;
+	tinyxml2::XMLDocument texteFile;
+	texteFile.LoadFile(sysinfo.file.Texte.c_str());
 
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.titleScreen,
-		blended, "Game dev in c++ with SDL2.0.8", { 255, 127, 127, 255 }, NoColor, 24, 0, 0,
-		nonTransparent, no_angle);
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.titleScreen,
-		blended, "La mort n'est que le commencement", { 127, 255, 127, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 800,
-		nonTransparent, no_angle, center_x);
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.titleScreen,
-		blended, "Je suis devenu la mort,", { 127, 255, 127, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 832,
-		nonTransparent, no_angle, center_x);
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.titleScreen,
-		blended, "le destructeur des Mondes", { 127, 255, 127, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 864,
-		nonTransparent, no_angle, center_x);
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.titleScreen,
-		blended, "CIVILIZATION", { 0, 64, 255, 255 }, NoColor, 70, SCREEN_WIDTH / 2, 100,
-		nonTransparent, no_angle, center_x);
-
-
-	/*** STATEscreennewgame ***/
-	sysinfo.var.statescreen = STATEscreennewgame;
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.newGame,
-		blended, "Press Return or kpad_Enter to valid selection", { 255, 64, 64, 255 }, NoColor, 24, 0, 100,
-		nonTransparent, no_angle);
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.newGame,
-		blended, "How many player(s) (max 9):", { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 132,
-		nonTransparent, no_angle, center_x);
-
+	if (texteFile.ErrorID() == 0)
+	{
+		readXmlTexte(texteFile, sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.allTextes);	
+	}
 
 	/*** STATEmainmap ***/
 	sysinfo.var.statescreen = STATEmainmap;
@@ -563,22 +737,6 @@ void IHM::calculImage(Sysinfo& sysinfo)
 			blended, std::to_string(i), { 255, 255, 255, 255 }, NoColor, 18, 1000, 1000,
 			nonTransparent, no_angle);
 	}
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.mainMap,
-		blended, "Select:", { 0, 64, 255, 255 }, NoColor, 24, 0, 600,
-		nonTransparent, no_angle);
-
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.mainMap,
-		blended, "Turn :", { 0, 64, 255, 255 }, NoColor, 24, 0, 850,
-		nonTransparent, no_angle);
-
-	sysinfo.var.select = selectnothing;
-	Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.mainMap,
-		blended, "selectnothing", { 0, 64, 255, 255 }, NoColor, 16, 78, 616,
-		nonTransparent, no_angle, center_y);
 
 	sysinfo.var.select = NotToSelect;
 	for (unsigned int i = 0; i < nbcitie; i++)
@@ -766,7 +924,131 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 	/* ### Don't put code below here ### */
 
-	logfileconsole("_calculImage End_");
+	logfileconsole("[INFO]___: [END] : calculImage");
+}
+
+/*
+* NAME : readXmlTexte
+* ROLE : Initialisation des Textes par la lecture du fichier Texte.xml
+* ROLE : Enregistrement des pointeurs dans des tableaux
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
+* RETURNED VALUE    : void
+*/
+void IHM::readXmlTexte(tinyxml2::XMLDocument& texteFile, SDL_Renderer*& renderer, TTF_Font* font[], AllTextes& allTextes)
+{
+	const char* root("Config");
+
+
+	const char* s_M_Texte("Texte"),
+		* s_Statescreen("Statescreen"),
+		* s_Select("Select"),
+		* s_TexteName("TexteName"),
+		* s_Type("Type"),
+		* s_Texte("Texte"),
+		* s_FontColor("FontColor"),
+		* s_FontColor_Simple("Simple"),
+		* s_FontColor_Simple_Condition("Condition"),
+		* s_FontColor_Simple_Color("Color"),
+		* s_FontColor_Complexe("Complexe"),
+		* s_FontColor_Complexe_condition("Condition"),
+		* s_FontColor_Complexe_R("R"),
+		* s_FontColor_Complexe_G("G"),
+		* s_FontColor_Complexe_B("B"),
+		* s_FontColor_Complexe_Alpha("Alpha"),
+		* s_BackColor("FontColor"),
+		* s_BackColor_Simple("Simple"),
+		* s_BackColor_Simple_Condition("Condition"),
+		* s_BackColor_Simple_Color("Color"),
+		* s_BackColor_Complexe("Complexe"),
+		* s_BackColor_Complexe_condition("Condition"),
+		* s_BackColor_Complexe_R("R"),
+		* s_BackColor_Complexe_G("G"),
+		* s_BackColor_Complexe_B("B"),
+		* s_BackColor_Complexe_Alpha("Alpha"),
+		* s_Size("Size"),
+		* s_X("X"),
+		* s_Y("Y"),
+		* s_Alpha("Alpha"),
+		* s_Angle("Angle"),
+		* s_Center("Center");
+
+	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_M_Texte));
+
+	SDL_Color fontColor, backColor;
+	Uint8 r(0), g(0), b(0), alpha(0), size(0);
+	int x(0), y(0);
+
+	while (node != nullptr)
+	{
+		if (strcmp(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
+			->FirstChildElement(s_FontColor_Simple_Condition)->GetText(), "true") == 0)
+		{
+			fontColor = xmlGiveColor(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
+				->FirstChildElement(s_FontColor_Simple_Color)->GetText());
+		}
+		else
+		{
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_R)->QueryIntText((int*)&r);
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_G)->QueryIntText((int*)&g);
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_B)->QueryIntText((int*)&b);
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_Alpha)->QueryIntText((int*)&alpha);
+			fontColor.r = r;
+			fontColor.g = g;
+			fontColor.b = b;
+			fontColor.a = alpha;
+		}
+
+		if (strcmp(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
+			->FirstChildElement(s_BackColor_Simple_Condition)->GetText(), "true") == 0)
+		{
+			backColor = xmlGiveColor(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
+				->FirstChildElement(s_BackColor_Simple_Color)->GetText());
+		}
+		else
+		{
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_R)->QueryIntText((int*)&r);
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_G)->QueryIntText((int*)&g);
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_B)->QueryIntText((int*)&b);
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_Alpha)->QueryIntText((int*)&alpha);
+			backColor.r = r;
+			backColor.g = g;
+			backColor.b = b;
+			backColor.a = alpha;
+		}
+
+		node->FirstChildElement(s_Size)->QueryIntText((int*)&size);
+		node->FirstChildElement(s_X)->QueryIntText(&x);
+		node->FirstChildElement(s_Y)->QueryIntText(&y);
+
+
+
+		Texte::loadTexte(renderer, font,
+			xmlGiveStateType(node->FirstChildElement(s_Statescreen)->GetText()),
+			xmlGiveSelectType(node->FirstChildElement(s_Select)->GetText()),
+			xmlGiveTexteConteneur(allTextes, node->FirstChildElement(s_TexteName)->GetText()),
+			xmlGiveTexteType(node->FirstChildElement(s_Type)->GetText()),
+			node->FirstChildElement(s_Texte)->GetText(),
+			fontColor,
+			backColor,
+			size,
+			x,
+			y,
+			xmlGiveAlpha(node->FirstChildElement(s_Alpha)->GetText()),
+			xmlGiveAngle(node->FirstChildElement(s_Angle)->GetText()),
+			xmlGiveCenter(node->FirstChildElement(s_Center)->GetText()));
+
+		/* Recherche du noeud Model suivant */
+		node = node->NextSibling();
+	}
 }
 
 
@@ -908,7 +1190,7 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 */
 void IHM::titleScreen(Sysinfo& sysinfo)
 {
-	logfileconsole("_titleScreens Start_");
+	logfileconsole("[INFO]___: [START] : titleScreen");
 
 	/* title screen init */
 	sysinfo.var.statescreen = STATEtitleScreen;
@@ -940,7 +1222,7 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 	/* ### Don't put code below here ### */
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
-	logfileconsole("_titleScreens End_");
+	logfileconsole("[INFO]___: [END] : titleScreen");
 }
 
 
@@ -954,7 +1236,7 @@ void IHM::titleScreen(Sysinfo& sysinfo)
  */
 void IHM::reloadScreen(Sysinfo& sysinfo)
 {
-	logfileconsole("_reloadScreen Start_");
+	logfileconsole("[INFO]___: [START] : reloadScreen");
 	sysinfo.var.statescreen = STATEreload;
 	SDL_RenderClear(sysinfo.screen.renderer);
 
@@ -968,7 +1250,7 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
 	/* ### Don't put code below here ### */
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
-	logfileconsole("_reloadScreen End_");
+	logfileconsole("[INFO]___: [END] : reloadScreen");
 }
 
 
@@ -983,8 +1265,11 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
  */
 void IHM::alwaysrender(Sysinfo& sysinfo)
 {
-	//clock_t t1, t2;
-	//t1 = clock();
+	/*
+	auto start = std::chrono::system_clock::now();
+	auto end = std::chrono::system_clock::now();
+	std::chrono::duration<double> elapsed_seconds = end - start;
+	*/
 
 	switch (sysinfo.var.statescreen)
 	{
@@ -1002,7 +1287,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			for (unsigned int j = 0; j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
 			{
-				sysinfo.allTextures.ground[toolbarT]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
+				sysinfo.allTextures.ground[3]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
 			}
 				
 		}
@@ -1144,8 +1429,11 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 	/* ### Don't put code below here ### */
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
-	//t2 = clock();
-	//cout << endl << "temps d'execution de alwaysrender : " + to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
+	/*
+	end = std::chrono::system_clock::now();
+	elapsed_seconds = end - start;
+	std::cout << std::endl << "temps d'execution de alwaysrender : " << std::setprecision(10) << elapsed_seconds.count();
+	*/
 }
 
 
@@ -1173,13 +1461,13 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 			switch (sysinfo.map.maps[m][n].tile_ground)
 			{
 			case grass:
-				sysinfo.allTextures.ground[grassT]->render(x, y);
+				sysinfo.allTextures.ground[0]->render(x, y);
 				break;
 			case water:
-				sysinfo.allTextures.ground[waterT]->render(x, y);
+				sysinfo.allTextures.ground[1]->render(x, y);
 				break;
 			case deepwater:
-				sysinfo.allTextures.ground[deepwaterT]->render(x, y);
+				sysinfo.allTextures.ground[2]->render(x, y);
 				break;
 			}
 
@@ -1311,7 +1599,7 @@ void IHM::countFrame(Screen& screen)
  */
 void IHM::deleteAll(Sysinfo& sysinfo)
 {
-	logfileconsole("*********_________ Start DeleteAll _________*********");
+	logfileconsole("[INFO]___: [START] *********_________ DeleteAll _________*********");
 
 	/* *********************************************************
 	 *					START delete font*					   *
@@ -1394,7 +1682,12 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 
 	/* ### Don't put code below here ### */
 
-	logfileconsole("*********_________ End DeleteAll _________*********");
+	logfileconsole("[INFO]___: [END] : *********_________ DeleteAll _________*********");
+
+	IHM::logfileconsole("[INFO]___: SDL_Quit Success");
+	IHM::logfileconsole("[INFO]___:________PROGRAMME FINISH________");
+
+	logger.close();
 }
 
 /* *********************************************************
