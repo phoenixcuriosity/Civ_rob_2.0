@@ -45,33 +45,33 @@ C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.2
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\chrono(169): message :  see reference to class template instantiation 'std::chrono::duration<__int64,std::nano>' being compiled
   IHM.cpp
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\chrono(570): message :  see reference to class template instantiation 'std::chrono::time_point<std::chrono::steady_clock,std::chrono::steady_clock::duration>' being compiled
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(956,5): warning C4189:  's_BackColor_Complexe_condition': local variable is initialized but not referenced
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(946,5): warning C4189:  's_FontColor_Complexe_condition': local variable is initialized but not referenced
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(891,5): warning C4189:  's_BackColor_Complexe_condition': local variable is initialized but not referenced
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(881,5): warning C4189:  's_FontColor_Complexe_condition': local variable is initialized but not referenced
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\HashTable.h(100,1): warning C4267:  'argument': conversion from 'size_t' to 'const unsigned int', possible loss of data
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(877): message :  see reference to function template instantiation 'void fillTabHachage<std::vector<Texture *,std::allocator<_Ty>>>(T &,std::vector<unsigned int,std::allocator<unsigned int>> &)' being compiled
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(877): message :         with
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(877): message :         [
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(877): message :             _Ty=Texture *,
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(877): message :             T=std::vector<Texture *,std::allocator<Texture *>>
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(877): message :         ]
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(804): message :  see reference to function template instantiation 'void fillTabHachage<std::vector<Texture *,std::allocator<_Ty>>>(T &,std::vector<unsigned int,std::allocator<unsigned int>> &)' being compiled
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(804): message :         with
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(804): message :         [
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(804): message :             _Ty=Texture *,
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(804): message :             T=std::vector<Texture *,std::allocator<Texture *>>
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(804): message :         ]
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\chrono(591): message :  see reference to class template instantiation 'std::chrono::duration<double,std::ratio<1,1>>' being compiled
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\chrono(169): message :  see reference to class template instantiation 'std::chrono::duration<__int64,std::nano>' being compiled
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\chrono(570): message :  see reference to class template instantiation 'std::chrono::time_point<std::chrono::steady_clock,std::chrono::steady_clock::duration>' being compiled
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.h(206,1): warning C4267:  'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1086): message :  see reference to function template instantiation 'void deleteDyTabPlayerAndTextures<std::vector<Player *,std::allocator<_Ty>>>(T &,const std::string &)' being compiled
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1086): message :         with
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1086): message :         [
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1086): message :             _Ty=Player *,
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1086): message :             T=std::vector<Player *,std::allocator<Player *>>
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1086): message :         ]
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.h(217,1): warning C4267:  'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1078): message :  see reference to function template instantiation 'void deleteDyTabPlayerAndTextures<std::vector<Player *,std::allocator<_Ty>>>(T &,const std::string &)' being compiled
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1078): message :         with
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1078): message :         [
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1078): message :             _Ty=Player *,
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1078): message :             T=std::vector<Player *,std::allocator<Player *>>
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1078): message :         ]
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\HashTable.h(126,1): warning C4267:  'argument': conversion from 'size_t' to 'const unsigned int', possible loss of data
   KeyboardMouse.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1339): message :  see reference to function template instantiation 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' being compiled
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1339): message :         with
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1339): message :         [
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1339): message :             _Ty=Texture *,
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1339): message :             T=std::vector<Texture *,std::allocator<Texture *>>
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1339): message :         ]
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1331): message :  see reference to function template instantiation 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' being compiled
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1331): message :         with
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1331): message :         [
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1331): message :             _Ty=Texture *,
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1331): message :             T=std::vector<Texture *,std::allocator<Texture *>>
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(1331): message :         ]
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\KeyboardMouse.cpp(52,6): warning C4189:  'SDL_EnableUNICODE': local variable is initialized but not referenced
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\KeyboardMouse.cpp(156,6): warning C4189:  'SDL_EnableUNICODE': local variable is initialized but not referenced
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\KeyboardMouse.cpp(425,43): warning C4100:  'sysinfo': unreferenced formal parameter
@@ -113,19 +113,19 @@ C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\SaveReload.cpp(313):
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\SaveReload.cpp(313): message :             _Ty=ButtonTexte *,
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\SaveReload.cpp(313): message :             T=std::vector<ButtonTexte *,std::allocator<ButtonTexte *>>
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\SaveReload.cpp(313): message :         ]
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(738): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(740): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(744): warning C4238:  nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(746): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(748): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(738,70): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(740,80): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(746,72): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(748,82): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(969): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(971): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(969,69): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(752): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(754): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(744,70): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(746,80): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(752,72): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(754,82): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(975): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(977): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(975,69): warning C4238:  nonstandard extension used: class rvalue used as lvalue
   Unit.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(971,79): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(977,79): warning C4238:  nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\HashTable.h(126,1): warning C4267:  'argument': conversion from 'size_t' to 'const unsigned int', possible loss of data
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(422): message :  see reference to function template instantiation 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' being compiled
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(422): message :         with

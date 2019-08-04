@@ -99,11 +99,15 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 			tabTexture.push_back(new Texture(renderer, newTexture, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, cnt));
 		}
 		else
-			IHM::logfileconsole("[ERROR]___: ___________ERROR : loadImage : cannot create Texture from : " + path);
+		{
+			IHM::exitError("[ERROR]___: loadImage : cannot create Texture from : " + path);
+		}
 		SDL_FreeSurface(loadedSurface);
 	}
 	else
-		IHM::logfileconsole("[ERROR]___:___________ERROR : loadImage : path or image are corrupt : " + path);
+	{
+		IHM::exitError("[ERROR]___: loadImage : path or image are corrupt : " + path);
+	}
 }
 
 
@@ -301,7 +305,9 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(	SDL_Renderer*& renderer,
 
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
 	if (texture == nullptr)
-		IHM::logfileconsole("[ERROR]___:___________ERROR : renderTextShaded nullptr for : " + message);
+	{
+		IHM::exitError("[ERROR]___:___________ERROR : renderTextShaded nullptr for : " + message);
+	}
 	SDL_FreeSurface(surf);
 
 	return texture;

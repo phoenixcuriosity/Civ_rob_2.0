@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.16
-	file version : 1.4
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -103,6 +103,8 @@ public:
 	*/
 	static void readXmlTexte(tinyxml2::XMLDocument& texteFile, SDL_Renderer*& renderer, TTF_Font* font[],AllTextes& allTextes);
 
+	static int determineCoor(std::string line);
+
 
 public:
 	/* *********************************************************
@@ -185,6 +187,8 @@ public:
 	/* *********************************************************
 	 *						END-GAME						   *
 	 ********************************************************* */
+
+	static void exitError(const std::string msg);
 
 	/*
 	 * NAME : deleteAll

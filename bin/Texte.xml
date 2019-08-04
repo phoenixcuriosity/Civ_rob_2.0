@@ -1,201 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Config>
-
 	<Texte>
-		<Statescreen>STATEtitleScreen</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>titleScreen</TexteName>
+		<Statescreen>STATEtitleScreen</Statescreen><Select>selectnothing</Select><TexteName>titleScreen</TexteName>
 		<Type>blended</Type>
 		<Texte>Game dev in c++ with SDL2.0.8</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>255</R>
-				<G>127</G>
-				<B>127</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>255</R><G>127</G><B>127</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>0</X>
-		<Y>0</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>nocenter</Center>
+		<Size>24</Size><X>0</X><Y>0</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
 	</Texte>
 	<Texte>
-		<Statescreen>STATEtitleScreen</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>titleScreen</TexteName>
+		<Statescreen>STATEtitleScreen</Statescreen><Select>selectnothing</Select><TexteName>titleScreen</TexteName>
 		<Type>blended</Type>
 		<Texte>La mort n'est que le commencement</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>127</R>
-				<G>255</G>
-				<B>127</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>127</R><G>255</G><B>127</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha>
 			</Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>960</X>
-		<Y>800</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>center_x</Center>
+		<Size>24</Size><X>(SCREEN_WIDTH)/(2)</X><Y>800</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_x</Center>
 	</Texte>
 	<Texte>
-		<Statescreen>STATEtitleScreen</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>titleScreen</TexteName>
+		<Statescreen>STATEtitleScreen</Statescreen><Select>selectnothing</Select><TexteName>titleScreen</TexteName>
 		<Type>blended</Type>
 		<Texte>Je suis devenu la mort,</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>127</R>
-				<G>255</G>
-				<B>127</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>127</R><G>255</G><B>127</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>960</X>
-		<Y>832</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>center_x</Center>
+		<Size>24</Size><X>(SCREEN_WIDTH)/(2)</X><Y>832</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_x</Center>
 	</Texte>
 	<Texte>
-		<Statescreen>STATEtitleScreen</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>titleScreen</TexteName>
+		<Statescreen>STATEtitleScreen</Statescreen><Select>selectnothing</Select><TexteName>titleScreen</TexteName>
 		<Type>blended</Type>
 		<Texte>le destructeur des Mondes</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>127</R>
-				<G>255</G>
-				<B>127</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>127</R><G>255</G><B>127</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>960</X>
-		<Y>864</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>center_x</Center>
+		<Size>24</Size><X>(SCREEN_WIDTH)/(2)</X><Y>864</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_x</Center>
 	</Texte>
 	<Texte>
-		<Statescreen>STATEtitleScreen</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>titleScreen</TexteName>
+		<Statescreen>STATEtitleScreen</Statescreen><Select>selectnothing</Select><TexteName>titleScreen</TexteName>
 		<Type>blended</Type>
 		<Texte>CIVILIZATION</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>0</R>
-				<G>64</G>
-				<B>255</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>70</Size>
-		<X>960</X>
-		<Y>100</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>center_x</Center>
+		<Size>70</Size><X>(SCREEN_WIDTH)/(2)</X><Y>100</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_x</Center>
 	</Texte>
 
 
@@ -208,83 +88,54 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<Texte>
-		<Statescreen>STATEscreennewgame</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>newGame</TexteName>
+		<Statescreen>STATEscreennewgame</Statescreen><Select>selectnothing</Select><TexteName>newGame</TexteName>
 		<Type>blended</Type>
 		<Texte>Press Return or kpad_Enter to valid selection</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>255</R>
-				<G>64</G>
-				<B>64</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>255</R><G>64</G><B>64</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>0</X>
-		<Y>100</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>nocenter</Center>
+		<Size>24</Size><X>0</X><Y>100</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
 	</Texte>
 	<Texte>
-		<Statescreen>STATEscreennewgame</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>newGame</TexteName>
+		<Statescreen>STATEscreennewgame</Statescreen><Select>selectnothing</Select><TexteName>newGame</TexteName>
 		<Type>blended</Type>
 		<Texte>How many player(s) (max 9):</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>255</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>255</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>960</X>
-		<Y>132</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>center_x</Center>
+		<Size>24</Size><X>(SCREEN_WIDTH)/(2)</X><Y>132</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_x</Center>
 	</Texte>
 
 
@@ -299,126 +150,326 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<Texte>
-		<Statescreen>STATEmainmap</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>mainMap</TexteName>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectnothing</Select><TexteName>mainMap</TexteName>
 		<Type>blended</Type>
 		<Texte>Select:</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>0</R>
-				<G>64</G>
-				<B>255</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>0</X>
-		<Y>600</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>nocenter</Center>
+		<Size>24</Size><X>0</X><Y>600</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
 	</Texte>
 	<Texte>
-		<Statescreen>STATEmainmap</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>mainMap</TexteName>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectnothing</Select><TexteName>mainMap</TexteName>
 		<Type>blended</Type>
 		<Texte>Turn :</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>0</R>
-				<G>64</G>
-				<B>255</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>24</Size>
-		<X>0</X>
-		<Y>850</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>nocenter</Center>
+		<Size>24</Size><X>0</X><Y>850</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
 	</Texte>
 	<Texte>
-		<Statescreen>STATEmainmap</Statescreen>
-		<Select>selectnothing</Select>
-		<TexteName>mainMap</TexteName>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectnothing</Select><TexteName>mainMap</TexteName>
 		<Type>blended</Type>
 		<Texte>selectnothing</Texte>
 		<FontColor>
-			<Simple>
-				<Condition>false</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>true</Condition>
-				<R>0</R>
-				<G>64</G>
-				<B>255</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
 		</FontColor>
 		<BackColor>
-			<Simple>
-				<Condition>true</Condition>
-				<Color>NoColor</Color>
-			</Simple>
-			<Complexe>
-				<Condition>false</Condition>
-				<R>0</R>
-				<G>0</G>
-				<B>0</B>
-				<Alpha>255</Alpha>
-			</Complexe>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>16</Size>
-		<X>78</X>
-		<Y>616</Y>
-		<Alpha>nonTransparent</Alpha>
-		<Angle>no_angle</Angle>
-		<Center>center_y</Center>
+		<Size>16</Size><X>78</X><Y>616</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_y</Center>
 	</Texte>
 
 
 
 
+
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectcreate</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>Scroll up or down</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color>
+			</Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>0</X><Y>332</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectcreate</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>Right click to create</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>18</Size><X>0</X><Y>364</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectcreate</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>create : </Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>18</Size><X>0</X><Y>400</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectcreate</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>selectcreate</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>16</Size><X>78</X><Y>616</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_y</Center>
+	</Texte>
+	
+
+
+
+
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectmove</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>Pick the unit to move</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>0</X><Y>332</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectmove</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>with Right click</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>0</X><Y>364</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectmove</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>selectmove</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>16</Size><X>78</X><Y>616</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_y</Center>
+	</Texte>
+
+
+
+
+
+
+
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectinspect</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>selectinspect</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>16</Size><X>78</X><Y>616</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_y</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectinspect</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>Pick the unit to inspect</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>0</X><Y>332</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEmainmap</Statescreen><Select>selectinspect</Select><TexteName>mainMap</TexteName>
+		<Type>blended</Type>
+		<Texte>with Right click</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>0</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>0</X><Y>364</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<Texte>
+		<Statescreen>STATEcitiemap</Statescreen><Select>selectcreate</Select><TexteName>citieMap</TexteName>
+		<Type>blended</Type>
+		<Texte>Scroll up or down</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>64</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>1620</X><Y>0</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEcitiemap</Statescreen><Select>selectcreate</Select><TexteName>citieMap</TexteName>
+		<Type>blended</Type>
+		<Texte>Left click to Select</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>64</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>1620</X><Y>32</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEcitiemap</Statescreen><Select>selectcreate</Select><TexteName>citieMap</TexteName>
+		<Type>blended</Type>
+		<Texte>create : </Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>64</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>20</Size><X>1620</X><Y>64</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
+	<Texte>
+		<Statescreen>STATEcitiemap</Statescreen><Select>selectcreate</Select><TexteName>citieMap</TexteName>
+		<Type>blended</Type>
+		<Texte>selectcreate</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>64</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>16</Size><X>1620</X><Y>96</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
+	</Texte>
 
 </Config>		
