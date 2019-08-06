@@ -717,7 +717,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 
 		if (sysinfo.var.select == selectcreate)
 		{
-			for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
+			for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 			{
 				if (sysinfo.allButton.citieMap[searchIndex(sysinfo.var.s_player.tabUnit_Struct[i].name, sysinfo.allButton.citieMap)]
 					->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
@@ -761,7 +761,7 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 			switch (sysinfo.var.select) 
 			{
 			case selectcreate:
-				for (unsigned int p = 0; p < sysinfo.var.s_player.unitNameMaxToCreate; p++) {
+				for (unsigned int p = 0; p < sysinfo.var.s_player.tabUnit_Struct.size(); p++) {
 					if (sysinfo.var.s_player.unitNameToCreate.compare(sysinfo.var.s_player.tabUnit_Struct[p].name) == 0)
 					{
 						selectunit = p;
@@ -813,7 +813,7 @@ void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 		}
 		else if (wheel == -1) 
 		{
-			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.unitNameMaxToCreate - 1)
+			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.tabUnit_Struct.size() - 1)
 				sysinfo.var.s_player.unitToCreate++;
 		}
 		Unit::searchUnit(sysinfo);

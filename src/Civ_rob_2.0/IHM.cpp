@@ -466,7 +466,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*
 		sysinfo.allTextures.unit
 	*/
-	for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
+	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.unit, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "units/" + sysinfo.var.s_player.tabUnit_Struct[i].name + ".bmp",
 			sysinfo.var.s_player.tabUnit_Struct[i].name, nonTransparent, 100, 432, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
@@ -699,7 +699,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 164,
 		nonTransparent, no_angle, center_x);
 	
-	for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
+	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
@@ -752,7 +752,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		
 
 	sysinfo.var.select = selectcreate;
-	for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
+	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
@@ -763,7 +763,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*** STATEcitiemap ***/
 	sysinfo.var.statescreen = STATEcitiemap;
 	sysinfo.var.select = selectcreate;
-	for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
+	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
@@ -1361,7 +1361,8 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
 			{
-				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0) {
+				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0)
+				{
 					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 					{
 						// affiche pour chaque joueurs les unités existantes (avec les stats)
@@ -1508,7 +1509,7 @@ void IHM::citiemap(Sysinfo& sysinfo)
 		initspace = 96;
 		for (unsigned int j = 0; j < 10; j++)
 		{
-			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.unitNameMaxToCreate)
+			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.tabUnit_Struct.size())
 				buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
 			else
 				break;

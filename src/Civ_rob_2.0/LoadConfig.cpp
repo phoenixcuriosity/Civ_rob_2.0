@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.0
+	last modification on this file on version:0.16
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -54,10 +54,8 @@ void LoadConfig::initMain(Sysinfo& sysinfo)
 						* s_Readme("Readme"),
 						* s_Texte("Texte"),
 						* s_Building("Building"),
-						* s_BuildingName("BuildingName"),
 						* s_CitieName("CitieName"),
 						* s_Unit("Unit"),
-						* s_UnitName("UnitName"),
 						* s_SpecName("SpecName"),
 						* s_SaveInfo("SaveInfo"),
 						* s_SaveMaps("SaveMaps"),
@@ -76,10 +74,8 @@ void LoadConfig::initMain(Sysinfo& sysinfo)
 		sysinfo.file.readme = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText();
 		sysinfo.file.Texte = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
 		sysinfo.file.BUILDING = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText();
-		sysinfo.file.BUILDINGNAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_BuildingName)->GetText();
 		sysinfo.file.CITIENAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText();
 		sysinfo.file.UNIT = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText();
-		sysinfo.file.UNITNAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_UnitName)->GetText();
 		sysinfo.file.SPECNAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText();
 		sysinfo.file.SaveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
 		sysinfo.file.SaveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();

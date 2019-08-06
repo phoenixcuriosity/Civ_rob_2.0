@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.4
+	last modification on this file on version:0.16
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,40 +41,36 @@
 */
 void Unit::loadUnitAndSpec(Sysinfo& sysinfo)
 {
-	std::ifstream UNIT("bin/UNIT.txt");
-	if (UNIT) 
+	tinyxml2::XMLDocument texteFile;
+	texteFile.LoadFile(sysinfo.file.UNIT.c_str());
+
+	const char* root("Root");
+
+	const char	* s_Unit("Unit"),
+					* s_Name("Name"),
+					* s_Life("Life"),
+					* s_Atq("Atq"),
+					* s_Def("Def"),
+					* s_Mouvement("Mouvement"),
+					* s_Level("Level");
+
+	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
+	Unit_Struct currentUnit;
+
+	while (node != nullptr)
 	{
-		std::string destroy;
-		Unit_Struct currentUnit;
+		currentUnit.name = node->FirstChildElement(s_Name)->GetText();
+		node->FirstChildElement(s_Life)->QueryIntText((int*)&currentUnit.life);
+		node->FirstChildElement(s_Atq)->QueryIntText((int*)& currentUnit.atq);
+		node->FirstChildElement(s_Def)->QueryIntText((int*)& currentUnit.def);
+		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)& currentUnit.movement);
+		node->FirstChildElement(s_Level)->QueryIntText((int*)& currentUnit.level);
+		
+		sysinfo.var.s_player.tabUnit_Struct.push_back(currentUnit);
 
-		UNIT >> destroy;
-		UNIT >> sysinfo.var.s_player.unitNameMaxToCreate;
-
-		for (unsigned int i = 0; i < sysinfo.var.s_player.unitNameMaxToCreate; i++)
-		{
-			UNIT >> destroy;
-			UNIT >> currentUnit.name;
-
-			UNIT >> destroy;
-			UNIT >> currentUnit.life;
-
-			UNIT >> destroy;
-			UNIT >> currentUnit.atq;
-
-			UNIT >> destroy;
-			UNIT >> currentUnit.def;
-
-			UNIT >> destroy;
-			UNIT >> currentUnit.movement;
-
-			UNIT >> destroy;
-			UNIT >> currentUnit.level;
-			sysinfo.var.s_player.tabUnit_Struct.push_back(currentUnit);
-		}
-
+		/* Recherche du noeud Model suivant */
+		node = node->NextSibling();
 	}
-	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier bin/UNIT.txt");
 }
 
 

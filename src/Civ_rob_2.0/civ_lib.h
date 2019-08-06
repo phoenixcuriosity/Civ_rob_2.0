@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.3
+	last modification on this file on version:0.16
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -139,7 +139,8 @@ enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspe
  ********************************************************* */
 
 //---------------------- Structure niveau 3 ---------------------------------------------------------------------------------------------------------
-struct Unit_Struct {
+struct Unit_Struct
+{
 
 	// nom de l'unité -> /bin/UNITNAME.txt
 	std::string name;
@@ -157,7 +158,8 @@ struct Unit_Struct {
 
 };
 //---------------------- Structure niveau 2 ---------------------------------------------------------------------------------------------------------
-struct SubcatPlayer {
+struct SubcatPlayer
+{
 
 	// *** Index ***//
 
@@ -207,13 +209,11 @@ struct SubcatPlayer {
 	// nombre de joueur sans nom
 	unsigned int nbNoNamePlayer = 0;
 
-	// nombre d'unité maximal différentes à créer 
-	unsigned int unitNameMaxToCreate = 0;
-
 	// nombre de cité maximal différentes à créer 
 	unsigned int citieNameMaxToCreate = 0;
 };
-struct Tile{
+struct Tile
+{
 
 	// index en X de la case : en tileSize
 	Uint8 indexX = 0;
@@ -255,7 +255,8 @@ struct Tile{
 	int8_t gold = -1;
 };
 //---------------------- Structure niveau 1 ---------------------------------------------------------------------------------------------------------
-struct Screen {
+struct Screen
+{
 	// ptr sur la fenetre crée par la SDL
 	SDL_Window *window = nullptr;
 
@@ -272,16 +273,15 @@ struct Screen {
 
 	int countedFrames = 0;
 };
-struct File {
+struct File
+{
 	const std::string log = "bin/log/log.txt";
 
 	std::string readme = "";
 	std::string Texte = "";
 	std::string BUILDING = "";
-	std::string BUILDINGNAME = "";
 	std::string CITIENAME = "";
 	std::string UNIT = "";
-	std::string UNITNAME = "";
 	std::string SPECNAME = "";
 
 	std::string SaveInfo = "";
@@ -289,7 +289,8 @@ struct File {
 	std::string SaveMaps = "";
 	std::string SavePlayer = "";
 };
-struct Var {
+struct Var
+{
 
 	/*** type primitif	***/
 
@@ -320,7 +321,8 @@ struct Var {
 	KeyboardMouse mouse;
 	SaveReload save;
 };
-struct Map {
+struct Map
+{
 	/*
 		Attention config spéciale de visual studio 2017 pour dépasser 1Mo de données dans un tableau
 		propriété -> éditeur de lien -> système -> taille de la réserve de la pile -> mettre une valeur plus grande que 1Mo
@@ -334,7 +336,8 @@ struct Map {
 	unsigned int screenOffsetYIndexMax = 0;
 	std::vector<std::vector<Tile>> maps;
 };
-struct AllTextures {
+struct AllTextures
+{
 	TTF_Font *font[MAX_FONT];
 
 	/* déjà en O(1) pas besoin d'index */
@@ -353,7 +356,8 @@ struct AllTextures {
 	std::vector<unsigned int> unitIndex;
 	std::vector<unsigned int> citieMapIndex;
 };
-struct AllTextes {
+struct AllTextes
+{
 
 	/* déjà en O(1) pas besoin d'index */
 	std::vector<Texte*> number;
@@ -368,7 +372,8 @@ struct AllTextes {
 	std::vector<unsigned int> mainMapIndex;
 	std::vector<unsigned int> citieMapIndex;
 };
-struct AllButtons {
+struct AllButtons
+{
 	std::vector<ButtonTexte*> titleScreen;
 	std::vector<ButtonTexte*> reload;
 	std::vector<ButtonTexte*> mainMap;
@@ -383,7 +388,8 @@ struct AllButtons {
 	std::vector<unsigned int> playerIndex;
 };
 //---------------------- Structure niveau 0 ---------------------------------------------------------------------------------------------------------
-struct Sysinfo {
+struct Sysinfo
+{
 	// contient les données en rapport à la SDL 
 	Screen screen;
 

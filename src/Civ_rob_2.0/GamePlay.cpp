@@ -305,7 +305,7 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 		association des vecteurs de position (x,y) avec les settlers de départ
 	*/
 	unsigned int selectunit = 0;
-	for (unsigned int p = 0; p < sysinfo.var.s_player.unitNameMaxToCreate; p++)
+	for (unsigned int p = 0; p < sysinfo.var.s_player.tabUnit_Struct.size(); p++)
 	{
 		if (sysinfo.var.s_player.tabUnit_Struct[p].name.compare("settler") == 0)
 		{

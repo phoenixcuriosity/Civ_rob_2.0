@@ -14,8 +14,7 @@
 		<Building>bin/BUILDING.txt</Building>
 		<BuildingName>bin/BUILDINGNAME.txt</BuildingName>
 		<CitieName>bin/CITIENAME.txt</CitieName>
-		<Unit>bin/UNIT.txt</Unit>
-		<UnitName>bin/UNITNAME.txt</UnitName>
+		<Unit>bin/Unit.xml</Unit>
 		<SpecName>bin/SPECNAME.txt</SpecName>
 
 		<SaveInfo>save/SaveInfo.txt</SaveInfo>
