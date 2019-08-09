@@ -51,10 +51,10 @@ void IHM::initTile(Map& map)
 {
 	Tile blankTile;
 	std::vector<Tile> blank;
-	for (unsigned int i = 0; i < map.mapSize / map.tileSize; i++)
+	for (unsigned int i(0); i < map.mapSize / map.tileSize; i++)
 	{
 		map.maps.push_back(blank);
-		for (unsigned int j = 0; j < map.mapSize / map.tileSize; j++) 
+		for (unsigned int j(0); j < map.mapSize / map.tileSize; j++) 
 		{
 			map.maps[i].push_back(blankTile);
 		}
@@ -304,7 +304,7 @@ void IHM::initFile(File& file)
 */
 void IHM::logfileconsole(const std::string msg)
 {
-	time_t now = time(0);
+	time_t now(time(0));
 	struct tm  tstruct;
 	char  buf[80];
 	tstruct = *localtime(&now);
@@ -387,7 +387,7 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		else
 			logfileconsole("[INFO]___: TTF_Init Success");
 
-		for (Uint8 i = 1; i < MAX_FONT; i++)
+		for (Uint8 i(1); i < MAX_FONT; i++)
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
 
 		logfileconsole("[INFO]___: SDL_Init Success");
@@ -442,14 +442,14 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*
 		sysinfo.allTextures.groundSpec
 	*/
-	unsigned int nbspecname = 0;
-	std::string destroy = "", name = "";
+	unsigned int nbspecname(0);
+	std::string destroy(""), name("");
 	std::ifstream SPECNAME(sysinfo.file.SPECNAME);
 	if (SPECNAME)
 	{
 		SPECNAME >> destroy;
 		SPECNAME >> nbspecname;
-		for (unsigned int i = 0; i < nbspecname; i++)
+		for (unsigned int i(0); i < nbspecname; i++)
 		{
 			name = "";
 			SPECNAME >> name;
@@ -466,7 +466,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*
 		sysinfo.allTextures.unit
 	*/
-	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.unit, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "units/" + sysinfo.var.s_player.tabUnit_Struct[i].name + ".bmp",
 			sysinfo.var.s_player.tabUnit_Struct[i].name, nonTransparent, 100, 432, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
@@ -479,7 +479,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	sysinfo.var.statescreen = STATEmainmap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
-	for (int i = 9; i >= 0; i--)
+	for (int i(9); i >= 0; i--)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "barre de vie/0." + std::to_string(i) + "life.bmp", "0." + std::to_string(i) + "life.bmp", nonTransparent,
 			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle, nocenter);
@@ -489,7 +489,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*
 		sysinfo.allTextures.colorapp
 	*/
-	for (unsigned int i = 0; i < 9; i++)
+	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapp, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayer" + std::to_string(i) + ".bmp", nonTransparent,
 			-1, -1, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle, nocenter);
@@ -498,7 +498,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*
 		sysinfo.allTextures.colorapptile
 	*/
-	for (unsigned int i = 0; i < 9; i++)
+	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapptile, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayertile" + std::to_string(i) + ".bmp", (Transparance_Type)96,
 			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
@@ -527,15 +527,15 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 
 	// chargement du nombre de ville ainsi que leur nom
-	unsigned int nbcitie = 0;
-	std::string citie = "";
+	unsigned int nbcitie(0);
+	std::string citie("");
 	std::ifstream CITIENAME(sysinfo.file.CITIENAME);
 	if (CITIENAME)
 	{
 		CITIENAME >> destroy;
 		CITIENAME >> nbcitie;
 		sysinfo.var.s_player.citieNameMaxToCreate = nbcitie;
-		for (unsigned int i = 0; i < nbcitie; i++)
+		for (unsigned int i(0); i < nbcitie; i++)
 		{
 			CITIENAME >> citie;
 			sysinfo.var.s_player.tabCitieName.push_back(citie);
@@ -546,14 +546,14 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 	//chargement du nombre de sauvegardes
 	std::ifstream loadInfo(sysinfo.file.SaveInfo);
-	unsigned int currentSave = 0, maxSave = 0;
+	unsigned int currentSave(0), maxSave(0);
 	if (loadInfo)
 	{
 		loadInfo >> destroy;
 		loadInfo >> maxSave;
 		sysinfo.var.save.SETnbSave(maxSave);
 		loadInfo >> destroy;
-		for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+		for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 		{
 			loadInfo >> currentSave;
 			sysinfo.var.save.GETtabSave().push_back(currentSave);
@@ -561,7 +561,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	}
 	else
 		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
-	int spacemenu = 64, initspacemenu = 300;
+	int spacemenu(64), initspacemenu(300);
 
 	
 	/* *********************************************************
@@ -624,7 +624,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		shaded, "Remove", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2 + 200, 256,
 		nonTransparent, no_angle, center_x);
 
-	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+	for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
@@ -699,7 +699,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 164,
 		nonTransparent, no_angle, center_x);
 	
-	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
@@ -733,7 +733,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*** STATEmainmap ***/
 	sysinfo.var.statescreen = STATEmainmap;
 
-	for (unsigned int i = 0; i < MAX_POP; i++)
+	for (unsigned int i(0); i < MAX_POP; i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.number,
@@ -742,7 +742,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	}
 
 	sysinfo.var.select = NotToSelect;
-	for (unsigned int i = 0; i < nbcitie; i++)
+	for (unsigned int i(0); i < nbcitie; i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.mainMap,
@@ -752,7 +752,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		
 
 	sysinfo.var.select = selectcreate;
-	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
@@ -763,7 +763,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	/*** STATEcitiemap ***/
 	sysinfo.var.statescreen = STATEcitiemap;
 	sysinfo.var.select = selectcreate;
-	for (unsigned int i = 0; i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
@@ -1076,7 +1076,7 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 				break;
 			case SDLK_F6:
 				deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");
-				for (unsigned int i = 0; i < 4; i++)
+				for (unsigned int i(0); i < 4; i++)
 				{
 					sysinfo.tabplayer.push_back(new Player("NoName" + std::to_string(i)));
 				}
@@ -1184,20 +1184,20 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 
-	for (unsigned int i = 0; i < sysinfo.allTextures.titleScreenIndex.size(); i++)
+	for (unsigned int i(0); i < sysinfo.allTextures.titleScreenIndex.size(); i++)
 	{
 		sysinfo.allTextures.titleScreen[sysinfo.allTextures.titleScreenIndex[i]]
 			->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 	}
 		
 
-	for (unsigned int i = 0; i < sysinfo.allTextes.titleScreenIndex.size(); i++)
+	for (unsigned int i(0); i < sysinfo.allTextes.titleScreenIndex.size(); i++)
 	{
 		sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]
 			->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 	}
 
-	for (unsigned int i = 0; i < sysinfo.allButton.titleScreenIndex.size(); i++)
+	for (unsigned int i(0); i < sysinfo.allButton.titleScreenIndex.size(); i++)
 	{
 		sysinfo.allButton.titleScreen[sysinfo.allButton.titleScreenIndex[i]]
 			->renderButtonTexte(sysinfo.var.statescreen);
@@ -1225,7 +1225,7 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 
-	for (unsigned int i = 0; i < sysinfo.allButton.reloadIndex.size(); i++)
+	for (unsigned int i(0); i < sysinfo.allButton.reloadIndex.size(); i++)
 	{
 		sysinfo.allButton.reload[sysinfo.allButton.reloadIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
 	}
@@ -1267,9 +1267,9 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		afficherSupertiles(sysinfo);
 
 		// affiche la texture grise de la toolbar
-		for (unsigned int i = 0; i < sysinfo.map.toolBarSize; i++)
+		for (unsigned int i(0); i < sysinfo.map.toolBarSize; i++)
 		{
-			for (unsigned int j = 0; j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
+			for (unsigned int j(0); j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
 			{
 				sysinfo.allTextures.ground[3]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
 			}
@@ -1285,7 +1285,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		 *					START Texte							   *
 		 ********************************************************* */
 
-		for (unsigned int i = 0; i < sysinfo.allTextes.mainMapIndex.size(); i++)
+		for (unsigned int i(0); i < sysinfo.allTextes.mainMapIndex.size(); i++)
 		{
 			sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 		}
@@ -1304,12 +1304,12 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		 *					START Button						   *
 		 ********************************************************* */
 
-		for (unsigned int i = 0; i < sysinfo.allButton.mainMapIndex.size(); i++)
+		for (unsigned int i(0); i < sysinfo.allButton.mainMapIndex.size(); i++)
 		{
 			sysinfo.allButton.mainMap[sysinfo.allButton.mainMapIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
 		}
 			
-		for (unsigned int i = 0; i < sysinfo.allButton.playerIndex.size(); i++)
+		for (unsigned int i(0); i < sysinfo.allButton.playerIndex.size(); i++)
 		{
 			sysinfo.allButton.player[sysinfo.allButton.playerIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
 		}
@@ -1359,11 +1359,11 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 
 		if (sysinfo.tabplayer.size() != 0)
 		{
-			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
+			for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++) 
 			{
 				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0)
 				{
-					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
+					for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 					{
 						// affiche pour chaque joueurs les unités existantes (avec les stats)
 						sysinfo.tabplayer[i]->GETtheUnit(j)->afficher(sysinfo, i);
@@ -1371,7 +1371,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 				}
 				if (sysinfo.tabplayer[i]->GETtabCity().size() != 0)
 				{
-					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
+					for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 					{
 						// affiche pour chaque joueurs les cités existantes
 						sysinfo.tabplayer[i]->GETtheCity(j)->afficher(sysinfo);
@@ -1434,11 +1434,11 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 	//clock_t t1, t2;
 	//t1 = clock();
 	
-	unsigned int x = 0, y = 0;
+	unsigned int x(0), y(0);
 
-	for (unsigned int m = sysinfo.map.screenOffsetXIndexMin; m < sysinfo.map.screenOffsetXIndexMax; m++)
+	for (unsigned int m(sysinfo.map.screenOffsetXIndexMin); m < sysinfo.map.screenOffsetXIndexMax; m++)
 	{
-		for (unsigned int n = sysinfo.map.screenOffsetYIndexMin; n < sysinfo.map.screenOffsetYIndexMax; n++)
+		for (unsigned int n(sysinfo.map.screenOffsetYIndexMin); n < sysinfo.map.screenOffsetYIndexMax; n++)
 		{
 			x = sysinfo.map.maps[m][n].tile_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
 			y = sysinfo.map.maps[m][n].tile_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize;
@@ -1502,12 +1502,12 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	 *			 START select = selectcreate				   *
 	 ********************************************************* */
 
-	std::string buildName;
-	unsigned int initspace = 96, space = 32;
+	std::string buildName("");
+	unsigned int initspace(96), space(32);
 	if (sysinfo.var.select == selectcreate)
 	{
 		initspace = 96;
-		for (unsigned int j = 0; j < 10; j++)
+		for (unsigned int j(0); j < 10; j++)
 		{
 			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.tabUnit_Struct.size())
 				buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
@@ -1599,7 +1599,7 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	 *					START delete font*					   *
 	 ********************************************************* */
 
-	for (unsigned int i = 1; i < MAX_FONT; i++)
+	for (unsigned int i(1); i < MAX_FONT; i++)
 		TTF_CloseFont(sysinfo.allTextures.font[i]);
 
 	/* *********************************************************

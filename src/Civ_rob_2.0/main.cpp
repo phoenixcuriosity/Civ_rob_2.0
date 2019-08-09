@@ -35,9 +35,9 @@ int main(int argc, char* argv[])
 
 	srand((unsigned int)time(NULL));
 
-	auto start = std::chrono::system_clock::now();
-	auto end = std::chrono::system_clock::now();
-	std::chrono::duration<double> elapsed_seconds = end - start;
+	auto start(std::chrono::system_clock::now());
+	auto end(std::chrono::system_clock::now());
+	std::chrono::duration<double> elapsed_seconds(end - start);
 
 	IHM::initFile(sysinfo.file);
 

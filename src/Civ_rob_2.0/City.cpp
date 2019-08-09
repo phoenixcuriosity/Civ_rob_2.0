@@ -44,16 +44,16 @@ void City::createCity(Sysinfo& sysinfo)
 	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == 0)
 	{
 
-		std::string name = sysinfo.var.s_player.tabCitieName[(sysinfo.var.s_player.selectplayer * 5) + sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size()];
-		unsigned int x = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx();
-		unsigned int y = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy();
+		std::string name(sysinfo.var.s_player.tabCitieName[(sysinfo.var.s_player.selectplayer * 5) + sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size()]);
+		unsigned int x(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx());
+		unsigned int y(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy());
 
 		unsigned int middletileX = 0, middletileY = 0;
 
 		Tile tabtile[initSizeView*initSizeView];
-		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
+		for (unsigned int i(0); i < sysinfo.map.maps.size(); i++)
 		{
-			for (unsigned int j = 0; j < sysinfo.map.maps.size(); j++)
+			for (unsigned int j(0); j < sysinfo.map.maps.size(); j++)
 			{
 				if (sysinfo.map.maps[i][j].tile_x == x && sysinfo.map.maps[i][j].tile_y == y)
 				{
@@ -63,10 +63,10 @@ void City::createCity(Sysinfo& sysinfo)
 				}
 			}
 		}
-		unsigned int k = 0;
-		for (int o = -(int)ceil(initSizeView / 2); o <= (int)ceil(initSizeView / 2); o++)
+		unsigned int k(0);
+		for (int o(-(int)ceil(initSizeView / 2)); o <= (int)ceil(initSizeView / 2); o++)
 		{
-			for (int p = -(int)ceil(initSizeView / 2); p <= (int)ceil(initSizeView / 2); p++)
+			for (int p(-(int)ceil(initSizeView / 2)); p <= (int)ceil(initSizeView / 2); p++)
 			{
 				if (o > -initSizeInfluence && o < initSizeInfluence && p > -initSizeInfluence && p < initSizeInfluence)
 					sysinfo.map.maps[middletileX + o][middletileY + p].appartenance = sysinfo.var.s_player.selectplayer;
@@ -95,7 +95,7 @@ void City::createCity(Sysinfo& sysinfo)
 */
 void City::searchCityTile(Sysinfo& sysinfo)
 {
-	for (unsigned int i = 0; i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size(); i++) 
+	for (unsigned int i(0); i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size(); i++) 
 	{
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(i)->testPos(sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 		{
@@ -117,7 +117,7 @@ void City::searchCityTile(Sysinfo& sysinfo)
 std::vector<Tile> City::createTiles(Tile tiles[])
 {
 	std::vector<Tile> Atiles;
-	for (unsigned int i = 0; i < initSizeView*initSizeView; i++)
+	for (unsigned int i(0); i < initSizeView*initSizeView; i++)
 		Atiles.push_back(tiles[i]);
 	return Atiles;
 }
@@ -170,10 +170,10 @@ City::~City()
 */
 void City::foodNextTurn()
 {
-	double foodLimitPerLevelCurrent = 15 + (_nbpop - 1) * 6 + pow((_nbpop - 1), 1.8);
-	double foodLimitPerLevelMinusOne = 15 + (_nbpop - 1 - 1) * 6 + pow((_nbpop - 1 - 1), 1.8);
-	double sommeFoodCitizen = 0;
-	bool change = false;
+	double foodLimitPerLevelCurrent(15 + (_nbpop - 1) * 6 + pow((_nbpop - 1), 1.8));
+	double foodLimitPerLevelMinusOne(15 + (_nbpop - 1 - 1) * 6 + pow((_nbpop - 1 - 1), 1.8));
+	double sommeFoodCitizen(0);
+	bool change(false);
 
 	
 	_foodStock += _foodBalance ;
@@ -198,7 +198,7 @@ void City::foodNextTurn()
 	}
 	if (change)
 	{
-		for (unsigned int i = 0; i < _citizens.size(); i++)
+		for (unsigned int i(0); i < _citizens.size(); i++)
 			sommeFoodCitizen += _citizens[i].GETfood();
 		_foodBalance = sommeFoodCitizen - (2 * (_nbpop - 1));
 	}
@@ -238,8 +238,8 @@ int City::testPos(unsigned int mouse_x, unsigned int mouse_y)
 */
 void City::afficher(Sysinfo& sysinfo)
 {
-	unsigned int x = _x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
-	unsigned int y = _y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize;
+	unsigned int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
+	unsigned int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
 
 	sysinfo.allTextures.citieMap[searchIndex(_image, sysinfo.allTextures.citieMap)]->render(x, y);
 
@@ -257,7 +257,7 @@ void City::afficher(Sysinfo& sysinfo)
 */
 void City::affichercitiemap(Sysinfo& sysinfo)
 {
-	for (unsigned int i = 0; i < initSizeView*initSizeView; i++) 
+	for (unsigned int i(0); i < initSizeView*initSizeView; i++) 
 	{
 		switch (_tile[i].tile_ground)
 		{
@@ -308,18 +308,18 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 */
 unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold)
 {
-	unsigned int condition = citizens.size();
-	unsigned int checkcondition = 0;
-	unsigned int place = 0;
+	unsigned int condition(citizens.size());
+	unsigned int checkcondition(0);
+	unsigned int place(0);
 
 	std::vector<unsigned int> tabpos;
-	for (unsigned int j = 0; j < condition; j++)
+	for (unsigned int j(0); j < condition; j++)
 	{
 		tabpos.push_back(citizens[j].GETtileOccupied());
 	}
-	for (unsigned int i = 0; i < initSizeView*initSizeView; i++)
+	for (unsigned int i(0); i < initSizeView*initSizeView; i++)
 	{
-		for (unsigned int p = 0; p < condition; p++)
+		for (unsigned int p(0); p < condition; p++)
 		{
 			checkcondition = 0;
 			if (i != tabpos[p])

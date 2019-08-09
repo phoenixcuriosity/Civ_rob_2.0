@@ -67,12 +67,12 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 {
 
 
-	int xt = 0, yt = 0, wt = 0, ht = 0;
+	int xt(0), yt(0), wt(0), ht(0);
 	if (x != -1 && y != -1)
 		xt = x, yt = y;
 
-	SDL_Texture* newTexture = nullptr;
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	SDL_Texture* newTexture(nullptr);
+	SDL_Surface* loadedSurface(IMG_Load(path.c_str()));
 	if (w == 0 && h == 0)
 	{
 		wt = loadedSurface->w;
@@ -296,14 +296,14 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(	SDL_Renderer*& renderer,
 												TTF_Font* font
 											   )
 {
-	SDL_Surface *surf = nullptr;
+	SDL_Surface *surf(nullptr);
 
 	if (type == blended)
 		surf = TTF_RenderText_Blended(font, message.c_str(), color);
 	else if (type == shaded)
 		surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
 
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
+	SDL_Texture *texture(SDL_CreateTextureFromSurface(renderer, surf));
 	if (texture == nullptr)
 	{
 		IHM::exitError("[ERROR]___:___________ERROR : renderTextShaded nullptr for : " + message);
@@ -351,10 +351,10 @@ void Texte::loadTexte(	SDL_Renderer*& renderer,
 					)
 {
 
-	SDL_Texture *image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
+	SDL_Texture *image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
 	if (alpha != nonTransparent)
 		SDL_SetTextureAlphaMod(image, alpha);
-	int xc = x, yc = y, iW = 0, iH = 0;
+	int xc(x), yc(y), iW(0), iH(0);
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
 	tabTexte.push_back(new Texte(renderer, font, image, msg, stateScreen, select, xc, yc, iW, iH,
@@ -394,9 +394,9 @@ void Texte::writeTexte(	SDL_Renderer*& renderer,
 					)
 {
 
-	SDL_Texture *image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
+	SDL_Texture *image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
 
-	int xc = x, yc = y, iW = 0, iH = 0;
+	int xc(x), yc(y), iW(0), iH(0);
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
 
@@ -448,12 +448,12 @@ Texte::Texte(	SDL_Renderer*& renderer,
 	_type(type), _txtcolor(txtcolor), _backcolor(backcolor),
 	_size(size), _font()
 {
-	for (unsigned int i = 0; i < MAX_FONT; i++)
+	for (unsigned int i(0); i < MAX_FONT; i++)
 		_font[i] = font[i];
 }
 Texte::~Texte()
 {
-	for (unsigned int i = 0; i < MAX_FONT; i++)
+	for (unsigned int i(0); i < MAX_FONT; i++)
 		_font[i] = nullptr;
 }
 
@@ -484,7 +484,7 @@ bool Texte::isSameColor(SDL_Color color1, SDL_Color color2) const
  */
 void Texte::resizeTexte()
 {
-	int xc = 0, yc = 0, iW = 0, iH = 0;
+	int xc(0), yc(0), iW(0), iH(0);
 
 	switch (this->GETcenter())
 	{
@@ -614,15 +614,15 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
 									)
 {
 
-	int xt = 0, yt = 0, wt = 0, ht = 0;
+	int xt(0), yt(0), wt(0), ht(0);
 	if (x != -1 && y != -1)
 		xt = x, yt = y;
 
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	std::size_t found = path.find('.');
+	SDL_Surface* loadedSurface(IMG_Load(path.c_str()));
+	std::size_t found(path.find('.'));
 	if (found != std::string::npos)
 		path.insert(found, "On");
-	SDL_Surface* loadedSurfaceOn = IMG_Load(path.c_str());
+	SDL_Surface* loadedSurfaceOn(IMG_Load(path.c_str()));
 	if (w == 0 && h == 0)
 	{
 		wt = loadedSurface->w;
@@ -638,8 +638,8 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
 	{
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 		SDL_SetColorKey(loadedSurfaceOn, SDL_TRUE, SDL_MapRGB(loadedSurfaceOn->format, 0, 0xFF, 0xFF));
-		SDL_Texture *image = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-		SDL_Texture *imageOn = SDL_CreateTextureFromSurface(renderer, loadedSurfaceOn);
+		SDL_Texture *image(SDL_CreateTextureFromSurface(renderer, loadedSurface));
+		SDL_Texture *imageOn(SDL_CreateTextureFromSurface(renderer, loadedSurfaceOn));
 		if (image != nullptr && imageOn != nullptr)
 		{
 			if (alpha != nonTransparent)
@@ -825,13 +825,11 @@ void ButtonTexte::createButtonTexte(	SDL_Renderer*& renderer,
 										Center_Type centerButtonTexte
 									)
 {
-	int iW = 0, iH = 0;
+	int iW(0), iH(0);
 
-	SDL_Texture *image = nullptr;
-	SDL_Texture *imageOn = nullptr;
+	SDL_Texture *image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
+	SDL_Texture *imageOn(createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]));
 
-	image = createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]);
-	imageOn = createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]);
 	if (alpha != nonTransparent)
 	{
 		SDL_SetTextureAlphaMod(image, alpha);
@@ -939,7 +937,7 @@ void ButtonTexte::resetOnstateScreen(Uint8 select, unsigned int selectnothing)
  */
 void ButtonTexte::resetOnPlayer(unsigned int selectplayer, std::vector<std::string> tabPlayerName)
 {
-	for (unsigned int i = 0; i < tabPlayerName.size(); i++)
+	for (unsigned int i(0); i < tabPlayerName.size(); i++)
 	{
 		if (i != selectplayer && this->GETname().compare(tabPlayerName[i]) == 0)
 			_on = false;

@@ -45,7 +45,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	IHM::logfileconsole("_Newgame Start_");
 	sysinfo.var.statescreen = STATEscreennewgame;
 
-	unsigned int nbplayer = 0, initspace = 132, space = 32;
+	unsigned int nbplayer(0), initspace(132), space(32);
 
 	// création d'une sauvegarde concernant la nouvelle partie
 	SaveReload::createSave(sysinfo);
@@ -64,7 +64,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	KeyboardMouse::cinDigit(sysinfo, nbplayer, SCREEN_WIDTH / 2, initspace += space);
 
 	// Deuxième demande au joueur : Le nom des joueurs
-	for (unsigned int i = 1; i < nbplayer + 1; i++)
+	for (unsigned int i(1); i < nbplayer + 1; i++)
 	{
 		sysinfo.var.s_player.tabPlayerName.push_back("");
 
@@ -85,9 +85,9 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	SaveReload::savePlayer(sysinfo);
 	
 	// Création des boutons pour séléctionner les joueurs
-	int initspacename = 200, spacename = 24;
+	int initspacename(200), spacename(24);
 	sysinfo.var.statescreen = STATEmainmap;
-	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
 			shaded, sysinfo.var.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename, nonTransparent, no_angle);
@@ -117,9 +117,9 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 	IHM::logfileconsole("_Groundgen Start_");
 	unsigned int randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
 
-	for (Uint8 i = 0; i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
+	for (Uint8 i(0); i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
 	{
-		for (Uint8 j = 0; j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
+		for (Uint8 j(0); j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
 		{
 			
 			sysinfo.map.maps[i][j].indexX = i + (Uint8)((SCREEN_WIDTH / 10) / sysinfo.map.tileSize);
@@ -304,8 +304,8 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 	/*
 		association des vecteurs de position (x,y) avec les settlers de départ
 	*/
-	unsigned int selectunit = 0;
-	for (unsigned int p = 0; p < sysinfo.var.s_player.tabUnit_Struct.size(); p++)
+	unsigned int selectunit(0);
+	for (unsigned int p(0); p < sysinfo.var.s_player.tabUnit_Struct.size(); p++)
 	{
 		if (sysinfo.var.s_player.tabUnit_Struct[p].name.compare("settler") == 0)
 		{
@@ -315,7 +315,7 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 	}
 
 	std::vector<randomPos> tabRandom;
-	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 	{
 		makeRandomPosTab(sysinfo, tabRandom);
 		sysinfo.tabplayer[i]->addUnit("settler", tabRandom[i].x, tabRandom[i].y,
@@ -339,9 +339,9 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 		créér autant de vecteur de position (x,y) que de joueur initial
 	*/
 	randomPos RandomPOS;
-	bool continuer = true;
-	unsigned int nbConditionCheck = 0;
-	unsigned int iteration = 0;
+	bool continuer(true);
+	unsigned int nbConditionCheck(0);
+	unsigned int iteration(0);
 
 	while (continuer)
 	{
@@ -391,8 +391,8 @@ void GamePlay::makeRandomPos(randomPos& RandomPOS, std::vector<std::vector<Tile>
 	/*
 		créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
 	*/
-	int x = (rand() % (maps.size() * tileSize - toolBarSize * tileSize)) + (toolBarSize * tileSize);
-	int y = (rand() % (maps[0].size() * tileSize));
+	int x((rand() % (maps.size() * tileSize - toolBarSize * tileSize)) + (toolBarSize * tileSize));
+	int y((rand() % (maps[0].size() * tileSize)));
 	RandomPOS.x = (int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;
 }
@@ -414,7 +414,7 @@ bool GamePlay::conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabR
 		condition pour valider les coordonnées crées:
 					- etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
 	*/
-	int spaceBetweenSettler = tileSize * 16;
+	int spaceBetweenSettler(tileSize * 16);
 
 	if (RandomPOS.x < (tabRandom[i].x - spaceBetweenSettler)
 		|| RandomPOS.x >(tabRandom[i].x + spaceBetweenSettler)
@@ -440,9 +440,9 @@ bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
 		condition pour valider les coordonnées crées:
 			- etre sur une tile possédant la caractéristique d'etre du sol
 	*/
-	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++) 
+	for (unsigned int i(0); i < sysinfo.map.maps.size(); i++) 
 	{
-		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++) 
+		for (unsigned int j(0); j < sysinfo.map.maps[i].size(); j++) 
 		{
 			if (sysinfo.map.maps[i][j].tile_x == RandomPOS.x && sysinfo.map.maps[i][j].tile_y == RandomPOS.y) 
 			{
@@ -476,14 +476,14 @@ bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
 */
 void GamePlay::nextTurn(Sysinfo& sysinfo)
 {
-	for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
+	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++) 
 	{
-		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
+		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
 		{
 			sysinfo.tabplayer[i]->GETtheUnit(j)->RESETmovement();
 			sysinfo.tabplayer[i]->GETtheUnit(j)->heal(sysinfo.map.maps, i);
 		}
-		for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
+		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 		{
 			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn();
 		}

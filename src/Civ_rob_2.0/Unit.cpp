@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.16
-	file version : 1.5
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -97,7 +97,7 @@ void Unit::searchUnit(Sysinfo& sysinfo)
 */
 void Unit::searchUnitTile(Sysinfo& sysinfo)
 {
-	for (unsigned int i = 0; i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size(); i++)
+	for (unsigned int i(0); i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size(); i++)
 	{
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)
 			->testPos(sysinfo.var.mouse.GETmouse_x() + sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize,
@@ -124,12 +124,15 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 {
 	switch (searchToMove(sysinfo, x, y))
 	{
-	case 0:
+	case cannotMove:
+		/*
+		* Void
+		*/
 		break;
-	case 1:
+	case canMove:
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->move(sysinfo.var.select, sysinfo.var.s_player.selectunit, x, y);
 		break;
-	case 2:
+	case attackMove:
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack));
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack)->GETalive() == false)
 		{
@@ -148,10 +151,10 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 * ROLE : Action conditionnelle (case libre, ennemi, amis)
 * INPUT  PARAMETERS : struct Map& : données générale de la map : taille
 * OUTPUT PARAMETERS : l'unité reste à sa place ou bouge en fonction du contexte
-* RETURNED VALUE    : int : 0 : ne bouge pas / 1 : case libre : peut bouger / 2 : ennemi : ne bouge pas
+* RETURNED VALUE    : Move_Type : 0 : ne bouge pas / 1 : case libre : peut bouger / 2 : ennemi : ne bouge pas
 *
 */
-int Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
+Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 {
 	/*
 		conditions de mouvement :
@@ -162,9 +165,9 @@ int Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 	*/
 	bool ground = false;
 
-	for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
+	for (unsigned int i(0); i < sysinfo.map.maps.size(); i++)
 	{
-		for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
+		for (unsigned int j(0); j < sysinfo.map.maps[i].size(); j++)
 		{
 			if (sysinfo.map.maps[i][j].tile_x == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx() + x &&
 				sysinfo.map.maps[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y)
@@ -189,12 +192,12 @@ int Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheUnit(j)->GETy())
 					{
 						if (sysinfo.var.s_player.selectplayer == (int)i)
-							return 0;
+							return cannotMove;
 						else
 						{
 							sysinfo.var.s_player.selectPlayerToAttack = (int)i;
 							sysinfo.var.s_player.selectUnitToAttack = (int)j;
-							return 2;
+							return attackMove;
 						}
 					}
 				}
@@ -202,8 +205,8 @@ int Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 		}
 	}
 	else
-		return 0;
-	return 1;
+		return cannotMove;
+	return canMove;
 }
 
 
@@ -268,7 +271,7 @@ void Unit::attack(Unit* cible)
 */
 void Unit::defend(unsigned int dmg)
 {
-	int test = 0;
+	int test(0);
 	if (dmg > _def)
 	{
 		if ((test = (_life - (dmg - _def))) <= 0) 
@@ -323,9 +326,9 @@ void Unit::move(Uint8& select, int& selectunit, int x, int y)
 */
 void Unit::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer)
 {
-	for (unsigned int i = 0; i < tiles.size(); i++) 
+	for (unsigned int i(0); i < tiles.size(); i++) 
 	{
-		for (unsigned int j = 0; j < tiles[i].size(); j++)
+		for (unsigned int j(0); j < tiles[i].size(); j++)
 		{
 			if (_x == tiles[i][j].tile_x && _y == tiles[i][j].tile_y)
 			{
@@ -479,7 +482,7 @@ void Unit::afficherstat(Sysinfo& sysinfo)
 {
 	if (_show)
 	{
-		int initspace = _y, space = 14;
+		int initspace(_y), space(14);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			blended, "Name: "  + _name, Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace, no_angle);
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,

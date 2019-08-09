@@ -1,5 +1,5 @@
 ﻿  City.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\City.cpp(311,42): warning C4267:  'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\City.cpp(311,41): warning C4267:  'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\HashTable.h(126,1): warning C4267:  'argument': conversion from 'size_t' to 'const unsigned int', possible loss of data
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\City.cpp(244): message :  see reference to function template instantiation 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' being compiled
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\City.cpp(244): message :         with
@@ -121,18 +121,18 @@ C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(744,70):
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(746,80): warning C4238:  nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(752,72): warning C4238:  nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(754,82): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(973): warning C4238:  nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(975): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(977): warning C4238:  nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(975,69): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(973,69): warning C4238:  nonstandard extension used: class rvalue used as lvalue
   Unit.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(977,79): warning C4238:  nonstandard extension used: class rvalue used as lvalue
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(975,79): warning C4238:  nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\HashTable.h(126,1): warning C4267:  'argument': conversion from 'size_t' to 'const unsigned int', possible loss of data
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(418): message :  see reference to function template instantiation 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' being compiled
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(418): message :         with
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(418): message :         [
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(418): message :             _Ty=Texture *,
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(418): message :             T=std::vector<Texture *,std::allocator<Texture *>>
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(418): message :         ]
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(421): message :  see reference to function template instantiation 'unsigned int searchIndex<std::vector<Texture *,std::allocator<_Ty>>>(std::string,const T &)' being compiled
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(421): message :         with
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(421): message :         [
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(421): message :             _Ty=Texture *,
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(421): message :             T=std::vector<Texture *,std::allocator<Texture *>>
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Unit.cpp(421): message :         ]
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\chrono(591): message :  see reference to class template instantiation 'std::chrono::duration<double,std::ratio<1,1>>' being compiled
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\chrono(169): message :  see reference to class template instantiation 'std::chrono::duration<__int64,std::nano>' being compiled
   tinyxml2.cpp

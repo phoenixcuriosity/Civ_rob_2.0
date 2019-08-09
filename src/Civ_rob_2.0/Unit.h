@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.3
+	last modification on this file on version:0.16
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,6 +39,8 @@
 #define Unit_H
 
 #include "civ_lib.h"
+
+enum Move_Type : Uint8 { cannotMove, canMove, attackMove};
 
 class Unit
 {
@@ -94,7 +96,7 @@ public:
 	* RETURNED VALUE    : int : 0 : ne bouge pas / 1 : case libre : peut bouger / 2 : ennemi : ne bouge pas
 	* 
 	*/
-	static int searchToMove(Sysinfo&, int, int);
+	static Move_Type searchToMove(Sysinfo&, int, int);
 
 	/*
 	* NAME : irrigate
