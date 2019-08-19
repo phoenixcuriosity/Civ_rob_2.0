@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
-	file version : 1.5
+	last modification on this file on version:0.17
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -199,7 +199,17 @@ public:
 	 * RETURNED VALUE    : void
 	 */
 	static void deleteAll(Sysinfo&);
+
+	static void deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const std::string& name);
+
+	static void deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std::string& name);
+
+	static void deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap, const std::string& name);
+
+	static void deletePlayer(std::vector<Player*>& vect, const std::string& name);
 };
+
+
 
 
 
@@ -211,25 +221,20 @@ public:
 	 * OUTPUT PARAMETERS : Destruction des allocations dynamique
 	 * RETURNED VALUE    : void
 */
-template<class T>
+/*
+template<typename T>
 void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name)
 {
-	unsigned int size = dytab.size();
-	for (unsigned int i = 0; i < size; i++)
+	for (const auto& n : a)
 	{
-		if (dytab[i] != nullptr)
+		if (n.second != nullptr)
 		{
-			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + dytab[i]->GETname() + " Success");
-			delete dytab[i];
+			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
+			delete n.second;
 		}
 	}
-	for (unsigned int i = 0; i < size; i++)
-		dytab.pop_back();
-	if (dytab.size() != 0)
-		IHM::logfileconsole("[ERROR]___:___________ERROR : " + name + ".size() != 0");
-	else
-		IHM::logfileconsole("[INFO]___: Delete ALL " + name + " Success");
 }
+*/
 
 
 #endif

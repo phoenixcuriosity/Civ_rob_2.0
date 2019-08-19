@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.8
+	last modification on this file on version:0.17
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,7 +51,7 @@
  * RETURNED VALUE    : void
  */
 void Texture::loadImage(	SDL_Renderer*& renderer,
-							std::vector<Texture*>& tabTexture,
+							std::unordered_map<std::string, Texture*>& tabTexture,
 							Uint8 stateScreen,
 							Uint8 select,
 							std::string path,
@@ -96,7 +96,7 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 					IHM::logSDLError(std::cout, "alpha : ");
 			}
 			centrage(xt, yt, wt, ht, cnt);
-			tabTexture.push_back(new Texture(renderer, newTexture, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, cnt));
+			tabTexture[msg] = new Texture(renderer, newTexture, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, cnt);
 		}
 		else
 		{
@@ -337,7 +337,7 @@ void Texte::loadTexte(	SDL_Renderer*& renderer,
 						TTF_Font* font[],
 						Uint8 stateScreen,
 						Uint8 select,
-						std::vector<Texte*>& tabTexte,
+						std::unordered_map<std::string, Texte*>& tabTexte,
 						Texte_Type type,
 						std::string msg,
 						SDL_Color color,
@@ -357,8 +357,9 @@ void Texte::loadTexte(	SDL_Renderer*& renderer,
 	int xc(x), yc(y), iW(0), iH(0);
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
-	tabTexte.push_back(new Texte(renderer, font, image, msg, stateScreen, select, xc, yc, iW, iH,
-		type, color, backcolor, size, alpha, angle, cnt));
+
+	tabTexte[msg] = new Texte(renderer, font, image, msg, stateScreen, select, xc, yc, iW, iH,
+		type, color, backcolor, size, alpha, angle, cnt);
 }
 
 
@@ -599,7 +600,7 @@ void Texte::SETbackcolor(SDL_Color backcolor)
  * RETURNED VALUE    : void
  */
 void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
-										std::vector<ButtonImage*>& tabButtonImage,
+										std::unordered_map<std::string, ButtonImage*>& tabButtonImage,
 										Uint8 stateScreen,
 										Uint8 select,
 										std::string path,
@@ -648,7 +649,7 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
 				SDL_SetTextureAlphaMod(imageOn, alpha);
 			}
 			centrage(xt, yt, wt, ht, cnt);
-			tabButtonImage.push_back(new ButtonImage(renderer, image, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, imageOn, cnt));
+			tabButtonImage[msg] = new ButtonImage(renderer, image, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, imageOn, cnt);
 		}
 		else
 			IHM::logfileconsole("[ERROR]___:___________ERROR : createButtonImage : cannot create Texture from : " + path);
@@ -812,7 +813,7 @@ void ButtonTexte::createButtonTexte(	SDL_Renderer*& renderer,
 										TTF_Font* font[],
 										Uint8 stateScreen,
 										Uint8 select,
-										std::vector<ButtonTexte*>& tabButtonTexte,
+										std::unordered_map<std::string, ButtonTexte*>& tabButtonTexte,
 										Texte_Type type,
 										std::string msg,
 										SDL_Color color,
@@ -837,8 +838,8 @@ void ButtonTexte::createButtonTexte(	SDL_Renderer*& renderer,
 	}
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(x, y, iW, iH, centerButtonTexte);
-	tabButtonTexte.push_back(new ButtonTexte(renderer, font, image, msg, stateScreen, select, x, y, iW, iH,
-		type, color, backcolor, size, alpha, angle, imageOn, centerButtonTexte));
+	tabButtonTexte[msg] = new ButtonTexte(renderer, font, image, msg, stateScreen, select, x, y, iW, iH,
+		type, color, backcolor, size, alpha, angle, imageOn, centerButtonTexte);
 
 	IHM::logfileconsole("[INFO]___: Create ButtonTexte n:" + std::to_string(tabButtonTexte.size() - 1) + " msg = " + msg + " Success");
 }

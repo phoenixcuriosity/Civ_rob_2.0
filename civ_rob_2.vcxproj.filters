@@ -63,9 +63,6 @@
     <ClInclude Include="src\Civ_rob_2.0\LTimer.h">
       <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="src\Civ_rob_2.0\HashTable.h">
-      <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="src\tinyxml2\tinyxml2.h">
       <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
     </ClInclude>
@@ -105,9 +102,6 @@
       <Filter>Fichiers sources\Classes</Filter>
     </ClCompile>
     <ClCompile Include="src\Civ_rob_2.0\LTimer.cpp">
-      <Filter>Fichiers sources\Classes\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Civ_rob_2.0\HashTable.cpp">
       <Filter>Fichiers sources\Classes\Misc</Filter>
     </ClCompile>
   </ItemGroup>

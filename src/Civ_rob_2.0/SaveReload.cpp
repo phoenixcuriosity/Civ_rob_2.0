@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.1
+	last modification on this file on version:0.17
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,7 +25,6 @@
 #include "SaveReload.h"
 #include "civ_lib.h"
 #include "IHM.h"
-#include "HashTable.h"
 
 
 /* *********************************************************
@@ -305,12 +304,9 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 
 
 			// suppression du pointeur vers la sauvegarde courante
-			unsigned int index = searchIndex("Save : " + std::to_string(sysinfo.var.save.GETcurrentSave()), sysinfo.allButton.reload);
-			delete sysinfo.allButton.reload[index];
-			sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + index);
+			delete sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETcurrentSave())];
+			sysinfo.allButton.reload.erase("Save : " + std::to_string(sysinfo.var.save.GETcurrentSave()));
 
-			// Hachage du tableau avec une case en moins
-			fillTabHachage(sysinfo.allButton.reload, sysinfo.allButton.reloadIndex);
 			
 
 			std::ofstream saveInfo(sysinfo.file.SaveInfo);
@@ -343,15 +339,11 @@ void SaveReload::clearSave(Sysinfo& sysinfo)
 {
 	IHM::logfileconsole("_clearSave Start_");
 
-	unsigned int index = 0;
 	for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) 
 	{
-		index = searchIndex("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]), sysinfo.allButton.reload);
-		delete sysinfo.allButton.reload[index];
-		sysinfo.allButton.reload.erase(sysinfo.allButton.reload.begin() + index);
+		delete sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])];
+		sysinfo.allButton.reload.erase("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]));
 	}
-
-	fillTabHachage(sysinfo.allButton.reload, sysinfo.allButton.reloadIndex);
 
 	std::string file;
 	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)

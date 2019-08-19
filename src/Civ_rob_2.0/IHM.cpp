@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
-	file version : 1.12
+	last modification on this file on version:0.17
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,7 +25,6 @@
 #include "IHM.h"
 #include "GamePlay.h"
 #include "SaveReload.h"
-#include "HashTable.h"
 
 
 /* *********************************************************
@@ -130,7 +129,7 @@ Uint8 xmlGiveSelectType(std::string type)
 	}
 }
 
-std::vector<Texte*>& xmlGiveTexteConteneur(AllTextes& allTextes, std::string type)
+std::unordered_map<std::string, Texte*>& xmlGiveTexteConteneur(AllTextes& allTextes, std::string type)
 {
 	if (type.compare("titleScreen") == 0)
 	{
@@ -429,7 +428,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "ground/water.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/deepwater.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+		IPath + "ground/deepwater.bmp", "deepwater.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
 	
 	
 	// chargement de l'image de la toolbar
@@ -778,76 +777,6 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	 *					END sysinfo.allTexte				   *
 	 ********************************************************* */
 	
-	
-
-	/* *********************************************************
-	 *					START HashTable						   *
-	 ********************************************************* */
-	
-	/*
-		Attention : Optimisation de cherche par nom,
-		* complexité en O(1) au lieu de O(n)
-		* NE PAS UTILISER pour : -> sysinfo.allTextures.ground : déja optimal en O(1)
-		*						 -> std::vector<Texture*> groundSpec;
-		*						 -> std::vector<Texture*> colorapp;
-		*						 -> std::vector<Texture*> colorapptile;
-		*						 -> std::vector<Texture*> barLife;
-		*						 -> ### mettre ici les autres cas  
-
-
-	*/
-
-	/*** sysinfo.allTextures ***/
-
-
-	sysinfo.allTextures.titleScreen.resize(sysinfo.allTextures.titleScreen.size() + sysinfo.allTextures.titleScreen.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextures.titleScreen, sysinfo.allTextures.titleScreenIndex);
-
-	sysinfo.allTextures.unit.resize(sysinfo.allTextures.unit.size() + sysinfo.allTextures.unit.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextures.unit, sysinfo.allTextures.unitIndex);
-
-	sysinfo.allTextures.citieMap.resize(sysinfo.allTextures.citieMap.size() + sysinfo.allTextures.citieMap.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextures.citieMap, sysinfo.allTextures.citieMapIndex);
-
-
-	/*** sysinfo.allTextes ***/
-
-
-	sysinfo.allTextes.titleScreen.resize(sysinfo.allTextes.titleScreen.size() + sysinfo.allTextes.titleScreen.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextes.titleScreen, sysinfo.allTextes.titleScreenIndex);
-
-	sysinfo.allTextes.mainMap.resize(sysinfo.allTextes.mainMap.size() + sysinfo.allTextes.mainMap.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextes.mainMap, sysinfo.allTextes.mainMapIndex);
-
-	sysinfo.allTextes.newGame.resize(sysinfo.allTextes.newGame.size() + sysinfo.allTextes.newGame.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextes.newGame, sysinfo.allTextes.newGameIndex);
-
-	sysinfo.allTextes.citieMap.resize(sysinfo.allTextes.citieMap.size() + sysinfo.allTextes.citieMap.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allTextes.citieMap, sysinfo.allTextes.citieMapIndex);
-
-	
-	
-	/*** sysinfo.allButtons ***/
-
-	sysinfo.allButton.titleScreen.resize(sysinfo.allButton.titleScreen.size() + sysinfo.allButton.titleScreen.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allButton.titleScreen, sysinfo.allButton.titleScreenIndex);
-
-	sysinfo.allButton.reload.resize(sysinfo.allButton.reload.size() + sysinfo.allButton.reload.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allButton.reload, sysinfo.allButton.reloadIndex);
-
-	sysinfo.allButton.mainMap.resize(sysinfo.allButton.mainMap.size() + sysinfo.allButton.mainMap.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allButton.mainMap, sysinfo.allButton.mainMapIndex);
-
-	sysinfo.allButton.citieMap.resize(sysinfo.allButton.citieMap.size() + sysinfo.allButton.citieMap.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allButton.citieMap, sysinfo.allButton.citieMapIndex);
-
-	/* Ne pas mettre allButton.player car initialisé dans NewGame */
-
-
-	/* *********************************************************
-	 *					END HashTable						   *
-	 ********************************************************* */
-
 
 	/* ### Don't put code below here ### */
 
@@ -1075,7 +1004,7 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 				GamePlay::groundGen(sysinfo);
 				break;
 			case SDLK_F6:
-				deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");
+				deletePlayer(sysinfo.tabplayer, "player");
 				for (unsigned int i(0); i < 4; i++)
 				{
 					sysinfo.tabplayer.push_back(new Player("NoName" + std::to_string(i)));
@@ -1184,23 +1113,19 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 
-	for (unsigned int i(0); i < sysinfo.allTextures.titleScreenIndex.size(); i++)
+	for (const auto& n : sysinfo.allTextures.titleScreen)
 	{
-		sysinfo.allTextures.titleScreen[sysinfo.allTextures.titleScreenIndex[i]]
-			->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
-	}
-		
-
-	for (unsigned int i(0); i < sysinfo.allTextes.titleScreenIndex.size(); i++)
-	{
-		sysinfo.allTextes.titleScreen[sysinfo.allTextes.titleScreenIndex[i]]
-			->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+		n.second->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 	}
 
-	for (unsigned int i(0); i < sysinfo.allButton.titleScreenIndex.size(); i++)
+	for (const auto& n : sysinfo.allTextes.titleScreen)
 	{
-		sysinfo.allButton.titleScreen[sysinfo.allButton.titleScreenIndex[i]]
-			->renderButtonTexte(sysinfo.var.statescreen);
+		n.second->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+	}
+
+	for (const auto& n : sysinfo.allButton.titleScreen)
+	{
+		n.second->renderButtonTexte(sysinfo.var.statescreen);
 	}
 
 	/* ### Don't put code below here ### */
@@ -1224,10 +1149,9 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
 	sysinfo.var.statescreen = STATEreload;
 	SDL_RenderClear(sysinfo.screen.renderer);
 
-
-	for (unsigned int i(0); i < sysinfo.allButton.reloadIndex.size(); i++)
+	for (const auto& n : sysinfo.allButton.reload)
 	{
-		sysinfo.allButton.reload[sysinfo.allButton.reloadIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+		n.second->renderButtonTexte(sysinfo.var.statescreen);
 	}
 		
 
@@ -1271,7 +1195,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			for (unsigned int j(0); j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
 			{
-				sysinfo.allTextures.ground[3]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
+				sysinfo.allTextures.ground["toolbar.bmp"]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
 			}
 				
 		}
@@ -1285,12 +1209,10 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		 *					START Texte							   *
 		 ********************************************************* */
 
-		for (unsigned int i(0); i < sysinfo.allTextes.mainMapIndex.size(); i++)
+		for (const auto& n : sysinfo.allTextes.mainMap)
 		{
-			sysinfo.allTextes.mainMap[sysinfo.allTextes.mainMapIndex[i]]->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
+			n.second->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 		}
-
-
 
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			blended, std::to_string(sysinfo.var.nbturn), { 0, 64, 255, 255 }, NoColor, 24, 80, 850, no_angle);
@@ -1304,14 +1226,14 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		 *					START Button						   *
 		 ********************************************************* */
 
-		for (unsigned int i(0); i < sysinfo.allButton.mainMapIndex.size(); i++)
+		for (const auto& n : sysinfo.allButton.mainMap)
 		{
-			sysinfo.allButton.mainMap[sysinfo.allButton.mainMapIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+			n.second->renderButtonTexte(sysinfo.var.statescreen);
 		}
-			
-		for (unsigned int i(0); i < sysinfo.allButton.playerIndex.size(); i++)
+
+		for (const auto& n : sysinfo.allButton.player)
 		{
-			sysinfo.allButton.player[sysinfo.allButton.playerIndex[i]]->renderButtonTexte(sysinfo.var.statescreen);
+			n.second->renderButtonTexte(sysinfo.var.statescreen);
 		}
 
 		/* *********************************************************
@@ -1328,7 +1250,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			if (sysinfo.var.s_player.unitNameToCreate.compare("") != 0)
 			{
-				sysinfo.allTextures.unit[searchIndex(sysinfo.var.s_player.unitNameToCreate, sysinfo.allTextures.unit)]->render(100, 432);
+				sysinfo.allTextures.unit[sysinfo.var.s_player.unitNameToCreate]->render(100, 432);
 			}
 		}
 		else if (sysinfo.var.select == selectmove)
@@ -1446,23 +1368,23 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 			switch (sysinfo.map.maps[m][n].tile_ground)
 			{
 			case grass:
-				sysinfo.allTextures.ground[0]->render(x, y);
+				sysinfo.allTextures.ground["grass.bmp"]->render(x, y);
 				break;
 			case water:
-				sysinfo.allTextures.ground[1]->render(x, y);
+				sysinfo.allTextures.ground["water.bmp"]->render(x, y);
 				break;
 			case deepwater:
-				sysinfo.allTextures.ground[2]->render(x, y);
+				sysinfo.allTextures.ground["deepwater.bmp"]->render(x, y);
 				break;
 			}
 
 			if (sysinfo.map.maps[m][n].tile_spec > 0)
 			{
-				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_spec - 1]->render(x, y);
+				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_stringspec]->render(x, y);
 			}
 			if (sysinfo.map.maps[m][n].appartenance != -1)
 			{
-				sysinfo.allTextures.colorapptile[sysinfo.map.maps[m][n].appartenance]->render(x, y);
+				sysinfo.allTextures.colorapptile["ColorPlayertile" + std::to_string(sysinfo.map.maps[m][n].appartenance) + ".bmp"]->render(x, y);
 			}
 		}
 	}
@@ -1488,10 +1410,10 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	 *					START Button						   *				
 	 ********************************************************* */
 	
-	sysinfo.allButton.citieMap[searchIndex("Map", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.citieMap[searchIndex("Build", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.citieMap[searchIndex("Food", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.citieMap[searchIndex("Place Citizen", sysinfo.allButton.citieMap)]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.citieMap["Map"]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.citieMap["Build"]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.citieMap["Food"]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.citieMap["Place Citizen"]->renderButtonTexte(sysinfo.var.statescreen);
 
 
 	/* *********************************************************
@@ -1514,23 +1436,22 @@ void IHM::citiemap(Sysinfo& sysinfo)
 			else
 				break;
 
-			sysinfo.allButton.citieMap[searchIndex(buildName, sysinfo.allButton.citieMap)]
+			sysinfo.allButton.citieMap[buildName]
 				->renderButtonTexte(sysinfo.var.statescreen, SCREEN_WIDTH / 2, initspace += space);
-			sysinfo.allTextures.unit[searchIndex(buildName, sysinfo.allTextures.unit)]
+			sysinfo.allTextures.unit[buildName]
 				->render((SCREEN_WIDTH / 2) - 50, initspace);
-			sysinfo.allTextes.citieMap[searchIndex(
+			sysinfo.allTextes.citieMap[
 				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].life) +
 				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].atq) +
 				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].def) +
-				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].movement),
-				sysinfo.allTextes.citieMap)]
+				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].movement)]
 				->render((SCREEN_WIDTH / 2) + 200, initspace);
 		}
 
-		sysinfo.allTextes.citieMap[searchIndex("Scroll up or down", sysinfo.allTextes.citieMap)]->render();
-		sysinfo.allTextes.citieMap[searchIndex("Left click to Select", sysinfo.allTextes.citieMap)]->render();
-		sysinfo.allTextes.citieMap[searchIndex("create : ", sysinfo.allTextes.citieMap)]->render();
-		sysinfo.allTextes.citieMap[searchIndex("selectcreate", sysinfo.allTextes.citieMap)]->render();
+		sysinfo.allTextes.citieMap["Scroll up or down"]->render();
+		sysinfo.allTextes.citieMap["Left click to Select"]->render();
+		sysinfo.allTextes.citieMap["create : "]->render();
+		sysinfo.allTextes.citieMap["selectcreate"]->render();
 	}
 
 	/* *********************************************************
@@ -1611,15 +1532,15 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	 *				 START delete Texture*					   *
 	 ********************************************************* */
 
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.ground, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.groundSpec, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.barLife, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.colorapp, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.colorapptile, "Texture");
+	deleteTexture(sysinfo.allTextures.ground, "Texture");
+	deleteTexture(sysinfo.allTextures.groundSpec, "Texture");
+	deleteTexture(sysinfo.allTextures.barLife, "Texture");
+	deleteTexture(sysinfo.allTextures.colorapp, "Texture");
+	deleteTexture(sysinfo.allTextures.colorapptile, "Texture");
 
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.titleScreen, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.unit, "Texture");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextures.citieMap, "Texture");
+	deleteTexture(sysinfo.allTextures.titleScreen, "Texture");
+	deleteTexture(sysinfo.allTextures.unit, "Texture");
+	deleteTexture(sysinfo.allTextures.citieMap, "Texture");
 
 	/* *********************************************************
 	 *				 END delete Texture*					   *
@@ -1630,11 +1551,11 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	 *				 START delete Texte*					   *
 	 ********************************************************* */
 
-	deleteDyTabPlayerAndTextures(sysinfo.allTextes.number, "Texte");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextes.titleScreen, "Texte");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextes.newGame, "Texte");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextes.mainMap, "Texte");
-	deleteDyTabPlayerAndTextures(sysinfo.allTextes.citieMap, "Texte");
+	deleteTexte(sysinfo.allTextes.number, "Texte");
+	deleteTexte(sysinfo.allTextes.titleScreen, "Texte");
+	deleteTexte(sysinfo.allTextes.newGame, "Texte");
+	deleteTexte(sysinfo.allTextes.mainMap, "Texte");
+	deleteTexte(sysinfo.allTextes.citieMap, "Texte");
 
 	/* *********************************************************
 	 *					END delete Texte*					   *
@@ -1645,17 +1566,17 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	 *				 START delete Button*					   *
 	 ********************************************************* */
 
-	deleteDyTabPlayerAndTextures(sysinfo.allButton.titleScreen, "Button");
-	deleteDyTabPlayerAndTextures(sysinfo.allButton.player, "Button");
-	deleteDyTabPlayerAndTextures(sysinfo.allButton.reload, "Button");
-	deleteDyTabPlayerAndTextures(sysinfo.allButton.mainMap, "Button");
-	deleteDyTabPlayerAndTextures(sysinfo.allButton.citieMap, "Button");
+	deleteButtonTexte(sysinfo.allButton.titleScreen, "Button");
+	deleteButtonTexte(sysinfo.allButton.player, "Button");
+	deleteButtonTexte(sysinfo.allButton.reload, "Button");
+	deleteButtonTexte(sysinfo.allButton.mainMap, "Button");
+	deleteButtonTexte(sysinfo.allButton.citieMap, "Button");
 
 	/* *********************************************************
 	 *				 END delete Button*						   *
 	 ********************************************************* */
 
-	deleteDyTabPlayerAndTextures(sysinfo.tabplayer, "player");
+	deletePlayer(sysinfo.tabplayer, "player");
 
 	/* *********************************************************
 	 *				 START delete SDL						   *
@@ -1682,6 +1603,56 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	IHM::logfileconsole("[INFO]___:________PROGRAMME FINISH________");
 
 	logger.close();
+}
+
+
+
+void IHM::deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const std::string& name)
+{
+	for (const auto& n : unmap)
+	{
+		if (n.second != nullptr)
+		{
+			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
+			delete n.second;
+		}
+	}
+}
+
+void IHM::deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std::string& name)
+{
+	for (const auto& n : unmap)
+	{
+		if (n.second != nullptr)
+		{
+			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
+			delete n.second;
+		}
+	}
+}
+
+void IHM::deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap, const std::string& name)
+{
+	for (const auto& n : unmap)
+	{
+		if (n.second != nullptr)
+		{
+			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
+			delete n.second;
+		}
+	}
+}
+
+void IHM::deletePlayer(std::vector<Player*>& vect, const std::string& name)
+{
+	for (unsigned int i(0); i < vect.size(); i++)
+	{
+		if (vect[i] != nullptr)
+		{
+			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + vect[i]->GETname() + " Success");
+			delete vect[i];
+		}
+	}
 }
 
 /* *********************************************************

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
-	file version : 1.4
+	last modification on this file on version:0.17
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -340,52 +340,34 @@ struct AllTextures
 {
 	TTF_Font *font[MAX_FONT];
 
-	/* déjà en O(1) pas besoin d'index */
-	std::vector<Texture*> ground;
-	std::vector<Texture*> groundSpec;
-	std::vector<Texture*> colorapp;
-	std::vector<Texture*> colorapptile;
-	std::vector<Texture*> barLife;
+	std::unordered_map<std::string, Texture*> ground;
+	std::unordered_map<std::string, Texture*> groundSpec;
+	std::unordered_map<std::string, Texture*> colorapp;
+	std::unordered_map<std::string, Texture*> colorapptile;
+	std::unordered_map<std::string, Texture*> barLife;
 
 
-	std::vector<Texture*> titleScreen;
-	std::vector<Texture*> unit;
-	std::vector<Texture*> citieMap;
-	
-	std::vector<unsigned int> titleScreenIndex;
-	std::vector<unsigned int> unitIndex;
-	std::vector<unsigned int> citieMapIndex;
+	std::unordered_map<std::string, Texture*> titleScreen;
+	std::unordered_map<std::string, Texture*> unit;
+	std::unordered_map<std::string, Texture*> citieMap;
 };
 struct AllTextes
 {
+	std::unordered_map<std::string, Texte*> number;
 
-	/* déjà en O(1) pas besoin d'index */
-	std::vector<Texte*> number;
-
-	std::vector<Texte*> titleScreen;
-	std::vector<Texte*> newGame;
-	std::vector<Texte*> mainMap;
-	std::vector<Texte*> citieMap;
-
-	std::vector<unsigned int> titleScreenIndex;
-	std::vector<unsigned int> newGameIndex;
-	std::vector<unsigned int> mainMapIndex;
-	std::vector<unsigned int> citieMapIndex;
+	std::unordered_map<std::string, Texte*> titleScreen;
+	std::unordered_map<std::string, Texte*> newGame;
+	std::unordered_map<std::string, Texte*> mainMap;
+	std::unordered_map<std::string, Texte*> citieMap;
 };
 struct AllButtons
 {
-	std::vector<ButtonTexte*> titleScreen;
-	std::vector<ButtonTexte*> reload;
-	std::vector<ButtonTexte*> mainMap;
-	std::vector<ButtonTexte*> citieMap;
+	std::unordered_map<std::string, ButtonTexte*> titleScreen;
+	std::unordered_map<std::string, ButtonTexte*> reload;
+	std::unordered_map<std::string, ButtonTexte*> mainMap;
+	std::unordered_map<std::string, ButtonTexte*> citieMap;
 
-	std::vector<ButtonTexte*> player; // init in GamePlay.cpp
-
-	std::vector<unsigned int> titleScreenIndex;
-	std::vector<unsigned int> reloadIndex;
-	std::vector<unsigned int> mainMapIndex;
-	std::vector<unsigned int> citieMapIndex;
-	std::vector<unsigned int> playerIndex;
+	std::unordered_map<std::string, ButtonTexte*> player; // init in GamePlay.cpp
 };
 //---------------------- Structure niveau 0 ---------------------------------------------------------------------------------------------------------
 struct Sysinfo

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.3
+	last modification on this file on version:0.17
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -23,7 +23,6 @@
 */
 
 #include "City.h"
-#include "HashTable.h"
 #include "IHM.h"
 
 /* *********************************************************
@@ -241,11 +240,11 @@ void City::afficher(Sysinfo& sysinfo)
 	unsigned int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
 	unsigned int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
 
-	sysinfo.allTextures.citieMap[searchIndex(_image, sysinfo.allTextures.citieMap)]->render(x, y);
+	sysinfo.allTextures.citieMap[_image]->render(x, y);
 
-	sysinfo.allTextes.mainMap[searchIndex(_name, sysinfo.allTextes.mainMap)]->render(x + sysinfo.map.tileSize / 2, y + sysinfo.map.tileSize);
+	sysinfo.allTextes.mainMap[_name]->render(x + sysinfo.map.tileSize / 2, y + sysinfo.map.tileSize);
 
-	sysinfo.allTextes.number[(unsigned int)floor(_nbpop)]->render(x + sysinfo.map.tileSize / 2 - 20, y + sysinfo.map.tileSize - 6);
+	sysinfo.allTextes.number[std::to_string((unsigned int)floor(_nbpop))]->render(x + sysinfo.map.tileSize / 2 - 20, y + sysinfo.map.tileSize - 6);
 }
 
 /*
@@ -262,10 +261,10 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 		switch (_tile[i].tile_ground)
 		{
 		case grass:
-			sysinfo.allTextures.ground[0]->render(_tile[i].tile_x, _tile[i].tile_y);
+			sysinfo.allTextures.ground["grass.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
 			break;
 		case water:
-			sysinfo.allTextures.ground[1]->render(_tile[i].tile_x, _tile[i].tile_y);
+			sysinfo.allTextures.ground["water.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
 			break;
 		}
 
@@ -273,11 +272,11 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 
 		if (_tile[i].tile_spec > 0) 
 		{
-			sysinfo.allTextures.groundSpec[_tile[i].tile_spec - 1]->render(_tile[i].tile_x, _tile[i].tile_y);
+			sysinfo.allTextures.groundSpec[_tile[i].tile_stringspec]->render(_tile[i].tile_x, _tile[i].tile_y);
 		}
 		if (_tile[i].appartenance != -1)
 		{
-			sysinfo.allTextures.colorapptile[_tile[i].appartenance]->render(_tile[i].tile_x, _tile[i].tile_y);
+			sysinfo.allTextures.colorapptile["ColorPlayertile" + std::to_string(_tile[i].appartenance) + ".bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
 		}
 	}
 }

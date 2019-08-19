@@ -22,7 +22,6 @@
     <ClInclude Include="src\Civ_rob_2.0\City.h" />
     <ClInclude Include="src\Civ_rob_2.0\civ_lib.h" />
     <ClInclude Include="src\Civ_rob_2.0\GamePlay.h" />
-    <ClInclude Include="src\Civ_rob_2.0\HashTable.h" />
     <ClInclude Include="src\Civ_rob_2.0\IHM.h" />
     <ClInclude Include="src\Civ_rob_2.0\KeyboardMouse.h" />
     <ClInclude Include="src\Civ_rob_2.0\LIB.h" />
@@ -37,7 +36,6 @@
   <ItemGroup>
     <ClCompile Include="src\Civ_rob_2.0\City.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\GamePlay.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\HashTable.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\IHM.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\KeyboardMouse.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\LoadConfig.cpp" />

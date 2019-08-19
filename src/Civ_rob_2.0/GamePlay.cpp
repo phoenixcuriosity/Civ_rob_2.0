@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.17
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,7 +26,6 @@
 #include "IHM.h"
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
-#include "HashTable.h"
 
 /* *********************************************************
  *			START GamePlay::STATIC::NEW-GAME			   *
@@ -55,8 +54,8 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 
 
 	// Première demande au joueur : Le nombre de joueurs ?
-	sysinfo.allTextes.newGame[searchIndex("Press Return or kpad_Enter to valid selection", sysinfo.allTextes.newGame)]->render();
-	sysinfo.allTextes.newGame[searchIndex("How many player(s) (max 9):", sysinfo.allTextes.newGame)]->render();
+	sysinfo.allTextes.newGame["Press Return or kpad_Enter to valid selection"]->render();
+	sysinfo.allTextes.newGame["How many player(s) (max 9):"]->render();
 	SDL_RenderPresent(sysinfo.screen.renderer);
 
 
@@ -93,9 +92,6 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 			shaded, sysinfo.var.s_player.tabPlayerName[i], { 127, 255, 127, 255 }, { 64, 64, 64, 255 }, 16, 0, initspacename += spacename, nonTransparent, no_angle);
 	}
 
-	/* Hachage du tableau player */
-	sysinfo.allButton.player.resize(sysinfo.allButton.player.size() + sysinfo.allButton.player.size() * INIT_SIZE_MULTIPLIER);
-	fillTabHachage(sysinfo.allButton.player, sysinfo.allButton.playerIndex);
 	
 	sysinfo.screen.enableFPS = true;
 	sysinfo.screen.fpsTimer.start();
