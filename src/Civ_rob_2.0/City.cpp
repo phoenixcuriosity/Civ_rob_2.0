@@ -70,8 +70,8 @@ void City::createCity(Sysinfo& sysinfo)
 				if (o > -initSizeInfluence && o < initSizeInfluence && p > -initSizeInfluence && p < initSizeInfluence)
 					sysinfo.map.maps[middletileX + o][middletileY + p].appartenance = sysinfo.var.s_player.selectplayer;
 				tabtile[k] = sysinfo.map.maps[middletileX + o][middletileY + p];
-				tabtile[k].tile_x = (SCREEN_WIDTH / 2) - (-o * sysinfo.map.tileSize);
-				tabtile[k].tile_y = (SCREEN_HEIGHT / 2) - (-p * sysinfo.map.tileSize);
+				tabtile[k].tile_x = (sysinfo.screen.screenWidth / 2) - (-o * sysinfo.map.tileSize);
+				tabtile[k].tile_y = (sysinfo.screen.screenHeight / 2) - (-p * sysinfo.map.tileSize);
 				k++;
 			}
 		}

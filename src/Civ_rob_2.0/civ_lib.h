@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.5
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,49 +47,8 @@
 
 
 /* *********************************************************
- *					 Constantes							   *
- ********************************************************* */
-
-//--- Constantes concernant l'ecran et la dimension de la fenetre  -----------------------------------------------------------------------------------
-
-/*
-	Pendant le développement du jeux, les parametres optimaux ont été:
-	*	-> SCREEN_WIDTH = 1920 pixels
-	*	-> SCREEN_HEIGHT = 1088 pixels
-	*	-> SCREEN_REFRESH_RATE = 60 Hz
-*/
-
-
-/* *********************************************************
  *				Calcul des Constantes					   *
  ********************************************************* */
-
-// Donne la valeur en pixel de la longueur et de la largeur de l'écran
-inline Uint16 getHorizontal()
-{
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.right % 64)) == 0)
-		return (Uint16)desktop.right;
-	return (Uint16)desktop.right + (64 - complete);
-}
-// longueur de la fenetre en pixel
-const Uint16 SCREEN_WIDTH = getHorizontal();
-
-inline Uint16 getVertical()
-{
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.bottom % 64)) == 0)
-		return (Uint16)desktop.bottom;
-	return (Uint16)desktop.bottom + (64 - complete);
-}
-// hauteur de la fenetre en pixel
-const Uint16 SCREEN_HEIGHT = getVertical();
 
 // Donne la fréquence de rafraichissement de l'écran en Hz
 inline Uint8 getRefreshRate()
@@ -262,6 +221,10 @@ struct Screen
 
 	// ptr sur le renderer crée par la SDL
 	SDL_Renderer *renderer = nullptr;
+
+	Uint16 screenWidth = 0;
+
+	Uint16 screenHeight = 0;
 
 	// autorise le début du compteur de fps
 	bool enableFPS = false;

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.6
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -80,7 +80,7 @@ public:
 	* OUTPUT PARAMETERS : message dans la console et le log.txt
 	* RETURNED VALUE    : bool : true = pas de d'erreur lors de l'initialisation de la SDL
 	*/
-	static bool initSDL(SDL_Window*&, SDL_Renderer*&, TTF_Font*[]);
+	static bool initSDL(Screen& screen, TTF_Font* font[]);
 
 	/*
 	* NAME : calculImage
@@ -101,9 +101,14 @@ public:
 	* OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
 	* RETURNED VALUE    : void
 	*/
-	static void readXmlTexte(tinyxml2::XMLDocument& texteFile, SDL_Renderer*& renderer, TTF_Font* font[],AllTextes& allTextes);
+	static void readXmlTexte(tinyxml2::XMLDocument& texteFile,
+								SDL_Renderer*& renderer,
+								TTF_Font* font[],
+								AllTextes& allTextes,
+								Uint16 screenWidth,
+								Uint16 screenHeight);
 
-	static int determineCoor(std::string line);
+	static int determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight);
 
 
 public:

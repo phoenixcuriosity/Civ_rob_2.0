@@ -924,7 +924,9 @@ bool ButtonTexte::searchButtonTexte(Uint8 stateScreen, signed int x, signed int 
 void ButtonTexte::resetOnstateScreen(Uint8 select, unsigned int selectnothing)
 {
 	if (this->GETselect() != select && this->GETselect() != selectnothing)
+	{
 		_on = false;
+	}
 }
 
 
@@ -941,7 +943,9 @@ void ButtonTexte::resetOnPlayer(unsigned int selectplayer, std::vector<std::stri
 	for (unsigned int i(0); i < tabPlayerName.size(); i++)
 	{
 		if (i != selectplayer && this->GETname().compare(tabPlayerName[i]) == 0)
+		{
 			_on = false;
+		}
 	}
 }
 
@@ -969,11 +973,14 @@ bool ButtonTexte::renderButtonTexte(	Uint8 stateScreen,
 			this->SETdstx(x);
 			this->SETdsty(y);
 		}
-
 		if (_on)
+		{
 			SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
+		}
 		else
+		{
 			SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, &this->GETdst());
+		}	
 		return true;
 	}
 	return false;

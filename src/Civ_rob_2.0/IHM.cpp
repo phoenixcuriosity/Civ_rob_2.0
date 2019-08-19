@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.13
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -331,6 +331,9 @@ void IHM::logSDLError(std::ostream &os, const std::string &msg)
 }
 
 
+
+
+
 /*
 * NAME : initSDL
 * ROLE : Initialisation de la SDL fenetre et renderer ainsi que le tableau de police de font
@@ -340,7 +343,7 @@ void IHM::logSDLError(std::ostream &os, const std::string &msg)
 * OUTPUT PARAMETERS : message dans la console et le log.txt
 * RETURNED VALUE    : bool : true = pas de d'erreur lors de l'initialisation de la SDL
 */
-bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[])
+bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
@@ -349,13 +352,15 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 	}
 	else
 	{
-		window = SDL_CreateWindow("Civ_Rob_2.0",
+		
+
+		screen.window = SDL_CreateWindow("Civ_Rob_2.0",
 			0, 0,
-			SCREEN_WIDTH, SCREEN_HEIGHT,
+			screen.screenWidth, screen.screenHeight,
 			SDL_WINDOW_OPENGL);
 
 		//	SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_FULLSCREEN
-		if (window == nullptr)
+		if (screen.window == nullptr)
 		{
 			logSDLError(std::cout, "CreateWindow");
 			SDL_Quit();
@@ -363,12 +368,12 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		}
 		else
 			logfileconsole("CreateWindow Success");
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		screen.renderer = SDL_CreateRenderer(screen.window, -1, SDL_RENDERER_ACCELERATED);
 		//| SDL_RENDERER_PRESENTVSYNC
-		if (renderer == nullptr)
+		if (screen.renderer == nullptr)
 		{
 			logSDLError(std::cout, "CreateRenderer");
-			SDL_DestroyWindow(window);
+			SDL_DestroyWindow(screen.window);
 			SDL_Quit();
 			return false;
 		}
@@ -378,8 +383,8 @@ bool IHM::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, TTF_Font* font[]
 		if (TTF_Init() != 0)
 		{
 			logSDLError(std::cout, "TTF_Init");
-			SDL_DestroyRenderer(renderer);
-			SDL_DestroyWindow(window);
+			SDL_DestroyRenderer(screen.renderer);
+			SDL_DestroyWindow(screen.window);
 			SDL_Quit();
 			return false;
 		}
@@ -508,11 +513,11 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	*/
 	sysinfo.var.statescreen = STATEtitleScreen;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "earth.jpg", "earth.jpg", nonTransparent, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, NULL, NULL, no_angle, center);
+		IPath + "earth.jpg", "earth.jpg", nonTransparent, sysinfo.screen.screenWidth / 2, sysinfo.screen.screenHeight / 2, NULL, NULL, no_angle, center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "sdl_icone.bmp", "sdl_icone.bmp", nonTransparent, SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100, NULL, NULL, no_angle, center_x);
+		IPath + "sdl_icone.bmp", "sdl_icone.bmp", nonTransparent, sysinfo.screen.screenWidth / 2, sysinfo.screen.screenHeight - 100, NULL, NULL, no_angle, center_x);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "signal/destroyed.bmp", "destroyed.bmp", nonTransparent, SCREEN_WIDTH / 2, 0, NULL, NULL, no_angle, center_x);
+		IPath + "signal/destroyed.bmp", "destroyed.bmp", nonTransparent, sysinfo.screen.screenWidth / 2, 0, NULL, NULL, no_angle, center_x);
 
 
 
@@ -579,22 +584,22 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "New Game", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu,
+		shaded, "New Game", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu,
 		nonTransparent, no_angle, center);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "Reload", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu,
+		shaded, "Reload", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
 		nonTransparent, no_angle, center);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu,
+		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
 		nonTransparent, no_angle, center);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "Quit", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu,
+		shaded, "Quit", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
 		nonTransparent, no_angle, center);
 
 
@@ -615,12 +620,12 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
-		shaded, "Load", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2 - 200, 256,
+		shaded, "Load", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2 - 200, 256,
 		nonTransparent, no_angle, center_x);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
-		shaded, "Remove", WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2 + 200, 256,
+		shaded, "Remove", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2 + 200, 256,
 		nonTransparent, no_angle, center_x);
 
 	for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
@@ -628,7 +633,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
 			shaded, "Save : " + std::to_string(sysinfo.var.save.GETtabSave()[i]),
-			WriteColorButton, BackColorButton, 32, SCREEN_WIDTH / 2, initspacemenu += spacemenu,
+			WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
 			nonTransparent, no_angle, center);
 	}
 		
@@ -683,19 +688,19 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	sysinfo.var.select = selectcreate;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font
 		, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-		shaded, "Build", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 100,
+		shaded, "Build", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 100,
 		nonTransparent, no_angle, center_x);
 
 	sysinfo.var.select = selectnothing;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-		shaded, "Food", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 132,
+		shaded, "Food", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 132,
 		nonTransparent, no_angle, center_x);
 
 	sysinfo.var.select = selectmoveCitizen;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-		shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, SCREEN_WIDTH / 2 - 200, 164,
+		shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 164,
 		nonTransparent, no_angle, center_x);
 	
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
@@ -726,7 +731,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 
 	if (texteFile.ErrorID() == 0)
 	{
-		readXmlTexte(texteFile, sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.allTextes);	
+		readXmlTexte(texteFile, sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.allTextes, sysinfo.screen.screenWidth, sysinfo.screen.screenHeight);
 	}
 
 	/*** STATEmainmap ***/
@@ -791,7 +796,12 @@ void IHM::calculImage(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
 * RETURNED VALUE    : void
 */
-void IHM::readXmlTexte(tinyxml2::XMLDocument& texteFile, SDL_Renderer*& renderer, TTF_Font* font[], AllTextes& allTextes)
+void IHM::readXmlTexte(	tinyxml2::XMLDocument& texteFile,
+						SDL_Renderer*& renderer,
+						TTF_Font* font[],
+						AllTextes& allTextes,
+						Uint16 screenWidth,
+						Uint16 screenHeight)
 {
 	const char* root("Config");
 
@@ -897,8 +907,8 @@ void IHM::readXmlTexte(tinyxml2::XMLDocument& texteFile, SDL_Renderer*& renderer
 				fontColor,
 				backColor,
 				(Uint8)size,
-				determineCoor(node->FirstChildElement(s_X)->GetText()),
-				determineCoor(node->FirstChildElement(s_Y)->GetText()),
+				determineCoor(node->FirstChildElement(s_X)->GetText(), screenWidth, screenHeight),
+				determineCoor(node->FirstChildElement(s_Y)->GetText(), screenWidth, screenHeight),
 				xmlGiveAlpha(node->FirstChildElement(s_Alpha)->GetText()),
 				xmlGiveAngle(node->FirstChildElement(s_Angle)->GetText()),
 				xmlGiveCenter(node->FirstChildElement(s_Center)->GetText()));
@@ -913,7 +923,7 @@ void IHM::readXmlTexte(tinyxml2::XMLDocument& texteFile, SDL_Renderer*& renderer
 	}
 }
 
-int IHM::determineCoor(std::string line)
+int IHM::determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight)
 {
 	std::string num(""), den(""), buffer("");
 	unsigned int somme(0), numI(0), denI(0);
@@ -937,14 +947,14 @@ int IHM::determineCoor(std::string line)
 		n = num.find("SCREEN_WIDTH");
 		while (n != std::string::npos)
 		{
-			num.replace(n, 12, std::to_string(SCREEN_WIDTH));
+			num.replace(n, 12, std::to_string(screenWidth));
 			n = num.find("SCREEN_WIDTH");
 		}
 		
 		n = num.find("SCREEN_HEIGHT");
 		while (n != std::string::npos)
 		{
-			num.replace(n, 13, std::to_string(SCREEN_HEIGHT));
+			num.replace(n, 13, std::to_string(screenHeight));
 			n = num.find("SCREEN_HEIGHT");
 		}
 
@@ -1193,7 +1203,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		// affiche la texture grise de la toolbar
 		for (unsigned int i(0); i < sysinfo.map.toolBarSize; i++)
 		{
-			for (unsigned int j(0); j < SCREEN_HEIGHT / sysinfo.map.tileSize; j++)
+			for (unsigned int j(0); j < sysinfo.screen.screenHeight / sysinfo.map.tileSize; j++)
 			{
 				sysinfo.allTextures.ground["toolbar.bmp"]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
 			}
@@ -1331,7 +1341,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		break;
 	}
 	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		blended, std::to_string(sysinfo.screen.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, SCREEN_WIDTH / 2, 50, no_angle, center_x);
+		blended, std::to_string(sysinfo.screen.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, sysinfo.screen.screenWidth / 2, 50, no_angle, center_x);
 
 	/* ### Don't put code below here ### */
 
@@ -1437,15 +1447,15 @@ void IHM::citiemap(Sysinfo& sysinfo)
 				break;
 
 			sysinfo.allButton.citieMap[buildName]
-				->renderButtonTexte(sysinfo.var.statescreen, SCREEN_WIDTH / 2, initspace += space);
+				->renderButtonTexte(sysinfo.var.statescreen, sysinfo.screen.screenWidth / 2, initspace += space);
 			sysinfo.allTextures.unit[buildName]
-				->render((SCREEN_WIDTH / 2) - 50, initspace);
+				->render((sysinfo.screen.screenWidth / 2) - 50, initspace);
 			sysinfo.allTextes.citieMap[
 				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].life) +
 				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].atq) +
 				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].def) +
 				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].movement)]
-				->render((SCREEN_WIDTH / 2) + 200, initspace);
+				->render((sysinfo.screen.screenWidth / 2) + 200, initspace);
 		}
 
 		sysinfo.allTextes.citieMap["Scroll up or down"]->render();
@@ -1521,8 +1531,10 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	 ********************************************************* */
 
 	for (unsigned int i(1); i < MAX_FONT; i++)
+	{
 		TTF_CloseFont(sysinfo.allTextures.font[i]);
-
+	}
+		
 	/* *********************************************************
 	 *					END delete font*					   *
 	 ********************************************************* */

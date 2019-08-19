@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -60,7 +60,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 
 
 	// Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1
-	KeyboardMouse::cinDigit(sysinfo, nbplayer, SCREEN_WIDTH / 2, initspace += space);
+	KeyboardMouse::cinDigit(sysinfo, nbplayer, sysinfo.screen.screenWidth / 2, initspace += space);
 
 	// Deuxième demande au joueur : Le nom des joueurs
 	for (unsigned int i(1); i < nbplayer + 1; i++)
@@ -68,11 +68,11 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 		sysinfo.var.s_player.tabPlayerName.push_back("");
 
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, SCREEN_WIDTH / 2, initspace += space, no_angle, center_x);
+			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, sysinfo.screen.screenWidth / 2, initspace += space, no_angle, center_x);
 		SDL_RenderPresent(sysinfo.screen.renderer);
 
 		// valeur par défaut avec incrémentation en fonction du nombre de joueur : noName 
-		KeyboardMouse::cinAlphabet(sysinfo, sysinfo.var.s_player.tabPlayerName[i - 1], SCREEN_WIDTH / 2, initspace += space);
+		KeyboardMouse::cinAlphabet(sysinfo, sysinfo.var.s_player.tabPlayerName[i - 1], sysinfo.screen.screenWidth / 2, initspace += space);
 		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i - 1]));
 	}
 	
@@ -118,9 +118,9 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 		for (Uint8 j(0); j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
 		{
 			
-			sysinfo.map.maps[i][j].indexX = i + (Uint8)((SCREEN_WIDTH / 10) / sysinfo.map.tileSize);
+			sysinfo.map.maps[i][j].indexX = i + (Uint8)((sysinfo.screen.screenWidth / 10) / sysinfo.map.tileSize);
 			sysinfo.map.maps[i][j].indexY = j;
-			sysinfo.map.maps[i][j].tile_x = sysinfo.map.tileSize * i + (SCREEN_WIDTH / 10);
+			sysinfo.map.maps[i][j].tile_x = sysinfo.map.tileSize * i + (sysinfo.screen.screenWidth / 10);
 			sysinfo.map.maps[i][j].tile_y = sysinfo.map.tileSize * j;
 			
 			/*

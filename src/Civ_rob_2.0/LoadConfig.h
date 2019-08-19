@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.0
+	last modification on this file on version:0.16
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,6 +43,10 @@ public:
 	* RETURNED VALUE    : void
 	*/
 	static void initMain(Sysinfo& sysinfo);
+
+	static Uint16 getHorizontal(unsigned int tileSize);
+
+	static Uint16 getVertical(unsigned int tileSize);
 
 private:
 

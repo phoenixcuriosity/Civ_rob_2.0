@@ -230,7 +230,9 @@ bool Unit::irrigate(Sysinfo&)
  *				START Units::METHODS					   *
  ********************************************************* */
 
-Unit::Unit() : _name(""), _x(0), _y(0), _life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true)
+Unit::Unit() :	_name(""), _x(0), _y(0),
+				_maxlife(0), _maxatq(0), _maxdef(0), _maxmovement(0), _maxlevel(0),
+				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true)
 {
 	IHM::logfileconsole("Create Unit Par Defaut Success");
 }

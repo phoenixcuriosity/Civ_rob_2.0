@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.17
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,9 +47,7 @@ int main(int argc, char* argv[])
 
 	IHM::initTile(sysinfo.map);
 
-	
-
-	if (IHM::initSDL(sysinfo.screen.window, sysinfo.screen.renderer, sysinfo.allTextures.font))
+	if (IHM::initSDL(sysinfo.screen, sysinfo.allTextures.font))
 	{
 		Unit::loadUnitAndSpec(sysinfo);
 		IHM::calculImage(sysinfo);

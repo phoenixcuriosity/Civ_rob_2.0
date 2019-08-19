@@ -103,8 +103,8 @@ public:
 	inline virtual std::string GETname() const					{ return _name; };
 	inline virtual Unit* GETtheUnit(unsigned int index) const	{ return _tabUnit[index]; };
 	inline virtual std::vector<Unit*> GETtabUnit() const		{ return _tabUnit; };
-	inline virtual City* GETtheCity(unsigned int index) const{ return _tabCity[index]; };
-	inline virtual std::vector<City*> GETtabCity() const	{ return _tabCity; };
+	inline virtual City* GETtheCity(unsigned int index) const	{ return _tabCity[index]; };
+	inline virtual std::vector<City*> GETtabCity() const		{ return _tabCity; };
 
 	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
 
