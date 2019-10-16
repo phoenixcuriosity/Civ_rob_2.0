@@ -104,7 +104,7 @@ public:
 	 ********************************************************* */
 	 
 	
-	City() {}; // garder le constructeur par défaut
+	//City() {}; // garder le constructeur par défaut
 	City(const std::string &, unsigned int, unsigned int, Tile[]);
 	~City();
 

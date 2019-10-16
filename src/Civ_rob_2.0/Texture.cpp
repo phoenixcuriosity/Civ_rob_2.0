@@ -69,7 +69,13 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 
 	int xt(0), yt(0), wt(0), ht(0);
 	if (x != -1 && y != -1)
+	{
 		xt = x, yt = y;
+	}
+	else
+	{
+		/* N/A */
+	}	
 
 	SDL_Texture* newTexture(nullptr);
 	SDL_Surface* loadedSurface(IMG_Load(path.c_str()));
@@ -93,7 +99,17 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 			if (alpha != nonTransparent)
 			{
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
+				{
 					IHM::logSDLError(std::cout, "alpha : ");
+				}
+				else
+				{
+					/* N/A */
+				}
+			}
+			else
+			{
+				/* N/A */
 			}
 			centrage(xt, yt, wt, ht, cnt);
 			tabTexture[msg] = new Texture(renderer, newTexture, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, cnt);
@@ -130,6 +146,7 @@ void Texture::centrage(	int& xc,
 	switch (cnt)
 	{
 	case nocenter:
+		/* N/A */
 		break;
 	case center_x:
 		xc -= (iW / 2);
@@ -140,6 +157,9 @@ void Texture::centrage(	int& xc,
 	case center:
 		xc -= (iW / 2);
 		yc -= (iH / 2);
+		break;
+	default:
+		/* N/A */
 		break;
 	}
 }
@@ -178,12 +198,22 @@ Texture::Texture(	SDL_Renderer*& renderer,
 Texture::~Texture()
 {
 	if (_renderer != nullptr)
+	{
 		_renderer = nullptr;
+	}	
+	else
+	{
+		/* N/A */
+	}
 
 	if (_texture != nullptr) 
 	{
 		SDL_DestroyTexture(_texture);
 		_texture = nullptr;
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 
@@ -232,10 +262,20 @@ void Texture::render(int x, int y)
 		_dst.x = x;
 		_dst.y = y;
 	}
-	if (_angle == 0)
-		SDL_RenderCopy(_renderer, _texture, NULL, &_dst);
 	else
+	{
+		/* N/A */
+	}
+
+	if (_angle == 0)
+	{
+		SDL_RenderCopy(_renderer, _texture, NULL, &_dst);
+	}
+	else
+	{
 		SDL_RenderCopyEx(_renderer, _texture, NULL, &_dst, _angle, NULL, SDL_FLIP_NONE);
+	}
+		
 }
 
 
@@ -299,14 +339,26 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(	SDL_Renderer*& renderer,
 	SDL_Surface *surf(nullptr);
 
 	if (type == blended)
+	{
 		surf = TTF_RenderText_Blended(font, message.c_str(), color);
+	}	
 	else if (type == shaded)
+	{
 		surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
+	}	
+	else
+	{
+		/* N/A */
+	}
 
 	SDL_Texture *texture(SDL_CreateTextureFromSurface(renderer, surf));
 	if (texture == nullptr)
 	{
 		IHM::exitError("[ERROR]___:___________ERROR : renderTextShaded nullptr for : " + message);
+	}
+	else
+	{
+		/* N/A */
 	}
 	SDL_FreeSurface(surf);
 
@@ -353,7 +405,13 @@ void Texte::loadTexte(	SDL_Renderer*& renderer,
 
 	SDL_Texture *image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
 	if (alpha != nonTransparent)
+	{
 		SDL_SetTextureAlphaMod(image, alpha);
+	}	
+	else
+	{
+		/* N/A */
+	}
 	int xc(x), yc(y), iW(0), iH(0);
 	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
 	centrage(xc, yc, iW, iH, cnt);
@@ -408,10 +466,14 @@ void Texte::writeTexte(	SDL_Renderer*& renderer,
 	dst.h = iH;
 
 	if (angle == 0)
+	{
 		SDL_RenderCopy(renderer, image, NULL, &dst);
+	}
 	else
+	{
 		SDL_RenderCopyEx(renderer, image, NULL, &dst, angle, NULL, SDL_FLIP_NONE);
-
+	}
+		
 	SDL_DestroyTexture(image);
 }
 
@@ -450,12 +512,16 @@ Texte::Texte(	SDL_Renderer*& renderer,
 	_size(size), _font()
 {
 	for (unsigned int i(0); i < MAX_FONT; i++)
+	{
 		_font[i] = font[i];
+	}	
 }
 Texte::~Texte()
 {
 	for (unsigned int i(0); i < MAX_FONT; i++)
+	{
 		_font[i] = nullptr;
+	}	
 }
 
 
@@ -470,9 +536,13 @@ Texte::~Texte()
 bool Texte::isSameColor(SDL_Color color1, SDL_Color color2) const
 {
 	if (color1.a != color2.a || color1.b != color2.b || color1.g != color2.g || color1.r != color2.r)
+	{
 		return false;
+	}
 	else
+	{
 		return true;
+	}	
 }
 
 
@@ -505,6 +575,9 @@ void Texte::resizeTexte()
 		xc = this->GETdstx() + this->GETdstw() / 2;
 		yc = this->GETdsty() + this->GETdsth() / 2;
 		break;
+	default:
+		/* N/A */
+		break;
 	}
 
 	SDL_QueryTexture(this->GETtextureNonConst(), NULL, NULL, &iW, &iH);
@@ -531,6 +604,10 @@ void Texte::SETname(std::string msg)
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 		resizeTexte();
 	}
+	else
+	{
+		/* N/A */
+	}
 }
 void Texte::SETtype(Texte_Type type)
 {
@@ -538,6 +615,10 @@ void Texte::SETtype(Texte_Type type)
 	{
 		_type = type;
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 void Texte::SETsize(Uint8 size)
@@ -548,6 +629,10 @@ void Texte::SETsize(Uint8 size)
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 		resizeTexte();
 	}
+	else
+	{
+		/* N/A */
+	}
 }
 void Texte::SETtxtcolor(SDL_Color txtcolor)
 {
@@ -556,6 +641,10 @@ void Texte::SETtxtcolor(SDL_Color txtcolor)
 		_txtcolor = txtcolor;
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
 	}
+	else
+	{
+		/* N/A */
+	}
 }
 void Texte::SETbackcolor(SDL_Color backcolor)
 {
@@ -563,6 +652,10 @@ void Texte::SETbackcolor(SDL_Color backcolor)
 	{
 		_backcolor = backcolor;
 		this->SETtexture(createSDL_TextureFromTexte(this->GETrenderer(), _type, this->GETname(), _txtcolor, _backcolor, _font[_size]));
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 
@@ -617,7 +710,13 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
 
 	int xt(0), yt(0), wt(0), ht(0);
 	if (x != -1 && y != -1)
+	{
 		xt = x, yt = y;
+	}
+	else
+	{
+		/* N/A */
+	}
 
 	SDL_Surface* loadedSurface(IMG_Load(path.c_str()));
 	std::size_t found(path.find('.'));
@@ -648,6 +747,11 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
 				SDL_SetTextureAlphaMod(image, alpha);
 				SDL_SetTextureAlphaMod(imageOn, alpha);
 			}
+			else
+			{
+				/* N/A */
+			}
+
 			centrage(xt, yt, wt, ht, cnt);
 			tabButtonImage[msg] = new ButtonImage(renderer, image, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, imageOn, cnt);
 		}

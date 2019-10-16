@@ -60,6 +60,10 @@ void City::createCity(Sysinfo& sysinfo)
 					middletileY = j;
 					break;
 				}
+				else
+				{
+					/* N/A */
+				}
 			}
 		}
 		unsigned int k(0);
@@ -68,7 +72,14 @@ void City::createCity(Sysinfo& sysinfo)
 			for (int p(-(int)ceil(initSizeView / 2)); p <= (int)ceil(initSizeView / 2); p++)
 			{
 				if (o > -initSizeInfluence && o < initSizeInfluence && p > -initSizeInfluence && p < initSizeInfluence)
+				{
 					sysinfo.map.maps[middletileX + o][middletileY + p].appartenance = sysinfo.var.s_player.selectplayer;
+				}
+				else
+				{
+					/* N/A */
+				}
+					
 				tabtile[k] = sysinfo.map.maps[middletileX + o][middletileY + p];
 				tabtile[k].tile_x = (sysinfo.screen.screenWidth / 2) - (-o * sysinfo.map.tileSize);
 				tabtile[k].tile_y = (sysinfo.screen.screenHeight / 2) - (-p * sysinfo.map.tileSize);
@@ -81,6 +92,10 @@ void City::createCity(Sysinfo& sysinfo)
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->deleteUnit(sysinfo.var.s_player.selectunit);
 		sysinfo.var.s_player.selectunit = -1;
 		sysinfo.var.s_player.unitNameToMove = "";
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 
@@ -103,6 +118,10 @@ void City::searchCityTile(Sysinfo& sysinfo)
 			sysinfo.var.select = selectnothing;
 			break;
 		}
+		else
+		{
+			/* N/A */
+		}
 	}
 }
 
@@ -116,8 +135,10 @@ void City::searchCityTile(Sysinfo& sysinfo)
 std::vector<Tile> City::createTiles(Tile tiles[])
 {
 	std::vector<Tile> Atiles;
-	for (unsigned int i(0); i < initSizeView*initSizeView; i++)
+	for (unsigned int i(0); i < initSizeView * initSizeView; i++)
+	{
 		Atiles.push_back(tiles[i]);
+	}
 	return Atiles;
 }
 
@@ -180,8 +201,8 @@ void City::foodNextTurn()
 	std::cout << std::endl << "level = " << _nbpop;
 	std::cout << std::endl << "nbcitizen = " << _citizens.size();
 	
-	if (_foodStock < 0
-		){
+	if (_foodStock < 0)
+	{
 		_nbpop--;
 		_citizens.pop_back();
 		_foodStock = foodLimitPerLevelMinusOne;
@@ -195,11 +216,20 @@ void City::foodNextTurn()
 		_foodStock -= foodLimitPerLevelCurrent;
 		change = true;
 	}
+	else
+	{
+		/* N/A */
+	}
+
 	if (change)
 	{
 		for (unsigned int i(0); i < _citizens.size(); i++)
 			sommeFoodCitizen += _citizens[i].GETfood();
 		_foodBalance = sommeFoodCitizen - (2 * (_nbpop - 1));
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 
@@ -213,7 +243,9 @@ void City::foodNextTurn()
 int City::testPos(unsigned int mouse_x, unsigned int mouse_y)
 {
 	if (_x == mouse_x && _y == mouse_y)
+	{
 		return 1;
+	}	
 	return 0;
 }
 
@@ -266,6 +298,9 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 		case water:
 			sysinfo.allTextures.ground["water.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
 			break;
+		default:
+			/* N/A */
+			break;
 		}
 
 
@@ -274,9 +309,18 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 		{
 			sysinfo.allTextures.groundSpec[_tile[i].tile_stringspec]->render(_tile[i].tile_x, _tile[i].tile_y);
 		}
+		else
+		{
+			/* N/A */
+		}
+
 		if (_tile[i].appartenance != -1)
 		{
 			sysinfo.allTextures.colorapptile["ColorPlayertile" + std::to_string(_tile[i].appartenance) + ".bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
+		}
+		else
+		{
+			/* N/A */
 		}
 	}
 }
@@ -307,7 +351,7 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 */
 unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold)
 {
-	unsigned int condition(citizens.size());
+	unsigned int condition((unsigned int)citizens.size());
 	unsigned int checkcondition(0);
 	unsigned int place(0);
 
@@ -322,9 +366,22 @@ unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> 
 		{
 			checkcondition = 0;
 			if (i != tabpos[p])
+			{
 				checkcondition++;
+			}
+			else
+			{
+				/* N/A */
+			}
+			
 			if (checkcondition == condition)
+			{
 				place = i;
+			}
+			else
+			{
+				/* N/A */
+			}
 		}
 	}
 	_food = tile[place].food;

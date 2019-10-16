@@ -40,7 +40,7 @@ Player::Player(const std::string &msg) : _name(msg)
 }
 Player::~Player()
 {
-	unsigned int size = _tabUnit.size();
+	unsigned int size = (unsigned int)_tabUnit.size();
 
 	for (unsigned int i = 0; i < size; i++)
 	{
@@ -58,7 +58,7 @@ Player::~Player()
 		IHM::logfileconsole("Kill ALL Unit of Player:" + _name + " Success");
 
 
-	size = _tabCity.size();
+	size = (unsigned int)_tabCity.size();
 
 	for (unsigned int i = 0; i < size; i++)
 	{

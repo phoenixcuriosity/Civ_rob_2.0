@@ -97,9 +97,9 @@ Uint16 LoadConfig::getHorizontal(unsigned int tileSize)
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
 	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.right % tileSize)) == 0)
+	if ((complete = ((Uint16)desktop.right % (Uint16)tileSize)) == 0)
 		return (Uint16)desktop.right;
-	return (Uint16)desktop.right + (tileSize - complete);
+	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
 }
 
 Uint16 LoadConfig::getVertical(unsigned int tileSize)
@@ -108,9 +108,9 @@ Uint16 LoadConfig::getVertical(unsigned int tileSize)
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
 	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.bottom % tileSize)) == 0)
+	if ((complete = ((Uint16)desktop.bottom % (Uint16)tileSize)) == 0)
 		return (Uint16)desktop.bottom;
-	return (Uint16)desktop.bottom + (tileSize - complete);
+	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
 }
 
 

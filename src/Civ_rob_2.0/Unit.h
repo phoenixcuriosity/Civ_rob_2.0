@@ -184,7 +184,7 @@ public:
 	* OUTPUT PARAMETERS : unsigned int mouse_y : position y
 	* RETURNED VALUE    : int : 0 : pas sélectioné / 1 : sélectionné
 	*/
-	virtual int testPos(unsigned int mouse_x, unsigned int mouse_y);
+	virtual bool testPos(unsigned int mouse_x, unsigned int mouse_y);
 
 
 public:

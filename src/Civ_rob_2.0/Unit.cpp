@@ -98,14 +98,19 @@ void Unit::searchUnitTile(Sysinfo& sysinfo)
 {
 	for (unsigned int i(0); i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size(); i++)
 	{
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)
-			->testPos(sysinfo.var.mouse.GETmouse_x() + sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize,
-				sysinfo.var.mouse.GETmouse_y() + sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize))
+		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->testPos(
+				sysinfo.var.mouse.GETmouse_x() + sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize,
+				sysinfo.var.mouse.GETmouse_y() + sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize)
+			)
 		{
 			sysinfo.var.s_player.selectunit = i;
 			sysinfo.var.s_player.unitNameToMove = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->GETname();
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->SETblit(true);
 			break;
+		}
+		else
+		{
+			/* N/A */
 		}
 	}
 }
@@ -125,7 +130,7 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 	{
 	case cannotMove:
 		/*
-		* Void
+		* N/A
 		*/
 		break;
 	case canMove:
@@ -139,6 +144,9 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 			tryToMove(sysinfo, x, y);
 		}
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->SETmovement(0);
+		break;
+	default:
+		/* N/A */
 		break;
 	}
 }
@@ -176,12 +184,22 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 					ground = true;
 					break;
 				}
+				else
+				{
+					/* N/A */
+				}
+			}
+			else
+			{
+				/* N/A */
 			}
 		}
 	}
 
 	if (ground)
 	{
+		/* On ground */
+
 		for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
 		{
 			for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
@@ -191,7 +209,9 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheUnit(j)->GETy())
 					{
 						if (sysinfo.var.s_player.selectplayer == (int)i)
+						{
 							return cannotMove;
+						}		
 						else
 						{
 							sysinfo.var.s_player.selectPlayerToAttack = (int)i;
@@ -199,12 +219,24 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 							return attackMove;
 						}
 					}
+					else
+					{
+						/* N/A */
+					}
+				}
+				else
+				{
+					/* N/A */
 				}
 			}
 		}
 	}
 	else
+	{
+		/* Not on ground */
+
 		return cannotMove;
+	}	
 	return canMove;
 }
 
@@ -246,6 +278,7 @@ Unit::Unit(const std::string &name, unsigned int x, unsigned int y, unsigned int
 }
 Unit::~Unit()
 {
+	/* N/A */
 }
 
 
@@ -258,8 +291,14 @@ Unit::~Unit()
 */
 void Unit::attack(Unit* cible)
 {
-	if (_movement > 0) 
+	if (_movement > 0)
+	{
 		cible->defend(_atq);
+	}
+	else
+	{
+		/* N/A */
+	}
 }
 
 
@@ -281,8 +320,14 @@ void Unit::defend(unsigned int dmg)
 			_alive = false;
 		}
 		else
+		{
 			_life -= (dmg - _def);
-	}	
+		}
+	}
+	else
+	{
+		/* N/A */
+	}
 }
 
 
@@ -304,16 +349,18 @@ void Unit::move(Uint8& select, int& selectunit, int x, int y)
 		_x += x;
 		_y += y;
 		_movement--;
-
 	}
-	if (_movement == 0)
+	else if (_movement == 0)
 	{
 		select = selectnothing;
 		selectunit = -1;
 		_blit = 0;
 		_show = true;
 	}
-
+	else
+	{
+		/* N/A */
+	}
 }
 
 
@@ -337,18 +384,36 @@ void Unit::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer
 				{
 					_life += (unsigned int)ceil(_maxlife / 20);
 					if (_life > _maxlife)
+					{
 						_life = _maxlife;
+					}
+					else
+					{
+						/* N/A */
+					}	
 					return;
 				}
 				else if (tiles[i][j].appartenance == (int)selectplayer)
 				{
 					_life += (unsigned int)ceil(_maxlife / 5);
 					if (_life > _maxlife)
+					{
 						_life = _maxlife;
+					}
+					else
+					{
+						/* N/A */
+					}	
 					return;
 				}
 				else
+				{
 					return;
+				}	
+			}
+			else
+			{
+				/* N/A */
 			}
 		}
 	}
@@ -365,6 +430,8 @@ void Unit::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer
 void Unit::levelup()
 {
 	_level++;
+
+	/* Todo */
 	//heal();
 }
 
@@ -389,11 +456,16 @@ void Unit::RESETmovement()
 * OUTPUT PARAMETERS : unsigned int mouse_y : position y
 * RETURNED VALUE    : int : 0 : pas sélectioné / 1 : sélectionné
 */
-int Unit::testPos(unsigned int mouse_x, unsigned int mouse_y) 
+bool Unit::testPos(unsigned int mouse_x, unsigned int mouse_y) 
 {
 	if (_x == mouse_x && _y == mouse_y)
-		return 1;
-	return 0;
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}	
 }
 
 /* *********************************************************
@@ -465,7 +537,10 @@ void Unit::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
 		{
 			sysinfo.allTextures.barLife["0.0life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
 		}
-
+		else
+		{
+			/* N/A */
+		}
 
 		sysinfo.allTextures.colorapp["ColorPlayer" + std::to_string(iPlayer) + ".bmp"]->render(x, y + sysinfo.map.tileSize);
 	}
@@ -501,6 +576,10 @@ void Unit::afficherstat(Sysinfo& sysinfo)
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			blended, "level: " + std::to_string(_level), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
 	}
+	else
+	{
+		/* N/A */
+	}
 }
 
 
@@ -520,6 +599,10 @@ void Unit::cmpblit()
 	if((++_blit %= (SCREEN_REFRESH_RATE / 2)) == 0)
 	{
 		_show = !_show;
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 
