@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.14
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -58,7 +58,6 @@ void IHM::initTile(Map& map)
 			map.maps[i].push_back(blankTile);
 		}
 	}
-
 }
 
 Uint8 xmlGiveStateType(std::string type)
@@ -291,6 +290,10 @@ void IHM::initFile(File& file)
 	{
 		exit(EXIT_FAILURE);
 	}
+	else
+	{
+		/* N/A */
+	}
 }
 
 
@@ -324,10 +327,8 @@ void IHM::logfileconsole(const std::string msg)
 */
 void IHM::logSDLError(std::ostream &os, const std::string &msg)
 {
-	
 	os << msg << " error: " << SDL_GetError() << std::endl;
 	logger << msg << " error: " << SDL_GetError() << std::endl;
-	
 }
 
 
@@ -367,7 +368,10 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 			return false;
 		}
 		else
+		{
 			logfileconsole("CreateWindow Success");
+		}
+			
 		screen.renderer = SDL_CreateRenderer(screen.window, -1, SDL_RENDERER_ACCELERATED);
 		//| SDL_RENDERER_PRESENTVSYNC
 		if (screen.renderer == nullptr)
@@ -378,7 +382,9 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 			return false;
 		}
 		else
+		{
 			logfileconsole("[INFO]___: CreateRenderer Success");
+		}	
 
 		if (TTF_Init() != 0)
 		{
@@ -389,10 +395,14 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 			return false;
 		}
 		else
+		{
 			logfileconsole("[INFO]___: TTF_Init Success");
+		}
 
 		for (Uint8 i(1); i < MAX_FONT; i++)
+		{
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
+		}	
 
 		logfileconsole("[INFO]___: SDL_Init Success");
 		return true;
@@ -462,7 +472,10 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		}
 	}
 	else
-		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SPECNAME);
+	{
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.SPECNAME);
+	}
+		
 
 
 
@@ -546,7 +559,9 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		}
 	}
 	else
-		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.CITIENAME);
+	{
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.CITIENAME);
+	}	
 
 	//chargement du nombre de sauvegardes
 	std::ifstream loadInfo(sysinfo.file.SaveInfo);
@@ -564,9 +579,9 @@ void IHM::calculImage(Sysinfo& sysinfo)
 		}
 	}
 	else
-		logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
-	int spacemenu(64), initspacemenu(300);
-
+	{
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+	}
 	
 	/* *********************************************************
 	 *				END sysinfo.allTextures					   *
@@ -577,6 +592,7 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	 *				START sysinfo.allButtons				   *
 	 ********************************************************* */
 
+	int spacemenu(64), initspacemenu(300);
 
 	 /*** STATEtitleScreen ***/
 	sysinfo.var.statescreen = STATEtitleScreen;
@@ -732,6 +748,10 @@ void IHM::calculImage(Sysinfo& sysinfo)
 	if (texteFile.ErrorID() == 0)
 	{
 		readXmlTexte(texteFile, sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.allTextes, sysinfo.screen.screenWidth, sysinfo.screen.screenHeight);
+	}
+	else
+	{
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.Texte);
 	}
 
 	/*** STATEmainmap ***/
@@ -965,6 +985,10 @@ int IHM::determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight
 		{
 			throw(" div/0 -> den == 0");
 		}
+		else
+		{
+			/* N/A */
+		}
 
 		return somme = (unsigned int)(numI / denI);
 	}
@@ -1030,12 +1054,20 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 					sysinfo.map.screenOffsetYIndexMin--;
 					sysinfo.map.screenOffsetYIndexMax--;
 				}
+				else
+				{
+					/* N/A */
+				}
 				break;
 			case SDLK_LEFT:
 				if (sysinfo.map.screenOffsetXIndexMin > 0)
 				{
 					sysinfo.map.screenOffsetXIndexMin--;
 					sysinfo.map.screenOffsetXIndexMax--;
+				}
+				else
+				{
+					/* N/A */
 				}
 				break;
 			case SDLK_DOWN:
@@ -1044,12 +1076,20 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 					sysinfo.map.screenOffsetYIndexMin++;
 					sysinfo.map.screenOffsetYIndexMax++;
 				}
+				else
+				{
+					/* N/A */
+				}
 				break;
 			case SDLK_RIGHT:
 				if (sysinfo.map.screenOffsetXIndexMax < sysinfo.map.maps.size())
 				{
 					sysinfo.map.screenOffsetXIndexMin++;
 					sysinfo.map.screenOffsetXIndexMax++;
+				}
+				else
+				{
+					/* N/A */
 				}
 				break;
 			case SDLK_SPACE:
@@ -1088,6 +1128,9 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 			case SDLK_KP_9:
 				KeyboardMouse::keySDLK_KP_9(sysinfo);
 				break;
+			default:
+				/* N/A */
+				break;
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN: // test sur le type d'événement click souris (enfoncé)
@@ -1095,7 +1138,9 @@ void IHM::eventSDL(Sysinfo& sysinfo)
 			break;
 		case SDL_MOUSEWHEEL:
 			KeyboardMouse::wheel(sysinfo, event.wheel.y);
-
+			break;
+		default:
+			/* N/A */
 			break;
 		}
 
@@ -1163,7 +1208,6 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
 	{
 		n.second->renderButtonTexte(sysinfo.var.statescreen);
 	}
-		
 
 	/* ### Don't put code below here ### */
 
@@ -1206,8 +1250,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 			for (unsigned int j(0); j < sysinfo.screen.screenHeight / sysinfo.map.tileSize; j++)
 			{
 				sysinfo.allTextures.ground["toolbar.bmp"]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
-			}
-				
+			}	
 		}
 
 		/* *********************************************************
@@ -1262,12 +1305,20 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 			{
 				sysinfo.allTextures.unit[sysinfo.var.s_player.unitNameToCreate]->render(100, 432);
 			}
+			else
+			{
+				/* N/A */
+			}
 		}
 		else if (sysinfo.var.select == selectmove)
 		{
 			if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 			{
 				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
+			}
+			else
+			{
+				/* N/A */
 			}
 		}
 		else if (sysinfo.var.select == selectinspect)
@@ -1277,6 +1328,14 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 			{
 				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->afficherstat(sysinfo);
 			}
+			else
+			{
+				/* N/A */
+			}
+		}
+		else
+		{
+			/* N/A */
 		}
 
 		/* *********************************************************
@@ -1301,6 +1360,11 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 						sysinfo.tabplayer[i]->GETtheUnit(j)->afficher(sysinfo, i);
 					}
 				}
+				else
+				{
+					/* N/A */
+				}
+
 				if (sysinfo.tabplayer[i]->GETtabCity().size() != 0)
 				{
 					for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
@@ -1309,7 +1373,15 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 						sysinfo.tabplayer[i]->GETtheCity(j)->afficher(sysinfo);
 					}
 				}
+				else
+				{
+					/* N/A */
+				}
 			}
+		}
+		else
+		{
+			/* N/A */
 		}
 
 		/* *********************************************************
@@ -1329,8 +1401,22 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 			if (sysinfo.var.s_player.selectCitie != -1)
 			{
 				if (sysinfo.var.s_player.selectCitie < (int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size())
+				{
 					citiemap(sysinfo);
+				}
+				else
+				{
+					/* N/A */
+				}
 			}
+			else
+			{
+				/* N/A */
+			}
+		}
+		else
+		{
+			/* N/A */
 		}
 
 		/* *********************************************************
@@ -1338,6 +1424,9 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		 ********************************************************* */
 
 
+		break;
+	default:
+		/* N/A */
 		break;
 	}
 	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
@@ -1386,15 +1475,27 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 			case deepwater:
 				sysinfo.allTextures.ground["deepwater.bmp"]->render(x, y);
 				break;
+			default:
+				throw("afficherSupertiles : tile_ground == NoGround");
+				break;
 			}
 
 			if (sysinfo.map.maps[m][n].tile_spec > 0)
 			{
 				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_stringspec]->render(x, y);
 			}
+			else
+			{
+				/* N/A */
+			}
+
 			if (sysinfo.map.maps[m][n].appartenance != -1)
 			{
 				sysinfo.allTextures.colorapptile["ColorPlayertile" + std::to_string(sysinfo.map.maps[m][n].appartenance) + ".bmp"]->render(x, y);
+			}
+			else
+			{
+				/* N/A */
 			}
 		}
 	}
@@ -1442,9 +1543,13 @@ void IHM::citiemap(Sysinfo& sysinfo)
 		for (unsigned int j(0); j < 10; j++)
 		{
 			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.tabUnit_Struct.size())
+			{
 				buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
+			}	
 			else
+			{
 				break;
+			}		
 
 			sysinfo.allButton.citieMap[buildName]
 				->renderButtonTexte(sysinfo.var.statescreen, sysinfo.screen.screenWidth / 2, initspace += space);
@@ -1462,6 +1567,10 @@ void IHM::citiemap(Sysinfo& sysinfo)
 		sysinfo.allTextes.citieMap["Left click to Select"]->render();
 		sysinfo.allTextes.citieMap["create : "]->render();
 		sysinfo.allTextes.citieMap["selectcreate"]->render();
+	}
+	else
+	{
+		/* N/A */
 	}
 
 	/* *********************************************************
@@ -1487,8 +1596,18 @@ void IHM::countFrame(Screen& screen)
 	{
 		screen.avgFPS = (int)ceil(screen.countedFrames / (screen.fpsTimer.getTicks() / 1000.f));
 		if (screen.avgFPS > 20000)
+		{
 			screen.avgFPS = 0;
+		}	
+		else
+		{
+			/* N/A */
+		}
 		++screen.countedFrames;
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 
@@ -1510,7 +1629,7 @@ void IHM::exitError(const std::string msg)
 	logfileconsole("[ERROR]___: " + msg);
 	deleteAll(*ptrSysinfo);
 	logfileconsole("[ERROR]___: Last msg before exitError : " + msg);
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 
@@ -1628,6 +1747,10 @@ void IHM::deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const 
 			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
 		}
+		else
+		{
+			/* N/A */
+		}
 	}
 }
 
@@ -1639,6 +1762,10 @@ void IHM::deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std:
 		{
 			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
+		}
+		else
+		{
+			/* N/A */
 		}
 	}
 }
@@ -1652,6 +1779,10 @@ void IHM::deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap
 			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
 		}
+		else
+		{
+			/* N/A */
+		}
 	}
 }
 
@@ -1663,6 +1794,10 @@ void IHM::deletePlayer(std::vector<Player*>& vect, const std::string& name)
 		{
 			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + vect[i]->GETname() + " Success");
 			delete vect[i];
+		}
+		else
+		{
+			/* N/A */
 		}
 	}
 }

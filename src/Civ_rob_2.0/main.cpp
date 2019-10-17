@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -50,7 +50,17 @@ int main(int argc, char* argv[])
 	if (IHM::initSDL(sysinfo.screen, sysinfo.allTextures.font))
 	{
 		Unit::loadUnitAndSpec(sysinfo);
-		IHM::calculImage(sysinfo);
+
+		try
+		{
+			IHM::calculImage(sysinfo);
+		}
+		catch (std::string const& chaine)
+		{
+			IHM::logfileconsole("[ERROR]___: " + chaine);
+			IHM::deleteAll(sysinfo);
+			exit(EXIT_FAILURE);
+		}
 		
 		end = std::chrono::system_clock::now();
 		elapsed_seconds = end - start;
@@ -68,6 +78,10 @@ int main(int argc, char* argv[])
 
 			IHM::alwaysrender(sysinfo);
 		}	
+	}
+	else
+	{
+		/* N/A */
 	}
 	IHM::deleteAll(sysinfo);
 
