@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.4
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -141,6 +141,9 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 				case 2:
 					tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 					break;
+				default:
+					/* N/A */
+					break;
 				}
 				if (randomspecwaterborder > 2)
 					tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
@@ -186,6 +189,9 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 						sysinfo.map.maps[i][j].tile_spec = horse;
 						sysinfo.map.maps[i][j].tile_stringspec = "horse.bmp";
 						break;
+					default:
+						/* N/A */
+						break;
 					}
 					if (randomspecgrass > 7 && randomspecgrass <= 32)
 					{ // plus de chance d'avoir des arbres
@@ -209,6 +215,10 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 						sysinfo.map.maps[i][j].work = 2;
 						sysinfo.map.maps[i][j].gold = 3;
 					}
+					else
+					{
+						/* N/A */
+					}
 				}
 				else
 				{
@@ -226,10 +236,18 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 						case 2:
 							tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 							break;
+						default:
+							/* N/A */
+							break;
 						}
 						if (randomspecwater > 2)
 							tileAffectation(sysinfo.map.maps[i][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 					}
+					else
+					{
+						/* N/A */
+					}
+
 					if (sysinfo.map.maps[i - 1][j].tile_ground != deepwater)
 					{
 						randomspecwater1 = rand() % 10 + 1;
@@ -241,10 +259,18 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 						case 2:
 							tileAffectation(sysinfo.map.maps[i - 1][j], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 							break;
+						default:
+							/* N/A */
+							break;
 						}
 						if (randomspecwater1 > 2)
 							tileAffectation(sysinfo.map.maps[i - 1][j], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
 					}
+					else
+					{
+						/* N/A */
+					}
+
 					if (sysinfo.map.maps[i - 1][j - 1].tile_ground != deepwater)
 					{
 						randomspecwater2 = rand() % 10 + 1;
@@ -256,9 +282,16 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 						case 2:
 							tileAffectation(sysinfo.map.maps[i - 1][j - 1], water, (std::string)"water.bmp", petroleum, (std::string)"petroleum.bmp", 1, 3, 4);
 							break;
+						default:
+							/* N/A */
+							break;
 						}
 						if (randomspecwater2 > 2)
 							tileAffectation(sysinfo.map.maps[i - 1][j - 1], water, (std::string)"water.bmp", specnothing, (std::string)"specnothing", 1, 1, 1);
+					}
+					else
+					{
+						/* N/A */
 					}
 				}
 			}
@@ -308,6 +341,10 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 			selectunit = p;
 			break;
 		}
+		else
+		{
+			/* N/A */
+		}
 	}
 
 	std::vector<randomPos> tabRandom;
@@ -347,6 +384,11 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 			IHM::logfileconsole("__________ERROR : makeRandomPosTab, Too many Iterations");
 			break;
 		}
+		else
+		{
+			/* N/A */
+		}
+
 		makeRandomPos(RandomPOS, sysinfo.map.maps, sysinfo.map.toolBarSize, sysinfo.map.tileSize);
 		if (conditionground(sysinfo, RandomPOS))
 		{
@@ -363,11 +405,23 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 							continuer = false;
 							break;
 						}
+						else
+						{
+							/* N/A */
+						}
+					}
+					else
+					{
+						/* N/A */
 					}
 				}
 			}
 			else
 				continuer = false;
+		}
+		else
+		{
+			/* N/A */
 		}
 	}
 	tabRandom.push_back(RandomPOS);
@@ -445,6 +499,10 @@ bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
 				if (sysinfo.map.maps[i][j].tile_ground == grass)
 					return true;
 				return false;
+			}
+			else
+			{
+				/* N/A */
 			}
 		}
 	}

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.15
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,11 @@
 
 std::ofstream logger;
 Sysinfo* ptrSysinfo;
+
+void IHM::initPtrSysinfo(Sysinfo& sysinfo)
+{
+	ptrSysinfo = &sysinfo;
+}
 
 /* *********************************************************
  *				START INITIALISATION					   *
@@ -422,8 +427,6 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 void IHM::calculImage(Sysinfo& sysinfo)
 {
 	logfileconsole("[INFO]___: [START] : calculImage");
-
-	ptrSysinfo = &sysinfo;
 
 	// répertoire de base de l'image
 	const std::string IPath = "bin/image/"; 
@@ -1651,7 +1654,14 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 
 	for (unsigned int i(1); i < MAX_FONT; i++)
 	{
-		TTF_CloseFont(sysinfo.allTextures.font[i]);
+		if (sysinfo.allTextures.font[i] != nullptr)
+		{
+			TTF_CloseFont(sysinfo.allTextures.font[i]);
+		}
+		else
+		{
+			/* N/A */
+		}
 	}
 		
 	/* *********************************************************
@@ -1681,13 +1691,13 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	/* *********************************************************
 	 *				 START delete Texte*					   *
 	 ********************************************************* */
-
+	
 	deleteTexte(sysinfo.allTextes.number, "Texte");
 	deleteTexte(sysinfo.allTextes.titleScreen, "Texte");
 	deleteTexte(sysinfo.allTextes.newGame, "Texte");
 	deleteTexte(sysinfo.allTextes.mainMap, "Texte");
 	deleteTexte(sysinfo.allTextes.citieMap, "Texte");
-
+	
 	/* *********************************************************
 	 *					END delete Texte*					   *
 	 ********************************************************* */
@@ -1702,7 +1712,7 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	deleteButtonTexte(sysinfo.allButton.reload, "Button");
 	deleteButtonTexte(sysinfo.allButton.mainMap, "Button");
 	deleteButtonTexte(sysinfo.allButton.citieMap, "Button");
-
+	
 	/* *********************************************************
 	 *				 END delete Button*						   *
 	 ********************************************************* */
@@ -1713,10 +1723,25 @@ void IHM::deleteAll(Sysinfo& sysinfo)
 	 *				 START delete SDL						   *
 	 ********************************************************* */
 
-	SDL_DestroyRenderer(sysinfo.screen.renderer);
-	SDL_DestroyWindow(sysinfo.screen.window);
-	sysinfo.screen.renderer = nullptr;
-	sysinfo.screen.window = nullptr;
+	if (sysinfo.screen.renderer != nullptr)
+	{
+		SDL_DestroyRenderer(sysinfo.screen.renderer);
+		sysinfo.screen.renderer = nullptr;
+	}
+	else
+	{
+		/* N/A */
+	}
+
+	if (sysinfo.screen.window != nullptr)
+	{
+		SDL_DestroyWindow(sysinfo.screen.window);
+		sysinfo.screen.window = nullptr;
+	}
+	else
+	{
+		/* N/A */
+	}
 
 	TTF_Quit();
 	IMG_Quit();

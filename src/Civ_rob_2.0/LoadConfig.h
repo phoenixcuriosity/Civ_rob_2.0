@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.16
-	file version : 1.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,11 +35,20 @@ public:
 	 *					INITIALISATION						   *
 	 ********************************************************* */
 
+	 /*
+	 * NAME : initStructs
+	 * ROLE : Initialisation des données par défaut des structures
+	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	 * OUTPUT PARAMETERS : données par défaut des structures
+	 * RETURNED VALUE    : void
+	 */
+	static void initStructs(Sysinfo& sysinfo);
+
 	/*
-	* NAME : initTile
-	* ROLE : Initialisation des cases de la map en fonction de sa taille
-	* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
-	* OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
+	* NAME : initMain
+	* ROLE : Chargement des informations de la configuration du jeu
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : configuration du jeu
 	* RETURNED VALUE    : void
 	*/
 	static void initMain(Sysinfo& sysinfo);

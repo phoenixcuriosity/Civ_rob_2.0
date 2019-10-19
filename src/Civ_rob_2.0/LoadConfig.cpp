@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.2
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,6 +26,25 @@
 #include "LoadConfig.h"
 #include "civ_lib.h"
 #include  "IHM.h"
+
+
+
+/*
+* NAME : initStructs
+* ROLE : Initialisation des données par défaut des structures
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : données par défaut des structures
+* RETURNED VALUE    : void
+*/
+void LoadConfig::initStructs(Sysinfo& sysinfo)
+{
+	/* ### Mettre ici les cas d'inialisation des structures ### */
+
+	for (unsigned int i(0); i < MAX_FONT; i++)
+	{
+		sysinfo.allTextures.font[i] = nullptr;
+	}
+}
 
 /*
 * NAME : initTile
@@ -84,10 +103,13 @@ void LoadConfig::initMain(Sysinfo& sysinfo)
 		sysinfo.file.SaveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
 		sysinfo.file.SaveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
 		sysinfo.file.SavePlayer = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
-
-
-
 	}
+	else
+	{
+		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
+	}
+
+
 	IHM::logfileconsole("[INFO]___: [END] : initMain");
 }
 

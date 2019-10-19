@@ -1,9 +1,9 @@
 ﻿  City.cpp
   GamePlay.cpp
   IHM.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(830,5): warning C4189: 's_BackColor_Complexe_condition': local variable is initialized but not referenced
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(853,5): warning C4189: 's_BackColor_Complexe_condition': local variable is initialized but not referenced
   KeyboardMouse.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(820,5): warning C4189: 's_FontColor_Complexe_condition': local variable is initialized but not referenced
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\IHM.cpp(843,5): warning C4189: 's_FontColor_Complexe_condition': local variable is initialized but not referenced
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\KeyboardMouse.cpp(51,6): warning C4189: 'SDL_EnableUNICODE': local variable is initialized but not referenced
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\KeyboardMouse.cpp(155,6): warning C4189: 'SDL_EnableUNICODE': local variable is initialized but not referenced
   LoadConfig.cpp
@@ -15,7 +15,7 @@ C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\main.cpp(32,14): war
   Player.cpp
   SaveReload.cpp
   Texture.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\main.cpp(61,7): warning C4189: 'SDL_EnableUNICODE': local variable is initialized but not referenced
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\main.cpp(79,7): warning C4189: 'SDL_EnableUNICODE': local variable is initialized but not referenced
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(849): warning C4238: nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(851): warning C4238: nonstandard extension used: class rvalue used as lvalue
 C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(857): warning C4238: nonstandard extension used: class rvalue used as lvalue

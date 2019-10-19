@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.4
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,6 +32,9 @@
 int main(int argc, char* argv[])
 {
 	Sysinfo sysinfo;
+	IHM::initPtrSysinfo(sysinfo);
+
+	LoadConfig::initStructs(sysinfo);
 
 	srand((unsigned int)time(NULL));
 
@@ -43,7 +46,14 @@ int main(int argc, char* argv[])
 
 	IHM::logfileconsole("[INFO]___: ________PROGRAMME START________");
 
-	LoadConfig::initMain(sysinfo);
+	try
+	{
+		LoadConfig::initMain(sysinfo);
+	}
+	catch (std::string const& chaine)
+	{
+		IHM::exitError(chaine);
+	}
 
 	IHM::initTile(sysinfo.map);
 
@@ -57,9 +67,7 @@ int main(int argc, char* argv[])
 		}
 		catch (std::string const& chaine)
 		{
-			IHM::logfileconsole("[ERROR]___: " + chaine);
-			IHM::deleteAll(sysinfo);
-			exit(EXIT_FAILURE);
+			IHM::exitError(chaine);
 		}
 		
 		end = std::chrono::system_clock::now();

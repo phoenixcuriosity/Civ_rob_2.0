@@ -35,6 +35,8 @@ public:
 	 *					INITIALISATION						   *
 	 ********************************************************* */
 
+	static void initPtrSysinfo(Sysinfo& sysinfo);
+
 	/*
 	* NAME : initTile
 	* ROLE : Initialisation des cases de la map en fonction de sa taille

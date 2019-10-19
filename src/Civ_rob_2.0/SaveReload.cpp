@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.2
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -109,6 +109,11 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 						savePlayer << std::endl << "\tlevel= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlevel();
 					}
 				}
+				else
+				{
+					/* N/A */
+				}
+
 				//savePlayer << endl << "nbcitie= " << tabplayer[i]->GETtabcities().size();
 				/*
 				if (tabplayer[i]->GETtabcities().size() != 0){
@@ -187,10 +192,22 @@ void SaveReload::reload(Sysinfo& sysinfo)
 								}
 								sysinfo.tabplayer[i]->addUnit(unitname, var[0], var[1], var[2], var[3], var[4], var[5], var[6]);
 							}
+							else
+							{
+								/* N/A */
+							}
 						}
 					}
 				}
+				else
+				{
+					/* N/A */
+				}
 			}
+		}
+		else
+		{
+			/* N/A */
 		}
 	}
 	else
@@ -220,12 +237,21 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 			sysinfo.var.save.GETtabSave().push_back(sysinfo.var.save.GETcurrentSave());
 			break;
 		}
+		else
+		{
+			/* N/A */
+		}
 	}
 	if (sysinfo.var.save.GETcurrentSave() == 0)
 	{
 		sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETnbSave() + 1);
 		sysinfo.var.save.GETtabSave().push_back(sysinfo.var.save.GETcurrentSave());
 	}
+	else
+	{
+		/* N/A */
+	}
+
 
 	std::ofstream saveInfo(sysinfo.file.SaveInfo);
 	if (saveInfo) 
@@ -271,6 +297,10 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 			{
 				condition = true;
 				break;
+			}
+			else
+			{
+				/* N/A */
 			}
 		}
 
@@ -320,6 +350,10 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 			}
 			else
 				IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		}
+		else
+		{
+			/* N/A */
 		}
 	}
 	else
