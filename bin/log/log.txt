@@ -1,0 +1,52 @@
+
+2019-10-20 00:41:41      [INFO]___: ________PROGRAMME START________
+2019-10-20 00:41:41      [INFO]___: [START] : initMain
+2019-10-20 00:41:41      [INFO]___: [END] : initMain
+2019-10-20 00:41:41      CreateWindow Success
+2019-10-20 00:41:41      [INFO]___: CreateRenderer Success
+2019-10-20 00:41:41      [INFO]___: TTF_Init Success
+2019-10-20 00:41:42      [INFO]___: SDL_Init Success
+2019-10-20 00:41:42      [INFO]___: [START] : calculImage
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:0 msg = New Game Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:1 msg = Reload Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:2 msg = Option Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:3 msg = Quit Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:0 msg = Back Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:1 msg = Remove all saves Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:2 msg = Load Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:3 msg = Remove Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:4 msg = Save : 1 Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:5 msg = Save : 2 Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:0 msg = screen Titre Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:1 msg = Create Unit Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:2 msg = Move Unit Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:3 msg = Inspect Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:4 msg = Delete Unit Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:5 msg = Next Turn Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:0 msg = Map Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:1 msg = Build Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:2 msg = Food Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:3 msg = Place Citizen Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:4 msg = battleoids Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:5 msg = biter Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:6 msg = bombardier Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:7 msg = car Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:8 msg = ouvrier_tier_1 Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:9 msg = ouvrier_tier_2 Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:10 msg = ouvrier_tier_3 Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:11 msg = robot Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:12 msg = rocket Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:13 msg = rover Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:14 msg = satellite Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:15 msg = settler Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:16 msg = spitter Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:17 msg = tank Success
+2019-10-20 00:41:42      [INFO]___: Create ButtonTexte n:18 msg = transport_plan Success
+2019-10-20 00:41:42      [INFO]___: [END] : calculImage
+2019-10-20 00:41:42      [INFO]___: temps d'execution de l'initialisation : 0.903618
+2019-10-20 00:41:42      [INFO]___: [START] : titleScreen
+2019-10-20 00:41:42      [INFO]___: [END] : titleScreen
+2019-10-20 00:41:44      [INFO]___: [START] *********_________ DeleteAll _________*********
+2019-10-20 00:41:44      [INFO]___: [END] : *********_________ DeleteAll _________*********
+2019-10-20 00:41:44      [INFO]___: SDL_Quit Success
+2019-10-20 00:41:44      [INFO]___:________PROGRAMME FINISH________
