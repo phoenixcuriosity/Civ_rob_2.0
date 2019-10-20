@@ -95,24 +95,6 @@ public:
 	*/
 	static void calculImage(Sysinfo&);
 
-	/*
-	* NAME : readXmlTexte
-	* ROLE : Initialisation des Textes par la lecture du fichier Texte.xml
-	* ROLE : Enregistrement des pointeurs dans des tableaux
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
-	* RETURNED VALUE    : void
-	*/
-	static void readXmlTexte(tinyxml2::XMLDocument& texteFile,
-								SDL_Renderer*& renderer,
-								TTF_Font* font[],
-								AllTextes& allTextes,
-								Uint16 screenWidth,
-								Uint16 screenHeight);
-
-	static int determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight);
-
-
 public:
 	/* *********************************************************
 	 *						IN-GAME							   *
@@ -186,34 +168,6 @@ public:
 	 * RETURNED VALUE    : void
 	 */
 	static void countFrame(Screen& screen);
-
-
-
-
-public:
-	/* *********************************************************
-	 *						END-GAME						   *
-	 ********************************************************* */
-
-	static void exitError(const std::string msg);
-
-	/*
-	 * NAME : deleteAll
-	 * ROLE : Destruction des allocations dynamique du programme
-	 * ROLE : Destruction de la fenetre et du Renderer de la SDL
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
-	 * RETURNED VALUE    : void
-	 */
-	static void deleteAll(Sysinfo&);
-
-	static void deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const std::string& name);
-
-	static void deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std::string& name);
-
-	static void deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap, const std::string& name);
-
-	static void deletePlayer(std::vector<Player*>& vect, const std::string& name);
 };
 
 

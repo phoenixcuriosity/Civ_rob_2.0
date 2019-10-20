@@ -25,6 +25,7 @@
 #include "Texture.h"
 #include "civ_lib.h"
 #include "IHM.h"
+#include "End.h"
 
 ///////////////////////////// Texture //////////////////////////////
 
@@ -116,13 +117,13 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 		}
 		else
 		{
-			IHM::exitError("[ERROR]___: loadImage : cannot create Texture from : " + path);
+			End::exitError("[ERROR]___: loadImage : cannot create Texture from : " + path);
 		}
 		SDL_FreeSurface(loadedSurface);
 	}
 	else
 	{
-		IHM::exitError("[ERROR]___: loadImage : path or image are corrupt : " + path);
+		End::exitError("[ERROR]___: loadImage : path or image are corrupt : " + path);
 	}
 }
 
@@ -354,7 +355,7 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(	SDL_Renderer*& renderer,
 	SDL_Texture *texture(SDL_CreateTextureFromSurface(renderer, surf));
 	if (texture == nullptr)
 	{
-		IHM::exitError("[ERROR]___:___________ERROR : renderTextShaded nullptr for : " + message);
+		End::exitError("[ERROR]___:___________ERROR : renderTextShaded nullptr for : " + message);
 	}
 	else
 	{

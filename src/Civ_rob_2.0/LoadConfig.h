@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.16
-	file version : 1.2
+	last modification on this file on version:0.17
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,6 +27,8 @@
 
 
 #include "LIB.h"
+#include "civ_lib.h"
+#include "Texture.h"
 
 class LoadConfig
 {
@@ -56,6 +58,32 @@ public:
 	static Uint16 getHorizontal(unsigned int tileSize);
 
 	static Uint16 getVertical(unsigned int tileSize);
+
+	/*
+	* NAME : readXmlTexte
+	* ROLE : Initialisation des Textes par la lecture du fichier Texte.xml
+	* ROLE : Enregistrement des pointeurs dans des tableaux
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
+	* RETURNED VALUE    : void
+	*/
+	static void readXmlTexte(tinyxml2::XMLDocument& texteFile,
+								SDL_Renderer*& renderer,
+								TTF_Font* font[],
+								AllTextes& allTextes,
+								Uint16 screenWidth,
+								Uint16 screenHeight);
+
+	static Uint8 xmlGiveStateType(std::string type);
+	static Uint8 xmlGiveSelectType(std::string type);
+	static std::unordered_map<std::string, Texte*>& xmlGiveTexteConteneur(AllTextes& allTextes, std::string type);
+	static Texte_Type xmlGiveTexteType(std::string type);
+	static SDL_Color xmlGiveColor(std::string type);
+	static Transparance_Type xmlGiveAlpha(std::string type);
+	static Rotation_Type xmlGiveAngle(std::string type);
+	static Center_Type xmlGiveCenter(std::string type);
+
+	static int determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight);
 
 private:
 

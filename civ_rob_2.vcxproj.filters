@@ -66,6 +66,9 @@
     <ClInclude Include="src\tinyxml2\tinyxml2.h">
       <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\End.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\tinyxml2\tinyxml2.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="src\Civ_rob_2.0\LTimer.cpp">
       <Filter>Fichiers sources\Classes\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\End.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

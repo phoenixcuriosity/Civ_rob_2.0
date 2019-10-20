@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.5
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,6 +26,7 @@
 #include "LoadConfig.h"
 #include "civ_lib.h"
 #include  "IHM.h"
+#include "End.h"
 
 
 
@@ -258,6 +259,411 @@ Uint16 LoadConfig::getVertical(unsigned int tileSize)
 	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
 }
 
+/*
+* NAME : readXmlTexte
+* ROLE : Initialisation des Textes par la lecture du fichier Texte.xml
+* ROLE : Enregistrement des pointeurs dans des tableaux
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
+* RETURNED VALUE    : void
+*/
+void LoadConfig::readXmlTexte(tinyxml2::XMLDocument& texteFile,
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	AllTextes& allTextes,
+	Uint16 screenWidth,
+	Uint16 screenHeight)
+{
+	const char* root("Config");
+
+
+	const char* s_M_Texte("Texte"),
+		* s_Statescreen("Statescreen"),
+		* s_Select("Select"),
+		* s_TexteName("TexteName"),
+		* s_Type("Type"),
+		* s_Texte("Texte"),
+		* s_FontColor("FontColor"),
+		* s_FontColor_Simple("Simple"),
+		* s_FontColor_Simple_Condition("Condition"),
+		* s_FontColor_Simple_Color("Color"),
+		* s_FontColor_Complexe("Complexe"),
+		* s_FontColor_Complexe_condition("Condition"),
+		* s_FontColor_Complexe_R("R"),
+		* s_FontColor_Complexe_G("G"),
+		* s_FontColor_Complexe_B("B"),
+		* s_FontColor_Complexe_Alpha("Alpha"),
+		* s_BackColor("FontColor"),
+		* s_BackColor_Simple("Simple"),
+		* s_BackColor_Simple_Condition("Condition"),
+		* s_BackColor_Simple_Color("Color"),
+		* s_BackColor_Complexe("Complexe"),
+		* s_BackColor_Complexe_condition("Condition"),
+		* s_BackColor_Complexe_R("R"),
+		* s_BackColor_Complexe_G("G"),
+		* s_BackColor_Complexe_B("B"),
+		* s_BackColor_Complexe_Alpha("Alpha"),
+		* s_Size("Size"),
+		* s_X("X"),
+		* s_Y("Y"),
+		* s_Alpha("Alpha"),
+		* s_Angle("Angle"),
+		* s_Center("Center");
+
+	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_M_Texte));
+
+	SDL_Color fontColor, backColor;
+	int r(0), g(0), b(0), alpha(0), size(0);
+	int x(0), y(0);
+
+	while (node != nullptr)
+	{
+		if (strcmp(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
+			->FirstChildElement(s_FontColor_Simple_Condition)->GetText(), "true") == 0)
+		{
+			fontColor = xmlGiveColor(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
+				->FirstChildElement(s_FontColor_Simple_Color)->GetText());
+		}
+		else
+		{
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_R)->QueryIntText((int*)&r);
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_G)->QueryIntText((int*)&g);
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_B)->QueryIntText((int*)&b);
+			node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Complexe)
+				->FirstChildElement(s_FontColor_Complexe_Alpha)->QueryIntText((int*)&alpha);
+			fontColor.r = (Uint8)r;
+			fontColor.g = (Uint8)g;
+			fontColor.b = (Uint8)b;
+			fontColor.a = (Uint8)alpha;
+		}
+
+		if (strcmp(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
+			->FirstChildElement(s_BackColor_Simple_Condition)->GetText(), "true") == 0)
+		{
+			backColor = xmlGiveColor(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
+				->FirstChildElement(s_BackColor_Simple_Color)->GetText());
+		}
+		else
+		{
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_R)->QueryIntText((int*)&r);
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_G)->QueryIntText((int*)&g);
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_B)->QueryIntText((int*)&b);
+			node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Complexe)
+				->FirstChildElement(s_BackColor_Complexe_Alpha)->QueryIntText((int*)&alpha);
+			backColor.r = (Uint8)r;
+			backColor.g = (Uint8)g;
+			backColor.b = (Uint8)b;
+			backColor.a = (Uint8)alpha;
+		}
+
+		node->FirstChildElement(s_Size)->QueryIntText((int*)&size);
+		node->FirstChildElement(s_X)->QueryIntText(&x);
+		node->FirstChildElement(s_Y)->QueryIntText(&y);
+
+
+		try
+		{
+			Texte::loadTexte(renderer, font,
+				xmlGiveStateType(node->FirstChildElement(s_Statescreen)->GetText()),
+				xmlGiveSelectType(node->FirstChildElement(s_Select)->GetText()),
+				xmlGiveTexteConteneur(allTextes, node->FirstChildElement(s_TexteName)->GetText()),
+				xmlGiveTexteType(node->FirstChildElement(s_Type)->GetText()),
+				node->FirstChildElement(s_Texte)->GetText(),
+				fontColor,
+				backColor,
+				(Uint8)size,
+				determineCoor(node->FirstChildElement(s_X)->GetText(), screenWidth, screenHeight),
+				determineCoor(node->FirstChildElement(s_Y)->GetText(), screenWidth, screenHeight),
+				xmlGiveAlpha(node->FirstChildElement(s_Alpha)->GetText()),
+				xmlGiveAngle(node->FirstChildElement(s_Angle)->GetText()),
+				xmlGiveCenter(node->FirstChildElement(s_Center)->GetText()));
+		}
+		catch (const std::string & msg)
+		{
+			End::exitError("[ERROR]___: IHM::determineCoor : " + msg);
+		}
+
+		/* Recherche du noeud Model suivant */
+		node = node->NextSibling();
+	}
+}
+
+Uint8 LoadConfig::xmlGiveStateType(std::string type)
+{
+	if (type.compare("STATEnothing") == 0)
+	{
+		return STATEnothing;
+	}
+	else if (type.compare("STATEtitleScreen") == 0)
+	{
+		return STATEtitleScreen;
+	}
+	else if (type.compare("STATEscreennewgame") == 0)
+	{
+		return STATEscreennewgame;
+	}
+	else if (type.compare("STATEreload") == 0)
+	{
+		return STATEreload;
+	}
+	else if (type.compare("STATEmainmap") == 0)
+	{
+		return STATEmainmap;
+	}
+	else if (type.compare("STATEscience") == 0)
+	{
+		return STATEscience;
+	}
+	else if (type.compare("STATEcitiemap") == 0)
+	{
+		return STATEcitiemap;
+	}
+	else
+	{
+		return STATEnothing;
+	}
+}
+
+Uint8 LoadConfig::xmlGiveSelectType(std::string type)
+{
+	if (type.compare("selectnothing") == 0)
+	{
+		return selectnothing;
+	}
+	else if (type.compare("NotToSelect") == 0)
+	{
+		return NotToSelect;
+	}
+	else if (type.compare("selectcreate") == 0)
+	{
+		return selectcreate;
+	}
+	else if (type.compare("selectinspect") == 0)
+	{
+		return selectinspect;
+	}
+	else if (type.compare("selectmove") == 0)
+	{
+		return selectmove;
+	}
+	else if (type.compare("selectmoveCitizen") == 0)
+	{
+		return selectmoveCitizen;
+	}
+	else
+	{
+		return selectnothing;
+	}
+}
+
+std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur(AllTextes& allTextes, std::string type)
+{
+	if (type.compare("titleScreen") == 0)
+	{
+		return allTextes.titleScreen;
+	}
+	else if (type.compare("newGame") == 0)
+	{
+		return allTextes.newGame;
+	}
+	else if (type.compare("mainMap") == 0)
+	{
+		return allTextes.mainMap;
+	}
+	else if (type.compare("citieMap") == 0)
+	{
+		return allTextes.citieMap;
+	}
+	else
+	{
+		return allTextes.titleScreen;
+	}
+}
+
+Texte_Type LoadConfig::xmlGiveTexteType(std::string type)
+{
+	if (type.compare("blended") == 0)
+	{
+		return blended;
+	}
+	else if (type.compare("shaded") == 0)
+	{
+		return shaded;
+	}
+	else
+	{
+		return blended;
+	}
+}
+
+SDL_Color LoadConfig::xmlGiveColor(std::string type)
+{
+	if (type.compare("Black") == 0)
+	{
+		return Black;
+	}
+	else if (type.compare("White") == 0)
+	{
+		return White;
+	}
+	else if (type.compare("Red") == 0)
+	{
+		return Red;
+	}
+	else if (type.compare("Green") == 0)
+	{
+		return Green;
+	}
+	else if (type.compare("Blue") == 0)
+	{
+		return Blue;
+	}
+	else if (type.compare("Blue") == 0)
+	{
+		return Blue;
+	}
+	else if (type.compare("Yellow") == 0)
+	{
+		return Yellow;
+	}
+	else if (type.compare("WriteColorButton") == 0)
+	{
+		return WriteColorButton;
+	}
+	else if (type.compare("BackColorButton") == 0)
+	{
+		return BackColorButton;
+	}
+	else if (type.compare("NoColor") == 0)
+	{
+		return NoColor;
+	}
+	else
+	{
+		return NoColor;
+	}
+}
+
+Transparance_Type LoadConfig::xmlGiveAlpha(std::string type)
+{
+	if (type.compare("nonTransparent") == 0)
+	{
+		return nonTransparent;
+	}
+	else if (type.compare("semiTransparent") == 0)
+	{
+		return semiTransparent;
+	}
+	else if (type.compare("transparent") == 0)
+	{
+		return transparent;
+	}
+	else
+	{
+		return nonTransparent;
+	}
+}
+
+Rotation_Type LoadConfig::xmlGiveAngle(std::string type)
+{
+	if (type.compare("no_angle") == 0)
+	{
+		return no_angle;
+	}
+	else if (type.compare("inverse") == 0)
+	{
+		return inverse;
+	}
+	else
+	{
+		return no_angle;
+	}
+}
+
+Center_Type LoadConfig::xmlGiveCenter(std::string type)
+{
+	if (type.compare("nocenter") == 0)
+	{
+		return nocenter;
+	}
+	else if (type.compare("center_x") == 0)
+	{
+		return center_x;
+	}
+	else if (type.compare("center_y") == 0)
+	{
+		return center_y;
+	}
+	else if (type.compare("center") == 0)
+	{
+		return center;
+	}
+	else
+	{
+		return nocenter;
+	}
+}
+
+int LoadConfig::determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight)
+{
+	std::string num(""), den(""), buffer("");
+	unsigned int somme(0), numI(0), denI(0);
+	unsigned int i(1);
+
+	if (line[0] == '(')
+	{
+		while (line[i] != ')')
+		{
+			num += line[i];
+			i++;
+		}
+		i += 3;
+		while (line[i] != ')')
+		{
+			den += line[i];
+			i++;
+		}
+
+		std::string::size_type n(0);
+		n = num.find("SCREEN_WIDTH");
+		while (n != std::string::npos)
+		{
+			num.replace(n, 12, std::to_string(screenWidth));
+			n = num.find("SCREEN_WIDTH");
+		}
+
+		n = num.find("SCREEN_HEIGHT");
+		while (n != std::string::npos)
+		{
+			num.replace(n, 13, std::to_string(screenHeight));
+			n = num.find("SCREEN_HEIGHT");
+		}
+
+		numI = std::stoi(num);
+		denI = std::stoi(den);
+
+		if (denI == 0)
+		{
+			throw(" div/0 -> den == 0");
+		}
+		else
+		{
+			/* N/A */
+		}
+
+		return somme = (unsigned int)(numI / denI);
+	}
+	else
+	{
+		return std::stoi(line);
+	}
+}
 
 
 /*

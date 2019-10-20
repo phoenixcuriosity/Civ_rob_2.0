@@ -24,6 +24,7 @@
 
 #include "IHM.h"
 #include "LoadConfig.h"
+#include "End.h"
 
 /* *********************************************************
  *						MAIN							   *
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
 	}
 	catch (std::string const& chaine)
 	{
-		IHM::exitError(chaine);
+		End::exitError(chaine);
 	}
 
 	IHM::initTile(sysinfo.map);
@@ -67,7 +68,7 @@ int main(int argc, char* argv[])
 		}
 		catch (std::string const& chaine)
 		{
-			IHM::exitError(chaine);
+			End::exitError(chaine);
 		}
 		
 		end = std::chrono::system_clock::now();
@@ -91,7 +92,7 @@ int main(int argc, char* argv[])
 	{
 		/* N/A */
 	}
-	IHM::deleteAll(sysinfo);
+	End::deleteAll(sysinfo);
 
 	return 0;
 }
