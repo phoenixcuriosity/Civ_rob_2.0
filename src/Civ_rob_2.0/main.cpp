@@ -93,7 +93,6 @@ int main(int argc, char* argv[])
 	}
 	IHM::deleteAll(sysinfo);
 
-
 	return 0;
 }
 

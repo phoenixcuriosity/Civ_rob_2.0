@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.4
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,11 +40,134 @@ void LoadConfig::initStructs(Sysinfo& sysinfo)
 {
 	/* ### Mettre ici les cas d'inialisation des structures ### */
 
+	/* *********************************************************
+	 *					   sysinfo.screen					   *
+	 ********************************************************* */
+
+	sysinfo.screen.window = nullptr;
+	sysinfo.screen.renderer = nullptr;
+	sysinfo.screen.screenWidth = 0;
+	sysinfo.screen.screenHeight = 0;
+	sysinfo.screen.enableFPS = false;
+	// sysinfo.screen.fpsTimer // N/A
+	sysinfo.screen.avgFPS = 0;
+	sysinfo.screen.countedFrames = 0;
+	
+	/* *********************************************************
+	 *					   sysinfo.file						   *
+	 ********************************************************* */
+
+	// sysinfo.file.log = "bin/log/log.txt"; // N/A : const
+	sysinfo.file.BUILDING = "";
+	sysinfo.file.CITIENAME = "";
+	sysinfo.file.readme = "";
+	sysinfo.file.SaveInfo = "";
+	sysinfo.file.SaveMaps = "";
+	sysinfo.file.SPECNAME = "";
+	sysinfo.file.UNIT = "";
+	sysinfo.file.Texte = "";
+
+	/* *********************************************************
+	 *					   sysinfo.var						   *
+	 ********************************************************* */
+
+	sysinfo.var.continuer = true;
+	sysinfo.var.nbturn = 0;
+	sysinfo.var.select = selectnothing;
+	sysinfo.var.statescreen = 0;
+
+	/* sysinfo.var.s_player */
+
+	sysinfo.var.s_player.selectCitie = -1;
+	sysinfo.var.s_player.selectplayer = -1;
+	sysinfo.var.s_player.selectPlayerToAttack = -1;
+	sysinfo.var.s_player.selectunit = -1;
+	sysinfo.var.s_player.selectUnitToAttack = -1;
+	sysinfo.var.s_player.unitToCreate = 0;
+	sysinfo.var.s_player.toBuild = "";
+	sysinfo.var.s_player.unitNameToCreate = "";
+	sysinfo.var.s_player.unitNameToMove = "";
+
+	sysinfo.var.s_player.tabCitieName.clear();
+	sysinfo.var.s_player.tabPlayerName.clear();
+	sysinfo.var.s_player.tabUnit_Struct.clear();
+
+	sysinfo.var.s_player.nbNoNamePlayer = 0;
+	sysinfo.var.s_player.citieNameMaxToCreate = 0;
+
+	/* sysinfo.var.mouse */
+
+	KeyboardMouse mouse;
+	sysinfo.var.mouse = mouse;
+
+	/* sysinfo.var.save */
+
+	SaveReload save;
+	sysinfo.var.save = save;
+
+	/* *********************************************************
+	 *					 sysinfo.allTextures				   *
+	 ********************************************************* */
+
 	for (unsigned int i(0); i < MAX_FONT; i++)
 	{
 		sysinfo.allTextures.font[i] = nullptr;
 	}
+
+	sysinfo.allTextures.ground.clear();
+	sysinfo.allTextures.groundSpec.clear();
+	sysinfo.allTextures.colorapp.clear();
+	sysinfo.allTextures.colorapptile.clear();
+	sysinfo.allTextures.barLife.clear();
+
+
+	sysinfo.allTextures.titleScreen.clear();
+	sysinfo.allTextures.unit.clear();
+	sysinfo.allTextures.citieMap.clear();
+
+	/* *********************************************************
+	 *					  sysinfo.allTextes					   *
+	 ********************************************************* */
+
+	sysinfo.allTextes.number.clear();
+	sysinfo.allTextes.titleScreen.clear();
+	sysinfo.allTextes.newGame.clear();
+	sysinfo.allTextes.mainMap.clear();
+	sysinfo.allTextes.citieMap.clear();
+
+	/* *********************************************************
+	 *					  sysinfo.allButton					   *
+	 ********************************************************* */
+
+	sysinfo.allButton.titleScreen.clear();
+	sysinfo.allButton.reload.clear();
+	sysinfo.allButton.mainMap.clear();
+	sysinfo.allButton.citieMap.clear();
+
+	sysinfo.allButton.player.clear();
+
+	/* *********************************************************
+	 *					    sysinfo.map						   *
+	 ********************************************************* */
+
+	sysinfo.map.mapSize = 0;
+	sysinfo.map.tileSize = 0;
+	sysinfo.map.toolBarSize = 0;
+	sysinfo.map.screenOffsetXIndexMin = 0;
+	sysinfo.map.screenOffsetYIndexMin = 0;
+	sysinfo.map.screenOffsetXIndexMax = 0;
+	sysinfo.map.screenOffsetYIndexMax = 0;
+	sysinfo.map.maps.clear();
+
+	/* *********************************************************
+	 *					    sysinfo							   *
+	 ********************************************************* */
+
+	sysinfo.tabplayer.clear();
 }
+
+
+
 
 /*
 * NAME : initTile
