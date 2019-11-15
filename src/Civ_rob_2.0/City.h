@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.17
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -188,6 +188,39 @@ private:
 };
 
 
+enum class Religion_Type : Uint8	{
+										catholic,
+										protestant,
+										reformed,
+										anglican,
+										orthodox,
+										coptic,
+										sunni,
+										shiite,
+										ibadi,
+										buddhism,
+										vajrayana,
+										mahayana,
+										confucianism,
+										shinto,
+										hinduism,
+										sikhism,
+										animism,
+										shamanism,
+										totemism,
+										inti,
+										nahuatl,
+										jewish,
+										zoroastrian
+									};
+
+enum class Emotion_Type : int8_t{
+									ecstatic	=  2,
+									happy		=  1,
+									neutre		=  0,
+									sad			= -1,
+									angry		= -2
+								};
 
 class Citizen
 {
@@ -222,12 +255,21 @@ public:
 		
 	/*
 	 * NAME : placeCitizenWithMouse
-	 * ROLE : 
-	 * INPUT  PARAMETERS : 
+	 * ROLE : TODO
+	 * INPUT  PARAMETERS : void 
 	 * OUTPUT PARAMETERS : 
 	 * RETURNED VALUE    : void
 	 */
-	void placeCitizenWithMouse();
+	virtual void placeCitizenWithMouse();
+
+	/*
+	 * NAME : afficher
+	 * ROLE : affichage du citizen sur la case de la citie map
+	 * INPUT  PARAMETERS : void
+	 * OUTPUT PARAMETERS : affichage sur la map
+	 * RETURNED VALUE    : void
+	 */
+	virtual void afficher(std::unordered_map<std::string, Texture*>& citieMap, unsigned int x, unsigned int y);
 
 
 
@@ -236,11 +278,23 @@ public:
 	 *				Citizen::METHODS::GET/SET				   *
 	 ********************************************************* */
 
+	inline void SETtileOccupied(unsigned int tileOccupied)		{ _tileOccupied = tileOccupied; };
+	inline void SEThappiness(Emotion_Type happiness)			{ _happiness = happiness; };
+	inline void SETfood(int food)								{ _food = food; };
+	inline void SETwork(int work)								{ _work = work; };
+	inline void SETgold(int gold)								{ _gold = gold; };
+	inline void SETrevolt(int revolt)							{ _revolt = revolt; };
+	inline void SETreligion(Religion_Type religion)				{ _religion = religion; };
+	inline void SETplace(bool place)							{ _place = place; };
+
 	inline unsigned int GETtileOccupied()const		{ return _tileOccupied; };
+	inline Emotion_Type GEThappiness()const			{ return _happiness; };
 	inline int GETfood()const						{ return _food; };
 	inline int GETwork()const						{ return _work; };
 	inline int GETgold()const						{ return _gold; };
-
+	inline int GETrevolt()const						{ return _revolt; };
+	inline Religion_Type GETreligion()const			{ return _religion; };
+	inline bool GETplace()const						{ return _place; };
 
 private:
 	/* *********************************************************
@@ -248,13 +302,13 @@ private:
 	 ********************************************************* */
 	 
 	unsigned int _tileOccupied;
-	int _happiness;
+	Emotion_Type _happiness;
 	int _food;
 	int _work;
 	int _gold;
 	int _revolt;
+	Religion_Type _religion;
 
-	bool _religious;
 	bool _place;
 };
 

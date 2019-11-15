@@ -36,7 +36,7 @@ Player::Player() : _name("NoName")
 }
 Player::Player(const std::string &msg) : _name(msg)
 {
-	IHM::logfileconsole("Create Player Success");
+	IHM::logfileconsole("[INFO]___: Create Player Success");
 }
 Player::~Player()
 {
@@ -46,16 +46,16 @@ Player::~Player()
 	{
 		delete _tabUnit[i];
 
-		IHM::logfileconsole("Kill Unit n:" + std::to_string(i) + " of Player: " + _name + " Success");
+		IHM::logfileconsole("[INFO]___: Kill Unit n:" + std::to_string(i) + " of Player: " + _name + " Success");
 	}
 
 	for (unsigned int i = 0; i < size; i++)
 		_tabUnit.pop_back();
 
 	if (_tabUnit.size() != 0)
-		IHM::logfileconsole("___________ERROR : _tabunit.size() != 0");
+		IHM::logfileconsole("[ERROR]__: _tabunit.size() != 0");
 	else
-		IHM::logfileconsole("Kill ALL Unit of Player:" + _name + " Success");
+		IHM::logfileconsole("[INFO]___: Kill ALL Unit of Player:" + _name + " Success");
 
 
 	size = (unsigned int)_tabCity.size();
@@ -64,16 +64,16 @@ Player::~Player()
 	{
 		delete _tabCity[i];
 
-		IHM::logfileconsole("Kill Citie n:" + std::to_string(i) + " of Player: " + _name + " Success");
+		IHM::logfileconsole("[INFO]___: Kill Citie n:" + std::to_string(i) + " of Player: " + _name + " Success");
 	}
 
 	for (unsigned int i = 0; i < size; i++)
 		_tabCity.pop_back();
 
 	if (_tabCity.size() != 0)
-		IHM::logfileconsole("___________ERROR : _tabcities.size() != 0");
+		IHM::logfileconsole("[ERROR]__: _tabcities.size() != 0");
 	else
-		IHM::logfileconsole("Kill ALL Cities of Player:" + _name + " Success");
+		IHM::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
 
 	
 }

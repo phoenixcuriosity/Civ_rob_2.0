@@ -84,17 +84,6 @@ public:
 	*/
 	static bool initSDL(Screen& screen, TTF_Font* font[]);
 
-	/*
-	* NAME : calculImage
-	* ROLE : Initialisation des Textures, des Textes et des Buttons 
-	* ROLE : Enregistrement des pointeurs dans des tableaux
-	* ROLE : Hachage des noms des Textures (et classes filles) pour une recherche en complexité en O(1)
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Tableaux de pointeurs vers les Textures (et classes filles)
-	* RETURNED VALUE    : void
-	*/
-	static void calculImage(Sysinfo&);
-
 public:
 	/* *********************************************************
 	 *						IN-GAME							   *

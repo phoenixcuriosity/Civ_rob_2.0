@@ -82,9 +82,9 @@ void End::deleteAll(Sysinfo& sysinfo)
 	 ********************************************************* */
 
 
-	 /* *********************************************************
-	  *				 START delete Texture*					   *
-	  ********************************************************* */
+	/* *********************************************************
+	 *				 START delete Texture	   		 		   *
+	 ********************************************************* */
 
 	deleteTexture(sysinfo.allTextures.ground, "Texture");
 	deleteTexture(sysinfo.allTextures.groundSpec, "Texture");

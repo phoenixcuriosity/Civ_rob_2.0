@@ -68,14 +68,21 @@ const std::string fontFile = "arial.ttf";
 	  *	-> blended : sans couleur de fond
 	  *	-> shaded : avec une couleur de fond
   */
-enum Texte_Type : Uint8 { blended, shaded };
+enum Texte_Type : Uint8 {
+							blended,
+							shaded
+						};
 
 /*
 	* type de transparance :
 	*	-> 0 transparance totale
 	*	-> 255 totalement visible
 */
-enum Transparance_Type : Uint8 { transparent = 0, semiTransparent = 128, nonTransparent = 255 };
+enum Transparance_Type : Uint8 { 
+									transparent = 0,
+									semiTransparent = 128,
+									nonTransparent = 255
+								};
 
 /*
 	* type de centrage :
@@ -84,14 +91,22 @@ enum Transparance_Type : Uint8 { transparent = 0, semiTransparent = 128, nonTran
 	*	-> center_y : la position x ne change pas et centre la position y en focntion de hauteur du texte
 	*	-> center : centre totalement le texte en fonction de sa longueur et de sa hauteur
 */
-enum Center_Type : Uint8 { nocenter, center_x, center_y, center };
+enum Center_Type : Uint8 {
+							nocenter,
+							center_x,
+							center_y,
+							center
+						};
 
 /*
 	* type de rotation des textures
-	* valeur en degrès
+	* valeur en degrès (min 0 / max 359)
 	* par défaut les textures n'ont pas d'angle
 */
-enum Rotation_Type : Uint16 { no_angle, inverse = 180 };
+enum Rotation_Type : Uint16 {
+								no_angle,
+								inverse = 180 
+							};
 
 
 

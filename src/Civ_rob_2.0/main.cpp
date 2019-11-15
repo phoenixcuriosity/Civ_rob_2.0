@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
 		try
 		{
-			IHM::calculImage(sysinfo);
+			LoadConfig::calculImage(sysinfo);
 		}
 		catch (std::string const& chaine)
 		{

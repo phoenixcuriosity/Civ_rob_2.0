@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.5
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,11 +43,17 @@ void City::createCity(Sysinfo& sysinfo)
 	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == 0)
 	{
 
-		std::string name(sysinfo.var.s_player.tabCitieName[(sysinfo.var.s_player.selectplayer * 5) + sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size()]);
+		std::string name(sysinfo.var.s_player.tabCitieName
+			[
+				(unsigned int)
+				(((unsigned int)sysinfo.var.s_player.selectplayer * (double)5)
+				+ sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size())
+			]);
+
 		unsigned int x(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx());
 		unsigned int y(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy());
 
-		unsigned int middletileX = 0, middletileY = 0;
+		unsigned int middletileX(0), middletileY(0);
 
 		Tile tabtile[initSizeView*initSizeView];
 		for (unsigned int i(0); i < sysinfo.map.maps.size(); i++)
@@ -73,14 +79,16 @@ void City::createCity(Sysinfo& sysinfo)
 			{
 				if (o > -initSizeInfluence && o < initSizeInfluence && p > -initSizeInfluence && p < initSizeInfluence)
 				{
-					sysinfo.map.maps[middletileX + o][middletileY + p].appartenance = sysinfo.var.s_player.selectplayer;
+					sysinfo.map.maps[(unsigned int)((double)middletileX + o)]
+									[(unsigned int)((double)middletileY + p)]
+									.appartenance = sysinfo.var.s_player.selectplayer;
 				}
 				else
 				{
 					/* N/A */
 				}
 					
-				tabtile[k] = sysinfo.map.maps[middletileX + o][middletileY + p];
+				tabtile[k] = sysinfo.map.maps[(unsigned int)((double)middletileX + o)][(unsigned int)((double)middletileY + p)];
 				tabtile[k].tile_x = (sysinfo.screen.screenWidth / 2) - (-o * sysinfo.map.tileSize);
 				tabtile[k].tile_y = (sysinfo.screen.screenHeight / 2) - (-p * sysinfo.map.tileSize);
 				k++;
@@ -190,16 +198,12 @@ City::~City()
 */
 void City::foodNextTurn()
 {
-	double foodLimitPerLevelCurrent(15 + (_nbpop - 1) * 6 + pow((_nbpop - 1), 1.8));
-	double foodLimitPerLevelMinusOne(15 + (_nbpop - 1 - 1) * 6 + pow((_nbpop - 1 - 1), 1.8));
+	double foodLimitPerLevelCurrent(15 + ((double)_nbpop - 1) * 6 + pow((_nbpop - 1), 1.8));
+	double foodLimitPerLevelMinusOne(15 + ((double)_nbpop - 1 - 1) * 6 + pow((_nbpop - 1 - 1), 1.8));
 	double sommeFoodCitizen(0);
 	bool change(false);
 
-	
 	_foodStock += _foodBalance ;
-	std::cout << std::endl << "food = " << _foodStock;
-	std::cout << std::endl << "level = " << _nbpop;
-	std::cout << std::endl << "nbcitizen = " << _citizens.size();
 	
 	if (_foodStock < 0)
 	{
@@ -225,7 +229,7 @@ void City::foodNextTurn()
 	{
 		for (unsigned int i(0); i < _citizens.size(); i++)
 			sommeFoodCitizen += _citizens[i].GETfood();
-		_foodBalance = sommeFoodCitizen - (2 * (_nbpop - 1));
+		_foodBalance = sommeFoodCitizen - (2 * ((double)_nbpop - 1));
 	}
 	else
 	{
@@ -303,8 +307,6 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 			break;
 		}
 
-
-
 		if (_tile[i].tile_spec > 0) 
 		{
 			sysinfo.allTextures.groundSpec[_tile[i].tile_stringspec]->render(_tile[i].tile_x, _tile[i].tile_y);
@@ -321,6 +323,18 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 		else
 		{
 			/* N/A */
+		}
+
+		for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
+		{
+			if (_citizens[nbCitizen].GETtileOccupied() == i && _citizens[nbCitizen].GETplace())
+			{
+				_citizens[nbCitizen].afficher(sysinfo.allTextures.citieMap, _tile[i].tile_x, _tile[i].tile_y);
+			}
+			else
+			{
+				/* N/A */
+			}
 		}
 	}
 }
@@ -401,15 +415,43 @@ unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> 
  *					START Citizen::METHODS				   *
  ********************************************************* */
  
-Citizen::Citizen() : _tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)), _happiness(1), _food(2), _work(1), _gold(1), _revolt(0), _religious(false), _place(false)
+Citizen::Citizen()
+:
+_tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)),
+_happiness(Emotion_Type::neutre),
+_food(2),
+_work(1),
+_gold(1),
+_revolt(0),
+_religion(Religion_Type::catholic),
+_place(false)
 {
 	IHM::logfileconsole("[INFO]___: Create Citizen par défaut Success");
 }
-Citizen::Citizen(Tile tile) : _tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)), _happiness(1), _food(tile.food), _work(tile.work), _gold(tile.gold), _revolt(0), _religious(false), _place(true)
+
+
+Citizen::Citizen(Tile tile)
+: 
+_tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)),
+_happiness(Emotion_Type::neutre),
+_food(tile.food),
+_work(tile.work),
+_gold(tile.gold),
+_revolt(0),
+_religion(Religion_Type::catholic),
+_place(true)
 {
 	IHM::logfileconsole("[INFO]___: Create Citizen Success");
 }
-Citizen::Citizen(std::vector<Tile> tile, std::vector<Citizen> citizens) : _tileOccupied(placeCitizen(tile, citizens, _food, _work, _gold)), _happiness(1), _revolt(0), _religious(false), _place(true)
+
+
+Citizen::Citizen(std::vector<Tile> tile, std::vector<Citizen> citizens)
+: 
+_tileOccupied(placeCitizen(tile, citizens, _food, _work, _gold)),
+_happiness(Emotion_Type::neutre),
+_revolt(0),
+_religion(Religion_Type::catholic),
+_place(true)
 {
 	IHM::logfileconsole("[INFO]___: Create Citizen Success");
 }
@@ -417,6 +459,55 @@ Citizen::~Citizen()
 {
 	IHM::logfileconsole("[INFO]___: Kill Citizen Success");
 }
+
+
+
+
+/*
+* NAME : placeCitizenWithMouse
+* ROLE : TODO
+* INPUT  PARAMETERS : void
+* OUTPUT PARAMETERS :
+* RETURNED VALUE    : void
+*/
+void Citizen::placeCitizenWithMouse()
+{
+	/* TODO */
+}
+
+/*
+ * NAME : afficher
+ * ROLE : affichage du citizen sur la case de la citie map
+ * INPUT  PARAMETERS : void
+ * OUTPUT PARAMETERS : affichage sur la map
+ * RETURNED VALUE    : void
+ */
+void Citizen::afficher(std::unordered_map<std::string, Texture*>& citieMap, unsigned int x, unsigned int y)
+{
+	switch (_happiness)
+	{
+	case Emotion_Type::ecstatic:
+		citieMap["Adore.png"]->render(x, y);
+		break;
+	case Emotion_Type::happy:
+		citieMap["Laugh.png"]->render(x, y);
+		break;
+	case Emotion_Type::neutre:
+		citieMap["Cool.png"]->render(x, y);
+		break;
+	case Emotion_Type::sad:
+		citieMap["Cry.png"]->render(x, y);
+		break;
+	case Emotion_Type::angry:
+		citieMap["Furious.png"]->render(x, y);
+		break;
+	default:
+		/* TODO ERROR */
+		break;
+	}
+}
+
+
 
 /* *********************************************************
  *					END Citizen::METHODS				   *

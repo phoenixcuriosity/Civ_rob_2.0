@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.6
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -80,16 +80,49 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
  ********************************************************* */
 
 // type de sol
-enum Ground_Type : Uint8 { noGround, grass, water, deepwater, dirt, sand};
+enum Ground_Type : Uint8 {
+							noGround,
+							grass,
+							water,
+							deepwater,
+							dirt,
+							sand
+						};
 
 // spécifications du terrain
-enum GroundSpec_Type : Uint8 { specnothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; 
+enum GroundSpec_Type : Uint8 {
+								specnothing,
+								coal,
+								copper,
+								iron,
+								tree,
+								stone,
+								uranium,
+								horse,
+								fish,
+								petroleum
+							}; 
 
 // différents état de l'écran
-enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame, STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
+enum State_Type : Uint8 {
+							STATEnothing,
+							STATEtitleScreen,
+							STATEscreennewgame,
+							STATEreload,
+							STATEmainmap,
+							STATEscience,
+							STATEcitiemap
+						};
 
 // spécifications de la séléction
-enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };
+enum Select_Type : Uint8 { 
+							selectnothing,
+							NotToSelect,
+							selectcreate,
+							selectinspect,
+							selectmove,
+							selectmoveCitizen 
+						};
 
 
 
@@ -274,7 +307,7 @@ struct Var
 		enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame,
 		STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
 	*/
-	Uint8 statescreen = 0;
+	Uint8 statescreen = STATEnothing;
 
 
 
