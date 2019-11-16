@@ -397,17 +397,20 @@ unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> 
 	unsigned int condition((unsigned int)citizens.size());
 	unsigned int checkcondition(0);
 	unsigned int place(0);
+	bool continuer = true;
 
 	std::vector<unsigned int> tabpos;
 	for (unsigned int j(0); j < condition; j++)
 	{
 		tabpos.push_back(citizens[j].GETtileOccupied());
 	}
-	for (unsigned int i(0); i < initSizeView*initSizeView; i++)
+
+	
+	for (unsigned int i(0); i < initSizeView * initSizeView; i++)
 	{
+		checkcondition = 0;
 		for (unsigned int p(0); p < condition; p++)
 		{
-			checkcondition = 0;
 			if (i != tabpos[p])
 			{
 				checkcondition++;
@@ -416,17 +419,28 @@ unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> 
 			{
 				/* N/A */
 			}
-			
+
 			if (checkcondition == condition)
 			{
 				place = i;
+				continuer = false;
+				break;
 			}
 			else
 			{
 				/* N/A */
 			}
 		}
+		if (!continuer)
+		{
+			break;
+		}
+		else
+		{
+			/* N/A */
+		}
 	}
+
 	_food = tile[place].food;
 	_work = tile[place].work;
 	_gold = tile[place].gold;
