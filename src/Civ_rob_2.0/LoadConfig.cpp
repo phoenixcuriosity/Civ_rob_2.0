@@ -389,6 +389,8 @@ void LoadConfig::calculImage(Sysinfo& sysinfo)
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "citie/citie.png", "citie.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citie/food.png", "food.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "citizen/Adore.png", "Adore.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "citizen/Laugh.png", "Laugh.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, nocenter);

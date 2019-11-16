@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.6
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -292,6 +292,8 @@ void City::afficher(Sysinfo& sysinfo)
 */
 void City::affichercitiemap(Sysinfo& sysinfo)
 {
+
+	/* Affichage des cases qui compose le secteur de la City */
 	for (unsigned int i(0); i < initSizeView*initSizeView; i++) 
 	{
 		switch (_tile[i].tile_ground)
@@ -336,6 +338,33 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 				/* N/A */
 			}
 		}
+	}
+
+	/* Affichage food */
+	unsigned int renderFoodX(24), renderFoodY(sysinfo.map.tileSize), offSetRenderX(0), offSetRenderY(0);
+	if (_foodStock > 0)
+	{
+		for (double nbfood(0); nbfood < _foodStock; nbfood++)
+		{
+			if (((unsigned int)nbfood % 10) == 0)
+			{
+				offSetRenderY++;
+				offSetRenderX = 0;
+			}
+			else
+			{
+				/* N/A */
+			}
+
+			sysinfo.allTextures.citieMap["food.png"]
+				->render(1400 + (offSetRenderX * renderFoodX), 500 + (offSetRenderY * renderFoodY));
+
+			offSetRenderX++;
+		}
+	}
+	else
+	{
+		/* N/A */
 	}
 }
 
