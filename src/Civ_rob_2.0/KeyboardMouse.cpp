@@ -330,7 +330,7 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 			if (name.size() > 50)
 			{
 				name = "par_defaut";
-				IHM::logfileconsole("cinAlphabet ERROR : Name to long > 50 char");
+				IHM::logfileconsole("[ERROR]___: cinAlphabet ERROR : Name to long > 50 char");
 			}
 			Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 				shaded, name, { 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, x + xspace, y, no_angle, center_x);

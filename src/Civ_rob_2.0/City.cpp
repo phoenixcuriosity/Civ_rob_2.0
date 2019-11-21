@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.7
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -150,21 +150,6 @@ std::vector<Tile> City::createTiles(Tile tiles[])
 	return Atiles;
 }
 
-/*
-* NAME : createCitizen
-* ROLE : Création d'un Citizen sur une case précise
-* INPUT  PARAMETERS : Tile tile : données d'une case
-* OUTPUT PARAMETERS : std::vector<Citizen>
-* RETURNED VALUE    : std::vector<Citizen> : ajout du Citizen
-*/
-std::vector<Citizen> City::createCitizen(Tile tiles)
-{
-	std::vector<Citizen> Acitizen;
-	Citizen acitizen(tiles);
-	Acitizen.push_back(acitizen);	
-	return Acitizen;
-}
-
 
 /* *********************************************************
  *					END City::STATIC					   *
@@ -178,14 +163,27 @@ std::vector<Citizen> City::createCitizen(Tile tiles)
 
 
 City::City(const std::string& name, unsigned int x, unsigned int y, Tile tile[]) : _image("citie.png"),
-_name(name), _x(x), _y(y), _tile(createTiles(tile)), _citizens(createCitizen(tile[(unsigned int)ceil((initSizeView*initSizeView) / 2)])),
+_name(name), _x(x), _y(y), _tile(createTiles(tile)),
 _influenceLevel(1),_nbpop(1), _atq(0), _def(0), _nbhappy(0), _nbsad(0), _nbstructurebuild(0),
 _foodStock(0), _foodBalance(tile[(unsigned int)ceil((initSizeView*initSizeView) / 2)].food)
 {
+	_citizens.push_back(new Citizen(tile[(unsigned int)ceil((initSizeView * initSizeView) / 2)]));
+
 	IHM::logfileconsole("[INFO]___: Create Citie: " + _name + " Success");
 }
 City::~City()
 {
+	for (const auto& n : _citizens)
+	{
+		if (n != nullptr)
+		{
+			delete n;
+		}
+		else
+		{
+			/* TODO Throw error */
+		}
+	}
 	IHM::logfileconsole("[INFO]___: Destroy Citie: " + _name + " Success");
 }
 
@@ -215,20 +213,21 @@ void City::foodNextTurn()
 	else if (_foodStock >= foodLimitPerLevelCurrent)
 	{
 		_nbpop++;
-		Citizen c(_tile, _citizens);
-		_citizens.push_back(c);
+		
+		_citizens.push_back(new Citizen(_tile, _citizens));
 		_foodStock -= foodLimitPerLevelCurrent;
 		change = true;
 	}
 	else
 	{
+		/* Entre 0 et foodLimitPerLevelCurrent */
 		/* N/A */
 	}
 
 	if (change)
 	{
 		for (unsigned int i(0); i < _citizens.size(); i++)
-			sommeFoodCitizen += _citizens[i].GETfood();
+			sommeFoodCitizen += _citizens[i]->GETfood();
 		_foodBalance = sommeFoodCitizen - (2 * ((double)_nbpop - 1));
 	}
 	else
@@ -329,9 +328,9 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 
 		for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
 		{
-			if (_citizens[nbCitizen].GETtileOccupied() == i && _citizens[nbCitizen].GETplace())
+			if (_citizens[nbCitizen]->GETtileOccupied() == i && _citizens[nbCitizen]->GETplace())
 			{
-				_citizens[nbCitizen].afficher(sysinfo.allTextures.citieMap, _tile[i].tile_x, _tile[i].tile_y);
+				_citizens[nbCitizen]->afficher(sysinfo.allTextures.citieMap, _tile[i].tile_x, _tile[i].tile_y);
 			}
 			else
 			{
@@ -392,7 +391,7 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Placement d'un Citizen
 * RETURNED VALUE    : unsigned int : la place allouée
 */
-unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> citizens, int& _food, int& _work, int& _gold)
+unsigned int Citizen::placeCitizen(std::vector<Tile>& tile, std::vector<Citizen*>& citizens, int& _food, int& _work, int& _gold)
 {
 	unsigned int condition((unsigned int)citizens.size());
 	unsigned int checkcondition(0);
@@ -402,7 +401,7 @@ unsigned int Citizen::placeCitizen(std::vector<Tile> tile, std::vector<Citizen> 
 	std::vector<unsigned int> tabpos;
 	for (unsigned int j(0); j < condition; j++)
 	{
-		tabpos.push_back(citizens[j].GETtileOccupied());
+		tabpos.push_back(citizens[j]->GETtileOccupied());
 	}
 
 	
@@ -488,7 +487,7 @@ _place(true)
 }
 
 
-Citizen::Citizen(std::vector<Tile> tile, std::vector<Citizen> citizens)
+Citizen::Citizen(std::vector<Tile>& tile, std::vector<Citizen*>& citizens)
 : 
 _tileOccupied(placeCitizen(tile, citizens, _food, _work, _gold)),
 _happiness(Emotion_Type::neutre),

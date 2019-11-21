@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -86,16 +86,6 @@ public:
 	 * RETURNED VALUE    : std::vector<Tile> : données générale de la cityMap
 	 */
 	static std::vector<Tile> createTiles(Tile tile[]);
-	
-		
-	/*
-	 * NAME : createCitizen
-	 * ROLE : Création d'un Citizen sur une case précise
-	 * INPUT  PARAMETERS : Tile tile : données d'une case
-	 * OUTPUT PARAMETERS : std::vector<Citizen>
-	 * RETURNED VALUE    : std::vector<Citizen> : ajout du Citizen
-	 */
-	static std::vector<Citizen> createCitizen(Tile tile);
 
 	
 public:
@@ -174,7 +164,7 @@ private:
 	unsigned int _x;
 	unsigned int _y;
 	std::vector<Tile> _tile;
-	std::vector<Citizen> _citizens;
+	std::vector<Citizen*> _citizens;
 	unsigned int _influenceLevel;
 	unsigned int _nbpop;
 	unsigned int _atq;
@@ -239,8 +229,8 @@ public:
 	 * OUTPUT PARAMETERS : Placement d'un Citizen
 	 * RETURNED VALUE    : unsigned int : la place allouée
 	 */
-	static unsigned int placeCitizen(std::vector<Tile> tile,
-		std::vector<Citizen> citizens, int& _food, int& _work, int& _gold);
+	static unsigned int placeCitizen(std::vector<Tile>& tile,
+		std::vector<Citizen*>& citizens, int& _food, int& _work, int& _gold);
 		
 	 
 	/* *********************************************************
@@ -248,7 +238,7 @@ public:
 	 ********************************************************* */
 	Citizen();
 	Citizen(Tile tiles);
-	Citizen(std::vector<Tile> tile, std::vector<Citizen> citizens);
+	Citizen(std::vector<Tile>& tile, std::vector<Citizen*>& citizens);
 	~Citizen();
 
 	

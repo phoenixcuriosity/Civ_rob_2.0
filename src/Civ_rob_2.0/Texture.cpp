@@ -101,7 +101,8 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 			{
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 				{
-					IHM::logSDLError(std::cout, "alpha : ");
+					throw("[ERROR]___: alpha");
+					/* TODO catch */
 				}
 				else
 				{

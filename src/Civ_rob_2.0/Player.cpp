@@ -32,7 +32,7 @@
 
 Player::Player() : _name("NoName")
 {
-	IHM::logfileconsole("Create Player Par Defaut Success");
+	IHM::logfileconsole("[INFO]___: Create Player Par Defaut Success");
 }
 Player::Player(const std::string &msg) : _name(msg)
 {

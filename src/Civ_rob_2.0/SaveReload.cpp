@@ -42,7 +42,7 @@
 */
 void SaveReload::savemaps(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_Save Start_");
+	IHM::logfileconsole("[INFO]___: Save Start");
 
 
 
@@ -69,9 +69,9 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
+		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
 
-	IHM::logfileconsole("_Save End_");
+	IHM::logfileconsole("[INFO]___: Save End");
 }
 
 /*
@@ -83,7 +83,7 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 */
 void SaveReload::savePlayer(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_SavePlayer Start_");
+	IHM::logfileconsole("[INFO]___: SavePlayer Start");
 	std::ofstream savePlayer(sysinfo.file.SavePlayer);
 	if (savePlayer) {
 		savePlayer << "nbPlayer= " << sysinfo.tabplayer.size();
@@ -128,9 +128,9 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
+		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 
-	IHM::logfileconsole("_SavePlayer End_");
+	IHM::logfileconsole("[INFO]___: SavePlayer End");
 }
 
 /*
@@ -142,7 +142,7 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 */
 void SaveReload::reload(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_Reload Start_");
+	IHM::logfileconsole("[INFO]___: Reload Start");
 	sysinfo.var.statescreen = STATEmainmap;
 
 	std::string destroy;
@@ -211,10 +211,10 @@ void SaveReload::reload(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
+		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
-	IHM::logfileconsole("_Reload End_");
+	IHM::logfileconsole("[INFO]___: Reload End");
 }
 
 /*
@@ -226,7 +226,7 @@ void SaveReload::reload(Sysinfo& sysinfo)
 */
 void SaveReload::createSave(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_createSave Start_");
+	IHM::logfileconsole("[INFO]___: createSave Start");
 	std::string destroy;
 
 	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
@@ -263,7 +263,7 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 			saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 
 	std::string save = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave());
 	_mkdir(save.c_str());
@@ -272,7 +272,7 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 	sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
 	sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
 
-	IHM::logfileconsole("_createSave Start_");
+	IHM::logfileconsole("[INFO]___: createSave End");
 }
 
 /*
@@ -284,7 +284,7 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 */
 void SaveReload::removeSave(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_removeSave Start_");
+	IHM::logfileconsole("[INFO]___: removeSave Start");
 	std::string file;
 	bool condition = false;
 
@@ -310,21 +310,21 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 
 			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
 			if (remove(file.c_str()) != 0)
-				IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+				IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				IHM::logfileconsole("file : " + file + " successfully remove");
+				IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
 			if (remove(file.c_str()) != 0)
-				IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+				IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				IHM::logfileconsole("file : " + file + " successfully remove");
+				IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave());
 			if (_rmdir(file.c_str()) != 0)
-				IHM::logfileconsole("ERREUR: Impossible d'effacer le dossier " + file);
+				IHM::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 			else
-				IHM::logfileconsole("directory : " + file + " successfully remove");
+				IHM::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 
 			sysinfo.var.save.SETnbSave(sysinfo.var.save.GETnbSave() - 1);
 			if (sysinfo.var.save.GETnbSave() == 0)
@@ -349,7 +349,7 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 					saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 			}
 			else
-				IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+				IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 		}
 		else
 		{
@@ -357,9 +357,9 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("ERREUR: currentSave = 0");
+		IHM::logfileconsole("[ERROR]___: currentSave = 0");
 
-	IHM::logfileconsole("_removeSave End_");
+	IHM::logfileconsole("[INFO]___: removeSave End");
 }
 
 /*
@@ -371,7 +371,7 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 */
 void SaveReload::clearSave(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_clearSave Start_");
+	IHM::logfileconsole("[INFO]___: clearSave Start");
 
 	for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) 
 	{
@@ -384,21 +384,21 @@ void SaveReload::clearSave(Sysinfo& sysinfo)
 	{
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SaveMaps.txt";
 		if (remove(file.c_str()) != 0)
-			IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+			IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			IHM::logfileconsole("file : " + file + " successfully remove");
+			IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SavePlayer.txt";
 		if (remove(file.c_str()) != 0)
-			IHM::logfileconsole("ERREUR: Impossible d'effacer le fichier " + file);
+			IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			IHM::logfileconsole("file : " + file + " successfully remove");
+			IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]);
 		if (_rmdir(file.c_str()) != 0)
-			IHM::logfileconsole("ERREUR: Impossible d'effacer le dossier " + file);
+			IHM::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 		else
-			IHM::logfileconsole("directory : " + file + " successfully remove");
+			IHM::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 	}
 
 	std::ofstream saveInfo(sysinfo.file.SaveInfo);
@@ -409,13 +409,13 @@ void SaveReload::clearSave(Sysinfo& sysinfo)
 		saveInfo << std::endl << "SaveUse=";
 	}
 	else
-		IHM::logfileconsole("ERREUR: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 
 	sysinfo.var.save.SETnbSave(0);
 	sysinfo.var.save.SETcurrentSave(0);
 	sysinfo.var.save.GETtabSave().clear();
 
-	IHM::logfileconsole("_clearSave End_");
+	IHM::logfileconsole("[INFO]___: clearSave End");
 }
 
 

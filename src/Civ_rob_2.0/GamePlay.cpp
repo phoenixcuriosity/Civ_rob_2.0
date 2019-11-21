@@ -41,7 +41,7 @@
 */
 void GamePlay::newGame(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_Newgame Start_");
+	IHM::logfileconsole("[INFO]___: Newgame Start");
 	sysinfo.var.statescreen = STATEscreennewgame;
 
 	unsigned int nbplayer(0), initspace(132), space(32);
@@ -98,7 +98,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 
 	/* ### Don't put code below here ### */
 
-	IHM::logfileconsole("_Newgame End_");
+	IHM::logfileconsole("[INFO]___: Newgame End");
 }
 
 /*
@@ -110,7 +110,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 */
 void GamePlay::groundGen(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("_Groundgen Start_");
+	IHM::logfileconsole("[INFO]___: Groundgen Start");
 	unsigned int randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
 
 	for (Uint8 i(0); i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
@@ -297,7 +297,7 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			}
 		}
 	}
-	IHM::logfileconsole("_Groundgen End_");
+	IHM::logfileconsole("[INFO]___: Groundgen End");
 }
 
 /*
@@ -350,7 +350,18 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 	std::vector<randomPos> tabRandom;
 	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 	{
-		makeRandomPosTab(sysinfo, tabRandom);
+		try
+		{
+			makeRandomPosTab(sysinfo, tabRandom);
+		}
+		catch (const std::string& msg)
+		{
+			randomPos RandomPOS;
+			makeRandomPos(RandomPOS, sysinfo.map.maps, sysinfo.map.toolBarSize, sysinfo.map.tileSize);
+			tabRandom.push_back(RandomPOS);
+			IHM::logfileconsole(msg);
+			throw("[ERROR]___: [Catch]___: makeRandomPosTab, Too many Iterations : No Critical Error -> Continue");
+		}
 		sysinfo.tabplayer[i]->addUnit("settler", tabRandom[i].x, tabRandom[i].y,
 			sysinfo.var.s_player.tabUnit_Struct[selectunit].life, sysinfo.var.s_player.tabUnit_Struct[selectunit].atq,
 			sysinfo.var.s_player.tabUnit_Struct[selectunit].def, sysinfo.var.s_player.tabUnit_Struct[selectunit].movement,
@@ -381,8 +392,7 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 		iteration++;
 		if (iteration > 10000)
 		{
-			IHM::logfileconsole("__________ERROR : makeRandomPosTab, Too many Iterations");
-			break;
+			throw("[ERROR]___: makeRandomPosTab, Too many Iterations");
 		}
 		else
 		{
@@ -441,7 +451,7 @@ void GamePlay::makeRandomPos(randomPos& RandomPOS, std::vector<std::vector<Tile>
 	/*
 		créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
 	*/
-	int x((rand() % (maps.size() * tileSize - toolBarSize * tileSize)) + (toolBarSize * tileSize));
+	int x((rand() % ((unsigned int)(maps.size() * tileSize) - (unsigned int)(toolBarSize * tileSize))) + (toolBarSize * tileSize));
 	int y((rand() % (maps[0].size() * tileSize)));
 	RandomPOS.x = (int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;

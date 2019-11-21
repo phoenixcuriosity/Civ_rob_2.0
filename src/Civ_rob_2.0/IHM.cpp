@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.16
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -110,23 +110,6 @@ void IHM::logfileconsole(const std::string msg)
 
 
 /*
-* NAME : logSDLError
-* ROLE : SDL erreur
-* INPUT  PARAMETERS : std::ostream &os, const std::string &msg
-* OUTPUT PARAMETERS : message d'erreur dans la console
-* RETURNED VALUE    : void
-*/
-void IHM::logSDLError(std::ostream &os, const std::string &msg)
-{
-	os << msg << " error: " << SDL_GetError() << std::endl;
-	logger << msg << " error: " << SDL_GetError() << std::endl;
-}
-
-
-
-
-
-/*
 * NAME : initSDL
 * ROLE : Initialisation de la SDL fenetre et renderer ainsi que le tableau de police de font
 * INPUT  PARAMETERS : SDL_Window*& : pointeur sur la fenetre de la SDL
@@ -139,7 +122,7 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
-		std::cout << std::endl << "SDL could not initialize! SDL_Error: " << SDL_GetError();
+		logfileconsole("[ERROR]___: SDL could not initialize! SDL_Error: " + (std::string)SDL_GetError());
 		return false;
 	}
 	else
@@ -154,20 +137,18 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 		//	SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_FULLSCREEN
 		if (screen.window == nullptr)
 		{
-			logSDLError(std::cout, "CreateWindow");
 			SDL_Quit();
 			return false;
 		}
 		else
 		{
-			logfileconsole("CreateWindow Success");
+			logfileconsole("[INFO]___: CreateWindow Success");
 		}
 			
 		screen.renderer = SDL_CreateRenderer(screen.window, -1, SDL_RENDERER_ACCELERATED);
 		//| SDL_RENDERER_PRESENTVSYNC
 		if (screen.renderer == nullptr)
 		{
-			logSDLError(std::cout, "CreateRenderer");
 			SDL_DestroyWindow(screen.window);
 			SDL_Quit();
 			return false;
@@ -179,7 +160,6 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
 
 		if (TTF_Init() != 0)
 		{
-			logSDLError(std::cout, "TTF_Init");
 			SDL_DestroyRenderer(screen.renderer);
 			SDL_DestroyWindow(screen.window);
 			SDL_Quit();
