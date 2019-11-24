@@ -1,0 +1,5 @@
+nbPlayer= 1
+
+player= 0
+name= NoName0
+nbunitTotal= 0

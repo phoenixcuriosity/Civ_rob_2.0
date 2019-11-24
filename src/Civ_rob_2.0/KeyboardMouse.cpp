@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.7
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,9 +46,8 @@
 */
 void KeyboardMouse::cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int x, unsigned int y)
 {
-	bool continuer = true;
+	bool continuer(true);
 	SDL_Event event;
-	int SDL_EnableUNICODE(1);
 
 	while (continuer)
 	{
@@ -152,7 +151,6 @@ void KeyboardMouse::cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned in
 {
 	bool continuer = true;
 	SDL_Event event;
-	int SDL_EnableUNICODE(1);
 	unsigned int xspace = 12;
 
 	while (continuer)

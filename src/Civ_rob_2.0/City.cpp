@@ -25,6 +25,7 @@
 #include "City.h"
 #include "IHM.h"
 
+
 /* *********************************************************
  *					START City::STATIC					   *
  ********************************************************* */
@@ -205,7 +206,16 @@ void City::foodNextTurn()
 	
 	if (_foodStock < 0)
 	{
+		/* TODO gestion prioritaire de suppression de Citizen */
 		_nbpop--;
+		if (_citizens[_citizens.size() - 1] != nullptr)
+		{
+			delete _citizens[_citizens.size() - 1];
+		}
+		else
+		{
+			/* TODO Throw error */
+		}
 		_citizens.pop_back();
 		_foodStock = foodLimitPerLevelMinusOne;
 		change = true;

@@ -44,6 +44,41 @@ const int initSizeInfluence = 2;
 const unsigned int MAX_POP = 50;
 
 
+enum class Religion_Type : Uint8 {
+									catholic,
+									protestant,
+									reformed,
+									anglican,
+									orthodox,
+									coptic,
+									sunni,
+									shiite,
+									ibadi,
+									buddhism,
+									vajrayana,
+									mahayana,
+									confucianism,
+									shinto,
+									hinduism,
+									sikhism,
+									animism,
+									shamanism,
+									totemism,
+									inti,
+									nahuatl,
+									jewish,
+									zoroastrian
+								};
+
+enum class Emotion_Type : int8_t	{
+										ecstatic =	2,
+										happy	 =	1,
+										neutre	 =	0,
+										sad		 = -1,
+										angry	 = -2
+									};
+
+
 
 
 /* *********************************************************
@@ -178,39 +213,6 @@ private:
 };
 
 
-enum class Religion_Type : Uint8	{
-										catholic,
-										protestant,
-										reformed,
-										anglican,
-										orthodox,
-										coptic,
-										sunni,
-										shiite,
-										ibadi,
-										buddhism,
-										vajrayana,
-										mahayana,
-										confucianism,
-										shinto,
-										hinduism,
-										sikhism,
-										animism,
-										shamanism,
-										totemism,
-										inti,
-										nahuatl,
-										jewish,
-										zoroastrian
-									};
-
-enum class Emotion_Type : int8_t{
-									ecstatic	=  2,
-									happy		=  1,
-									neutre		=  0,
-									sad			= -1,
-									angry		= -2
-								};
 
 class Citizen
 {

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.5
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -77,15 +77,21 @@ int main(int argc, char* argv[])
 
 		IHM::titleScreen(sysinfo);
 
-		int SDL_EnableUNICODE(1); // on azerty
-
 		while (sysinfo.var.continuer)
 		{
 			IHM::eventSDL(sysinfo);
 
 			IHM::countFrame(sysinfo.screen);
 
-			IHM::alwaysrender(sysinfo);
+			try 
+			{
+				IHM::alwaysrender(sysinfo);
+			}
+			catch (const std::string& msg)
+			{
+				End::exitError(msg);
+			}
+			
 		}	
 	}
 	else
@@ -94,7 +100,7 @@ int main(int argc, char* argv[])
 	}
 	End::deleteAll(sysinfo);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 /*

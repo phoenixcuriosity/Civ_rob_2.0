@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.17
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -74,8 +74,6 @@ Player::~Player()
 		IHM::logfileconsole("[ERROR]__: _tabcities.size() != 0");
 	else
 		IHM::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
-
-	
 }
 
 
@@ -117,8 +115,8 @@ void Player::deleteUnit(unsigned int index)
 	delete _tabUnit[index];
 	if (_tabUnit.size() > 1 && index < _tabUnit.size() - 1)
 	{
-		for (unsigned int i = index; i < (_tabUnit.size() - 1); i++)
-			_tabUnit[i] = _tabUnit[i + 1];
+		for (unsigned int i(index); i < (_tabUnit.size() - 1); i++)
+			_tabUnit[i] = _tabUnit[(unsigned __int64)i + 1];
 	}
 	_tabUnit.pop_back();
 }
@@ -147,8 +145,8 @@ void Player::deleteCity(unsigned int index)
 	delete _tabCity[index];
 	if (_tabCity.size() > 1 && index < _tabCity.size() - 1)
 	{
-		for (unsigned int i = index; i < (_tabCity.size() - 1); i++)
-			_tabCity[i] = _tabCity[i + 1];
+		for (unsigned int i(index); i < (_tabCity.size() - 1); i++)
+			_tabCity[i] = _tabCity[(unsigned __int64)i + 1];
 	}
 	_tabCity.pop_back();
 }

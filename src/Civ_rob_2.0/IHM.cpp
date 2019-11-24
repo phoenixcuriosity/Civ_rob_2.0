@@ -523,11 +523,11 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		 *			START Affichage Unit/Citie/Player			   *
 		 ********************************************************* */
 
-		if (sysinfo.tabplayer.size() != 0)
+		if (sysinfo.tabplayer.size() > 0)
 		{
 			for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++) 
 			{
-				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0)
+				if (sysinfo.tabplayer[i]->GETtabUnit().size() > 0)
 				{
 					for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 					{
@@ -537,6 +537,7 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 				}
 				else
 				{
+					/* No Error : Possible de ne pas avoir d'unité */
 					/* N/A */
 				}
 
@@ -550,13 +551,14 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 				}
 				else
 				{
+					/* No Error : Possible de ne pas avoir de cité */
 					/* N/A */
 				}
 			}
 		}
 		else
 		{
-			/* N/A */
+			throw("[ERROR]__: alwaysrender : sysinfo.tabplayer.size() <= 0");
 		}
 
 		/* *********************************************************
@@ -715,11 +717,11 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	if (sysinfo.var.select == selectcreate)
 	{
 		initspace = 96;
-		for (unsigned int j(0); j < 10; j++)
+		for (Uint8 j(0); j < 10; j++)
 		{
-			if (sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.tabUnit_Struct.size())
+			if ((unsigned __int64)sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.tabUnit_Struct.size())
 			{
-				buildName = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].name;
+				buildName = sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].name;
 			}	
 			else
 			{
@@ -731,10 +733,10 @@ void IHM::citiemap(Sysinfo& sysinfo)
 			sysinfo.allTextures.unit[buildName]
 				->render((sysinfo.screen.screenWidth / 2) - 50, initspace);
 			sysinfo.allTextes.citieMap[
-				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].life) +
-				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].atq) +
-				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].def) +
-				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate + j].movement)]
+				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].life) +
+				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].atq) +
+				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].def) +
+				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].movement)]
 				->render((sysinfo.screen.screenWidth / 2) + 200, initspace);
 		}
 

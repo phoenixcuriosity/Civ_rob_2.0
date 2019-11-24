@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.17
-	file version : 1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,14 @@ class End
 public:
 	static void initPtrSysinfoLogger(Sysinfo& sysinfo, std::ofstream& logger);
 
+
+	/*
+	 * NAME : exitError
+	 * ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée
+	 * INPUT  PARAMETERS : const std::string msg : message de l'erreur
+	 * OUTPUT PARAMETERS : EXIT_FAILURE
+	 * RETURNED VALUE    : void
+	 */
 	static void exitError(const std::string msg);
 
 	/*

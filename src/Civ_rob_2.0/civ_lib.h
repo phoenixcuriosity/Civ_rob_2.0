@@ -124,7 +124,14 @@ enum Select_Type : Uint8 {
 							selectmoveCitizen 
 						};
 
-
+// spécifications de la séléction CinState_Type
+enum CinState_Type : Uint8	{
+								cinNothing,
+								cinTitleScreen,
+								cinScreenNewGameNbPlayer,
+								cinScreenNewGameNamePlayer,
+								cinMainMap,
+							};
 
 /* *********************************************************
  *						Structures						   *
@@ -308,6 +315,11 @@ struct Var
 		STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
 	*/
 	Uint8 statescreen = STATEnothing;
+
+	/*
+		état de l'entrée clavier
+	*/
+	Uint8 cinState = cinNothing;
 
 
 
