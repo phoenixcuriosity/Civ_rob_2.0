@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.7
+	last modification on this file on version:0.18
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -300,8 +300,18 @@ struct Var
 	// variable permettant de quitter la boucle principale donc le jeu
 	bool continuer = true;
 
+	bool waitEvent = true;
+
 	// nombre de tours passé dans le jeu
 	unsigned int nbturn = 0;
+
+	/* Nb player */
+	Uint8 nbPlayer = 0;
+
+	std::string tempPlayerName = "";
+
+	unsigned int tempX = 0;
+	unsigned int tempY = 0;
 
 	/*	
 		état de la sélection du joueur

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.3
+	last modification on this file on version:0.18
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,33 +30,24 @@
 class KeyboardMouse
 {
 public:
-	/* *********************************************************
-	 *			KeyboardMouse::STATIC::CIN					   *
-	 ********************************************************* */
+
 
 	/*
-	* NAME : cinDigit
-	* ROLE : Recherche d'un digit rentré par le joueur
+	* NAME : eventSDL
+	* ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier
 	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* INPUT  PARAMETERS : unsigned int& digit : le digit a retourner
-	* INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage du digit
-	* INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage du digit
-	* OUTPUT PARAMETERS : le digit
+	* OUTPUT PARAMETERS : évenements d'entré utilisateur
 	* RETURNED VALUE    : void
 	*/
-	static void cinDigit(Sysinfo& sysinfo, unsigned int& digit, unsigned int x, unsigned int y);
+	static void eventSDL(Sysinfo& sysinfo);
 
-	/*
-	* NAME : cinAlphabet
-	* ROLE : Recherche d'une chaine de caractères (finisant par \0) rentré par le joueur
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* INPUT  PARAMETERS : std::string &name : la chaine de caractères a retourner
-	* INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage
-	* INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage
-	* OUTPUT PARAMETERS : la chaine de caractères a retourner
-	* RETURNED VALUE    : void
-	*/
-	static void cinAlphabet(Sysinfo& sysinfo, std::string &name, unsigned int x, unsigned int y);
+	static void eventSDL_bis(Sysinfo& sysinfo, SDL_Event event);
+
+	static void wait_SDL(Sysinfo& sysinfo);
+
+	static void run_SDL(Sysinfo& sysinfo);
+
+	
 
 
 public:
@@ -64,30 +55,56 @@ public:
 	 *			KeyboardMouse::STATIC::UNE TOUCHE			   *
 	 ********************************************************* */
 
+	static void keySDLK_ESCAPE();
+	static void keySDLK_BACKSPACE(Sysinfo& sysinfo);
+	static void keySDLK_RETURN(Sysinfo& sysinfo);
+	static void keySDLK_KP_ENTER(Sysinfo& sysinfo);
+	static void keySDLK_SPACE(Sysinfo& sysinfo);
 
-	 /*
-	 * NAME : cinAlphabet
-	 * ROLE : Recherche d'une chaine de caractères (finisant par \0) rentré par le joueur
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * INPUT  PARAMETERS : std::string &name : la chaine de caractères a retourner
-	 * INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage
-	 * INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage
-	 * OUTPUT PARAMETERS : la chaine de caractères a retourner
-	 * RETURNED VALUE    : void
-	 */
-	static void keySDLK_b(Sysinfo&);
+	static void keySDLK_F1(Sysinfo& sysinfo);
+	static void keySDLK_F2(Sysinfo& sysinfo);
+	static void keySDLK_F3(Sysinfo& sysinfo);
+	static void keySDLK_F4(Sysinfo& sysinfo);
+	static void keySDLK_F5(Sysinfo& sysinfo);
+	static void keySDLK_F6(Sysinfo& sysinfo);
+	static void keySDLK_F7(Sysinfo& sysinfo);
+	static void keySDLK_F8(Sysinfo& sysinfo);
+	static void keySDLK_F9(Sysinfo& sysinfo);
+	static void keySDLK_F10(Sysinfo& sysinfo);
+	static void keySDLK_F11(Sysinfo& sysinfo);
+	static void keySDLK_F12(Sysinfo& sysinfo);
 
-	/*
-	* NAME : cinAlphabet
-	* ROLE : Recherche d'une chaine de caractères (finisant par \0) rentré par le joueur
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* INPUT  PARAMETERS : std::string &name : la chaine de caractères a retourner
-	* INPUT  PARAMETERS : unsigned int x : coordonnée en x pour l'affichage
-	* INPUT  PARAMETERS : unsigned int y : coordonnée en y pour l'affichage
-	* OUTPUT PARAMETERS : la chaine de caractères a retourner
-	* RETURNED VALUE    : void
-	*/
-	static void keySDLK_i(Sysinfo&);
+	static void keySDLK_UP(Sysinfo& sysinfo);
+	static void keySDLK_LEFT(Sysinfo& sysinfo);
+	static void keySDLK_DOWN(Sysinfo& sysinfo);
+	static void keySDLK_RIGHT(Sysinfo& sysinfo);
+
+	static void keySDLK_a(Sysinfo& sysinfo);
+	static void keySDLK_b(Sysinfo& sysinfo);
+	static void keySDLK_c(Sysinfo& sysinfo);
+	static void keySDLK_d(Sysinfo& sysinfo);
+	static void keySDLK_e(Sysinfo& sysinfo);
+	static void keySDLK_f(Sysinfo& sysinfo);
+	static void keySDLK_g(Sysinfo& sysinfo);
+	static void keySDLK_h(Sysinfo& sysinfo);
+	static void keySDLK_i(Sysinfo& sysinfo);
+	static void keySDLK_j(Sysinfo& sysinfo);
+	static void keySDLK_k(Sysinfo& sysinfo);
+	static void keySDLK_l(Sysinfo& sysinfo);
+	static void keySDLK_m(Sysinfo& sysinfo);
+	static void keySDLK_n(Sysinfo& sysinfo);
+	static void keySDLK_o(Sysinfo& sysinfo);
+	static void keySDLK_p(Sysinfo& sysinfo);
+	static void keySDLK_q(Sysinfo& sysinfo);
+	static void keySDLK_r(Sysinfo& sysinfo);
+	static void keySDLK_s(Sysinfo& sysinfo);
+	static void keySDLK_t(Sysinfo& sysinfo);
+	static void keySDLK_u(Sysinfo& sysinfo);
+	static void keySDLK_v(Sysinfo& sysinfo);
+	static void keySDLK_w(Sysinfo& sysinfo);
+	static void keySDLK_x(Sysinfo& sysinfo);
+	static void keySDLK_y(Sysinfo& sysinfo);
+	static void keySDLK_z(Sysinfo& sysinfo);
 
 
 	/*

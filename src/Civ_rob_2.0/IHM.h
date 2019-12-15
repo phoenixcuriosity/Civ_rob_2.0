@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.8
+	last modification on this file on version:0.18
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -80,14 +80,7 @@ public:
 	 *						IN-GAME							   *
 	 ********************************************************* */
 
-	 /*
-	 * NAME : eventSDL
-	 * ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : évenements d'entré utilisateur
-	 * RETURNED VALUE    : void
-	 */
-	static void eventSDL(Sysinfo& sysinfo);
+	
 
 	/*
 	* NAME : titleScreen
@@ -98,6 +91,12 @@ public:
 	* RETURNED VALUE    : void
 	*/
 	static void titleScreen(Sysinfo&);
+
+
+	static void refreshNbPlayerTxt(Sysinfo& sysinfo);
+
+	static void refreshNamePlayerTxt(Sysinfo& sysinfo);
+
 
 	/*
 	 * NAME : reloadScreen

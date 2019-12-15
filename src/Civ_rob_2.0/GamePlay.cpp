@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.5
+	last modification on this file on version:0.18
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -44,7 +44,10 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	IHM::logfileconsole("[INFO]___: Newgame Start");
 	sysinfo.var.statescreen = STATEscreennewgame;
 
-	unsigned int nbplayer(0), initspace(132), space(32);
+	unsigned int space(32);
+
+	sysinfo.var.tempX = sysinfo.screen.screenWidth / 2;
+	sysinfo.var.tempY = 164;
 
 	// création d'une sauvegarde concernant la nouvelle partie
 	SaveReload::createSave(sysinfo);
@@ -58,22 +61,32 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	sysinfo.allTextes.newGame["How many player(s) (max 9):"]->render();
 	SDL_RenderPresent(sysinfo.screen.renderer);
 
-
+	sysinfo.var.cinState = cinScreenNewGameNbPlayer;
+	sysinfo.var.waitEvent = true;
 	// Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1
-	KeyboardMouse::cinDigit(sysinfo, nbplayer, sysinfo.screen.screenWidth / 2, initspace += space);
+	KeyboardMouse::eventSDL(sysinfo);
+	sysinfo.var.tempY += space;
 
+	sysinfo.var.cinState = cinScreenNewGameNamePlayer;
 	// Deuxième demande au joueur : Le nom des joueurs
-	for (unsigned int i(1); i < nbplayer + 1; i++)
+	for (unsigned int i(0); i < sysinfo.var.nbPlayer; i++)
 	{
-		sysinfo.var.s_player.tabPlayerName.push_back("");
+		sysinfo.var.waitEvent = true;
+		sysinfo.var.tempY += space;
 
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, sysinfo.screen.screenWidth / 2, initspace += space, no_angle, center_x);
+			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, sysinfo.screen.screenWidth / 2, sysinfo.var.tempY, no_angle, center_x);
 		SDL_RenderPresent(sysinfo.screen.renderer);
 
+		sysinfo.var.tempY += space;
+
 		// valeur par défaut avec incrémentation en fonction du nombre de joueur : noName 
-		KeyboardMouse::cinAlphabet(sysinfo, sysinfo.var.s_player.tabPlayerName[i - 1], sysinfo.screen.screenWidth / 2, initspace += space);
-		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i - 1]));
+		KeyboardMouse::eventSDL(sysinfo);
+
+		sysinfo.var.s_player.tabPlayerName.push_back(sysinfo.var.tempPlayerName);
+		sysinfo.var.tempPlayerName = "";
+		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i]));
+		sysinfo.var.tempY += space;
 	}
 	
 	groundGen(sysinfo);
@@ -86,6 +99,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	// Création des boutons pour séléctionner les joueurs
 	int initspacename(200), spacename(24);
 	sysinfo.var.statescreen = STATEmainmap;
+	sysinfo.var.cinState = cinMainMap;
 	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,

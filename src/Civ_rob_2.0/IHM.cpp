@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.18
+	last modification on this file on version:0.18
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -192,149 +192,14 @@ bool IHM::initSDL(Screen& screen, TTF_Font* font[])
  ********************************************************* */
 
 
-
-/*
-* NAME : eventSDL
-* ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : évenements d'entré utilisateur
-* RETURNED VALUE    : void
-*/
-void IHM::eventSDL(Sysinfo& sysinfo)
-{
-	SDL_Event event;
-	while (SDL_PollEvent(&event) != 0)
-	{
-		switch (event.type)
-		{
-		case SDL_QUIT:	// permet de quitter le jeu
-			sysinfo.var.continuer = 0;
-			break;
-		case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
-			switch (event.key.keysym.sym)
-			{
-			case SDLK_F5:
-				GamePlay::groundGen(sysinfo);
-				break;
-			case SDLK_F6:
-				End::deletePlayer(sysinfo.tabplayer, "player");
-				for (unsigned int i(0); i < 4; i++)
-				{
-					sysinfo.tabplayer.push_back(new Player("NoName" + std::to_string(i)));
-				}
-				GamePlay::newGameSettlerSpawn(sysinfo);
-				break;
-			case SDLK_ESCAPE:
-				sysinfo.var.continuer = 0;
-				break;
-			case SDLK_UP:
-				if (sysinfo.map.screenOffsetYIndexMin > 0)
-				{
-					sysinfo.map.screenOffsetYIndexMin--;
-					sysinfo.map.screenOffsetYIndexMax--;
-				}
-				else
-				{
-					/* N/A */
-				}
-				break;
-			case SDLK_LEFT:
-				if (sysinfo.map.screenOffsetXIndexMin > 0)
-				{
-					sysinfo.map.screenOffsetXIndexMin--;
-					sysinfo.map.screenOffsetXIndexMax--;
-				}
-				else
-				{
-					/* N/A */
-				}
-				break;
-			case SDLK_DOWN:
-				if (sysinfo.map.screenOffsetYIndexMax < sysinfo.map.maps[0].size())
-				{
-					sysinfo.map.screenOffsetYIndexMin++;
-					sysinfo.map.screenOffsetYIndexMax++;
-				}
-				else
-				{
-					/* N/A */
-				}
-				break;
-			case SDLK_RIGHT:
-				if (sysinfo.map.screenOffsetXIndexMax < sysinfo.map.maps.size())
-				{
-					sysinfo.map.screenOffsetXIndexMin++;
-					sysinfo.map.screenOffsetXIndexMax++;
-				}
-				else
-				{
-					/* N/A */
-				}
-				break;
-			case SDLK_SPACE:
-				GamePlay::nextTurn(sysinfo);
-				break;
-			case SDLK_b:
-				KeyboardMouse::keySDLK_b(sysinfo);
-				break;
-			case SDLK_i:
-				KeyboardMouse::keySDLK_i(sysinfo);
-				break;
-			case SDLK_KP_1:
-				KeyboardMouse::keySDLK_KP_1(sysinfo);
-				break;
-			case SDLK_KP_2:
-				KeyboardMouse::keySDLK_KP_2(sysinfo);
-				break;
-			case SDLK_KP_3:
-				KeyboardMouse::keySDLK_KP_3(sysinfo);
-				break;
-			case SDLK_KP_4:
-				KeyboardMouse::keySDLK_KP_4(sysinfo);
-				break;
-			case SDLK_KP_5:
-				KeyboardMouse::keySDLK_KP_5(sysinfo);
-				break;
-			case SDLK_KP_6:
-				KeyboardMouse::keySDLK_KP_6(sysinfo);
-				break;
-			case SDLK_KP_7:
-				KeyboardMouse::keySDLK_KP_7(sysinfo);
-				break;
-			case SDLK_KP_8:
-				KeyboardMouse::keySDLK_KP_8(sysinfo);
-				break;
-			case SDLK_KP_9:
-				KeyboardMouse::keySDLK_KP_9(sysinfo);
-				break;
-			default:
-				/* N/A */
-				break;
-			}
-			break;
-		case SDL_MOUSEBUTTONDOWN: // test sur le type d'événement click souris (enfoncé)
-			KeyboardMouse::mouse(sysinfo, event);
-			break;
-		case SDL_MOUSEWHEEL:
-			KeyboardMouse::wheel(sysinfo, event.wheel.y);
-			break;
-		default:
-			/* N/A */
-			break;
-		}
-
-	}
-}
-
-
-/*
-* NAME : titleScreen
-* ROLE : Desciption de la fenetre "titleScreen"
-* ROLE : fonctionnement selon l'état : enum State_Type = STATEtitleScreen
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Ouverture de la fenetre "titleScreen"
-* RETURNED VALUE    : void
-*/
+ /*
+ * NAME : titleScreen
+ * ROLE : Desciption de la fenetre "titleScreen"
+ * ROLE : fonctionnement selon l'état : enum State_Type = STATEtitleScreen
+ * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+ * OUTPUT PARAMETERS : Ouverture de la fenetre "titleScreen"
+ * RETURNED VALUE    : void
+ */
 void IHM::titleScreen(Sysinfo& sysinfo)
 {
 	logfileconsole("[INFO]___: [START] : titleScreen");
@@ -366,6 +231,26 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	logfileconsole("[INFO]___: [END] : titleScreen");
+}
+
+
+void IHM::refreshNbPlayerTxt(Sysinfo& sysinfo)
+{
+	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
+		shaded, "Number of player(s)" + std::to_string(sysinfo.var.nbPlayer),
+		{ 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, sysinfo.var.tempX, sysinfo.var.tempY, no_angle, center_x);
+
+	SDL_RenderPresent(sysinfo.screen.renderer);
+}
+
+
+void IHM::refreshNamePlayerTxt(Sysinfo& sysinfo)
+{
+	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
+		shaded, sysinfo.var.tempPlayerName, { 255, 127, 127, 255 }, { 64, 64, 64, 255 },
+		24, sysinfo.var.tempX + 12, sysinfo.var.tempY, no_angle, center_x);
+
+	SDL_RenderPresent(sysinfo.screen.renderer);
 }
 
 

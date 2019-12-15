@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.6
+	last modification on this file on version:0.18
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -75,11 +75,13 @@ int main(int argc, char* argv[])
 		elapsed_seconds = end - start;
 		IHM::logfileconsole("[INFO]___: temps d'execution de l'initialisation : " + std::to_string(elapsed_seconds.count()));
 
+		sysinfo.var.cinState = cinTitleScreen;
+
 		IHM::titleScreen(sysinfo);
 
 		while (sysinfo.var.continuer)
 		{
-			IHM::eventSDL(sysinfo);
+			KeyboardMouse::eventSDL(sysinfo);
 
 			IHM::countFrame(sysinfo.screen);
 
