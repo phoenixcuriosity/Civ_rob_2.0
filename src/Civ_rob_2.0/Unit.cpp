@@ -24,6 +24,7 @@
 
 #include "Unit.h"
 #include "IHM.h"
+#include "LoadConfig.h"
 
 
 /* *********************************************************
@@ -264,9 +265,9 @@ bool Unit::irrigate(Sysinfo&)
 
 Unit::Unit() :	_name(""), _x(0), _y(0),
 				_maxlife(0), _maxatq(0), _maxdef(0), _maxmovement(0), _maxlevel(0),
-				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true)
+				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true), _blit(0), _show(true)
 {
-	IHM::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
+	LoadConfig::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
 Unit::Unit(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
 	unsigned int def, unsigned int move, unsigned int level)
@@ -274,7 +275,7 @@ Unit::Unit(const std::string &name, unsigned int x, unsigned int y, unsigned int
 	_maxlife(life), _maxatq(atq), _maxdef(def), _maxmovement(move), _maxlevel(level),
 	_life(life), _atq(atq), _def(def), _movement(move), _level(level), _alive(true), _blit(0), _show(true)
 {
-	IHM::logfileconsole("[INFO]___: Create Unit:  Success");
+	LoadConfig::logfileconsole("[INFO]___: Create Unit:  Success");
 }
 Unit::~Unit()
 {

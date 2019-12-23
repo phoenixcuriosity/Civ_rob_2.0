@@ -25,6 +25,7 @@
 #include "SaveReload.h"
 #include "civ_lib.h"
 #include "IHM.h"
+#include "LoadConfig.h"
 
 
 /* *********************************************************
@@ -42,7 +43,7 @@
 */
 void SaveReload::savemaps(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: Save Start");
+	LoadConfig::logfileconsole("[INFO]___: Save Start");
 
 
 
@@ -69,9 +70,9 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
 
-	IHM::logfileconsole("[INFO]___: Save End");
+	LoadConfig::logfileconsole("[INFO]___: Save End");
 }
 
 /*
@@ -83,7 +84,7 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 */
 void SaveReload::savePlayer(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: SavePlayer Start");
+	LoadConfig::logfileconsole("[INFO]___: SavePlayer Start");
 	std::ofstream savePlayer(sysinfo.file.SavePlayer);
 	if (savePlayer) {
 		savePlayer << "nbPlayer= " << sysinfo.tabplayer.size();
@@ -128,9 +129,9 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 
-	IHM::logfileconsole("[INFO]___: SavePlayer End");
+	LoadConfig::logfileconsole("[INFO]___: SavePlayer End");
 }
 
 /*
@@ -142,7 +143,7 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 */
 void SaveReload::reload(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: Reload Start");
+	LoadConfig::logfileconsole("[INFO]___: Reload Start");
 	sysinfo.var.statescreen = STATEmainmap;
 
 	std::string destroy;
@@ -211,10 +212,10 @@ void SaveReload::reload(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
-	IHM::logfileconsole("[INFO]___: Reload End");
+	LoadConfig::logfileconsole("[INFO]___: Reload End");
 }
 
 /*
@@ -226,7 +227,7 @@ void SaveReload::reload(Sysinfo& sysinfo)
 */
 void SaveReload::createSave(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: createSave Start");
+	LoadConfig::logfileconsole("[INFO]___: createSave Start");
 	std::string destroy;
 
 	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
@@ -263,7 +264,7 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 			saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 	}
 	else
-		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 
 	std::string save = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave());
 	_mkdir(save.c_str());
@@ -272,7 +273,7 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 	sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
 	sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
 
-	IHM::logfileconsole("[INFO]___: createSave End");
+	LoadConfig::logfileconsole("[INFO]___: createSave End");
 }
 
 /*
@@ -284,7 +285,7 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 */
 void SaveReload::removeSave(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: removeSave Start");
+	LoadConfig::logfileconsole("[INFO]___: removeSave Start");
 	std::string file;
 	bool condition = false;
 
@@ -310,21 +311,21 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 
 			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
 			if (remove(file.c_str()) != 0)
-				IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+				LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+				LoadConfig::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
 			if (remove(file.c_str()) != 0)
-				IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+				LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+				LoadConfig::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave());
 			if (_rmdir(file.c_str()) != 0)
-				IHM::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
+				LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 			else
-				IHM::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
+				LoadConfig::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 
 			sysinfo.var.save.SETnbSave(sysinfo.var.save.GETnbSave() - 1);
 			if (sysinfo.var.save.GETnbSave() == 0)
@@ -349,7 +350,7 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 					saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 			}
 			else
-				IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+				LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 		}
 		else
 		{
@@ -357,9 +358,9 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 		}
 	}
 	else
-		IHM::logfileconsole("[ERROR]___: currentSave = 0");
+		LoadConfig::logfileconsole("[ERROR]___: currentSave = 0");
 
-	IHM::logfileconsole("[INFO]___: removeSave End");
+	LoadConfig::logfileconsole("[INFO]___: removeSave End");
 }
 
 /*
@@ -371,7 +372,7 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 */
 void SaveReload::clearSave(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: clearSave Start");
+	LoadConfig::logfileconsole("[INFO]___: clearSave Start");
 
 	for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) 
 	{
@@ -384,21 +385,21 @@ void SaveReload::clearSave(Sysinfo& sysinfo)
 	{
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SaveMaps.txt";
 		if (remove(file.c_str()) != 0)
-			IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+			LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+			LoadConfig::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SavePlayer.txt";
 		if (remove(file.c_str()) != 0)
-			IHM::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+			LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			IHM::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+			LoadConfig::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]);
 		if (_rmdir(file.c_str()) != 0)
-			IHM::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
+			LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 		else
-			IHM::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
+			LoadConfig::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 	}
 
 	std::ofstream saveInfo(sysinfo.file.SaveInfo);
@@ -409,13 +410,13 @@ void SaveReload::clearSave(Sysinfo& sysinfo)
 		saveInfo << std::endl << "SaveUse=";
 	}
 	else
-		IHM::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
 
 	sysinfo.var.save.SETnbSave(0);
 	sysinfo.var.save.SETcurrentSave(0);
 	sysinfo.var.save.GETtabSave().clear();
 
-	IHM::logfileconsole("[INFO]___: clearSave End");
+	LoadConfig::logfileconsole("[INFO]___: clearSave End");
 }
 
 

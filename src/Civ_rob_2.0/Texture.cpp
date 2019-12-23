@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.9
+	last modification on this file on version:0.18
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,7 +24,7 @@
 
 #include "Texture.h"
 #include "civ_lib.h"
-#include "IHM.h"
+#include "LoadConfig.h"
 #include "End.h"
 
 ///////////////////////////// Texture //////////////////////////////
@@ -263,10 +263,6 @@ void Texture::render(int x, int y)
 	{
 		_dst.x = x;
 		_dst.y = y;
-	}
-	else
-	{
-		/* N/A */
 	}
 
 	if (_angle == 0)
@@ -522,6 +518,7 @@ Texte::~Texte()
 {
 	for (unsigned int i(0); i < MAX_FONT; i++)
 	{
+		/* Ptr delete in End::deleteAll */
 		_font[i] = nullptr;
 	}	
 }
@@ -758,15 +755,15 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
 			tabButtonImage[msg] = new ButtonImage(renderer, image, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, imageOn, cnt);
 		}
 		else
-			IHM::logfileconsole("[ERROR]___:___________ERROR : createButtonImage : cannot create Texture from : " + path);
+			LoadConfig::logfileconsole("[ERROR]___:___________ERROR : createButtonImage : cannot create Texture from : " + path);
 		SDL_FreeSurface(loadedSurface);
 		SDL_FreeSurface(loadedSurfaceOn);
 	}
 	else
-		IHM::logfileconsole("[ERROR]___:___________ERROR : createButtonImage : path or image are corrupt : " + path);
+		LoadConfig::logfileconsole("[ERROR]___:___________ERROR : createButtonImage : path or image are corrupt : " + path);
 
 
-	IHM::logfileconsole("Create ButtonImage n:" + std::to_string(tabButtonImage.size() - 1) + " msg = " + msg + " Success");
+	LoadConfig::logfileconsole("Create ButtonImage n:" + std::to_string(tabButtonImage.size() - 1) + " msg = " + msg + " Success");
 }
 
 /* *********************************************************
@@ -848,17 +845,17 @@ bool ButtonImage::renderButtonImage(Uint8 stateScreen)
 		if (this->GETangle() == 0)
 		{
 			if (_on)
-				SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
+				SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, this->GETdstPtr());
 			else
-				SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, &this->GETdst());
+				SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, this->GETdstPtr());
 			return true;
 		}
 		else
 		{
 			if (_on)
-				SDL_RenderCopyEx(this->GETrenderer(), _imageOn, NULL, &this->GETdst(), this->GETangle(), NULL, SDL_FLIP_NONE);
+				SDL_RenderCopyEx(this->GETrenderer(), _imageOn, NULL, this->GETdstPtr(), this->GETangle(), NULL, SDL_FLIP_NONE);
 			else
-				SDL_RenderCopyEx(this->GETrenderer(), this->GETtexture(), NULL, &this->GETdst(), this->GETangle(), NULL, SDL_FLIP_NONE);
+				SDL_RenderCopyEx(this->GETrenderer(), this->GETtexture(), NULL, this->GETdstPtr(), this->GETangle(), NULL, SDL_FLIP_NONE);
 			return true;
 		}
 
@@ -947,7 +944,7 @@ void ButtonTexte::createButtonTexte(	SDL_Renderer*& renderer,
 	tabButtonTexte[msg] = new ButtonTexte(renderer, font, image, msg, stateScreen, select, x, y, iW, iH,
 		type, color, backcolor, size, alpha, angle, imageOn, centerButtonTexte);
 
-	IHM::logfileconsole("[INFO]___: Create ButtonTexte n:" + std::to_string(tabButtonTexte.size() - 1) + " msg = " + msg + " Success");
+	LoadConfig::logfileconsole("[INFO]___: Create ButtonTexte n:" + std::to_string(tabButtonTexte.size() - 1) + " msg = " + msg + " Success");
 }
 
 /* *********************************************************
@@ -1081,11 +1078,11 @@ bool ButtonTexte::renderButtonTexte(	Uint8 stateScreen,
 		}
 		if (_on)
 		{
-			SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, &this->GETdst());
+			SDL_RenderCopy(this->GETrenderer(), _imageOn, NULL, this->GETdstPtr());
 		}
 		else
 		{
-			SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, &this->GETdst());
+			SDL_RenderCopy(this->GETrenderer(), this->GETtexture(), NULL, this->GETdstPtr());
 		}	
 		return true;
 	}

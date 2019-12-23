@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.7
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,7 +33,7 @@
 int main(int argc, char* argv[])
 {
 	Sysinfo sysinfo;
-	IHM::initPtrSysinfo(sysinfo);
+	LoadConfig::initPtrSysinfo(sysinfo);
 
 	LoadConfig::initStructs(sysinfo);
 
@@ -43,9 +43,9 @@ int main(int argc, char* argv[])
 	auto end(std::chrono::system_clock::now());
 	std::chrono::duration<double> elapsed_seconds(end - start);
 
-	IHM::initFile(sysinfo.file);
+	LoadConfig::initFile(sysinfo.file);
 
-	IHM::logfileconsole("[INFO]___: ________PROGRAMME START________");
+	LoadConfig::logfileconsole("[INFO]___: ________PROGRAMME START________");
 
 	try
 	{
@@ -56,9 +56,9 @@ int main(int argc, char* argv[])
 		End::exitError(chaine);
 	}
 
-	IHM::initTile(sysinfo.map);
+	LoadConfig::initTile(sysinfo.map);
 
-	if (IHM::initSDL(sysinfo.screen, sysinfo.allTextures.font))
+	if (LoadConfig::initSDL(sysinfo.screen, sysinfo.allTextures.font))
 	{
 		Unit::loadUnitAndSpec(sysinfo);
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 		
 		end = std::chrono::system_clock::now();
 		elapsed_seconds = end - start;
-		IHM::logfileconsole("[INFO]___: temps d'execution de l'initialisation : " + std::to_string(elapsed_seconds.count()));
+		LoadConfig::logfileconsole("[INFO]___: temps d'execution de l'initialisation : " + std::to_string(elapsed_seconds.count()));
 
 		sysinfo.var.cinState = cinTitleScreen;
 

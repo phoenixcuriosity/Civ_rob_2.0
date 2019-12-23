@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.9
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,51 +30,6 @@
 
 class IHM
 {
-public:
-	/* *********************************************************
-	 *					INITIALISATION						   *
-	 ********************************************************* */
-
-	static void initPtrSysinfo(Sysinfo& sysinfo);
-
-	/*
-	* NAME : initTile
-	* ROLE : Initialisation des cases de la map en fonction de sa taille
-	* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
-	* OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
-	* RETURNED VALUE    : void
-	*/
-	static void initTile(Map& map);
-
-	/*
-	* NAME : initFile
-	* ROLE : Initialisation des fichiers : log
-	* INPUT  PARAMETERS : struct File& : nom des fichiers
-	* OUTPUT PARAMETERS : Initialisation de log.txt
-	* RETURNED VALUE    : void
-	*/
-	static void initFile(File& file);
-
-	/*
-	* NAME : logfileconsole
-	* ROLE : Transmission du message sur la console et dans le fichier log.txt
-	* INPUT  PARAMETERS : const std::string msg : message
-	* OUTPUT PARAMETERS : message dans la console et le log.txt
-	* RETURNED VALUE    : void
-	*/
-	static void logfileconsole(const std::string msg);
-
-	/*
-	* NAME : initSDL
-	* ROLE : Initialisation de la SDL fenetre et renderer ainsi que le tableau de police de font
-	* INPUT  PARAMETERS : SDL_Window*& : pointeur sur la fenetre de la SDL
-	* INPUT  PARAMETERS : SDL_Renderer*& : pointeur sur le Renderer de la SDL
-	* INPUT  PARAMETERS : TTF_Font*[] : pointeur sur le tableau de police de font
-	* OUTPUT PARAMETERS : message dans la console et le log.txt
-	* RETURNED VALUE    : bool : true = pas de d'erreur lors de l'initialisation de la SDL
-	*/
-	static bool initSDL(Screen& screen, TTF_Font* font[]);
-
 public:
 	/* *********************************************************
 	 *						IN-GAME							   *
@@ -119,6 +74,9 @@ public:
 	 */
 	static void alwaysrender(Sysinfo&);
 
+
+	static void mainmap(Sysinfo& sysinfo);
+
 	/*
 	 * NAME : afficherSupertiles
 	 * ROLE : Affichage de la map (tiles, spec, appartenance) aux dimensions map.screen 
@@ -148,34 +106,6 @@ public:
 	 */
 	static void countFrame(Screen& screen);
 };
-
-
-
-
-
-/*
-	 * NAME : deleteDyTabPlayerAndTextures
-	 * ROLE : Destruction des allocations dynamique du tableau de pointeurs
-	 * INPUT  PARAMETERS : T& dytab : template<class T> : Texture et classes filles
-	 * INPUT  PARAMETERS : const std::string& name : nom du tableau à détruire
-	 * OUTPUT PARAMETERS : Destruction des allocations dynamique
-	 * RETURNED VALUE    : void
-*/
-/*
-template<typename T>
-void deleteDyTabPlayerAndTextures(T& dytab, const std::string& name)
-{
-	for (const auto& n : a)
-	{
-		if (n.second != nullptr)
-		{
-			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
-			delete n.second;
-		}
-	}
-}
-*/
-
 
 #endif
 

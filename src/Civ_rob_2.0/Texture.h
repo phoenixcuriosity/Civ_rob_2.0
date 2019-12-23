@@ -260,6 +260,7 @@ public:
 	inline virtual SDL_Texture* GETtexture() const { return _texture; };
 	inline virtual SDL_Texture* GETtextureNonConst() { return _texture; };
 	inline virtual SDL_Rect GETdst()const { return _dst; };
+	inline virtual SDL_Rect* GETdstPtr() { return &_dst; };
 	inline virtual int GETdstx()const { return _dst.x; };
 	inline virtual int GETdsty()const { return _dst.y; };
 	inline virtual int GETdstw()const { return _dst.w; };

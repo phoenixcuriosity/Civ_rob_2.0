@@ -24,6 +24,7 @@
 
 #include "End.h"
 #include "IHM.h"
+#include "LoadConfig.h"
 
 
 /* *********************************************************
@@ -49,9 +50,9 @@ void End::initPtrSysinfoLogger(Sysinfo& sysinfo, std::ofstream& ptrlogger)
 */
 void End::exitError(const std::string msg)
 {
-	IHM::logfileconsole("[ERROR]___: " + msg);
+	LoadConfig::logfileconsole("[ERROR]___: " + msg);
 	deleteAll(*ptrSysinfo);
-	IHM::logfileconsole("[ERROR]___: Last msg before exitError : " + msg);
+	LoadConfig::logfileconsole("[ERROR]___: Last msg before exitError : " + msg);
 	exit(EXIT_FAILURE);
 }
 
@@ -66,7 +67,7 @@ void End::exitError(const std::string msg)
  */
 void End::deleteAll(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: [START] *********_________ DeleteAll _________*********");
+	LoadConfig::logfileconsole("[INFO]___: [START] *********_________ DeleteAll _________*********");
 
 	/* *********************************************************
 	 *					START delete font*					   *
@@ -173,10 +174,10 @@ void End::deleteAll(Sysinfo& sysinfo)
 
 	 /* ### Don't put code below here ### */
 
-	IHM::logfileconsole("[INFO]___: [END] : *********_________ DeleteAll _________*********");
+	LoadConfig::logfileconsole("[INFO]___: [END] : *********_________ DeleteAll _________*********");
 
-	IHM::logfileconsole("[INFO]___: SDL_Quit Success");
-	IHM::logfileconsole("[INFO]___:________PROGRAMME FINISH________");
+	LoadConfig::logfileconsole("[INFO]___: SDL_Quit Success");
+	LoadConfig::logfileconsole("[INFO]___:________PROGRAMME FINISH________");
 
 	logger->close();
 }
@@ -189,7 +190,7 @@ void End::deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const 
 	{
 		if (n.second != nullptr)
 		{
-			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
+			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
 		}
 		else
@@ -205,7 +206,7 @@ void End::deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std:
 	{
 		if (n.second != nullptr)
 		{
-			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
+			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
 		}
 		else
@@ -221,7 +222,7 @@ void End::deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap
 	{
 		if (n.second != nullptr)
 		{
-			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
+			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
 		}
 		else
@@ -237,7 +238,7 @@ void End::deletePlayer(std::vector<Player*>& vect, const std::string& name)
 	{
 		if (vect[i] != nullptr)
 		{
-			IHM::logfileconsole("[INFO]___: Delete " + name + " name = " + vect[i]->GETname() + " Success");
+			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + vect[i]->GETname() + " Success");
 			delete vect[i];
 		}
 		else

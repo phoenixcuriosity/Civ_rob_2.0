@@ -24,6 +24,7 @@
 
 #include "City.h"
 #include "IHM.h"
+#include "LoadConfig.h"
 
 
 /* *********************************************************
@@ -170,7 +171,7 @@ _foodStock(0), _foodBalance(tile[(unsigned int)ceil((initSizeView*initSizeView) 
 {
 	_citizens.push_back(new Citizen(tile[(unsigned int)ceil((initSizeView * initSizeView) / 2)]));
 
-	IHM::logfileconsole("[INFO]___: Create Citie: " + _name + " Success");
+	LoadConfig::logfileconsole("[INFO]___: Create Citie: " + _name + " Success");
 }
 City::~City()
 {
@@ -185,7 +186,7 @@ City::~City()
 			/* TODO Throw error */
 		}
 	}
-	IHM::logfileconsole("[INFO]___: Destroy Citie: " + _name + " Success");
+	LoadConfig::logfileconsole("[INFO]___: Destroy Citie: " + _name + " Success");
 }
 
 /*
@@ -478,7 +479,7 @@ _revolt(0),
 _religion(Religion_Type::catholic),
 _place(false)
 {
-	IHM::logfileconsole("[INFO]___: Create Citizen par défaut Success");
+	LoadConfig::logfileconsole("[INFO]___: Create Citizen par défaut Success");
 }
 
 
@@ -493,7 +494,7 @@ _revolt(0),
 _religion(Religion_Type::catholic),
 _place(true)
 {
-	IHM::logfileconsole("[INFO]___: Create Citizen Success");
+	LoadConfig::logfileconsole("[INFO]___: Create Citizen Success");
 }
 
 
@@ -505,11 +506,11 @@ _revolt(0),
 _religion(Religion_Type::catholic),
 _place(true)
 {
-	IHM::logfileconsole("[INFO]___: Create Citizen Success");
+	LoadConfig::logfileconsole("[INFO]___: Create Citizen Success");
 }
 Citizen::~Citizen()
 {
-	IHM::logfileconsole("[INFO]___: Kill Citizen Success");
+	LoadConfig::logfileconsole("[INFO]___: Kill Citizen Success");
 }
 
 

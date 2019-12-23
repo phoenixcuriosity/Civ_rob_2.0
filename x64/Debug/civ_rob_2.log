@@ -11,18 +11,6 @@ C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\main.cpp(33,14): war
   Player.cpp
   SaveReload.cpp
   Texture.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(851): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(853): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(859): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(861): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(851,70): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(853,80): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(859,72): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(861,82): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(1084): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(1088): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(1084,69): warning C4238: nonstandard extension used: class rvalue used as lvalue
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\Texture.cpp(1088,79): warning C4238: nonstandard extension used: class rvalue used as lvalue
   Unit.cpp
   tinyxml2.cpp
   Generating Code...

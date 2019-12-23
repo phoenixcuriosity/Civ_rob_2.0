@@ -26,6 +26,7 @@
 #include "IHM.h"
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
+#include "LoadConfig.h"
 
 /* *********************************************************
  *			START GamePlay::STATIC::NEW-GAME			   *
@@ -41,7 +42,7 @@
 */
 void GamePlay::newGame(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: Newgame Start");
+	LoadConfig::logfileconsole("[INFO]___: Newgame Start");
 	sysinfo.var.statescreen = STATEscreennewgame;
 
 	unsigned int space(32);
@@ -72,7 +73,6 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	for (unsigned int i(0); i < sysinfo.var.nbPlayer; i++)
 	{
 		sysinfo.var.waitEvent = true;
-		sysinfo.var.tempY += space;
 
 		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			blended,"Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor, 24, sysinfo.screen.screenWidth / 2, sysinfo.var.tempY, no_angle, center_x);
@@ -112,7 +112,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 
 	/* ### Don't put code below here ### */
 
-	IHM::logfileconsole("[INFO]___: Newgame End");
+	LoadConfig::logfileconsole("[INFO]___: Newgame End");
 }
 
 /*
@@ -124,7 +124,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 */
 void GamePlay::groundGen(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: Groundgen Start");
+	LoadConfig::logfileconsole("[INFO]___: Groundgen Start");
 	unsigned int randomground = 0, randomspecgrass = 0, randomspecwater = 0, randomspecwater1 = 0, randomspecwater2 = 0, randomspecwaterborder = 0;
 
 	for (Uint8 i(0); i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
@@ -311,7 +311,7 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			}
 		}
 	}
-	IHM::logfileconsole("[INFO]___: Groundgen End");
+	LoadConfig::logfileconsole("[INFO]___: Groundgen End");
 }
 
 /*
@@ -373,7 +373,7 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 			randomPos RandomPOS;
 			makeRandomPos(RandomPOS, sysinfo.map.maps, sysinfo.map.toolBarSize, sysinfo.map.tileSize);
 			tabRandom.push_back(RandomPOS);
-			IHM::logfileconsole(msg);
+			LoadConfig::logfileconsole(msg);
 			throw("[ERROR]___: [Catch]___: makeRandomPosTab, Too many Iterations : No Critical Error -> Continue");
 		}
 		sysinfo.tabplayer[i]->addUnit("settler", tabRandom[i].x, tabRandom[i].y,

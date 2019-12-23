@@ -28,6 +28,7 @@
 #include "SaveReload.h"
 #include "GamePlay.h"
 #include "End.h"
+#include "LoadConfig.h"
 
 
 /*
@@ -326,7 +327,7 @@ void KeyboardMouse::keySDLK_BACKSPACE(Sysinfo& sysinfo)
 		sysinfo.var.waitEvent = false;
 		break;
 	case cinScreenNewGameNamePlayer:
-		if (sysinfo.var.tempPlayerName.compare("") != 0)
+		if (sysinfo.var.tempPlayerName.size() > 0)
 		{
 			sysinfo.var.tempPlayerName.pop_back();
 			IHM::refreshNamePlayerTxt(sysinfo);
@@ -1854,7 +1855,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			SaveReload::savemaps(sysinfo);
 			SaveReload::savePlayer(sysinfo);
 			resetButtonOn(sysinfo);
-			IHM::logfileconsole("__________________________");
+			LoadConfig::logfileconsole("__________________________");
 			IHM::titleScreen(sysinfo);
 			return;
 		}
@@ -1925,7 +1926,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 						sysinfo.var.s_player.selectplayer = (int)i;
 					else
 						sysinfo.var.s_player.selectplayer = -1;
-					IHM::logfileconsole("sysinfo.var.selectplayer = " + sysinfo.tabplayer[i]->GETname());
+					LoadConfig::logfileconsole("sysinfo.var.selectplayer = " + sysinfo.tabplayer[i]->GETname());
 					resetButtonPlayerOn(sysinfo);
 					return;
 				}
@@ -2088,14 +2089,14 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0)
 				{
 					Unit::searchUnitTile(sysinfo);
-					IHM::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
+					LoadConfig::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
 			case selectinspect:
 				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0) 
 				{
 					Unit::searchUnitTile(sysinfo);
-					IHM::logfileconsole("Unit select to Inspect n:" + std::to_string(sysinfo.var.s_player.selectunit));
+					LoadConfig::logfileconsole("Unit select to Inspect n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
 			}

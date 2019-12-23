@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.9
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -173,6 +173,161 @@ void LoadConfig::initStructs(Sysinfo& sysinfo)
 	sysinfo.tabplayer.clear();
 }
 
+/* *********************************************************
+ *					Variable Globale					   *
+ ********************************************************* */
+
+static std::ofstream logger;
+static Sysinfo* ptrSysinfo;
+
+void LoadConfig::initPtrSysinfo(Sysinfo& sysinfo)
+{
+	ptrSysinfo = &sysinfo;
+	End::initPtrSysinfoLogger(sysinfo, logger);
+}
+
+/* *********************************************************
+ *				START INITIALISATION					   *
+ ********************************************************* */
+
+
+ /*
+ * NAME : initTile
+ * ROLE : Initialisation des cases de la map en fonction de sa taille
+ * INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+ * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
+ * RETURNED VALUE    : void
+ */
+void LoadConfig::initTile(Map& map)
+{
+	Tile blankTile;
+	std::vector<Tile> blank;
+	for (unsigned int i(0); i < map.mapSize / map.tileSize; i++)
+	{
+		map.maps.push_back(blank);
+		for (unsigned int j(0); j < map.mapSize / map.tileSize; j++)
+		{
+			map.maps[i].push_back(blankTile);
+		}
+	}
+}
+
+/*
+* NAME : initFile
+* ROLE : Initialisation des fichiers : log
+* INPUT  PARAMETERS : struct File& : nom des fichiers
+* OUTPUT PARAMETERS : Initialisation de log.txt
+* RETURNED VALUE    : void
+*/
+void LoadConfig::initFile(File& file)
+{
+	logger.open(file.log, std::ofstream::out | std::ofstream::trunc);
+	if (!logger.is_open())
+	{
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		/* N/A */
+	}
+}
+
+
+/*
+* NAME : logfileconsole
+* ROLE : Transmission du message sur la console et dans le fichier log.txt
+* INPUT  PARAMETERS : const std::string msg : message
+* OUTPUT PARAMETERS : message dans la console et le log.txt
+* RETURNED VALUE    : void
+*/
+void LoadConfig::logfileconsole(const std::string msg)
+{
+	time_t now(time(0));
+	struct tm  tstruct;
+	char  buf[80];
+	tstruct = *localtime(&now);
+	strftime(buf, sizeof(buf), "%F %X", &tstruct);
+
+	std::cout << std::endl << buf << "      " << msg;
+	logger << std::endl << buf << "      " << msg;
+}
+
+
+/*
+* NAME : initSDL
+* ROLE : Initialisation de la SDL fenetre et renderer ainsi que le tableau de police de font
+* INPUT  PARAMETERS : SDL_Window*& : pointeur sur la fenetre de la SDL
+* INPUT  PARAMETERS : SDL_Renderer*& : pointeur sur le Renderer de la SDL
+* INPUT  PARAMETERS : TTF_Font*[] : pointeur sur le tableau de police de font
+* OUTPUT PARAMETERS : message dans la console et le log.txt
+* RETURNED VALUE    : bool : true = pas de d'erreur lors de l'initialisation de la SDL
+*/
+bool LoadConfig::initSDL(Screen& screen, TTF_Font* font[])
+{
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	{
+		logfileconsole("[ERROR]___: SDL could not initialize! SDL_Error: " + (std::string)SDL_GetError());
+		return false;
+	}
+	else
+	{
+
+
+		screen.window = SDL_CreateWindow("Civ_Rob_2.0",
+			0, 0,
+			screen.screenWidth, screen.screenHeight,
+			SDL_WINDOW_OPENGL);
+
+		//	SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_FULLSCREEN
+		if (screen.window == nullptr)
+		{
+			SDL_Quit();
+			return false;
+		}
+		else
+		{
+			logfileconsole("[INFO]___: CreateWindow Success");
+		}
+
+		screen.renderer = SDL_CreateRenderer(screen.window, -1, SDL_RENDERER_ACCELERATED);
+		//| SDL_RENDERER_PRESENTVSYNC
+		if (screen.renderer == nullptr)
+		{
+			SDL_DestroyWindow(screen.window);
+			SDL_Quit();
+			return false;
+		}
+		else
+		{
+			logfileconsole("[INFO]___: CreateRenderer Success");
+		}
+
+		if (TTF_Init() != 0)
+		{
+			SDL_DestroyRenderer(screen.renderer);
+			SDL_DestroyWindow(screen.window);
+			SDL_Quit();
+			return false;
+		}
+		else
+		{
+			logfileconsole("[INFO]___: TTF_Init Success");
+		}
+
+		for (Uint8 i(1); i < MAX_FONT; i++)
+		{
+			font[i] = TTF_OpenFont(fontFile.c_str(), i);
+		}
+
+		logfileconsole("[INFO]___: SDL_Init Success");
+		return true;
+	}
+}
+
+/* *********************************************************
+ *					END INITIALISATION					   *
+ ********************************************************* */
+
 
 
 
@@ -185,7 +340,7 @@ void LoadConfig::initStructs(Sysinfo& sysinfo)
 */
 void LoadConfig::initMain(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: [START] : initMain");
+	logfileconsole("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config;
 	config.LoadFile(configFilePath);
@@ -240,7 +395,7 @@ void LoadConfig::initMain(Sysinfo& sysinfo)
 	}
 
 
-	IHM::logfileconsole("[INFO]___: [END] : initMain");
+	logfileconsole("[INFO]___: [END] : initMain");
 }
 
 Uint16 LoadConfig::getHorizontal(unsigned int tileSize)
@@ -277,7 +432,7 @@ Uint16 LoadConfig::getVertical(unsigned int tileSize)
 */
 void LoadConfig::calculImage(Sysinfo& sysinfo)
 {
-	IHM::logfileconsole("[INFO]___: [START] : calculImage");
+	logfileconsole("[INFO]___: [START] : calculImage");
 
 	// répertoire de base de l'image
 	const std::string IPath = "bin/image/";
@@ -670,7 +825,7 @@ void LoadConfig::calculImage(Sysinfo& sysinfo)
 
 	 /* ### Don't put code below here ### */
 
-	IHM::logfileconsole("[INFO]___: [END] : calculImage");
+	logfileconsole("[INFO]___: [END] : calculImage");
 }
 
 /*
@@ -1078,7 +1233,6 @@ int LoadConfig::determineCoor(std::string line, Uint16 screenWidth, Uint16 scree
 		return std::stoi(line);
 	}
 }
-
 
 /*
 *	End Of File : LoadConfig.cpp
