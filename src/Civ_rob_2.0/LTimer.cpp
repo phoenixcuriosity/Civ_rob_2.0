@@ -1,7 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2018 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0

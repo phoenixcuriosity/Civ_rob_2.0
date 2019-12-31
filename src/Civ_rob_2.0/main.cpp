@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.8
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -34,6 +34,9 @@ int main(int argc, char* argv[])
 {
 	Sysinfo sysinfo;
 	LoadConfig::initPtrSysinfo(sysinfo);
+
+	sysinfo.var.argc = argc;
+	sysinfo.var.argv = argv;
 
 	LoadConfig::initStructs(sysinfo);
 

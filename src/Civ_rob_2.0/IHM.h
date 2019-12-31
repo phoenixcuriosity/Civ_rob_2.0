@@ -1,7 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
 	file version : 1.11
 

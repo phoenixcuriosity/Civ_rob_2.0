@@ -1,17 +1,5 @@
 ﻿  City.cpp
-  End.cpp
   GamePlay.cpp
   IHM.cpp
-  KeyboardMouse.cpp
-  LoadConfig.cpp
-  LTimer.cpp
-  main.cpp
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\main.cpp(33,26): warning C4100: 'argv': unreferenced formal parameter
-C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\src\Civ_rob_2.0\main.cpp(33,14): warning C4100: 'argc': unreferenced formal parameter
-  Player.cpp
-  SaveReload.cpp
-  Texture.cpp
-  Unit.cpp
-  tinyxml2.cpp
   Generating Code...
   civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\x64\Debug\civ_rob_2.exe

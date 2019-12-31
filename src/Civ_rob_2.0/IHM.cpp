@@ -1,7 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2019 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
 	file version : 1.20
 
@@ -172,7 +172,8 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		{
 			if (sysinfo.var.s_player.selectCitie != -1)
 			{
-				if (sysinfo.var.s_player.selectCitie < (int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size())
+				if (sysinfo.var.s_player.selectCitie <
+					(int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size())
 				{
 					citiemap(sysinfo);
 				}
@@ -201,8 +202,18 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 		/* N/A */
 		break;
 	}
-	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		blended, std::to_string(sysinfo.screen.avgFPS), { 0, 64, 255, 255 }, NoColor, 24, sysinfo.screen.screenWidth / 2, 50, no_angle, center_x);
+	Texte::writeTexte
+	(sysinfo.screen.renderer,
+		sysinfo.allTextures.font,
+		blended,
+		std::to_string(sysinfo.screen.avgFPS),
+		{ 0, 64, 255, 255 },
+		NoColor,
+		24,
+		sysinfo.screen.screenWidth / 2,
+		50,
+		no_angle,
+		center_x);
 
 	/* ### Don't put code below here ### */
 
@@ -247,8 +258,17 @@ void IHM::mainmap(Sysinfo& sysinfo)
 		n.second->renderTextureTestStates(sysinfo.var.statescreen, sysinfo.var.select);
 	}
 
-	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		blended, std::to_string(sysinfo.var.nbturn), { 0, 64, 255, 255 }, NoColor, 24, 80, 850, no_angle);
+	Texte::writeTexte
+	(sysinfo.screen.renderer,
+		sysinfo.allTextures.font,
+		blended,
+		std::to_string(sysinfo.var.nbturn),
+		{ 0, 64, 255, 255 },
+		NoColor,
+		24,
+		80,
+		850,
+		no_angle);
 
 	/* *********************************************************
 	 *					END Texte							   *
@@ -284,7 +304,8 @@ void IHM::mainmap(Sysinfo& sysinfo)
 		// affiche les unités pour rendre l'unité à créer
 		if (sysinfo.var.s_player.unitNameToCreate.compare("") != 0)
 		{
-			sysinfo.allTextures.unit[sysinfo.var.s_player.unitNameToCreate]->render(100, 432);
+			sysinfo.allTextures.unit[sysinfo.var.s_player.unitNameToCreate]
+				->render(100, 432);
 		}
 		else
 		{
@@ -294,7 +315,8 @@ void IHM::mainmap(Sysinfo& sysinfo)
 	case selectmove:
 		if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		{
-			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
+			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+				->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
 		}
 		else
 		{
@@ -305,7 +327,8 @@ void IHM::mainmap(Sysinfo& sysinfo)
 		// affiche les stats de l'unité inspecté
 		if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		{
-			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->afficherstat(sysinfo);
+			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+				->GETtheUnit(sysinfo.var.s_player.selectunit)->afficherstat(sysinfo);
 		}
 		else
 		{
@@ -407,7 +430,8 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 
 			if (sysinfo.map.maps[m][n].tile_spec > 0)
 			{
-				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_stringspec]->render(x, y);
+				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_stringspec]
+					->render(x, y);
 			}
 			else
 			{
@@ -416,7 +440,9 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 
 			if (sysinfo.map.maps[m][n].appartenance != -1)
 			{
-				sysinfo.allTextures.colorapptile["ColorPlayertile" + std::to_string(sysinfo.map.maps[m][n].appartenance) + ".bmp"]->render(x, y);
+				sysinfo.allTextures.colorapptile
+					["ColorPlayertile" + std::to_string(sysinfo.map.maps[m][n].appartenance) + ".bmp"]
+				->render(x, y);
 			}
 			else
 			{
@@ -467,9 +493,11 @@ void IHM::citiemap(Sysinfo& sysinfo)
 		initspace = 96;
 		for (Uint8 j(0); j < 10; j++)
 		{
-			if ((unsigned __int64)sysinfo.var.s_player.unitToCreate + j < sysinfo.var.s_player.tabUnit_Struct.size())
+			if ((unsigned __int64)sysinfo.var.s_player.unitToCreate + j <
+				sysinfo.var.s_player.tabUnit_Struct.size())
 			{
-				buildName = sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].name;
+				buildName = sysinfo.var.s_player.tabUnit_Struct
+					[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].name;
 			}	
 			else
 			{
@@ -502,7 +530,8 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	 *			 END select = selectcreate					   *
 	 ********************************************************* */
 
-	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
+	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+		->GETtheCity(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
 
 }
 
