@@ -41,6 +41,9 @@ public:
 	Player(const std::string&);
 	~Player();
 
+	Player& operator=(const Player& player);
+	virtual void deletePlayer();
+
 	
 	/*
 	 * NAME : addEmptyUnit

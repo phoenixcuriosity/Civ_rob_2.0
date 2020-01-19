@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.7
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,6 +51,10 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	// Fond noir
 	SDL_RenderClear(sysinfo.screen.renderer);
 
+	/* *********************************************************
+	 *						Nb player ?						   *
+	 ********************************************************* */
+
 	// Première demande au joueur : Le nombre de joueurs ?
 	sysinfo.allTextes.newGame["Press Return or kpad_Enter to valid selection"]->render();
 	sysinfo.allTextes.newGame["How many player(s) (max 9):"]->render();
@@ -66,8 +70,12 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 
 	// Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1
 	KeyboardMouse::eventSDL(sysinfo);
-	sysinfo.var.tempY += space;
 
+	/* *********************************************************
+	 *					Name of player ?					   *
+	 ********************************************************* */
+
+	sysinfo.var.tempY += space;
 	sysinfo.var.cinState = cinScreenNewGameNamePlayer;
 	// Deuxième demande au joueur : Le nom des joueurs
 	for (unsigned int i(0); i < sysinfo.var.nbPlayer; i++)
@@ -98,13 +106,25 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i]));
 		sysinfo.var.tempY += space;
 	}
+
+	/* *********************************************************
+	 *					Map Generation						   *
+	 ********************************************************* */
 	
 	groundGen(sysinfo);
 	newGameSettlerSpawn(sysinfo);
 
+	/* *********************************************************
+	 *							Save						   *
+	 ********************************************************* */
+
 	/*** Sauvegarde des paramètres appliqués et de la génération de la map ***/
-	SaveReload::savemaps(sysinfo);
+	SaveReload::saveMaps(sysinfo);
 	SaveReload::savePlayer(sysinfo);
+
+	/* *********************************************************
+	 *					 Button Creation					   *
+	 ********************************************************* */
 	
 	// Création des boutons pour séléctionner les joueurs
 	int initspacename(200), spacename(24);
@@ -148,13 +168,7 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 void GamePlay::groundGen(Sysinfo& sysinfo)
 {
 	LoadConfig::logfileconsole("[INFO]___: Groundgen Start");
-	unsigned int	randomground(0),
-					randomspecgrass(0),
-					randomspecwater(0),
-					randomspecwater1(0),
-					randomspecwater2(0),
-					randomspecwaterborder(0);
-
+	
 	for (Uint8 i(0); i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
 	{
 		for (Uint8 j(0); j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
@@ -167,12 +181,14 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			
 
 			/* *********************************************************
-			 *					bord de la map (0)					   *
+			 *			bord de la map (MAP_BORDER_ZERO)			   *
 			 ********************************************************* */
-			if (   (i == 0)
-				|| (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 1)
-				|| (j == 0)
-				|| (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 1))
+
+			if (   (i == MAP_BORDER_ZERO)
+				|| (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - (MAP_BORDER_ZERO + 1))
+				|| (j == MAP_BORDER_ZERO)
+				|| (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - (MAP_BORDER_ZERO + 1))
+				)
 			{
 				tileAffectation
 				(sysinfo.map.maps[i][j],
@@ -186,59 +202,12 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			}
 					
 			/* *********************************************************
-			 *					bord de la map (1 - 3)				   *
+			 *	  bord de la map (MAP_BORDER_MIN to MAP_BORDER_MAX)    *
 			 ********************************************************* */
-			else if (  (i == 1)
-					|| (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 2)
-					|| (j == 1)
-					|| (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 2)
-					|| (i == 2)
-					|| (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 3)
-					|| (j == 2)
-					|| (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 3)
-					|| (i == 3)
-					|| (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4)
-					|| (j == 3)
-					|| (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - 4))
+
+			else if (mapBordersConditions(sysinfo.map, i, j))
 			{
-				
-				randomspecwaterborder = rand() % 50 + 1;
-				switch (randomspecwaterborder) {
-				case 1:
-					tileAffectation
-					(sysinfo.map.maps[i][j],
-						water, (std::string)"water.bmp",
-						fish,
-						(std::string)"fish.bmp",
-						3,
-						2,
-						1);
-					break;
-				case 2:
-					tileAffectation
-					(sysinfo.map.maps[i][j],
-						water,
-						(std::string)"water.bmp",
-						petroleum,
-						(std::string)"petroleum.bmp",
-						1,
-						3,
-						4);
-					break;
-				default:
-					/* N/A */
-					break;
-				}
-				if (randomspecwaterborder > 2)
-					tileAffectation
-					(sysinfo.map.maps[i][j],
-						water,
-						(std::string)"water.bmp",
-						specnothing,
-						(std::string)"specnothing", 
-						1,
-						1,
-						1);
+				mapBorders(sysinfo.map.maps[i][j]);
 			}
 
 			/* *********************************************************
@@ -246,223 +215,338 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			 ********************************************************* */
 			else
 			{
-				randomground = rand() % 100 + 1;//the range 1 to 100
-				if (randomground < 92)
-				{
-					sysinfo.map.maps[i][j].tile_ground = grass;
-					sysinfo.map.maps[i][j].tile_stringground = "grass.bmp";
-					randomspecgrass = rand() % 100 + 1;
-					switch (randomspecgrass)
-					{
-					case 1:
-						sysinfo.map.maps[i][j].tile_spec = coal;
-						sysinfo.map.maps[i][j].tile_stringspec = "coal.png";
-						break;
-					case 2:
-						sysinfo.map.maps[i][j].tile_spec = copper;
-						sysinfo.map.maps[i][j].tile_stringspec = "copper.png";
-						break;
-					case 3:
-						sysinfo.map.maps[i][j].tile_spec = iron;
-						sysinfo.map.maps[i][j].tile_stringspec = "iron.png";
-						break;
-					case 4:
-						sysinfo.map.maps[i][j].tile_spec = tree;
-						sysinfo.map.maps[i][j].tile_stringspec = "tree1.bmp";
-						break;
-					case 5:
-						sysinfo.map.maps[i][j].tile_spec = stone;
-						sysinfo.map.maps[i][j].tile_stringspec = "stone.png";
-						break;
-					case 6:
-						sysinfo.map.maps[i][j].tile_spec = uranium;
-						sysinfo.map.maps[i][j].tile_stringspec = "uranium.png";
-						break;
-					case 7:
-						sysinfo.map.maps[i][j].tile_spec = horse;
-						sysinfo.map.maps[i][j].tile_stringspec = "horse.bmp";
-						break;
-					default:
-						/* N/A */
-						break;
-					}
-					if (randomspecgrass > 7 && randomspecgrass <= 32)
-					{ // plus de chance d'avoir des arbres
-						sysinfo.map.maps[i][j].tile_spec = tree;
-						sysinfo.map.maps[i][j].tile_stringspec = "tree1.bmp";
-						sysinfo.map.maps[i][j].food = 1;
-						sysinfo.map.maps[i][j].work = 2;
-						sysinfo.map.maps[i][j].gold = 1;
-					}
-					else if (randomspecgrass > 32)
-					{
-						sysinfo.map.maps[i][j].tile_spec = specnothing;
-						sysinfo.map.maps[i][j].tile_stringspec = "specnothing";
-						sysinfo.map.maps[i][j].food = 2;
-						sysinfo.map.maps[i][j].work = 1;
-						sysinfo.map.maps[i][j].gold = 1;
-					}
-					else if (randomspecgrass <= 7) 
-					{
-						sysinfo.map.maps[i][j].food = 1;
-						sysinfo.map.maps[i][j].work = 2;
-						sysinfo.map.maps[i][j].gold = 3;
-					}
-					else
-					{
-						/* N/A */
-					}
-				}
-				else
-				{
-					/*
-						génération de l'eau -> forme en L (3 cases)
-					*/
-					if (i > 2 && j > 2)
-					{
-						randomspecwater = rand() % 20 + 1;
-						switch (randomspecwater)
-						{
-						case 1:
-							tileAffectation
-							(sysinfo.map.maps[i][j],
-								water,
-								(std::string)"water.bmp",
-								fish,
-								(std::string)"fish.bmp",
-								3,
-								2,
-								1);
-							break;
-						case 2:
-							tileAffectation
-							(sysinfo.map.maps[i][j],
-								water,
-								(std::string)"water.bmp",
-								petroleum,
-								(std::string)"petroleum.bmp",
-								1,
-								3,
-								4);
-							break;
-						default:
-							/* N/A */
-							break;
-						}
-						if (randomspecwater > 2)
-							tileAffectation
-							(sysinfo.map.maps[i][j],
-								water,
-								(std::string)"water.bmp",
-								specnothing,
-								(std::string)"specnothing",
-								1,
-								1,
-								1);
-					}
-					else
-					{
-						/* N/A */
-					}
-
-					if (sysinfo.map.maps[i - 1][j].tile_ground != deepwater)
-					{
-						randomspecwater1 = rand() % 10 + 1;
-						switch (randomspecwater1)
-						{
-						case 1:
-							tileAffectation
-							(sysinfo.map.maps[i - 1][j],
-								water,
-								(std::string)"water.bmp",
-								fish,
-								(std::string)"fish.bmp",
-								3,
-								2,
-								1);
-							break;
-						case 2:
-							tileAffectation
-							(sysinfo.map.maps[i - 1][j],
-								water,
-								(std::string)"water.bmp",
-								petroleum,
-								(std::string)"petroleum.bmp",
-								1,
-								3,
-								4);
-							break;
-						default:
-							/* N/A */
-							break;
-						}
-						if (randomspecwater1 > 2)
-							tileAffectation
-							(sysinfo.map.maps[i - 1][j],
-								water,
-								(std::string)"water.bmp",
-								specnothing,
-								(std::string)"specnothing",
-								1, 
-								1,
-								1);
-					}
-					else
-					{
-						/* N/A */
-					}
-
-					if (sysinfo.map.maps[i - 1][j - 1].tile_ground != deepwater)
-					{
-						randomspecwater2 = rand() % 10 + 1;
-						switch (randomspecwater2)
-						{
-						case 1:
-							tileAffectation
-							(sysinfo.map.maps[i - 1][j - 1],
-								water,
-								(std::string)"water.bmp",
-								fish,
-								(std::string)"fish.bmp",
-								3,
-								2,
-								1);
-							break;
-						case 2:
-							tileAffectation
-							(sysinfo.map.maps[i - 1][j - 1],
-								water,
-								(std::string)"water.bmp",
-								petroleum,
-								(std::string)"petroleum.bmp",
-								1,
-								3,
-								4);
-							break;
-						default:
-							/* N/A */
-							break;
-						}
-						if (randomspecwater2 > 2)
-							tileAffectation
-							(sysinfo.map.maps[i - 1][j - 1],
-								water,
-								(std::string)"water.bmp",
-								specnothing,
-								(std::string)"specnothing",
-								1,
-								1,
-								1);
-					}
-					else
-					{
-						/* N/A */
-					}
-				}
+				mapIntern(sysinfo.map.maps, i, j);
 			}
 		}
 	}
 	LoadConfig::logfileconsole("[INFO]___: Groundgen End");
+}
+
+/*
+* NAME : mapBordersConditions
+* ROLE : Boucle For de conditions
+* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2
+* INPUT  PARAMETERS : Map& map : structure de la MAP
+* INPUT  PARAMETERS : unsigned int i : index en X
+* INPUT  PARAMETERS : unsigned int j : index en Y
+* OUTPUT PARAMETERS : Validations des conditions ou non
+* RETURNED VALUE    : bool : valid = true / not valid = false
+*/
+bool GamePlay::mapBordersConditions(Map& map, unsigned int i, unsigned int j)
+{
+	for (unsigned int index(MAP_BORDER_MIN); index < MAP_BORDER_MAX; index++)
+	{
+		if (
+				(i == index)
+			||  (i == (map.mapSize / map.tileSize) - (index + 1))
+			||  (j == index)
+			||  (j == (map.mapSize / map.tileSize) - (index + 1))
+			)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+/*
+* NAME : mapBordersConditions
+* ROLE : Affectation des caractéristiques de la case en fonction ...
+* ROLE : ... de la fonction rand, dans la bordure de la map entre ...
+* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX
+* INPUT  PARAMETERS : Tile& tile : tile à affecter
+* OUTPUT PARAMETERS : Affectation des caractéristiques
+* RETURNED VALUE    : void
+*/
+void GamePlay::mapBorders(Tile& tile)
+{
+	unsigned int randomspecwaterborder
+	((rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER) + MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER);
+	switch (randomspecwaterborder) {
+	case 1:
+		tileAffectation
+		(	tile,
+			water, (std::string)"water.bmp",
+			fish,
+			(std::string)"fish.bmp",
+			3,
+			2,
+			1);
+		break;
+	case 2:
+		tileAffectation
+		(	tile,
+			water,
+			(std::string)"water.bmp",
+			petroleum,
+			(std::string)"petroleum.bmp",
+			1,
+			3,
+			4);
+		break;
+	default:
+		/* N/A */
+		break;
+	}
+	if (randomspecwaterborder > 2)
+	{
+		tileAffectation
+		(tile,
+			water,
+			(std::string)"water.bmp",
+			specnothing,
+			(std::string)"specnothing",
+			1,
+			1,
+			1);
+	}
+}
+
+/*
+* NAME : mapIntern
+* ROLE : Affectation des caractéristiques de la case en fonction ...
+* ROLE : ... de la fonction rand, dans le reste de la map
+* ROLE : Si la case est de type water alors création de 2 autres ...
+* ROLE : ... cases de type water pour obtenir une forme en L
+* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& maps : matrice de la map
+* INPUT  PARAMETERS : unsigned int i : index en X
+* INPUT  PARAMETERS : unsigned int j : index en Y
+* OUTPUT PARAMETERS : Affectation des caractéristiques
+* RETURNED VALUE    : void
+*/
+void GamePlay::mapIntern(std::vector<std::vector<Tile>>& maps, unsigned int i, unsigned int j)
+{
+	unsigned int	randomground(0),
+					randomspecgrass(0),
+					randomspecwater(0),
+					randomspecwater1(0),
+					randomspecwater2(0);
+
+	randomground = rand() % MAP_GEN_RANDOM_RANGE_GROUND + MAP_GEN_RANDOM_OFFSET_GROUND;
+	if (randomground < 92)
+	{
+		maps[i][j].tile_ground = grass;
+		maps[i][j].tile_stringground = "grass.bmp";
+		randomspecgrass =
+			rand() % MAP_GEN_RANDOM_RANGE_SPEC_GRASS + MAP_GEN_RANDOM_OFFSET_SPEC_GRASS;
+		switch (randomspecgrass)
+		{
+		case 1:
+			maps[i][j].tile_spec = coal;
+			maps[i][j].tile_stringspec = "coal.png";
+			break;
+		case 2:
+			maps[i][j].tile_spec = copper;
+			maps[i][j].tile_stringspec = "copper.png";
+			break;
+		case 3:
+			maps[i][j].tile_spec = iron;
+			maps[i][j].tile_stringspec = "iron.png";
+			break;
+		case 4:
+			maps[i][j].tile_spec = tree;
+			maps[i][j].tile_stringspec = "tree1.bmp";
+			break;
+		case 5:
+			maps[i][j].tile_spec = stone;
+			maps[i][j].tile_stringspec = "stone.png";
+			break;
+		case 6:
+			maps[i][j].tile_spec = uranium;
+			maps[i][j].tile_stringspec = "uranium.png";
+			break;
+		case 7:
+			maps[i][j].tile_spec = horse;
+			maps[i][j].tile_stringspec = "horse.bmp";
+			break;
+		default:
+			/* N/A */
+			break;
+		}
+		if (randomspecgrass > 7 && randomspecgrass <= 32)
+		{ // plus de chance d'avoir des arbres
+			maps[i][j].tile_spec = tree;
+			maps[i][j].tile_stringspec = "tree1.bmp";
+			maps[i][j].food = 1;
+			maps[i][j].work = 2;
+			maps[i][j].gold = 1;
+		}
+		else if (randomspecgrass > 32)
+		{
+			maps[i][j].tile_spec = specnothing;
+			maps[i][j].tile_stringspec = "specnothing";
+			maps[i][j].food = 2;
+			maps[i][j].work = 1;
+			maps[i][j].gold = 1;
+		}
+		else if (randomspecgrass <= 7)
+		{
+			maps[i][j].food = 1;
+			maps[i][j].work = 2;
+			maps[i][j].gold = 3;
+		}
+		else
+		{
+			/* N/A */
+		}
+	}
+	else
+	{
+
+		/* *********************************************************
+		 *		génération de l'eau -> forme en L (3 cases)		   *
+		 ********************************************************* */
+
+		/* 1er case */
+
+		if (i > 2 && j > 2)
+		{
+			randomspecwater =
+				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER + MAP_GEN_RANDOM_OFFSET_SPEC_WATER;
+			switch (randomspecwater)
+			{
+			case 1:
+				tileAffectation
+				(	maps[i][j],
+					water,
+					(std::string)"water.bmp",
+					fish,
+					(std::string)"fish.bmp",
+					3,
+					2,
+					1);
+				break;
+			case 2:
+				tileAffectation
+				(	maps[i][j],
+					water,
+					(std::string)"water.bmp",
+					petroleum,
+					(std::string)"petroleum.bmp",
+					1,
+					3,
+					4);
+				break;
+			default:
+				/* N/A */
+				break;
+			}
+			if (randomspecwater > 2)
+				tileAffectation
+				(	maps[i][j],
+					water,
+					(std::string)"water.bmp",
+					specnothing,
+					(std::string)"specnothing",
+					1,
+					1,
+					1);
+		}
+		else
+		{
+			/* N/A */
+		}
+
+		/* 2ème case */
+
+		if (maps[i - 1][j].tile_ground != deepwater)
+		{
+			randomspecwater1 =
+				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER1 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER1;
+			switch (randomspecwater1)
+			{
+			case 1:
+				tileAffectation
+				(	maps[i - 1][j],
+					water,
+					(std::string)"water.bmp",
+					fish,
+					(std::string)"fish.bmp",
+					3,
+					2,
+					1);
+				break;
+			case 2:
+				tileAffectation
+				(	maps[i - 1][j],
+					water,
+					(std::string)"water.bmp",
+					petroleum,
+					(std::string)"petroleum.bmp",
+					1,
+					3,
+					4);
+				break;
+			default:
+				/* N/A */
+				break;
+			}
+			if (randomspecwater1 > 2)
+				tileAffectation
+				(	maps[i - 1][j],
+					water,
+					(std::string)"water.bmp",
+					specnothing,
+					(std::string)"specnothing",
+					1,
+					1,
+					1);
+		}
+		else
+		{
+			/* N/A */
+		}
+
+		/* 3ème case */
+
+		if (maps[i - 1][j - 1].tile_ground != deepwater)
+		{
+			randomspecwater2 =
+				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER2 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER2;
+			switch (randomspecwater2)
+			{
+			case 1:
+				tileAffectation
+				(	maps[i - 1][j - 1],
+					water,
+					(std::string)"water.bmp",
+					fish,
+					(std::string)"fish.bmp",
+					3,
+					2,
+					1);
+				break;
+			case 2:
+				tileAffectation
+				(	maps[i - 1][j - 1],
+					water,
+					(std::string)"water.bmp",
+					petroleum,
+					(std::string)"petroleum.bmp",
+					1,
+					3,
+					4);
+				break;
+			default:
+				/* N/A */
+				break;
+			}
+			if (randomspecwater2 > 2)
+				tileAffectation
+				(	maps[i - 1][j - 1],
+					water,
+					(std::string)"water.bmp",
+					specnothing,
+					(std::string)"specnothing",
+					1,
+					1,
+					1);
+		}
+		else
+		{
+			/* N/A */
+		}
+	}
 }
 
 /*
@@ -567,7 +651,7 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 	while (continuer)
 	{
 		iteration++;
-		if (iteration > 10000)
+		if (iteration > MAX_RANDOM_POS_ITERATION)
 		{
 			throw("[ERROR]___: makeRandomPosTab, Too many Iterations");
 		}

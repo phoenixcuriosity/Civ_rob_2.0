@@ -1,5 +1,15 @@
 ﻿  City.cpp
+  End.cpp
   GamePlay.cpp
   IHM.cpp
+  KeyboardMouse.cpp
+  LoadConfig.cpp
+  LTimer.cpp
+  main.cpp
+  Player.cpp
+  SaveReload.cpp
+  Texture.cpp
+  Unit.cpp
+  tinyxml2.cpp
   Generating Code...
   civ_rob_2.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\x64\Debug\civ_rob_2.exe

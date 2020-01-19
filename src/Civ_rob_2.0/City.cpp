@@ -48,14 +48,19 @@ void City::createCity(Sysinfo& sysinfo)
 		std::string name(sysinfo.var.s_player.tabCitieName
 			[
 				(unsigned int)
-				(((unsigned int)sysinfo.var.s_player.selectplayer * (double)5)
-				+ sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size())
+				(
+					((unsigned int)sysinfo.var.s_player.selectplayer * (double)MAX_CITY_PER_PLAYER)
+					+ sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETtabCity().size()
+				)
 			]);
 
 		unsigned int x(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-			->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx());
+			->GETtheUnit(sysinfo.var.s_player.selectunit)
+				->GETx());
 		unsigned int y(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-			->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy());
+			->GETtheUnit(sysinfo.var.s_player.selectunit)
+				->GETy());
 
 		unsigned int middletileX(0), middletileY(0);
 
@@ -81,7 +86,12 @@ void City::createCity(Sysinfo& sysinfo)
 		{
 			for (int p(-(int)ceil(initSizeView / 2)); p <= (int)ceil(initSizeView / 2); p++)
 			{
-				if (o > -initSizeInfluence && o < initSizeInfluence && p > -initSizeInfluence && p < initSizeInfluence)
+				if (
+						o > -initSizeInfluence
+					&&	o < initSizeInfluence
+					&&	p > -initSizeInfluence
+					&&  p < initSizeInfluence
+					)
 				{
 					sysinfo.map.maps[(unsigned int)((double)middletileX + o)]
 									[(unsigned int)((double)middletileY + p)]
@@ -92,16 +102,21 @@ void City::createCity(Sysinfo& sysinfo)
 					/* N/A */
 				}
 					
-				tabtile[k] = sysinfo.map.maps[(unsigned int)((double)middletileX + o)][(unsigned int)((double)middletileY + p)];
+				tabtile[k]
+					= sysinfo.map.maps
+					[(unsigned int)((double)middletileX + o)]
+					[(unsigned int)((double)middletileY + p)];
 				tabtile[k].tile_x = (sysinfo.screen.screenWidth / 2) - (-o * sysinfo.map.tileSize);
 				tabtile[k].tile_y = (sysinfo.screen.screenHeight / 2) - (-p * sysinfo.map.tileSize);
 				k++;
 			}
 		}
 
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addCity(name, x, y, tabtile);
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+			->addCity(name, x, y, tabtile);
 
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->deleteUnit(sysinfo.var.s_player.selectunit);
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+			->deleteUnit(sysinfo.var.s_player.selectunit);
 		sysinfo.var.s_player.selectunit = -1;
 		sysinfo.var.s_player.unitNameToMove = "";
 	}
@@ -325,7 +340,8 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 
 		if (_tile[i].tile_spec > 0) 
 		{
-			sysinfo.allTextures.groundSpec[_tile[i].tile_stringspec]->render(_tile[i].tile_x, _tile[i].tile_y);
+			sysinfo.allTextures.groundSpec[_tile[i].tile_stringspec]
+				->render(_tile[i].tile_x, _tile[i].tile_y);
 		}
 		else
 		{

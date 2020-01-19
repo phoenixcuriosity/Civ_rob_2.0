@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.3
+	last modification on this file on version:0.18
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,12 +41,8 @@
 * OUTPUT PARAMETERS : et map.screen dans SaveScreen.txt
 * RETURNED VALUE    : void
 */
-void SaveReload::savemaps(Sysinfo& sysinfo)
+void SaveReload::saveMaps(Sysinfo& sysinfo)
 {
-	LoadConfig::logfileconsole("[INFO]___: Save Start");
-
-
-
 	std::ofstream saveMaps(sysinfo.file.SaveMaps);
 	if (saveMaps)
 	{
@@ -54,18 +50,69 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 		{
 			for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
 			{
-				saveMaps << "nbX= " << (unsigned int)sysinfo.map.maps[i][j].indexX << std::endl;
-				saveMaps << "nbY= " << (unsigned int)sysinfo.map.maps[i][j].indexY << std::endl;
-				saveMaps << "x= " << sysinfo.map.maps[i][j].tile_x << std::endl;
-				saveMaps << "y= " << sysinfo.map.maps[i][j].tile_y << std::endl;
-				saveMaps << "stringground= " << sysinfo.map.maps[i][j].tile_stringground << std::endl;
-				saveMaps << "ground= " << (unsigned int)sysinfo.map.maps[i][j].tile_ground << std::endl;
-				saveMaps << "stringspec= " << sysinfo.map.maps[i][j].tile_stringspec << std::endl;
-				saveMaps << "spec= " << (unsigned int)sysinfo.map.maps[i][j].tile_spec << std::endl;
-				saveMaps << "appartenance= " << sysinfo.map.maps[i][j].appartenance << std::endl;
-				saveMaps << "food= " << (unsigned int)sysinfo.map.maps[i][j].food << std::endl;
-				saveMaps << "work= " << (unsigned int)sysinfo.map.maps[i][j].work << std::endl;
-				saveMaps << "gold= " << (unsigned int)sysinfo.map.maps[i][j].gold << std::endl << std::endl;
+				saveMaps << (unsigned int)sysinfo.map.maps[i][j].indexX << std::endl;
+				saveMaps << (unsigned int)sysinfo.map.maps[i][j].indexY << std::endl;
+				saveMaps << sysinfo.map.maps[i][j].tile_x << std::endl;
+				saveMaps << sysinfo.map.maps[i][j].tile_y << std::endl;
+				saveMaps << sysinfo.map.maps[i][j].tile_stringground << std::endl;
+				saveMaps << (unsigned int)sysinfo.map.maps[i][j].tile_ground << std::endl;
+				saveMaps << sysinfo.map.maps[i][j].tile_stringspec << std::endl;
+				saveMaps << (unsigned int)sysinfo.map.maps[i][j].tile_spec << std::endl;
+				saveMaps << sysinfo.map.maps[i][j].appartenance << std::endl;
+				saveMaps << (unsigned int)sysinfo.map.maps[i][j].food << std::endl;
+				saveMaps << (unsigned int)sysinfo.map.maps[i][j].work << std::endl;
+				saveMaps << (unsigned int)sysinfo.map.maps[i][j].gold << std::endl << std::endl;
+			}
+		}
+	}
+	else
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
+}
+
+void SaveReload::loadMaps(Sysinfo& sysinfo)
+{
+	std::string input("");
+
+	std::ifstream saveMaps(sysinfo.file.SaveMaps);
+	if (saveMaps)
+	{
+		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
+		{
+			for (unsigned int j = 0; j < sysinfo.map.maps[i].size(); j++)
+			{
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].indexX = (Uint8)std::stoul(input);
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].indexY = (Uint8)std::stoul(input);
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].tile_x = std::stoul(input);
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].tile_y = std::stoul(input);
+
+				saveMaps >> sysinfo.map.maps[i][j].tile_stringground;
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].tile_ground = (Uint8)std::stoul(input);
+
+				saveMaps >> sysinfo.map.maps[i][j].tile_stringspec;
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].tile_spec = (Uint8)std::stoul(input);
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].appartenance = std::stoi(input);
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].food = (int8_t)std::stoi(input);
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].work = (int8_t)std::stoi(input);
+
+				saveMaps >> input;
+				sysinfo.map.maps[i][j].gold = (int8_t)std::stoi(input);
 			}
 		}
 	}
@@ -84,20 +131,20 @@ void SaveReload::savemaps(Sysinfo& sysinfo)
 */
 void SaveReload::savePlayer(Sysinfo& sysinfo)
 {
-	LoadConfig::logfileconsole("[INFO]___: SavePlayer Start");
 	std::ofstream savePlayer(sysinfo.file.SavePlayer);
-	if (savePlayer) {
+	if (savePlayer)
+	{
 		savePlayer << "nbPlayer= " << sysinfo.tabplayer.size();
 		if (sysinfo.tabplayer.size() != 0)
 		{
-			for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++)
+			for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 			{
 				savePlayer << std::endl << std::endl << "player= " + std::to_string(i);
 				savePlayer << std::endl << "name= " << sysinfo.tabplayer[i]->GETname();
 				savePlayer << std::endl << "nbunitTotal= " << sysinfo.tabplayer[i]->GETtabUnit().size();
 				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0)
 				{
-					for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
+					for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 					{
 						savePlayer << std::endl << std::endl << "\tunit= " << j;
 						savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETname();
@@ -131,29 +178,26 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 	else
 		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 
-	LoadConfig::logfileconsole("[INFO]___: SavePlayer End");
 }
 
-/*
-* NAME : reload
-* ROLE : Chargement de la partie à patir des fichiers de sauvegarde
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Chargement de la partie
-* RETURNED VALUE    : void
-*/
-void SaveReload::reload(Sysinfo& sysinfo)
+
+void SaveReload::loadPlayer(Sysinfo& sysinfo)
 {
-	LoadConfig::logfileconsole("[INFO]___: Reload Start");
 	sysinfo.var.statescreen = STATEmainmap;
 
-	std::string destroy;
-	std::string inttostringtileSize = std::to_string(sysinfo.map.tileSize);
+	std::string		destroy(""),
+					name(""),
+					unitname(""),
+					inttostringtileSiz(std::to_string(sysinfo.map.tileSize));
 
-	
-	unsigned int nbplayer = 0, nbunit = 0, test = 0, test1 = 0;
+	unsigned int	nbplayer(0),
+					nbunit(0),
+					test(0),
+					test1(0);
+
 	unsigned int var[7];
-	std::string name, unitname;
-	int initspacename = 200, spacename = 32;
+
+	int initspacename(200), spacename(32);
 
 
 	std::ifstream savePlayer(sysinfo.file.SavePlayer);
@@ -163,7 +207,7 @@ void SaveReload::reload(Sysinfo& sysinfo)
 		savePlayer >> nbplayer;
 
 		if (nbplayer > 0) {
-			for (unsigned int i = 0; i < nbplayer; i++)
+			for (unsigned int i(0); i < nbplayer; i++)
 			{
 				savePlayer >> destroy;
 				savePlayer >> test;
@@ -172,13 +216,25 @@ void SaveReload::reload(Sysinfo& sysinfo)
 					savePlayer >> destroy;
 					savePlayer >> name;
 					sysinfo.tabplayer.push_back(new Player(name));
-					ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.player,
-						shaded, name, { 255, 64, 0, 255 }, { 64, 64, 64, 255 }, 24, 0, initspacename += spacename, nonTransparent, no_angle);
+					ButtonTexte::createButtonTexte(sysinfo.screen.renderer,
+						sysinfo.allTextures.font,
+						sysinfo.var.statescreen,
+						sysinfo.var.select,
+						sysinfo.allButton.player,
+						shaded,
+						name,
+						{ 255, 64, 0, 255 },
+						{ 64, 64, 64, 255 },
+						24,
+						0,
+						initspacename += spacename,
+						nonTransparent,
+						no_angle);
 
 					savePlayer >> destroy;
 					savePlayer >> nbunit;
 					if (nbunit > 0) {
-						for (unsigned int j = 0; j < nbunit; j++)
+						for (unsigned int j(0); j < nbunit; j++)
 						{
 							savePlayer >> destroy;
 							savePlayer >> test1;
@@ -186,12 +242,19 @@ void SaveReload::reload(Sysinfo& sysinfo)
 								savePlayer >> destroy;
 								savePlayer >> unitname;
 
-								for (unsigned int k = 0; k < 7; k++)
+								for (unsigned int k(0); k < 7; k++)
 								{
 									savePlayer >> destroy;
 									savePlayer >> var[k];
 								}
-								sysinfo.tabplayer[i]->addUnit(unitname, var[0], var[1], var[2], var[3], var[4], var[5], var[6]);
+								sysinfo.tabplayer[i]->addUnit(unitname,
+									var[0],
+									var[1],
+									var[2],
+									var[3],
+									var[4],
+									var[5],
+									var[6]);
 							}
 							else
 							{
@@ -213,6 +276,21 @@ void SaveReload::reload(Sysinfo& sysinfo)
 	}
 	else
 		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
+}
+
+/*
+* NAME : reload
+* ROLE : Chargement de la partie à patir des fichiers de sauvegarde
+* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* OUTPUT PARAMETERS : Chargement de la partie
+* RETURNED VALUE    : void
+*/
+void SaveReload::reload(Sysinfo& sysinfo)
+{
+	LoadConfig::logfileconsole("[INFO]___: Reload Start");
+
+	loadMaps(sysinfo);
+	loadPlayer(sysinfo);
 
 	SDL_RenderPresent(sysinfo.screen.renderer);
 	LoadConfig::logfileconsole("[INFO]___: Reload End");
@@ -331,7 +409,8 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 			if (sysinfo.var.save.GETnbSave() == 0)
 				sysinfo.var.save.GETtabSave().clear();
 			else
-				sysinfo.var.save.GETtabSave().erase(sysinfo.var.save.GETtabSave().begin() + sysinfo.var.save.GETcurrentSave() - 1);
+				sysinfo.var.save.GETtabSave().erase
+					(sysinfo.var.save.GETtabSave().begin() + sysinfo.var.save.GETcurrentSave() - 1);
 
 
 			// suppression du pointeur vers la sauvegarde courante

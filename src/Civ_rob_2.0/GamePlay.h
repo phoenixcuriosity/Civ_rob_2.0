@@ -80,6 +80,43 @@ public:
 	static void groundGen(Sysinfo&);
 
 	/*
+	* NAME : mapBordersConditions
+	* ROLE : Boucle For de conditions
+	* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2
+	* INPUT  PARAMETERS : Map& map : structure de la MAP
+	* INPUT  PARAMETERS : unsigned int i : index en X
+	* INPUT  PARAMETERS : unsigned int j : index en Y
+	* OUTPUT PARAMETERS : Validations des conditions ou non
+	* RETURNED VALUE    : bool : valid = true / not valid = false
+	*/
+	static bool mapBordersConditions(Map& map, unsigned int i, unsigned int j);
+
+	/*
+	* NAME : mapBordersConditions
+	* ROLE : Affectation des caractéristiques de la case en fonction ...
+	* ROLE : ... de la fonction rand, dans la bordure de la map entre ...
+	* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX
+	* INPUT  PARAMETERS : Tile& tile : tile à affecter
+	* OUTPUT PARAMETERS : Affectation des caractéristiques
+	* RETURNED VALUE    : void
+	*/
+	static void mapBorders(Tile& tile);
+
+	/*
+	* NAME : mapIntern
+	* ROLE : Affectation des caractéristiques de la case en fonction ...
+	* ROLE : ... de la fonction rand, dans le reste de la map
+	* ROLE : Si la case est de type water alors création de 2 autres ...
+	* ROLE : ... cases de type water pour obtenir une forme en L
+	* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& maps : matrice de la map
+	* INPUT  PARAMETERS : unsigned int i : index en X
+	* INPUT  PARAMETERS : unsigned int j : index en Y
+	* OUTPUT PARAMETERS : Affectation des caractéristiques
+	* RETURNED VALUE    : void
+	*/
+	static void mapIntern(std::vector<std::vector<Tile>>& maps, unsigned int i, unsigned int j);
+
+	/*
 	* NAME : tileAffectation
 	* ROLE : Affectation des caractéristiques à une case
 	* INPUT  PARAMETERS : Tile& tile, : la case à affecter

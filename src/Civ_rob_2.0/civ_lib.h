@@ -72,7 +72,35 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
 #define configFilePath "bin/config.xml"
 
+/* MAP -> taille max - min de la mer */
+#define MAP_BORDER_MAX 4
+#define MAP_BORDER_MIN 1
 
+/* MAP -> valeur deep_water */
+#define MAP_BORDER_ZERO 0
+
+/* MAP_GEN_RANDOM */
+#define MAP_GEN_RANDOM_RANGE_GROUND 100
+#define MAP_GEN_RANDOM_OFFSET_GROUND 1
+
+#define MAP_GEN_RANDOM_RANGE_SPEC_GRASS 100
+#define MAP_GEN_RANDOM_OFFSET_SPEC_GRASS 1
+
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER 20
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER 1
+
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER1 10
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER1 1
+
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER2 10
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER2 1
+
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER 50
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER 1
+
+#define MAX_CITY_PER_PLAYER 5
+
+#define MAX_RANDOM_POS_ITERATION 10000
 
 
 /* *********************************************************

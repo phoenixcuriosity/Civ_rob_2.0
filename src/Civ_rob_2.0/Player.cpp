@@ -41,6 +41,23 @@ Player::Player(const std::string &msg) : _name(msg)
 }
 Player::~Player()
 {
+	deletePlayer();
+}
+
+Player& Player::operator=(const Player& player)
+{
+	if (this != &player)
+	{
+		deletePlayer();
+		_name = player.GETname();
+		_tabUnit = player.GETtabUnit();
+		_tabCity = player.GETtabCity();
+	}
+	return *this;
+}
+
+void Player::deletePlayer()
+{
 	unsigned int size = (unsigned int)_tabUnit.size();
 
 	for (unsigned int i = 0; i < size; i++)
@@ -76,7 +93,6 @@ Player::~Player()
 	else
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
 }
-
 
 /*
 * NAME : addEmptyUnit

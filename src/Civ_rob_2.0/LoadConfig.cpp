@@ -72,9 +72,8 @@ void LoadConfig::initStructs(Sysinfo& sysinfo)
 	 *					   sysinfo.var						   *
 	 ********************************************************* */
 
-	/* Already setup in main */
-	//sysinfo.var.argc = argc;
-	//sysinfo.var.argv = argv;
+	//sysinfo.var.argc = argc; /* Already setup in main */
+	//sysinfo.var.argv = argv; /* Already setup in main */
 	sysinfo.var.continuer = true;
 	sysinfo.var.waitEvent = true;
 	sysinfo.var.nbturn = 0;
@@ -612,7 +611,7 @@ void LoadConfig::calculImage(Sysinfo& sysinfo)
 
 
 	 /* *********************************************************
-	  *				START sysinfo.allButtons				   *
+	  *				START sysinfo.allButtons				    *
 	  ********************************************************* */
 
 	int spacemenu(64), initspacemenu(300);

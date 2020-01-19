@@ -442,7 +442,7 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
 			{
 				sysinfo.allTextures.colorapptile
 					["ColorPlayertile" + std::to_string(sysinfo.map.maps[m][n].appartenance) + ".bmp"]
-				->render(x, y);
+						->render(x, y);
 			}
 			else
 			{
@@ -493,7 +493,8 @@ void IHM::citiemap(Sysinfo& sysinfo)
 		initspace = 96;
 		for (Uint8 j(0); j < 10; j++)
 		{
-			if ((unsigned __int64)sysinfo.var.s_player.unitToCreate + j <
+			if ((unsigned __int64)sysinfo.var.s_player.unitToCreate + j 
+				<
 				sysinfo.var.s_player.tabUnit_Struct.size())
 			{
 				buildName = sysinfo.var.s_player.tabUnit_Struct
@@ -531,7 +532,8 @@ void IHM::citiemap(Sysinfo& sysinfo)
 	 ********************************************************* */
 
 	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-		->GETtheCity(sysinfo.var.s_player.selectCitie)->affichercitiemap(sysinfo);
+		->GETtheCity(sysinfo.var.s_player.selectCitie)
+			->affichercitiemap(sysinfo);
 
 }
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.18
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,7 +43,17 @@ public:
 	* OUTPUT PARAMETERS : et map.screen dans SaveScreen.txt
 	* RETURNED VALUE    : void
 	*/
-	static void savemaps(Sysinfo&);
+	static void saveMaps(Sysinfo&);
+
+	/*
+	* NAME : loadMaps
+	* ROLE : Chargement des sys map.map et map.screen
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : Chargement des maps : map.map dans SaveMap.txt ...
+	* OUTPUT PARAMETERS : ... et map.screen dans SaveScreen.txt
+	* RETURNED VALUE    : void
+	*/
+	static void loadMaps(Sysinfo&);
 
 	/*
 	* NAME : savePlayer
@@ -53,6 +63,15 @@ public:
 	* RETURNED VALUE    : void
 	*/
 	static void savePlayer(Sysinfo&);
+
+	/*
+	* NAME : savePlayer
+	* ROLE : Chargement des joueurs (units et cities)
+	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* OUTPUT PARAMETERS : Chargement des joueurs (units et cities) dans SavePlayer.txt
+	* RETURNED VALUE    : void
+	*/
+	static void loadPlayer(Sysinfo&);
 
 	/*
 	* NAME : reload

@@ -83,7 +83,8 @@ void Unit::loadUnitAndSpec(Sysinfo& sysinfo)
 */
 void Unit::searchUnit(Sysinfo& sysinfo)
 {
-	sysinfo.var.s_player.unitNameToCreate = sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate].name;
+	sysinfo.var.s_player.unitNameToCreate
+		= sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate].name;
 }
 
 
@@ -99,13 +100,18 @@ void Unit::searchUnitTile(Sysinfo& sysinfo)
 {
 	for (unsigned int i(0); i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size(); i++)
 	{
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->testPos(
+		if (	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+					->GETtheUnit(i)->testPos
+				(
 				sysinfo.var.mouse.GETmouse_x() + sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize,
-				sysinfo.var.mouse.GETmouse_y() + sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize)
+				sysinfo.var.mouse.GETmouse_y() + sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize
+				)
 			)
 		{
 			sysinfo.var.s_player.selectunit = i;
-			sysinfo.var.s_player.unitNameToMove = sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->GETname();
+			sysinfo.var.s_player.unitNameToMove
+				= sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->GETname();
+
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->SETblit(true);
 			break;
 		}
@@ -135,16 +141,32 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 		*/
 		break;
 	case canMove:
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->move(sysinfo.var.select, sysinfo.var.s_player.selectunit, x, y);
+
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+			->GETtheUnit(sysinfo.var.s_player.selectunit)
+				->move(sysinfo.var.select, sysinfo.var.s_player.selectunit, x, y);
 		break;
 	case attackMove:
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack));
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack)->GETalive() == false)
+
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+			->GETtheUnit(sysinfo.var.s_player.selectunit)
+				->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]
+					->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack));
+
+		if (
+			sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]
+			->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack)
+				->GETalive()
+			==
+			false
+			)
 		{
-			sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]->deleteUnit(sysinfo.var.s_player.selectUnitToAttack);
+			sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]
+				->deleteUnit(sysinfo.var.s_player.selectUnitToAttack);
 			tryToMove(sysinfo, x, y);
 		}
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->SETmovement(0);
+		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+			->GETtheUnit(sysinfo.var.s_player.selectunit)->SETmovement(0);
 		break;
 	default:
 		/* N/A */
@@ -177,8 +199,21 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 	{
 		for (unsigned int j(0); j < sysinfo.map.maps[i].size(); j++)
 		{
-			if (sysinfo.map.maps[i][j].tile_x == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx() + x &&
-				sysinfo.map.maps[i][j].tile_y == sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y)
+			if (
+				sysinfo.map.maps[i][j].tile_x
+				== 
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETtheUnit(sysinfo.var.s_player.selectunit)
+							->GETx() 
+					+ x
+				&&
+				sysinfo.map.maps[i][j].tile_y
+				==
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETtheUnit(sysinfo.var.s_player.selectunit)
+							->GETy()
+					+ y
+				)
 			{
 				if (sysinfo.map.maps[i][j].tile_ground == grass)
 				{
@@ -205,9 +240,27 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 		{
 			for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
 			{
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETx() + x == sysinfo.tabplayer[i]->GETtheUnit(j)->GETx())
+				if (
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETtheUnit(sysinfo.var.s_player.selectunit)
+							->GETx()
+					+ x 
+					==
+					sysinfo.tabplayer[i]
+						->GETtheUnit(j)
+							->GETx()
+					)
 				{
-					if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(sysinfo.var.s_player.selectunit)->GETy() + y == sysinfo.tabplayer[i]->GETtheUnit(j)->GETy())
+					if (
+						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+							->GETtheUnit(sysinfo.var.s_player.selectunit)
+								->GETy()
+						+ y
+						==
+						sysinfo.tabplayer[i]
+							->GETtheUnit(j)
+								->GETy()
+						)
 					{
 						if (sysinfo.var.s_player.selectplayer == (int)i)
 						{

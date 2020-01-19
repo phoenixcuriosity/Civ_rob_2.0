@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.9
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -76,7 +76,9 @@ int main(int argc, char* argv[])
 		
 		end = std::chrono::system_clock::now();
 		elapsed_seconds = end - start;
-		LoadConfig::logfileconsole("[INFO]___: temps d'execution de l'initialisation : " + std::to_string(elapsed_seconds.count()));
+		LoadConfig::logfileconsole
+		("[INFO]___: temps d'execution de l'initialisation : "
+			+ std::to_string(elapsed_seconds.count()));
 
 		sysinfo.var.cinState = cinTitleScreen;
 

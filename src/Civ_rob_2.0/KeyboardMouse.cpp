@@ -1805,9 +1805,20 @@ void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event)
 	*/
 
 	if (event.button.button == SDL_BUTTON_LEFT)
+	{
 		cliqueGauche(sysinfo, event);
-	else if (event.button.button == SDL_BUTTON_RIGHT && sysinfo.var.statescreen == STATEmainmap)
+	}
+	else if (	event.button.button == SDL_BUTTON_RIGHT
+			 && sysinfo.var.statescreen == STATEmainmap
+			)
+	{
 		cliqueDroit(sysinfo, event);
+	}
+	else
+	{
+		/* N/A */
+	}
+		
 
 }
 
@@ -1830,14 +1841,15 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 	{
 		if (sysinfo.var.s_player.selectplayer > -1) 
 		{
-			if (sysinfo.var.select == selectinspect && sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() != 0) 
+			if (   sysinfo.var.select == selectinspect
+				&& sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() != 0) 
 			{
-				sysinfo.var.mouse.SETmouse_x((
-					(unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize)
-					+ sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
-				sysinfo.var.mouse.SETmouse_y((
-					(unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize)
-					+ sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
+				sysinfo.var.mouse.SETmouse_x(
+					((unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize)
+					+ (sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize));
+				sysinfo.var.mouse.SETmouse_y(
+					((unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize)
+					+ (sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize));
 				City::searchCityTile(sysinfo);
 			}
 		}
@@ -1849,10 +1861,10 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 	case STATEmainmap:
 
 		if (sysinfo.allButton.mainMap["screen Titre"]
-			->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			sysinfo.var.cinState = cinTitleScreen;
-			SaveReload::savemaps(sysinfo);
+			SaveReload::saveMaps(sysinfo);
 			SaveReload::savePlayer(sysinfo);
 			resetButtonOn(sysinfo);
 			LoadConfig::logfileconsole("__________________________");
@@ -1861,7 +1873,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		}
 		
 		if (sysinfo.allButton.mainMap["Create Unit"]
-			->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			sysinfo.allButton.mainMap["Create Unit"]->changeOn();
 			if (sysinfo.var.select != selectcreate)
@@ -1873,7 +1885,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			return;
 		}
 		if (sysinfo.allButton.mainMap["Move Unit"]
-			->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			sysinfo.allButton.mainMap["Move Unit"]->changeOn();
 			if (sysinfo.var.select != selectmove)
@@ -1887,7 +1899,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			return;
 		}
 		if (sysinfo.allButton.mainMap["Inspect"]
-			->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			sysinfo.allButton.mainMap["Inspect"]->changeOn();
 			if (sysinfo.var.select != selectinspect)
@@ -1901,16 +1913,18 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			return;
 		}
 		if (sysinfo.allButton.mainMap["Next Turn"]
-			->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			GamePlay::nextTurn(sysinfo);
 			resetButtonOn(sysinfo);
 			return;
 		}
 		if (sysinfo.allButton.mainMap["Delete Unit"]
-			->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
-			sysinfo.allButton.mainMap["Delete Unit"]->SETon(!sysinfo.allButton.mainMap["Delete Unit"]->GETon());
+			sysinfo.allButton.mainMap["Delete Unit"]
+				->SETon(!sysinfo.allButton.mainMap["Delete Unit"]
+					->GETon());
 			resetButtonOn(sysinfo);
 			return;
 		}
@@ -1919,7 +1933,8 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			unsigned int i(0);
 			for (const auto& n : sysinfo.allButton.player)
 			{
-				if (sysinfo.allButton.player[n.second->GETname()]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				if (sysinfo.allButton.player[n.second->GETname()]
+						->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 				{
 					sysinfo.allButton.player[n.second->GETname()]->changeOn();
 					if (sysinfo.var.s_player.selectplayer != (int)i)
@@ -1937,46 +1952,55 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		
 		break;
 	case STATEtitleScreen:
-		if (sysinfo.allButton.titleScreen["New Game"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.titleScreen["New Game"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			GamePlay::newGame(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.titleScreen["Reload"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.titleScreen["Reload"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			IHM::reloadScreen(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.titleScreen["Option"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.titleScreen["Option"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			//clearSave(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.titleScreen["Quit"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.titleScreen["Quit"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			sysinfo.var.continuer = false;
 			return;
 		}
 		break;
 	case STATEreload:
-		if (sysinfo.allButton.reload["Back"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y)) 
+		if (sysinfo.allButton.reload["Back"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y)) 
 		{
 			IHM::titleScreen(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.reload["Remove all saves"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.reload["Remove all saves"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
-			sysinfo.allButton.reload["Remove all saves"]->changeOn();
+			sysinfo.allButton.reload["Remove all saves"]
+				->changeOn();
 			SaveReload::clearSave(sysinfo);
 			IHM::reloadScreen(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.reload["Load"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.reload["Load"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			SaveReload::reload(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.reload["Remove"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.reload["Remove"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			SaveReload::removeSave(sysinfo);
 			IHM::reloadScreen(sysinfo);
@@ -1985,9 +2009,11 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 
 		for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++)
 		{
-			if (sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+			if (sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
+					->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 			{
-				sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]->changeOn();
+				sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
+					->changeOn();
 				sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
 				sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveMaps.txt";
 				sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SavePlayer.txt";
@@ -1997,7 +2023,8 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		}
 		break;
 	case STATEcitiemap:
-		if (sysinfo.allButton.citieMap["Map"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.citieMap["Map"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
 			sysinfo.var.s_player.selectCitie = -1;
 			sysinfo.var.statescreen = STATEmainmap;
@@ -2005,9 +2032,11 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			resetButtonCitieMap(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.citieMap["Build"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.citieMap["Build"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
-			sysinfo.allButton.citieMap["Build"]->changeOn();
+			sysinfo.allButton.citieMap["Build"]
+				->changeOn();
 			if (sysinfo.var.select != selectcreate)
 				sysinfo.var.select = selectcreate;
 			else
@@ -2015,9 +2044,11 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 			resetButtonCitieMap(sysinfo);
 			return;
 		}
-		if (sysinfo.allButton.citieMap["Place Citizen"]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (sysinfo.allButton.citieMap["Place Citizen"]
+				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
-			sysinfo.allButton.citieMap["Place Citizen"]->changeOn();
+			sysinfo.allButton.citieMap["Place Citizen"]
+				->changeOn();
 			if (sysinfo.var.select != selectmoveCitizen)
 				sysinfo.var.select = selectmoveCitizen;
 			else
@@ -2031,7 +2062,8 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		{
 			for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 			{
-				if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Struct[i].name]->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+				if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Struct[i].name]
+						->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 				{
 					sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Struct[i].name;
 					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Struct[i].name,
