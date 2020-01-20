@@ -64,8 +64,6 @@ inline Uint8 getRefreshRate()
 // fréquence de rafraichissement de l'écran en Hz
 const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
-
-
 /* *********************************************************
  *						Constantes						   *
  ********************************************************* */
@@ -108,58 +106,63 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
  ********************************************************* */
 
 // type de sol
-enum Ground_Type : Uint8 {
-							noGround,
-							grass,
-							water,
-							deepwater,
-							dirt,
-							sand
-						};
+enum Ground_Type : Uint8
+{
+	noGround,
+	grass,
+	water,
+	deepwater,
+	dirt,
+	sand
+};
 
 // spécifications du terrain
-enum GroundSpec_Type : Uint8 {
-								specnothing,
-								coal,
-								copper,
-								iron,
-								tree,
-								stone,
-								uranium,
-								horse,
-								fish,
-								petroleum
-							}; 
+enum GroundSpec_Type : Uint8
+{
+	specnothing,
+	coal,
+	copper,
+	iron,
+	tree,
+	stone,
+	uranium,
+	horse,
+	fish,
+	petroleum
+}; 
 
 // différents état de l'écran
-enum State_Type : Uint8 {
-							STATEnothing,
-							STATEtitleScreen,
-							STATEscreennewgame,
-							STATEreload,
-							STATEmainmap,
-							STATEscience,
-							STATEcitiemap
-						};
+enum State_Type : Uint8 
+{
+	STATEnothing,
+	STATEtitleScreen,
+	STATEscreennewgame,
+	STATEreload,
+	STATEmainmap,
+	STATEscience,
+	STATEcitiemap
+};
 
 // spécifications de la séléction
-enum Select_Type : Uint8 { 
-							selectnothing,
-							NotToSelect,
-							selectcreate,
-							selectinspect,
-							selectmove,
-							selectmoveCitizen 
-						};
+enum Select_Type: Uint8 
+{ 
+	selectnothing,
+	NotToSelect,
+	selectcreate,
+	selectinspect,
+	selectmove,
+	selectmoveCitizen 
+};
 
 // spécifications de la séléction CinState_Type
-enum CinState_Type : Uint8	{
-								cinNothing,
-								cinTitleScreen,
-								cinScreenNewGameNbPlayer,
-								cinScreenNewGameNamePlayer,
-								cinMainMap,
-							};
+enum CinState_Type : Uint8
+{
+	cinNothing,
+	cinTitleScreen,
+	cinScreenNewGameNbPlayer,
+	cinScreenNewGameNamePlayer,
+	cinMainMap,
+};
 
 /* *********************************************************
  *						Structures						   *
@@ -347,21 +350,45 @@ struct Var
 
 	/*	
 		état de la sélection du joueur
-		enum Select_Type : Uint8 { selectnothing, NotToSelect, selectcreate, selectinspect, selectmove, selectmoveCitizen };
+		enum Select_Type : Uint8 
+		{ 
+			selectnothing,
+			NotToSelect,
+			selectcreate,
+			selectinspect,
+			selectmove,
+			selectmoveCitizen 
+		};
 	*/
-	Uint8 select = selectnothing;
+	Select_Type select = selectnothing;
 
 	/* 
 		état de l'écran du joueur
-		enum State_Type : Uint8 { STATEnothing, STATEtitleScreen, STATEscreennewgame,
-		STATEreload, STATEmainmap, STATEscience, STATEcitiemap };
+		enum State_Type : Uint8
+		{ 
+			STATEnothing,
+			STATEtitleScreen,
+			STATEscreennewgame,
+			STATEreload,
+			STATEmainmap,
+			STATEscience,
+			STATEcitiemap
+		};
 	*/
-	Uint8 statescreen = STATEnothing;
+	State_Type statescreen = STATEnothing;
 
 	/*
 		état de l'entrée clavier
+		enum CinState_Type : Uint8
+		{
+			cinNothing,
+			cinTitleScreen,
+			cinScreenNewGameNbPlayer,
+			cinScreenNewGameNamePlayer,
+			cinMainMap,
+		};
 	*/
-	Uint8 cinState = cinNothing;
+	CinState_Type cinState = cinNothing;
 
 
 

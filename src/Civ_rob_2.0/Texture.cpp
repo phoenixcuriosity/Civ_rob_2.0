@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.10
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,25 +46,27 @@
  * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
  * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
  * INPUT  PARAMETERS : unsigned int w, unsigned int h : les valeurs de longueur et de largeur permettant de changer la définition de l'image originale sinon mettre NULL
- * INPUT  PARAMETERS : Uint16 angle : enum Rotation_Type
+ * INPUT  PARAMETERS : Uint16 angle : enum Uint16
  * INPUT  PARAMETERS : Uint8 cnt : le type de centrage -> enum Center_Type
  * OUTPUT PARAMETERS : Allocation dynamique d'une Texture dans le tableau correspondant
  * RETURNED VALUE    : void
  */
-void Texture::loadImage(	SDL_Renderer*& renderer,
-							std::unordered_map<std::string, Texture*>& tabTexture,
-							Uint8 stateScreen,
-							Uint8 select,
-							std::string path,
-							std::string msg,
-							Transparance_Type alpha,
-							int x,
-							int y,
-							unsigned int w,
-							unsigned int h,
-							Rotation_Type angle,
-							Center_Type cnt
-						)
+void Texture::loadImage
+(	
+	SDL_Renderer*& renderer,
+	std::unordered_map<std::string, Texture*>& tabTexture,
+	Uint8 stateScreen,
+	Uint8 select,
+	std::string path,
+	std::string msg,
+	Transparance_Type alpha,
+	int x,
+	int y,
+	unsigned int w,
+	unsigned int h,
+	Uint16 angle,
+	Center_Type cnt
+)
 {
 
 
@@ -77,6 +79,8 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 	{
 		/* N/A */
 	}	
+
+	assertRangeAngle(&angle);
 
 	SDL_Texture* newTexture(nullptr);
 	SDL_Surface* loadedSurface(IMG_Load(path.c_str()));
@@ -114,7 +118,22 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 				/* N/A */
 			}
 			centrage(xt, yt, wt, ht, cnt);
-			tabTexture[msg] = new Texture(renderer, newTexture, msg, stateScreen, select, xt, yt, wt, ht, alpha, angle, cnt);
+			tabTexture[msg]
+				= new Texture
+						(
+							renderer, 
+							newTexture,
+							msg,
+							stateScreen,
+							select,
+							xt,
+							yt,
+							wt,
+							ht,
+							alpha, 
+							angle,
+							cnt
+						);
 		}
 		else
 		{
@@ -128,6 +147,21 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
 	}
 }
 
+/*
+* NAME : assertRangeAngle
+* ROLE : Limitation sur 360°
+* INPUT  PARAMETERS : Uint16* angle : angle de rotation
+* OUTPUT PARAMETERS : angle %= MAX_ANGLE
+* RETURNED VALUE    : void
+*/
+void Texture::assertRangeAngle
+(
+	Uint16* angle
+)
+{
+	*angle %= MAX_ANGLE;
+}
+
 
 /*
  * NAME : centrage
@@ -138,12 +172,14 @@ void Texture::loadImage(	SDL_Renderer*& renderer,
  * OUTPUT PARAMETERS : Permet de centrer la Texture
  * RETURNED VALUE    : void
  */
-void Texture::centrage(	int& xc,
-						int& yc,
-						int iW,
-						int iH,
-						Center_Type cnt
-					)
+void Texture::centrage
+(	
+	int& xc,
+	int& yc,
+	int iW,
+	int iH,
+	Center_Type cnt
+)
 {
 	switch (cnt)
 	{
@@ -179,19 +215,21 @@ void Texture::centrage(	int& xc,
  ********************************************************* */
 
 
-Texture::Texture(	SDL_Renderer*& renderer,
-					SDL_Texture* image,
-					std::string msg,
-					Uint8 stateScreen,
-					Uint8 select,
-					unsigned int x,
-					unsigned int y,
-					int w,
-					int h,
-					Transparance_Type alpha,
-					Rotation_Type angle,
-					Center_Type center
-				)
+Texture::Texture
+(	
+	SDL_Renderer*& renderer,
+	SDL_Texture* image,
+	std::string msg,
+	Uint8 stateScreen,
+	Uint8 select,
+	unsigned int x,
+	unsigned int y,
+	int w,
+	int h,
+	Transparance_Type alpha,
+	Uint16 angle,
+	Center_Type center
+)
 	: _renderer(renderer),
 	_texture(image), _dst(rectangle(x, y, w, h)), _name(msg),
 	_stateScreen(stateScreen), _select(select), _alpha(alpha), _angle(angle), _center(center)
@@ -227,7 +265,13 @@ Texture::~Texture()
  * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
  * RETURNED VALUE    : SDL_Rect : Rectangle
  */
-SDL_Rect Texture::rectangle(int x, int y, int w, int h)
+SDL_Rect Texture::rectangle
+(
+	int x,
+	int y,
+	int w,
+	int h
+)
 {
 	SDL_Rect rectangle;
 	rectangle.x = x;
@@ -257,7 +301,11 @@ SDL_Rect Texture::rectangle(int x, int y, int w, int h)
  * OUTPUT PARAMETERS : rendre la Texture
  * RETURNED VALUE    : void
  */
-void Texture::render(int x, int y)
+void Texture::render
+(
+	int x,
+	int y
+)
 {
 	if (x != -1 && y != -1)
 	{
@@ -284,7 +332,13 @@ void Texture::render(int x, int y)
  * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
  * RETURNED VALUE    : void
  */
-bool Texture::renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x, int y)
+bool Texture::renderTextureTestStates
+(
+	Uint8 stateScreen,
+	Uint8 select,
+	int x,
+	int y
+)
 {
 	if (_stateScreen == stateScreen && _select == select)
 	{
@@ -326,13 +380,15 @@ bool Texture::renderTextureTestStates(Uint8 stateScreen, Uint8 select, int x, in
  * OUTPUT PARAMETERS : Permet de créer un ptr sur une SDL_Texture
  * RETURNED VALUE    : SDL_Texture*
  */
-SDL_Texture* Texte::createSDL_TextureFromTexte(	SDL_Renderer*& renderer,
-												Texte_Type type,
-												std::string message,
-												SDL_Color color,
-												SDL_Color colorback,
-												TTF_Font* font
-											   )
+SDL_Texture* Texte::createSDL_TextureFromTexte
+(	
+	SDL_Renderer*& renderer,
+	Texte_Type type,
+	std::string message,
+	SDL_Color color,
+	SDL_Color colorback,
+	TTF_Font* font
+)
 {
 	SDL_Surface *surf(nullptr);
 
@@ -378,28 +434,31 @@ SDL_Texture* Texte::createSDL_TextureFromTexte(	SDL_Renderer*& renderer,
  * INPUT  PARAMETERS : Uint8 : la taille du Texte
  * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
  * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
- * INPUT  PARAMETERS : Uint16 angle : enum Rotation_Type
+ * INPUT  PARAMETERS : Uint16 angle : enum Uint16
  * INPUT  PARAMETERS : Uint8 cnt : enum Center_Type
  * OUTPUT PARAMETERS : création et ajout d'un objet Texte
  * RETURNED VALUE    : void
  */
-void Texte::loadTexte(	SDL_Renderer*& renderer,
-						TTF_Font* font[],
-						Uint8 stateScreen,
-						Uint8 select,
-						std::unordered_map<std::string, Texte*>& tabTexte,
-						Texte_Type type,
-						std::string msg,
-						SDL_Color color,
-						SDL_Color backcolor,
-						Uint8 size,
-						int x,
-						int y,
-						Transparance_Type alpha,
-						Rotation_Type angle,
-						Center_Type cnt
-					)
+void Texte::loadTexte
+(	
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	Uint8 stateScreen,
+	Uint8 select,
+	std::unordered_map<std::string, Texte*>& tabTexte,
+	Texte_Type type,
+	std::string msg,
+	SDL_Color color,
+	SDL_Color backcolor,
+	Uint8 size,
+	int x,
+	int y,
+	Transparance_Type alpha,
+	Uint16 angle,
+	Center_Type cnt
+)
 {
+	assertRangeAngle(&angle);
 
 	SDL_Texture *image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
 	if (alpha != nonTransparent)
@@ -432,24 +491,27 @@ void Texte::loadTexte(	SDL_Renderer*& renderer,
  * INPUT  PARAMETERS : Uint8 : la taille du Texte
  * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
  * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
- * INPUT  PARAMETERS : Uint16 angle : enum Rotation_Type
+ * INPUT  PARAMETERS : Uint16 angle : enum Uint16
  * INPUT  PARAMETERS : Uint8 cnt : enum Center_Type
  * OUTPUT PARAMETERS : créer un ptr sur SDL_Texture temporaire pour afficher le texte à l'écran
  * RETURNED VALUE    : void
  */
-void Texte::writeTexte(	SDL_Renderer*& renderer,
-						TTF_Font* font[],
-						Texte_Type type,
-						std::string msg,
-						SDL_Color color,
-						SDL_Color backcolor,
-						Uint8 size,
-						unsigned int x,
-						unsigned int y,
-						Rotation_Type angle,
-						Center_Type cnt
-					)
+void Texte::writeTexte
+(	
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	Texte_Type type,
+	std::string msg,
+	SDL_Color color,
+	SDL_Color backcolor,
+	Uint8 size,
+	unsigned int x,
+	unsigned int y,
+	Uint16 angle,
+	Center_Type cnt
+)
 {
+	assertRangeAngle(&angle);
 
 	SDL_Texture *image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
 
@@ -487,24 +549,26 @@ void Texte::writeTexte(	SDL_Renderer*& renderer,
  ********************************************************* */
 
 
-Texte::Texte(	SDL_Renderer*& renderer,
-				TTF_Font* font[],
-				SDL_Texture* image,
-				std::string msg,
-				Uint8 stateScreen,
-				Uint8 select,
-				int x,
-				int y,
-				int w,
-				int h,
-				Texte_Type type,
-				SDL_Color txtcolor,
-				SDL_Color backcolor,
-				Uint8 size,
-				Transparance_Type alpha,
-				Rotation_Type angle,
-				Center_Type center
-			) :
+Texte::Texte
+(	
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	SDL_Texture* image,
+	std::string msg,
+	Uint8 stateScreen,
+	Uint8 select,
+	int x,
+	int y,
+	int w,
+	int h,
+	Texte_Type type,
+	SDL_Color txtcolor,
+	SDL_Color backcolor,
+	Uint8 size,
+	Transparance_Type alpha,
+	Uint16 angle,
+	Center_Type center
+):
 	Texture(renderer, image, msg, stateScreen, select, x, y, w, h, alpha, angle, center),
 	_type(type), _txtcolor(txtcolor), _backcolor(backcolor),
 	_size(size), _font()
@@ -532,7 +596,11 @@ Texte::~Texte()
  * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
  * RETURNED VALUE    : bool : false = pas les meme/ true = meme couleur
  */
-bool Texte::isSameColor(SDL_Color color1, SDL_Color color2) const
+bool Texte::isSameColor
+(
+	SDL_Color color1,
+	SDL_Color color2
+)const
 {
 	if (color1.a != color2.a || color1.b != color2.b || color1.g != color2.g || color1.r != color2.r)
 	{
@@ -595,7 +663,10 @@ void Texte::resizeTexte()
  *			START Texte::METHODES::GET/SET				   *
  ********************************************************* */
 
-void Texte::SETname(std::string msg)
+void Texte::SETname
+(
+	std::string msg
+)
 {
 	if (this->GETname().compare(msg) != 0)
 	{
@@ -608,7 +679,10 @@ void Texte::SETname(std::string msg)
 		/* N/A */
 	}
 }
-void Texte::SETtype(Texte_Type type)
+void Texte::SETtype
+(
+	Texte_Type type
+)
 {
 	if (type != _type)
 	{
@@ -620,7 +694,10 @@ void Texte::SETtype(Texte_Type type)
 		/* N/A */
 	}
 }
-void Texte::SETsize(Uint8 size)
+void Texte::SETsize
+(
+	Uint8 size
+)
 {
 	if (size != _size)
 	{
@@ -633,7 +710,10 @@ void Texte::SETsize(Uint8 size)
 		/* N/A */
 	}
 }
-void Texte::SETtxtcolor(SDL_Color txtcolor)
+void Texte::SETtxtcolor
+(
+	SDL_Color txtcolor
+)
 {
 	if (!isSameColor(txtcolor, _txtcolor))
 	{
@@ -645,7 +725,10 @@ void Texte::SETtxtcolor(SDL_Color txtcolor)
 		/* N/A */
 	}
 }
-void Texte::SETbackcolor(SDL_Color backcolor)
+void Texte::SETbackcolor
+(
+	SDL_Color backcolor
+)
 {
 	if (!isSameColor(backcolor, _backcolor))
 	{
@@ -686,25 +769,27 @@ void Texte::SETbackcolor(SDL_Color backcolor)
  * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
  * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
  * INPUT  PARAMETERS : unsigned int w, unsigned int h : les valeurs de longueur et de largeur permettant de changer la définition de l'image originale sinon mettre NULL
- * INPUT  PARAMETERS : Uint16 angle : enum Rotation_Type
+ * INPUT  PARAMETERS : Uint16 angle : enum Uint16
  * INPUT  PARAMETERS : Uint8 cnt : le type de centrage -> enum Center_Type
  * OUTPUT PARAMETERS : création et ajout d'un objet ButtonTexte
  * RETURNED VALUE    : void
  */
-void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
-										std::unordered_map<std::string, ButtonImage*>& tabButtonImage,
-										Uint8 stateScreen,
-										Uint8 select,
-										std::string path,
-										std::string msg,
-										Transparance_Type alpha,
-										int x,
-										int y,
-										unsigned int w,
-										unsigned int h,
-										Rotation_Type angle,
-										Center_Type cnt
-									)
+void ButtonImage::createButtonImage
+(	
+	SDL_Renderer*& renderer,
+	std::unordered_map<std::string, ButtonImage*>& tabButtonImage,
+	Uint8 stateScreen,
+	Uint8 select,
+	std::string path,
+	std::string msg,
+	Transparance_Type alpha,
+	int x,
+	int y,
+	unsigned int w,
+	unsigned int h,
+	Uint16 angle,
+	Center_Type cnt
+)
 {
 
 	int xt(0), yt(0), wt(0), ht(0);
@@ -716,6 +801,8 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
 	{
 		/* N/A */
 	}
+
+	assertRangeAngle(&angle);
 
 	SDL_Surface* loadedSurface(IMG_Load(path.c_str()));
 	std::size_t found(path.find('.'));
@@ -777,24 +864,25 @@ void ButtonImage::createButtonImage(	SDL_Renderer*& renderer,
  ********************************************************* */
 
 
-ButtonImage::ButtonImage(	SDL_Renderer*& renderer,
-							SDL_Texture* image,
-							const std::string& msg,
-							Uint8 stateScreen,
-							Uint8 select,
-							int x,
-							int y,
-							int w,
-							int h,
-							Transparance_Type alpha,
-							Rotation_Type angle,
-							SDL_Texture* imageOn,
-							Center_Type center
-						)
+ButtonImage::ButtonImage
+(	
+	SDL_Renderer*& renderer,
+	SDL_Texture* image,
+	const std::string& msg,
+	Uint8 stateScreen,
+	Uint8 select,
+	int x,
+	int y,
+	int w,
+	int h,
+	Transparance_Type alpha,
+	Uint16 angle,
+	SDL_Texture* imageOn,
+	Center_Type center
+)
 	: Texture(renderer, image, msg, stateScreen, select, x, y, w, h, alpha, angle, center),
 	_imageOn(imageOn), _on(false)
 {
-
 }
 ButtonImage::~ButtonImage()
 {
@@ -814,7 +902,12 @@ ButtonImage::~ButtonImage()
  * OUTPUT PARAMETERS : Validation ou non du bouton
  * RETURNED VALUE    : bool : false = pas valide / true = valide
  */
-bool ButtonImage::searchButtonImage(Uint8 stateScreen, signed int x, signed int y)
+bool ButtonImage::searchButtonImage
+(
+	Uint8 stateScreen,
+	signed int x,
+	signed int y
+)
 {
 	if (stateScreen == this->GETstateScreen())
 	{
@@ -838,7 +931,10 @@ bool ButtonImage::searchButtonImage(Uint8 stateScreen, signed int x, signed int 
  * OUTPUT PARAMETERS : Affiche le bouton
  * RETURNED VALUE    : bool : false = non affiché / true = affichage
  */
-bool ButtonImage::renderButtonImage(Uint8 stateScreen)
+bool ButtonImage::renderButtonImage
+(
+	Uint8 stateScreen
+)
 {
 	if (this->GETstateScreen() == stateScreen)
 	{
@@ -907,29 +1003,33 @@ void ButtonImage::changeOn()
  * INPUT  PARAMETERS : Uint8 : la taille du Texte
  * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
  * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
- * INPUT  PARAMETERS : Uint16 angle : enum Rotation_Type
+ * INPUT  PARAMETERS : Uint16 angle : enum Uint16
  * INPUT  PARAMETERS : Uint8 cnt : le type de centrage -> enum Center_Type
  * OUTPUT PARAMETERS : création et ajout d'un objet ButtonTexte
  * RETURNED VALUE    : void
  */
-void ButtonTexte::createButtonTexte(	SDL_Renderer*& renderer,
-										TTF_Font* font[],
-										Uint8 stateScreen,
-										Uint8 select,
-										std::unordered_map<std::string, ButtonTexte*>& tabButtonTexte,
-										Texte_Type type,
-										std::string msg,
-										SDL_Color color,
-										SDL_Color backcolor,
-										Uint8 size,
-										int x,
-										int y,
-										Transparance_Type alpha,
-										Rotation_Type angle,
-										Center_Type centerButtonTexte
-									)
+void ButtonTexte::createButtonTexte
+(	
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	Uint8 stateScreen,
+	Uint8 select,
+	std::unordered_map<std::string, ButtonTexte*>& tabButtonTexte,
+	Texte_Type type,
+	std::string msg,
+	SDL_Color color,
+	SDL_Color backcolor,
+	Uint8 size,
+	int x,
+	int y,
+	Transparance_Type alpha,
+	Uint16 angle,
+	Center_Type centerButtonTexte
+)
 {
 	int iW(0), iH(0);
+
+	assertRangeAngle(&angle);
 
 	SDL_Texture *image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
 	SDL_Texture *imageOn(createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]));
@@ -958,25 +1058,27 @@ void ButtonTexte::createButtonTexte(	SDL_Renderer*& renderer,
  ********************************************************* */
 
 
-ButtonTexte::ButtonTexte(	SDL_Renderer* renderer,
-							TTF_Font* font[],
-							SDL_Texture* image,
-							std::string msg,
-							Uint8 stateScreen,
-							Uint8 select,
-							int x,
-							int y,
-							int w,
-							int h,
-							Texte_Type type,
-							SDL_Color txtcolor,
-							SDL_Color backcolor,
-							Uint8 size,
-							Transparance_Type alpha,
-							Rotation_Type angle,
-							SDL_Texture* imageOn,
-							Center_Type center
-						)
+ButtonTexte::ButtonTexte
+(	
+	SDL_Renderer* renderer,
+	TTF_Font* font[],
+	SDL_Texture* image,
+	std::string msg,
+	Uint8 stateScreen,
+	Uint8 select,
+	int x,
+	int y,
+	int w,
+	int h,
+	Texte_Type type,
+	SDL_Color txtcolor,
+	SDL_Color backcolor,
+	Uint8 size,
+	Transparance_Type alpha,
+	Uint16 angle,
+	SDL_Texture* imageOn,
+	Center_Type center
+)
 	: Texte(renderer, font, image, msg, stateScreen, select, x, y, w, h, type, txtcolor, backcolor, size, alpha, angle, center),
 	_imageOn(imageOn), _on(false)
 {
@@ -999,7 +1101,12 @@ ButtonTexte::~ButtonTexte()
  * OUTPUT PARAMETERS : Validation ou non
  * RETURNED VALUE    : bool : false = non valide / true = valide
  */
-bool ButtonTexte::searchButtonTexte(Uint8 stateScreen, signed int x, signed int y)
+bool ButtonTexte::searchButtonTexte
+(
+	Uint8 stateScreen,
+	signed int x,
+	signed int y
+)
 {
 	if (stateScreen == this->GETstateScreen())
 	{
@@ -1024,7 +1131,11 @@ bool ButtonTexte::searchButtonTexte(Uint8 stateScreen, signed int x, signed int 
  * OUTPUT PARAMETERS : Reset l'état _on des boutons
  * RETURNED VALUE    : void
  */
-void ButtonTexte::resetOnstateScreen(Uint8 select, unsigned int selectnothing)
+void ButtonTexte::resetOnstateScreen
+(
+	Uint8 select,
+	unsigned int selectnothing
+)
 {
 	if (this->GETselect() != select && this->GETselect() != selectnothing)
 	{
@@ -1041,7 +1152,11 @@ void ButtonTexte::resetOnstateScreen(Uint8 select, unsigned int selectnothing)
  * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
  * RETURNED VALUE    : void
  */
-void ButtonTexte::resetOnPlayer(unsigned int selectplayer, std::vector<std::string> tabPlayerName)
+void ButtonTexte::resetOnPlayer
+(
+	unsigned int selectplayer,
+	std::vector<std::string> tabPlayerName
+)
 {
 	for (unsigned int i(0); i < tabPlayerName.size(); i++)
 	{
@@ -1062,11 +1177,13 @@ void ButtonTexte::resetOnPlayer(unsigned int selectplayer, std::vector<std::stri
  * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
  * RETURNED VALUE    : bool : false = non afficher / true = affichage
  */
-bool ButtonTexte::renderButtonTexte(	Uint8 stateScreen,
-										int x,
-										int y,
-										Center_Type center
-									)
+bool ButtonTexte::renderButtonTexte
+(
+	Uint8 stateScreen,
+	int x,
+	int y,
+	Center_Type center
+)
 {
 	if (this->GETstateScreen() == stateScreen)
 	{

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.10
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -769,7 +769,14 @@ void LoadConfig::calculImage(Sysinfo& sysinfo)
 
 	if (texteFile.ErrorID() == 0)
 	{
-		LoadConfig::readXmlTexte(texteFile, sysinfo.screen.renderer, sysinfo.allTextures.font, sysinfo.allTextes, sysinfo.screen.screenWidth, sysinfo.screen.screenHeight);
+		LoadConfig::readXmlTexte
+			(	texteFile,
+				sysinfo.screen.renderer,
+				sysinfo.allTextures.font,
+				sysinfo.allTextes,
+				sysinfo.screen.screenWidth,
+				sysinfo.screen.screenHeight
+			);
 	}
 	else
 	{
@@ -838,12 +845,14 @@ void LoadConfig::calculImage(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
 * RETURNED VALUE    : void
 */
-void LoadConfig::readXmlTexte(tinyxml2::XMLDocument& texteFile,
+void LoadConfig::readXmlTexte
+(	tinyxml2::XMLDocument& texteFile,
 	SDL_Renderer*& renderer,
 	TTF_Font* font[],
 	AllTextes& allTextes,
 	Uint16 screenWidth,
-	Uint16 screenHeight)
+	Uint16 screenHeight
+)
 {
 	const char* root("Config");
 
@@ -940,20 +949,23 @@ void LoadConfig::readXmlTexte(tinyxml2::XMLDocument& texteFile,
 
 		try
 		{
-			Texte::loadTexte(renderer, font,
-				xmlGiveStateType(node->FirstChildElement(s_Statescreen)->GetText()),
-				xmlGiveSelectType(node->FirstChildElement(s_Select)->GetText()),
-				xmlGiveTexteConteneur(allTextes, node->FirstChildElement(s_TexteName)->GetText()),
-				xmlGiveTexteType(node->FirstChildElement(s_Type)->GetText()),
-				node->FirstChildElement(s_Texte)->GetText(),
-				fontColor,
-				backColor,
-				(Uint8)size,
-				determineCoor(node->FirstChildElement(s_X)->GetText(), screenWidth, screenHeight),
-				determineCoor(node->FirstChildElement(s_Y)->GetText(), screenWidth, screenHeight),
-				xmlGiveAlpha(node->FirstChildElement(s_Alpha)->GetText()),
-				xmlGiveAngle(node->FirstChildElement(s_Angle)->GetText()),
-				xmlGiveCenter(node->FirstChildElement(s_Center)->GetText()));
+			Texte::loadTexte
+				(	renderer,
+					font,
+					xmlGiveStateType(node->FirstChildElement(s_Statescreen)->GetText()),
+					xmlGiveSelectType(node->FirstChildElement(s_Select)->GetText()),
+					xmlGiveTexteConteneur(allTextes, node->FirstChildElement(s_TexteName)->GetText()),
+					xmlGiveTexteType(node->FirstChildElement(s_Type)->GetText()),
+					node->FirstChildElement(s_Texte)->GetText(),
+					fontColor,
+					backColor,
+					(Uint8)size,
+					determineCoor(node->FirstChildElement(s_X)->GetText(), screenWidth, screenHeight),
+					determineCoor(node->FirstChildElement(s_Y)->GetText(), screenWidth, screenHeight),
+					xmlGiveAlpha(node->FirstChildElement(s_Alpha)->GetText()),
+					xmlGiveAngle(node->FirstChildElement(s_Angle)->GetText()),
+					xmlGiveCenter(node->FirstChildElement(s_Center)->GetText())
+				);
 		}
 		catch (const std::string & msg)
 		{
@@ -965,7 +977,7 @@ void LoadConfig::readXmlTexte(tinyxml2::XMLDocument& texteFile,
 	}
 }
 
-Uint8 LoadConfig::xmlGiveStateType(std::string type)
+State_Type LoadConfig::xmlGiveStateType(std::string type)
 {
 	if (type.compare("STATEnothing") == 0)
 	{
@@ -1001,7 +1013,7 @@ Uint8 LoadConfig::xmlGiveStateType(std::string type)
 	}
 }
 
-Uint8 LoadConfig::xmlGiveSelectType(std::string type)
+Select_Type LoadConfig::xmlGiveSelectType(std::string type)
 {
 	if (type.compare("selectnothing") == 0)
 	{
@@ -1033,7 +1045,8 @@ Uint8 LoadConfig::xmlGiveSelectType(std::string type)
 	}
 }
 
-std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur(AllTextes& allTextes, std::string type)
+std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur
+(AllTextes& allTextes, std::string type)
 {
 	if (type.compare("titleScreen") == 0)
 	{
@@ -1141,7 +1154,7 @@ Transparance_Type LoadConfig::xmlGiveAlpha(std::string type)
 	}
 }
 
-Rotation_Type LoadConfig::xmlGiveAngle(std::string type)
+Uint16 LoadConfig::xmlGiveAngle(std::string type)
 {
 	if (type.compare("no_angle") == 0)
 	{

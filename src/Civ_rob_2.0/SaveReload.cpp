@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.4
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -187,8 +187,7 @@ void SaveReload::loadPlayer(Sysinfo& sysinfo)
 
 	std::string		destroy(""),
 					name(""),
-					unitname(""),
-					inttostringtileSiz(std::to_string(sysinfo.map.tileSize));
+					unitname("");
 
 	unsigned int	nbplayer(0),
 					nbunit(0),
@@ -198,7 +197,6 @@ void SaveReload::loadPlayer(Sysinfo& sysinfo)
 	unsigned int var[7];
 
 	int initspacename(200), spacename(32);
-
 
 	std::ifstream savePlayer(sysinfo.file.SavePlayer);
 	if (savePlayer)

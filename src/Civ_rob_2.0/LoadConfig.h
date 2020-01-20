@@ -85,13 +85,13 @@ public:
 								Uint16 screenWidth,
 								Uint16 screenHeight);
 
-	static Uint8 xmlGiveStateType(std::string type);
-	static Uint8 xmlGiveSelectType(std::string type);
+	static State_Type xmlGiveStateType(std::string type);
+	static Select_Type xmlGiveSelectType(std::string type);
 	static std::unordered_map<std::string, Texte*>& xmlGiveTexteConteneur(AllTextes& allTextes, std::string type);
 	static Texte_Type xmlGiveTexteType(std::string type);
 	static SDL_Color xmlGiveColor(std::string type);
 	static Transparance_Type xmlGiveAlpha(std::string type);
-	static Rotation_Type xmlGiveAngle(std::string type);
+	static Uint16 xmlGiveAngle(std::string type);
 	static Center_Type xmlGiveCenter(std::string type);
 
 	static int determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight);

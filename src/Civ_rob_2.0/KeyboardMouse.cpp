@@ -1860,6 +1860,11 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 	{
 	case STATEmainmap:
 
+
+		/* *********************************************************
+		 *						STATEmainmap					   *
+		 ********************************************************* */
+
 		if (sysinfo.allButton.mainMap["screen Titre"]
 				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
@@ -1952,6 +1957,12 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		
 		break;
 	case STATEtitleScreen:
+
+
+		/* *********************************************************
+		 *						STATEtitleScreen				   *
+		 ********************************************************* */
+
 		if (sysinfo.allButton.titleScreen["New Game"]
 				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{
@@ -1978,6 +1989,12 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		}
 		break;
 	case STATEreload:
+
+
+		/* *********************************************************
+		 *						STATEreload						   *
+		 ********************************************************* */
+
 		if (sysinfo.allButton.reload["Back"]
 				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y)) 
 		{
@@ -2023,6 +2040,12 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 		}
 		break;
 	case STATEcitiemap:
+
+
+		/* *********************************************************
+		 *						STATEcitiemap					   *
+		 ********************************************************* */
+
 		if (sysinfo.allButton.citieMap["Map"]
 				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
 		{

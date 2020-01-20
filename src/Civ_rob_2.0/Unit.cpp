@@ -396,7 +396,7 @@ void Unit::defend(unsigned int dmg)
 * OUTPUT PARAMETERS : Application du mouvement à l'unité
 * RETURNED VALUE    : void
 */
-void Unit::move(Uint8& select, int& selectunit, int x, int y)
+void Unit::move(Select_Type& select, int& selectunit, int x, int y)
 {
 	if (_movement > 0)
 	{

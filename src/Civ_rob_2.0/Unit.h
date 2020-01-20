@@ -147,7 +147,7 @@ public:
 	* OUTPUT PARAMETERS : Application du mouvement à l'unité
 	* RETURNED VALUE    : void
 	*/
-	virtual void move(Uint8& select, int& selectunit, int x, int y);
+	virtual void move(Select_Type& select, int& selectunit, int x, int y);
 
 	/*
 	* NAME : heal
