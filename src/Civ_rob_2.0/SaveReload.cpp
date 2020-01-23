@@ -41,7 +41,10 @@
 * OUTPUT PARAMETERS : et map.screen dans SaveScreen.txt
 * RETURNED VALUE    : void
 */
-void SaveReload::saveMaps(Sysinfo& sysinfo)
+void SaveReload::saveMaps
+(
+	Sysinfo& sysinfo
+)
 {
 	std::ofstream saveMaps(sysinfo.file.SaveMaps);
 	if (saveMaps)
@@ -69,7 +72,10 @@ void SaveReload::saveMaps(Sysinfo& sysinfo)
 		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
 }
 
-void SaveReload::loadMaps(Sysinfo& sysinfo)
+void SaveReload::loadMaps
+(
+	Sysinfo& sysinfo
+)
 {
 	std::string input("");
 
@@ -129,7 +135,10 @@ void SaveReload::loadMaps(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt
 * RETURNED VALUE    : void
 */
-void SaveReload::savePlayer(Sysinfo& sysinfo)
+void SaveReload::savePlayer
+(
+	Sysinfo& sysinfo
+)
 {
 	std::ofstream savePlayer(sysinfo.file.SavePlayer);
 	if (savePlayer)
@@ -181,7 +190,10 @@ void SaveReload::savePlayer(Sysinfo& sysinfo)
 }
 
 
-void SaveReload::loadPlayer(Sysinfo& sysinfo)
+void SaveReload::loadPlayer
+(
+	Sysinfo& sysinfo
+)
 {
 	sysinfo.var.statescreen = STATEmainmap;
 
@@ -283,7 +295,10 @@ void SaveReload::loadPlayer(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Chargement de la partie
 * RETURNED VALUE    : void
 */
-void SaveReload::reload(Sysinfo& sysinfo)
+void SaveReload::reload
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: Reload Start");
 
@@ -301,7 +316,10 @@ void SaveReload::reload(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Création d'un emplacement de fichier de sauvegarde
 * RETURNED VALUE    : void
 */
-void SaveReload::createSave(Sysinfo& sysinfo)
+void SaveReload::createSave
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: createSave Start");
 	std::string destroy;
@@ -359,7 +377,10 @@ void SaveReload::createSave(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Supprime une sauvegarde
 * RETURNED VALUE    : void
 */
-void SaveReload::removeSave(Sysinfo& sysinfo)
+void SaveReload::removeSave
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: removeSave Start");
 	std::string file;
@@ -447,7 +468,10 @@ void SaveReload::removeSave(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Supprime toutes les sauvegardes du dossier
 * RETURNED VALUE    : void
 */
-void SaveReload::clearSave(Sysinfo& sysinfo)
+void SaveReload::clearSave
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: clearSave Start");
 

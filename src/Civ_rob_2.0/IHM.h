@@ -45,12 +45,21 @@ public:
 	* OUTPUT PARAMETERS : Ouverture de la fenetre "titleScreen"
 	* RETURNED VALUE    : void
 	*/
-	static void titleScreen(Sysinfo&);
+	static void titleScreen
+	(
+		Sysinfo&
+	);
 
 
-	static void refreshNbPlayerTxt(Sysinfo& sysinfo);
+	static void refreshNbPlayerTxt
+	(
+		Sysinfo& sysinfo
+	);
 
-	static void refreshNamePlayerTxt(Sysinfo& sysinfo);
+	static void refreshNamePlayerTxt
+	(
+		Sysinfo& sysinfo
+	);
 
 
 	/*
@@ -61,7 +70,10 @@ public:
 	 * OUTPUT PARAMETERS : Ouverture de la fenetre "reloadScreen"
 	 * RETURNED VALUE    : void
 	 */
-	static void reloadScreen(Sysinfo& sysinfo);
+	static void reloadScreen
+	(
+		Sysinfo& sysinfo
+	);
 
 	/*
 	 * NAME : alwaysrender
@@ -72,10 +84,16 @@ public:
 	 * OUTPUT PARAMETERS : Ouverture de la fenetre "STATEmainmap" ou "STATEcitiemap"
 	 * RETURNED VALUE    : void
 	 */
-	static void alwaysrender(Sysinfo&);
+	static void alwaysrender
+	(
+		Sysinfo&
+	);
 
 
-	static void mainmap(Sysinfo& sysinfo);
+	static void mainmap
+	(
+		Sysinfo& sysinfo
+	);
 
 	/*
 	 * NAME : afficherSupertiles
@@ -84,7 +102,10 @@ public:
 	 * OUTPUT PARAMETERS : Affichage de la map sur la fenetre "mainMap"
 	 * RETURNED VALUE    : void
 	 */
-	static void afficherSupertiles(Sysinfo&);
+	static void afficherSupertiles
+	(
+		Sysinfo&
+	);
 
 	/*
 	 * NAME : citiemap
@@ -94,7 +115,10 @@ public:
 	 * OUTPUT PARAMETERS :  Affichage de la map sur la fenetre "citieMap"
 	 * RETURNED VALUE    : void
 	 */
-	static void citiemap(Sysinfo&);
+	static void citiemap
+	(
+		Sysinfo&
+	);
 
 	/*
 	 * NAME : countFrame
@@ -104,7 +128,10 @@ public:
 	 * OUTPUT PARAMETERS : Incrémentation du nombre de frames comptées
 	 * RETURNED VALUE    : void
 	 */
-	static void countFrame(Screen& screen);
+	static void countFrame
+	(
+		Screen& screen
+	);
 };
 
 #endif

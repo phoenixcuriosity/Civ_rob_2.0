@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.8
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,7 +40,10 @@
 * OUTPUT PARAMETERS : Noms des joueurs, groundGen, positions des settlers
 * RETURNED VALUE    : void
 */
-void GamePlay::newGame(Sysinfo& sysinfo)
+void GamePlay::newGame
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: Newgame Start");
 	sysinfo.var.statescreen = STATEscreennewgame;
@@ -111,8 +114,13 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 	 *					Map Generation						   *
 	 ********************************************************* */
 	
-	groundGen(sysinfo);
-	newGameSettlerSpawn(sysinfo);
+	groundGen(sysinfo.map, sysinfo.screen.screenWidth);
+	newGameSettlerSpawn
+		(
+			sysinfo.var.s_player.tabUnit_Struct,
+			sysinfo.map,
+			sysinfo.tabplayer
+		);
 
 	/* *********************************************************
 	 *							Save						   *
@@ -161,23 +169,28 @@ void GamePlay::newGame(Sysinfo& sysinfo)
 /*
 * NAME : groundGen
 * ROLE : Génération du sol et des spec de la map
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : Map& map : structure de la MAP
+* INPUT  PARAMETERS : Uint16 screenWidth : taille en de l'écran en pixel (axe x)
 * OUTPUT PARAMETERS : Génération du sol et des spec de la map
 * RETURNED VALUE    : void
 */
-void GamePlay::groundGen(Sysinfo& sysinfo)
+void GamePlay::groundGen
+(
+	Map& map,
+	Uint16 screenWidth
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: Groundgen Start");
 	
-	for (Uint8 i(0); i < sysinfo.map.mapSize / sysinfo.map.tileSize; i++)
+	for (Uint8 i(0); i < map.mapSize / map.tileSize; i++)
 	{
-		for (Uint8 j(0); j < sysinfo.map.mapSize / sysinfo.map.tileSize; j++)
+		for (Uint8 j(0); j < map.mapSize / map.tileSize; j++)
 		{
 			
-			sysinfo.map.maps[i][j].indexX = i + (Uint8)((sysinfo.screen.screenWidth / 10) / sysinfo.map.tileSize);
-			sysinfo.map.maps[i][j].indexY = j;
-			sysinfo.map.maps[i][j].tile_x = sysinfo.map.tileSize * i + (sysinfo.screen.screenWidth / 10);
-			sysinfo.map.maps[i][j].tile_y = sysinfo.map.tileSize * j;
+			map.maps[i][j].indexX = i + (Uint8)((screenWidth / 10) / map.tileSize);
+			map.maps[i][j].indexY = j;
+			map.maps[i][j].tile_x = map.tileSize * i + (screenWidth / 10);
+			map.maps[i][j].tile_y = map.tileSize * j;
 			
 
 			/* *********************************************************
@@ -185,29 +198,31 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			 ********************************************************* */
 
 			if (   (i == MAP_BORDER_ZERO)
-				|| (i == (sysinfo.map.mapSize / sysinfo.map.tileSize) - (MAP_BORDER_ZERO + 1))
+				|| (i == (map.mapSize / map.tileSize) - (MAP_BORDER_ZERO + 1))
 				|| (j == MAP_BORDER_ZERO)
-				|| (j == (sysinfo.map.mapSize / sysinfo.map.tileSize) - (MAP_BORDER_ZERO + 1))
+				|| (j == (map.mapSize / map.tileSize) - (MAP_BORDER_ZERO + 1))
 				)
 			{
 				tileAffectation
-				(sysinfo.map.maps[i][j],
+				(
+					map.maps[i][j],
 					deepwater,
 					(std::string)"deepwater.bmp",
 					specnothing,
 					(std::string)"specnothing",
 					0,
 					0,
-					0);
+					0
+				);
 			}
 					
 			/* *********************************************************
 			 *	  bord de la map (MAP_BORDER_MIN to MAP_BORDER_MAX)    *
 			 ********************************************************* */
 
-			else if (mapBordersConditions(sysinfo.map, i, j))
+			else if (mapBordersConditions(map, i, j))
 			{
-				mapBorders(sysinfo.map.maps[i][j]);
+				mapBorders(map.maps[i][j]);
 			}
 
 			/* *********************************************************
@@ -215,7 +230,7 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 			 ********************************************************* */
 			else
 			{
-				mapIntern(sysinfo.map.maps, i, j);
+				mapIntern(map.maps, i, j);
 			}
 		}
 	}
@@ -232,7 +247,12 @@ void GamePlay::groundGen(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Validations des conditions ou non
 * RETURNED VALUE    : bool : valid = true / not valid = false
 */
-bool GamePlay::mapBordersConditions(Map& map, unsigned int i, unsigned int j)
+bool GamePlay::mapBordersConditions
+(
+	Map& map,
+	unsigned int i,
+	unsigned int j
+)
 {
 	for (unsigned int index(MAP_BORDER_MIN); index < MAP_BORDER_MAX; index++)
 	{
@@ -258,7 +278,10 @@ bool GamePlay::mapBordersConditions(Map& map, unsigned int i, unsigned int j)
 * OUTPUT PARAMETERS : Affectation des caractéristiques
 * RETURNED VALUE    : void
 */
-void GamePlay::mapBorders(Tile& tile)
+void GamePlay::mapBorders
+(
+	Tile& tile
+)
 {
 	unsigned int randomspecwaterborder
 	((rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER) + MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER);
@@ -314,7 +337,12 @@ void GamePlay::mapBorders(Tile& tile)
 * OUTPUT PARAMETERS : Affectation des caractéristiques
 * RETURNED VALUE    : void
 */
-void GamePlay::mapIntern(std::vector<std::vector<Tile>>& maps, unsigned int i, unsigned int j)
+void GamePlay::mapIntern
+(
+	std::vector<std::vector<Tile>>& maps,
+	unsigned int i,
+	unsigned int j
+)
 {
 	unsigned int	randomground(0),
 					randomspecgrass(0),
@@ -559,14 +587,17 @@ void GamePlay::mapIntern(std::vector<std::vector<Tile>>& maps, unsigned int i, u
 * OUTPUT PARAMETERS : Affectation
 * RETURNED VALUE    : void
 */
-void GamePlay::tileAffectation(	Tile& tile,
-								Uint8 tile_ground, 
-								std::string tile_stringground,
-								Uint8 tile_spec,
-								std::string tile_stringspec,
-								int8_t food,
-								int8_t work,
-								int8_t gold)
+void GamePlay::tileAffectation
+(	
+	Tile& tile,
+	Uint8 tile_ground, 
+	std::string tile_stringground,
+	Uint8 tile_spec,
+	std::string tile_stringspec,
+	int8_t food,
+	int8_t work,
+	int8_t gold
+)
 {
 	tile.tile_ground = tile_ground;
 	tile.tile_stringground = tile_stringground;
@@ -580,19 +611,26 @@ void GamePlay::tileAffectation(	Tile& tile,
 /*
 * NAME : newGameSettlerSpawn
 * ROLE : Création des position pour les settlers de chaque joueurs
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::vector<Unit_Struct>& : tableau des statistiques par défauts des unités
+* INPUT  PARAMETERS : struct Map& map : structure globale de la map
+* INPUT  PARAMETERS : std::vector<Player*>& : vecteurs de joueurs
 * OUTPUT PARAMETERS : position pour les settlers de chaque joueurs
 * RETURNED VALUE    : void
 */
-void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
+void GamePlay::newGameSettlerSpawn
+(
+	std::vector<Unit_Struct>& tabUnit_Struct,
+	Map& map,
+	std::vector<Player*>& tabplayer
+)
 {
 	/*
 		association des vecteurs de position (x,y) avec les settlers de départ
 	*/
 	unsigned int selectunit(0);
-	for (unsigned int p(0); p < sysinfo.var.s_player.tabUnit_Struct.size(); p++)
+	for (unsigned int p(0); p < tabUnit_Struct.size(); p++)
 	{
-		if (sysinfo.var.s_player.tabUnit_Struct[p].name.compare("settler") == 0)
+		if (tabUnit_Struct[p].name.compare("settler") == 0)
 		{
 			selectunit = p;
 			break;
@@ -604,41 +642,45 @@ void GamePlay::newGameSettlerSpawn(Sysinfo& sysinfo)
 	}
 
 	std::vector<randomPos> tabRandom;
-	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
+	for (unsigned int i(0); i < tabplayer.size(); i++)
 	{
 		try
 		{
-			makeRandomPosTab(sysinfo, tabRandom);
+			makeRandomPosTab(map, tabRandom);
 		}
 		catch (const std::string& msg)
 		{
 			randomPos RandomPOS;
-			makeRandomPos(RandomPOS, sysinfo.map.maps, sysinfo.map.toolBarSize, sysinfo.map.tileSize);
+			makeRandomPos(RandomPOS, map.maps, map.toolBarSize, map.tileSize);
 			tabRandom.push_back(RandomPOS);
 			LoadConfig::logfileconsole(msg);
 			throw("[ERROR]___: [Catch]___: makeRandomPosTab, Too many Iterations : No Critical Error -> Continue");
 		}
-		sysinfo.tabplayer[i]->addUnit
+		tabplayer[i]->addUnit
 		(	"settler",
 			tabRandom[i].x,
 			tabRandom[i].y,
-			sysinfo.var.s_player.tabUnit_Struct[selectunit].life,
-			sysinfo.var.s_player.tabUnit_Struct[selectunit].atq,
-			sysinfo.var.s_player.tabUnit_Struct[selectunit].def,
-			sysinfo.var.s_player.tabUnit_Struct[selectunit].movement,
-			sysinfo.var.s_player.tabUnit_Struct[selectunit].level);
+			tabUnit_Struct[selectunit].life,
+			tabUnit_Struct[selectunit].atq,
+			tabUnit_Struct[selectunit].def,
+			tabUnit_Struct[selectunit].movement,
+			tabUnit_Struct[selectunit].level);
 	}
 }
 
 /*
 * NAME : makeRandomPosTab
 * ROLE : Créér autant de vecteur de position (x,y) que de joueur initial
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : Map& map : structure globale de la map
 * INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
 * OUTPUT PARAMETERS : std::vector<randomPos>& : vecteurs de positions
 * RETURNED VALUE    : void
 */
-void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom)
+void GamePlay::makeRandomPosTab
+(
+	Map& map,
+	std::vector<randomPos>& tabRandom
+)
 {
 	/*
 		créér autant de vecteur de position (x,y) que de joueur initial
@@ -660,15 +702,15 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 			/* N/A */
 		}
 
-		makeRandomPos(RandomPOS, sysinfo.map.maps, sysinfo.map.toolBarSize, sysinfo.map.tileSize);
-		if (conditionground(sysinfo, RandomPOS))
+		makeRandomPos(RandomPOS, map.maps, map.toolBarSize, map.tileSize);
+		if (conditionground(map.maps, RandomPOS))
 		{
 			if (tabRandom.size() > 1)
 			{
 				nbConditionCheck = 0;
 				for (unsigned int i = 0; i < tabRandom.size(); i++)
 				{
-					if (conditionspace(RandomPOS, tabRandom, sysinfo.map.tileSize, i))
+					if (conditionspace(RandomPOS, tabRandom, map.tileSize, i))
 					{
 						nbConditionCheck++;
 						if (nbConditionCheck == tabRandom.size())
@@ -707,10 +749,13 @@ void GamePlay::makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRan
 * OUTPUT PARAMETERS : un vecteur de position
 * RETURNED VALUE    : void
 */
-void GamePlay::makeRandomPos(	randomPos& RandomPOS,
-								std::vector<std::vector<Tile>> maps,
-								unsigned int toolBarSize,
-								unsigned int tileSize)
+void GamePlay::makeRandomPos
+(	
+	randomPos& RandomPOS,
+	std::vector<std::vector<Tile>> maps,
+	unsigned int toolBarSize,
+	unsigned int tileSize
+)
 {
 	/*
 		créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
@@ -732,10 +777,13 @@ void GamePlay::makeRandomPos(	randomPos& RandomPOS,
 * OUTPUT PARAMETERS : validation des positions
 * RETURNED VALUE    : true -> condition de position validée / false -> non valide
 */
-bool GamePlay::conditionspace(	randomPos& RandomPOS,
-								std::vector<randomPos>& tabRandom,
-								unsigned int tileSize,
-								unsigned int i)
+bool GamePlay::conditionspace
+(	
+	randomPos& RandomPOS,
+	std::vector<randomPos>& tabRandom,
+	unsigned int tileSize,
+	unsigned int i
+)
 {
 	/*
 		condition pour valider les coordonnées crées:
@@ -756,24 +804,28 @@ bool GamePlay::conditionspace(	randomPos& RandomPOS,
 * NAME : conditionground
 * ROLE : condition pour valider les coordonnées crées:
 * ROLE : - etre sur une tile possédant la caractéristique d'etre du sol
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la map
 * INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
 * OUTPUT PARAMETERS : validation des positions
 * RETURNED VALUE    : true -> condition de position validée / false -> non valide
 */
-bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
+bool GamePlay::conditionground
+(
+	std::vector<std::vector<Tile>>& maps,
+	randomPos& RandomPOS
+)
 {
 	/*
 		condition pour valider les coordonnées crées:
 			- etre sur une tile possédant la caractéristique d'etre du sol
 	*/
-	for (unsigned int i(0); i < sysinfo.map.maps.size(); i++) 
+	for (unsigned int i(0); i < maps.size(); i++) 
 	{
-		for (unsigned int j(0); j < sysinfo.map.maps[i].size(); j++) 
+		for (unsigned int j(0); j < maps[i].size(); j++) 
 		{
-			if (sysinfo.map.maps[i][j].tile_x == RandomPOS.x && sysinfo.map.maps[i][j].tile_y == RandomPOS.y) 
+			if (maps[i][j].tile_x == RandomPOS.x && maps[i][j].tile_y == RandomPOS.y) 
 			{
-				if (sysinfo.map.maps[i][j].tile_ground == grass)
+				if (maps[i][j].tile_ground == grass)
 					return true;
 				return false;
 			}
@@ -805,7 +857,10 @@ bool GamePlay::conditionground(Sysinfo& sysinfo, randomPos& RandomPOS)
 * OUTPUT PARAMETERS : passage à un nouveau tour 
 * RETURNED VALUE    : void
 */
-void GamePlay::nextTurn(Sysinfo& sysinfo)
+void GamePlay::nextTurn
+(
+	Sysinfo& sysinfo
+)
 {
 	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++) 
 	{

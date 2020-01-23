@@ -548,7 +548,7 @@ void KeyboardMouse::keySDLK_F5(Sysinfo& sysinfo)
 		/* N/A */
 		break;
 	case cinMainMap:
-		GamePlay::groundGen(sysinfo);
+		GamePlay::groundGen(sysinfo.map, sysinfo.screen.screenWidth);
 		break;
 	default:
 		/* N/A */
@@ -577,7 +577,12 @@ void KeyboardMouse::keySDLK_F6(Sysinfo& sysinfo)
 		{
 			sysinfo.tabplayer.push_back(new Player("NoName" + std::to_string(i)));
 		}
-		GamePlay::newGameSettlerSpawn(sysinfo);
+		GamePlay::newGameSettlerSpawn
+		(
+			sysinfo.var.s_player.tabUnit_Struct,
+			sysinfo.map,
+			sysinfo.tabplayer
+		);
 		break;
 	default:
 		/* N/A */
@@ -1524,10 +1529,22 @@ void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (	sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&&	sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
+		if (
+				   sysinfo.var.statescreen == STATEmainmap
+				&& sysinfo.var.select == selectmove
+				&& sysinfo.var.s_player.selectplayer != -1
+				&& sysinfo.var.s_player.selectunit != -1
+			)
 		{
-			Unit::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), sysinfo.map.tileSize);
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				-(int)(sysinfo.map.tileSize),
+				sysinfo.map.tileSize
+			);
 		}
 			
 		break;
@@ -1555,11 +1572,23 @@ void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
 		IHM::refreshNamePlayerTxt(sysinfo);
 		break;
 	case cinMainMap:
-
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-			Unit::tryToMove(sysinfo, 0, sysinfo.map.tileSize);
-
+		if (
+				   sysinfo.var.statescreen == STATEmainmap
+				&& sysinfo.var.select == selectmove
+				&& sysinfo.var.s_player.selectplayer != -1
+				&& sysinfo.var.s_player.selectunit != -1
+			)
+		{
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				0,
+				sysinfo.map.tileSize
+			);
+		}
 		break;
 	default:
 		/* N/A */
@@ -1586,9 +1615,23 @@ void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-			Unit::tryToMove(sysinfo, sysinfo.map.tileSize, sysinfo.map.tileSize);
+		if (
+			sysinfo.var.statescreen == STATEmainmap
+			&& sysinfo.var.select == selectmove
+			&& sysinfo.var.s_player.selectplayer != -1
+			&& sysinfo.var.s_player.selectunit != -1
+			)
+		{
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				sysinfo.map.tileSize,
+				sysinfo.map.tileSize
+			);
+		}
 
 		break;
 	default:
@@ -1616,9 +1659,23 @@ void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-			Unit::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), 0);
+		if (
+			sysinfo.var.statescreen == STATEmainmap
+			&& sysinfo.var.select == selectmove
+			&& sysinfo.var.s_player.selectplayer != -1
+			&& sysinfo.var.s_player.selectunit != -1
+			)
+		{
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				-(int)sysinfo.map.tileSize,
+				0
+			);
+		}
 
 		break;
 	default:
@@ -1672,9 +1729,23 @@ void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-			Unit::tryToMove(sysinfo, sysinfo.map.tileSize, 0);
+		if (
+			sysinfo.var.statescreen == STATEmainmap
+			&& sysinfo.var.select == selectmove
+			&& sysinfo.var.s_player.selectplayer != -1
+			&& sysinfo.var.s_player.selectunit != -1
+			)
+		{
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				sysinfo.map.tileSize,
+				0
+			);
+		}
 
 		break;
 	default:
@@ -1702,9 +1773,23 @@ void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-			Unit::tryToMove(sysinfo, -(int)(sysinfo.map.tileSize), -(int)(sysinfo.map.tileSize));
+		if (
+			sysinfo.var.statescreen == STATEmainmap
+			&& sysinfo.var.select == selectmove
+			&& sysinfo.var.s_player.selectplayer != -1
+			&& sysinfo.var.s_player.selectunit != -1
+			)
+		{
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				-(int)sysinfo.map.tileSize,
+				-(int)sysinfo.map.tileSize
+			);
+		}
 
 		break;
 	default:
@@ -1732,9 +1817,24 @@ void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-			Unit::tryToMove(sysinfo, 0, -(int)(sysinfo.map.tileSize));
+		if (
+			sysinfo.var.statescreen == STATEmainmap
+			&& sysinfo.var.select == selectmove
+			&& sysinfo.var.s_player.selectplayer != -1
+			&& sysinfo.var.s_player.selectunit != -1
+			)
+		{
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				0,
+				-(int)sysinfo.map.tileSize
+			);
+		}
+
 
 		break;
 	default:
@@ -1762,9 +1862,24 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
-			Unit::tryToMove(sysinfo, sysinfo.map.tileSize, -(int)(sysinfo.map.tileSize));
+		if (
+			sysinfo.var.statescreen == STATEmainmap
+			&& sysinfo.var.select == selectmove
+			&& sysinfo.var.s_player.selectplayer != -1
+			&& sysinfo.var.s_player.selectunit != -1
+			)
+		{
+			Unit::tryToMove
+			(
+				sysinfo.map.maps,
+				sysinfo.var.s_player,
+				sysinfo.tabplayer,
+				sysinfo.var.select,
+				sysinfo.map.tileSize,
+				-(int)sysinfo.map.tileSize
+			);
+		}
+
 
 		break;
 	default:
@@ -1850,7 +1965,7 @@ void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event)
 				sysinfo.var.mouse.SETmouse_y(
 					((unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize)
 					+ (sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize));
-				City::searchCityTile(sysinfo);
+				City::searchCityTile(sysinfo.tabplayer, sysinfo.var);
 			}
 		}
 	}
@@ -2143,14 +2258,26 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 			case selectmove:
 				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0)
 				{
-					Unit::searchUnitTile(sysinfo);
+					Unit::searchUnitTile
+					(
+						sysinfo.var.s_player,
+						sysinfo.var.mouse,
+						sysinfo.map,
+						sysinfo.tabplayer
+					);
 					LoadConfig::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
 			case selectinspect:
 				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0) 
 				{
-					Unit::searchUnitTile(sysinfo);
+					Unit::searchUnitTile
+					(
+						sysinfo.var.s_player,
+						sysinfo.var.mouse,
+						sysinfo.map,
+						sysinfo.tabplayer
+					);
 					LoadConfig::logfileconsole("Unit select to Inspect n:" + std::to_string(sysinfo.var.s_player.selectunit));
 				}
 				break;
@@ -2182,7 +2309,7 @@ void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.tabUnit_Struct.size() - 1)
 				sysinfo.var.s_player.unitToCreate++;
 		}
-		Unit::searchUnit(sysinfo);
+		Unit::searchUnit(sysinfo.var.s_player);
 	}
 	/*
 	else if (sysinfo.var.statescreen == STATEreload)

@@ -42,7 +42,10 @@
  * OUTPUT PARAMETERS : Ouverture de la fenetre "titleScreen"
  * RETURNED VALUE    : void
  */
-void IHM::titleScreen(Sysinfo& sysinfo)
+void IHM::titleScreen
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: [START] : titleScreen");
 
@@ -76,7 +79,10 @@ void IHM::titleScreen(Sysinfo& sysinfo)
 }
 
 
-void IHM::refreshNbPlayerTxt(Sysinfo& sysinfo)
+void IHM::refreshNbPlayerTxt
+(
+	Sysinfo& sysinfo
+)
 {
 	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		shaded, "Number of player(s)" + std::to_string(sysinfo.var.nbPlayer),
@@ -86,7 +92,10 @@ void IHM::refreshNbPlayerTxt(Sysinfo& sysinfo)
 }
 
 
-void IHM::refreshNamePlayerTxt(Sysinfo& sysinfo)
+void IHM::refreshNamePlayerTxt
+(
+	Sysinfo& sysinfo
+)
 {
 	if (sysinfo.var.tempPlayerName.size() > 0)
 	{
@@ -112,7 +121,10 @@ void IHM::refreshNamePlayerTxt(Sysinfo& sysinfo)
  * OUTPUT PARAMETERS : Ouverture de la fenetre "reloadScreen"
  * RETURNED VALUE    : void
  */
-void IHM::reloadScreen(Sysinfo& sysinfo)
+void IHM::reloadScreen
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: [START] : reloadScreen");
 	sysinfo.var.statescreen = STATEreload;
@@ -139,7 +151,10 @@ void IHM::reloadScreen(Sysinfo& sysinfo)
  * OUTPUT PARAMETERS : Ouverture de la fenetre "STATEmainmap" ou "STATEcitiemap"
  * RETURNED VALUE    : void
  */
-void IHM::alwaysrender(Sysinfo& sysinfo)
+void IHM::alwaysrender
+(
+	Sysinfo& sysinfo
+)
 {
 	/*
 	auto start = std::chrono::system_clock::now();
@@ -225,7 +240,10 @@ void IHM::alwaysrender(Sysinfo& sysinfo)
 	*/
 }
 
-void IHM::mainmap(Sysinfo& sysinfo)
+void IHM::mainmap
+(
+	Sysinfo& sysinfo
+)
 {
 	SDL_RenderClear(sysinfo.screen.renderer);
 
@@ -328,7 +346,13 @@ void IHM::mainmap(Sysinfo& sysinfo)
 		if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-				->GETtheUnit(sysinfo.var.s_player.selectunit)->afficherstat(sysinfo);
+				->GETtheUnit(sysinfo.var.s_player.selectunit)
+					->afficherstat
+						(
+							sysinfo.allTextures.font,
+							sysinfo.screen.renderer,
+							sysinfo.map.tileSize
+						);
 		}
 		else
 		{
@@ -356,7 +380,14 @@ void IHM::mainmap(Sysinfo& sysinfo)
 				for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 				{
 					// affiche pour chaque joueurs les unités existantes (avec les stats)
-					sysinfo.tabplayer[i]->GETtheUnit(j)->afficher(sysinfo, i);
+					sysinfo.tabplayer[i]
+						->GETtheUnit(j)
+							->afficher
+								(
+									sysinfo.allTextures,
+									sysinfo.map,
+									i
+								);
 				}
 			}
 			else
@@ -398,7 +429,10 @@ void IHM::mainmap(Sysinfo& sysinfo)
  * OUTPUT PARAMETERS : Affichage de la map sur la fenetre "mainMap"
  * RETURNED VALUE    : void
  */
-void IHM::afficherSupertiles(Sysinfo& sysinfo)
+void IHM::afficherSupertiles
+(
+	Sysinfo& sysinfo
+)
 {
 	//clock_t t1, t2;
 	//t1 = clock();
@@ -464,7 +498,10 @@ void IHM::afficherSupertiles(Sysinfo& sysinfo)
  * OUTPUT PARAMETERS :  Affichage de la map sur la fenetre "citieMap"
  * RETURNED VALUE    : void
  */
-void IHM::citiemap(Sysinfo& sysinfo)
+void IHM::citiemap
+(
+	Sysinfo& sysinfo
+)
 {
 	SDL_RenderClear(sysinfo.screen.renderer);
 	
@@ -546,7 +583,10 @@ void IHM::citiemap(Sysinfo& sysinfo)
  * OUTPUT PARAMETERS : Incrémentation du nombre de frames comptées
  * RETURNED VALUE    : void
  */
-void IHM::countFrame(Screen& screen)
+void IHM::countFrame
+(
+	Screen& screen
+)
 {
 	if (screen.enableFPS)
 	{

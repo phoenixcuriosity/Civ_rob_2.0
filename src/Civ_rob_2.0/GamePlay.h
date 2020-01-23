@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.18
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -68,16 +68,24 @@ public:
 	* OUTPUT PARAMETERS : Noms des joueurs, groundGen, positions des settlers
 	* RETURNED VALUE    : void
 	*/
-	static void newGame(Sysinfo&);
+	static void newGame
+	(
+		Sysinfo&
+	);
 
 	/*
 	* NAME : groundGen
 	* ROLE : Génération du sol et des spec de la map
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* INPUT  PARAMETERS : Map& map : structure de la MAP
+	* INPUT  PARAMETERS : Uint16 screenWidth : taille en de l'écran en pixel (axe x)
 	* OUTPUT PARAMETERS : Génération du sol et des spec de la map
 	* RETURNED VALUE    : void
 	*/
-	static void groundGen(Sysinfo&);
+	static void groundGen
+	(
+		Map& map,
+		Uint16 screenWidth
+	);
 
 	/*
 	* NAME : mapBordersConditions
@@ -89,7 +97,12 @@ public:
 	* OUTPUT PARAMETERS : Validations des conditions ou non
 	* RETURNED VALUE    : bool : valid = true / not valid = false
 	*/
-	static bool mapBordersConditions(Map& map, unsigned int i, unsigned int j);
+	static bool mapBordersConditions
+	(
+		Map& map,
+		unsigned int i,
+		unsigned int j
+	);
 
 	/*
 	* NAME : mapBordersConditions
@@ -100,7 +113,10 @@ public:
 	* OUTPUT PARAMETERS : Affectation des caractéristiques
 	* RETURNED VALUE    : void
 	*/
-	static void mapBorders(Tile& tile);
+	static void mapBorders
+	(
+		Tile& tile
+	);
 
 	/*
 	* NAME : mapIntern
@@ -114,7 +130,12 @@ public:
 	* OUTPUT PARAMETERS : Affectation des caractéristiques
 	* RETURNED VALUE    : void
 	*/
-	static void mapIntern(std::vector<std::vector<Tile>>& maps, unsigned int i, unsigned int j);
+	static void mapIntern
+	(
+		std::vector<std::vector<Tile>>& maps,
+		unsigned int i,
+		unsigned int j
+	);
 
 	/*
 	* NAME : tileAffectation
@@ -126,26 +147,47 @@ public:
 	* OUTPUT PARAMETERS : Affectation
 	* RETURNED VALUE    : void
 	*/
-	static void tileAffectation(Tile& tile, Uint8 tile_ground, std::string tile_stringground, Uint8 tile_spec, std::string tile_stringspec, int8_t food, int8_t work, int8_t gold);
+	static void tileAffectation
+	(
+		Tile& tile,
+		Uint8 tile_ground,
+		std::string tile_stringground,
+		Uint8 tile_spec,
+		std::string tile_stringspec,
+		int8_t food,
+		int8_t work,
+		int8_t gold
+	);
 	
 	/*
 	* NAME : newGameSettlerSpawn
 	* ROLE : Création des position pour les settlers de chaque joueurs
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* INPUT  PARAMETERS : std::vector<Unit_Struct>& : tableau des statistiques par défauts des unités
+	* INPUT  PARAMETERS : struct Map& map : structure globale de la map
+	* INPUT  PARAMETERS : std::vector<Player*>& : vecteurs de joueurs
 	* OUTPUT PARAMETERS : position pour les settlers de chaque joueurs
 	* RETURNED VALUE    : void
 	*/
-	static void newGameSettlerSpawn(Sysinfo&);
+	static void newGameSettlerSpawn
+	(
+		std::vector<Unit_Struct>& tabUnit_Struct,
+		Map& map,
+		std::vector<Player*>& tabplayer
+	);
 	
 	/*
 	* NAME : makeRandomPosTab
 	* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* INPUT  PARAMETERS : Map& map : structure globale de la map
 	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
 	* OUTPUT PARAMETERS : std::vector<randomPos>& : vecteurs de positions
 	* RETURNED VALUE    : void
 	*/
-	static void makeRandomPosTab(Sysinfo& sysinfo, std::vector<randomPos>& tabRandom);
+	static void makeRandomPosTab
+	(
+		Map& map,
+		std::vector<randomPos>& tabRandom
+	);
 	
 	/*
 	* NAME : makeRandomPos
@@ -156,7 +198,13 @@ public:
 	* OUTPUT PARAMETERS : un vecteur de position
 	* RETURNED VALUE    : void
 	*/
-	static void makeRandomPos(randomPos& RandomPOS, std::vector<std::vector<Tile>> maps, unsigned int toolBarSize, unsigned int tileSize);
+	static void makeRandomPos
+	(
+		randomPos& RandomPOS,
+		std::vector<std::vector<Tile>> maps,
+		unsigned int toolBarSize,
+		unsigned int tileSize
+	);
 	
 	/*
 	* NAME : conditionspace
@@ -169,18 +217,28 @@ public:
 	* OUTPUT PARAMETERS : validation des positions
 	* RETURNED VALUE    : true -> condition de position validée / false -> non valide
 	*/
-	static bool conditionspace(randomPos& RandomPOS, std::vector<randomPos>& tabRandom, unsigned int tileSize, unsigned int i);
+	static bool conditionspace
+	(
+		randomPos& RandomPOS,
+		std::vector<randomPos>& tabRandom,
+		unsigned int tileSize,
+		unsigned int i
+	);
 	
 	/*
 	* NAME : conditionground
 	* ROLE : condition pour valider les coordonnées crées:
 	* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+	* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la map
 	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
 	* OUTPUT PARAMETERS : validation des positions
 	* RETURNED VALUE    : true -> condition de position validée / false -> non valide
 	*/
-	static bool conditionground(Sysinfo& sysinfo, randomPos& RandomPOS);
+	static bool conditionground
+	(
+		std::vector<std::vector<Tile>>& maps,
+		randomPos& RandomPOS
+	);
 
 
 
@@ -197,7 +255,10 @@ public:
 	* OUTPUT PARAMETERS : passage à un nouveau tour 
 	* RETURNED VALUE    : void
 	*/
-	static void nextTurn(Sysinfo&);
+	static void nextTurn
+	(
+		Sysinfo&
+	);
 };
 
 #endif /* GamePlay_H */

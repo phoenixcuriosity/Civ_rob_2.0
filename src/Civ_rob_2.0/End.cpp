@@ -34,7 +34,11 @@
 static std::ofstream* logger;
 static Sysinfo* ptrSysinfo;
 
-void End::initPtrSysinfoLogger(Sysinfo& sysinfo, std::ofstream& ptrlogger)
+void End::initPtrSysinfoLogger
+(
+	Sysinfo& sysinfo,
+	std::ofstream& ptrlogger
+)
 {
 	ptrSysinfo = &sysinfo;
 	logger = &ptrlogger;
@@ -48,7 +52,10 @@ void End::initPtrSysinfoLogger(Sysinfo& sysinfo, std::ofstream& ptrlogger)
 * OUTPUT PARAMETERS : EXIT_FAILURE
 * RETURNED VALUE    : void
 */
-void End::exitError(const std::string msg)
+void End::exitError
+(
+	const std::string msg
+)
 {
 	LoadConfig::logfileconsole("[ERROR]___: " + msg);
 	deleteAll(*ptrSysinfo);
@@ -65,7 +72,10 @@ void End::exitError(const std::string msg)
  * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
  * RETURNED VALUE    : void
  */
-void End::deleteAll(Sysinfo& sysinfo)
+void End::deleteAll
+(
+	Sysinfo& sysinfo
+)
 {
 	LoadConfig::logfileconsole("[INFO]___: [START] *********_________ DeleteAll _________*********");
 
@@ -184,7 +194,11 @@ void End::deleteAll(Sysinfo& sysinfo)
 
 
 
-void End::deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const std::string& name)
+void End::deleteTexture
+(
+	std::unordered_map<std::string, Texture*>& unmap,
+	const std::string& name
+)
 {
 	for (const auto& n : unmap)
 	{
@@ -200,7 +214,11 @@ void End::deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const 
 	}
 }
 
-void End::deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std::string& name)
+void End::deleteTexte
+(
+	std::unordered_map<std::string, Texte*>& unmap,
+	const std::string& name
+)
 {
 	for (const auto& n : unmap)
 	{
@@ -216,7 +234,11 @@ void End::deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std:
 	}
 }
 
-void End::deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap, const std::string& name)
+void End::deleteButtonTexte
+(
+	std::unordered_map<std::string,
+	ButtonTexte*>& unmap, const std::string& name
+)
 {
 	for (const auto& n : unmap)
 	{
@@ -232,7 +254,11 @@ void End::deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap
 	}
 }
 
-void End::deletePlayer(std::vector<Player*>& vect, const std::string& name)
+void End::deletePlayer
+(
+	std::vector<Player*>& vect, 
+	const std::string& name
+)
 {
 	for (unsigned int i(0); i < vect.size(); i++)
 	{

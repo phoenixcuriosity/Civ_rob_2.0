@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.8
+	last modification on this file on version:0.18
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,14 +35,19 @@
 /*
 * NAME : loadUnitAndSpec
 * ROLE : Chargement des informations concernant les unités à partir d'un fichier
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* INPUT  PARAMETERS : std::string& : nom du fichier à ouvrir
+* INPUT  PARAMETERS : std::vector<Unit_Struct>& : Vecteur des Unit
 * OUTPUT PARAMETERS : tableau de nom et spec concernant les unités
 * RETURNED VALUE    : void
 */
-void Unit::loadUnitAndSpec(Sysinfo& sysinfo)
+void Unit::loadUnitAndSpec
+(
+	std::string& UNIT,
+	std::vector<Unit_Struct>& tabUnit_Struct
+)
 {
 	tinyxml2::XMLDocument texteFile;
-	texteFile.LoadFile(sysinfo.file.UNIT.c_str());
+	texteFile.LoadFile(UNIT.c_str());
 
 	const char* root("Root");
 
@@ -66,7 +71,7 @@ void Unit::loadUnitAndSpec(Sysinfo& sysinfo)
 		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)& currentUnit.movement);
 		node->FirstChildElement(s_Level)->QueryIntText((int*)& currentUnit.level);
 		
-		sysinfo.var.s_player.tabUnit_Struct.push_back(currentUnit);
+		tabUnit_Struct.push_back(currentUnit);
 
 		/* Recherche du noeud Model suivant */
 		node = node->NextSibling();
@@ -77,42 +82,51 @@ void Unit::loadUnitAndSpec(Sysinfo& sysinfo)
 /*
 * NAME : searchunit
 * ROLE : Sélection du nom de l'unité à partir de l'index du tableau
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* INPUT  PARAMETERS : struct SubcatPlayer& : structure player
 * OUTPUT PARAMETERS : nom de l'unité
 * RETURNED VALUE    : void
 */
-void Unit::searchUnit(Sysinfo& sysinfo)
+void Unit::searchUnit
+(
+	SubcatPlayer& s_player
+)
 {
-	sysinfo.var.s_player.unitNameToCreate
-		= sysinfo.var.s_player.tabUnit_Struct[sysinfo.var.s_player.unitToCreate].name;
+	s_player.unitNameToCreate = s_player.tabUnit_Struct[s_player.unitToCreate].name;
 }
 
 
 /*
 * NAME : searchUnitTile
 * ROLE : Cherche l'unité étant dans la case séléctionné
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* INPUT  PARAMETERS : Struct SubcatPlayer& : structure concernant un joueur
+* INPUT  PARAMETERS : Class KeyboardMouse& : données générale des entrées utilisateur
+* INPUT  PARAMETERS : struct Map& : données générale de la map
+* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
 * OUTPUT PARAMETERS : index et nom de l'unité sélectionnée
 * OUTPUT PARAMETERS : activation de la méthode blit (clignotement)
 * RETURNED VALUE    : void
 */
-void Unit::searchUnitTile(Sysinfo& sysinfo)
+void Unit::searchUnitTile
+(
+	SubcatPlayer& s_player,
+	KeyboardMouse& mouse,
+	Map& map,
+	std::vector<Player*>& tabplayer
+)
 {
-	for (unsigned int i(0); i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size(); i++)
+	for (unsigned int i(0); i <tabplayer[s_player.selectplayer]->GETtabUnit().size(); i++)
 	{
-		if (	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-					->GETtheUnit(i)->testPos
+		if (tabplayer[s_player.selectplayer]->GETtheUnit(i)->testPos
 				(
-				sysinfo.var.mouse.GETmouse_x() + sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize,
-				sysinfo.var.mouse.GETmouse_y() + sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize
+					mouse.GETmouse_x() + map.screenOffsetXIndexMin * map.tileSize,
+					mouse.GETmouse_y() + map.screenOffsetYIndexMin * map.tileSize
 				)
 			)
 		{
-			sysinfo.var.s_player.selectunit = i;
-			sysinfo.var.s_player.unitNameToMove
-				= sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->GETname();
+			s_player.selectunit = i;
+			s_player.unitNameToMove = tabplayer[s_player.selectplayer]->GETtheUnit(i)->GETname();
 
-			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheUnit(i)->SETblit(true);
+			tabplayer[s_player.selectplayer]->GETtheUnit(i)->SETblit(true);
 			break;
 		}
 		else
@@ -127,13 +141,26 @@ void Unit::searchUnitTile(Sysinfo& sysinfo)
 * NAME : tryToMove
 * ROLE : Recherche à faire bouger l'unité selon le contexte
 * ROLE : Attention : contient un rappel récursif
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la MAP
+* INPUT  PARAMETERS : Struct SubcatPlayer& : structure concernant un joueur
+* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
+* INPUT  PARAMETERS : Select_Type : état de la sélection du joueur (enum Select_Type : Uint8)
+* INPUT  PARAMETERS : int x : pos X
+* INPUT  PARAMETERS : int y : pos Y
 * OUTPUT PARAMETERS : l'unité reste à sa place ou bouge en fonction du contexte
 * RETURNED VALUE    : void
 */
-void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
+void Unit::tryToMove
+(
+	std::vector<std::vector<Tile>>& maps,
+	SubcatPlayer& s_player,
+	std::vector<Player*>& tabplayer,
+	Select_Type select,
+	int x,
+	int y
+)
 {
-	switch (searchToMove(sysinfo, x, y))
+	switch (searchToMove(maps, s_player, tabplayer, x, y))
 	{
 	case cannotMove:
 		/*
@@ -142,31 +169,31 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 		break;
 	case canMove:
 
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-			->GETtheUnit(sysinfo.var.s_player.selectunit)
-				->move(sysinfo.var.select, sysinfo.var.s_player.selectunit, x, y);
+		tabplayer[s_player.selectplayer]
+			->GETtheUnit(s_player.selectunit)
+				->move(select, s_player.selectunit, x, y);
 		break;
 	case attackMove:
 
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-			->GETtheUnit(sysinfo.var.s_player.selectunit)
-				->attack(sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]
-					->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack));
+		tabplayer[s_player.selectplayer]
+			->GETtheUnit(s_player.selectunit)
+				->attack(tabplayer[s_player.selectPlayerToAttack]
+					->GETtheUnit(s_player.selectUnitToAttack));
 
 		if (
-			sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]
-			->GETtheUnit(sysinfo.var.s_player.selectUnitToAttack)
+			tabplayer[s_player.selectPlayerToAttack]
+			->GETtheUnit(s_player.selectUnitToAttack)
 				->GETalive()
 			==
 			false
 			)
 		{
-			sysinfo.tabplayer[sysinfo.var.s_player.selectPlayerToAttack]
-				->deleteUnit(sysinfo.var.s_player.selectUnitToAttack);
-			tryToMove(sysinfo, x, y);
+			tabplayer[s_player.selectPlayerToAttack]
+				->deleteUnit(s_player.selectUnitToAttack);
+			tryToMove(maps, s_player, tabplayer, select, x, y);
 		}
-		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-			->GETtheUnit(sysinfo.var.s_player.selectunit)->SETmovement(0);
+		tabplayer[s_player.selectplayer]
+			->GETtheUnit(s_player.selectunit)->SETmovement(0);
 		break;
 	default:
 		/* N/A */
@@ -179,12 +206,23 @@ void Unit::tryToMove(Sysinfo& sysinfo, int x, int y)
 * NAME : searchToMove
 * ROLE : Recherche à faire bouger l'unité selon le contexte
 * ROLE : Action conditionnelle (case libre, ennemi, amis)
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la MAP
+* INPUT  PARAMETERS : Struct SubcatPlayer& : structure concernant un joueur
+* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
+* INPUT  PARAMETERS : int x : pos X
+* INPUT  PARAMETERS : int y : pos Y
 * OUTPUT PARAMETERS : l'unité reste à sa place ou bouge en fonction du contexte
 * RETURNED VALUE    : Move_Type : 0 : ne bouge pas / 1 : case libre : peut bouger / 2 : ennemi : ne bouge pas
 *
 */
-Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
+Move_Type Unit::searchToMove
+(
+	std::vector<std::vector<Tile>>& maps,
+	SubcatPlayer& s_player,
+	std::vector<Player*>& tabplayer,
+	int x,
+	int y
+)
 {
 	/*
 		conditions de mouvement :
@@ -195,27 +233,27 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 	*/
 	bool ground = false;
 
-	for (unsigned int i(0); i < sysinfo.map.maps.size(); i++)
+	for (unsigned int i(0); i < maps.size(); i++)
 	{
-		for (unsigned int j(0); j < sysinfo.map.maps[i].size(); j++)
+		for (unsigned int j(0); j < maps[i].size(); j++)
 		{
 			if (
-				sysinfo.map.maps[i][j].tile_x
+				maps[i][j].tile_x
 				== 
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-						->GETtheUnit(sysinfo.var.s_player.selectunit)
+					tabplayer[s_player.selectplayer]
+						->GETtheUnit(s_player.selectunit)
 							->GETx() 
 					+ x
 				&&
-				sysinfo.map.maps[i][j].tile_y
+				maps[i][j].tile_y
 				==
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-						->GETtheUnit(sysinfo.var.s_player.selectunit)
+					tabplayer[s_player.selectplayer]
+						->GETtheUnit(s_player.selectunit)
 							->GETy()
 					+ y
 				)
 			{
-				if (sysinfo.map.maps[i][j].tile_ground == grass)
+				if (maps[i][j].tile_ground == grass)
 				{
 					ground = true;
 					break;
@@ -236,40 +274,40 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 	{
 		/* On ground */
 
-		for (unsigned int i = 0; i < sysinfo.tabplayer.size(); i++) 
+		for (unsigned int i = 0; i < tabplayer.size(); i++) 
 		{
-			for (unsigned int j = 0; j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
+			for (unsigned int j = 0; j < tabplayer[i]->GETtabUnit().size(); j++) 
 			{
 				if (
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-						->GETtheUnit(sysinfo.var.s_player.selectunit)
+					tabplayer[s_player.selectplayer]
+						->GETtheUnit(s_player.selectunit)
 							->GETx()
 					+ x 
 					==
-					sysinfo.tabplayer[i]
+					tabplayer[i]
 						->GETtheUnit(j)
 							->GETx()
 					)
 				{
 					if (
-						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-							->GETtheUnit(sysinfo.var.s_player.selectunit)
+						tabplayer[s_player.selectplayer]
+							->GETtheUnit(s_player.selectunit)
 								->GETy()
 						+ y
 						==
-						sysinfo.tabplayer[i]
+						tabplayer[i]
 							->GETtheUnit(j)
 								->GETy()
 						)
 					{
-						if (sysinfo.var.s_player.selectplayer == (int)i)
+						if (s_player.selectplayer == (int)i)
 						{
 							return cannotMove;
 						}		
 						else
 						{
-							sysinfo.var.s_player.selectPlayerToAttack = (int)i;
-							sysinfo.var.s_player.selectUnitToAttack = (int)j;
+							s_player.selectPlayerToAttack = (int)i;
+							s_player.selectUnitToAttack = (int)j;
 							return attackMove;
 						}
 					}
@@ -302,7 +340,10 @@ Move_Type Unit::searchToMove(Sysinfo& sysinfo, int x, int y)
 * OUTPUT PARAMETERS :
 * RETURNED VALUE    : bool
 */
-bool Unit::irrigate(Sysinfo&)
+bool Unit::irrigate
+(
+	Sysinfo&
+)
 {
 	return false;
 }
@@ -322,14 +363,25 @@ Unit::Unit() :	_name(""), _x(0), _y(0),
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
-Unit::Unit(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
-	unsigned int def, unsigned int move, unsigned int level)
+
+Unit::Unit
+(
+	const std::string &name,
+	unsigned int x,
+	unsigned int y,
+	unsigned int life,
+	unsigned int atq,
+	unsigned int def,
+	unsigned int move,
+	unsigned int level
+)
 	: _name(name), _x(x), _y(y),
 	_maxlife(life), _maxatq(atq), _maxdef(def), _maxmovement(move), _maxlevel(level),
 	_life(life), _atq(atq), _def(def), _movement(move), _level(level), _alive(true), _blit(0), _show(true)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit:  Success");
 }
+
 Unit::~Unit()
 {
 	/* N/A */
@@ -343,7 +395,10 @@ Unit::~Unit()
 * OUTPUT PARAMETERS : Attaque d'une unité
 * RETURNED VALUE    : void
 */
-void Unit::attack(Unit* cible)
+void Unit::attack
+(
+	Unit* cible
+)
 {
 	if (_movement > 0)
 	{
@@ -363,7 +418,10 @@ void Unit::attack(Unit* cible)
 * OUTPUT PARAMETERS : l'unité peut prendre des dommage et/ou mourrir
 * RETURNED VALUE    : void
 */
-void Unit::defend(unsigned int dmg)
+void Unit::defend
+(
+	unsigned int dmg
+)
 {
 	int test(0);
 	if (dmg > _def)
@@ -396,7 +454,13 @@ void Unit::defend(unsigned int dmg)
 * OUTPUT PARAMETERS : Application du mouvement à l'unité
 * RETURNED VALUE    : void
 */
-void Unit::move(Select_Type& select, int& selectunit, int x, int y)
+void Unit::move
+(
+	Select_Type& select,
+	int& selectunit,
+	int x,
+	int y
+)
 {
 	if (_movement > 0)
 	{
@@ -431,7 +495,11 @@ void Unit::move(Select_Type& select, int& selectunit, int x, int y)
 * OUTPUT PARAMETERS : Soigne l'unité en fonction du contexte
 * RETURNED VALUE    : void
 */
-void Unit::heal(std::vector<std::vector<Tile>>& tiles, unsigned int selectplayer)
+void Unit::heal
+(
+	std::vector<std::vector<Tile>>& tiles,
+	unsigned int selectplayer
+)
 {
 	for (unsigned int i(0); i < tiles.size(); i++) 
 	{
@@ -515,7 +583,11 @@ void Unit::RESETmovement()
 * OUTPUT PARAMETERS : unsigned int mouse_y : position y
 * RETURNED VALUE    : int : 0 : pas sélectioné / 1 : sélectionné
 */
-bool Unit::testPos(unsigned int mouse_x, unsigned int mouse_y) 
+bool Unit::testPos
+(
+	unsigned int mouse_x,
+	unsigned int mouse_y
+) 
 {
 	if (_x == mouse_x && _y == mouse_y)
 	{
@@ -540,68 +612,75 @@ bool Unit::testPos(unsigned int mouse_x, unsigned int mouse_y)
 /*
 * NAME : afficher
 * ROLE : Affichage de la Texture de l'unité ainsi que la barre de vie et couleur
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* INPUT  PARAMETERS : AllTextures& : Structure contenant toutes les Textures
+* INPUT  PARAMETERS : struct Map& : données générale de la map
 * INPUT  PARAMETERS : unsigned int iPlayer : joueur sélectionné
 * OUTPUT PARAMETERS : Affichage de l'unité
 * RETURNED VALUE    : void
 */
-void Unit::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
+void Unit::afficher
+(
+	AllTextures& allTextures,
+	Map& map,
+	unsigned int iPlayer
+)
+{
 	if (_show)
 	{
-		unsigned int x = _x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize;
-		unsigned int y = _y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize;
-		sysinfo.allTextures.unit[_name]->render( x, y);
+		unsigned int x = _x - map.screenOffsetXIndexMin * map.tileSize;
+		unsigned int y = _y - map.screenOffsetYIndexMin * map.tileSize;
+		allTextures.unit[_name]->render( x, y);
 	
 		if (_life == _maxlife)
 		{
-			sysinfo.allTextures.barLife["maxlife.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["maxlife.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1)))
 		{
-			sysinfo.allTextures.barLife["0.9life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.9life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) 
 		{
-			sysinfo.allTextures.barLife["0.8life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.8life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3)))
 		{
-			sysinfo.allTextures.barLife["0.7life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.7life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4)))
 		{
-			sysinfo.allTextures.barLife["0.6life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.6life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5)))
 		{
-			sysinfo.allTextures.barLife["0.5life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.5life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) 
 		{
-			sysinfo.allTextures.barLife["0.4life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.4life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) 
 		{
-			sysinfo.allTextures.barLife["0.3life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.3life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8)))
 		{
-			sysinfo.allTextures.barLife["0.2life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.2life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9)))
 		{
-			sysinfo.allTextures.barLife["0.1life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.1life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else if (_life < (_maxlife - ceil(_maxlife * 0.9)))
 		{
-			sysinfo.allTextures.barLife["0.0life.bmp"]->render(x + (sysinfo.map.tileSize / 2) - 4, y + sysinfo.map.tileSize);
+			allTextures.barLife["0.0life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
 		}
 		else
 		{
 			/* N/A */
 		}
 
-		sysinfo.allTextures.colorapp["ColorPlayer" + std::to_string(iPlayer) + ".bmp"]->render(x, y + sysinfo.map.tileSize);
+		allTextures.colorapp["ColorPlayer" + std::to_string(iPlayer) + ".bmp"]->render(x, y + map.tileSize);
 	}
 }
 
@@ -609,31 +688,70 @@ void Unit::afficher(Sysinfo& sysinfo, unsigned int iPlayer){
 /*
 * NAME : afficherstat
 * ROLE : Affichage des statistiques de l'unité (nom, x, y ...)
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
+* INPUT  PARAMETERS : TTF_Font* font[] : tableau de ptr de font SDL
+* INPUT  PARAMETERS : SDL_Renderer*& : ptr sur le renderer SDL
+* INPUT  PARAMETERS : unsigned int tileSize : données de la map : taille tile
 * OUTPUT PARAMETERS : Affichage des statistiques de l'unité
 * RETURNED VALUE    : void
 */
-void Unit::afficherstat(Sysinfo& sysinfo)
+void Unit::afficherstat
+(
+	TTF_Font* font[],
+	SDL_Renderer*& renderer,
+	unsigned int tileSize
+)
 {
 	if (_show)
 	{
 		int initspace(_y), space(14);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "Name: "  + _name, Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace, no_angle);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "X: " + std::to_string(_x), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "Y: " + std::to_string(_y), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "life: " + std::to_string(_life), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "atq: " + std::to_string(_atq), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "def: " + std::to_string(_def), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "movement: " + std::to_string(_movement), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			blended, "level: " + std::to_string(_level), Red, { 255, 255, 255, 255 }, 12, _x + sysinfo.map.tileSize, initspace += space, no_angle);
+
+		Texte::writeTexte
+		(
+			renderer, font, blended, "Name: "  + _name, Red, White,
+			12, _x + tileSize, initspace, no_angle
+		);
+
+		Texte::writeTexte
+		(
+			renderer, font, blended, "X: " + std::to_string(_x), Red, White,
+			12, _x + tileSize, initspace += space, no_angle
+		);
+
+		Texte::writeTexte
+		(
+			renderer, font, blended, "Y: " + std::to_string(_y), Red, White,
+			12, _x + tileSize, initspace += space, no_angle
+		);
+
+		Texte::writeTexte
+		(
+			renderer, font, blended, "life: " + std::to_string(_life), Red, White,
+			12, _x + tileSize, initspace += space, no_angle
+		);
+
+		Texte::writeTexte
+		(
+			renderer, font,blended, "atq: " + std::to_string(_atq), Red, White,
+			12, _x + tileSize, initspace += space, no_angle
+		);
+
+		Texte::writeTexte
+		(
+			renderer, font, blended, "def: " + std::to_string(_def), Red, White,
+			12, _x + tileSize, initspace += space, no_angle
+		);
+
+		Texte::writeTexte
+		(
+			renderer, font, blended, "movement: " + std::to_string(_movement), Red, White,
+			12, _x + tileSize, initspace += space, no_angle
+		);
+
+		Texte::writeTexte
+		(
+			renderer, font, blended, "level: " + std::to_string(_level), Red, White,
+			12, _x + tileSize, initspace += space, no_angle
+		);
 	}
 	else
 	{

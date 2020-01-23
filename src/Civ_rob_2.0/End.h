@@ -31,7 +31,12 @@
 class End
 {
 public:
-	static void initPtrSysinfoLogger(Sysinfo& sysinfo, std::ofstream& logger);
+
+	static void initPtrSysinfoLogger
+	(
+		Sysinfo& sysinfo,
+		std::ofstream& logger
+	);
 
 
 	/*
@@ -41,7 +46,10 @@ public:
 	 * OUTPUT PARAMETERS : EXIT_FAILURE
 	 * RETURNED VALUE    : void
 	 */
-	static void exitError(const std::string msg);
+	static void exitError
+	(
+		const std::string msg
+	);
 
 	/*
 	 * NAME : deleteAll
@@ -51,15 +59,35 @@ public:
 	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
 	 * RETURNED VALUE    : void
 	 */
-	static void deleteAll(Sysinfo&);
+	static void deleteAll
+	(
+		Sysinfo&
+	);
 
-	static void deleteTexture(std::unordered_map<std::string, Texture*>& unmap, const std::string& name);
+	static void deleteTexture
+	(
+		std::unordered_map<std::string, Texture*>& unmap,
+		const std::string& name
+	);
 
-	static void deleteTexte(std::unordered_map<std::string, Texte*>& unmap, const std::string& name);
+	static void deleteTexte
+	(
+		std::unordered_map<std::string, Texte*>& unmap,
+		const std::string& name
+	);
 
-	static void deleteButtonTexte(std::unordered_map<std::string, ButtonTexte*>& unmap, const std::string& name);
+	static void deleteButtonTexte
+	(
+		std::unordered_map<std::string,
+		ButtonTexte*>& unmap,
+		const std::string& name
+	);
 
-	static void deletePlayer(std::vector<Player*>& vect, const std::string& name);
+	static void deletePlayer
+	(
+		std::vector<Player*>& vect,
+		const std::string& name
+	);
 };
 
 

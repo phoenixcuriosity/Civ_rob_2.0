@@ -40,7 +40,10 @@
 * OUTPUT PARAMETERS : Création d'une City
 * RETURNED VALUE    : void
 */
-void City::createCity(Sysinfo& sysinfo)
+void City::createCity
+(
+	Sysinfo& sysinfo
+)
 {
 	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == 0)
 	{
@@ -130,20 +133,25 @@ void City::createCity(Sysinfo& sysinfo)
 /*
 * NAME : searchCityTile
 * ROLE : Recherche la case de la City et renvoie vers cityMap
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
+* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
+* INPUT  PARAMETERS : Var& : Structure Var
 * OUTPUT PARAMETERS : la case de la City et renvoie vers cityMap
 * RETURNED VALUE    : void
 */
-void City::searchCityTile(Sysinfo& sysinfo)
+void City::searchCityTile
+(
+	std::vector<Player*>& tabplayer,
+	Var& var
+)
 {
-	for (unsigned int i(0); i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size(); i++) 
+	for (unsigned int i(0); i < tabplayer[var.s_player.selectplayer]->GETtabCity().size(); i++) 
 	{
-		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(i)
-			->testPos(sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+		if (tabplayer[var.s_player.selectplayer]->GETtheCity(i)
+			->testPos(var.mouse.GETmouse_x(), var.mouse.GETmouse_y()))
 		{
-			sysinfo.var.s_player.selectCitie = i;
-			sysinfo.var.statescreen = STATEcitiemap;
-			sysinfo.var.select = selectnothing;
+			var.s_player.selectCitie = i;
+			var.statescreen = STATEcitiemap;
+			var.select = selectnothing;
 			break;
 		}
 		else
@@ -160,7 +168,10 @@ void City::searchCityTile(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : std::vector<Tile>
 * RETURNED VALUE    : std::vector<Tile> : données générale de la cityMap
 */
-std::vector<Tile> City::createTiles(Tile tiles[])
+std::vector<Tile> City::createTiles
+(
+	Tile tiles[]
+)
 {
 	std::vector<Tile> Atiles;
 	for (unsigned int i(0); i < initSizeView * initSizeView; i++)
@@ -182,7 +193,14 @@ std::vector<Tile> City::createTiles(Tile tiles[])
  ********************************************************* */
 
 
-City::City(const std::string& name, unsigned int x, unsigned int y, Tile tile[]) : _image("citie.png"),
+City::City
+(
+	const std::string& name,
+	unsigned int x,
+	unsigned int y,
+	Tile tile[]
+)
+	: _image("citie.png"),
 _name(name), _x(x), _y(y), _tile(createTiles(tile)),
 _influenceLevel(1),_nbpop(1), _atq(0), _def(0), _nbhappy(0), _nbsad(0), _nbstructurebuild(0),
 _foodStock(0), _foodBalance(tile[(unsigned int)ceil((initSizeView*initSizeView) / 2)].food)
@@ -191,6 +209,7 @@ _foodStock(0), _foodBalance(tile[(unsigned int)ceil((initSizeView*initSizeView) 
 
 	LoadConfig::logfileconsole("[INFO]___: Create Citie: " + _name + " Success");
 }
+
 City::~City()
 {
 	for (const auto& n : _citizens)
@@ -272,7 +291,11 @@ void City::foodNextTurn()
 * OUTPUT PARAMETERS : Retourne si la position est valide
 * RETURNED VALUE    : int : 0 : pas valide / 1 : valide
 */
-int City::testPos(unsigned int mouse_x, unsigned int mouse_y)
+int City::testPos
+(
+	unsigned int mouse_x,
+	unsigned int mouse_y
+)
 {
 	if (_x == mouse_x && _y == mouse_y)
 	{
@@ -299,7 +322,10 @@ int City::testPos(unsigned int mouse_x, unsigned int mouse_y)
 * OUTPUT PARAMETERS : Affichage de la City (Texture et nom)
 * RETURNED VALUE    : void
 */
-void City::afficher(Sysinfo& sysinfo)
+void City::afficher
+(
+	Sysinfo& sysinfo
+)
 {
 	unsigned int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
 	unsigned int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
@@ -319,7 +345,10 @@ void City::afficher(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Affichage des cases de la City
 * RETURNED VALUE    : void
 */
-void City::affichercitiemap(Sysinfo& sysinfo)
+void City::affichercitiemap
+(
+	Sysinfo& sysinfo
+)
 {
 
 	/* Affichage des cases qui compose le secteur de la City */
@@ -423,11 +452,14 @@ void City::affichercitiemap(Sysinfo& sysinfo)
 * OUTPUT PARAMETERS : Placement d'un Citizen
 * RETURNED VALUE    : unsigned int : la place allouée
 */
-unsigned int Citizen::placeCitizen(	std::vector<Tile>& tile,
-									std::vector<Citizen*>& citizens,
-									int& _food,
-									int& _work,
-									int& _gold)
+unsigned int Citizen::placeCitizen
+(	
+	std::vector<Tile>& tile,
+	std::vector<Citizen*>& citizens,
+	int& _food,
+	int& _work,
+	int& _gold
+)
 {
 	unsigned int condition((unsigned int)citizens.size());
 	unsigned int checkcondition(0);
@@ -508,7 +540,10 @@ _place(false)
 }
 
 
-Citizen::Citizen(Tile tile)
+Citizen::Citizen
+(
+	Tile tile
+)
 : 
 _tileOccupied((unsigned int)ceil((initSizeView*initSizeView) / 2)),
 _happiness(Emotion_Type::neutre),
@@ -523,7 +558,11 @@ _place(true)
 }
 
 
-Citizen::Citizen(std::vector<Tile>& tile, std::vector<Citizen*>& citizens)
+Citizen::Citizen
+(
+	std::vector<Tile>& tile,
+	std::vector<Citizen*>& citizens
+)
 : 
 _tileOccupied(placeCitizen(tile, citizens, _food, _work, _gold)),
 _happiness(Emotion_Type::neutre),
@@ -533,6 +572,7 @@ _place(true)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Citizen Success");
 }
+
 Citizen::~Citizen()
 {
 	LoadConfig::logfileconsole("[INFO]___: Kill Citizen Success");
@@ -560,10 +600,13 @@ void Citizen::placeCitizenWithMouse()
  * OUTPUT PARAMETERS : affichage sur la map
  * RETURNED VALUE    : void
  */
-void Citizen::afficher(	std::unordered_map<std::string,
-						Texture*>& citieMap,
-						unsigned int x,
-						unsigned int y)
+void Citizen::afficher
+(	
+	std::unordered_map<std::string,
+	Texture*>& citieMap,
+	unsigned int x,
+	unsigned int y
+)
 {
 	switch (_happiness)
 	{

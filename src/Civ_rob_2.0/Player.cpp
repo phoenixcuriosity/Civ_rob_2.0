@@ -44,7 +44,10 @@ Player::~Player()
 	deletePlayer();
 }
 
-Player& Player::operator=(const Player& player)
+Player& Player::operator=
+(
+	const Player& player
+)
 {
 	if (this != &player)
 	{
@@ -114,8 +117,17 @@ void Player::addEmptyUnit()
 * OUTPUT PARAMETERS : Ajout une Unit
 * RETURNED VALUE    : void
 */
-void Player::addUnit(const std::string &name, unsigned int x, unsigned int y, unsigned int life, unsigned int atq,
-	unsigned int def, unsigned int move, unsigned int level) 
+void Player::addUnit
+(
+	const std::string &name,
+	unsigned int x,
+	unsigned int y,
+	unsigned int life,
+	unsigned int atq,
+	unsigned int def,
+	unsigned int move,
+	unsigned int level
+) 
 {
 	_tabUnit.push_back(new Unit(name, x, y, life, atq, def, move, level));
 }
@@ -127,7 +139,10 @@ void Player::addUnit(const std::string &name, unsigned int x, unsigned int y, un
 * OUTPUT PARAMETERS : Suppression d'une Unit
 * RETURNED VALUE    : void
 */
-void Player::deleteUnit(unsigned int index)
+void Player::deleteUnit
+(
+	unsigned int index
+)
 {
 	delete _tabUnit[index];
 	if (_tabUnit.size() > 1 && index < _tabUnit.size() - 1)
@@ -145,7 +160,13 @@ void Player::deleteUnit(unsigned int index)
 * OUTPUT PARAMETERS : Ajout une City
 * RETURNED VALUE    : void
 */
-void Player::addCity(const std::string &name, unsigned int x, unsigned int y, Tile tiles[])
+void Player::addCity
+(
+	const std::string &name,
+	unsigned int x,
+	unsigned int y,
+	Tile tiles[]
+)
 {
 	_tabCity.push_back(new City(name, x, y, tiles));
 }
@@ -157,7 +178,10 @@ void Player::addCity(const std::string &name, unsigned int x, unsigned int y, Ti
 * OUTPUT PARAMETERS : Suppression d'une City
 * RETURNED VALUE    : void
 */
-void Player::deleteCity(unsigned int index)
+void Player::deleteCity
+(
+	unsigned int index
+)
 {
 	delete _tabCity[index];
 	if (_tabCity.size() > 1 && index < _tabCity.size() - 1)

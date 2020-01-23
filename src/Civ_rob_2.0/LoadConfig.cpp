@@ -37,7 +37,10 @@
 * OUTPUT PARAMETERS : données par défaut des structures
 * RETURNED VALUE    : void
 */
-void LoadConfig::initStructs(Sysinfo& sysinfo)
+void LoadConfig::initStructs
+(
+	Sysinfo& sysinfo
+)
 {
 	/* ### Mettre ici les cas d'inialisation des structures ### */
 
@@ -200,7 +203,10 @@ void LoadConfig::initPtrSysinfo(Sysinfo& sysinfo)
  * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
  * RETURNED VALUE    : void
  */
-void LoadConfig::initTile(Map& map)
+void LoadConfig::initTile
+(
+	Map& map
+)
 {
 	Tile blankTile;
 	std::vector<Tile> blank;
@@ -221,7 +227,10 @@ void LoadConfig::initTile(Map& map)
 * OUTPUT PARAMETERS : Initialisation de log.txt
 * RETURNED VALUE    : void
 */
-void LoadConfig::initFile(File& file)
+void LoadConfig::initFile
+(
+	File& file
+)
 {
 	logger.open(file.log, std::ofstream::out | std::ofstream::trunc);
 	if (!logger.is_open())
@@ -242,7 +251,10 @@ void LoadConfig::initFile(File& file)
 * OUTPUT PARAMETERS : message dans la console et le log.txt
 * RETURNED VALUE    : void
 */
-void LoadConfig::logfileconsole(const std::string msg)
+void LoadConfig::logfileconsole
+(
+	const std::string msg
+)
 {
 	time_t now(time(0));
 	struct tm  tstruct;
@@ -264,7 +276,11 @@ void LoadConfig::logfileconsole(const std::string msg)
 * OUTPUT PARAMETERS : message dans la console et le log.txt
 * RETURNED VALUE    : bool : true = pas de d'erreur lors de l'initialisation de la SDL
 */
-bool LoadConfig::initSDL(Screen& screen, TTF_Font* font[])
+bool LoadConfig::initSDL
+(
+	Screen& screen,
+	TTF_Font* font[]
+)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
@@ -340,7 +356,10 @@ bool LoadConfig::initSDL(Screen& screen, TTF_Font* font[])
 * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
 * RETURNED VALUE    : void
 */
-void LoadConfig::initMain(Sysinfo& sysinfo)
+void LoadConfig::initMain
+(
+	Sysinfo& sysinfo
+)
 {
 	logfileconsole("[INFO]___: [START] : initMain");
 
@@ -400,7 +419,10 @@ void LoadConfig::initMain(Sysinfo& sysinfo)
 	logfileconsole("[INFO]___: [END] : initMain");
 }
 
-Uint16 LoadConfig::getHorizontal(unsigned int tileSize)
+Uint16 LoadConfig::getHorizontal
+(
+	unsigned int tileSize
+)
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
@@ -411,7 +433,10 @@ Uint16 LoadConfig::getHorizontal(unsigned int tileSize)
 	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
 }
 
-Uint16 LoadConfig::getVertical(unsigned int tileSize)
+Uint16 LoadConfig::getVertical
+(
+	unsigned int tileSize
+)
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
@@ -432,7 +457,10 @@ Uint16 LoadConfig::getVertical(unsigned int tileSize)
 * OUTPUT PARAMETERS : Tableaux de pointeurs vers les Textures (et classes filles)
 * RETURNED VALUE    : void
 */
-void LoadConfig::calculImage(Sysinfo& sysinfo)
+void LoadConfig::calculImage
+(
+	Sysinfo& sysinfo
+)
 {
 	logfileconsole("[INFO]___: [START] : calculImage");
 
@@ -846,7 +874,8 @@ void LoadConfig::calculImage(Sysinfo& sysinfo)
 * RETURNED VALUE    : void
 */
 void LoadConfig::readXmlTexte
-(	tinyxml2::XMLDocument& texteFile,
+(
+	tinyxml2::XMLDocument& texteFile,
 	SDL_Renderer*& renderer,
 	TTF_Font* font[],
 	AllTextes& allTextes,
@@ -977,7 +1006,10 @@ void LoadConfig::readXmlTexte
 	}
 }
 
-State_Type LoadConfig::xmlGiveStateType(std::string type)
+State_Type LoadConfig::xmlGiveStateType
+(
+	std::string type
+)
 {
 	if (type.compare("STATEnothing") == 0)
 	{
@@ -1013,7 +1045,10 @@ State_Type LoadConfig::xmlGiveStateType(std::string type)
 	}
 }
 
-Select_Type LoadConfig::xmlGiveSelectType(std::string type)
+Select_Type LoadConfig::xmlGiveSelectType
+(
+	std::string type
+)
 {
 	if (type.compare("selectnothing") == 0)
 	{
@@ -1046,7 +1081,10 @@ Select_Type LoadConfig::xmlGiveSelectType(std::string type)
 }
 
 std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur
-(AllTextes& allTextes, std::string type)
+(
+	AllTextes& allTextes,
+	std::string type
+)
 {
 	if (type.compare("titleScreen") == 0)
 	{
@@ -1070,7 +1108,10 @@ std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur
 	}
 }
 
-Texte_Type LoadConfig::xmlGiveTexteType(std::string type)
+Texte_Type LoadConfig::xmlGiveTexteType
+(
+	std::string type
+)
 {
 	if (type.compare("blended") == 0)
 	{
@@ -1086,7 +1127,10 @@ Texte_Type LoadConfig::xmlGiveTexteType(std::string type)
 	}
 }
 
-SDL_Color LoadConfig::xmlGiveColor(std::string type)
+SDL_Color LoadConfig::xmlGiveColor
+(
+	std::string type
+)
 {
 	if (type.compare("Black") == 0)
 	{
@@ -1134,7 +1178,10 @@ SDL_Color LoadConfig::xmlGiveColor(std::string type)
 	}
 }
 
-Transparance_Type LoadConfig::xmlGiveAlpha(std::string type)
+Transparance_Type LoadConfig::xmlGiveAlpha
+(
+	std::string type
+)
 {
 	if (type.compare("nonTransparent") == 0)
 	{
@@ -1154,7 +1201,10 @@ Transparance_Type LoadConfig::xmlGiveAlpha(std::string type)
 	}
 }
 
-Uint16 LoadConfig::xmlGiveAngle(std::string type)
+Uint16 LoadConfig::xmlGiveAngle
+(
+	std::string type
+)
 {
 	if (type.compare("no_angle") == 0)
 	{
@@ -1170,7 +1220,10 @@ Uint16 LoadConfig::xmlGiveAngle(std::string type)
 	}
 }
 
-Center_Type LoadConfig::xmlGiveCenter(std::string type)
+Center_Type LoadConfig::xmlGiveCenter
+(
+	std::string type
+)
 {
 	if (type.compare("nocenter") == 0)
 	{
@@ -1194,7 +1247,12 @@ Center_Type LoadConfig::xmlGiveCenter(std::string type)
 	}
 }
 
-int LoadConfig::determineCoor(std::string line, Uint16 screenWidth, Uint16 screenHeight)
+int LoadConfig::determineCoor
+(
+	std::string line,
+	Uint16 screenWidth,
+	Uint16 screenHeight
+)
 {
 	std::string num(""), den(""), buffer("");
 	unsigned int somme(0), numI(0), denI(0);

@@ -102,17 +102,25 @@ public:
 	 * OUTPUT PARAMETERS : Création d'une City
 	 * RETURNED VALUE    : void
 	 */
-	static void createCity(Sysinfo& sysinfo);
+	static void createCity
+	(
+		Sysinfo& sysinfo
+	);
 	
 		
 	/*
-	 * NAME : searchCityTile
-	 * ROLE : Recherche la case de la City et renvoie vers cityMap
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : la case de la City et renvoie vers cityMap
-	 * RETURNED VALUE    : void
-	 */
-	static void searchCityTile(Sysinfo& sysinfo);
+	* NAME : searchCityTile
+	* ROLE : Recherche la case de la City et renvoie vers cityMap
+	* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
+	* INPUT  PARAMETERS : Var& : Structure Var
+	* OUTPUT PARAMETERS : la case de la City et renvoie vers cityMap
+	* RETURNED VALUE    : void
+	*/
+	static void searchCityTile
+	(
+		std::vector<Player*>& tabplayer,
+		Var& var
+	);
 	
 		
 	/*
@@ -122,7 +130,10 @@ public:
 	 * OUTPUT PARAMETERS : std::vector<Tile>
 	 * RETURNED VALUE    : std::vector<Tile> : données générale de la cityMap
 	 */
-	static std::vector<Tile> createTiles(Tile tile[]);
+	static std::vector<Tile> createTiles
+	(
+		Tile tile[]
+	);
 
 	
 public:
@@ -131,8 +142,14 @@ public:
 	 ********************************************************* */
 	 
 	
-	//City() {}; // garder le constructeur par défaut
-	City(const std::string &, unsigned int, unsigned int, Tile[]);
+	City
+	(
+		const std::string &,
+		unsigned int,
+		unsigned int,
+		Tile[]
+	);
+
 	~City();
 
 		
@@ -153,7 +170,11 @@ public:
 	 * OUTPUT PARAMETERS : Retourne si la position est valide
 	 * RETURNED VALUE    : int : 0 : pas valide / 1 : valide
 	 */
-	virtual int testPos(unsigned int x, unsigned int y);
+	virtual int testPos
+	(
+		unsigned int x,
+		unsigned int y
+	);
 
 
 public:
@@ -169,7 +190,10 @@ public:
 	 * OUTPUT PARAMETERS : Affichage de la City (Texture et nom)
 	 * RETURNED VALUE    : void
 	 */
-	virtual void afficher(Sysinfo&);
+	virtual void afficher
+	(
+		Sysinfo&
+	);
 	
 		
 	/*
@@ -179,7 +203,10 @@ public:
 	 * OUTPUT PARAMETERS : Affichage des cases de la City
 	 * RETURNED VALUE    : void
 	 */
-	virtual void affichercitiemap(Sysinfo&);
+	virtual void affichercitiemap
+	(
+		Sysinfo&
+	);
 	 
 	
 public:
@@ -233,16 +260,32 @@ public:
 	 * OUTPUT PARAMETERS : Placement d'un Citizen
 	 * RETURNED VALUE    : unsigned int : la place allouée
 	 */
-	static unsigned int placeCitizen(std::vector<Tile>& tile,
-		std::vector<Citizen*>& citizens, int& _food, int& _work, int& _gold);
+	static unsigned int placeCitizen
+	(
+		std::vector<Tile>& tile,
+		std::vector<Citizen*>& citizens,
+		int& _food,
+		int& _work,
+		int& _gold
+	);
 		
 	 
 	/* *********************************************************
 	 *					Citizen::METHODS					   *
 	 ********************************************************* */
 	Citizen();
-	Citizen(Tile tiles);
-	Citizen(std::vector<Tile>& tile, std::vector<Citizen*>& citizens);
+
+	Citizen
+	(
+		Tile tiles
+	);
+
+	Citizen
+	(
+		std::vector<Tile>& tile,
+		std::vector<Citizen*>& citizens
+	);
+
 	~Citizen();
 
 	
@@ -263,7 +306,13 @@ public:
 	 * OUTPUT PARAMETERS : affichage sur la map
 	 * RETURNED VALUE    : void
 	 */
-	virtual void afficher(std::unordered_map<std::string, Texture*>& citieMap, unsigned int x, unsigned int y);
+	virtual void afficher
+	(
+		std::unordered_map<std::string,
+		Texture*>& citieMap,
+		unsigned int x,
+		unsigned int y
+	);
 
 
 

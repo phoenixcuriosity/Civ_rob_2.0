@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 
 	if (LoadConfig::initSDL(sysinfo.screen, sysinfo.allTextures.font))
 	{
-		Unit::loadUnitAndSpec(sysinfo);
+		Unit::loadUnitAndSpec(sysinfo.file.UNIT, sysinfo.var.s_player.tabUnit_Struct);
 
 		try
 		{
