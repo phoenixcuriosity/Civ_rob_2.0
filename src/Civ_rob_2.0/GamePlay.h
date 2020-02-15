@@ -22,36 +22,78 @@
 
 */
 
-
-/*
-	newgame :
-	Ce module permet la configuration du début de la partie
-	Celui-ci comprend par ordre d'apparition:
-		- Une demande du nombre de joueur ainsi que leur nom
-		- La génération des positions des settlers -> fonction newGameSettlerSpawn
-		- La génération de la map -> fonction groundgen
-		- appel à la sauvegarde de l'état actuel des joueurs et de la map -> fonctions savePlayer et savemaps
-		- Création des boutons aux noms des joueurs
-
-*/
-
 #ifndef GamePlay_H
 #define GamePlay_H
 
-#include "civ_lib.h"
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
+/* For struct Sysinfo and derived structs */
+#include "LIB.h"
+
+/* For class Player */
 #include "Player.h"
 
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
 
-/*
-* Structure d'un couple de positions
-* Positions en x et y permettant le spawn des settlers	
-*/
+ /* MAP -> taille max - min de la mer */
+const Uint8 MAP_BORDER_MAX = 4;
+const Uint8 MAP_BORDER_MIN = 1;
+
+/* MAP -> valeur deep_water */
+const Uint8 MAP_BORDER_ZERO = 0;
+
+/* MAP_GEN_RANDOM */
+const Uint8 MAP_GEN_RANDOM_RANGE_GROUND = 100;
+const Uint8 MAP_GEN_RANDOM_OFFSET_GROUND = 1;
+
+const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_GRASS = 100;
+const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_GRASS = 1;
+
+const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER = 20;
+const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER = 1;
+
+const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER1 = 10;
+const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER1 = 1;
+
+const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER2 = 10;
+const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER2 = 1;
+
+const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER = 50;
+const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER = 1;
+
+const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
+
+/* Minimum space beetween two or more settlers */
+const Uint8 MIN_SPACE_BETWEEN_SETTLER = 16;
+
+/* *********************************************************
+ *						 Enum							   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						 Structs						   *
+ ********************************************************* */
+
+/* ---------------------------------------------------------------------- */
+/* Structure d'un couple de positions									  */
+/* Positions en x et y permettant le spawn des settlers					  */
+/* ---------------------------------------------------------------------- */
 typedef struct randomPos randomPos;
 struct randomPos
 {
 	unsigned int x;
 	unsigned int y;
 };
+
+/* *********************************************************
+ *						  Classe						   *
+ ********************************************************* */
 
 class GamePlay
 {
@@ -61,75 +103,80 @@ public:
 	 ********************************************************* */
 
 
-	/*
-	* NAME : newGame
-	* ROLE : Initialisation de la nouvelle partie
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Noms des joueurs, groundGen, positions des settlers
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : newGame																	   */
+	/* ROLE : Initialisation de la nouvelle partie										   */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+	/* RETURNED VALUE : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void newGame
 	(
 		Sysinfo&
 	);
 
-	/*
-	* NAME : groundGen
-	* ROLE : Génération du sol et des spec de la map
-	* INPUT  PARAMETERS : Map& map : structure de la MAP
-	* INPUT  PARAMETERS : Uint16 screenWidth : taille en de l'écran en pixel (axe x)
-	* OUTPUT PARAMETERS : Génération du sol et des spec de la map
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : groundGen																	   */
+	/* ROLE : Génération du sol et des spec de la map									   */
+	/* INPUT/OUTPUT : Map& map : structure de la MAP									   */
+	/* INPUT : Uint16 screenWidth : taille en de l'écran en pixel (axe x)				   */
+	/* RETURNED VALUE : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void groundGen
 	(
 		Map& map,
 		Uint16 screenWidth
 	);
 
-	/*
-	* NAME : mapBordersConditions
-	* ROLE : Boucle For de conditions
-	* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2
-	* INPUT  PARAMETERS : Map& map : structure de la MAP
-	* INPUT  PARAMETERS : unsigned int i : index en X
-	* INPUT  PARAMETERS : unsigned int j : index en Y
-	* OUTPUT PARAMETERS : Validations des conditions ou non
-	* RETURNED VALUE    : bool : valid = true / not valid = false
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : mapBordersConditions														   */
+	/* ROLE : Boucle For de conditions													   */
+	/* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2				   */
+	/* INPUT : const Map& map : structure de la MAP										   */
+	/* INPUT : unsigned int i : index en X												   */
+	/* INPUT : unsigned int j : index en Y												   */
+	/* RETURNED VALUE : bool : valid = true / not valid = false							   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static bool mapBordersConditions
 	(
-		Map& map,
+		const Map& map,
 		unsigned int i,
 		unsigned int j
 	);
 
-	/*
-	* NAME : mapBordersConditions
-	* ROLE : Affectation des caractéristiques de la case en fonction ...
-	* ROLE : ... de la fonction rand, dans la bordure de la map entre ...
-	* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX
-	* INPUT  PARAMETERS : Tile& tile : tile à affecter
-	* OUTPUT PARAMETERS : Affectation des caractéristiques
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : mapBorders																   */
+	/* ROLE : Affectation des caractéristiques de la case en fonction ...				   */
+	/* ROLE : ... de la fonction rand, dans la bordure de la map entre ...				   */
+	/* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX										   */
+	/* OUTPUT : Tile& tile : tile à affecter											   */
+	/* RETURNED VALUE : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void mapBorders
 	(
 		Tile& tile
 	);
 
-	/*
-	* NAME : mapIntern
-	* ROLE : Affectation des caractéristiques de la case en fonction ...
-	* ROLE : ... de la fonction rand, dans le reste de la map
-	* ROLE : Si la case est de type water alors création de 2 autres ...
-	* ROLE : ... cases de type water pour obtenir une forme en L
-	* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& maps : matrice de la map
-	* INPUT  PARAMETERS : unsigned int i : index en X
-	* INPUT  PARAMETERS : unsigned int j : index en Y
-	* OUTPUT PARAMETERS : Affectation des caractéristiques
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : mapIntern																	   */
+	/* ROLE : Affectation des caractéristiques de la case en fonction ...				   */
+	/* ROLE : ... de la fonction rand, dans le reste de la map							   */
+	/* ROLE : Si la case est de type water alors création de 2 autres ...				   */
+	/* ROLE : ... cases de type water pour obtenir une forme en L						   */
+	/* INPUT/OUTPUT : std::vector<std::vector<Tile>>& maps : matrice de la map			   */
+	/* INPUT : unsigned int i : index en X												   */
+	/* INPUT : unsigned int j : index en Y												   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void mapIntern
 	(
 		std::vector<std::vector<Tile>>& maps,
@@ -137,16 +184,17 @@ public:
 		unsigned int j
 	);
 
-	/*
-	* NAME : tileAffectation
-	* ROLE : Affectation des caractéristiques à une case
-	* INPUT  PARAMETERS : Tile& tile, : la case à affecter
-	* INPUT  PARAMETERS : Uint8 tile_ground, std::string tile_stringground,
-	* INPUT  PARAMETERS : Uint8 tile_spec, std::string tile_stringspec,
-	* INPUT  PARAMETERS : int8_t food, int8_t work, int8_t gold
-	* OUTPUT PARAMETERS : Affectation
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : tileAffectation															   */
+	/* ROLE : Affectation des caractéristiques à une case								   */
+	/* OUTPUT : Tile& tile, : la case à affecter										   */
+	/* INPUT : Uint8 tile_ground, std::string tile_stringground,						   */
+	/* INPUT : Uint8 tile_spec, std::string tile_stringspec,							   */
+	/* INPUT : int8_t food, int8_t work, int8_t gold									   */
+	/* RETURNED VALUE : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void tileAffectation
 	(
 		Tile& tile,
@@ -159,85 +207,92 @@ public:
 		int8_t gold
 	);
 	
-	/*
-	* NAME : newGameSettlerSpawn
-	* ROLE : Création des position pour les settlers de chaque joueurs
-	* INPUT  PARAMETERS : std::vector<Unit_Struct>& : tableau des statistiques par défauts des unités
-	* INPUT  PARAMETERS : struct Map& map : structure globale de la map
-	* INPUT  PARAMETERS : std::vector<Player*>& : vecteurs de joueurs
-	* OUTPUT PARAMETERS : position pour les settlers de chaque joueurs
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : newGameSettlerSpawn														   */
+	/* ROLE : Création des position pour les settlers de chaque joueurs					   */
+	/* INPUT : const std::vector<Unit_Struct>& : tableau des statistiques ...			   */
+	/* INPUT : ...  par défauts des unités												   */
+	/* INPUT : const struct Map& map : structure globale de la map						   */
+	/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void newGameSettlerSpawn
 	(
-		std::vector<Unit_Struct>& tabUnit_Struct,
-		Map& map,
+		const std::vector<Unit_Struct>& tabUnit_Struct,
+		const Map& map,
 		std::vector<Player*>& tabplayer
 	);
 	
-	/*
-	* NAME : makeRandomPosTab
-	* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial
-	* INPUT  PARAMETERS : Map& map : structure globale de la map
-	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-	* OUTPUT PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : makeRandomPosTab															   */
+	/* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial			   */
+	/* INPUT : const Map& map : structure globale de la map								   */
+	/* INPUT/OUTPUT : std::vector<randomPos>& : vecteurs de positions					   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void makeRandomPosTab
 	(
-		Map& map,
+		const Map& map,
 		std::vector<randomPos>& tabRandom
 	);
 	
-	/*
-	* NAME : makeRandomPos
-	* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
-	* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
-	* INPUT  PARAMETERS : unsigned int toolBarSize: taille de la barre d'outil
-	* INPUT  PARAMETERS : unsigned int tileSize
-	* OUTPUT PARAMETERS : un vecteur de position
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : makeRandomPos																   */
+	/* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran */
+	/* OUTPUT : randomPos& RandomPOS : couple de positions								   */
+	/* INPUT : const std::vector<std::vector<Tile>>& maps : Matrice maps				   */
+	/* INPUT : unsigned int toolBarSize: taille de la barre d'outil						   */
+	/* INPUT : unsigned int tileSize													   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void makeRandomPos
 	(
 		randomPos& RandomPOS,
-		std::vector<std::vector<Tile>> maps,
+		const std::vector<std::vector<Tile>>& maps,
 		unsigned int toolBarSize,
 		unsigned int tileSize
 	);
 	
-	/*
-	* NAME : conditionspace
-	* ROLE : condition pour valider les coordonnées crées:
-	* ROLE : - etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
-	* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
-	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-	* INPUT  PARAMETERS : unsigned int tileSize
-	* INPUT  PARAMETERS : couple de positions courant
-	* OUTPUT PARAMETERS : validation des positions
-	* RETURNED VALUE    : true -> condition de position validée / false -> non valide
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : conditionspace															   */
+	/* ROLE : condition pour valider les coordonnées crées:								   */
+	/* ROLE : etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée */
+	/* INPUT : const randomPos& RandomPOS : couple de positions							   */
+	/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+	/* INPUT : unsigned int tileSize													   */
+	/* INPUT : unsigned int i : couple de positions courant								   */
+	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static bool conditionspace
 	(
-		randomPos& RandomPOS,
-		std::vector<randomPos>& tabRandom,
+		const randomPos& RandomPOS,
+		const std::vector<randomPos>& tabRandom,
 		unsigned int tileSize,
 		unsigned int i
 	);
 	
-	/*
-	* NAME : conditionground
-	* ROLE : condition pour valider les coordonnées crées:
-	* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol
-	* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la map
-	* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-	* OUTPUT PARAMETERS : validation des positions
-	* RETURNED VALUE    : true -> condition de position validée / false -> non valide
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : conditionground															   */
+	/* ROLE : condition pour valider les coordonnées crées:								   */
+	/* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol			   */
+	/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la map				   */
+	/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static bool conditionground
 	(
-		std::vector<std::vector<Tile>>& maps,
-		randomPos& RandomPOS
+		const std::vector<std::vector<Tile>>& maps,
+		const randomPos& RandomPOS
 	);
 
 
@@ -248,13 +303,14 @@ public:
 	 ********************************************************* */
 
 
-	/*
-	* NAME : nextTurn
-	* ROLE : Action à réaliser lors du passage à un nouveau tour 
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : passage à un nouveau tour 
-	* RETURNED VALUE    : void
-	*/
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : nextTurn																	   */
+	/* ROLE : Action à réaliser lors du passage à un nouveau tour					       */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void nextTurn
 	(
 		Sysinfo&

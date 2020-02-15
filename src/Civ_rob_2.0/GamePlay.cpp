@@ -32,14 +32,15 @@
  *			START GamePlay::STATIC::NEW-GAME			   *
  ********************************************************* */
 
- 
-/*
-* NAME : newGame
-* ROLE : Initialisation de la nouvelle partie
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Noms des joueurs, groundGen, positions des settlers
-* RETURNED VALUE    : void
-*/
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : newGame																	   */
+/* ROLE : Initialisation de la nouvelle partie										   */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+/* RETURNED VALUE : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::newGame
 (
 	Sysinfo& sysinfo
@@ -48,17 +49,18 @@ void GamePlay::newGame
 	LoadConfig::logfileconsole("[INFO]___: Newgame Start");
 	sysinfo.var.statescreen = STATEscreennewgame;
 
-	// création d'une sauvegarde concernant la nouvelle partie
 	SaveReload::createSave(sysinfo);
 
-	// Fond noir
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 	/* *********************************************************
 	 *						Nb player ?						   *
 	 ********************************************************* */
 
-	// Première demande au joueur : Le nombre de joueurs ?
+	/* ---------------------------------------------------------------------- */
+	/* Première demande au joueur : 										  */
+	/* Le nombre de joueurs ?												  */
+	/* ---------------------------------------------------------------------- */
 	sysinfo.allTextes.newGame["Press Return or kpad_Enter to valid selection"]->render();
 	sysinfo.allTextes.newGame["How many player(s) (max 9):"]->render();
 	SDL_RenderPresent(sysinfo.screen.renderer);
@@ -71,7 +73,9 @@ void GamePlay::newGame
 	sysinfo.var.tempX = sysinfo.screen.screenWidth / 2;
 	sysinfo.var.tempY = 164;
 
-	// Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1
+	/* ---------------------------------------------------------------------- */
+	/* Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1 		  */
+	/* ---------------------------------------------------------------------- */
 	KeyboardMouse::eventSDL(sysinfo);
 
 	/* *********************************************************
@@ -80,7 +84,11 @@ void GamePlay::newGame
 
 	sysinfo.var.tempY += space;
 	sysinfo.var.cinState = cinScreenNewGameNamePlayer;
-	// Deuxième demande au joueur : Le nom des joueurs
+
+	/* ---------------------------------------------------------------------- */
+	/* Deuxième demande au joueur : 										  */
+	/* Le nom des joueurs													  */
+	/* ---------------------------------------------------------------------- */
 	for (unsigned int i(0); i < sysinfo.var.nbPlayer; i++)
 	{
 		sysinfo.var.waitEvent = true;
@@ -101,7 +109,10 @@ void GamePlay::newGame
 
 		sysinfo.var.tempY += space;
 
-		// valeur par défaut avec incrémentation en fonction du nombre de joueur : noName 
+		/* ---------------------------------------------------------------------- */
+		/* Valeur par défaut avec incrémentation en fonction			 		  */
+		/* du nombre de joueur : noName									 		  */
+		/* ---------------------------------------------------------------------- */
 		KeyboardMouse::eventSDL(sysinfo);
 
 		sysinfo.var.s_player.tabPlayerName.push_back(sysinfo.var.tempPlayerName);
@@ -126,7 +137,6 @@ void GamePlay::newGame
 	 *							Save						   *
 	 ********************************************************* */
 
-	/*** Sauvegarde des paramètres appliqués et de la génération de la map ***/
 	SaveReload::saveMaps(sysinfo);
 	SaveReload::savePlayer(sysinfo);
 
@@ -134,7 +144,9 @@ void GamePlay::newGame
 	 *					 Button Creation					   *
 	 ********************************************************* */
 	
-	// Création des boutons pour séléctionner les joueurs
+	/* ---------------------------------------------------------------------- */
+	/* Création des boutons pour séléctionner les joueurs			 		  */
+	/* ---------------------------------------------------------------------- */
 	int initspacename(200), spacename(24);
 	sysinfo.var.statescreen = STATEmainmap;
 	sysinfo.var.cinState = cinMainMap;
@@ -166,14 +178,15 @@ void GamePlay::newGame
 	LoadConfig::logfileconsole("[INFO]___: Newgame End");
 }
 
-/*
-* NAME : groundGen
-* ROLE : Génération du sol et des spec de la map
-* INPUT  PARAMETERS : Map& map : structure de la MAP
-* INPUT  PARAMETERS : Uint16 screenWidth : taille en de l'écran en pixel (axe x)
-* OUTPUT PARAMETERS : Génération du sol et des spec de la map
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : groundGen																	   */
+/* ROLE : Génération du sol et des spec de la map									   */
+/* INPUT/OUTPUT : Map& map : structure de la MAP									   */
+/* INPUT : Uint16 screenWidth : taille en de l'écran en pixel (axe x)				   */
+/* RETURNED VALUE : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::groundGen
 (
 	Map& map,
@@ -237,30 +250,34 @@ void GamePlay::groundGen
 	LoadConfig::logfileconsole("[INFO]___: Groundgen End");
 }
 
-/*
-* NAME : mapBordersConditions
-* ROLE : Boucle For de conditions
-* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2
-* INPUT  PARAMETERS : Map& map : structure de la MAP
-* INPUT  PARAMETERS : unsigned int i : index en X
-* INPUT  PARAMETERS : unsigned int j : index en Y
-* OUTPUT PARAMETERS : Validations des conditions ou non
-* RETURNED VALUE    : bool : valid = true / not valid = false
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : mapBordersConditions														   */
+/* ROLE : Boucle For de conditions													   */
+/* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2				   */
+/* INPUT : const Map& map : structure de la MAP										   */
+/* INPUT : unsigned int i : index en X												   */
+/* INPUT : unsigned int j : index en Y												   */
+/* RETURNED VALUE : bool : valid = true / not valid = false							   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 bool GamePlay::mapBordersConditions
 (
-	Map& map,
+	const Map& map,
 	unsigned int i,
 	unsigned int j
 )
 {
 	for (unsigned int index(MAP_BORDER_MIN); index < MAP_BORDER_MAX; index++)
 	{
-		if (
+		if	(
 				(i == index)
-			||  (i == (map.mapSize / map.tileSize) - (index + 1))
-			||  (j == index)
-			||  (j == (map.mapSize / map.tileSize) - (index + 1))
+				||
+				(i == (map.mapSize / map.tileSize) - (index + 1))
+				||
+				(j == index)
+				||
+				(j == (map.mapSize / map.tileSize) - (index + 1))
 			)
 		{
 			return true;
@@ -269,15 +286,16 @@ bool GamePlay::mapBordersConditions
 	return false;
 }
 
-/*
-* NAME : mapBordersConditions
-* ROLE : Affectation des caractéristiques de la case en fonction ...
-* ROLE : ... de la fonction rand, dans la bordure de la map entre ...
-* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX
-* INPUT  PARAMETERS : Tile& tile : tile à affecter
-* OUTPUT PARAMETERS : Affectation des caractéristiques
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : mapBorders																   */
+/* ROLE : Affectation des caractéristiques de la case en fonction ...				   */
+/* ROLE : ... de la fonction rand, dans la bordure de la map entre ...				   */
+/* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX										   */
+/* OUTPUT : Tile& tile : tile à affecter											   */
+/* RETURNED VALUE : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::mapBorders
 (
 	Tile& tile
@@ -325,18 +343,19 @@ void GamePlay::mapBorders
 	}
 }
 
-/*
-* NAME : mapIntern
-* ROLE : Affectation des caractéristiques de la case en fonction ...
-* ROLE : ... de la fonction rand, dans le reste de la map
-* ROLE : Si la case est de type water alors création de 2 autres ...
-* ROLE : ... cases de type water pour obtenir une forme en L
-* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& maps : matrice de la map
-* INPUT  PARAMETERS : unsigned int i : index en X
-* INPUT  PARAMETERS : unsigned int j : index en Y
-* OUTPUT PARAMETERS : Affectation des caractéristiques
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : mapIntern																	   */
+/* ROLE : Affectation des caractéristiques de la case en fonction ...				   */
+/* ROLE : ... de la fonction rand, dans le reste de la map							   */
+/* ROLE : Si la case est de type water alors création de 2 autres ...				   */
+/* ROLE : ... cases de type water pour obtenir une forme en L						   */
+/* INPUT/OUTPUT : std::vector<std::vector<Tile>>& maps : matrice de la map			   */
+/* INPUT : unsigned int i : index en X												   */
+/* INPUT : unsigned int j : index en Y												   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::mapIntern
 (
 	std::vector<std::vector<Tile>>& maps,
@@ -577,16 +596,17 @@ void GamePlay::mapIntern
 	}
 }
 
-/*
-* NAME : tileAffectation
-* ROLE : Affectation des caractéristiques à une case
-* INPUT  PARAMETERS : Tile& tile, : la case à affecter
-* INPUT  PARAMETERS : Uint8 tile_ground, std::string tile_stringground,
-* INPUT  PARAMETERS : Uint8 tile_spec, std::string tile_stringspec,
-* INPUT  PARAMETERS : int8_t food, int8_t work, int8_t gold
-* OUTPUT PARAMETERS : Affectation
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : tileAffectation															   */
+/* ROLE : Affectation des caractéristiques à une case								   */
+/* OUTPUT : Tile& tile, : la case à affecter										   */
+/* INPUT : Uint8 tile_ground, std::string tile_stringground,						   */
+/* INPUT : Uint8 tile_spec, std::string tile_stringspec,							   */
+/* INPUT : int8_t food, int8_t work, int8_t gold									   */
+/* RETURNED VALUE : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::tileAffectation
 (	
 	Tile& tile,
@@ -608,25 +628,28 @@ void GamePlay::tileAffectation
 	tile.gold = gold;
 }
 
-/*
-* NAME : newGameSettlerSpawn
-* ROLE : Création des position pour les settlers de chaque joueurs
-* INPUT  PARAMETERS : std::vector<Unit_Struct>& : tableau des statistiques par défauts des unités
-* INPUT  PARAMETERS : struct Map& map : structure globale de la map
-* INPUT  PARAMETERS : std::vector<Player*>& : vecteurs de joueurs
-* OUTPUT PARAMETERS : position pour les settlers de chaque joueurs
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : newGameSettlerSpawn														   */
+/* ROLE : Création des position pour les settlers de chaque joueurs					   */
+/* INPUT : const std::vector<Unit_Struct>& : tableau des statistiques ...			   */
+/* INPUT : ...  par défauts des unités												   */
+/* INPUT : const struct Map& map : structure globale de la map						   */
+/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::newGameSettlerSpawn
 (
-	std::vector<Unit_Struct>& tabUnit_Struct,
-	Map& map,
+	const std::vector<Unit_Struct>& tabUnit_Struct,
+	const Map& map,
 	std::vector<Player*>& tabplayer
 )
 {
-	/*
-		association des vecteurs de position (x,y) avec les settlers de départ
-	*/
+	/* ---------------------------------------------------------------------- */
+	/* association des vecteurs de position (x,y)							  */
+	/* avec les settlers de départ											  */
+	/* ---------------------------------------------------------------------- */
 	unsigned int selectunit(0);
 	for (unsigned int p(0); p < tabUnit_Struct.size(); p++)
 	{
@@ -668,23 +691,21 @@ void GamePlay::newGameSettlerSpawn
 	}
 }
 
-/*
-* NAME : makeRandomPosTab
-* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial
-* INPUT  PARAMETERS : Map& map : structure globale de la map
-* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-* OUTPUT PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : makeRandomPosTab															   */
+/* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial			   */
+/* INPUT : const Map& map : structure globale de la map								   */
+/* INPUT/OUTPUT : std::vector<randomPos>& : vecteurs de positions					   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::makeRandomPosTab
 (
-	Map& map,
+	const Map& map,
 	std::vector<randomPos>& tabRandom
 )
 {
-	/*
-		créér autant de vecteur de position (x,y) que de joueur initial
-	*/
 	randomPos RandomPOS;
 	bool continuer(true);
 	unsigned int nbConditionCheck(0);
@@ -740,94 +761,105 @@ void GamePlay::makeRandomPosTab
 	tabRandom.push_back(RandomPOS);
 }
 
-/*
-* NAME : makeRandomPos
-* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
-* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
-* INPUT  PARAMETERS : unsigned int toolBarSize: taille de la barre d'outil
-* INPUT  PARAMETERS : unsigned int tileSize
-* OUTPUT PARAMETERS : un vecteur de position
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : makeRandomPos																   */
+/* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran */
+/* OUTPUT : randomPos& RandomPOS : couple de positions								   */
+/* INPUT : const std::vector<std::vector<Tile>>& maps : Matrice maps				   */
+/* INPUT : unsigned int toolBarSize: taille de la barre d'outil						   */
+/* INPUT : unsigned int tileSize													   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::makeRandomPos
 (	
 	randomPos& RandomPOS,
-	std::vector<std::vector<Tile>> maps,
+	const std::vector<std::vector<Tile>>& maps,
 	unsigned int toolBarSize,
 	unsigned int tileSize
 )
 {
-	/*
-		créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran
-	*/
 	int x((rand() % ((unsigned int)(maps.size() * tileSize) - (unsigned int)(toolBarSize * tileSize))) + (toolBarSize * tileSize));
 	int y((rand() % (maps[0].size() * tileSize)));
 	RandomPOS.x = (int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;
 }
 
-/*
-* NAME : conditionspace
-* ROLE : condition pour valider les coordonnées crées:
-* ROLE : - etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
-* INPUT  PARAMETERS : randomPos& RandomPOS : couple de positions
-* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-* INPUT  PARAMETERS : unsigned int tileSize
-* INPUT  PARAMETERS : couple de positions courant
-* OUTPUT PARAMETERS : validation des positions
-* RETURNED VALUE    : true -> condition de position validée / false -> non valide
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : conditionspace															   */
+/* ROLE : condition pour valider les coordonnées crées:								   */
+/* ROLE : etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée */
+/* INPUT : const randomPos& RandomPOS : couple de positions							   */
+/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+/* INPUT : unsigned int tileSize													   */
+/* INPUT : unsigned int i : couple de positions courant								   */
+/* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 bool GamePlay::conditionspace
 (	
-	randomPos& RandomPOS,
-	std::vector<randomPos>& tabRandom,
+	const randomPos& RandomPOS,
+	const std::vector<randomPos>& tabRandom,
 	unsigned int tileSize,
 	unsigned int i
 )
 {
-	/*
-		condition pour valider les coordonnées crées:
-					- etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée
-	*/
-	int spaceBetweenSettler(tileSize * 16);
+	int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
 
-	if (RandomPOS.x < (tabRandom[i].x - spaceBetweenSettler)
-		|| RandomPOS.x >(tabRandom[i].x + spaceBetweenSettler)
-		|| RandomPOS.y < (tabRandom[i].y - spaceBetweenSettler)
-		|| RandomPOS.y >(tabRandom[i].y + spaceBetweenSettler))
+	if	(
+			RandomPOS.x < (tabRandom[i].x - spaceBetweenSettler)
+			||
+			RandomPOS.x >(tabRandom[i].x + spaceBetweenSettler)
+			||
+			RandomPOS.y < (tabRandom[i].y - spaceBetweenSettler)
+			||
+			RandomPOS.y >(tabRandom[i].y + spaceBetweenSettler)
+		)
+	{
 		return true;
+	}
 	else
+	{
 		return false;
+	}	
 }
 
-/*
-* NAME : conditionground
-* ROLE : condition pour valider les coordonnées crées:
-* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol
-* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la map
-* INPUT  PARAMETERS : std::vector<randomPos>& : vecteurs de positions
-* OUTPUT PARAMETERS : validation des positions
-* RETURNED VALUE    : true -> condition de position validée / false -> non valide
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : conditionground															   */
+/* ROLE : condition pour valider les coordonnées crées:								   */
+/* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol			   */
+/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la map				   */
+/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+/* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 bool GamePlay::conditionground
 (
-	std::vector<std::vector<Tile>>& maps,
-	randomPos& RandomPOS
+	const std::vector<std::vector<Tile>>& maps,
+	const randomPos& RandomPOS
 )
 {
-	/*
-		condition pour valider les coordonnées crées:
-			- etre sur une tile possédant la caractéristique d'etre du sol
-	*/
 	for (unsigned int i(0); i < maps.size(); i++) 
 	{
 		for (unsigned int j(0); j < maps[i].size(); j++) 
 		{
-			if (maps[i][j].tile_x == RandomPOS.x && maps[i][j].tile_y == RandomPOS.y) 
+			if	(
+					maps[i][j].tile_x == RandomPOS.x
+					&&
+					maps[i][j].tile_y == RandomPOS.y
+				) 
 			{
 				if (maps[i][j].tile_ground == grass)
+				{
 					return true;
-				return false;
+				}
+				else
+				{
+					return false;
+				}	
 			}
 			else
 			{
@@ -850,13 +882,14 @@ bool GamePlay::conditionground
  ********************************************************* */
 
 
-/*
-* NAME : nextTurn
-* ROLE : Action à réaliser lors du passage à un nouveau tour 
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : passage à un nouveau tour 
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : nextTurn																	   */
+/* ROLE : Action à réaliser lors du passage à un nouveau tour					       */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
 void GamePlay::nextTurn
 (
 	Sysinfo& sysinfo

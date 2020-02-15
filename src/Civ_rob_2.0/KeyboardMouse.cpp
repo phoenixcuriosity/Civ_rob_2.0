@@ -1529,12 +1529,7 @@ void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (
-				   sysinfo.var.statescreen == STATEmainmap
-				&& sysinfo.var.select == selectmove
-				&& sysinfo.var.s_player.selectplayer != -1
-				&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1572,12 +1567,7 @@ void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
 		IHM::refreshNamePlayerTxt(sysinfo);
 		break;
 	case cinMainMap:
-		if (
-				   sysinfo.var.statescreen == STATEmainmap
-				&& sysinfo.var.select == selectmove
-				&& sysinfo.var.s_player.selectplayer != -1
-				&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1615,12 +1605,7 @@ void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (
-			sysinfo.var.statescreen == STATEmainmap
-			&& sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1
-			&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1659,12 +1644,7 @@ void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (
-			sysinfo.var.statescreen == STATEmainmap
-			&& sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1
-			&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1729,12 +1709,7 @@ void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (
-			sysinfo.var.statescreen == STATEmainmap
-			&& sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1
-			&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1773,12 +1748,7 @@ void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (
-			sysinfo.var.statescreen == STATEmainmap
-			&& sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1
-			&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1817,12 +1787,7 @@ void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (
-			sysinfo.var.statescreen == STATEmainmap
-			&& sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1
-			&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1862,12 +1827,7 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 		break;
 	case cinMainMap:
 
-		if (
-			sysinfo.var.statescreen == STATEmainmap
-			&& sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1
-			&& sysinfo.var.s_player.selectunit != -1
-			)
+		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1888,6 +1848,28 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 	}
 }
 
+bool KeyboardMouse::conditionTryToMove
+(
+	const Var var
+)
+{
+	if	(
+			var.statescreen == STATEmainmap
+			&&
+			var.select == selectmove
+			&&
+			var.s_player.selectplayer != -1
+			&&
+			var.s_player.selectunit != -1
+		)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
 /* *********************************************************
  *			END KeyboardMouse::STATIC::UNE TOUCHE		   *

@@ -81,7 +81,6 @@ typedef struct AllTextes AllTextes;
 typedef struct AllButtons AllButtons;
 typedef struct Sysinfo Sysinfo;
 
-
 /* *********************************************************
  *					Classes								   *
  ********************************************************* */
@@ -94,7 +93,6 @@ class Texture;
 class Texte;
 class ButtonImage;
 class ButtonTexte;
-class HashTable;
 class City;
 class Citizen;
 class LTimer;

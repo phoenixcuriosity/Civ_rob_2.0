@@ -39,12 +39,15 @@
 #ifndef civ_lib_H
 #define civ_lib_H
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "LIB.h"
 #include "Texture.h"
 #include "LTimer.h"
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
-
 
 /* *********************************************************
  *				Calcul des Constantes					   *
@@ -68,68 +71,11 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
  *						Constantes						   *
  ********************************************************* */
 
-#define configFilePath "bin/config.xml"
-
-/* MAP -> taille max - min de la mer */
-#define MAP_BORDER_MAX 4
-#define MAP_BORDER_MIN 1
-
-/* MAP -> valeur deep_water */
-#define MAP_BORDER_ZERO 0
-
-/* MAP_GEN_RANDOM */
-#define MAP_GEN_RANDOM_RANGE_GROUND 100
-#define MAP_GEN_RANDOM_OFFSET_GROUND 1
-
-#define MAP_GEN_RANDOM_RANGE_SPEC_GRASS 100
-#define MAP_GEN_RANDOM_OFFSET_SPEC_GRASS 1
-
-#define MAP_GEN_RANDOM_RANGE_SPEC_WATER 20
-#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER 1
-
-#define MAP_GEN_RANDOM_RANGE_SPEC_WATER1 10
-#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER1 1
-
-#define MAP_GEN_RANDOM_RANGE_SPEC_WATER2 10
-#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER2 1
-
-#define MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER 50
-#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER 1
-
-#define MAX_CITY_PER_PLAYER 5
-
-#define MAX_RANDOM_POS_ITERATION 10000
-
+const std::string configFilePath = "bin/config.xml";
 
 /* *********************************************************
  *						 Enum							   *
  ********************************************************* */
-
-// type de sol
-enum Ground_Type : Uint8
-{
-	noGround,
-	grass,
-	water,
-	deepwater,
-	dirt,
-	sand
-};
-
-// spécifications du terrain
-enum GroundSpec_Type : Uint8
-{
-	specnothing,
-	coal,
-	copper,
-	iron,
-	tree,
-	stone,
-	uranium,
-	horse,
-	fish,
-	petroleum
-}; 
 
 // différents état de l'écran
 enum State_Type : Uint8 
@@ -162,6 +108,32 @@ enum CinState_Type : Uint8
 	cinScreenNewGameNbPlayer,
 	cinScreenNewGameNamePlayer,
 	cinMainMap,
+};
+
+// type de sol
+enum Ground_Type : Uint8
+{
+	noGround,
+	grass,
+	water,
+	deepwater,
+	dirt,
+	sand
+};
+
+// spécifications du terrain
+enum GroundSpec_Type : Uint8
+{
+	specnothing,
+	coal,
+	copper,
+	iron,
+	tree,
+	stone,
+	uranium,
+	horse,
+	fish,
+	petroleum
 };
 
 /* *********************************************************

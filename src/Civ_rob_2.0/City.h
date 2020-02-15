@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.4
+	last modification on this file on version:0.18
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,24 +25,40 @@
 #ifndef City_H
 #define City_H
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "civ_lib.h"
 #include "Player.h"
-
 
 /* *********************************************************
  *					 Constantes							   *
  ********************************************************* */
 
-  
-  
-// taille de la carte transposée dans la citiemap
-const int initSizeView = 7;
+/* taille de la carte transposée dans la citiemap */
+const Uint8 INIT_SIZE_VIEW = 7;
 
-// taille de l'influence de la citie initialement
-const int initSizeInfluence = 2;
+/* taille de l'influence de la citie initialement */
+const Uint8 INIT_SIZE_INFLUENCE = 2;
 
-const unsigned int MAX_POP = 50;
+/* Population maximale dans une Citie */
+const Uint8 MAX_POP = 50;
 
+/* Todo : généralisation : compter nb Citie par player dans CITIENAME.txt */
+
+/* Nombre de noms de Citie dans CITIENAME.txt */
+const Uint8 MAX_CITY_PER_PLAYER = 5;
+
+/* *********************************************************
+ *						 Structs						   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *							 Enum						   *
+ ********************************************************* */
 
 enum class Religion_Type : Uint8
 {
@@ -80,9 +96,6 @@ enum class Emotion_Type : int8_t
 	angry	 = -2
 };
 
-
-
-
 /* *********************************************************
  *						 Classes						   *
  ********************************************************* */
@@ -94,42 +107,54 @@ public:
 	 *					City::STATIC						   *
 	 ********************************************************* */
 	
-	
-	/*
-	 * NAME : createCity
-	 * ROLE : Création d'une City à partir d'un settler sur la carte
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : Création d'une City
-	 * RETURNED VALUE    : void
-	 */
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : createCity																   */
+	/* ROLE : Création d'une City à partir d'un settler sur la carte					   */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
 	static void createCity
 	(
 		Sysinfo& sysinfo
 	);
-	
-		
-	/*
-	* NAME : searchCityTile
-	* ROLE : Recherche la case de la City et renvoie vers cityMap
-	* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
-	* INPUT  PARAMETERS : Var& : Structure Var
-	* OUTPUT PARAMETERS : la case de la City et renvoie vers cityMap
-	* RETURNED VALUE    : void
-	*/
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : initSizeInfluenceCondition												   */
+	/* ROLE : Conditions des cases de la ville à l'intérieur de zone d'influence		   */
+	/* INPUT : unsigned int o :	index en x												   */
+	/* INPUT : unsigned int p :	index en y												   */
+	/* RETURNED VALUE : bool : false -> invalid / true -> valid							   */
+	/* ----------------------------------------------------------------------------------- */
+	static bool initSizeInfluenceCondition
+	(
+		unsigned int o,
+		unsigned int p
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : searchCityTile															   */
+	/* ROLE : Recherche la case de la City et renvoie vers cityMap						   */
+	/* INPUT : const std::vector<Player*>& : Vecteur de joueurs							   */
+	/* INPUT/OUTPUT : Var& : Structure Var												   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
 	static void searchCityTile
 	(
-		std::vector<Player*>& tabplayer,
+		const std::vector<Player*>& tabplayer,
 		Var& var
 	);
 	
-		
-	/*
-	 * NAME : createTiles
-	 * ROLE : Création d'un tableau de Tile pour la City
-	 * INPUT  PARAMETERS : Tile tile[] : données générale de la map
-	 * OUTPUT PARAMETERS : std::vector<Tile>
-	 * RETURNED VALUE    : std::vector<Tile> : données générale de la cityMap
-	 */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : createTiles																   */
+	/* ROLE : Création d'un tableau de Tile pour la City								   */
+	/* INPUT : Tile tile[] : données générale de la map									   */
+	/* RETURNED VALUE : std::vector<Tile> : données générale de la cityMap				   */
+	/* ----------------------------------------------------------------------------------- */
 	static std::vector<Tile> createTiles
 	(
 		Tile tile[]
@@ -141,36 +166,54 @@ public:
 	 *					City::METHODS						   *
 	 ********************************************************* */
 	 
-	
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : City																		   */
+	/* ROLE : Constructeur complet														   */
+	/* INPUT : const std::string &	: name de la Citie									   */
+	/* INPUT : unsigned int x : index en x												   */
+	/* INPUT : unsigned int y : index en y												   */
+	/* INPUT : Tile tile[] : tableau de tile de la Citie								   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	City
 	(
 		const std::string &,
-		unsigned int,
-		unsigned int,
-		Tile[]
+		unsigned int x,
+		unsigned int y,
+		Tile tile[]
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : ~City																		   */
+	/* ROLE : Destructeur																   */
+	/* INPUT : void																		   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	~City();
 
-		
-	/*
-	 * NAME : foodNextTurn
-	 * ROLE : Calcul et application du niveau de Food pour le prochain tour
-	 * INPUT  PARAMETERS : void
-	 * OUTPUT PARAMETERS : Calcul et application du niveau de Food
-	 * RETURNED VALUE    : void
-	 */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : foodNextTurn																   */
+	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void foodNextTurn();
 
-		
-	/*
-	 * NAME : testPos
-	 * ROLE : Retourne si la position est valide
-	 * INPUT  PARAMETERS : unsigned int x, unsigned int y : position de la souris
-	 * OUTPUT PARAMETERS : Retourne si la position est valide
-	 * RETURNED VALUE    : int : 0 : pas valide / 1 : valide
-	 */
-	virtual int testPos
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : testPos																	   */
+	/* ROLE : Retourne si la position est valide										   */
+	/* INPUT : unsigned int x : position de la souris en x								   */
+	/* INPUT : unsigned int y : position de la souris en y								   */
+	/* RETURNED VALUE : bool : false : invalid / true : valid							   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool testPos
 	(
 		unsigned int x,
 		unsigned int y
@@ -182,27 +225,28 @@ public:
 	 *				City::METHODS::Affichage				   *
 	 ********************************************************* */
 	 
-		
-	/*
-	 * NAME : afficher
-	 * ROLE : Affichage de la City (Texture et nom)
-	 * INPUT  PARAMETERS : truct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : Affichage de la City (Texture et nom)
-	 * RETURNED VALUE    : void
-	 */
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficher																	   */
+	/* ROLE : Affichage de la City (Texture et nom)										   */
+	/* INPUT : truct Sysinfo& : structure globale du programme							   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void afficher
 	(
 		Sysinfo&
 	);
-	
-		
-	/*
-	 * NAME : affichercitiemap
-	 * ROLE : Affichage des cases qui compose le secteur de la City
-	 * INPUT  PARAMETERS : truct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : Affichage des cases de la City
-	 * RETURNED VALUE    : void
-	 */
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : affichercitiemap															   */
+	/* ROLE : Affichage des cases qui compose le secteur de la City						   */
+	/* INPUT : truct Sysinfo& : structure globale du programme							   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void affichercitiemap
 	(
 		Sysinfo&
@@ -249,17 +293,18 @@ public:
 	/* *********************************************************
 	 *					Citizen::STATIC						   *
 	 ********************************************************* */
-	 
-	
-	/*
-	 * NAME : placeCitizen
-	 * ROLE : Placement d'un Citizen en fonction des cases occupées de la City
-	 * INPUT  PARAMETERS : std::vector<Tile> : carte de la City
-	 * INPUT  PARAMETERS : std::vector<Citizen> : tableau de Citizen
-	 * INPUT  PARAMETERS : int& _food, int& _work, int& _gold : spec de la case
-	 * OUTPUT PARAMETERS : Placement d'un Citizen
-	 * RETURNED VALUE    : unsigned int : la place allouée
-	 */
+
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : placeCitizen																   */
+	/* ROLE : Placement d'un Citizen en fonction des cases occupées de la City			   */
+	/* INPUT : std::vector<Tile> : carte de la City										   */
+	/* INPUT : std::vector<Citizen> : tableau de Citizen								   */
+	/* INPUT : int& _food, int& _work, int& _gold : spec de la case						   */
+	/* RETURNED VALUE    : unsigned int : la place allouée								   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	static unsigned int placeCitizen
 	(
 		std::vector<Tile>& tile,
@@ -273,43 +318,76 @@ public:
 	/* *********************************************************
 	 *					Citizen::METHODS					   *
 	 ********************************************************* */
+
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : Citizen																	   */
+	/* ROLE : Constructeur par défaut													   */
+	/* INPUT : void																		   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	Citizen();
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : Citizen																	   */
+	/* ROLE : Constructeur par une Tile													   */
+	/* INPUT : Tile tile : tile centrale de la Citie									   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	Citizen
 	(
-		Tile tiles
+		Tile tile
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : Citizen																	   */
+	/* ROLE : Constructeur par une Tile													   */
+	/* INPUT : std::vector<Tile>& tile : tableau de Tile de la Citie					   */
+	/* INPUT : std::vector<Citizen*>& citizens : tableau de Citizens					   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	Citizen
 	(
 		std::vector<Tile>& tile,
 		std::vector<Citizen*>& citizens
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : ~Citizen																	   */
+	/* ROLE : Destructeur																   */
+	/* INPUT : void																		   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	~Citizen();
 
 	
-		
-	/*
-	 * NAME : placeCitizenWithMouse
-	 * ROLE : TODO
-	 * INPUT  PARAMETERS : void 
-	 * OUTPUT PARAMETERS : 
-	 * RETURNED VALUE    : void
-	 */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : placeCitizenWithMouse														   */
+	/* ROLE : TODO																		   */
+	/* INPUT : void 																	   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void placeCitizenWithMouse();
 
-	/*
-	 * NAME : afficher
-	 * ROLE : affichage du citizen sur la case de la citie map
-	 * INPUT  PARAMETERS : void
-	 * OUTPUT PARAMETERS : affichage sur la map
-	 * RETURNED VALUE    : void
-	 */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficher																	   */
+	/* ROLE : affichage du citizen sur la case de la citie map							   */
+	/* INPUT : std::unordered_map<std::string,Texture*>& : tableau de Texture de la Citie  */
+	/* INPUT : unsigned int x : index en x du Citizen									   */
+	/* INPUT : unsigned int y : index en y du Citizen									   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void afficher
 	(
-		std::unordered_map<std::string,
-		Texture*>& citieMap,
+		std::unordered_map<std::string,Texture*>& citieMap,
 		unsigned int x,
 		unsigned int y
 	);

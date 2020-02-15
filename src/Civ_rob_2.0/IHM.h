@@ -107,6 +107,11 @@ public:
 		Sysinfo&
 	);
 
+	static bool checkPlayerUnitSelection
+	(
+		const SubcatPlayer& s_player
+	);
+
 	/*
 	 * NAME : citiemap
 	 * ROLE : Affichage de la fenetre citiemap

@@ -364,7 +364,7 @@ void LoadConfig::initMain
 	logfileconsole("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config;
-	config.LoadFile(configFilePath);
+	config.LoadFile(configFilePath.c_str());
 
 	if (config.ErrorID() == 0)
 	{
@@ -487,7 +487,8 @@ void LoadConfig::calculImage
 
 	// chargement de l'image de la toolbar
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "toolbar.bmp", "toolbar.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+		IPath + "toolbar.bmp", "toolbar.bmp", nonTransparent, 0, 0,
+		sysinfo.map.tileSize * sysinfo.map.toolBarSize, sysinfo.map.tileSize * sysinfo.screen.screenHeight, no_angle, nocenter);
 
 
 
@@ -886,38 +887,38 @@ void LoadConfig::readXmlTexte
 	const char* root("Config");
 
 
-	const char* s_M_Texte("Texte"),
-		* s_Statescreen("Statescreen"),
-		* s_Select("Select"),
-		* s_TexteName("TexteName"),
-		* s_Type("Type"),
-		* s_Texte("Texte"),
-		* s_FontColor("FontColor"),
-		* s_FontColor_Simple("Simple"),
-		* s_FontColor_Simple_Condition("Condition"),
-		* s_FontColor_Simple_Color("Color"),
-		* s_FontColor_Complexe("Complexe"),
-		//* s_FontColor_Complexe_condition("Condition"), // not use
-		* s_FontColor_Complexe_R("R"),
-		* s_FontColor_Complexe_G("G"),
-		* s_FontColor_Complexe_B("B"),
-		* s_FontColor_Complexe_Alpha("Alpha"),
-		* s_BackColor("FontColor"),
-		* s_BackColor_Simple("Simple"),
-		* s_BackColor_Simple_Condition("Condition"),
-		* s_BackColor_Simple_Color("Color"),
-		* s_BackColor_Complexe("Complexe"),
-		//* s_BackColor_Complexe_condition("Condition"), //not use
-		* s_BackColor_Complexe_R("R"),
-		* s_BackColor_Complexe_G("G"),
-		* s_BackColor_Complexe_B("B"),
-		* s_BackColor_Complexe_Alpha("Alpha"),
-		* s_Size("Size"),
-		* s_X("X"),
-		* s_Y("Y"),
-		* s_Alpha("Alpha"),
-		* s_Angle("Angle"),
-		* s_Center("Center");
+	const char	* s_M_Texte("Texte"),
+					* s_Statescreen("Statescreen"),
+					* s_Select("Select"),
+					* s_TexteName("TexteName"),
+					* s_Type("Type"),
+					* s_Texte("Texte"),
+					* s_FontColor("FontColor"),
+						* s_FontColor_Simple("Simple"),
+						* s_FontColor_Simple_Condition("Condition"),
+							* s_FontColor_Simple_Color("Color"),
+						* s_FontColor_Complexe("Complexe"),
+						//* s_FontColor_Complexe_condition("Condition"), // not use
+							* s_FontColor_Complexe_R("R"),
+							* s_FontColor_Complexe_G("G"),
+							* s_FontColor_Complexe_B("B"),
+							* s_FontColor_Complexe_Alpha("Alpha"),
+					* s_BackColor("FontColor"),
+						* s_BackColor_Simple("Simple"),
+						* s_BackColor_Simple_Condition("Condition"),
+							* s_BackColor_Simple_Color("Color"),
+						* s_BackColor_Complexe("Complexe"),
+						//* s_BackColor_Complexe_condition("Condition"), //not use
+							* s_BackColor_Complexe_R("R"),
+							* s_BackColor_Complexe_G("G"),
+							* s_BackColor_Complexe_B("B"),
+							* s_BackColor_Complexe_Alpha("Alpha"),
+					* s_Size("Size"),
+					* s_X("X"),
+					* s_Y("Y"),
+					* s_Alpha("Alpha"),
+					* s_Angle("Angle"),
+					* s_Center("Center");
 
 	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_M_Texte));
 

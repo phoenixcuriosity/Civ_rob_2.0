@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.9
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,27 +22,34 @@
 
 */
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "Unit.h"
 #include "IHM.h"
 #include "LoadConfig.h"
 
-
 /* *********************************************************
- *				START Unit::STATIC						   *
+ *						 Classes						   *
  ********************************************************* */
 
+/* *********************************************************
+ *					START Unit::STATIC					   *
+ ********************************************************* */
 
-/*
-* NAME : loadUnitAndSpec
-* ROLE : Chargement des informations concernant les unités à partir d'un fichier
-* INPUT  PARAMETERS : std::string& : nom du fichier à ouvrir
-* INPUT  PARAMETERS : std::vector<Unit_Struct>& : Vecteur des Unit
-* OUTPUT PARAMETERS : tableau de nom et spec concernant les unités
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : loadUnitAndSpec															   */
+/* ROLE : Chargement des informations concernant les unités à partir d'un fichier	   */
+/* INPUT : const std::string& : nom du fichier à ouvrir								   */
+/* OUTPUT : std::vector<Unit_Struct>& : Vecteur des Unit							   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::loadUnitAndSpec
 (
-	std::string& UNIT,
+	const std::string& UNIT,
 	std::vector<Unit_Struct>& tabUnit_Struct
 )
 {
@@ -78,14 +85,14 @@ void Unit::loadUnitAndSpec
 	}
 }
 
-
-/*
-* NAME : searchunit
-* ROLE : Sélection du nom de l'unité à partir de l'index du tableau
-* INPUT  PARAMETERS : struct SubcatPlayer& : structure player
-* OUTPUT PARAMETERS : nom de l'unité
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : searchunit																   */
+/* ROLE : Sélection du nom de l'unité à partir de l'index du tableau				   */
+/* INPUT/OUTPUT : struct Map& : données générale de la map : taille					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::searchUnit
 (
 	SubcatPlayer& s_player
@@ -94,23 +101,22 @@ void Unit::searchUnit
 	s_player.unitNameToCreate = s_player.tabUnit_Struct[s_player.unitToCreate].name;
 }
 
-
-/*
-* NAME : searchUnitTile
-* ROLE : Cherche l'unité étant dans la case séléctionné
-* INPUT  PARAMETERS : Struct SubcatPlayer& : structure concernant un joueur
-* INPUT  PARAMETERS : Class KeyboardMouse& : données générale des entrées utilisateur
-* INPUT  PARAMETERS : struct Map& : données générale de la map
-* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
-* OUTPUT PARAMETERS : index et nom de l'unité sélectionnée
-* OUTPUT PARAMETERS : activation de la méthode blit (clignotement)
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : searchUnitTile															   */
+/* ROLE : Cherche l'unité étant dans la case séléctionné							   */
+/* INPUT/OUTPUT : SubcatPlayer& s_player : structure concernant un joueur			   */
+/* INPUT : const KeyboardMouse& mouse : données générale des entrées utilisateur	   */
+/* INPUT : const Map& map : données générale de la map								   */
+/* INPUT/OUTPUT : std::vector<Player*>& tabplayer : Vecteur de joueurs				   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::searchUnitTile
 (
 	SubcatPlayer& s_player,
-	KeyboardMouse& mouse,
-	Map& map,
+	const KeyboardMouse& mouse,
+	const Map& map,
 	std::vector<Player*>& tabplayer
 )
 {
@@ -136,23 +142,23 @@ void Unit::searchUnitTile
 	}
 }
 
-
-/*
-* NAME : tryToMove
-* ROLE : Recherche à faire bouger l'unité selon le contexte
-* ROLE : Attention : contient un rappel récursif
-* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la MAP
-* INPUT  PARAMETERS : Struct SubcatPlayer& : structure concernant un joueur
-* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
-* INPUT  PARAMETERS : Select_Type : état de la sélection du joueur (enum Select_Type : Uint8)
-* INPUT  PARAMETERS : int x : pos X
-* INPUT  PARAMETERS : int y : pos Y
-* OUTPUT PARAMETERS : l'unité reste à sa place ou bouge en fonction du contexte
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : tryToMove																	   */
+/* ROLE : Recherche à faire bouger l'unité selon le contexte						   */
+/* ROLE : Attention : contient un rappel récursif									   */
+/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la MAP				   */
+/* INPUT/OUTPUT : Struct SubcatPlayer& : structure concernant un joueur				   */
+/* INPUT/OUTPUT : std::vector<Player*>& : Vecteur de joueurs						   */
+/* INPUT : Select_Type : état de la sélection du joueur (enum Select_Type : Uint8)	   */
+/* INPUT : int x : pos X															   */
+/* INPUT : int y : pos Y															   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::tryToMove
 (
-	std::vector<std::vector<Tile>>& maps,
+	const std::vector<std::vector<Tile>>& maps,
 	SubcatPlayer& s_player,
 	std::vector<Player*>& tabplayer,
 	Select_Type select,
@@ -180,12 +186,12 @@ void Unit::tryToMove
 				->attack(tabplayer[s_player.selectPlayerToAttack]
 					->GETtheUnit(s_player.selectUnitToAttack));
 
-		if (
-			tabplayer[s_player.selectPlayerToAttack]
-			->GETtheUnit(s_player.selectUnitToAttack)
-				->GETalive()
-			==
-			false
+		if	(
+				tabplayer[s_player.selectPlayerToAttack]
+					->GETtheUnit(s_player.selectUnitToAttack)
+						->GETalive()
+				==
+				false
 			)
 		{
 			tabplayer[s_player.selectPlayerToAttack]
@@ -201,61 +207,55 @@ void Unit::tryToMove
 	}
 }
 
-
-/*
-* NAME : searchToMove
-* ROLE : Recherche à faire bouger l'unité selon le contexte
-* ROLE : Action conditionnelle (case libre, ennemi, amis)
-* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& : Matrice de la MAP
-* INPUT  PARAMETERS : Struct SubcatPlayer& : structure concernant un joueur
-* INPUT  PARAMETERS : std::vector<Player*>& : Vecteur de joueurs
-* INPUT  PARAMETERS : int x : pos X
-* INPUT  PARAMETERS : int y : pos Y
-* OUTPUT PARAMETERS : l'unité reste à sa place ou bouge en fonction du contexte
-* RETURNED VALUE    : Move_Type : 0 : ne bouge pas / 1 : case libre : peut bouger / 2 : ennemi : ne bouge pas
-*
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : searchToMove																   */
+/* ROLE : Recherche à faire bouger l'unité selon le contexte						   */
+/* ROLE : Action conditionnelle (case libre, ennemi, amis)							   */
+/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la MAP			   	   */
+/* INPUT : Struct SubcatPlayer& : structure concernant un joueur					   */
+/* INPUT : const std::vector<Player*>& : Vecteur de joueurs							   */
+/* INPUT : int x : pos X														   	   */
+/* INPUT : int y : pos Y															   */
+/* RETURNED VALUE : Move_Type : / 0 : ne bouge pas / 1 : case libre : peut bouger	   */
+/* RETURNED VALUE : Move_Type : / 2 : ennemi : ne bouge pas							   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Move_Type Unit::searchToMove
 (
-	std::vector<std::vector<Tile>>& maps,
+	const std::vector<std::vector<Tile>>& maps,
 	SubcatPlayer& s_player,
-	std::vector<Player*>& tabplayer,
+	const std::vector<Player*>& tabplayer,
 	int x,
 	int y
 )
 {
-	/*
-		conditions de mouvement :
-			- que la case cible soit du sol et
-					- que la case cible est libre
-					- ou que la case cible est occupée par un ennemi susceptible de mourrir par l'attaque
 
-	*/
-	bool ground = false;
+	/* ---------------------------------------------------------------------- */
+	/* conditions de mouvement :											  */
+	/*	- que la case cible soit du sol et									  */
+	/*		- que la case cible est libre									  */
+	/*		- ou que la case cible est occupée par un ennemi				  */
+	/*		  susceptible de mourrir par l'attaque							  */
+	/* ---------------------------------------------------------------------- */
+
+	bool onGround = false;
 
 	for (unsigned int i(0); i < maps.size(); i++)
 	{
 		for (unsigned int j(0); j < maps[i].size(); j++)
 		{
-			if (
-				maps[i][j].tile_x
-				== 
-					tabplayer[s_player.selectplayer]
-						->GETtheUnit(s_player.selectunit)
-							->GETx() 
-					+ x
-				&&
-				maps[i][j].tile_y
-				==
-					tabplayer[s_player.selectplayer]
-						->GETtheUnit(s_player.selectunit)
-							->GETy()
-					+ y
+			if	(checkNextTile
+					(
+						maps[i][j],
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit),
+						x, y
+					)
 				)
 			{
 				if (maps[i][j].tile_ground == grass)
 				{
-					ground = true;
+					onGround = true;
 					break;
 				}
 				else
@@ -270,7 +270,7 @@ Move_Type Unit::searchToMove
 		}
 	}
 
-	if (ground)
+	if (onGround)
 	{
 		/* On ground */
 
@@ -278,42 +278,23 @@ Move_Type Unit::searchToMove
 		{
 			for (unsigned int j = 0; j < tabplayer[i]->GETtabUnit().size(); j++) 
 			{
-				if (
-					tabplayer[s_player.selectplayer]
-						->GETtheUnit(s_player.selectunit)
-							->GETx()
-					+ x 
-					==
-					tabplayer[i]
-						->GETtheUnit(j)
-							->GETx()
+				if	(checkUnitNextTile
+						(
+							tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit),
+							tabplayer[i]->GETtheUnit(j),
+							x, y
+						)	
 					)
 				{
-					if (
-						tabplayer[s_player.selectplayer]
-							->GETtheUnit(s_player.selectunit)
-								->GETy()
-						+ y
-						==
-						tabplayer[i]
-							->GETtheUnit(j)
-								->GETy()
-						)
+					if (s_player.selectplayer == (int)i)
 					{
-						if (s_player.selectplayer == (int)i)
-						{
-							return cannotMove;
-						}		
-						else
-						{
-							s_player.selectPlayerToAttack = (int)i;
-							s_player.selectUnitToAttack = (int)j;
-							return attackMove;
-						}
-					}
+						return cannotMove;
+					}		
 					else
 					{
-						/* N/A */
+						s_player.selectPlayerToAttack = (int)i;
+						s_player.selectUnitToAttack = (int)j;
+						return attackMove;
 					}
 				}
 				else
@@ -332,14 +313,85 @@ Move_Type Unit::searchToMove
 	return canMove;
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : checkUnitNextTile															   */
+/* ROLE : Check des équalités des positions des Units avec + x et +y				   */
+/* INPUT : const Unit* from : Unit avec un mouvement possible + x + y				   */
+/* INPUT : const Unit* from : Unit aux positions + x + y							   */
+/* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
+/* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
+/* RETURNED VALUE : bool : false->position différente / true->même positions		   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::checkUnitNextTile
+(
+	const Unit* from,
+	const Unit* to,
+	int x,
+	int y
+)
+{
+	if ((from->GETx() + x) == to->GETx())
+	{
+		if ((from->GETy() + y) == to->GETy())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
 
-/*
-* NAME : irrigate
-* ROLE :
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
-* OUTPUT PARAMETERS :
-* RETURNED VALUE    : bool
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : checkNextTile																   */
+/* ROLE : Check des équalités des positions des Units avec + x et +y				   */
+/* INPUT : const Tile& from : Tile à tester											   */
+/* INPUT : const Unit* from : Unit aux positions + x + y							   */
+/* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
+/* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
+/* RETURNED VALUE : bool : false->position différente / true->même positions		   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::checkNextTile
+(
+	const Tile& from,
+	const Unit* to,
+	int x,
+	int y
+)
+{
+	if ((from.tile_x + x) == to->GETx())
+	{
+		if ((from.tile_y + y) == to->GETy())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : irrigate																	   */
+/* ROLE : 	TODO																	   */
+/* RETURNED VALUE : bool															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 bool Unit::irrigate
 (
 	Sysinfo&
@@ -357,6 +409,13 @@ bool Unit::irrigate
  *				START Units::METHODS					   *
  ********************************************************* */
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : Unit																		   */
+/* ROLE : Constructeur par défaut													   */
+/* INPUT : void																		   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Unit::Unit() :	_name(""), _x(0), _y(0),
 				_maxlife(0), _maxatq(0), _maxdef(0), _maxmovement(0), _maxlevel(0),
 				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true), _blit(0), _show(true)
@@ -364,6 +423,20 @@ Unit::Unit() :	_name(""), _x(0), _y(0),
 	LoadConfig::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : Unit																		   */
+/* ROLE : Constructeur par complet													   */
+/* INPUT : const std::string &name : nom											   */
+/* INPUT : unsigned int x :	position en x sur la map								   */
+/* INPUT : unsigned int y : position en y sur la map								   */
+/* INPUT : unsigned int life : vie max												   */
+/* INPUT : unsigned int atq	: atq max												   */
+/* INPUT : unsigned int def	: def max												   */
+/* INPUT : unsigned int move : move max												   */
+/* INPUT : unsigned int level : level 1												   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Unit::Unit
 (
 	const std::string &name,
@@ -382,19 +455,26 @@ Unit::Unit
 	LoadConfig::logfileconsole("[INFO]___: Create Unit:  Success");
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : ~Unit																		   */
+/* ROLE : Destructeur																   */
+/* INPUT : void																		   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Unit::~Unit()
 {
 	/* N/A */
 }
 
-
-/*
-* NAME : attack
-* ROLE : Attaque la cible avec les dommages appliqués de l'unité
-* INPUT  PARAMETERS : Units* : pointeur vers l'unité qui doit se défendre
-* OUTPUT PARAMETERS : Attaque d'une unité
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : attack																	   */
+/* ROLE : Attaque la cible avec les dommages appliqués de l'unité					   */
+/* INPUT/OUTPUT : Units* : pointeur vers l'unité qui doit se défendre				   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::attack
 (
 	Unit* cible
@@ -410,14 +490,14 @@ void Unit::attack
 	}
 }
 
-
-/*
-* NAME : defend
-* ROLE : Défense de l'unité face à une attaque
-* INPUT  PARAMETERS : unsigned int : dommage appliqué par l'attaque
-* OUTPUT PARAMETERS : l'unité peut prendre des dommage et/ou mourrir
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : defend																	   */
+/* ROLE : Défense de l'unité face à une attaque										   */
+/* INPUT : unsigned int : dommage appliqué par l'attaque							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::defend
 (
 	unsigned int dmg
@@ -442,18 +522,18 @@ void Unit::defend
 	}
 }
 
-
-/*
-* NAME : move
-* ROLE : Application du mouvement à l'unité
-* ROLE : Si l'unité n'a plus de mouvement disponible alors arret
-* INPUT  PARAMETERS : Uint8& : enum Select_Type
-* INPUT  PARAMETERS : int& : unité séléctionnée
-* INPUT  PARAMETERS : int x : incrementation coor x
-* INPUT  PARAMETERS : int y : incrementation coor y
-* OUTPUT PARAMETERS : Application du mouvement à l'unité
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : move																		   */
+/* ROLE : Application du mouvement à l'unité										   */
+/* ROLE : Si l'unité n'a plus de mouvement disponible alors arret					   */
+/* INPUT : Uint8& : enum Select_Type												   */
+/* INPUT : int& : unité séléctionnée												   */
+/* INPUT : int x : incrementation coor x											   */
+/* INPUT : int y : incrementation coor y											   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::move
 (
 	Select_Type& select,
@@ -486,18 +566,18 @@ void Unit::move
 	}
 }
 
-
-/*
-* NAME : heal
-* ROLE : Soigne l'unité en fonction du territoire sur lequel elle se trouve
-* INPUT  PARAMETERS : std::vector<std::vector<Tile>>& tiles : tableau de cases
-* INPUT  PARAMETERS : unsigned int : données générale de la map : joueur sélectionné
-* OUTPUT PARAMETERS : Soigne l'unité en fonction du contexte
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : heal																		   */
+/* ROLE : Soigne l'unité en fonction du territoire sur lequel elle se trouve		   */
+/* INPUT : const std::vector<std::vector<Tile>>& tiles : tableau de cases			   */
+/* INPUT : unsigned int : données générale de la map : joueur sélectionné			   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::heal
 (
-	std::vector<std::vector<Tile>>& tiles,
+	const std::vector<std::vector<Tile>>& tiles,
 	unsigned int selectplayer
 )
 {
@@ -546,14 +626,14 @@ void Unit::heal
 	}
 }
 
-
-/*
-* NAME : levelup
-* ROLE : levelup
-* INPUT  PARAMETERS : void
-* OUTPUT PARAMETERS : levelup
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : levelup																	   */
+/* ROLE : Incrémentation de 1 de level												   */
+/* INPUT : void																		   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::levelup()
 {
 	_level++;
@@ -562,27 +642,28 @@ void Unit::levelup()
 	//heal();
 }
 
-
-/*
-* NAME : RESETmovement
-* ROLE : RESETmovement
-* INPUT  PARAMETERS : void
-* OUTPUT PARAMETERS : RESETmovement
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : RESETmovement																   */
+/* ROLE : Reset du nombre de mouvement disponible pour un tour						   */
+/* INPUT : void																	       */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::RESETmovement()
 {
 	_movement = _maxmovement;
 }
 
-
-/*
-* NAME : testPos
-* ROLE : Test sur les positions de la souris et de l'unité
-* INPUT  PARAMETERS : unsigned int mouse_x : position x
-* OUTPUT PARAMETERS : unsigned int mouse_y : position y
-* RETURNED VALUE    : int : 0 : pas sélectioné / 1 : sélectionné
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : testPos																	   */
+/* ROLE : Test sur les positions de la souris et de l'unité							   */
+/* INPUT : unsigned int mouse_x : position x										   */
+/* INPUT : unsigned int mouse_y : position y										   */
+/* RETURNED VALUE    : int : 0 : pas sélectioné / 1 : sélectionné					   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 bool Unit::testPos
 (
 	unsigned int mouse_x,
@@ -609,26 +690,27 @@ bool Unit::testPos
  ********************************************************* */
 
 
-/*
-* NAME : afficher
-* ROLE : Affichage de la Texture de l'unité ainsi que la barre de vie et couleur
-* INPUT  PARAMETERS : AllTextures& : Structure contenant toutes les Textures
-* INPUT  PARAMETERS : struct Map& : données générale de la map
-* INPUT  PARAMETERS : unsigned int iPlayer : joueur sélectionné
-* OUTPUT PARAMETERS : Affichage de l'unité
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : afficher																	   */
+/* ROLE : Affichage de la Texture de l'unité ainsi que la barre de vie et couleur	   */
+/* INPUT/OUPUT : AllTextures& : Structure contenant toutes les Textures				   */
+/* INPUT : const struct Map& : données générale de la map							   */
+/* INPUT : unsigned int iPlayer : joueur sélectionné								   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::afficher
 (
 	AllTextures& allTextures,
-	Map& map,
+	const Map& map,
 	unsigned int iPlayer
 )
 {
 	if (_show)
 	{
-		unsigned int x = _x - map.screenOffsetXIndexMin * map.tileSize;
-		unsigned int y = _y - map.screenOffsetYIndexMin * map.tileSize;
+		unsigned int x(_x - map.screenOffsetXIndexMin * map.tileSize);
+		unsigned int y(_y - map.screenOffsetYIndexMin * map.tileSize);
 		allTextures.unit[_name]->render( x, y);
 	
 		if (_life == _maxlife)
@@ -684,16 +766,16 @@ void Unit::afficher
 	}
 }
 
-
-/*
-* NAME : afficherstat
-* ROLE : Affichage des statistiques de l'unité (nom, x, y ...)
-* INPUT  PARAMETERS : TTF_Font* font[] : tableau de ptr de font SDL
-* INPUT  PARAMETERS : SDL_Renderer*& : ptr sur le renderer SDL
-* INPUT  PARAMETERS : unsigned int tileSize : données de la map : taille tile
-* OUTPUT PARAMETERS : Affichage des statistiques de l'unité
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : afficherstat																   */
+/* ROLE : Affichage des statistiques de l'unité (nom, x, y ...)						   */
+/* INPUT : TTF_Font* font[] : tableau de ptr de font SDL							   */
+/* INPUT/OUTPUT : SDL_Renderer*& : ptr sur le renderer SDL							   */
+/* INPUT : unsigned int tileSize : données de la map : taille tile					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::afficherstat
 (
 	TTF_Font* font[],
@@ -759,20 +841,20 @@ void Unit::afficherstat
 	}
 }
 
-
-/*
-* NAME : cmpblit
-* ROLE : Compteur permettant de faire clignoter l'unité
-* ROLE : Attention : basé sur SCREEN_REFRESH_RATE
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
-* OUTPUT PARAMETERS : Compteur permettant de faire clignoter l'unité
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : cmpblit																	   */
+/* ROLE : Compteur permettant de faire clignoter l'unité							   */
+/* ROLE : Attention : basé sur SCREEN_REFRESH_RATE									   */
+/* INPUT : void																		   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Unit::cmpblit() 
 {
-	/*
-		50% off 50% on , environ 1s le cycle
-	*/
+	/* ---------------------------------------------------------------------- */
+	/* 50% off 50% on , environ 1s le cycle									  */
+	/* ---------------------------------------------------------------------- */
 	if((++_blit %= (SCREEN_REFRESH_RATE / 2)) == 0)
 	{
 		_show = !_show;

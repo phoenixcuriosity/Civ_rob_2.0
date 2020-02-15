@@ -125,6 +125,11 @@ public:
 	static void keySDLK_KP_8(Sysinfo&);
 	static void keySDLK_KP_9(Sysinfo&);
 
+	static bool conditionTryToMove
+	(
+		const Var var
+	);
+
 
 public:
 	/* *********************************************************

@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
 	last modification on this file on version:0.18
-	file version : 1.20
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -187,8 +187,11 @@ void IHM::alwaysrender
 		{
 			if (sysinfo.var.s_player.selectCitie != -1)
 			{
-				if (sysinfo.var.s_player.selectCitie <
-					(int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size())
+				if (
+						sysinfo.var.s_player.selectCitie
+						<
+						(int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size()
+					)
 				{
 					citiemap(sysinfo);
 				}
@@ -253,14 +256,7 @@ void IHM::mainmap
 
 	afficherSupertiles(sysinfo);
 
-	// affiche la texture grise de la toolbar
-	for (unsigned int i(0); i < sysinfo.map.toolBarSize; i++)
-	{
-		for (unsigned int j(0); j < sysinfo.screen.screenHeight / sysinfo.map.tileSize; j++)
-		{
-			sysinfo.allTextures.ground["toolbar.bmp"]->render(i * sysinfo.map.tileSize, j * sysinfo.map.tileSize);
-		}
-	}
+	sysinfo.allTextures.ground["toolbar.bmp"]->render();
 
 	/* *********************************************************
 	 *					END background						   *
@@ -319,7 +315,9 @@ void IHM::mainmap
 	switch (sysinfo.var.select)
 	{
 	case selectcreate:
-		// affiche les unités pour rendre l'unité à créer
+		/* ---------------------------------------------------------------------- */
+		/* Affiche les unités pour rendre l'unité à créer						  */
+		/* ---------------------------------------------------------------------- */
 		if (sysinfo.var.s_player.unitNameToCreate.compare("") != 0)
 		{
 			sysinfo.allTextures.unit[sysinfo.var.s_player.unitNameToCreate]
@@ -331,7 +329,10 @@ void IHM::mainmap
 		}
 		break;
 	case selectmove:
-		if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
+		/* ---------------------------------------------------------------------- */
+		/* Selectionne l'unité à faire bouger	 								  */
+		/* ---------------------------------------------------------------------- */
+		if	(checkPlayerUnitSelection(sysinfo.var.s_player))
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 				->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
@@ -342,8 +343,10 @@ void IHM::mainmap
 		}
 		break;
 	case selectinspect:
-		// affiche les stats de l'unité inspecté
-		if (sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
+		/* ---------------------------------------------------------------------- */
+		/* Affiche les stats de l'unité inspecté								  */
+		/* ---------------------------------------------------------------------- */
+		if (checkPlayerUnitSelection(sysinfo.var.s_player))
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 				->GETtheUnit(sysinfo.var.s_player.selectunit)
@@ -487,6 +490,25 @@ void IHM::afficherSupertiles
 	//t2 = clock();
 	//std::cout << std::endl << "temps d'execution de alwaysrender : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	
+}
+
+bool IHM::checkPlayerUnitSelection
+(
+	const SubcatPlayer& s_player
+)
+{
+	if  (
+			s_player.selectplayer != -1
+			&&
+			s_player.selectunit != -1
+		)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 

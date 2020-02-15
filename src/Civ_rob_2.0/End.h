@@ -25,64 +25,127 @@
 #ifndef End_H
 #define End_H
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "LIB.h"
-#include "civ_lib.h"
+
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						  Classe						   *
+ ********************************************************* */
 
 class End
 {
 public:
 
+	/* *********************************************************
+	 *						  STATIC						   *
+	 ********************************************************* */
+
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : initPtrSysinfoLogger														   */
+	/* ROLE : Initialisation des ptr sysinfo et logger									   */
+	/* INPUT : Sysinfo& sysinfo: structure globale du programme							   */
+	/* INPUT : std::ofstream& logger : fichier log										   */
+	/* RETURNED VALUE : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void initPtrSysinfoLogger
 	(
 		Sysinfo& sysinfo,
 		std::ofstream& logger
 	);
 
-
-	/*
-	 * NAME : exitError
-	 * ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée
-	 * INPUT  PARAMETERS : const std::string msg : message de l'erreur
-	 * OUTPUT PARAMETERS : EXIT_FAILURE
-	 * RETURNED VALUE    : void
-	 */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : exitError																	   */
+	/* ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée	   */
+	/* INPUT : const std::string msg : message de l'erreur								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void exitError
 	(
 		const std::string msg
 	);
 
-	/*
-	 * NAME : deleteAll
-	 * ROLE : Destruction des allocations dynamique du programme
-	 * ROLE : Destruction de la fenetre et du Renderer de la SDL
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
-	 * RETURNED VALUE    : void
-	 */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteAll																	   */
+	/* ROLE : Destruction des allocations dynamique du programme						   */
+	/* ROLE : Destruction de la fenetre et du Renderer de la SDL						   */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void deleteAll
 	(
 		Sysinfo&
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteTexture																   */
+	/* ROLE : Destruction des allocations dynamiques de la unordered_map				   */
+	/* INPUT/OUTPUT : std::unordered_map<std::string, Texture*>& unmap : map Texture	   */
+	/* INPUT : const std::string name : name de la Texture								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void deleteTexture
 	(
 		std::unordered_map<std::string, Texture*>& unmap,
 		const std::string& name
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteTexte																   */
+	/* ROLE : Destruction des allocations dynamiques de la unordered_map				   */
+	/* INPUT/OUTPUT : std::unordered_map<std::string, Texture*>& unmap : map Texte		   */
+	/* INPUT : const std::string name : name de la Texture								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void deleteTexte
 	(
 		std::unordered_map<std::string, Texte*>& unmap,
 		const std::string& name
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteButtonTexte															   */
+	/* ROLE : Destruction des allocations dynamiques de la unordered_map				   */
+	/* INPUT/OUTPUT : std::unordered_map<std::string, ButtonTexte*>& unmap: map ButtonTexte*/
+	/* INPUT : const std::string name : name de la Texture								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void deleteButtonTexte
 	(
-		std::unordered_map<std::string,
-		ButtonTexte*>& unmap,
+		std::unordered_map<std::string, ButtonTexte*>& unmap,
 		const std::string& name
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deletePlayer																   */
+	/* ROLE : Destruction des allocations dynamiques du vecteur							   */
+	/* INPUT/OUTPUT : std::vector<Player*>& vect : vecteur de joueurs					   */
+	/* INPUT : const std::string name : name de la Texture								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
 	static void deletePlayer
 	(
 		std::vector<Player*>& vect,
@@ -90,12 +153,7 @@ public:
 	);
 };
 
-
-
 #endif //End_H
-
-
-
 
 /*
 *	End Of File : End.h

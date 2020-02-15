@@ -38,17 +38,17 @@
 /*
  * NAME : loadImage
  * ROLE : Allocation dynamique d'une Texture avec ses caractéristiques
- * INPUT  PARAMETERS : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
- * INPUT  PARAMETERS : std::vector<Texture*>& tabTexture : le tableau dans lequel sera stocké la Texture (allocation dynamique)
- * INPUT  PARAMETERS : Uint8 stateScreen, Uint8 select : les variables qui décrivent les différents état de l'écran et les spécifications de la séléction
- * INPUT  PARAMETERS : std::string path : le chemin d'accès ainsi que le nom de l'image à partir du fichier (inclure le type .png , .bmp ...)
- * INPUT  PARAMETERS : std::string msg : le nom qui permettra d'identifier la Texture dans le tableau
- * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
- * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
- * INPUT  PARAMETERS : unsigned int w, unsigned int h : les valeurs de longueur et de largeur permettant de changer la définition de l'image originale sinon mettre NULL
- * INPUT  PARAMETERS : Uint16 angle : enum Uint16
- * INPUT  PARAMETERS : Uint8 cnt : le type de centrage -> enum Center_Type
- * OUTPUT PARAMETERS : Allocation dynamique d'une Texture dans le tableau correspondant
+ * INPUT : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
+ * INPUT : std::vector<Texture*>& tabTexture : le tableau dans lequel sera stocké la Texture (allocation dynamique)
+ * INPUT : Uint8 stateScreen, Uint8 select : les variables qui décrivent les différents état de l'écran et les spécifications de la séléction
+ * INPUT : std::string path : le chemin d'accès ainsi que le nom de l'image à partir du fichier (inclure le type .png , .bmp ...)
+ * INPUT : std::string msg : le nom qui permettra d'identifier la Texture dans le tableau
+ * INPUT : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
+ * INPUT : int x, int y	: les valeurs en pixel de la future position
+ * INPUT : unsigned int w, unsigned int h : les valeurs de longueur et de largeur permettant de changer la définition de l'image originale sinon mettre NULL
+ * INPUT : Uint16 angle : enum Uint16
+ * INPUT : Uint8 cnt : le type de centrage -> enum Center_Type
+ * OUTPUT : Allocation dynamique d'une Texture dans le tableau correspondant
  * RETURNED VALUE    : void
  */
 void Texture::loadImage
@@ -392,17 +392,17 @@ SDL_Texture* Texte::createSDL_TextureFromTexte
 {
 	SDL_Surface *surf(nullptr);
 
-	if (type == blended)
+	switch (type)
 	{
+	case blended:
 		surf = TTF_RenderText_Blended(font, message.c_str(), color);
-	}	
-	else if (type == shaded)
-	{
+		break;
+	case shaded:
 		surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
-	}	
-	else
-	{
+		break;
+	default:
 		/* N/A */
+		break;
 	}
 
 	SDL_Texture *texture(SDL_CreateTextureFromSurface(renderer, surf));
