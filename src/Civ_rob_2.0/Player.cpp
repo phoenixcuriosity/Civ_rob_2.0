@@ -22,28 +22,62 @@
 
 */
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "Player.h"
 #include "IHM.h"
 #include "LoadConfig.h"
-
 
 /* *********************************************************
  *				START Player::METHODS					   *
  ********************************************************* */
 
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : Player																	   */
+/* ROLE : Constructeur par défaut													   */
+/* INPUT : void																		   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Player::Player() : _name("NoName")
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Player Par Defaut Success");
 }
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : Player																	   */
+/* ROLE : Constructeur par nom du joueur											   */
+/* INPUT : const std::string&														   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Player::Player(const std::string &msg) : _name(msg)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Player Success");
 }
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : ~Player																	   */
+/* ROLE : Initialisation d'une Unit vide											   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Player::~Player()
 {
 	deletePlayer();
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : operator=																	   */
+/* ROLE : Redéfinition de l'opérateur =												   */
+/* INPUT : const Player& player : l'objet à copier									   */
+/* RETURNED VALUE : Player&	: l'objet recopié										   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Player& Player::operator=
 (
 	const Player& player
@@ -59,21 +93,29 @@ Player& Player::operator=
 	return *this;
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : deletePlayer																   */
+/* ROLE : Destruction de l'objet et de ses ptr										   */
+/* INPUT : void																		   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Player::deletePlayer()
 {
-	unsigned int size = (unsigned int)_tabUnit.size();
+	unsigned int size((unsigned int)_tabUnit.size());
 
-	for (unsigned int i = 0; i < size; i++)
+	for (unsigned int i(0); i < size; i++)
 	{
 		delete _tabUnit[i];
 
 		LoadConfig::logfileconsole("[INFO]___: Kill Unit n:" + std::to_string(i) + " of Player: " + _name + " Success");
 	}
 
-	for (unsigned int i = 0; i < size; i++)
+	for (unsigned int i(0); i < size; i++)
 		_tabUnit.pop_back();
 
-	if (_tabUnit.size() != 0)
+	if (_tabUnit.size() > 0)
 		LoadConfig::logfileconsole("[ERROR]__: _tabunit.size() != 0");
 	else
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Unit of Player:" + _name + " Success");
@@ -81,47 +123,49 @@ void Player::deletePlayer()
 
 	size = (unsigned int)_tabCity.size();
 
-	for (unsigned int i = 0; i < size; i++)
+	for (unsigned int i(0); i < size; i++)
 	{
 		delete _tabCity[i];
 
 		LoadConfig::logfileconsole("[INFO]___: Kill Citie n:" + std::to_string(i) + " of Player: " + _name + " Success");
 	}
 
-	for (unsigned int i = 0; i < size; i++)
+	for (unsigned int i(0); i < size; i++)
 		_tabCity.pop_back();
 
-	if (_tabCity.size() != 0)
+	if (_tabCity.size() > 0)
 		LoadConfig::logfileconsole("[ERROR]__: _tabcities.size() != 0");
 	else
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
 }
 
-/*
-* NAME : addEmptyUnit
-* ROLE : Initialisation d'une Unit vide
-* INPUT  PARAMETERS : void
-* OUTPUT PARAMETERS : Initialisation d'une Unit vide
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : addEmptyUnit																   */
+/* ROLE : Initialisation d'une Unit vide											   */
+/* INPUT : void																		   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Player::addEmptyUnit()
 {
 	_tabUnit.push_back(new Unit());
 }
 
-
-/*
-* NAME : addUnit
-* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)
-* INPUT  PARAMETERS : Spécifications demandées (nom, positions, ...)
-* OUTPUT PARAMETERS : Ajout une Unit
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : addUnit																	   */
+/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
+/* INPUT : Spécifications demandées (nom, positions, ...)							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Player::addUnit
 (
 	const std::string &name,
 	unsigned int x,
 	unsigned int y,
+	Unit_Movement_Type movementType,
 	unsigned int life,
 	unsigned int atq,
 	unsigned int def,
@@ -129,67 +173,84 @@ void Player::addUnit
 	unsigned int level
 ) 
 {
-	_tabUnit.push_back(new Unit(name, x, y, life, atq, def, move, level));
+	_tabUnit.push_back(new Unit(name, x, y, movementType, life, atq, def, move, level));
 }
 
-/*
-* NAME : deleteUnit
-* ROLE : Suppression d'une Unit du joueur
-* INPUT  PARAMETERS : unsigned int : index de Unit dans le tableau
-* OUTPUT PARAMETERS : Suppression d'une Unit
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : deleteUnit																   */
+/* ROLE : Suppression d'une Unit du joueur											   */
+/* INPUT : unsigned int : index de Unit dans le tableau								   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Player::deleteUnit
 (
 	unsigned int index
 )
 {
-	delete _tabUnit[index];
-	if (_tabUnit.size() > 1 && index < _tabUnit.size() - 1)
+	if (nullptr != _tabUnit[index])
 	{
-		for (unsigned int i(index); i < (_tabUnit.size() - 1); i++)
-			_tabUnit[i] = _tabUnit[(unsigned __int64)i + 1];
+		delete _tabUnit[index];
+		if (_tabUnit.size() > 1 && index < _tabUnit.size() - 1)
+		{
+			for (unsigned int i(index); i < (_tabUnit.size() - 1); i++)
+				_tabUnit[i] = _tabUnit[(unsigned __int64)i + 1];
+		}
+		_tabUnit.pop_back();
 	}
-	_tabUnit.pop_back();
+	else
+	{
+		throw("[ERROR]__: deleteUnit : nullptr == _tabUnit[index]");
+	}
 }
 
-/*
-* NAME : addCity
-* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)
-* INPUT  PARAMETERS : Spécifications demandées (nom, positions, ...)
-* OUTPUT PARAMETERS : Ajout une City
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : addCity																	   */
+/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
+/* INPUT : Spécifications demandées (nom, positions, ...)							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Player::addCity
 (
 	const std::string &name,
 	unsigned int x,
 	unsigned int y,
-	Tile tiles[]
+	std::vector<Tile>& tiles
 )
 {
 	_tabCity.push_back(new City(name, x, y, tiles));
 }
 
-/*
-* NAME : deleteCity
-* ROLE : Suppression d'une City du joueur
-* INPUT  PARAMETERS : unsigned int : index de City dans le tableau
-* OUTPUT PARAMETERS : Suppression d'une City
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : deleteCity																   */
+/* ROLE : Suppression d'une City du joueur											   */
+/* INPUT : unsigned int : index de City dans le tableau								   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void Player::deleteCity
 (
 	unsigned int index
 )
 {
-	delete _tabCity[index];
-	if (_tabCity.size() > 1 && index < _tabCity.size() - 1)
+	if (nullptr != _tabCity[index])
 	{
-		for (unsigned int i(index); i < (_tabCity.size() - 1); i++)
-			_tabCity[i] = _tabCity[(unsigned __int64)i + 1];
+		delete _tabCity[index];
+		if (_tabCity.size() > 1 && index < _tabCity.size() - 1)
+		{
+			for (unsigned int i(index); i < (_tabCity.size() - 1); i++)
+				_tabCity[i] = _tabCity[(unsigned __int64)i + 1];
+		}
+		_tabCity.pop_back();
 	}
-	_tabCity.pop_back();
+	else
+	{
+		throw("[ERROR]__: deleteCity : nullptr == _tabCity[index]");
+	}
 }
 
 

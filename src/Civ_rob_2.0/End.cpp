@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.1
+	last modification on this file on version:0.19
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -102,7 +102,7 @@ void End::deleteAll
 
 	for (unsigned int i(1); i < MAX_FONT; i++)
 	{
-		if (sysinfo.allTextures.font[i] != nullptr)
+		if (nullptr != sysinfo.allTextures.font[i])
 		{
 			TTF_CloseFont(sysinfo.allTextures.font[i]);
 		}
@@ -171,7 +171,7 @@ void End::deleteAll
 	 *				 START delete SDL						   *
 	 ********************************************************* */
 
-	if (sysinfo.screen.renderer != nullptr)
+	if (nullptr != sysinfo.screen.renderer)
 	{
 		SDL_DestroyRenderer(sysinfo.screen.renderer);
 		sysinfo.screen.renderer = nullptr;
@@ -181,7 +181,7 @@ void End::deleteAll
 		/* N/A */
 	}
 
-	if (sysinfo.screen.window != nullptr)
+	if (nullptr != sysinfo.screen.window)
 	{
 		SDL_DestroyWindow(sysinfo.screen.window);
 		sysinfo.screen.window = nullptr;
@@ -226,7 +226,7 @@ void End::deleteTexture
 {
 	for (const auto& n : unmap)
 	{
-		if (n.second != nullptr)
+		if (nullptr != n.second)
 		{
 			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
@@ -255,7 +255,7 @@ void End::deleteTexte
 {
 	for (const auto& n : unmap)
 	{
-		if (n.second != nullptr)
+		if (nullptr != n.second)
 		{
 			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
@@ -284,7 +284,7 @@ void End::deleteButtonTexte
 {
 	for (const auto& n : unmap)
 	{
-		if (n.second != nullptr)
+		if (nullptr != n.second)
 		{
 			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
@@ -313,7 +313,7 @@ void End::deletePlayer
 {
 	for (unsigned int i(0); i < vect.size(); i++)
 	{
-		if (vect[i] != nullptr)
+		if (nullptr != vect[i])
 		{
 			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + vect[i]->GETname() + " Success");
 			delete vect[i];

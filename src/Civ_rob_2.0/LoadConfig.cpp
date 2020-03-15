@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.11
+	last modification on this file on version:0.19
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,21 +22,48 @@
 
 */
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
 
 #include "LoadConfig.h"
 #include "civ_lib.h"
 #include  "IHM.h"
 #include "End.h"
 
+/* *********************************************************
+ *					Variable Globale					   *
+ ********************************************************* */
 
+static std::ofstream logger;
+static Sysinfo* ptrSysinfo;
 
-/*
-* NAME : initStructs
-* ROLE : Initialisation des données par défaut des structures
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : données par défaut des structures
-* RETURNED VALUE    : void
-*/
+/* *********************************************************
+ *						 Classes						   *
+ ********************************************************* */
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initPtrSysinfo															   */
+/* ROLE : Initialisation des ptr sur sysinfo et logger								   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void LoadConfig::initPtrSysinfo(Sysinfo& sysinfo)
+{
+	ptrSysinfo = &sysinfo;
+	End::initPtrSysinfoLogger(sysinfo, logger);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initStructs																   */
+/* ROLE : Initialisation des données par défaut des structures						   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void LoadConfig::initStructs
 (
 	Sysinfo& sysinfo
@@ -62,14 +89,14 @@ void LoadConfig::initStructs
 	 ********************************************************* */
 
 	// sysinfo.file.log = "bin/log/log.txt"; // N/A : const
-	sysinfo.file.BUILDING = "";
-	sysinfo.file.CITIENAME = "";
-	sysinfo.file.readme = "";
-	sysinfo.file.SaveInfo = "";
-	sysinfo.file.SaveMaps = "";
-	sysinfo.file.SPECNAME = "";
-	sysinfo.file.UNIT = "";
-	sysinfo.file.Texte = "";
+	sysinfo.file.BUILDING = EMPTY_STRING;
+	sysinfo.file.CITIENAME = EMPTY_STRING;
+	sysinfo.file.readme = EMPTY_STRING;
+	sysinfo.file.SaveInfo = EMPTY_STRING;
+	sysinfo.file.SaveMaps = EMPTY_STRING;
+	sysinfo.file.SPECNAME = EMPTY_STRING;
+	sysinfo.file.UNIT = EMPTY_STRING;
+	sysinfo.file.Texte = EMPTY_STRING;
 
 	/* *********************************************************
 	 *					   sysinfo.var						   *
@@ -81,24 +108,24 @@ void LoadConfig::initStructs
 	sysinfo.var.waitEvent = true;
 	sysinfo.var.nbturn = 0;
 	sysinfo.var.nbPlayer = 0;
-	sysinfo.var.tempPlayerName = "";
+	sysinfo.var.tempPlayerName = EMPTY_STRING;
 	sysinfo.var.tempX = 0;
 	sysinfo.var.tempY = 0;
-	sysinfo.var.select = selectnothing;
-	sysinfo.var.statescreen = STATEnothing;
-	sysinfo.var.cinState = cinNothing;
+	sysinfo.var.select = Select_Type::selectnothing;
+	sysinfo.var.statescreen = State_Type::error;
+	sysinfo.var.cinState = CinState_Type::cinNothing;
 
 	/* sysinfo.var.s_player */
 
-	sysinfo.var.s_player.selectCitie = -1;
-	sysinfo.var.s_player.selectplayer = -1;
-	sysinfo.var.s_player.selectPlayerToAttack = -1;
-	sysinfo.var.s_player.selectunit = -1;
-	sysinfo.var.s_player.selectUnitToAttack = -1;
+	sysinfo.var.s_player.selectCitie = NO_CITIE_SELECTED;
+	sysinfo.var.s_player.selectplayer = NO_PLAYER_SELECTED;
+	sysinfo.var.s_player.selectPlayerToAttack = NO_PLAYER_SELECTED;
+	sysinfo.var.s_player.selectunit = NO_UNIT_SELECTED;
+	sysinfo.var.s_player.selectUnitToAttack = NO_UNIT_SELECTED;
 	sysinfo.var.s_player.unitToCreate = 0;
-	sysinfo.var.s_player.toBuild = "";
-	sysinfo.var.s_player.unitNameToCreate = "";
-	sysinfo.var.s_player.unitNameToMove = "";
+	sysinfo.var.s_player.toBuild = EMPTY_STRING;
+	sysinfo.var.s_player.unitNameToCreate = EMPTY_STRING;
+	sysinfo.var.s_player.unitNameToMove = EMPTY_STRING;
 
 	sysinfo.var.s_player.tabCitieName.clear();
 	sysinfo.var.s_player.tabPlayerName.clear();
@@ -178,31 +205,176 @@ void LoadConfig::initStructs
 	sysinfo.tabplayer.clear();
 }
 
-/* *********************************************************
- *					Variable Globale					   *
- ********************************************************* */
-
-static std::ofstream logger;
-static Sysinfo* ptrSysinfo;
-
-void LoadConfig::initPtrSysinfo(Sysinfo& sysinfo)
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initFile																	   */
+/* ROLE : Initialisation des fichiers : log											   */
+/* INPUT : struct File& : nom des fichiers											   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void LoadConfig::initFile
+(
+	File& file
+)
 {
-	ptrSysinfo = &sysinfo;
-	End::initPtrSysinfoLogger(sysinfo, logger);
+	logger.open(file.log, std::ofstream::out | std::ofstream::trunc);
+	if (!logger.is_open())
+	{
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		/* N/A */
+	}
 }
 
-/* *********************************************************
- *				START INITIALISATION					   *
- ********************************************************* */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initMain																	   */
+/* ROLE : Chargement des informations de la configuration du jeu					   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void LoadConfig::initMain
+(
+	Sysinfo& sysinfo
+)
+{
+	logfileconsole("[INFO]___: [START] : initMain");
+
+	tinyxml2::XMLDocument config;
+	config.LoadFile(configFilePath.c_str());
+
+	if (config.ErrorID() == 0)
+	{
+		const char* root("Config");
 
 
- /*
- * NAME : initTile
- * ROLE : Initialisation des cases de la map en fonction de sa taille
- * INPUT  PARAMETERS : struct Map& : données générale de la map : taille
- * OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
- * RETURNED VALUE    : void
- */
+		const char* s_Map("Map"),
+			* s_TileSize("TileSize"),
+			* s_MapSize("MapSize"),
+
+			* s_FilePaths("FilePaths"),
+			* s_Readme("Readme"),
+			* s_Texte("Texte"),
+			* s_Building("Building"),
+			* s_CitieName("CitieName"),
+			* s_Unit("Unit"),
+			* s_SpecName("SpecName"),
+			* s_SaveInfo("SaveInfo"),
+			* s_SaveMaps("SaveMaps"),
+			* s_SavePlayer("SavePlayer");
+
+		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_TileSize)->QueryUnsignedText(&sysinfo.map.tileSize);
+		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSize)->QueryUnsignedText(&sysinfo.map.mapSize);
+
+		sysinfo.file.readme = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText();
+		sysinfo.file.Texte = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
+		sysinfo.file.BUILDING = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText();
+		sysinfo.file.CITIENAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText();
+		sysinfo.file.UNIT = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText();
+		sysinfo.file.SPECNAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText();
+		sysinfo.file.SaveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
+		sysinfo.file.SaveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
+		sysinfo.file.SavePlayer = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
+	}
+	else
+	{
+		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
+	}
+
+	logfileconsole("[INFO]___: [END] : initMain");
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : computeSize																   */
+/* ROLE : Calcul des différentes tailles de fenetre en fonction de tileSize			   */
+/* INPUT/OUTPUT : Screen& screen : longueur et hauteur écran						   */
+/* INPUT/OUTPUT : struct Sysinfo& : différentes tailles de fenetre					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void LoadConfig::computeSize
+(
+	Screen& screen,
+	Map& map
+)
+{
+	/* ---------------------------------------------------------------------- */
+	/* 1° : Screen														 	  */
+	/* ---------------------------------------------------------------------- */
+	screen.screenWidth = getHorizontal(map.tileSize);
+	screen.screenHeight = getVertical(map.tileSize);
+
+	/* ---------------------------------------------------------------------- */
+	/* 2° : Maimap														 	  */
+	/* ---------------------------------------------------------------------- */
+	map.toolBarSize = (screen.screenWidth / 10) / map.tileSize;
+	map.screenOffsetXIndexMax = ((screen.screenWidth * 9) / 10) / map.tileSize;
+	map.screenOffsetYIndexMax = screen.screenHeight / map.tileSize;
+
+	/* ---------------------------------------------------------------------- */
+	/* 3° : CitieMap													 	  */
+	/* ---------------------------------------------------------------------- */
+	map.citieMap.ToolbarButtonsH = (screen.screenWidth / 3);
+	map.citieMap.ToolbarButtonsW = (screen.screenHeight / 3);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getHorizontal																   */
+/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
+/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+Uint16 LoadConfig::getHorizontal
+(
+	unsigned int tileSize
+)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.right % (Uint16)tileSize)) == 0)
+		return (Uint16)desktop.right;
+	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getVertical																   */
+/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
+/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+Uint16 LoadConfig::getVertical
+(
+	unsigned int tileSize
+)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.bottom % (Uint16)tileSize)) == 0)
+		return (Uint16)desktop.bottom;
+	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initTile																	   */
+/* ROLE : Initialisation des cases de la map en fonction de sa taille				   */
+/* INPUT : struct Map& : données générale de la map : taille						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void LoadConfig::initTile
 (
 	Map& map
@@ -220,37 +392,91 @@ void LoadConfig::initTile
 	}
 }
 
-/*
-* NAME : initFile
-* ROLE : Initialisation des fichiers : log
-* INPUT  PARAMETERS : struct File& : nom des fichiers
-* OUTPUT PARAMETERS : Initialisation de log.txt
-* RETURNED VALUE    : void
-*/
-void LoadConfig::initFile
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : loadUnitAndSpec															   */
+/* ROLE : Chargement des informations concernant les unités à partir d'un fichier	   */
+/* INPUT : const std::string& : nom du fichier à ouvrir								   */
+/* OUTPUT : std::vector<Unit_Struct>& : Vecteur des Unit							   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void LoadConfig::loadUnitAndSpec
 (
-	File& file
+	const std::string& UNIT,
+	std::vector<Unit_Struct>& tabUnit_Struct
 )
 {
-	logger.open(file.log, std::ofstream::out | std::ofstream::trunc);
-	if (!logger.is_open())
+	tinyxml2::XMLDocument texteFile;
+	texteFile.LoadFile(UNIT.c_str());
+
+	const char* root("Root");
+
+	const char		* s_Unit("Unit"),
+						* s_Name("Name"),
+						* s_MovementType("MovementType"),
+						* s_Life("Life"),
+						* s_Atq("Atq"),
+						* s_Def("Def"),
+						* s_Mouvement("Mouvement"),
+						* s_Level("Level");
+
+	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
+	Unit_Struct currentUnit;
+
+	while (nullptr != node)
 	{
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		/* N/A */
+		currentUnit.name = node->FirstChildElement(s_Name)->GetText();
+		currentUnit.type = xmlGiveMovementType(node->FirstChildElement(s_MovementType)->GetText());
+		node->FirstChildElement(s_Life)->QueryIntText((int*)&currentUnit.life);
+		node->FirstChildElement(s_Atq)->QueryIntText((int*)&currentUnit.atq);
+		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
+		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)&currentUnit.movement);
+		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
+
+		tabUnit_Struct.push_back(currentUnit);
+
+		/* Recherche du noeud Model suivant */
+		node = node->NextSibling();
 	}
 }
 
+Unit_Movement_Type LoadConfig::xmlGiveMovementType
+(
+	std::string type
+)
+{
+	if (type.compare("ground"))
+	{
+		return Unit_Movement_Type::ground;
+	}
+	else if(type.compare("air"))
+	{
+		return Unit_Movement_Type::air;
+	}
+	else if (type.compare("water"))
+	{
+		return Unit_Movement_Type::water;
+	}
+	else if (type.compare("deepwater"))
+	{
+		return Unit_Movement_Type::deepwater;
+	}
+	else
+	{
+		return Unit_Movement_Type::ground;
+	}
+}
 
-/*
-* NAME : logfileconsole
-* ROLE : Transmission du message sur la console et dans le fichier log.txt
-* INPUT  PARAMETERS : const std::string msg : message
-* OUTPUT PARAMETERS : message dans la console et le log.txt
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : logfileconsole															   */
+/* ROLE : Transmission du message sur la console et dans le fichier log.txt			   */
+/* INPUT : const std::string msg : message											   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void LoadConfig::logfileconsole
 (
 	const std::string msg
@@ -262,20 +488,23 @@ void LoadConfig::logfileconsole
 	tstruct = *localtime(&now);
 	strftime(buf, sizeof(buf), "%F %X", &tstruct);
 
+#ifdef _DEBUG_MODE
 	std::cout << std::endl << buf << "      " << msg;
+#endif // DEBUG_MODE
 	logger << std::endl << buf << "      " << msg;
 }
 
-
-/*
-* NAME : initSDL
-* ROLE : Initialisation de la SDL fenetre et renderer ainsi que le tableau de police de font
-* INPUT  PARAMETERS : SDL_Window*& : pointeur sur la fenetre de la SDL
-* INPUT  PARAMETERS : SDL_Renderer*& : pointeur sur le Renderer de la SDL
-* INPUT  PARAMETERS : TTF_Font*[] : pointeur sur le tableau de police de font
-* OUTPUT PARAMETERS : message dans la console et le log.txt
-* RETURNED VALUE    : bool : true = pas de d'erreur lors de l'initialisation de la SDL
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initSDL																	   */
+/* ROLE : Initialisation de la SDL fenetre et renderer ...							   */
+/* ROLE : ... ainsi que le tableau de police de font								   */
+/* INPUT : SDL_Window*& : pointeur sur la fenetre de la SDL							   */
+/* INPUT : SDL_Renderer*& : pointeur sur le Renderer de la SDL						   */
+/* INPUT : TTF_Font*[] : pointeur sur le tableau de police de font					   */
+/* RETURNED VALUE    : bool : true = pas d'erreur lors de l'initialisation de la SDL   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 bool LoadConfig::initSDL
 (
 	Screen& screen,
@@ -284,20 +513,31 @@ bool LoadConfig::initSDL
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
+		/* ---------------------------------------------------------------------- */
+		/* 1° : Si l'initialisation de tous les services de la SDL est failed	  */
+		/* ---------------------------------------------------------------------- */
+
 		logfileconsole("[ERROR]___: SDL could not initialize! SDL_Error: " + (std::string)SDL_GetError());
 		return false;
 	}
 	else
 	{
+		/* ---------------------------------------------------------------------- */
+		/* 2° : Si l'initialisation de tous les services de la SDL est success	  */
+		/* ---------------------------------------------------------------------- */
 
+		/* ---------------------------------------------------------------------- */
+		/* 2.1° : Création du context de la fenetre de jeu						  */
+		/*      : Titre, position pa défaut et taille   						  */
+		/*      : Test validité du context				   						  */
+		/* ---------------------------------------------------------------------- */
 
 		screen.window = SDL_CreateWindow("Civ_Rob_2.0",
 			0, 0,
 			screen.screenWidth, screen.screenHeight,
 			SDL_WINDOW_OPENGL);
 
-		//	SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_FULLSCREEN
-		if (screen.window == nullptr)
+		if (nullptr == screen.window)
 		{
 			SDL_Quit();
 			return false;
@@ -307,9 +547,20 @@ bool LoadConfig::initSDL
 			logfileconsole("[INFO]___: CreateWindow Success");
 		}
 
+		/* ---------------------------------------------------------------------- */
+		/* 2.2° : Création du context du SDL_Renderer							  */
+		/*      : Option non utilisée en debug :  SDL_RENDERER_PRESENTVSYNC       */
+		/*      : permettant la	synchronisation avec la fréquence de l'écran	  */
+		/*      : Test validité du context				   						  */
+		/* ---------------------------------------------------------------------- */
+
+#ifdef _DEBUG_MODE
 		screen.renderer = SDL_CreateRenderer(screen.window, -1, SDL_RENDERER_ACCELERATED);
-		//| SDL_RENDERER_PRESENTVSYNC
-		if (screen.renderer == nullptr)
+#else
+		screen.renderer = SDL_CreateRenderer(screen.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+#endif // DEBUG_MODE
+
+		if (nullptr == screen.renderer)
 		{
 			SDL_DestroyWindow(screen.window);
 			SDL_Quit();
@@ -319,6 +570,11 @@ bool LoadConfig::initSDL
 		{
 			logfileconsole("[INFO]___: CreateRenderer Success");
 		}
+
+		/* ---------------------------------------------------------------------- */
+		/* 2.3° : Initialisation de la SDL pour les textes						  */
+		/*      : Test validité du context				   						  */
+		/* ---------------------------------------------------------------------- */
 
 		if (TTF_Init() != 0)
 		{
@@ -332,6 +588,11 @@ bool LoadConfig::initSDL
 			logfileconsole("[INFO]___: TTF_Init Success");
 		}
 
+		/* ---------------------------------------------------------------------- */
+		/* 2.4° : Création d'un tableau de ptr vers les différentes tailles de 	  */
+		/*      : de la font utilisée				   						      */
+		/* ---------------------------------------------------------------------- */
+
 		for (Uint8 i(1); i < MAX_FONT; i++)
 		{
 			font[i] = TTF_OpenFont(fontFile.c_str(), i);
@@ -342,121 +603,15 @@ bool LoadConfig::initSDL
 	}
 }
 
-/* *********************************************************
- *					END INITIALISATION					   *
- ********************************************************* */
-
-
-
-
-/*
-* NAME : initTile
-* ROLE : Initialisation des cases de la map en fonction de sa taille
-* INPUT  PARAMETERS : struct Map& : données générale de la map : taille
-* OUTPUT PARAMETERS : Initialisation de map.screen et map.maps
-* RETURNED VALUE    : void
-*/
-void LoadConfig::initMain
-(
-	Sysinfo& sysinfo
-)
-{
-	logfileconsole("[INFO]___: [START] : initMain");
-
-	tinyxml2::XMLDocument config;
-	config.LoadFile(configFilePath.c_str());
-
-	if (config.ErrorID() == 0)
-	{
-		const char* root("Config");
-
-
-		const char	* s_Map("Map"),
-						* s_TileSize("TileSize"),
-						* s_MapSize("MapSize"),
-
-					* s_FilePaths("FilePaths"),
-						* s_Readme("Readme"),
-						* s_Texte("Texte"),
-						* s_Building("Building"),
-						* s_CitieName("CitieName"),
-						* s_Unit("Unit"),
-						* s_SpecName("SpecName"),
-						* s_SaveInfo("SaveInfo"),
-						* s_SaveMaps("SaveMaps"),
-						* s_SavePlayer("SavePlayer");
-
-
-
-
-		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_TileSize)->QueryUnsignedText(&sysinfo.map.tileSize);
-		sysinfo.screen.screenWidth = getHorizontal(sysinfo.map.tileSize);
-		sysinfo.screen.screenHeight = getVertical(sysinfo.map.tileSize);
-
-
-		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSize)->QueryUnsignedText(&sysinfo.map.mapSize);
-		sysinfo.map.toolBarSize = (sysinfo.screen.screenWidth / 10) / sysinfo.map.tileSize;
-		sysinfo.map.screenOffsetXIndexMax = ((sysinfo.screen.screenWidth * 9) / 10) / sysinfo.map.tileSize;
-		sysinfo.map.screenOffsetYIndexMax = sysinfo.screen.screenHeight / sysinfo.map.tileSize;
-
-
-		sysinfo.file.readme = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText();
-		sysinfo.file.Texte = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
-		sysinfo.file.BUILDING = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText();
-		sysinfo.file.CITIENAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText();
-		sysinfo.file.UNIT = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText();
-		sysinfo.file.SPECNAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText();
-		sysinfo.file.SaveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
-		sysinfo.file.SaveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
-		sysinfo.file.SavePlayer = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
-	}
-	else
-	{
-		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
-	}
-
-
-	logfileconsole("[INFO]___: [END] : initMain");
-}
-
-Uint16 LoadConfig::getHorizontal
-(
-	unsigned int tileSize
-)
-{
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.right % (Uint16)tileSize)) == 0)
-		return (Uint16)desktop.right;
-	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
-}
-
-Uint16 LoadConfig::getVertical
-(
-	unsigned int tileSize
-)
-{
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.bottom % (Uint16)tileSize)) == 0)
-		return (Uint16)desktop.bottom;
-	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
-}
-
-
-/*
-* NAME : calculImage
-* ROLE : Initialisation des Textures, des Textes et des Buttons
-* ROLE : Enregistrement des pointeurs dans des tableaux
-* ROLE : Hachage des noms des Textures (et classes filles) pour une recherche en complexité en O(1)
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Tableaux de pointeurs vers les Textures (et classes filles)
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : calculImage																   */
+/* ROLE : Initialisation des Textures, des Textes et des Buttons					   */
+/* ROLE : Enregistrement des pointeurs dans des unorder_map							   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void LoadConfig::calculImage
 (
 	Sysinfo& sysinfo
@@ -478,18 +633,17 @@ void LoadConfig::calculImage
 		 sysinfo.allTextures.ground
 	 */
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/water.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+		IPath + "ground/water.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/deepwater.bmp", "deepwater.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+		IPath + "ground/deepwater.bmp", "deepwater.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 	// chargement de l'image de la toolbar
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "toolbar.bmp", "toolbar.bmp", nonTransparent, 0, 0,
-		sysinfo.map.tileSize * sysinfo.map.toolBarSize, sysinfo.map.tileSize * sysinfo.screen.screenHeight, no_angle, nocenter);
-
+		sysinfo.map.tileSize * sysinfo.map.toolBarSize, sysinfo.map.tileSize * sysinfo.screen.screenHeight, no_angle, Center_Type::nocenter);
 
 
 	// chargement des spécifications du sol de la map
@@ -497,7 +651,7 @@ void LoadConfig::calculImage
 		sysinfo.allTextures.groundSpec
 	*/
 	unsigned int nbspecname(0);
-	std::string destroy(""), name("");
+	std::string destroy(EMPTY_STRING), name(EMPTY_STRING);
 	std::ifstream SPECNAME(sysinfo.file.SPECNAME);
 	if (SPECNAME)
 	{
@@ -505,10 +659,10 @@ void LoadConfig::calculImage
 		SPECNAME >> nbspecname;
 		for (unsigned int i(0); i < nbspecname; i++)
 		{
-			name = "";
+			name = EMPTY_STRING;
 			SPECNAME >> name;
 			Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.groundSpec, sysinfo.var.statescreen, sysinfo.var.select,
-				IPath + "spec/" + name, name, nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+				IPath + "spec/" + name, name, nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 		}
 	}
 	else
@@ -526,20 +680,20 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.unit, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "units/" + sysinfo.var.s_player.tabUnit_Struct[i].name + ".bmp",
-			sysinfo.var.s_player.tabUnit_Struct[i].name, nonTransparent, 100, 432, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+			sysinfo.var.s_player.tabUnit_Struct[i].name, nonTransparent, 100, 432, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 
 	/*
 		sysinfo.allTextures.barLife
 	*/
-	sysinfo.var.statescreen = STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainmap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
 	for (int i(9); i >= 0; i--)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "barre de vie/0." + std::to_string(i) + "life.bmp", "0." + std::to_string(i) + "life.bmp", nonTransparent,
-			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle, nocenter);
+			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle, Center_Type::nocenter);
 
 
 
@@ -549,7 +703,7 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapp, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayer" + std::to_string(i) + ".bmp", nonTransparent,
-			-1, -1, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle, nocenter);
+			-1, -1, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle, Center_Type::nocenter);
 
 
 	/*
@@ -558,45 +712,57 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapptile, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayertile" + std::to_string(i) + ".bmp", (Transparance_Type)96,
-			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 	/*
 		sysinfo.allTextures.titleScreen
 	*/
-	sysinfo.var.statescreen = STATEtitleScreen;
+	sysinfo.var.statescreen = State_Type::STATEtitleScreen;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "earth.jpg", "earth.jpg", nonTransparent, sysinfo.screen.screenWidth / 2, sysinfo.screen.screenHeight / 2, NULL, NULL, no_angle, center);
+		IPath + "earth.jpg", "earth.jpg", nonTransparent, sysinfo.screen.screenWidth / 2, sysinfo.screen.screenHeight / 2, NULL, NULL, no_angle, Center_Type::center);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "sdl_icone.bmp", "sdl_icone.bmp", nonTransparent, sysinfo.screen.screenWidth / 2, sysinfo.screen.screenHeight - 100, NULL, NULL, no_angle, center_x);
+		IPath + "sdl_icone.bmp", "sdl_icone.bmp", nonTransparent, sysinfo.screen.screenWidth / 2, sysinfo.screen.screenHeight - 100, NULL, NULL, no_angle, Center_Type::center_x);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.titleScreen, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "signal/destroyed.bmp", "destroyed.bmp", nonTransparent, sysinfo.screen.screenWidth / 2, 0, NULL, NULL, no_angle, center_x);
+		IPath + "signal/destroyed.bmp", "destroyed.bmp", nonTransparent, sysinfo.screen.screenWidth / 2, 0, NULL, NULL, no_angle, Center_Type::center_x);
 
 
 
 	/*
 		sysinfo.allTextures.citieMap
 	*/
-	sysinfo.var.statescreen = STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEcitiemap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citie/citie.png", "citie.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+		IPath + "citie/citie.png", "citie.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citie/food.png", "food.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, nocenter);
+		IPath + "citie/food.png", "food.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Adore.png", "Adore.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, nocenter);
+		IPath + "citizen/Adore.png", "Adore.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Laugh.png", "Laugh.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, nocenter);
+		IPath + "citizen/Laugh.png", "Laugh.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Cool.png", "Cool.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, nocenter);
+		IPath + "citizen/Cool.png", "Cool.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Cry.png", "Cry.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, nocenter);
+		IPath + "citizen/Cry.png", "Cry.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Furious.png", "Furious.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, nocenter);
+		IPath + "citizen/Furious.png", "Furious.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+
+
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "toolbar.bmp", "CitieToolbarButtons", nonTransparent, sysinfo.map.tileSize, sysinfo.map.tileSize,
+		sysinfo.map.citieMap.ToolbarButtonsH, sysinfo.map.citieMap.ToolbarButtonsW, no_angle, Center_Type::nocenter);
+
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "toolbar.bmp", "CitieToolbarStats", nonTransparent,
+		sysinfo.map.tileSize + sysinfo.map.citieMap.ToolbarButtonsH + 2 * sysinfo.map.tileSize + INIT_SIZE_VIEW * sysinfo.map.tileSize,
+		sysinfo.map.tileSize,
+		sysinfo.map.citieMap.ToolbarButtonsH - sysinfo.map.tileSize,
+		sysinfo.map.citieMap.ToolbarButtonsW, no_angle, Center_Type::nocenter);
 
 
 	// chargement du nombre de ville ainsi que leur nom
 	unsigned int nbcitie(0);
-	std::string citie("");
+	std::string citie(EMPTY_STRING);
 	std::ifstream CITIENAME(sysinfo.file.CITIENAME);
 	if (CITIENAME)
 	{
@@ -646,141 +812,131 @@ void LoadConfig::calculImage
 	int spacemenu(64), initspacemenu(300);
 
 	/*** STATEtitleScreen ***/
-	sysinfo.var.statescreen = STATEtitleScreen;
+	sysinfo.var.statescreen = State_Type::STATEtitleScreen;
 
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "New Game", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu,
-		nonTransparent, no_angle, center);
+		Texte_Type::shaded, "New Game", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu,
+		nonTransparent, no_angle, Center_Type::center);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "Reload", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
-		nonTransparent, no_angle, center);
+		Texte_Type::shaded, "Reload", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
+		nonTransparent, no_angle, Center_Type::center);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
-		nonTransparent, no_angle, center);
+		Texte_Type::shaded, "Option", { 128, 128, 128, 255 }, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
+		nonTransparent, no_angle, Center_Type::center);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.titleScreen,
-		shaded, "Quit", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
-		nonTransparent, no_angle, center);
+		Texte_Type::shaded, "Quit", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
+		nonTransparent, no_angle, Center_Type::center);
 
 
 
 	/*** STATEreload ***/
-	sysinfo.var.statescreen = STATEreload;
+	sysinfo.var.statescreen = State_Type::STATEreload;
 	initspacemenu = 300;
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
-		shaded, "Back", WriteColorButton, BackColorButton, 24, 96, 0,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Back", WriteColorButton, BackColorButton, 24, 96, 0,
+		nonTransparent, no_angle, Center_Type::center_x);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
-		shaded, "Remove all saves", WriteColorButton, BackColorButton, 24, 256, 0,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Remove all saves", WriteColorButton, BackColorButton, 24, 256, 0,
+		nonTransparent, no_angle, Center_Type::center_x);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
-		shaded, "Load", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2 - 200, 256,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Load", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2 - 200, 256,
+		nonTransparent, no_angle, Center_Type::center_x);
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
-		shaded, "Remove", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2 + 200, 256,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Remove", WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2 + 200, 256,
+		nonTransparent, no_angle, Center_Type::center_x);
 
 	for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.reload,
-			shaded, "Save : " + std::to_string(sysinfo.var.save.GETtabSave()[i]),
+			Texte_Type::shaded, "Save : " + std::to_string(sysinfo.var.save.GETtabSave()[i]),
 			WriteColorButton, BackColorButton, 32, sysinfo.screen.screenWidth / 2, initspacemenu += spacemenu,
-			nonTransparent, no_angle, center);
+			nonTransparent, no_angle, Center_Type::center);
 	}
 
 
 
 	/*** STATEmainmap ***/
-	sysinfo.var.statescreen = STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainmap;
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
-		shaded, "screen Titre", WriteColorButton, BackColorButton, 24, 0, 0,
-		nonTransparent, no_angle, nocenter);
+		Texte_Type::shaded, "screen Titre", WriteColorButton, BackColorButton, 24, 0, 0,
+		nonTransparent, no_angle, Center_Type::nocenter);
 
-	sysinfo.var.select = selectcreate;
+#ifdef _DEBUG_MODE
+	sysinfo.var.select = Select_Type::selectcreate;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
-		shaded, "Create Unit", WriteColorButton, BackColorButton, 24, 0, 50,
-		nonTransparent, no_angle, nocenter);
+		Texte_Type::shaded, "Create Unit", WriteColorButton, BackColorButton, 24, 0, 50,
+		nonTransparent, no_angle, Center_Type::nocenter);
 
-	sysinfo.var.select = selectmove;
+	sysinfo.var.select = Select_Type::selectnothing;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
-		shaded, "Move Unit", WriteColorButton, BackColorButton, 24, 0, 82,
-		nonTransparent, no_angle, nocenter);
-
-	sysinfo.var.select = selectinspect;
-	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
-		shaded, "Inspect", WriteColorButton, BackColorButton, 24, 0, 114,
-		nonTransparent, no_angle, nocenter);
-
-	sysinfo.var.select = selectnothing;
-	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
-		shaded, "Delete Unit", WriteColorButton, BackColorButton, 24, 0, 146,
-		nonTransparent, no_angle, nocenter);
+		Texte_Type::shaded, "Delete Unit", WriteColorButton, BackColorButton, 24, 0, 146,
+		nonTransparent, no_angle, Center_Type::nocenter);
+#endif // DEBUG_MODE
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
-		shaded, "Next Turn", WriteColorButton, BackColorButton, 24, 0, 800,
-		nonTransparent, no_angle, nocenter);
+		Texte_Type::shaded, "Next Turn", WriteColorButton, BackColorButton, 24, 0, 800,
+		nonTransparent, no_angle, Center_Type::nocenter);
 
 
 	/*** STATEcitiemap ***/
-	sysinfo.var.statescreen = STATEcitiemap;
-	sysinfo.var.select = selectnothing;
+	sysinfo.var.statescreen = State_Type::STATEcitiemap;
+	sysinfo.var.select = Select_Type::selectnothing;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-		shaded, "Map", WriteColorButton, BackColorButton, 24, 96, 0,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Map", WriteColorButton, BackColorButton, 24, 96, 0,
+		nonTransparent, no_angle, Center_Type::center_x);
 
-	sysinfo.var.select = selectcreate;
+	sysinfo.var.select = Select_Type::selectcreate;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font
 		, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-		shaded, "Build", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 100,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Build", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 100,
+		nonTransparent, no_angle, Center_Type::center_x);
 
-	sysinfo.var.select = selectnothing;
+	sysinfo.var.select = Select_Type::selectnothing;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-		shaded, "Food", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 132,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Food", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 132,
+		nonTransparent, no_angle, Center_Type::center_x);
 
-	sysinfo.var.select = selectmoveCitizen;
+	sysinfo.var.select = Select_Type::selectmoveCitizen;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-		shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 164,
-		nonTransparent, no_angle, center_x);
+		Texte_Type::shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 164,
+		nonTransparent, no_angle, Center_Type::center_x);
 
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-			shaded, sysinfo.var.s_player.tabUnit_Struct[i].name, { 255, 64, 0, 255 }, BackColorButton, 24, 64, 400,
-			nonTransparent, no_angle, nocenter);
+			Texte_Type::shaded, sysinfo.var.s_player.tabUnit_Struct[i].name, { 255, 64, 0, 255 }, BackColorButton, 24, 64, 400,
+			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
 
 
-	sysinfo.var.select = selectnothing;
+	sysinfo.var.select = Select_Type::selectnothing;
 
 
 	/* *********************************************************
@@ -813,47 +969,47 @@ void LoadConfig::calculImage
 	}
 
 	/*** STATEmainmap ***/
-	sysinfo.var.statescreen = STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainmap;
 
 	for (unsigned int i(0); i < MAX_POP; i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.number,
-			blended, std::to_string(i), { 255, 255, 255, 255 }, NoColor, 18, 1000, 1000,
-			nonTransparent, no_angle, nocenter);
+			Texte_Type::blended, std::to_string(i), { 255, 255, 255, 255 }, NoColor, 18, 1000, 1000,
+			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
-	sysinfo.var.select = NotToSelect;
+	sysinfo.var.select = Select_Type::NotToSelect;
 	for (unsigned int i(0); i < nbcitie; i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.mainMap,
-			blended, sysinfo.var.s_player.tabCitieName[i], { 255, 64, 0, 255 }, NoColor, 12, -1, -1,
-			nonTransparent, no_angle, nocenter);
+			Texte_Type::blended, sysinfo.var.s_player.tabCitieName[i], { 255, 64, 0, 255 }, NoColor, 12, -1, -1,
+			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
 
-	sysinfo.var.select = selectcreate;
+	sysinfo.var.select = Select_Type::selectcreate;
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
-			blended, sysinfo.var.s_player.tabUnit_Struct[i].name, { 0, 64, 255, 255 }, NoColor, 18, 64, 400,
-			nonTransparent, no_angle, nocenter);
+			Texte_Type::blended, sysinfo.var.s_player.tabUnit_Struct[i].name, { 0, 64, 255, 255 }, NoColor, 18, 64, 400,
+			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
 	/*** STATEcitiemap ***/
-	sysinfo.var.statescreen = STATEcitiemap;
-	sysinfo.var.select = selectcreate;
+	sysinfo.var.statescreen = State_Type::STATEcitiemap;
+	sysinfo.var.select = Select_Type::selectcreate;
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
-			blended, "life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].life) +
+			Texte_Type::blended, "life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].life) +
 			"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].atq) +
 			"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].def) +
 			"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].movement),
-			{ 255, 64, 0, 255 }, NoColor, 24, 0, 0, nonTransparent, no_angle, nocenter);
+			{ 255, 64, 0, 255 }, NoColor, 24, 0, 0, nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
 	/* *********************************************************
@@ -866,14 +1022,15 @@ void LoadConfig::calculImage
 	logfileconsole("[INFO]___: [END] : calculImage");
 }
 
-/*
-* NAME : readXmlTexte
-* ROLE : Initialisation des Textes par la lecture du fichier Texte.xml
-* ROLE : Enregistrement des pointeurs dans des tableaux
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Tableau de pointeurs vers les Texte
-* RETURNED VALUE    : void
-*/
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : readXmlTexte																   */
+/* ROLE : Initialisation des Textes par la lecture du fichier Texte.xml				   */
+/* ROLE : Enregistrement des pointeurs dans des unorder_map							   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void LoadConfig::readXmlTexte
 (
 	tinyxml2::XMLDocument& texteFile,
@@ -1012,37 +1169,37 @@ State_Type LoadConfig::xmlGiveStateType
 	std::string type
 )
 {
-	if (type.compare("STATEnothing") == 0)
+	if (type.compare("error") == 0)
 	{
-		return STATEnothing;
+		return State_Type::error;
 	}
 	else if (type.compare("STATEtitleScreen") == 0)
 	{
-		return STATEtitleScreen;
+		return State_Type::STATEtitleScreen;
 	}
 	else if (type.compare("STATEscreennewgame") == 0)
 	{
-		return STATEscreennewgame;
+		return State_Type::STATEscreennewgame;
 	}
 	else if (type.compare("STATEreload") == 0)
 	{
-		return STATEreload;
+		return State_Type::STATEreload;
 	}
 	else if (type.compare("STATEmainmap") == 0)
 	{
-		return STATEmainmap;
+		return State_Type::STATEmainmap;
 	}
 	else if (type.compare("STATEscience") == 0)
 	{
-		return STATEscience;
+		return State_Type::STATEscience;
 	}
 	else if (type.compare("STATEcitiemap") == 0)
 	{
-		return STATEcitiemap;
+		return State_Type::STATEcitiemap;
 	}
 	else
 	{
-		return STATEnothing;
+		return State_Type::error;
 	}
 }
 
@@ -1053,31 +1210,31 @@ Select_Type LoadConfig::xmlGiveSelectType
 {
 	if (type.compare("selectnothing") == 0)
 	{
-		return selectnothing;
+		return Select_Type::selectnothing;
 	}
 	else if (type.compare("NotToSelect") == 0)
 	{
-		return NotToSelect;
+		return Select_Type::NotToSelect;
 	}
 	else if (type.compare("selectcreate") == 0)
 	{
-		return selectcreate;
+		return Select_Type::selectcreate;
 	}
 	else if (type.compare("selectinspect") == 0)
 	{
-		return selectinspect;
+		return Select_Type::selectinspect;
 	}
 	else if (type.compare("selectmove") == 0)
 	{
-		return selectmove;
+		return Select_Type::selectmove;
 	}
 	else if (type.compare("selectmoveCitizen") == 0)
 	{
-		return selectmoveCitizen;
+		return Select_Type::selectmoveCitizen;
 	}
 	else
 	{
-		return selectnothing;
+		return Select_Type::selectnothing;
 	}
 }
 
@@ -1116,15 +1273,15 @@ Texte_Type LoadConfig::xmlGiveTexteType
 {
 	if (type.compare("blended") == 0)
 	{
-		return blended;
+		return Texte_Type::blended;
 	}
 	else if (type.compare("shaded") == 0)
 	{
-		return shaded;
+		return Texte_Type::shaded;
 	}
 	else
 	{
-		return blended;
+		return Texte_Type::blended;
 	}
 }
 
@@ -1228,23 +1385,23 @@ Center_Type LoadConfig::xmlGiveCenter
 {
 	if (type.compare("nocenter") == 0)
 	{
-		return nocenter;
+		return Center_Type::nocenter;
 	}
 	else if (type.compare("center_x") == 0)
 	{
-		return center_x;
+		return Center_Type::center_x;
 	}
 	else if (type.compare("center_y") == 0)
 	{
-		return center_y;
+		return Center_Type::center_y;
 	}
 	else if (type.compare("center") == 0)
 	{
-		return center;
+		return Center_Type::center;
 	}
 	else
 	{
-		return nocenter;
+		return Center_Type::nocenter;
 	}
 }
 
@@ -1255,7 +1412,7 @@ int LoadConfig::determineCoor
 	Uint16 screenHeight
 )
 {
-	std::string num(""), den(""), buffer("");
+	std::string num(EMPTY_STRING), den(EMPTY_STRING), buffer(EMPTY_STRING);
 	unsigned int somme(0), numI(0), denI(0);
 	unsigned int i(1);
 

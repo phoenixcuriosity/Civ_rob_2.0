@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.4
+	last modification on this file on version:0.19
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,29 +25,100 @@
 #ifndef KeyboardMouse_H
 #define KeyboardMouse_H
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "LIB.h"
+
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
+
+#define ONE_CLICK 1
+#define TWO_CLICKS 2
+
+#define MOUSE_SCROLL_UP 1
+#define MOUSE_SCROLL_DOWN -1
+
+/* *********************************************************
+ *						 Enum							   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						Structures						   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						 Classes						   *
+ ********************************************************* */
 
 class KeyboardMouse
 {
 public:
+	/* *********************************************************
+	 *					KeyboardMouse STATIC				   *
+	 ********************************************************* */
 
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : checkCaseSDL																				    	  */
+	/* ROLE : Check du cas du type cinState, choix entre wait et run SDL event								      */
+	/* ROLE : Recherche les évenements d'entré de type SDL_event : souris, clavier							      */
+	/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void checkCaseSDL
+	(
+		Sysinfo& sysinfo
+	);
 
-	/*
-	* NAME : eventSDL
-	* ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : évenements d'entré utilisateur
-	* RETURNED VALUE    : void
-	*/
-	static void eventSDL(Sysinfo& sysinfo);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : wait_SDL																					    	  */
+	/* ROLE : Attente d'un évenement d'entrée de la SDL de type SDL_event : souris, clavier					      */
+	/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void wait_SDL
+	(
+		Sysinfo& sysinfo
+	);
 
-	static void eventSDL_bis(Sysinfo& sysinfo, SDL_Event event);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : run_SDL																					    	  */
+	/* ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier					      */
+	/* ROLE : Si aucun évenements n'est trouvé alors le programme continue									      */
+	/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void run_SDL
+	(
+		Sysinfo& sysinfo
+	);
 
-	static void wait_SDL(Sysinfo& sysinfo);
-
-	static void run_SDL(Sysinfo& sysinfo);
-
-	
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : eventSDL																					    	  */
+	/* ROLE : Recherche d'entré de type SDL_event : souris, clavier											      */
+	/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+	/* INPUT : SDL_Event event : entré de type SDL_event 										    			  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void eventSDL
+	(
+		Sysinfo& sysinfo,
+		SDL_Event event
+	);
 
 
 public:
@@ -106,15 +177,6 @@ public:
 	static void keySDLK_y(Sysinfo& sysinfo);
 	static void keySDLK_z(Sysinfo& sysinfo);
 
-
-	/*
-	* comm 0.14e : ce commentaire est commun au 9 boutons 
-	* NAME : keySDLK_KP_1
-	* ROLE : Appel la fonction dans le contexte de l'appuie sur la touche
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Appel une fonction
-	* RETURNED VALUE    : void
-	*/
 	static void keySDLK_KP_1(Sysinfo&);
 	static void keySDLK_KP_2(Sysinfo&);
 	static void keySDLK_KP_3(Sysinfo&);
@@ -125,6 +187,17 @@ public:
 	static void keySDLK_KP_8(Sysinfo&);
 	static void keySDLK_KP_9(Sysinfo&);
 
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : conditionTryToMove																		    	  */
+	/* ROLE : Condition pour vouloir bouger une Unit														      */
+	/* ROLE : S'il y au moins 1 joueur et qu'une Unit est sélectionné et que ...							      */
+	/* ROLE : statescreen =	STATEmainmap et que select = selectmove	alors l'Unit peut essayer de bouger		      */
+	/* INPUT : const Var var : structure des variables de types joueurs et Unit								      */
+	/* RETURNED VALUE : bool -> false : une ou toutes les conditions ne sont pas remplies						  */
+	/* RETURNED VALUE : bool -> true : toutes les conditions sont remplies										  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
 	static bool conditionTryToMove
 	(
 		const Var var
@@ -136,74 +209,194 @@ public:
 	 *			KeyboardMouse::STATIC::SOURIS				   *
 	 ********************************************************* */
 
-	 /*
-	 * NAME : mouse
-	 * ROLE : Dispatch entre clique droit ou clique gauche
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * INPUT  PARAMETERS : SDL_Event : l'évenement du clique
-	 * OUTPUT PARAMETERS : choix du clique
-	 * RETURNED VALUE    : void
-	 */
-	static void mouse(Sysinfo&, SDL_Event);
 
-	/*
-	* NAME : cliqueGauche
-	* ROLE : Recherche de la zone ou le clique à lieu
-	* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
-	* OUTPUT PARAMETERS : la chaine de caractères a retourner
-	* RETURNED VALUE    : void
-	*/
-	static void cliqueGauche(Sysinfo&, SDL_Event);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : mouse																						    	  */
+	/* ROLE : Dispatch entre clique droit ou clique gauche													      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* INPUT : SDL_Event : l'évenement du clique			    												  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void mouse
+	(
+		Sysinfo&,
+		SDL_Event
+	);
 
-	/*
-	* NAME : cliqueDroit
-	* ROLE : Recherche de la zone ou le clique à lieu
-	* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
-	* OUTPUT PARAMETERS : la chaine de caractères a retourner
-	* RETURNED VALUE    : void
-	*/
-	static void cliqueDroit(Sysinfo&, SDL_Event);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : cliqueGauche																				    	  */
+	/* ROLE : Recherche de la zone ou le clique à lieu sur chaque case de STATE								      */
+	/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void cliqueGauche
+	(
+		Sysinfo& sysinfo,
+		SDL_Event event
+	);
 
-	/*
-	* NAME : wheel
-	* ROLE : Recherche l'incrémentation ou décrémentation du contexte
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* INPUT  PARAMETERS : int& wheel : l'évenement de scroll de la souris
-	* OUTPUT PARAMETERS : une action suivant l'incrémentation ou décrémentation du contexte
-	* RETURNED VALUE    : void
-	*/
-	static void wheel(Sysinfo&, int& wheel);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : checkSTATEmainmap																			    	  */
+	/* ROLE : Recherche de la zone ou le clique à lieu sur STATEmainmap										      */
+	/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+	/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+	/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static bool checkSTATEmainmap
+	(
+		Sysinfo& sysinfo
+	); 
 
-	/*
-	* NAME : resetButtonOn
-	* ROLE : reset de l'affichage On des boutons
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : reset de l'affichage On des boutons
-	* RETURNED VALUE    : void
-	*/
-	static void resetButtonOn(Sysinfo& sysinfo);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : inspectCitie																				    	  */
+	/* ROLE : Recherche de la position de la Citie sur tous les joueurs										      */
+	/* ROLE : Si aucun joueur n'existe la Citie ne peut pas etre trouvée									      */
+	/* INPUT : const TabPlayer& tabplayer : tableau de ptr de joueurs											  */
+	/* INPUT/OUTPUT : Var& var : Structure des Variables non organisées											  */
+	/* RETURNED VALUE : bool -> false : la Citie n'est enregistrée chez aucun joueur ou il n'y aucun joueur		  */
+	/* RETURNED VALUE : bool -> true : la Citie est enregistrée chez joueur (et existance dui joueur)			  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static bool inspectCitie
+	(
+		const TabPlayer& tabplayer,
+		Var& var
+	);
 
-	/*
-	* NAME : resetButtonPlayerOn
-	* ROLE : reset de l'affichage On des boutons player
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : reset de l'affichage On des boutons player
-	* RETURNED VALUE    : void
-	*/
-	static void resetButtonPlayerOn(Sysinfo& sysinfo);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : checkSTATEtitleScreen																		    	  */
+	/* ROLE : Recherche de la zone ou le clique à lieu sur STATEtitleScreen									      */
+	/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+	/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+	/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static bool checkSTATEtitleScreen
+	(
+		Sysinfo& sysinfo
+	);
 
-	/*
-	* NAME : resetButtonCitieMap
-	* ROLE : reset de l'affichage On des boutons citieMap
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : reset de l'affichage On des boutons citieMap
-	* RETURNED VALUE    : void
-	*/
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : checkSTATEreload																			    	  */
+	/* ROLE : Recherche de la zone ou le clique à lieu sur STATEreload										      */
+	/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+	/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+	/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static bool checkSTATEreload
+	(
+		Sysinfo& sysinfo
+	);
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : checkSTATEcitiemap																		    	  */
+	/* ROLE : Recherche de la zone ou le clique à lieu sur STATEcitiemap									      */
+	/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+	/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+	/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static bool checkSTATEcitiemap
+	(
+		Sysinfo& sysinfo
+	);
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : cliqueDroit																				    	  */
+	/* ROLE : Recherche de la zone ou le clique à lieu														      */
+	/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+	/* INPUT : struct Sysinfo& : structure globale du programme													  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void cliqueDroit
+	(
+		Sysinfo&
+	);
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : wheel																						    	  */
+	/* ROLE : Recherche l'incrémentation ou décrémentation du contexte										      */
+	/* INPUT : struct Sysinfo& : structure globale du programme												      */
+	/* INPUT : int& wheel : l'évenement de scroll de la souris													  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void wheel
+	(
+		Sysinfo&,
+		int& wheel
+	);
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : resetButtonOn																				    	  */
+	/* ROLE : reset de l'affichage On des boutons															      */
+	/* INPUT : struct Sysinfo& : structure globale du programme												      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void resetButtonOn
+	(
+		Sysinfo& sysinfo
+	);
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : resetButtonPlayerOn																		    	  */
+	/* ROLE : reset de l'affichage On des boutons player													      */
+	/* INPUT : struct Sysinfo& : structure globale du programme												      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void resetButtonPlayerOn
+	(
+		Sysinfo& sysinfo
+	);
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : resetButtonCitieMap																		    	  */
+	/* ROLE : reset de l'affichage On des boutons citieMap													      */
+	/* INPUT : struct Sysinfo& : structure globale du programme												      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
 	static void resetButtonCitieMap(Sysinfo& sysinfo);
+	
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : inspect																					    	  */
+	/* ROLE : Inspect les cases survolées par la souris par la SDL_MOUSE_MOTION								      */
+	/* ROLE : Attention fonction appélée à chaque actions de la souris (potentiellement toutes les frames)	      */
+	/* INPUT : struct Sysinfo& : structure globale du programme												      */
+	/* INPUT : SDL_Event : l'évenement du clique			    												  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void inspect
+	(
+		Sysinfo& sysinfo,
+		SDL_Event event
+	);
 
 
 
@@ -213,8 +406,43 @@ public:
 	 ********************************************************* */
 
 
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : KeyboardMouse																				    	  */
+	/* ROLE : Constructeur par défaut de la classe KeyboardMouse											      */
+	/* INPUT : void																							      */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
 	KeyboardMouse();
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : ~KeyboardMouse																			    	  */
+	/* ROLE : Destructeur par défaut de la classe KeyboardMouse												      */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
 	~KeyboardMouse() {};
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : refreshMousePos																			    	  */
+	/* ROLE : Inspect les cases survolées par la souris par la SDL_MOUSE_MOTION								      */
+	/* INPUT : Sint32 x	: position en x de la souris selon SDL												      */
+	/* INPUT : Sint32 y	: position en y de la souris selon SDL												      */
+	/* INPUT : unsigned int tileSize : taille d'une tile													      */
+	/* INPUT : unsigned int screenOffsetXIndexMin : offset en pixel sur l'axe X								      */
+	/* INPUT : unsigned int screenOffsetYIndexMin : offset en pixel sur l'axe Y									  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	void refreshMousePos
+	(
+		Sint32 x,
+		Sint32 y,
+		unsigned int tileSize,
+		unsigned int screenOffsetXIndexMin,
+		unsigned int screenOffsetYIndexMin
+	);
 
 	
 	
@@ -224,15 +452,19 @@ public:
 	 ********************************************************* */
 	 
 	 
-	inline unsigned int GETmouse_x()const	{ return _mouse_x; };
-	inline unsigned int GETmouse_y()const	{ return _mouse_y; };
-	inline unsigned int GETywheel()const	{ return _ywheel; };
-	inline unsigned int GETxwheel()const	{ return _xwheel; };
+	inline unsigned int GETmouse_x()const				{ return _mouse_x; };
+	inline unsigned int GETmouse_y()const				{ return _mouse_y; };
+	inline unsigned int GETmouse_xNormalized()const		{ return _mouse_xNormalized; };
+	inline unsigned int GETmouse_yNormalized()const		{ return _mouse_yNormalized; };
+	inline unsigned int GETywheel()const				{ return _ywheel; };
+	inline unsigned int GETxwheel()const				{ return _xwheel; };
 
-	inline void SETmouse_x(unsigned int mouse_x)	{ _mouse_x = mouse_x; };
-	inline void SETmouse_y(unsigned int mouse_y)	{ _mouse_y = mouse_y; };
-	inline void SETywheel(unsigned int ywheel)		{ _ywheel = ywheel; };
-	inline void SETxwheel(unsigned int xwheel)		{ _xwheel = xwheel; };
+	inline void SETmouse_x(unsigned int mouse_x)						{ _mouse_x = mouse_x; };
+	inline void SETmouse_y(unsigned int mouse_y)						{ _mouse_y = mouse_y; };
+	inline void SETmouse_xNormalized(unsigned int mouse_xNormalized)	{ _mouse_xNormalized = mouse_xNormalized; };
+	inline void SETmouse_yNormalized(unsigned int mouse_yNormalized)	{ _mouse_yNormalized = mouse_yNormalized; };
+	inline void SETywheel(unsigned int ywheel)							{ _ywheel = ywheel; };
+	inline void SETxwheel(unsigned int xwheel)							{ _xwheel = xwheel; };
 	
 
 private:
@@ -242,6 +474,8 @@ private:
 
 	unsigned int _mouse_x;
 	unsigned int _mouse_y;
+	unsigned int _mouse_xNormalized;
+	unsigned int _mouse_yNormalized;
 	unsigned int _ywheel;
 	unsigned int _xwheel;
 };

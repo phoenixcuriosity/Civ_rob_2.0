@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.5
+	last modification on this file on version:0.19
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,15 +32,15 @@
  *				START SaveReload::STATIC				   *
  ********************************************************* */
  
- 
-/*
-* NAME : savemaps
-* ROLE : Sauvegardes des sys map.map et map.screen
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Sauvegardes des maps : map.map dans SaveMap.txt
-* OUTPUT PARAMETERS : et map.screen dans SaveScreen.txt
-* RETURNED VALUE    : void
-*/
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : savemaps																					    	  */
+/* ROLE : Sauvegardes des sys map.map et map.screen														      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void																	    			  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::saveMaps
 (
 	Sysinfo& sysinfo
@@ -72,12 +72,20 @@ void SaveReload::saveMaps
 		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
 }
 
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : loadMaps																					    	  */
+/* ROLE : Chargement des sys map.map et map.screen														      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void								    												  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadMaps
 (
 	Sysinfo& sysinfo
 )
 {
-	std::string input("");
+	std::string input(EMPTY_STRING);
 
 	std::ifstream saveMaps(sysinfo.file.SaveMaps);
 	if (saveMaps)
@@ -101,12 +109,12 @@ void SaveReload::loadMaps
 				saveMaps >> sysinfo.map.maps[i][j].tile_stringground;
 
 				saveMaps >> input;
-				sysinfo.map.maps[i][j].tile_ground = (Uint8)std::stoul(input);
+				sysinfo.map.maps[i][j].tile_ground = (Ground_Type)std::stoul(input);
 
 				saveMaps >> sysinfo.map.maps[i][j].tile_stringspec;
 
 				saveMaps >> input;
-				sysinfo.map.maps[i][j].tile_spec = (Uint8)std::stoul(input);
+				sysinfo.map.maps[i][j].tile_spec = (GroundSpec_Type)std::stoul(input);
 
 				saveMaps >> input;
 				sysinfo.map.maps[i][j].appartenance = std::stoi(input);
@@ -128,13 +136,14 @@ void SaveReload::loadMaps
 	LoadConfig::logfileconsole("[INFO]___: Save End");
 }
 
-/*
-* NAME : savePlayer
-* ROLE : Sauvegarde des joueurs (units et cities)
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : savePlayer																				    	  */
+/* ROLE : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt									      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void 																				  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::savePlayer
 (
 	Sysinfo& sysinfo
@@ -159,6 +168,7 @@ void SaveReload::savePlayer
 						savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETname();
 						savePlayer << std::endl << "\tx= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETx();
 						savePlayer << std::endl << "\ty= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETy();
+						savePlayer << std::endl << "\tmovementType= " << (unsigned int)sysinfo.tabplayer[i]->GETtheUnit(j)->GETmovementType();
 						savePlayer << std::endl << "\tlife= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlife();
 						savePlayer << std::endl << "\tatq= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETatq();
 						savePlayer << std::endl << "\tdef= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETdef();
@@ -189,24 +199,31 @@ void SaveReload::savePlayer
 
 }
 
-
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : loadPlayer																				    	  */
+/* ROLE : Chargement des joueurs (units et cities) dans SavePlayer.txt									      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadPlayer
 (
 	Sysinfo& sysinfo
 )
 {
-	sysinfo.var.statescreen = STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainmap;
 
-	std::string		destroy(""),
-					name(""),
-					unitname("");
+	std::string		destroy(EMPTY_STRING),
+					name(EMPTY_STRING),
+					unitname(EMPTY_STRING);
 
 	unsigned int	nbplayer(0),
 					nbunit(0),
 					test(0),
 					test1(0);
 
-	unsigned int var[7];
+	unsigned int var[8];
 
 	int initspacename(200), spacename(32);
 
@@ -216,7 +233,8 @@ void SaveReload::loadPlayer
 		savePlayer >> destroy;
 		savePlayer >> nbplayer;
 
-		if (nbplayer > 0) {
+		if (nbplayer > 0)
+		{
 			for (unsigned int i(0); i < nbplayer; i++)
 			{
 				savePlayer >> destroy;
@@ -231,7 +249,7 @@ void SaveReload::loadPlayer
 						sysinfo.var.statescreen,
 						sysinfo.var.select,
 						sysinfo.allButton.player,
-						shaded,
+						Texte_Type::shaded,
 						name,
 						{ 255, 64, 0, 255 },
 						{ 64, 64, 64, 255 },
@@ -243,12 +261,14 @@ void SaveReload::loadPlayer
 
 					savePlayer >> destroy;
 					savePlayer >> nbunit;
-					if (nbunit > 0) {
+					if (nbunit > 0)
+					{
 						for (unsigned int j(0); j < nbunit; j++)
 						{
 							savePlayer >> destroy;
 							savePlayer >> test1;
-							if (test1 == j) {
+							if (test1 == j)
+							{
 								savePlayer >> destroy;
 								savePlayer >> unitname;
 
@@ -260,11 +280,12 @@ void SaveReload::loadPlayer
 								sysinfo.tabplayer[i]->addUnit(unitname,
 									var[0],
 									var[1],
-									var[2],
+									(Unit_Movement_Type)var[2],
 									var[3],
 									var[4],
 									var[5],
-									var[6]);
+									var[6],
+									var[7] );
 							}
 							else
 							{
@@ -288,13 +309,14 @@ void SaveReload::loadPlayer
 		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
 }
 
-/*
-* NAME : reload
-* ROLE : Chargement de la partie à patir des fichiers de sauvegarde
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Chargement de la partie
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : reload																					    	  */
+/* ROLE : Chargement de la partie à patir des fichiers de sauvegarde									      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::reload
 (
 	Sysinfo& sysinfo
@@ -309,13 +331,14 @@ void SaveReload::reload
 	LoadConfig::logfileconsole("[INFO]___: Reload End");
 }
 
-/*
-* NAME : createSave
-* ROLE : Création d'un emplacement de fichier de sauvegarde (courant)
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Création d'un emplacement de fichier de sauvegarde
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : createSave																				    	  */
+/* ROLE : Création d'un emplacement de fichier de sauvegarde (courant)									      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::createSave
 (
 	Sysinfo& sysinfo
@@ -324,7 +347,7 @@ void SaveReload::createSave
 	LoadConfig::logfileconsole("[INFO]___: createSave Start");
 	std::string destroy;
 
-	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+	for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 	{
 		if ((i + 1) != sysinfo.var.save.GETtabSave()[i])
 		{
@@ -354,7 +377,7 @@ void SaveReload::createSave
 		saveInfo << "NbSave=";
 		saveInfo << std::endl << sysinfo.var.save.GETnbSave() + 1;
 		saveInfo << std::endl << "SaveUse=";
-		for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave() + 1; i++)
+		for (unsigned int i(0); i < sysinfo.var.save.GETnbSave() + 1; i++)
 			saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 	}
 	else
@@ -370,26 +393,27 @@ void SaveReload::createSave
 	LoadConfig::logfileconsole("[INFO]___: createSave End");
 }
 
-/*
-* NAME : removeSave
-* ROLE : Supprime une sauvegarde du dossier de sauvegarde
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Supprime une sauvegarde
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : removeSave																				    	  */
+/* ROLE : Supprime une sauvegarde du dossier de sauvegarde												      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::removeSave
 (
 	Sysinfo& sysinfo
 )
 {
 	LoadConfig::logfileconsole("[INFO]___: removeSave Start");
-	std::string file;
-	bool condition = false;
+	std::string file(EMPTY_STRING);
+	bool condition(false);
 
 	if (sysinfo.var.save.GETcurrentSave() != 0) 
 	{
 
-		for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+		for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 		{
 			if (sysinfo.var.save.GETcurrentSave() == sysinfo.var.save.GETtabSave()[i]) 
 			{
@@ -444,7 +468,7 @@ void SaveReload::removeSave
 				saveInfo << "NbSave=";
 				saveInfo << std::endl << sysinfo.var.save.GETnbSave();
 				saveInfo << std::endl << "SaveUse=";
-				for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+				for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 					saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 			}
 			else
@@ -461,13 +485,14 @@ void SaveReload::removeSave
 	LoadConfig::logfileconsole("[INFO]___: removeSave End");
 }
 
-/*
-* NAME : clearSave
-* ROLE : Supprime toutes les sauvegardes du dossier
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : Supprime toutes les sauvegardes du dossier
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : clearSave																					    	  */
+/* ROLE : Supprime toutes les sauvegardes du dossier													      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::clearSave
 (
 	Sysinfo& sysinfo
@@ -475,14 +500,14 @@ void SaveReload::clearSave
 {
 	LoadConfig::logfileconsole("[INFO]___: clearSave Start");
 
-	for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++) 
+	for (unsigned int j(0); j < sysinfo.var.save.GETnbSave(); j++) 
 	{
 		delete sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])];
 		sysinfo.allButton.reload.erase("Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j]));
 	}
 
-	std::string file;
-	for (unsigned int i = 0; i < sysinfo.var.save.GETnbSave(); i++)
+	std::string file(EMPTY_STRING);
+	for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 	{
 		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SaveMaps.txt";
 		if (remove(file.c_str()) != 0)
@@ -531,9 +556,24 @@ void SaveReload::clearSave
   *				START SaveReload::METHODS				    *
   ********************************************************* */
 
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : SaveReload																				    	  */
+/* ROLE : Constructeur par défaut																		      */
+/* INPUT : void																							      */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 SaveReload::SaveReload(): _nbSave(0), _currentSave(0)
 {
 }
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : ~SaveReload																				    	  */
+/* ROLE : Destructeur par défaut																		      */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 SaveReload::~SaveReload()
 {
 }

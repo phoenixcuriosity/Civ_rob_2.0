@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.3
+	last modification on this file on version:0.19
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,9 +31,7 @@
 
 /* For struct Sysinfo and derived structs */
 #include "LIB.h"
-
-/* For class Player */
-#include "Player.h"
+#include "civ_lib.h"
 
 /* *********************************************************
  *						Constantes						   *
@@ -198,9 +196,9 @@ public:
 	static void tileAffectation
 	(
 		Tile& tile,
-		Uint8 tile_ground,
+		Ground_Type tile_ground,
 		std::string tile_stringground,
-		Uint8 tile_spec,
+		GroundSpec_Type tile_spec,
 		std::string tile_stringspec,
 		int8_t food,
 		int8_t work,

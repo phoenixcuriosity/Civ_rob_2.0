@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.9
+	last modification on this file on version:0.19
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -21,6 +21,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
 
 #include "GamePlay.h"
 #include "IHM.h"
@@ -47,7 +51,7 @@ void GamePlay::newGame
 )
 {
 	LoadConfig::logfileconsole("[INFO]___: Newgame Start");
-	sysinfo.var.statescreen = STATEscreennewgame;
+	sysinfo.var.statescreen = State_Type::STATEscreennewgame;
 
 	SaveReload::createSave(sysinfo);
 
@@ -65,7 +69,7 @@ void GamePlay::newGame
 	sysinfo.allTextes.newGame["How many player(s) (max 9):"]->render();
 	SDL_RenderPresent(sysinfo.screen.renderer);
 
-	sysinfo.var.cinState = cinScreenNewGameNbPlayer;
+	sysinfo.var.cinState = CinState_Type::cinScreenNewGameNbPlayer;
 	sysinfo.var.waitEvent = true;
 
 	unsigned int space(32);
@@ -76,14 +80,14 @@ void GamePlay::newGame
 	/* ---------------------------------------------------------------------- */
 	/* Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1 		  */
 	/* ---------------------------------------------------------------------- */
-	KeyboardMouse::eventSDL(sysinfo);
+	KeyboardMouse::checkCaseSDL(sysinfo);
 
 	/* *********************************************************
 	 *					Name of player ?					   *
 	 ********************************************************* */
 
 	sysinfo.var.tempY += space;
-	sysinfo.var.cinState = cinScreenNewGameNamePlayer;
+	sysinfo.var.cinState = CinState_Type::cinScreenNewGameNamePlayer;
 
 	/* ---------------------------------------------------------------------- */
 	/* Deuxième demande au joueur : 										  */
@@ -96,14 +100,14 @@ void GamePlay::newGame
 		Texte::writeTexte
 		(sysinfo.screen.renderer,
 			sysinfo.allTextures.font,
-			blended,
+			Texte_Type::blended,
 			"Name of player nb:" + std::to_string(i),
 			{ 255, 0, 0, 255 },
 			NoColor,
 			24, 
 			sysinfo.screen.screenWidth / 2,
 			sysinfo.var.tempY,
-			no_angle, center_x);
+			no_angle, Center_Type::center_x);
 
 		SDL_RenderPresent(sysinfo.screen.renderer);
 
@@ -113,10 +117,10 @@ void GamePlay::newGame
 		/* Valeur par défaut avec incrémentation en fonction			 		  */
 		/* du nombre de joueur : noName									 		  */
 		/* ---------------------------------------------------------------------- */
-		KeyboardMouse::eventSDL(sysinfo);
+		KeyboardMouse::checkCaseSDL(sysinfo);
 
 		sysinfo.var.s_player.tabPlayerName.push_back(sysinfo.var.tempPlayerName);
-		sysinfo.var.tempPlayerName = "";
+		sysinfo.var.tempPlayerName = EMPTY_STRING;
 		sysinfo.tabplayer.push_back(new Player(sysinfo.var.s_player.tabPlayerName[i]));
 		sysinfo.var.tempY += space;
 	}
@@ -148,8 +152,8 @@ void GamePlay::newGame
 	/* Création des boutons pour séléctionner les joueurs			 		  */
 	/* ---------------------------------------------------------------------- */
 	int initspacename(200), spacename(24);
-	sysinfo.var.statescreen = STATEmainmap;
-	sysinfo.var.cinState = cinMainMap;
+	sysinfo.var.statescreen = State_Type::STATEmainmap;
+	sysinfo.var.cinState = CinState_Type::cinMainMap;
 	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 	{
 		ButtonTexte::createButtonTexte
@@ -158,7 +162,7 @@ void GamePlay::newGame
 			sysinfo.var.statescreen,
 			sysinfo.var.select,
 			sysinfo.allButton.player,
-			shaded,
+			Texte_Type::shaded,
 			sysinfo.var.s_player.tabPlayerName[i],
 			{ 127, 255, 127, 255 },
 			{ 64, 64, 64, 255 },
@@ -219,10 +223,10 @@ void GamePlay::groundGen
 				tileAffectation
 				(
 					map.maps[i][j],
-					deepwater,
+					Ground_Type::deepwater,
 					(std::string)"deepwater.bmp",
-					specnothing,
-					(std::string)"specnothing",
+					GroundSpec_Type::nothing,
+					EMPTY_STRING,
 					0,
 					0,
 					0
@@ -303,12 +307,14 @@ void GamePlay::mapBorders
 {
 	unsigned int randomspecwaterborder
 	((rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER) + MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER);
-	switch (randomspecwaterborder) {
+	switch (randomspecwaterborder)
+	{
 	case 1:
 		tileAffectation
 		(	tile,
-			water, (std::string)"water.bmp",
-			fish,
+			Ground_Type::water,
+			(std::string)"water.bmp",
+			GroundSpec_Type::fish,
 			(std::string)"fish.bmp",
 			3,
 			2,
@@ -317,9 +323,9 @@ void GamePlay::mapBorders
 	case 2:
 		tileAffectation
 		(	tile,
-			water,
+			Ground_Type::water,
 			(std::string)"water.bmp",
-			petroleum,
+			GroundSpec_Type::petroleum,
 			(std::string)"petroleum.bmp",
 			1,
 			3,
@@ -333,10 +339,10 @@ void GamePlay::mapBorders
 	{
 		tileAffectation
 		(tile,
-			water,
+			Ground_Type::water,
 			(std::string)"water.bmp",
-			specnothing,
-			(std::string)"specnothing",
+			GroundSpec_Type::nothing,
+			EMPTY_STRING,
 			1,
 			1,
 			1);
@@ -372,38 +378,38 @@ void GamePlay::mapIntern
 	randomground = rand() % MAP_GEN_RANDOM_RANGE_GROUND + MAP_GEN_RANDOM_OFFSET_GROUND;
 	if (randomground < 92)
 	{
-		maps[i][j].tile_ground = grass;
+		maps[i][j].tile_ground = Ground_Type::grass;
 		maps[i][j].tile_stringground = "grass.bmp";
 		randomspecgrass =
 			rand() % MAP_GEN_RANDOM_RANGE_SPEC_GRASS + MAP_GEN_RANDOM_OFFSET_SPEC_GRASS;
 		switch (randomspecgrass)
 		{
 		case 1:
-			maps[i][j].tile_spec = coal;
+			maps[i][j].tile_spec = GroundSpec_Type::coal;
 			maps[i][j].tile_stringspec = "coal.png";
 			break;
 		case 2:
-			maps[i][j].tile_spec = copper;
+			maps[i][j].tile_spec = GroundSpec_Type::copper;
 			maps[i][j].tile_stringspec = "copper.png";
 			break;
 		case 3:
-			maps[i][j].tile_spec = iron;
+			maps[i][j].tile_spec = GroundSpec_Type::iron;
 			maps[i][j].tile_stringspec = "iron.png";
 			break;
 		case 4:
-			maps[i][j].tile_spec = tree;
+			maps[i][j].tile_spec = GroundSpec_Type::tree;
 			maps[i][j].tile_stringspec = "tree1.bmp";
 			break;
 		case 5:
-			maps[i][j].tile_spec = stone;
+			maps[i][j].tile_spec = GroundSpec_Type::stone;
 			maps[i][j].tile_stringspec = "stone.png";
 			break;
 		case 6:
-			maps[i][j].tile_spec = uranium;
+			maps[i][j].tile_spec = GroundSpec_Type::uranium;
 			maps[i][j].tile_stringspec = "uranium.png";
 			break;
 		case 7:
-			maps[i][j].tile_spec = horse;
+			maps[i][j].tile_spec = GroundSpec_Type::horse;
 			maps[i][j].tile_stringspec = "horse.bmp";
 			break;
 		default:
@@ -412,7 +418,7 @@ void GamePlay::mapIntern
 		}
 		if (randomspecgrass > 7 && randomspecgrass <= 32)
 		{ // plus de chance d'avoir des arbres
-			maps[i][j].tile_spec = tree;
+			maps[i][j].tile_spec = GroundSpec_Type::tree;
 			maps[i][j].tile_stringspec = "tree1.bmp";
 			maps[i][j].food = 1;
 			maps[i][j].work = 2;
@@ -420,8 +426,8 @@ void GamePlay::mapIntern
 		}
 		else if (randomspecgrass > 32)
 		{
-			maps[i][j].tile_spec = specnothing;
-			maps[i][j].tile_stringspec = "specnothing";
+			maps[i][j].tile_spec = GroundSpec_Type::nothing;
+			maps[i][j].tile_stringspec = EMPTY_STRING;
 			maps[i][j].food = 2;
 			maps[i][j].work = 1;
 			maps[i][j].gold = 1;
@@ -455,9 +461,9 @@ void GamePlay::mapIntern
 			case 1:
 				tileAffectation
 				(	maps[i][j],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					fish,
+					GroundSpec_Type::fish,
 					(std::string)"fish.bmp",
 					3,
 					2,
@@ -466,9 +472,9 @@ void GamePlay::mapIntern
 			case 2:
 				tileAffectation
 				(	maps[i][j],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					petroleum,
+					GroundSpec_Type::petroleum,
 					(std::string)"petroleum.bmp",
 					1,
 					3,
@@ -481,10 +487,10 @@ void GamePlay::mapIntern
 			if (randomspecwater > 2)
 				tileAffectation
 				(	maps[i][j],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					specnothing,
-					(std::string)"specnothing",
+					GroundSpec_Type::nothing,
+					EMPTY_STRING,
 					1,
 					1,
 					1);
@@ -496,7 +502,7 @@ void GamePlay::mapIntern
 
 		/* 2ème case */
 
-		if (maps[i - 1][j].tile_ground != deepwater)
+		if (Ground_Type::deepwater != maps[i - 1][j].tile_ground)
 		{
 			randomspecwater1 =
 				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER1 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER1;
@@ -505,9 +511,9 @@ void GamePlay::mapIntern
 			case 1:
 				tileAffectation
 				(	maps[i - 1][j],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					fish,
+					GroundSpec_Type::fish,
 					(std::string)"fish.bmp",
 					3,
 					2,
@@ -516,9 +522,9 @@ void GamePlay::mapIntern
 			case 2:
 				tileAffectation
 				(	maps[i - 1][j],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					petroleum,
+					GroundSpec_Type::petroleum,
 					(std::string)"petroleum.bmp",
 					1,
 					3,
@@ -531,10 +537,10 @@ void GamePlay::mapIntern
 			if (randomspecwater1 > 2)
 				tileAffectation
 				(	maps[i - 1][j],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					specnothing,
-					(std::string)"specnothing",
+					GroundSpec_Type::nothing,
+					EMPTY_STRING,
 					1,
 					1,
 					1);
@@ -546,7 +552,7 @@ void GamePlay::mapIntern
 
 		/* 3ème case */
 
-		if (maps[i - 1][j - 1].tile_ground != deepwater)
+		if (Ground_Type::deepwater != maps[i - 1][j - 1].tile_ground)
 		{
 			randomspecwater2 =
 				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER2 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER2;
@@ -555,9 +561,9 @@ void GamePlay::mapIntern
 			case 1:
 				tileAffectation
 				(	maps[i - 1][j - 1],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					fish,
+					GroundSpec_Type::fish,
 					(std::string)"fish.bmp",
 					3,
 					2,
@@ -566,9 +572,9 @@ void GamePlay::mapIntern
 			case 2:
 				tileAffectation
 				(	maps[i - 1][j - 1],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					petroleum,
+					GroundSpec_Type::petroleum,
 					(std::string)"petroleum.bmp",
 					1,
 					3,
@@ -581,10 +587,10 @@ void GamePlay::mapIntern
 			if (randomspecwater2 > 2)
 				tileAffectation
 				(	maps[i - 1][j - 1],
-					water,
+					Ground_Type::water,
 					(std::string)"water.bmp",
-					specnothing,
-					(std::string)"specnothing",
+					GroundSpec_Type::nothing,
+					EMPTY_STRING,
 					1,
 					1,
 					1);
@@ -610,9 +616,9 @@ void GamePlay::mapIntern
 void GamePlay::tileAffectation
 (	
 	Tile& tile,
-	Uint8 tile_ground, 
+	Ground_Type tile_ground,
 	std::string tile_stringground,
-	Uint8 tile_spec,
+	GroundSpec_Type tile_spec,
 	std::string tile_stringspec,
 	int8_t food,
 	int8_t work,
@@ -651,12 +657,13 @@ void GamePlay::newGameSettlerSpawn
 	/* avec les settlers de départ											  */
 	/* ---------------------------------------------------------------------- */
 	unsigned int selectunit(0);
-	for (unsigned int p(0); p < tabUnit_Struct.size(); p++)
+	bool continuer(true);
+	for (unsigned int p(0); (p < tabUnit_Struct.size()) && (continuer); p++)
 	{
 		if (tabUnit_Struct[p].name.compare("settler") == 0)
 		{
 			selectunit = p;
-			break;
+			continuer = false;
 		}
 		else
 		{
@@ -683,6 +690,7 @@ void GamePlay::newGameSettlerSpawn
 		(	"settler",
 			tabRandom[i].x,
 			tabRandom[i].y,
+			tabUnit_Struct[selectunit].type,
 			tabUnit_Struct[selectunit].life,
 			tabUnit_Struct[selectunit].atq,
 			tabUnit_Struct[selectunit].def,
@@ -729,7 +737,7 @@ void GamePlay::makeRandomPosTab
 			if (tabRandom.size() > 1)
 			{
 				nbConditionCheck = 0;
-				for (unsigned int i = 0; i < tabRandom.size(); i++)
+				for (unsigned int i = 0; (i < tabRandom.size()) && (continuer); i++)
 				{
 					if (conditionspace(RandomPOS, tabRandom, map.tileSize, i))
 					{
@@ -737,7 +745,6 @@ void GamePlay::makeRandomPosTab
 						if (nbConditionCheck == tabRandom.size())
 						{
 							continuer = false;
-							break;
 						}
 						else
 						{
@@ -852,7 +859,7 @@ bool GamePlay::conditionground
 					maps[i][j].tile_y == RandomPOS.y
 				) 
 			{
-				if (maps[i][j].tile_ground == grass)
+				if (maps[i][j].tile_ground == Ground_Type::grass)
 				{
 					return true;
 				}

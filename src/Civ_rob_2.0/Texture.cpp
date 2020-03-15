@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.11
+	last modification on this file on version:0.19
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -55,8 +55,8 @@ void Texture::loadImage
 (	
 	SDL_Renderer*& renderer,
 	std::unordered_map<std::string, Texture*>& tabTexture,
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	std::string path,
 	std::string msg,
 	Transparance_Type alpha,
@@ -68,10 +68,8 @@ void Texture::loadImage
 	Center_Type cnt
 )
 {
-
-
 	int xt(0), yt(0), wt(0), ht(0);
-	if (x != -1 && y != -1)
+	if (SCREEN_MIN_X_OUT_OF_RANGE < x && SCREEN_MIN_Y_OUT_OF_RANGE < y)
 	{
 		xt = x, yt = y;
 	}
@@ -95,13 +93,13 @@ void Texture::loadImage
 		ht = h;
 	}
 
-	if (loadedSurface != nullptr)
+	if (nullptr != loadedSurface)
 	{
 		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-		if (newTexture != nullptr)
+		if (nullptr != newTexture)
 		{
-			if (alpha != nonTransparent)
+			if (nonTransparent > alpha)
 			{
 				if (SDL_SetTextureAlphaMod(newTexture, alpha) != 0)
 				{
@@ -183,16 +181,16 @@ void Texture::centrage
 {
 	switch (cnt)
 	{
-	case nocenter:
+	case Center_Type::nocenter:
 		/* N/A */
 		break;
-	case center_x:
+	case Center_Type::center_x:
 		xc -= (iW / 2);
 		break;
-	case center_y:
+	case Center_Type::center_y:
 		yc -= (iH / 2);
 		break;
-	case center:
+	case Center_Type::center:
 		xc -= (iW / 2);
 		yc -= (iH / 2);
 		break;
@@ -220,8 +218,8 @@ Texture::Texture
 	SDL_Renderer*& renderer,
 	SDL_Texture* image,
 	std::string msg,
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	unsigned int x,
 	unsigned int y,
 	int w,
@@ -307,7 +305,7 @@ void Texture::render
 	int y
 )
 {
-	if (x != -1 && y != -1)
+	if (SCREEN_MIN_X_OUT_OF_RANGE < x && SCREEN_MIN_Y_OUT_OF_RANGE < y)
 	{
 		_dst.x = x;
 		_dst.y = y;
@@ -334,8 +332,8 @@ void Texture::render
  */
 bool Texture::renderTextureTestStates
 (
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	int x,
 	int y
 )
@@ -394,10 +392,10 @@ SDL_Texture* Texte::createSDL_TextureFromTexte
 
 	switch (type)
 	{
-	case blended:
+	case Texte_Type::blended:
 		surf = TTF_RenderText_Blended(font, message.c_str(), color);
 		break;
-	case shaded:
+	case Texte_Type::shaded:
 		surf = TTF_RenderText_Shaded(font, message.c_str(), color, colorback);
 		break;
 	default:
@@ -443,8 +441,8 @@ void Texte::loadTexte
 (	
 	SDL_Renderer*& renderer,
 	TTF_Font* font[],
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	std::unordered_map<std::string, Texte*>& tabTexte,
 	Texte_Type type,
 	std::string msg,
@@ -555,8 +553,8 @@ Texte::Texte
 	TTF_Font* font[],
 	SDL_Texture* image,
 	std::string msg,
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	int x,
 	int y,
 	int w,
@@ -626,19 +624,19 @@ void Texte::resizeTexte()
 
 	switch (this->GETcenter())
 	{
-	case nocenter:
+	case Center_Type::nocenter:
 		xc = this->GETdstx();
 		yc = this->GETdsty();
 		break;
-	case center_x:
+	case Center_Type::center_x:
 		xc = this->GETdstx() + this->GETdstw() / 2;
 		yc = this->GETdsty();
 		break;
-	case center_y:
+	case Center_Type::center_y:
 		xc = this->GETdstx();
 		yc = this->GETdsty() + this->GETdsth() / 2;
 		break;
-	case center:
+	case Center_Type::center:
 		xc = this->GETdstx() + this->GETdstw() / 2;
 		yc = this->GETdsty() + this->GETdsth() / 2;
 		break;
@@ -778,8 +776,8 @@ void ButtonImage::createButtonImage
 (	
 	SDL_Renderer*& renderer,
 	std::unordered_map<std::string, ButtonImage*>& tabButtonImage,
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	std::string path,
 	std::string msg,
 	Transparance_Type alpha,
@@ -793,7 +791,7 @@ void ButtonImage::createButtonImage
 {
 
 	int xt(0), yt(0), wt(0), ht(0);
-	if (x != -1 && y != -1)
+	if (SCREEN_MIN_X_OUT_OF_RANGE < x && SCREEN_MIN_Y_OUT_OF_RANGE < y)
 	{
 		xt = x, yt = y;
 	}
@@ -869,8 +867,8 @@ ButtonImage::ButtonImage
 	SDL_Renderer*& renderer,
 	SDL_Texture* image,
 	const std::string& msg,
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	int x,
 	int y,
 	int w,
@@ -904,7 +902,7 @@ ButtonImage::~ButtonImage()
  */
 bool ButtonImage::searchButtonImage
 (
-	Uint8 stateScreen,
+	State_Type stateScreen,
 	signed int x,
 	signed int y
 )
@@ -933,7 +931,7 @@ bool ButtonImage::searchButtonImage
  */
 bool ButtonImage::renderButtonImage
 (
-	Uint8 stateScreen
+	State_Type stateScreen
 )
 {
 	if (this->GETstateScreen() == stateScreen)
@@ -1012,8 +1010,8 @@ void ButtonTexte::createButtonTexte
 (	
 	SDL_Renderer*& renderer,
 	TTF_Font* font[],
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	std::unordered_map<std::string, ButtonTexte*>& tabButtonTexte,
 	Texte_Type type,
 	std::string msg,
@@ -1064,8 +1062,8 @@ ButtonTexte::ButtonTexte
 	TTF_Font* font[],
 	SDL_Texture* image,
 	std::string msg,
-	Uint8 stateScreen,
-	Uint8 select,
+	State_Type stateScreen,
+	Select_Type select,
 	int x,
 	int y,
 	int w,
@@ -1103,7 +1101,7 @@ ButtonTexte::~ButtonTexte()
  */
 bool ButtonTexte::searchButtonTexte
 (
-	Uint8 stateScreen,
+	State_Type stateScreen,
 	signed int x,
 	signed int y
 )
@@ -1133,11 +1131,10 @@ bool ButtonTexte::searchButtonTexte
  */
 void ButtonTexte::resetOnstateScreen
 (
-	Uint8 select,
-	unsigned int selectnothing
+	Select_Type select
 )
 {
-	if (this->GETselect() != select && this->GETselect() != selectnothing)
+	if (this->GETselect() != select && this->GETselect() != Select_Type::selectnothing)
 	{
 		_on = false;
 	}
@@ -1179,7 +1176,7 @@ void ButtonTexte::resetOnPlayer
  */
 bool ButtonTexte::renderButtonTexte
 (
-	Uint8 stateScreen,
+	State_Type stateScreen,
 	int x,
 	int y,
 	Center_Type center
@@ -1187,7 +1184,7 @@ bool ButtonTexte::renderButtonTexte
 {
 	if (this->GETstateScreen() == stateScreen)
 	{
-		if (x != -1 && y != -1)
+		if (SCREEN_MIN_X_OUT_OF_RANGE < x && SCREEN_MIN_Y_OUT_OF_RANGE < y)
 		{
 			centrage(x, y, this->GETdstw(), this->GETdsth(), center);
 			this->SETdstx(x);

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.10
+	last modification on this file on version:0.19
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,6 +22,10 @@
 
 */
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "KeyboardMouse.h"
 #include "civ_lib.h"
 #include "IHM.h"
@@ -30,31 +34,41 @@
 #include "End.h"
 #include "LoadConfig.h"
 
+/* *********************************************************
+ *						 Classes						   *
+ ********************************************************* */
 
-/*
-* NAME : eventSDL
-* ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : évenements d'entré utilisateur
-* RETURNED VALUE    : void
-*/
-void KeyboardMouse::eventSDL(Sysinfo& sysinfo)
+/* *********************************************************
+ *					KeyboardMouse STATIC				   *
+ ********************************************************* */
+
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : checkCaseSDL																				    	  */
+/* ROLE : Check du cas du type cinState, choix entre wait et run SDL event								      */
+/* ROLE : Recherche les évenements d'entré de type SDL_event : souris, clavier							      */
+/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+void KeyboardMouse::checkCaseSDL(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		run_SDL(sysinfo);
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		wait_SDL(sysinfo);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		wait_SDL(sysinfo);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		run_SDL(sysinfo);
 		break;
 	default:
@@ -63,37 +77,73 @@ void KeyboardMouse::eventSDL(Sysinfo& sysinfo)
 	}
 }
 
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : wait_SDL																					    	  */
+/* ROLE : Attente d'un évenement d'entrée de la SDL de type SDL_event : souris, clavier					      */
+/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::wait_SDL(Sysinfo& sysinfo)
 {
 	SDL_Event event;
 	while (sysinfo.var.waitEvent)
 	{
 		SDL_WaitEvent(&event);
-		eventSDL_bis(sysinfo, event);
+		eventSDL(sysinfo, event);
 	}
 }
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : run_SDL																					    	  */
+/* ROLE : Recherche infini des évenements d'entré de type SDL_event : souris, clavier					      */
+/* ROLE : Si aucun évenements n'est trouvé alors le programme continue									      */
+/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::run_SDL(Sysinfo& sysinfo)
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event) != 0)
 	{
-		eventSDL_bis(sysinfo, event);
+		eventSDL(sysinfo, event);
 	}
 }
 
-void KeyboardMouse::eventSDL_bis(Sysinfo& sysinfo, SDL_Event event)
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : eventSDL																					    	  */
+/* ROLE : Recherche d'entré de type SDL_event : souris, clavier											      */
+/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+void KeyboardMouse::eventSDL(Sysinfo& sysinfo, SDL_Event event)
 {
 	switch (event.type)
 	{
-	case SDL_QUIT:	// permet de quitter le jeu
+
+	/* ---------------------------------------------------------------------- */
+	/* Permet de quitter le jeu												  */
+	/* ---------------------------------------------------------------------- */
+	case SDL_QUIT:
 		sysinfo.var.continuer = 0;
 		break;
-	case SDL_KEYDOWN: // test sur le type d'événement touche enfoncé
+
+	/* ---------------------------------------------------------------------- */
+	/* Test sur le type d'événement touche enfoncé							  */
+	/* ---------------------------------------------------------------------- */
+	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym)
 		{
 
 
-
+		/* ---------------------------------------------------------------------- */
+		/* Specials Keys														  */
+		/* ---------------------------------------------------------------------- */
 
 		case SDLK_ESCAPE:
 			keySDLK_ESCAPE();
@@ -111,6 +161,9 @@ void KeyboardMouse::eventSDL_bis(Sysinfo& sysinfo, SDL_Event event)
 			keySDLK_SPACE(sysinfo);
 			break;
 
+		/* ---------------------------------------------------------------------- */
+		/* F Keys																  */
+		/* ---------------------------------------------------------------------- */
 
 		case SDLK_F1:
 			keySDLK_F1(sysinfo);
@@ -149,8 +202,9 @@ void KeyboardMouse::eventSDL_bis(Sysinfo& sysinfo, SDL_Event event)
 			keySDLK_F12(sysinfo);
 			break;
 
-
-
+		/* ---------------------------------------------------------------------- */
+		/* Arrow Keys															  */
+		/* ---------------------------------------------------------------------- */
 
 		case SDLK_UP:
 			keySDLK_UP(sysinfo);
@@ -165,8 +219,9 @@ void KeyboardMouse::eventSDL_bis(Sysinfo& sysinfo, SDL_Event event)
 			keySDLK_RIGHT(sysinfo);
 			break;
 
-
-
+		/* ---------------------------------------------------------------------- */
+		/* Alphabetic Keys														  */
+		/* ---------------------------------------------------------------------- */
 
 		case SDLK_a:
 			keySDLK_a(sysinfo);
@@ -247,8 +302,9 @@ void KeyboardMouse::eventSDL_bis(Sysinfo& sysinfo, SDL_Event event)
 			keySDLK_z(sysinfo);
 			break;
 
-
-
+		/* ---------------------------------------------------------------------- */
+		/* Numeric Keys															  */
+		/* ---------------------------------------------------------------------- */
 
 		case SDLK_KP_1:
 			keySDLK_KP_1(sysinfo);
@@ -282,12 +338,31 @@ void KeyboardMouse::eventSDL_bis(Sysinfo& sysinfo, SDL_Event event)
 			break;
 		}
 		break;
-	case SDL_MOUSEBUTTONDOWN: // test sur le type d'événement click souris (enfoncé)
+
+	/* ---------------------------------------------------------------------- */
+	/* test sur le type d'événement click souris (enfoncé)					  */
+	/* ---------------------------------------------------------------------- */
+
+	case SDL_MOUSEBUTTONDOWN:
 		mouse(sysinfo, event);
 		break;
+
+	/* ---------------------------------------------------------------------- */
+	/* test sur le type d'événement wheel									  */
+	/* ---------------------------------------------------------------------- */
+
 	case SDL_MOUSEWHEEL:
 		wheel(sysinfo, event.wheel.y);
 		break;
+
+	/* ---------------------------------------------------------------------- */
+	/* test sur le type d'événement motion									  */
+	/* ---------------------------------------------------------------------- */
+
+	case SDL_MOUSEMOTION:
+		inspect(sysinfo, event);
+		break;
+
 	default:
 		/* N/A */
 		break;
@@ -312,28 +387,38 @@ void KeyboardMouse::keySDLK_BACKSPACE(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		if (sysinfo.var.nbPlayer == 0)
 		{
 			sysinfo.var.nbPlayer = 1;
-			IHM::refreshNbPlayerTxt(sysinfo);
+			IHM::refreshNbPlayerTxt
+			(
+				sysinfo.screen.renderer,
+				sysinfo.allTextures.font,
+				sysinfo.var
+			);
 		}
 		sysinfo.var.waitEvent = false;
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		if (sysinfo.var.tempPlayerName.size() > 0)
 		{
 			sysinfo.var.tempPlayerName.pop_back();
-			IHM::refreshNamePlayerTxt(sysinfo);
+			IHM::refreshNamePlayerTxt
+			(
+				sysinfo.screen.renderer,
+				sysinfo.allTextures.font,
+				sysinfo.var
+			);
 		}	
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -345,30 +430,40 @@ void KeyboardMouse::keySDLK_RETURN(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		if (sysinfo.var.nbPlayer == 0)
 		{
 			sysinfo.var.nbPlayer = 1;
-			IHM::refreshNbPlayerTxt(sysinfo);
+			IHM::refreshNbPlayerTxt
+			(
+				sysinfo.screen.renderer,
+				sysinfo.allTextures.font,
+				sysinfo.var
+			);
 		}
 		sysinfo.var.waitEvent = false;
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		if (sysinfo.var.tempPlayerName.compare("") == 0)
 		{
 			sysinfo.var.tempPlayerName = "NoName" + std::to_string(sysinfo.var.s_player.nbNoNamePlayer);
 			sysinfo.var.s_player.nbNoNamePlayer++;
-			IHM::refreshNamePlayerTxt(sysinfo);
+			IHM::refreshNamePlayerTxt
+			(
+				sysinfo.screen.renderer,
+				sysinfo.allTextures.font,
+				sysinfo.var
+			);
 		}
 		sysinfo.var.waitEvent = false;
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -380,30 +475,40 @@ void KeyboardMouse::keySDLK_KP_ENTER(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		if (sysinfo.var.nbPlayer == 0)
 		{
 			sysinfo.var.nbPlayer = 1;
-			IHM::refreshNbPlayerTxt(sysinfo);
+			IHM::refreshNbPlayerTxt
+			(
+				sysinfo.screen.renderer,
+				sysinfo.allTextures.font,
+				sysinfo.var
+			);
 		}
 		sysinfo.var.waitEvent = false;
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		if (sysinfo.var.tempPlayerName.compare("") == 0)
 		{
 			sysinfo.var.tempPlayerName = "NoName" + std::to_string(sysinfo.var.s_player.nbNoNamePlayer);
 			sysinfo.var.s_player.nbNoNamePlayer++;
-			IHM::refreshNamePlayerTxt(sysinfo);
+			IHM::refreshNamePlayerTxt
+			(
+				sysinfo.screen.renderer,
+				sysinfo.allTextures.font,
+				sysinfo.var
+			);
 		}
 		sysinfo.var.waitEvent = false;
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -415,19 +520,19 @@ void KeyboardMouse::keySDLK_SPACE(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		GamePlay::nextTurn(sysinfo);
 		break;
 	default:
@@ -439,19 +544,19 @@ void KeyboardMouse::keySDLK_F1(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -463,19 +568,19 @@ void KeyboardMouse::keySDLK_F2(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -487,19 +592,19 @@ void KeyboardMouse::keySDLK_F3(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -511,19 +616,19 @@ void KeyboardMouse::keySDLK_F4(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -535,19 +640,19 @@ void KeyboardMouse::keySDLK_F5(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		GamePlay::groundGen(sysinfo.map, sysinfo.screen.screenWidth);
 		break;
 	default:
@@ -559,19 +664,19 @@ void KeyboardMouse::keySDLK_F6(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		End::deletePlayer(sysinfo.tabplayer, "player");
 		for (unsigned int i(0); i < 4; i++)
 		{
@@ -593,19 +698,19 @@ void KeyboardMouse::keySDLK_F7(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -617,19 +722,19 @@ void KeyboardMouse::keySDLK_F8(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -641,19 +746,19 @@ void KeyboardMouse::keySDLK_F9(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -665,19 +770,19 @@ void KeyboardMouse::keySDLK_F10(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -689,19 +794,19 @@ void KeyboardMouse::keySDLK_F11(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -713,19 +818,19 @@ void KeyboardMouse::keySDLK_F12(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -737,19 +842,19 @@ void KeyboardMouse::keySDLK_UP(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		if (sysinfo.map.screenOffsetYIndexMin > 0)
 		{
 			sysinfo.map.screenOffsetYIndexMin--;
@@ -765,19 +870,19 @@ void KeyboardMouse::keySDLK_LEFT(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		if (sysinfo.map.screenOffsetXIndexMin > 0)
 		{
 			sysinfo.map.screenOffsetXIndexMin--;
@@ -793,19 +898,19 @@ void KeyboardMouse::keySDLK_DOWN(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		if (sysinfo.map.screenOffsetYIndexMax < sysinfo.map.maps[0].size())
 		{
 			sysinfo.map.screenOffsetYIndexMin++;
@@ -821,19 +926,19 @@ void KeyboardMouse::keySDLK_RIGHT(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		/* N/A */
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		if (sysinfo.map.screenOffsetXIndexMax < sysinfo.map.maps.size())
 		{
 			sysinfo.map.screenOffsetXIndexMin++;
@@ -849,20 +954,25 @@ void KeyboardMouse::keySDLK_a(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'a';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -874,22 +984,26 @@ void KeyboardMouse::keySDLK_b(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'b';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
+	case CinState_Type::cinMainMap:
+		if (conditionTryToMove(sysinfo.var))
 			City::createCity(sysinfo);
 		break;
 	default:
@@ -901,20 +1015,25 @@ void KeyboardMouse::keySDLK_c(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'c';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -926,20 +1045,25 @@ void KeyboardMouse::keySDLK_d(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'd';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -951,20 +1075,25 @@ void KeyboardMouse::keySDLK_e(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'e';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -976,20 +1105,25 @@ void KeyboardMouse::keySDLK_f(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'f';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1001,20 +1135,25 @@ void KeyboardMouse::keySDLK_g(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'g';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1026,20 +1165,25 @@ void KeyboardMouse::keySDLK_h(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'h';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1051,22 +1195,26 @@ void KeyboardMouse::keySDLK_i(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'i';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
-		if (sysinfo.var.statescreen == STATEmainmap && sysinfo.var.select == selectmove
-			&& sysinfo.var.s_player.selectplayer != -1 && sysinfo.var.s_player.selectunit != -1)
+	case CinState_Type::cinMainMap:
+		if (conditionTryToMove(sysinfo.var))
 			Unit::irrigate(sysinfo);
 		break;
 	default:
@@ -1078,20 +1226,25 @@ void KeyboardMouse::keySDLK_j(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'j';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1103,20 +1256,25 @@ void KeyboardMouse::keySDLK_k(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'k';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1128,20 +1286,25 @@ void KeyboardMouse::keySDLK_l(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'l';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1153,20 +1316,25 @@ void KeyboardMouse::keySDLK_m(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'm';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1178,20 +1346,25 @@ void KeyboardMouse::keySDLK_n(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'n';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1203,20 +1376,25 @@ void KeyboardMouse::keySDLK_o(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'o';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1228,20 +1406,25 @@ void KeyboardMouse::keySDLK_p(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'p';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1253,20 +1436,25 @@ void KeyboardMouse::keySDLK_q(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'q';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1278,20 +1466,25 @@ void KeyboardMouse::keySDLK_r(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'r';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1303,20 +1496,25 @@ void KeyboardMouse::keySDLK_s(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 's';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1328,20 +1526,25 @@ void KeyboardMouse::keySDLK_t(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 't';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1353,20 +1556,25 @@ void KeyboardMouse::keySDLK_u(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'u';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1378,20 +1586,25 @@ void KeyboardMouse::keySDLK_v(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'v';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1403,20 +1616,25 @@ void KeyboardMouse::keySDLK_w(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'w';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1428,20 +1646,25 @@ void KeyboardMouse::keySDLK_x(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'x';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1453,20 +1676,25 @@ void KeyboardMouse::keySDLK_y(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'y';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1478,20 +1706,25 @@ void KeyboardMouse::keySDLK_z(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		/* N/A */
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += 'z';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1513,21 +1746,31 @@ void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 1;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '1';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 
 		if (conditionTryToMove(sysinfo.var))
 		{
@@ -1552,21 +1795,31 @@ void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 2;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '2';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		if (conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
@@ -1589,21 +1842,31 @@ void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 3;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '3';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 
 		if (conditionTryToMove(sysinfo.var))
 		{
@@ -1628,21 +1891,31 @@ void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 4;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '4';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 
 		if (conditionTryToMove(sysinfo.var))
 		{
@@ -1667,21 +1940,31 @@ void KeyboardMouse::keySDLK_KP_5(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 5;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '5';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 		/* N/A */
 		break;
 	default:
@@ -1693,21 +1976,31 @@ void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 6;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '6';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 
 		if (conditionTryToMove(sysinfo.var))
 		{
@@ -1732,21 +2025,31 @@ void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 7;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '7';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 
 		if (conditionTryToMove(sysinfo.var))
 		{
@@ -1771,21 +2074,31 @@ void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 8;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '8';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 
 		if (conditionTryToMove(sysinfo.var))
 		{
@@ -1811,21 +2124,31 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 {
 	switch (sysinfo.var.cinState)
 	{
-	case cinNothing:
+	case CinState_Type::cinNothing:
 		/* N/A */
 		break;
-	case cinTitleScreen:
+	case CinState_Type::cinTitleScreen:
 		/* N/A */
 		break;
-	case cinScreenNewGameNbPlayer:
+	case CinState_Type::cinScreenNewGameNbPlayer:
 		sysinfo.var.nbPlayer = 9;
-		IHM::refreshNbPlayerTxt(sysinfo);
+		IHM::refreshNbPlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinScreenNewGameNamePlayer:
+	case CinState_Type::cinScreenNewGameNamePlayer:
 		sysinfo.var.tempPlayerName += '9';
-		IHM::refreshNamePlayerTxt(sysinfo);
+		IHM::refreshNamePlayerTxt
+		(
+			sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var
+		);
 		break;
-	case cinMainMap:
+	case CinState_Type::cinMainMap:
 
 		if (conditionTryToMove(sysinfo.var))
 		{
@@ -1848,19 +2171,30 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 	}
 }
 
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : conditionTryToMove																		    	  */
+/* ROLE : Condition pour vouloir bouger une Unit														      */
+/* ROLE : S'il y au moins 1 joueur et qu'une Unit est sélectionné et que ...							      */
+/* ROLE : statescreen =	STATEmainmap et que select = selectmove	alors l'Unit peut essayer de bouger		      */
+/* INPUT : const Var var : structure des variables de types joueurs et Unit								      */
+/* RETURNED VALUE : bool -> false : une ou toutes les conditions ne sont pas remplies						  */
+/* RETURNED VALUE : bool -> true : toutes les conditions sont remplies										  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 bool KeyboardMouse::conditionTryToMove
 (
 	const Var var
 )
 {
 	if	(
-			var.statescreen == STATEmainmap
+			State_Type::STATEmainmap == var.statescreen
 			&&
-			var.select == selectmove
+			Select_Type::selectmove == var.select
 			&&
-			var.s_player.selectplayer != -1
+			NO_PLAYER_SELECTED < var.s_player.selectplayer
 			&&
-			var.s_player.selectunit != -1
+			NO_UNIT_SELECTED < var.s_player.selectunit
 		)
 	{
 		return true;
@@ -1882,16 +2216,21 @@ bool KeyboardMouse::conditionTryToMove
  *			START KeyboardMouse::STATIC::SOURIS		       *
  ********************************************************* */
 
- 
-/*
-* NAME : mouse
-* ROLE : Dispatch entre clique droit ou clique gauche
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
-* OUTPUT PARAMETERS : choix du clique
-* RETURNED VALUE    : void
-*/
-void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event)
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : mouse																						    	  */
+/* ROLE : Dispatch entre clique droit ou clique gauche													      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+/* INPUT : SDL_Event : l'évenement du clique			    												  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+void KeyboardMouse::mouse
+(
+	Sysinfo& sysinfo,
+	SDL_Event event
+)
 {
 	/*
 
@@ -1900,368 +2239,417 @@ void KeyboardMouse::mouse(Sysinfo& sysinfo, SDL_Event event)
 		BUTTON_RIGHT
 
 	*/
+	sysinfo.var.mouse.refreshMousePos
+	(
+		event.button.x,
+		event.button.y,
+		sysinfo.map.tileSize,
+		sysinfo.map.screenOffsetXIndexMin,
+		sysinfo.map.screenOffsetYIndexMin
+	);
 
-	if (event.button.button == SDL_BUTTON_LEFT)
+	if (SDL_BUTTON_LEFT == event.button.button)
 	{
 		cliqueGauche(sysinfo, event);
 	}
-	else if (	event.button.button == SDL_BUTTON_RIGHT
-			 && sysinfo.var.statescreen == STATEmainmap
+	else if (
+				SDL_BUTTON_RIGHT == event.button.button
+				&&
+				State_Type::STATEmainmap == sysinfo.var.statescreen
 			)
 	{
-		cliqueDroit(sysinfo, event);
+		cliqueDroit(sysinfo);
 	}
 	else
 	{
 		/* N/A */
 	}
-		
-
 }
 
-/*
-* NAME : cliqueGauche
-* ROLE : Recherche de la zone ou le clique à lieu
-* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
-* OUTPUT PARAMETERS : la chaine de caractères a retourner
-* RETURNED VALUE    : void
-*/
-void KeyboardMouse::cliqueGauche(Sysinfo& sysinfo, SDL_Event event) 
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : cliqueGauche																				    	  */
+/* ROLE : Recherche de la zone ou le clique à lieu sur chaque case de STATE								      */
+/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+void KeyboardMouse::cliqueGauche
+(
+	Sysinfo& sysinfo,
+	SDL_Event event
+) 
 {
-
-	
-
-	// inspect citie
-	if (sysinfo.var.statescreen == STATEmainmap)
-	{
-		if (sysinfo.var.s_player.selectplayer > -1) 
-		{
-			if (   sysinfo.var.select == selectinspect
-				&& sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() != 0) 
-			{
-				sysinfo.var.mouse.SETmouse_x(
-					((unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize)
-					+ (sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize));
-				sysinfo.var.mouse.SETmouse_y(
-					((unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize)
-					+ (sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize));
-				City::searchCityTile(sysinfo.tabplayer, sysinfo.var);
-			}
-		}
-	}
 	// recherche du bouton par comparaison de string et des positions x et y du clic
-
 	switch (sysinfo.var.statescreen)
 	{
-	case STATEmainmap:
+	case State_Type::STATEmainmap:
+		
+		if (checkSTATEmainmap(sysinfo)) return;
 
-
-		/* *********************************************************
-		 *						STATEmainmap					   *
-		 ********************************************************* */
-
-		if (sysinfo.allButton.mainMap["screen Titre"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
+		if (ONE_CLICK == event.button.clicks)
 		{
-			sysinfo.var.cinState = cinTitleScreen;
-			SaveReload::saveMaps(sysinfo);
-			SaveReload::savePlayer(sysinfo);
-			resetButtonOn(sysinfo);
-			LoadConfig::logfileconsole("__________________________");
-			IHM::titleScreen(sysinfo);
-			return;
+			if (Unit::searchUnitTile(sysinfo.var.s_player, sysinfo.var.mouse, sysinfo.tabplayer, &sysinfo.var.select)) return;
+		}
+		else if(TWO_CLICKS == event.button.clicks)
+		{
+			if (inspectCitie(sysinfo.tabplayer, sysinfo.var)) return;
+		}
+		else
+		{
+			/* N/A */
 		}
 		
-		if (sysinfo.allButton.mainMap["Create Unit"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.allButton.mainMap["Create Unit"]->changeOn();
-			if (sysinfo.var.select != selectcreate)
-				sysinfo.var.select = selectcreate;
-			else
-				sysinfo.var.select = selectnothing;
-
-			resetButtonOn(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.mainMap["Move Unit"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.allButton.mainMap["Move Unit"]->changeOn();
-			if (sysinfo.var.select != selectmove)
-				sysinfo.var.select = selectmove;
-			else
-			{
-				sysinfo.var.s_player.selectunit = -1;
-				sysinfo.var.select = selectnothing;
-			}
-			resetButtonOn(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.mainMap["Inspect"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.allButton.mainMap["Inspect"]->changeOn();
-			if (sysinfo.var.select != selectinspect)
-				sysinfo.var.select = selectinspect;
-			else
-			{
-					sysinfo.var.s_player.selectunit = -1;
-				sysinfo.var.select = selectnothing;
-			}
-			resetButtonOn(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.mainMap["Next Turn"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			GamePlay::nextTurn(sysinfo);
-			resetButtonOn(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.mainMap["Delete Unit"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.allButton.mainMap["Delete Unit"]
-				->SETon(!sysinfo.allButton.mainMap["Delete Unit"]
-					->GETon());
-			resetButtonOn(sysinfo);
-			return;
-		}
-
-		{
-			unsigned int i(0);
-			for (const auto& n : sysinfo.allButton.player)
-			{
-				if (sysinfo.allButton.player[n.second->GETname()]
-						->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-				{
-					sysinfo.allButton.player[n.second->GETname()]->changeOn();
-					if (sysinfo.var.s_player.selectplayer != (int)i)
-						sysinfo.var.s_player.selectplayer = (int)i;
-					else
-						sysinfo.var.s_player.selectplayer = -1;
-					LoadConfig::logfileconsole("sysinfo.var.selectplayer = " + sysinfo.tabplayer[i]->GETname());
-					resetButtonPlayerOn(sysinfo);
-					return;
-				}
-				i++;
-			}
-		}
-		
-		
 		break;
-	case STATEtitleScreen:
+	case State_Type::STATEtitleScreen:
 
+		if (checkSTATEtitleScreen(sysinfo)) return;
 
-		/* *********************************************************
-		 *						STATEtitleScreen				   *
-		 ********************************************************* */
-
-		if (sysinfo.allButton.titleScreen["New Game"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			GamePlay::newGame(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.titleScreen["Reload"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			IHM::reloadScreen(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.titleScreen["Option"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			//clearSave(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.titleScreen["Quit"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.var.continuer = false;
-			return;
-		}
 		break;
-	case STATEreload:
+	case State_Type::STATEreload:
 
+		if (checkSTATEreload(sysinfo)) return;
 
-		/* *********************************************************
-		 *						STATEreload						   *
-		 ********************************************************* */
-
-		if (sysinfo.allButton.reload["Back"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y)) 
-		{
-			IHM::titleScreen(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.reload["Remove all saves"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.allButton.reload["Remove all saves"]
-				->changeOn();
-			SaveReload::clearSave(sysinfo);
-			IHM::reloadScreen(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.reload["Load"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			SaveReload::reload(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.reload["Remove"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			SaveReload::removeSave(sysinfo);
-			IHM::reloadScreen(sysinfo);
-			return;
-		}
-
-		for (unsigned int j = 0; j < sysinfo.var.save.GETnbSave(); j++)
-		{
-			if (sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
-					->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-			{
-				sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
-					->changeOn();
-				sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
-				sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveMaps.txt";
-				sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SavePlayer.txt";
-				IHM::reloadScreen(sysinfo);
-				return;
-			}
-		}
 		break;
-	case STATEcitiemap:
+	case State_Type::STATEcitiemap:
 
+		if (checkSTATEcitiemap(sysinfo)) return;
 
-		/* *********************************************************
-		 *						STATEcitiemap					   *
-		 ********************************************************* */
-
-		if (sysinfo.allButton.citieMap["Map"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.var.s_player.selectCitie = -1;
-			sysinfo.var.statescreen = STATEmainmap;
-			sysinfo.var.select = selectnothing;
-			resetButtonCitieMap(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.citieMap["Build"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.allButton.citieMap["Build"]
-				->changeOn();
-			if (sysinfo.var.select != selectcreate)
-				sysinfo.var.select = selectcreate;
-			else
-				sysinfo.var.select = selectnothing;
-			resetButtonCitieMap(sysinfo);
-			return;
-		}
-		if (sysinfo.allButton.citieMap["Place Citizen"]
-				->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-		{
-			sysinfo.allButton.citieMap["Place Citizen"]
-				->changeOn();
-			if (sysinfo.var.select != selectmoveCitizen)
-				sysinfo.var.select = selectmoveCitizen;
-			else
-				sysinfo.var.select = selectnothing;
-			resetButtonCitieMap(sysinfo);
-			return;
-		}
-
-
-		if (sysinfo.var.select == selectcreate)
-		{
-			for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
-			{
-				if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Struct[i].name]
-						->searchButtonTexte(sysinfo.var.statescreen, event.button.x, event.button.y))
-				{
-					sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Struct[i].name;
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Struct[i].name,
-						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETx(),
-						sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETy(),
-						sysinfo.var.s_player.tabUnit_Struct[i].life, sysinfo.var.s_player.tabUnit_Struct[i].atq,
-						sysinfo.var.s_player.tabUnit_Struct[i].def, sysinfo.var.s_player.tabUnit_Struct[i].movement,
-						sysinfo.var.s_player.tabUnit_Struct[i].level);
-
-					sysinfo.var.select = selectnothing;
-					break;
-				}
-			}
-		}
+		break;
+	default:
+		/* N/A */
+		/* TODO ERROR */
 		break;
 	}
 }
 
-/*
-* NAME : cliqueDroit
-* ROLE : Recherche de la zone ou le clique à lieu
-* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* INPUT  PARAMETERS : SDL_Event : l'évenement du clique
-* OUTPUT PARAMETERS : la chaine de caractères a retourner
-* RETURNED VALUE    : void
-*/
-void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : checkSTATEmainmap																			    	  */
+/* ROLE : Recherche de la zone ou le clique à lieu sur STATEmainmap										      */
+/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+bool KeyboardMouse::checkSTATEmainmap
+(
+	Sysinfo& sysinfo
+)
 {
-	unsigned int selectunit = 0;
-	sysinfo.var.mouse.SETmouse_x((unsigned int)ceil(event.button.x / sysinfo.map.tileSize) * sysinfo.map.tileSize);
-	sysinfo.var.mouse.SETmouse_y((unsigned int)ceil(event.button.y / sysinfo.map.tileSize) * sysinfo.map.tileSize);
-	if (sysinfo.var.s_player.selectplayer > -1)
+	if (sysinfo.allButton.mainMap["screen Titre"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.var.cinState = CinState_Type::cinTitleScreen;
+		SaveReload::saveMaps(sysinfo);
+		SaveReload::savePlayer(sysinfo);
+		resetButtonOn(sysinfo);
+		LoadConfig::logfileconsole("__________________________");
+		IHM::titleScreen(sysinfo);
+		return true;
+	}
+
+
+#ifdef _DEBUG_MODE
+	if (sysinfo.allButton.mainMap["Create Unit"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.allButton.mainMap["Create Unit"]->changeOn();
+		if (sysinfo.var.select != Select_Type::selectcreate)
+			sysinfo.var.select = Select_Type::selectcreate;
+		else
+			sysinfo.var.select = Select_Type::selectnothing;
+
+		resetButtonOn(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.mainMap["Delete Unit"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.allButton.mainMap["Delete Unit"]
+			->SETon(!sysinfo.allButton.mainMap["Delete Unit"]
+				->GETon());
+		resetButtonOn(sysinfo);
+		return true;
+	}
+#endif // DEBUG_MODE
+	
+	if (sysinfo.allButton.mainMap["Next Turn"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		GamePlay::nextTurn(sysinfo);
+		resetButtonOn(sysinfo);
+		return true;
+	}
+	
+
+	{
+		unsigned int i(0);
+		for (const auto& n : sysinfo.allButton.player)
+		{
+			if (sysinfo.allButton.player[n.second->GETname()]
+					->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+			{
+				sysinfo.allButton.player[n.second->GETname()]->changeOn();
+				if (sysinfo.var.s_player.selectplayer != (int)i)
+					sysinfo.var.s_player.selectplayer = (int)i;
+				else
+					sysinfo.var.s_player.selectplayer = NO_PLAYER_SELECTED;
+				LoadConfig::logfileconsole("sysinfo.var.selectplayer = " + sysinfo.tabplayer[i]->GETname());
+				resetButtonPlayerOn(sysinfo);
+				return true;
+			}
+			i++;
+		}
+	}
+	return false;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : inspectCitie																				    	  */
+/* ROLE : Recherche de la position de la Citie sur tous les joueurs										      */
+/* ROLE : Si aucun joueur n'existe la Citie ne peut pas etre trouvée									      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+/* RETURNED VALUE : bool -> false : la Citie n'est enregistrée chez aucun joueur ou il n'y aucun joueur		  */
+/* RETURNED VALUE : bool -> true : la Citie est enregistrée chez joueur (et existance dui joueur)			  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+bool KeyboardMouse::inspectCitie
+(
+	const TabPlayer& tabplayer,
+	Var& var
+)
+{
+	if (NO_PLAYER_SELECTED < var.s_player.selectplayer)
+	{
+		if (tabplayer[var.s_player.selectplayer]->GETtabCity().size() > 0)
+		{
+			City::searchCityTile(tabplayer, var);
+			return true;
+		}
+	}
+	return false;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : checkSTATEtitleScreen																		    	  */
+/* ROLE : Recherche de la zone ou le clique à lieu sur STATEtitleScreen									      */
+/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+bool KeyboardMouse::checkSTATEtitleScreen
+(
+	Sysinfo& sysinfo
+)
+{
+	if (sysinfo.allButton.titleScreen["New Game"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		GamePlay::newGame(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.titleScreen["Reload"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		IHM::reloadScreen(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.titleScreen["Option"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		//clearSave(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.titleScreen["Quit"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.var.continuer = false;
+		return true;
+	}
+	return false;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : checkSTATEreload																			    	  */
+/* ROLE : Recherche de la zone ou le clique à lieu sur STATEreload										      */
+/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+bool KeyboardMouse::checkSTATEreload
+(
+	Sysinfo& sysinfo
+)
+{
+	if (sysinfo.allButton.reload["Back"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		IHM::titleScreen(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.reload["Remove all saves"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.allButton.reload["Remove all saves"]
+			->changeOn();
+		SaveReload::clearSave(sysinfo);
+		IHM::reloadScreen(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.reload["Load"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		SaveReload::reload(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.reload["Remove"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		SaveReload::removeSave(sysinfo);
+		IHM::reloadScreen(sysinfo);
+		return true;
+	}
+
+	for (unsigned int j(0); j < sysinfo.var.save.GETnbSave(); j++)
+	{
+		if (sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
+				->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+		{
+			sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
+				->changeOn();
+			sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
+			sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveMaps.txt";
+			sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SavePlayer.txt";
+			IHM::reloadScreen(sysinfo);
+			return true;
+		}
+	}
+	return false;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : checkSTATEcitiemap																		    	  */
+/* ROLE : Recherche de la zone ou le clique à lieu sur STATEcitiemap									      */
+/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
+/* RETURNED VALUE : bool -> false : aucun boutons ou fonctions utilisés										  */
+/* RETURNED VALUE : bool -> true : un bouton ou une fonction utilisé										  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+bool KeyboardMouse::checkSTATEcitiemap
+(
+	Sysinfo& sysinfo
+)
+{
+	if (sysinfo.allButton.citieMap["Map"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.var.s_player.selectCitie = NO_CITIE_SELECTED;
+		sysinfo.var.statescreen = State_Type::STATEmainmap;
+		sysinfo.var.select = Select_Type::selectnothing;
+		resetButtonCitieMap(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.citieMap["Build"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.allButton.citieMap["Build"]
+			->changeOn();
+		if (sysinfo.var.select != Select_Type::selectcreate)
+			sysinfo.var.select = Select_Type::selectcreate;
+		else
+			sysinfo.var.select = Select_Type::selectnothing;
+		resetButtonCitieMap(sysinfo);
+		return true;
+	}
+	if (sysinfo.allButton.citieMap["Place Citizen"]
+			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+	{
+		sysinfo.allButton.citieMap["Place Citizen"]
+			->changeOn();
+		if (sysinfo.var.select != Select_Type::selectmoveCitizen)
+			sysinfo.var.select = Select_Type::selectmoveCitizen;
+		else
+			sysinfo.var.select = Select_Type::selectnothing;
+		resetButtonCitieMap(sysinfo);
+		return true;
+	}
+
+
+	if (Select_Type::selectcreate == sysinfo.var.select)
+	{
+		for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+		{
+			if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Struct[i].name]
+					->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
+			{
+				sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Struct[i].name;
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Struct[i].name,
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETx(),
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETy(),
+					sysinfo.var.s_player.tabUnit_Struct[i].type,
+					sysinfo.var.s_player.tabUnit_Struct[i].life, sysinfo.var.s_player.tabUnit_Struct[i].atq,
+					sysinfo.var.s_player.tabUnit_Struct[i].def, sysinfo.var.s_player.tabUnit_Struct[i].movement,
+					sysinfo.var.s_player.tabUnit_Struct[i].level);
+
+				sysinfo.var.select = Select_Type::selectnothing;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : cliqueDroit																				    	  */
+/* ROLE : Recherche de la zone ou le clique à lieu														      */
+/* ROLE : En fonction de la zone touchée une action peut avoir lieu (boutons)							      */
+/* INPUT : struct Sysinfo& : structure globale du programme													  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+void KeyboardMouse::cliqueDroit
+(
+	Sysinfo& sysinfo
+)
+{
+	if (NO_PLAYER_SELECTED < sysinfo.var.s_player.selectplayer)
 	{
 		switch (sysinfo.var.statescreen)
 		{
-		case STATEmainmap:
+		case State_Type::STATEmainmap:
 			switch (sysinfo.var.select) 
 			{
-			case selectcreate:
-				for (unsigned int p = 0; p < sysinfo.var.s_player.tabUnit_Struct.size(); p++) {
+			case Select_Type::selectcreate:
+
+				int selectunit(NO_UNIT_SELECTED);
+				for (unsigned int p(0); (p < sysinfo.var.s_player.tabUnit_Struct.size()) && (NO_UNIT_SELECTED == selectunit); p++)
+				{
 					if (sysinfo.var.s_player.unitNameToCreate.compare(sysinfo.var.s_player.tabUnit_Struct[p].name) == 0)
 					{
 						selectunit = p;
-						break;
 					}
 				}
-				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.unitNameToCreate,
-					sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y(),
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit
+				(sysinfo.var.s_player.unitNameToCreate,
+					sysinfo.var.mouse.GETmouse_xNormalized(), sysinfo.var.mouse.GETmouse_yNormalized(),
+					sysinfo.var.s_player.tabUnit_Struct[selectunit].type,
 					sysinfo.var.s_player.tabUnit_Struct[selectunit].life, sysinfo.var.s_player.tabUnit_Struct[selectunit].atq,
 					sysinfo.var.s_player.tabUnit_Struct[selectunit].def, sysinfo.var.s_player.tabUnit_Struct[selectunit].movement,
-					sysinfo.var.s_player.tabUnit_Struct[selectunit].level);
-				break;
-			case selectmove:
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0)
-				{
-					Unit::searchUnitTile
-					(
-						sysinfo.var.s_player,
-						sysinfo.var.mouse,
-						sysinfo.map,
-						sysinfo.tabplayer
-					);
-					LoadConfig::logfileconsole("Unit select to move n:" + std::to_string(sysinfo.var.s_player.selectunit));
-				}
-				break;
-			case selectinspect:
-				if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabUnit().size() != 0) 
-				{
-					Unit::searchUnitTile
-					(
-						sysinfo.var.s_player,
-						sysinfo.var.mouse,
-						sysinfo.map,
-						sysinfo.tabplayer
-					);
-					LoadConfig::logfileconsole("Unit select to Inspect n:" + std::to_string(sysinfo.var.s_player.selectunit));
-				}
+					sysinfo.var.s_player.tabUnit_Struct[selectunit].level
+				);
 				break;
 			}
 			break;
@@ -2269,24 +2657,25 @@ void KeyboardMouse::cliqueDroit(Sysinfo& sysinfo, SDL_Event event)
 	}
 }
 
-/*
-* NAME : wheel
-* ROLE : Recherche l'incrémentation ou décrémentation du contexte
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* INPUT  PARAMETERS : int& wheel : l'évenement de scroll de la souris
-* OUTPUT PARAMETERS : une action suivant l'incrémentation ou décrémentation du contexte
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : wheel																						    	  */
+/* ROLE : Recherche l'incrémentation ou décrémentation du contexte										      */
+/* INPUT : struct Sysinfo& : structure globale du programme												      */
+/* INPUT : int& wheel : l'évenement de scroll de la souris													  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 {
-	if (sysinfo.var.select == selectcreate)
+	if (Select_Type::selectcreate == sysinfo.var.select)
 	{
-		if (wheel == 1)
+		if (MOUSE_SCROLL_UP == wheel)
 		{
 			if (sysinfo.var.s_player.unitToCreate > 0)
 				sysinfo.var.s_player.unitToCreate--;
 		}
-		else if (wheel == -1) 
+		else if (MOUSE_SCROLL_DOWN == wheel)
 		{
 			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.tabUnit_Struct.size() - 1)
 				sysinfo.var.s_player.unitToCreate++;
@@ -2310,50 +2699,105 @@ void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 	*/
 }
 
-/*
-* NAME : resetButtonOn
-* ROLE : reset de l'affichage On des boutons
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : reset de l'affichage On des boutons
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : resetButtonOn																				    	  */
+/* ROLE : reset de l'affichage On des boutons															      */
+/* INPUT : struct Sysinfo& : structure globale du programme												      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::resetButtonOn(Sysinfo& sysinfo)
 {
 	for (const auto& n : sysinfo.allButton.mainMap)
 	{
-		n.second->resetOnstateScreen(sysinfo.var.select, selectnothing);
+		n.second->resetOnstateScreen(sysinfo.var.select);
 		n.second->resetOnPlayer(sysinfo.var.s_player.selectplayer, sysinfo.var.s_player.tabPlayerName);
 	}
 }
 
-/*
-* NAME : resetButtonPlayerOn
-* ROLE : reset de l'affichage On des boutons player
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : reset de l'affichage On des boutons player
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : resetButtonPlayerOn																		    	  */
+/* ROLE : reset de l'affichage On des boutons player													      */
+/* INPUT : struct Sysinfo& : structure globale du programme												      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::resetButtonPlayerOn(Sysinfo& sysinfo)
 {
 	for (const auto& n : sysinfo.allButton.player)
 	{
-		n.second->resetOnstateScreen(sysinfo.var.select, selectnothing);
+		n.second->resetOnstateScreen(sysinfo.var.select);
 		n.second->resetOnPlayer(sysinfo.var.s_player.selectplayer, sysinfo.var.s_player.tabPlayerName);
 	}
 }
 
-/*
-* NAME : resetButtonCitieMap
-* ROLE : reset de l'affichage On des boutons citieMap
-* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-* OUTPUT PARAMETERS : reset de l'affichage On des boutons citieMap
-* RETURNED VALUE    : void
-*/
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : resetButtonCitieMap																		    	  */
+/* ROLE : reset de l'affichage On des boutons citieMap													      */
+/* INPUT : struct Sysinfo& : structure globale du programme												      */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::resetButtonCitieMap(Sysinfo& sysinfo)
 {
 	for (const auto& n : sysinfo.allButton.citieMap)
 	{
-		n.second->resetOnstateScreen(sysinfo.var.select, selectnothing);
+		n.second->resetOnstateScreen(sysinfo.var.select);
+	}
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : inspect																					    	  */
+/* ROLE : Inspect les cases survolées par la souris par la SDL_MOUSE_MOTION								      */
+/* ROLE : Attention fonction appélée à chaque actions de la souris (potentiellement toutes les frames)	      */
+/* INPUT : struct Sysinfo& : structure globale du programme												      */
+/* INPUT : SDL_Event : l'évenement du clique			    												  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+void KeyboardMouse::inspect
+(
+	Sysinfo& sysinfo,
+	SDL_Event event
+)
+{
+	switch (sysinfo.var.statescreen)
+	{
+	case State_Type::STATEmainmap:
+
+		sysinfo.var.mouse.refreshMousePos
+		(
+			event.button.x,
+			event.button.y,
+			sysinfo.map.tileSize,
+			sysinfo.map.screenOffsetXIndexMin,
+			sysinfo.map.screenOffsetYIndexMin
+		);
+
+
+		for (unsigned int selectedPlayer(0); selectedPlayer < sysinfo.tabplayer.size(); selectedPlayer++)
+		{
+			for (unsigned int i(0); i < sysinfo.tabplayer[selectedPlayer]->GETtabUnit().size(); i++)
+			{
+				if	(sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->testPos
+						(sysinfo.var.mouse.GETmouse_xNormalized(),sysinfo.var.mouse.GETmouse_yNormalized())
+					)
+				{
+					sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(true);
+					return;
+				}
+				else
+				{
+					sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(false);
+				}
+			}
+		}
+
+		break;
 	}
 }
 
@@ -2369,8 +2813,43 @@ void KeyboardMouse::resetButtonCitieMap(Sysinfo& sysinfo)
  ********************************************************* */
  
 
-KeyboardMouse::KeyboardMouse(): _mouse_x(0), _mouse_y(0), _ywheel(0), _xwheel(0)
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : KeyboardMouse																				    	  */
+/* ROLE : Constructeur par défaut de la classe KeyboardMouse											      */
+/* INPUT : void																							      */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+KeyboardMouse::KeyboardMouse()
+: _mouse_x(0), _mouse_y(0), _mouse_xNormalized(0), _mouse_yNormalized(0), _ywheel(0), _xwheel(0)
 {
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* NAME : refreshMousePos																			    	  */
+/* ROLE : Inspect les cases survolées par la souris par la SDL_MOUSE_MOTION								      */
+/* INPUT : Sint32 x	: position en x de la souris selon SDL												      */
+/* INPUT : Sint32 y	: position en y de la souris selon SDL												      */
+/* INPUT : unsigned int tileSize : taille d'une tile													      */
+/* INPUT : unsigned int screenOffsetXIndexMin : offset en pixel sur l'axe X								      */
+/* INPUT : unsigned int screenOffsetYIndexMin : offset en pixel sur l'axe Y									  */
+/* RETURNED VALUE    : void																					  */
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+void KeyboardMouse::refreshMousePos
+(
+	Sint32 x,
+	Sint32 y,
+	unsigned int tileSize,
+	unsigned int screenOffsetXIndexMin,
+	unsigned int screenOffsetYIndexMin
+)
+{
+	_mouse_x = x;
+	_mouse_y = y;
+	_mouse_xNormalized = ((unsigned int)ceil(x / tileSize) * tileSize) + (screenOffsetXIndexMin * tileSize);
+	_mouse_yNormalized = ((unsigned int)ceil(y / tileSize) * tileSize) + (screenOffsetYIndexMin * tileSize);
 }
 
 

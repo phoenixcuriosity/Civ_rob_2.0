@@ -4,6 +4,7 @@
 
 	<Unit>
 		<Name>battleoids</Name>
+		<MovementType>ground</MovementType>
 		<Life>100</Life>
 		<Atq>50</Atq>
 		<Def>30</Def>
@@ -12,6 +13,7 @@
 	</Unit>
 	<Unit>
 		<Name>biter</Name>
+		<MovementType>ground</MovementType>
 		<Life>10</Life>
 		<Atq>5</Atq>
 		<Def>3</Def>
@@ -20,6 +22,7 @@
 	</Unit>	
 	<Unit>
 		<Name>bombardier</Name>
+		<MovementType>air</MovementType>
 		<Life>50</Life>
 		<Atq>50</Atq>
 		<Def>2</Def>
@@ -28,6 +31,7 @@
 	</Unit>	
 	<Unit>
 		<Name>car</Name>
+		<MovementType>ground</MovementType>
 		<Life>50</Life>
 		<Atq>12</Atq>
 		<Def>5</Def>
@@ -36,6 +40,7 @@
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_1</Name>
+		<MovementType>ground</MovementType>
 		<Life>1</Life>
 		<Atq>0</Atq>
 		<Def>0</Def>
@@ -44,6 +49,7 @@
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_2</Name>
+		<MovementType>ground</MovementType>
 		<Life>1</Life>
 		<Atq>0</Atq>
 		<Def>0</Def>
@@ -52,6 +58,7 @@
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_3</Name>
+		<MovementType>ground</MovementType>
 		<Life>1</Life>
 		<Atq>0</Atq>
 		<Def>0</Def>
@@ -60,6 +67,7 @@
 	</Unit>
 	<Unit>
 		<Name>robot</Name>
+		<MovementType>air</MovementType>
 		<Life>75</Life>
 		<Atq>25</Atq>
 		<Def>10</Def>
@@ -68,6 +76,7 @@
 	</Unit>	
 	<Unit>
 		<Name>rocket</Name>
+		<MovementType>air</MovementType>
 		<Life>1</Life>
 		<Atq>100</Atq>
 		<Def>10</Def>
@@ -76,6 +85,7 @@
 	</Unit>	
 	<Unit>
 		<Name>rover</Name>
+		<MovementType>ground</MovementType>
 		<Life>5</Life>
 		<Atq>0</Atq>
 		<Def>2</Def>
@@ -84,6 +94,7 @@
 	</Unit>	
 	<Unit>
 		<Name>satellite</Name>
+		<MovementType>air</MovementType>
 		<Life>10</Life>
 		<Atq>0</Atq>
 		<Def>0</Def>
@@ -92,6 +103,7 @@
 	</Unit>
 	<Unit>
 		<Name>settler</Name>
+		<MovementType>ground</MovementType>
 		<Life>1</Life>
 		<Atq>0</Atq>
 		<Def>0</Def>
@@ -100,6 +112,7 @@
 	</Unit>	
 	<Unit>
 		<Name>spitter</Name>
+		<MovementType>ground</MovementType>
 		<Life>10</Life>
 		<Atq>2</Atq>
 		<Def>2</Def>
@@ -108,6 +121,7 @@
 	</Unit>
 	<Unit>
 		<Name>tank</Name>
+		<MovementType>ground</MovementType>
 		<Life>100</Life>
 		<Atq>50</Atq>
 		<Def>50</Def>
@@ -116,6 +130,7 @@
 	</Unit>	
 	<Unit>
 		<Name>transport_plan</Name>
+		<MovementType>air</MovementType>
 		<Life>100</Life>
 		<Atq>0</Atq>
 		<Def>10</Def>

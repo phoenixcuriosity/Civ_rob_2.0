@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.10
+	last modification on this file on version:0.19
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,7 @@
 #include "Unit.h"
 #include "IHM.h"
 #include "LoadConfig.h"
+#include "GamePlay.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -37,53 +38,6 @@
 /* *********************************************************
  *					START Unit::STATIC					   *
  ********************************************************* */
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : loadUnitAndSpec															   */
-/* ROLE : Chargement des informations concernant les unités à partir d'un fichier	   */
-/* INPUT : const std::string& : nom du fichier à ouvrir								   */
-/* OUTPUT : std::vector<Unit_Struct>& : Vecteur des Unit							   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void Unit::loadUnitAndSpec
-(
-	const std::string& UNIT,
-	std::vector<Unit_Struct>& tabUnit_Struct
-)
-{
-	tinyxml2::XMLDocument texteFile;
-	texteFile.LoadFile(UNIT.c_str());
-
-	const char* root("Root");
-
-	const char	* s_Unit("Unit"),
-					* s_Name("Name"),
-					* s_Life("Life"),
-					* s_Atq("Atq"),
-					* s_Def("Def"),
-					* s_Mouvement("Mouvement"),
-					* s_Level("Level");
-
-	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
-	Unit_Struct currentUnit;
-
-	while (node != nullptr)
-	{
-		currentUnit.name = node->FirstChildElement(s_Name)->GetText();
-		node->FirstChildElement(s_Life)->QueryIntText((int*)&currentUnit.life);
-		node->FirstChildElement(s_Atq)->QueryIntText((int*)& currentUnit.atq);
-		node->FirstChildElement(s_Def)->QueryIntText((int*)& currentUnit.def);
-		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)& currentUnit.movement);
-		node->FirstChildElement(s_Level)->QueryIntText((int*)& currentUnit.level);
-		
-		tabUnit_Struct.push_back(currentUnit);
-
-		/* Recherche du noeud Model suivant */
-		node = node->NextSibling();
-	}
-}
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -107,39 +61,43 @@ void Unit::searchUnit
 /* ROLE : Cherche l'unité étant dans la case séléctionné							   */
 /* INPUT/OUTPUT : SubcatPlayer& s_player : structure concernant un joueur			   */
 /* INPUT : const KeyboardMouse& mouse : données générale des entrées utilisateur	   */
-/* INPUT : const Map& map : données générale de la map								   */
 /* INPUT/OUTPUT : std::vector<Player*>& tabplayer : Vecteur de joueurs				   */
+/* OUTPUT : Select_Type* select : type de sélection									   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void Unit::searchUnitTile
+bool Unit::searchUnitTile
 (
 	SubcatPlayer& s_player,
 	const KeyboardMouse& mouse,
-	const Map& map,
-	std::vector<Player*>& tabplayer
+	std::vector<Player*>& tabplayer,
+	Select_Type* select
 )
 {
-	for (unsigned int i(0); i <tabplayer[s_player.selectplayer]->GETtabUnit().size(); i++)
+	if (NO_PLAYER_SELECTED < s_player.selectplayer)
 	{
-		if (tabplayer[s_player.selectplayer]->GETtheUnit(i)->testPos
-				(
-					mouse.GETmouse_x() + map.screenOffsetXIndexMin * map.tileSize,
-					mouse.GETmouse_y() + map.screenOffsetYIndexMin * map.tileSize
+		for (unsigned int i(0); i < tabplayer[s_player.selectplayer]->GETtabUnit().size(); i++)
+		{
+			if	(
+					tabplayer[s_player.selectplayer]->GETtheUnit(i)
+						->testPos(mouse.GETmouse_xNormalized(), mouse.GETmouse_yNormalized())
 				)
-			)
-		{
-			s_player.selectunit = i;
-			s_player.unitNameToMove = tabplayer[s_player.selectplayer]->GETtheUnit(i)->GETname();
+			{
+				s_player.selectunit = i;
+				s_player.unitNameToMove = tabplayer[s_player.selectplayer]->GETtheUnit(i)->GETname();
 
-			tabplayer[s_player.selectplayer]->GETtheUnit(i)->SETblit(true);
-			break;
-		}
-		else
-		{
-			/* N/A */
+				tabplayer[s_player.selectplayer]->GETtheUnit(i)->SETshow(true);
+				LoadConfig::logfileconsole("Unit select to move n:" + std::to_string(i));
+				*select = Select_Type::selectmove;
+				return true;
+			}
+			else
+			{
+				/* N/A */
+			}
 		}
 	}
+	return false;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -168,18 +126,18 @@ void Unit::tryToMove
 {
 	switch (searchToMove(maps, s_player, tabplayer, x, y))
 	{
-	case cannotMove:
+	case Move_Type::cannotMove:
 		/*
 		* N/A
 		*/
 		break;
-	case canMove:
+	case Move_Type::canMove:
 
 		tabplayer[s_player.selectplayer]
 			->GETtheUnit(s_player.selectunit)
 				->move(select, s_player.selectunit, x, y);
 		break;
-	case attackMove:
+	case Move_Type::attackMove:
 
 		tabplayer[s_player.selectplayer]
 			->GETtheUnit(s_player.selectunit)
@@ -239,24 +197,19 @@ Move_Type Unit::searchToMove
 	/*		  susceptible de mourrir par l'attaque							  */
 	/* ---------------------------------------------------------------------- */
 
-	bool onGround = false;
+	bool onGround(false);
+	bool condition(false);
 
-	for (unsigned int i(0); i < maps.size(); i++)
+	for (unsigned int i(0); (i < maps.size()) && (false == onGround); i++)
 	{
-		for (unsigned int j(0); j < maps[i].size(); j++)
+		for (unsigned int j(0); (j < maps[i].size()) && (false == onGround); j++)
 		{
-			if	(checkNextTile
-					(
-						maps[i][j],
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit),
-						x, y
-					)
-				)
+			condition = checkNextTile(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit), maps[i][j], x, y);
+			if	(true == condition)
 			{
-				if (maps[i][j].tile_ground == grass)
+				if (maps[i][j].tile_ground == Ground_Type::grass)
 				{
 					onGround = true;
-					break;
 				}
 				else
 				{
@@ -270,31 +223,29 @@ Move_Type Unit::searchToMove
 		}
 	}
 
+	condition = false;
 	if (onGround)
 	{
-		/* On ground */
+		/* ---------------------------------------------------------------------- */
+		/* Next Tile is a ground Tile 											  */
+		/* ---------------------------------------------------------------------- */
 
 		for (unsigned int i = 0; i < tabplayer.size(); i++) 
 		{
 			for (unsigned int j = 0; j < tabplayer[i]->GETtabUnit().size(); j++) 
 			{
-				if	(checkUnitNextTile
-						(
-							tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit),
-							tabplayer[i]->GETtheUnit(j),
-							x, y
-						)	
-					)
+				condition = checkUnitNextTile(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit),tabplayer[i]->GETtheUnit(j),x, y);
+				if	(true == condition)
 				{
 					if (s_player.selectplayer == (int)i)
 					{
-						return cannotMove;
+						return Move_Type::cannotMove;
 					}		
 					else
 					{
 						s_player.selectPlayerToAttack = (int)i;
 						s_player.selectUnitToAttack = (int)j;
-						return attackMove;
+						return Move_Type::attackMove;
 					}
 				}
 				else
@@ -306,11 +257,13 @@ Move_Type Unit::searchToMove
 	}
 	else
 	{
-		/* Not on ground */
+		/* ---------------------------------------------------------------------- */
+		/* Next Tile is not a ground Tile 										  */
+		/* ---------------------------------------------------------------------- */
 
-		return cannotMove;
+		return Move_Type::cannotMove;
 	}	
-	return canMove;
+	return Move_Type::canMove;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -337,6 +290,7 @@ bool Unit::checkUnitNextTile
 		if ((from->GETy() + y) == to->GETy())
 		{
 			return true;
+
 		}
 		else
 		{
@@ -353,8 +307,8 @@ bool Unit::checkUnitNextTile
 /* ----------------------------------------------------------------------------------- */
 /* NAME : checkNextTile																   */
 /* ROLE : Check des équalités des positions des Units avec + x et +y				   */
-/* INPUT : const Tile& from : Tile à tester											   */
 /* INPUT : const Unit* from : Unit aux positions + x + y							   */
+/* INPUT : const Tile& to : Tile à tester											   */
 /* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
 /* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
 /* RETURNED VALUE : bool : false->position différente / true->même positions		   */
@@ -362,15 +316,15 @@ bool Unit::checkUnitNextTile
 /* ----------------------------------------------------------------------------------- */
 bool Unit::checkNextTile
 (
-	const Tile& from,
-	const Unit* to,
+	const Unit* from,
+	const Tile& to,
 	int x,
 	int y
 )
 {
-	if ((from.tile_x + x) == to->GETx())
+	if ((from->GETx() + x) == (to.tile_x))
 	{
-		if ((from.tile_y + y) == to->GETy())
+		if ((from->GETy() + y) == (to.tile_y))
 		{
 			return true;
 		}
@@ -418,7 +372,7 @@ bool Unit::irrigate
 /* ----------------------------------------------------------------------------------- */
 Unit::Unit() :	_name(""), _x(0), _y(0),
 				_maxlife(0), _maxatq(0), _maxdef(0), _maxmovement(0), _maxlevel(0),
-				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true), _blit(0), _show(true)
+				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true), _blit(0), _show(true), _showStats(false)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
@@ -442,15 +396,16 @@ Unit::Unit
 	const std::string &name,
 	unsigned int x,
 	unsigned int y,
+	Unit_Movement_Type movementType,
 	unsigned int life,
 	unsigned int atq,
 	unsigned int def,
 	unsigned int move,
 	unsigned int level
 )
-	: _name(name), _x(x), _y(y),
+	: _name(name), _x(x), _y(y), _movementType(movementType),
 	_maxlife(life), _maxatq(atq), _maxdef(def), _maxmovement(move), _maxlevel(level),
-	_life(life), _atq(atq), _def(def), _movement(move), _level(level), _alive(true), _blit(0), _show(true)
+	_life(life), _atq(atq), _def(def), _movement(move), _level(level), _alive(true), _blit(0), _show(true), _showStats(false)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit:  Success");
 }
@@ -555,8 +510,8 @@ void Unit::move
 	
 	if (_movement == 0)
 	{
-		select = selectnothing;
-		selectunit = -1;
+		select = Select_Type::selectnothing;
+		selectunit = NO_UNIT_SELECTED;
 		_blit = 0;
 		_show = true;
 	}
@@ -587,7 +542,7 @@ void Unit::heal
 		{
 			if (_x == tiles[i][j].tile_x && _y == tiles[i][j].tile_y)
 			{
-				if (tiles[i][j].appartenance == -1) 
+				if (NO_APPARTENANCE == tiles[i][j].appartenance)
 				{
 					_life += (unsigned int)ceil(_maxlife / 20);
 					if (_life > _maxlife)
@@ -770,69 +725,72 @@ void Unit::afficher
 /* ----------------------------------------------------------------------------------- */
 /* NAME : afficherstat																   */
 /* ROLE : Affichage des statistiques de l'unité (nom, x, y ...)						   */
+/* INPUT : const Map& map : données de la map										   */
 /* INPUT : TTF_Font* font[] : tableau de ptr de font SDL							   */
 /* INPUT/OUTPUT : SDL_Renderer*& : ptr sur le renderer SDL							   */
-/* INPUT : unsigned int tileSize : données de la map : taille tile					   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void Unit::afficherstat
 (
+	const Map& map,
 	TTF_Font* font[],
-	SDL_Renderer*& renderer,
-	unsigned int tileSize
+	SDL_Renderer*& renderer
 )
 {
-	if (_show)
+	if (_showStats)
 	{
-		int initspace(_y), space(14);
+		unsigned int x(_x - map.screenOffsetXIndexMin * map.tileSize);
+		unsigned int y(_y - map.screenOffsetYIndexMin * map.tileSize);
+		unsigned int space(14);
+		
 
 		Texte::writeTexte
 		(
-			renderer, font, blended, "Name: "  + _name, Red, White,
-			12, _x + tileSize, initspace, no_angle
+			renderer, font, Texte_Type::blended, "Name: "  + _name, Red, White,
+			12, x + map.tileSize, y, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, blended, "X: " + std::to_string(_x), Red, White,
-			12, _x + tileSize, initspace += space, no_angle
+			renderer, font, Texte_Type::blended, "X: " + std::to_string(_x), Red, White,
+			12, x + map.tileSize, y += space, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, blended, "Y: " + std::to_string(_y), Red, White,
-			12, _x + tileSize, initspace += space, no_angle
+			renderer, font, Texte_Type::blended, "Y: " + std::to_string(_y), Red, White,
+			12, x + map.tileSize, y += space, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, blended, "life: " + std::to_string(_life), Red, White,
-			12, _x + tileSize, initspace += space, no_angle
+			renderer, font, Texte_Type::blended, "life: " + std::to_string(_life), Red, White,
+			12, x + map.tileSize, y += space, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font,blended, "atq: " + std::to_string(_atq), Red, White,
-			12, _x + tileSize, initspace += space, no_angle
+			renderer, font, Texte_Type::blended, "atq: " + std::to_string(_atq), Red, White,
+			12, x + map.tileSize, y += space, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, blended, "def: " + std::to_string(_def), Red, White,
-			12, _x + tileSize, initspace += space, no_angle
+			renderer, font, Texte_Type::blended, "def: " + std::to_string(_def), Red, White,
+			(Uint8)12, x + map.tileSize, y += space, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, blended, "movement: " + std::to_string(_movement), Red, White,
-			12, _x + tileSize, initspace += space, no_angle
+			renderer, font, Texte_Type::blended, "movement: " + std::to_string(_movement), Red, White,
+			(Uint8)12, x + map.tileSize, y += space, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, blended, "level: " + std::to_string(_level), Red, White,
-			12, _x + tileSize, initspace += space, no_angle
+			renderer, font, Texte_Type::blended, "level: " + std::to_string(_level), Red, White,
+			(Uint8)12, x + map.tileSize, y += space, no_angle
 		);
 	}
 	else

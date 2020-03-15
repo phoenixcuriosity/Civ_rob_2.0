@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.3
+	last modification on this file on version:0.19
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -72,6 +72,7 @@
 typedef struct Unit_Struct Unit_Struct;
 typedef struct SubcatPlayer SubcatPlayer;
 typedef struct Tile Tile;
+typedef struct CitieMap CitieMap;
 typedef struct Screen Screen;
 typedef struct File File;
 typedef struct Var Var;
@@ -99,6 +100,16 @@ class LTimer;
 class Player;
 class Unit;
 class LoadConfig;
+
+/* *********************************************************
+ *					Redéfinition Type					   *
+ ********************************************************* */
+
+typedef std::vector<std::vector<Tile>>					MatriceTile;
+typedef std::unordered_map<std::string, Texture*>		MapTexture;
+typedef std::unordered_map<std::string, Texte*>			MapTexte;
+typedef std::unordered_map<std::string, ButtonTexte*>	MapButtonTexte;
+typedef std::vector<Player*>							TabPlayer;
 
 #endif
 

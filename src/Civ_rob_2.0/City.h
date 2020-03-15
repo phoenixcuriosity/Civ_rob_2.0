@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.5
+	last modification on this file on version:0.19
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -115,6 +115,7 @@ public:
 	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	static void createCity
 	(
 		Sysinfo& sysinfo
@@ -122,16 +123,62 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
+	/* NAME : searchMiddleTile															   */
+	/* ROLE : Recherche les indices de la Tile centrale de la Citie						   */
+	/* INPUT : const MatriceTile& maps : Matrice de la map								   */
+	/* INPUT : unsigned int x :	index en x de la Citie 									   */
+	/* INPUT : unsigned int y :	index en y de la Citie 									   */
+	/* OUTPUT : unsigned int* middletileX : index en tileSize de x						   */
+	/* OUTPUT : unsigned int* middletileX : index en tileSize de y						   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static void searchMiddleTile
+	(
+		const MatriceTile& maps,
+		unsigned int x,
+		unsigned int y,
+		unsigned int* middletileX,
+		unsigned int* middletileY
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : fillCitieTiles															   */
+	/* ROLE : Rempli le tableau de la Citie avec le point centrale la middletileXY		   */
+	/* ROLE : et de largeur et hauteur totale INIT_SIZE_VIEW							   */
+	/* INPUT : const Screen& screen	: taille en x et y de l'écran						   */
+	/* INPUT : unsigned int middletileX : index en tileSize de x de la Citie			   */
+	/* INPUT : unsigned int middletileY : index en tileSize de y de la Citie			   */
+	/* INPUT : unsigned int selectplayer : index d'appartenance							   */
+	/* INPUT/OUTPUT : Map& map : structure de la Map									   */
+	/* OUTPUT : std::vector<Tile>& tabtile : tableau à remplir de la Citie				   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static void fillCitieTiles
+	(
+		const Screen& screen,
+		unsigned int middletileX,
+		unsigned int middletileY,
+		unsigned int selectplayer,
+		Map& map,
+		std::vector<Tile>& tabtile
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initSizeInfluenceCondition												   */
 	/* ROLE : Conditions des cases de la ville à l'intérieur de zone d'influence		   */
-	/* INPUT : unsigned int o :	index en x												   */
-	/* INPUT : unsigned int p :	index en y												   */
+	/* INPUT : int o :	index en x														   */
+	/* INPUT : int p :	index en y														   */
 	/* RETURNED VALUE : bool : false -> invalid / true -> valid							   */
+	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static bool initSizeInfluenceCondition
 	(
-		unsigned int o,
-		unsigned int p
+		int o,
+		int p
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -142,24 +189,12 @@ public:
 	/* INPUT/OUTPUT : Var& : Structure Var												   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	static void searchCityTile
 	(
 		const std::vector<Player*>& tabplayer,
 		Var& var
 	);
-	
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : createTiles																   */
-	/* ROLE : Création d'un tableau de Tile pour la City								   */
-	/* INPUT : Tile tile[] : données générale de la map									   */
-	/* RETURNED VALUE : std::vector<Tile> : données générale de la cityMap				   */
-	/* ----------------------------------------------------------------------------------- */
-	static std::vector<Tile> createTiles
-	(
-		Tile tile[]
-	);
-
 	
 public:
 	/* *********************************************************
@@ -182,7 +217,7 @@ public:
 		const std::string &,
 		unsigned int x,
 		unsigned int y,
-		Tile tile[]
+		std::vector<Tile>& tiles
 	);
 
 	/* ----------------------------------------------------------------------------------- */

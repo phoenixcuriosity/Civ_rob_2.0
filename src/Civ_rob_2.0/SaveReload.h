@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.3
+	last modification on this file on version:0.19
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,7 +25,33 @@
 #ifndef SaveReload_H
 #define SaveReload_H
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "LIB.h"
+
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						 Enum							   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						Structures						   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						 Classes						   *
+ ********************************************************* */
 
 class SaveReload
 {
@@ -35,79 +61,109 @@ public:
 	 ********************************************************* */
 
 
-	/*
-	* NAME : savemaps
-	* ROLE : Sauvegardes des sys map.map et map.screen
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Sauvegardes des maps : map.map dans SaveMap.txt
-	* OUTPUT PARAMETERS : et map.screen dans SaveScreen.txt
-	* RETURNED VALUE    : void
-	*/
-	static void saveMaps(Sysinfo&);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : savemaps																					    	  */
+	/* ROLE : Sauvegardes des sys map.map et map.screen														      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void																	    			  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void saveMaps
+	(
+		Sysinfo&
+	);
 
-	/*
-	* NAME : loadMaps
-	* ROLE : Chargement des sys map.map et map.screen
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Chargement des maps : map.map dans SaveMap.txt ...
-	* OUTPUT PARAMETERS : ... et map.screen dans SaveScreen.txt
-	* RETURNED VALUE    : void
-	*/
-	static void loadMaps(Sysinfo&);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : loadMaps																					    	  */
+	/* ROLE : Chargement des sys map.map et map.screen														      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void								    												  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void loadMaps
+	(
+		Sysinfo&
+	);
 
-	/*
-	* NAME : savePlayer
-	* ROLE : Sauvegarde des joueurs (units et cities)
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt
-	* RETURNED VALUE    : void
-	*/
-	static void savePlayer(Sysinfo&);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : savePlayer																				    	  */
+	/* ROLE : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt									      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void 																				  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void savePlayer
+	(
+		Sysinfo&
+	);
 
-	/*
-	* NAME : savePlayer
-	* ROLE : Chargement des joueurs (units et cities)
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Chargement des joueurs (units et cities) dans SavePlayer.txt
-	* RETURNED VALUE    : void
-	*/
-	static void loadPlayer(Sysinfo&);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : loadPlayer																				    	  */
+	/* ROLE : Chargement des joueurs (units et cities) dans SavePlayer.txt									      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void loadPlayer
+	(
+		Sysinfo&
+	);
 
-	/*
-	* NAME : reload
-	* ROLE : Chargement de la partie à patir des fichiers de sauvegarde
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Chargement de la partie
-	* RETURNED VALUE    : void
-	*/
-	static void reload(Sysinfo&);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : reload																					    	  */
+	/* ROLE : Chargement de la partie à patir des fichiers de sauvegarde									      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void reload
+	(
+		Sysinfo&
+	);
 	
-	/*
-	* NAME : createSave
-	* ROLE : Création d'un emplacement de fichier de sauvegarde (courant)
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Création d'un emplacement de fichier de sauvegarde
-	* RETURNED VALUE    : void
-	*/
-	static void createSave(Sysinfo& sysinfo);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : createSave																				    	  */
+	/* ROLE : Création d'un emplacement de fichier de sauvegarde (courant)									      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void createSave
+	(
+		Sysinfo& sysinfo
+	);
 	
-	/*
-	* NAME : removeSave
-	* ROLE : Supprime une sauvegarde du dossier de sauvegarde
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Supprime une sauvegarde
-	* RETURNED VALUE    : void
-	*/
-	static void removeSave(Sysinfo& sysinfo);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : removeSave																				    	  */
+	/* ROLE : Supprime une sauvegarde du dossier de sauvegarde												      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void removeSave
+	(
+		Sysinfo& sysinfo
+	);
 	
-	/*
-	* NAME : clearSave
-	* ROLE : Supprime toutes les sauvegardes du dossier
-	* INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	* OUTPUT PARAMETERS : Supprime toutes les sauvegardes du dossier
-	* RETURNED VALUE    : void
-	*/
-	static void clearSave(Sysinfo& sysinfo);
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : clearSave																					    	  */
+	/* ROLE : Supprime toutes les sauvegardes du dossier													      */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	static void clearSave
+	(
+		Sysinfo& sysinfo
+	);
 
 
 
@@ -116,10 +172,22 @@ public:
 	 *				SaveReload::METHODS						   *
 	 ********************************************************* */
 
-	 
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : SaveReload																				    	  */
+	/* ROLE : Constructeur par défaut																		      */
+	/* INPUT : void																							      */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
 	SaveReload();
+
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : ~SaveReload																				    	  */
+	/* ROLE : Destructeur par défaut																		      */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------------------- */
 	~SaveReload();
-	
 	
 public:
 	/* *********************************************************

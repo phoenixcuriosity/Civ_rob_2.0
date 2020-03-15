@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
+	last modification on this file on version:0.19
 	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
@@ -73,35 +73,18 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
 const std::string configFilePath = "bin/config.xml";
 
+#define NO_PLAYER_SELECTED -1
+#define NO_UNIT_SELECTED -1
+#define NO_CITIE_SELECTED -1
+#define NO_APPARTENANCE -1
+#define EMPTY_STRING ""
+
 /* *********************************************************
  *						 Enum							   *
  ********************************************************* */
 
-// différents état de l'écran
-enum State_Type : Uint8 
-{
-	STATEnothing,
-	STATEtitleScreen,
-	STATEscreennewgame,
-	STATEreload,
-	STATEmainmap,
-	STATEscience,
-	STATEcitiemap
-};
-
-// spécifications de la séléction
-enum Select_Type: Uint8 
-{ 
-	selectnothing,
-	NotToSelect,
-	selectcreate,
-	selectinspect,
-	selectmove,
-	selectmoveCitizen 
-};
-
 // spécifications de la séléction CinState_Type
-enum CinState_Type : Uint8
+enum class CinState_Type : Uint8
 {
 	cinNothing,
 	cinTitleScreen,
@@ -111,9 +94,9 @@ enum CinState_Type : Uint8
 };
 
 // type de sol
-enum Ground_Type : Uint8
+enum class Ground_Type : Uint8
 {
-	noGround,
+	error,
 	grass,
 	water,
 	deepwater,
@@ -122,9 +105,9 @@ enum Ground_Type : Uint8
 };
 
 // spécifications du terrain
-enum GroundSpec_Type : Uint8
+enum class GroundSpec_Type : Uint8
 {
-	specnothing,
+	nothing,
 	coal,
 	copper,
 	iron,
@@ -134,6 +117,14 @@ enum GroundSpec_Type : Uint8
 	horse,
 	fish,
 	petroleum
+};
+
+enum class Unit_Movement_Type : Uint8
+{
+	ground,
+	air,
+	water,
+	deepwater
 };
 
 /* *********************************************************
@@ -150,7 +141,7 @@ struct Unit_Struct
 	/*
 		statistiques concernant l'unité -> /bin/UNIT.txt
 	*/
-
+	Unit_Movement_Type type = Unit_Movement_Type::ground;
 	unsigned int life = 0;
 	unsigned int atq = 0;
 	unsigned int def = 0;
@@ -166,19 +157,19 @@ struct SubcatPlayer
 	// *** Index ***//
 
 	// index de la cité actuellement sélectionnée
-	int selectCitie = -1;
+	int selectCitie = NO_CITIE_SELECTED;
 
 	// index du joueur actuellement sélectionné
-	int selectplayer = -1;
+	int selectplayer = NO_PLAYER_SELECTED;
 
 	// index du joueur actuellement sélectionné, action : Attaquer
-	int selectPlayerToAttack = -1;
+	int selectPlayerToAttack = NO_PLAYER_SELECTED;
 
 	// index de l'unité actuellement sélectionnée
-	int selectunit = -1;
+	int selectunit = NO_UNIT_SELECTED;
 
 	// index de l'unité actuellement sélectionnée, action : Attaquer
-	int selectUnitToAttack = -1;
+	int selectUnitToAttack = NO_UNIT_SELECTED;
 
 	// index de l'unité actuellement sélectionnée, action : Créer
 	unsigned int unitToCreate = 0;
@@ -230,22 +221,22 @@ struct Tile
 	unsigned int tile_y = 0;
 
 	// nom du type de sol
-	std::string tile_stringground = "";
+	std::string tile_stringground = EMPTY_STRING;
 
 	// type de sol -> enum Ground_Type : Uint8 { noGround, grass, water, deepwater, dirt, sand};
-	Uint8 tile_ground = noGround;
+	Ground_Type tile_ground = Ground_Type::error;
 
 	// nom du type de spécification de la case
-	std::string tile_stringspec = "";
+	std::string tile_stringspec = EMPTY_STRING;
 
 	/* 
 		type de spécification
-		-> enum GroundSpec_Type : Uint8 { specnothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; 
+		-> enum GroundSpec_Type : Uint8 { nothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; 
 	*/
-	Uint8 tile_spec = 0;
+	GroundSpec_Type tile_spec = GroundSpec_Type::nothing;
 
 	// index d'appartenance d'un case à un joueur : appartenance neutre = -1
-	int appartenance = -1;
+	int appartenance = NO_APPARTENANCE;
 
 	// indice de nourriture de la case
 	int8_t food = -1;
@@ -256,6 +247,12 @@ struct Tile
 	// indice financier de la case
 	int8_t gold = -1;
 };
+struct CitieMap
+{
+	unsigned int ToolbarButtonsH = 0;
+	unsigned int ToolbarButtonsW = 0;
+};
+
 //---------------------- Structure niveau 1 ---------------------------------------------------------------------------------------------------------
 struct Screen
 {
@@ -283,17 +280,17 @@ struct File
 {
 	const std::string log = "bin/log/log.txt";
 
-	std::string readme = "";
-	std::string Texte = "";
-	std::string BUILDING = "";
-	std::string CITIENAME = "";
-	std::string UNIT = "";
-	std::string SPECNAME = "";
+	std::string readme =		EMPTY_STRING;
+	std::string Texte =			EMPTY_STRING;
+	std::string BUILDING =		EMPTY_STRING;
+	std::string CITIENAME =		EMPTY_STRING;
+	std::string UNIT =			EMPTY_STRING;
+	std::string SPECNAME =		EMPTY_STRING;
 
-	std::string SaveInfo = "";
+	std::string SaveInfo =		EMPTY_STRING;
 
-	std::string SaveMaps = "";
-	std::string SavePlayer = "";
+	std::string SaveMaps =		EMPTY_STRING;
+	std::string SavePlayer =	EMPTY_STRING;
 };
 struct Var
 {
@@ -315,7 +312,7 @@ struct Var
 	/* Nb player */
 	Uint8 nbPlayer = 0;
 
-	std::string tempPlayerName = "";
+	std::string tempPlayerName = EMPTY_STRING;
 
 	unsigned int tempX = 0;
 	unsigned int tempY = 0;
@@ -332,7 +329,7 @@ struct Var
 			selectmoveCitizen 
 		};
 	*/
-	Select_Type select = selectnothing;
+	Select_Type select = Select_Type::selectnothing;
 
 	/* 
 		état de l'écran du joueur
@@ -347,7 +344,7 @@ struct Var
 			STATEcitiemap
 		};
 	*/
-	State_Type statescreen = STATEnothing;
+	State_Type statescreen = State_Type::error;
 
 	/*
 		état de l'entrée clavier
@@ -360,7 +357,7 @@ struct Var
 			cinMainMap,
 		};
 	*/
-	CinState_Type cinState = cinNothing;
+	CinState_Type cinState = CinState_Type::cinNothing;
 
 
 
@@ -383,40 +380,40 @@ struct Map
 	unsigned int screenOffsetYIndexMin = 0;
 	unsigned int screenOffsetXIndexMax = 0;
 	unsigned int screenOffsetYIndexMax = 0;
-	std::vector<std::vector<Tile>> maps;
+	MatriceTile maps;
+	CitieMap citieMap;
 };
 struct AllTextures
 {
 	TTF_Font *font[MAX_FONT];
 
-	std::unordered_map<std::string, Texture*> ground;
-	std::unordered_map<std::string, Texture*> groundSpec;
-	std::unordered_map<std::string, Texture*> colorapp;
-	std::unordered_map<std::string, Texture*> colorapptile;
-	std::unordered_map<std::string, Texture*> barLife;
+	MapTexture ground;
+	MapTexture groundSpec;
+	MapTexture colorapp;
+	MapTexture colorapptile;
+	MapTexture barLife;
 
-
-	std::unordered_map<std::string, Texture*> titleScreen;
-	std::unordered_map<std::string, Texture*> unit;
-	std::unordered_map<std::string, Texture*> citieMap;
+	MapTexture titleScreen;
+	MapTexture unit;
+	MapTexture citieMap;
 };
 struct AllTextes
 {
-	std::unordered_map<std::string, Texte*> number;
+	MapTexte number;
 
-	std::unordered_map<std::string, Texte*> titleScreen;
-	std::unordered_map<std::string, Texte*> newGame;
-	std::unordered_map<std::string, Texte*> mainMap;
-	std::unordered_map<std::string, Texte*> citieMap;
+	MapTexte titleScreen;
+	MapTexte newGame;
+	MapTexte mainMap;
+	MapTexte citieMap;
 };
 struct AllButtons
 {
-	std::unordered_map<std::string, ButtonTexte*> titleScreen;
-	std::unordered_map<std::string, ButtonTexte*> reload;
-	std::unordered_map<std::string, ButtonTexte*> mainMap;
-	std::unordered_map<std::string, ButtonTexte*> citieMap;
+	MapButtonTexte titleScreen;
+	MapButtonTexte reload;
+	MapButtonTexte mainMap;
+	MapButtonTexte citieMap;
 
-	std::unordered_map<std::string, ButtonTexte*> player; // init in GamePlay.cpp
+	MapButtonTexte player; // init in GamePlay.cpp
 };
 //---------------------- Structure niveau 0 ---------------------------------------------------------------------------------------------------------
 struct Sysinfo
@@ -443,7 +440,7 @@ struct Sysinfo
 	Map map;
 
 	// tableau de ptr sur les objets Player
-	std::vector<Player*> tabplayer;
+	TabPlayer tabplayer;
 };
 
 #endif /* civ_lib_H */

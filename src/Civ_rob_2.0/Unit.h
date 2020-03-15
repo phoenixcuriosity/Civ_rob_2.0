@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.7
+	last modification on this file on version:0.19
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -54,7 +54,7 @@
  *						 Enum							   *
  ********************************************************* */
 
-enum Move_Type : Uint8 
+enum class Move_Type : Uint8 
 { 
 	cannotMove,
 	canMove,
@@ -75,21 +75,6 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : loadUnitAndSpec															   */
-	/* ROLE : Chargement des informations concernant les unités à partir d'un fichier	   */
-	/* INPUT : const std::string& : nom du fichier à ouvrir								   */
-	/* OUTPUT : std::vector<Unit_Struct>& : Vecteur des Unit							   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void loadUnitAndSpec
-	(
-		const std::string& UNIT,
-		std::vector<Unit_Struct>& tabUnit_Struct
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : searchunit																   */
 	/* ROLE : Sélection du nom de l'unité à partir de l'index du tableau				   */
 	/* INPUT/OUTPUT : struct Map& : données générale de la map : taille					   */
@@ -107,17 +92,17 @@ public:
 	/* ROLE : Cherche l'unité étant dans la case séléctionné							   */
 	/* INPUT/OUTPUT : SubcatPlayer& s_player : structure concernant un joueur			   */
 	/* INPUT : const KeyboardMouse& mouse : données générale des entrées utilisateur	   */
-	/* INPUT : const Map& map : données générale de la map								   */
 	/* INPUT/OUTPUT : std::vector<Player*>& tabplayer : Vecteur de joueurs				   */
+	/* OUTPUT : Select_Type* select : type de sélection									   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	static void searchUnitTile
+	static bool searchUnitTile
 	(
 		SubcatPlayer& s_player,
 		const KeyboardMouse& mouse,
-		const Map& map,
-		std::vector<Player*>& tabplayer
+		std::vector<Player*>& tabplayer,
+		Select_Type* select
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -190,8 +175,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : checkNextTile																   */
 	/* ROLE : Check des équalités des positions des Units avec + x et +y				   */
-	/* INPUT : const Tile& from : Tile à tester											   */
 	/* INPUT : const Unit* from : Unit aux positions + x + y							   */
+	/* INPUT : const Tile& to : Tile à tester											   */
 	/* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
 	/* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
 	/* RETURNED VALUE : bool : false->position différente / true->même positions		   */
@@ -199,8 +184,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static bool checkNextTile
 	(
-		const Tile& from,
-		const Unit* to,
+		const Unit* from,
+		const Tile& to,
 		int x,
 		int y
 	);
@@ -250,6 +235,7 @@ public:
 		const std::string &name,
 		unsigned int x,
 		unsigned int y,
+		Unit_Movement_Type movementType,
 		unsigned int life,
 		unsigned int atq,
 		unsigned int def,
@@ -261,7 +247,6 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : ~Unit																		   */
 	/* ROLE : Destructeur																   */
-	/* INPUT : void																		   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	~Unit();
@@ -390,17 +375,17 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : afficherstat																   */
 	/* ROLE : Affichage des statistiques de l'unité (nom, x, y ...)						   */
+	/* INPUT : const Map& map : données de la map										   */
 	/* INPUT : TTF_Font* font[] : tableau de ptr de font SDL							   */
 	/* INPUT/OUTPUT : SDL_Renderer*& : ptr sur le renderer SDL							   */
-	/* INPUT : unsigned int tileSize : données de la map : taille tile					   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void afficherstat
 	(
+		const Map& map,
 		TTF_Font* font[],
-		SDL_Renderer*& renderer,
-		unsigned int tileSize
+		SDL_Renderer*& renderer
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -420,32 +405,39 @@ public:
 	 *				Unit::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline std::string GETname()			const { return _name; };
-	inline unsigned int GETx()				const { return _x; };
-	inline unsigned int GETy()				const { return _y; };
-	inline unsigned int GETmaxlife()		const { return _maxlife; };
-	inline unsigned int GETmaxatq()			const { return _maxatq; };
-	inline unsigned int GETmaxdef()			const { return _maxdef; };
-	inline unsigned int GETmaxmovement()	const { return _maxmovement; };
-	inline unsigned int GETmaxlevel()		const { return _maxlevel; };
-	inline unsigned int GETlife()			const { return _life; };
-	inline unsigned int GETatq()			const { return _atq; };
-	inline unsigned int GETdef()			const { return _def; };
-	inline unsigned int GETmovement()		const { return _movement; };
-	inline unsigned int GETlevel()			const { return _level; };
-	inline bool GETalive()					const { return _alive; };
-	inline bool GETblit()					const { return _blit; };
+	inline std::string GETname()				const { return _name; };
+	inline unsigned int GETx()					const { return _x; };
+	inline unsigned int GETy()					const { return _y; };
+	inline Unit_Movement_Type GETmovementType() const { return _movementType; };
+	inline unsigned int GETmaxlife()			const { return _maxlife; };
+	inline unsigned int GETmaxatq()				const { return _maxatq; };
+	inline unsigned int GETmaxdef()				const { return _maxdef; };
+	inline unsigned int GETmaxmovement()		const { return _maxmovement; };
+	inline unsigned int GETmaxlevel()			const { return _maxlevel; };
+	inline unsigned int GETlife()				const { return _life; };
+	inline unsigned int GETatq()				const { return _atq; };
+	inline unsigned int GETdef()				const { return _def; };
+	inline unsigned int GETmovement()			const { return _movement; };
+	inline unsigned int GETlevel()				const { return _level; };
+	inline bool GETalive()						const { return _alive; };
+	inline unsigned int GETblit()				const { return _blit; };
+	inline bool GETshow()						const { return _show; };
+	inline bool GETshowStats()					const { return _showStats; };
 
-	inline void SETname(const std::string &name)		{ _name = name; };
-	inline void SETx(unsigned int x)					{ _x = x; };
-	inline void SETy(unsigned int y)					{ _y = y; };
-	inline void SETlife(unsigned int life)				{ _life = life; };
-	inline void SETatq(unsigned int atq)				{ _atq = atq; };
-	inline void SETdef(unsigned int def)				{ _def = def; };
-	inline void SETmovement(unsigned int movement)		{ _movement = movement; };
-	inline void SETlevel(unsigned int level)			{ _level = level; };
-	inline void SETalive(bool alive)					{ _alive = alive; };
-	inline void SETblit(bool blit)						{ _blit = blit; };
+
+	inline void SETname(const std::string &name)					{ _name = name; };
+	inline void SETx(unsigned int x)								{ _x = x; };
+	inline void SETy(unsigned int y)								{ _y = y; };
+	inline void SETmovementType(Unit_Movement_Type movementType)	{ _movementType = movementType; };
+	inline void SETlife(unsigned int life)							{ _life = life; };
+	inline void SETatq(unsigned int atq)							{ _atq = atq; };
+	inline void SETdef(unsigned int def)							{ _def = def; };
+	inline void SETmovement(unsigned int movement)					{ _movement = movement; };
+	inline void SETlevel(unsigned int level)						{ _level = level; };
+	inline void SETalive(bool alive)								{ _alive = alive; };
+	inline void SETblit(unsigned int blit)							{ _blit = blit; };
+	inline void SETshow(bool show)									{ _show = show; };
+	inline void SETshowStats(bool showStats)						{ _showStats = showStats; };
 		
 private:
 	/* *********************************************************
@@ -454,6 +446,7 @@ private:
 	std::string _name;
 	unsigned int _x;
 	unsigned int _y;
+	Unit_Movement_Type _movementType;
 
 	unsigned int _maxlife;
 	unsigned int _maxatq;
@@ -470,6 +463,7 @@ private:
 
 	unsigned int _blit;
 	bool _show;
+	bool _showStats;
 };
 
 

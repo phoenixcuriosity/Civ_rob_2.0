@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.21
+	last modification on this file on version:0.19
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,26 +22,34 @@
 
 */
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "IHM.h"
 #include "GamePlay.h"
 #include "SaveReload.h"
 #include "LoadConfig.h"
 #include "End.h"
 
+/* *********************************************************
+ *						 Classes						   *
+ ********************************************************* */
 
 /* *********************************************************
  *					START IN-GAME						   *
  ********************************************************* */
 
 
- /*
- * NAME : titleScreen
- * ROLE : Desciption de la fenetre "titleScreen"
- * ROLE : fonctionnement selon l'état : enum State_Type = STATEtitleScreen
- * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
- * OUTPUT PARAMETERS : Ouverture de la fenetre "titleScreen"
- * RETURNED VALUE    : void
- */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : titleScreen																   */
+/* ROLE : Desciption de la fenetre "titleScreen"									   */
+/* ROLE : fonctionnement selon l'état : enum State_Type = STATEtitleScreen			   */
+/* INPUT  : struct Sysinfo& : structure globale du programme						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::titleScreen
 (
 	Sysinfo& sysinfo
@@ -50,8 +58,8 @@ void IHM::titleScreen
 	LoadConfig::logfileconsole("[INFO]___: [START] : titleScreen");
 
 	/* title screen init */
-	sysinfo.var.statescreen = STATEtitleScreen;
-	sysinfo.var.select = selectnothing;
+	sysinfo.var.statescreen = State_Type::STATEtitleScreen;
+	sysinfo.var.select = Select_Type::selectnothing;
 
 	// applique une surface de la taille de l'écran de couleur noir
 	SDL_RenderClear(sysinfo.screen.renderer);
@@ -78,56 +86,78 @@ void IHM::titleScreen
 	LoadConfig::logfileconsole("[INFO]___: [END] : titleScreen");
 }
 
-
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : refreshNbPlayerTxt														   */
+/* ROLE : Maj du nombre de joueurs lors de la saisie								   */
+/* INPUT/OUTPUT : SDL_Renderer*& : Ptr sur le SDL_Renderer							   */
+/* INPUT/OUTPUT : TTF_Font* font[] : ptr sur tableau de font						   */
+/* INPUT : const Var& var : structure globale pour les variables					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::refreshNbPlayerTxt
 (
-	Sysinfo& sysinfo
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	const Var& var
 )
 {
-	Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		shaded, "Number of player(s)" + std::to_string(sysinfo.var.nbPlayer),
-		{ 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, sysinfo.var.tempX, sysinfo.var.tempY, no_angle, center_x);
+	Texte::writeTexte(renderer, font,
+		Texte_Type::shaded, "Number of player(s)" + std::to_string(var.nbPlayer),
+		{ 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, var.tempX, var.tempY, no_angle, Center_Type::center_x);
 
-	SDL_RenderPresent(sysinfo.screen.renderer);
+	SDL_RenderPresent(renderer);
 }
 
-
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : refreshNamePlayerTxt														   */
+/* ROLE : Maj du noms du joueur lors de la saisie									   */
+/* INPUT/OUTPUT : SDL_Renderer*& : Ptr sur le SDL_Renderer							   */
+/* INPUT/OUTPUT : TTF_Font* font[] : ptr sur tableau de font						   */
+/* INPUT : const Var& var : structure globale pour les variables					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::refreshNamePlayerTxt
 (
-	Sysinfo& sysinfo
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	const Var& var
 )
 {
-	if (sysinfo.var.tempPlayerName.size() > 0)
+	if (var.tempPlayerName.size() > 0)
 	{
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			shaded, sysinfo.var.tempPlayerName, { 255, 127, 127, 255 }, { 64, 64, 64, 255 },
-			24, sysinfo.var.tempX + 12, sysinfo.var.tempY, no_angle, center_x);
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, var.tempPlayerName, { 255, 127, 127, 255 }, { 64, 64, 64, 255 },
+			24, var.tempX + 12, var.tempY, no_angle, Center_Type::center_x);
 	}
 	else
 	{
-		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			shaded, "_", { 255, 127, 127, 255 }, { 64, 64, 64, 255 },
-			24, sysinfo.var.tempX + 12, sysinfo.var.tempY, no_angle, center_x);
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "_", { 255, 127, 127, 255 }, { 64, 64, 64, 255 },
+			24, var.tempX + 12, var.tempY, no_angle, Center_Type::center_x);
 	}
-	SDL_RenderPresent(sysinfo.screen.renderer);
+	SDL_RenderPresent(renderer);
 }
 
-
-/*
- * NAME : reloadScreen
- * ROLE : Desciption de la fenetre "reloadScreen"
- * ROLE : fonctionnement selon l'état : enum State_Type = STATEreload
- * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
- * OUTPUT PARAMETERS : Ouverture de la fenetre "reloadScreen"
- * RETURNED VALUE    : void
- */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : reloadScreen																   */
+/* ROLE : Desciption de la fenetre "reloadScreen"									   */
+/* ROLE : fonctionnement selon l'état : enum State_Type = STATEreload				   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::reloadScreen
 (
 	Sysinfo& sysinfo
 )
 {
 	LoadConfig::logfileconsole("[INFO]___: [START] : reloadScreen");
-	sysinfo.var.statescreen = STATEreload;
+	sysinfo.var.statescreen = State_Type::STATEreload;
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 	for (const auto& n : sysinfo.allButton.reload)
@@ -141,16 +171,16 @@ void IHM::reloadScreen
 	LoadConfig::logfileconsole("[INFO]___: [END] : reloadScreen");
 }
 
-
-/*
- * NAME : alwaysrender
- * ROLE : Tous les 1/SCREEN_REFRESH_RATE cette fonction permet ...
- * ROLE : ... la désciption de la fenetre "STATEmainmap" ou "STATEcitiemap"
- * ROLE : fonctionnement selon l'état : enum State_Type = STATEmainmap ou STATEcitiemap
- * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
- * OUTPUT PARAMETERS : Ouverture de la fenetre "STATEmainmap" ou "STATEcitiemap"
- * RETURNED VALUE    : void
- */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : alwaysrender																   */
+/* ROLE : Tous les 1/SCREEN_REFRESH_RATE cette fonction permet ...					   */
+/* ROLE : ... la désciption de la fenetre "STATEmainmap" ou "STATEcitiemap"			   */
+/* ROLE : fonctionnement selon l'état : enum State_Type = STATEmainmap ou STATEcitiemap*/
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void														       */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::alwaysrender
 (
 	Sysinfo& sysinfo
@@ -164,7 +194,7 @@ void IHM::alwaysrender
 
 	switch (sysinfo.var.statescreen)
 	{
-	case STATEmainmap:
+	case State_Type::STATEmainmap:
 
 		/* *********************************************************
 		 *					START Affichage mainmap				   *
@@ -177,7 +207,7 @@ void IHM::alwaysrender
 		 ********************************************************* */
 
 		break;
-	case STATEcitiemap:
+	case State_Type::STATEcitiemap:
 
 		/* *********************************************************
 		 *				START Affichage citieMap				   *
@@ -185,7 +215,7 @@ void IHM::alwaysrender
 
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() > 0)
 		{
-			if (sysinfo.var.s_player.selectCitie != -1)
+			if (NO_CITIE_SELECTED != sysinfo.var.s_player.selectCitie)
 			{
 				if (
 						sysinfo.var.s_player.selectCitie
@@ -223,7 +253,7 @@ void IHM::alwaysrender
 	Texte::writeTexte
 	(sysinfo.screen.renderer,
 		sysinfo.allTextures.font,
-		blended,
+		Texte_Type::blended,
 		std::to_string(sysinfo.screen.avgFPS),
 		{ 0, 64, 255, 255 },
 		NoColor,
@@ -231,7 +261,7 @@ void IHM::alwaysrender
 		sysinfo.screen.screenWidth / 2,
 		50,
 		no_angle,
-		center_x);
+		Center_Type::center_x);
 
 	/* ### Don't put code below here ### */
 
@@ -243,6 +273,14 @@ void IHM::alwaysrender
 	*/
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : mainmap																	   */
+/* ROLE : Affichage de la mainmap													   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void														       */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::mainmap
 (
 	Sysinfo& sysinfo
@@ -275,7 +313,7 @@ void IHM::mainmap
 	Texte::writeTexte
 	(sysinfo.screen.renderer,
 		sysinfo.allTextures.font,
-		blended,
+		Texte_Type::blended,
 		std::to_string(sysinfo.var.nbturn),
 		{ 0, 64, 255, 255 },
 		NoColor,
@@ -314,11 +352,11 @@ void IHM::mainmap
 
 	switch (sysinfo.var.select)
 	{
-	case selectcreate:
+	case Select_Type::selectcreate:
 		/* ---------------------------------------------------------------------- */
 		/* Affiche les unités pour rendre l'unité à créer						  */
 		/* ---------------------------------------------------------------------- */
-		if (sysinfo.var.s_player.unitNameToCreate.compare("") != 0)
+		if (sysinfo.var.s_player.unitNameToCreate.compare(EMPTY_STRING) != 0)
 		{
 			sysinfo.allTextures.unit[sysinfo.var.s_player.unitNameToCreate]
 				->render(100, 432);
@@ -328,7 +366,7 @@ void IHM::mainmap
 			/* N/A */
 		}
 		break;
-	case selectmove:
+	case Select_Type::selectmove:
 		/* ---------------------------------------------------------------------- */
 		/* Selectionne l'unité à faire bouger	 								  */
 		/* ---------------------------------------------------------------------- */
@@ -336,26 +374,6 @@ void IHM::mainmap
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 				->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
-		}
-		else
-		{
-			/* N/A */
-		}
-		break;
-	case selectinspect:
-		/* ---------------------------------------------------------------------- */
-		/* Affiche les stats de l'unité inspecté								  */
-		/* ---------------------------------------------------------------------- */
-		if (checkPlayerUnitSelection(sysinfo.var.s_player))
-		{
-			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-				->GETtheUnit(sysinfo.var.s_player.selectunit)
-					->afficherstat
-						(
-							sysinfo.allTextures.font,
-							sysinfo.screen.renderer,
-							sysinfo.map.tileSize
-						);
 		}
 		else
 		{
@@ -383,14 +401,22 @@ void IHM::mainmap
 				for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 				{
 					// affiche pour chaque joueurs les unités existantes (avec les stats)
-					sysinfo.tabplayer[i]
-						->GETtheUnit(j)
-							->afficher
+					sysinfo.tabplayer[i]->GETtheUnit(j)->afficher
 								(
 									sysinfo.allTextures,
 									sysinfo.map,
 									i
 								);
+
+					if (sysinfo.tabplayer[i]->GETtheUnit(j)->GETshowStats())
+					{
+						sysinfo.tabplayer[i]->GETtheUnit(j)->afficherstat
+								(
+									sysinfo.map,
+									sysinfo.allTextures.font,
+									sysinfo.screen.renderer
+								);
+					}
 				}
 			}
 			else
@@ -399,7 +425,7 @@ void IHM::mainmap
 				/* N/A */
 			}
 
-			if (sysinfo.tabplayer[i]->GETtabCity().size() != 0)
+			if (sysinfo.tabplayer[i]->GETtabCity().size() > 0)
 			{
 				for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 				{
@@ -424,14 +450,14 @@ void IHM::mainmap
 	 ********************************************************* */
 }
 
-
-/*
- * NAME : afficherSupertiles
- * ROLE : Affichage de la map (tiles, spec, appartenance) aux dimensions map.screen
- * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
- * OUTPUT PARAMETERS : Affichage de la map sur la fenetre "mainMap"
- * RETURNED VALUE    : void
- */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : afficherSupertiles														   */
+/* ROLE : Affichage de la map (tiles, spec, appartenance) aux dimensions map.screen	   */
+/* INPUT : struct Sysinfo& : structure globale du programme						       */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::afficherSupertiles
 (
 	Sysinfo& sysinfo
@@ -451,13 +477,13 @@ void IHM::afficherSupertiles
 
 			switch (sysinfo.map.maps[m][n].tile_ground)
 			{
-			case grass:
+			case Ground_Type::grass:
 				sysinfo.allTextures.ground["grass.bmp"]->render(x, y);
 				break;
-			case water:
+			case Ground_Type::water:
 				sysinfo.allTextures.ground["water.bmp"]->render(x, y);
 				break;
-			case deepwater:
+			case Ground_Type::deepwater:
 				sysinfo.allTextures.ground["deepwater.bmp"]->render(x, y);
 				break;
 			default:
@@ -465,7 +491,7 @@ void IHM::afficherSupertiles
 				break;
 			}
 
-			if (sysinfo.map.maps[m][n].tile_spec > 0)
+			if (GroundSpec_Type::nothing < sysinfo.map.maps[m][n].tile_spec)
 			{
 				sysinfo.allTextures.groundSpec[sysinfo.map.maps[m][n].tile_stringspec]
 					->render(x, y);
@@ -475,7 +501,7 @@ void IHM::afficherSupertiles
 				/* N/A */
 			}
 
-			if (sysinfo.map.maps[m][n].appartenance != -1)
+			if (NO_APPARTENANCE < sysinfo.map.maps[m][n].appartenance)
 			{
 				sysinfo.allTextures.colorapptile
 					["ColorPlayertile" + std::to_string(sysinfo.map.maps[m][n].appartenance) + ".bmp"]
@@ -492,15 +518,24 @@ void IHM::afficherSupertiles
 	
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : checkPlayerUnitSelection													   */
+/* ROLE : Check si un joueur et une unitée sont selectionnés						   */
+/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
+/* RETURNED VALUE : bool : false -> joueur et/ou unité non selectionné (==-1)		   */
+/* RETURNED VALUE : bool : true -> joueur et unité selectionné (!=-1)				   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 bool IHM::checkPlayerUnitSelection
 (
 	const SubcatPlayer& s_player
 )
 {
 	if  (
-			s_player.selectplayer != -1
+			NO_PLAYER_SELECTED < s_player.selectplayer
 			&&
-			s_player.selectunit != -1
+			NO_UNIT_SELECTED < s_player.selectunit
 		)
 	{
 		return true;
@@ -511,21 +546,53 @@ bool IHM::checkPlayerUnitSelection
 	}
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : checkPlayerCitieSelection													   */
+/* ROLE : Check si un joueur et une Citie sont selectionnés							   */
+/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
+/* RETURNED VALUE : bool : false -> joueur et/ou Citie non selectionné (==-1)		   */
+/* RETURNED VALUE : bool : true -> joueur et Citie selectionné (!=-1)				   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool IHM::checkPlayerCitieSelection
+(
+	const SubcatPlayer& s_player
+)
+{
+	if	(
+			NO_PLAYER_SELECTED < s_player.selectplayer
+			&&
+			NO_CITIE_SELECTED < s_player.selectCitie
+		)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
-/*
- * NAME : citiemap
- * ROLE : Affichage de la fenetre citiemap
- * ROLE : fonctionnement selon l'état : enum State_Type = STATEcitiemap
- * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
- * OUTPUT PARAMETERS :  Affichage de la map sur la fenetre "citieMap"
- * RETURNED VALUE    : void
- */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : citiemap																	   */
+/* ROLE : Affichage de la fenetre citiemap											   */
+/* ROLE : fonctionnement selon l'état : enum State_Type = STATEcitiemap				   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::citiemap
 (
 	Sysinfo& sysinfo
 )
 {
 	SDL_RenderClear(sysinfo.screen.renderer);
+
+
+	sysinfo.allTextures.citieMap["CitieToolbarButtons"]->render();
+	sysinfo.allTextures.citieMap["CitieToolbarStats"]->render();
 	
 	/* *********************************************************
 	 *					START Button						   *				
@@ -545,16 +612,18 @@ void IHM::citiemap
 	 *			 START select = selectcreate				   *
 	 ********************************************************* */
 
-	std::string buildName("");
+	std::string buildName(EMPTY_STRING);
 	unsigned int initspace(96), space(32);
-	if (sysinfo.var.select == selectcreate)
+	if (Select_Type::selectcreate == sysinfo.var.select)
 	{
 		initspace = 96;
 		for (Uint8 j(0); j < 10; j++)
 		{
-			if ((unsigned __int64)sysinfo.var.s_player.unitToCreate + j 
-				<
-				sysinfo.var.s_player.tabUnit_Struct.size())
+			if	(
+					((unsigned __int64)sysinfo.var.s_player.unitToCreate + j)
+					<
+					sysinfo.var.s_player.tabUnit_Struct.size()
+				)
 			{
 				buildName = sysinfo.var.s_player.tabUnit_Struct
 					[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].name;
@@ -596,15 +665,15 @@ void IHM::citiemap
 
 }
 
-
-/*
- * NAME : countFrame
- * ROLE : Compteur de frames durant le programme
- * ROLE : Début : à la fin de la fonction newGame(...)
- * INPUT  PARAMETERS : Screen& screen : données concernant la fenetre SDL
- * OUTPUT PARAMETERS : Incrémentation du nombre de frames comptées
- * RETURNED VALUE    : void
- */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : countFrame																   */
+/* ROLE : Compteur de frames durant le programme 									   */
+/* ROLE : Début : à la fin de la fonction newGame(...)								   */
+/* INPUT : Screen& screen : données concernant la fenetre SDL						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void IHM::countFrame
 (
 	Screen& screen

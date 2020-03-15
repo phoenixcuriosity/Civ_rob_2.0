@@ -25,9 +25,35 @@
 #ifndef Player_H
 #define Player_H
 
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
+
 #include "civ_lib.h"
 #include "Unit.h"
 #include "City.h"
+
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
+
+ /* N/A */
+
+/* *********************************************************
+ *						 Enum							   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						Structures						   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						 Classes						   *
+ ********************************************************* */
 
 class Player
 {
@@ -36,65 +62,131 @@ public:
 	 *					Player::METHODS						   *
 	 ********************************************************* */
 	 
-	 
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : Player																	   */
+	/* ROLE : Constructeur par défaut													   */
+	/* INPUT : void																		   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	Player();
-	Player(const std::string&);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : Player																	   */
+	/* ROLE : Constructeur par nom du joueur											   */
+	/* INPUT : const std::string&														   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	Player
+	(
+		const std::string&
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : ~Player																	   */
+	/* ROLE : Initialisation d'une Unit vide											   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	~Player();
 
-	Player& operator=(const Player& player);
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : operator=																	   */
+	/* ROLE : Redéfinition de l'opérateur =												   */
+	/* INPUT : const Player& player : l'objet à copier									   */
+	/* RETURNED VALUE : Player&	: l'objet recopié										   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	Player& operator=
+	(
+		const Player& player
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deletePlayer																   */
+	/* ROLE : Destruction de l'objet et de ses ptr										   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void deletePlayer();
 
-	
-	/*
-	 * NAME : addEmptyUnit
-	 * ROLE : Initialisation d'une Unit vide
-	 * INPUT  PARAMETERS : void
-	 * OUTPUT PARAMETERS : Initialisation d'une Unit vide
-	 * RETURNED VALUE    : void
-	 */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : addEmptyUnit																   */
+	/* ROLE : Initialisation d'une Unit vide											   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void addEmptyUnit();
 	
-	
-	/*
-	 * NAME : addUnit
-	 * ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)
-	 * INPUT  PARAMETERS : Spécifications demandées (nom, positions, ...)
-	 * OUTPUT PARAMETERS : Ajout une Unit
-	 * RETURNED VALUE    : void
-	 */
-	virtual void addUnit(const std::string &name, unsigned int x,
-		unsigned int y, unsigned int life, unsigned int atq,
-		unsigned int def, unsigned int move, unsigned int level);
-		
-		
-	/*
-	 * NAME : deleteUnit
-	 * ROLE : Suppression d'une Unit du joueur
-	 * INPUT  PARAMETERS : unsigned int : index de Unit dans le tableau
-	 * OUTPUT PARAMETERS : Suppression d'une Unit
-	 * RETURNED VALUE    : void
-	 */
-	virtual void deleteUnit(unsigned int index);
-	
-	
-	/*
-	 * NAME : addCity
-	 * ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)
-	 * INPUT  PARAMETERS : Spécifications demandées (nom, positions, ...)
-	 * OUTPUT PARAMETERS : Ajout une City
-	 * RETURNED VALUE    : void
-	 */
-	virtual void addCity(const std::string &, unsigned int, unsigned int, Tile[]);
-	
-	
-	/*
-	 * NAME : deleteCity
-	 * ROLE : Suppression d'une City du joueur
-	 * INPUT  PARAMETERS : unsigned int : index de City dans le tableau
-	 * OUTPUT PARAMETERS : Suppression d'une City
-	 * RETURNED VALUE    : void
-	 */
-	virtual void deleteCity(unsigned int);
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : addUnit																	   */
+	/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
+	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void addUnit
+	(
+		const std::string &name,
+		unsigned int x,
+		unsigned int y,
+		Unit_Movement_Type movementType,
+		unsigned int life,
+		unsigned int atq,
+		unsigned int def,
+		unsigned int move,
+		unsigned int level
+	);	
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteUnit																   */
+	/* ROLE : Suppression d'une Unit du joueur											   */
+	/* INPUT : unsigned int : index de Unit dans le tableau								   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void deleteUnit
+	(
+		unsigned int index
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : addCity																	   */
+	/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
+	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void addCity
+	(
+		const std::string &,
+		unsigned int,
+		unsigned int,
+		std::vector<Tile>& tiles
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteCity																   */
+	/* ROLE : Suppression d'une City du joueur											   */
+	/* INPUT : unsigned int : index de City dans le tableau								   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void deleteCity
+	(
+		unsigned int
+	);
 
 	
 public:

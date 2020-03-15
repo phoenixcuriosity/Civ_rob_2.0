@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.18
-	file version : 1.10
+	last modification on this file on version:0.19
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,7 @@
 #include "City.h"
 #include "IHM.h"
 #include "LoadConfig.h"
+#include "GamePlay.h"
 
 /* *********************************************************
  *					START City::STATIC					   *
@@ -50,6 +51,11 @@ void City::createCity
 {
 	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == 0)
 	{
+		/* ---------------------------------------------------------------------- */
+		/* 1° : Recherche du nom de la nouvelle Citie 							  */
+		/*    : Recherche dans le tableau global des noms de Citie				  */
+		/*  : En fonction du nombre de Citie déjà crées et de MAX_CITY_PER_PLAYER */
+		/* ---------------------------------------------------------------------- */
 
 		std::string name(sysinfo.var.s_player.tabCitieName
 			[
@@ -61,70 +67,54 @@ void City::createCity
 				)
 			]);
 
+		/* ---------------------------------------------------------------------- */
+		/* 2° : Recherche du position de la nouvelle Citie = position settler 	  */
+		/* ---------------------------------------------------------------------- */
+
 		unsigned int x(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-			->GETtheUnit(sysinfo.var.s_player.selectunit)
-				->GETx());
+						->GETtheUnit(sysinfo.var.s_player.selectunit)
+							->GETx());
 		unsigned int y(sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-			->GETtheUnit(sysinfo.var.s_player.selectunit)
-				->GETy());
+						->GETtheUnit(sysinfo.var.s_player.selectunit)
+							->GETy());
+
+		/* ---------------------------------------------------------------------- */
+		/* 3° : Recherche de la tile ou se trouve le settler 					  */
+		/* ---------------------------------------------------------------------- */
 
 		unsigned int middletileX(0), middletileY(0);
+		searchMiddleTile(sysinfo.map.maps, x, y, &middletileX, &middletileY);
 
-		Tile tabtile[INIT_SIZE_VIEW * INIT_SIZE_VIEW];
-		bool continuer(true);
-		for (unsigned int i(0); i < sysinfo.map.maps.size() && (continuer); i++)
-		{
-			for (unsigned int j(0); j < sysinfo.map.maps.size() && (continuer); j++)
-			{
-				if  (
-						sysinfo.map.maps[i][j].tile_x == x
-						&&
-						sysinfo.map.maps[i][j].tile_y == y
-					)
-				{
-					middletileX = i;
-					middletileY = j;
-					continuer = false;
-				}
-				else
-				{
-					/* N/A */
-				}
-			}
-		}
-		unsigned int k(0);
-		for (int o(-(int)ceil(INIT_SIZE_VIEW / 2)); o <= (int)ceil(INIT_SIZE_VIEW / 2); o++)
-		{
-			for (int p(-(int)ceil(INIT_SIZE_VIEW / 2)); p <= (int)ceil(INIT_SIZE_VIEW / 2); p++)
-			{
-				if	(initSizeInfluenceCondition(o, p))
-				{
-					sysinfo.map.maps[(unsigned int)((double)middletileX + o)]
-									[(unsigned int)((double)middletileY + p)]
-									.appartenance = sysinfo.var.s_player.selectplayer;
-				}
-				else
-				{
-					/* N/A */
-				}
-					
-				tabtile[k]
-					= sysinfo.map.maps
-					[(unsigned int)((double)middletileX + o)]
-					[(unsigned int)((double)middletileY + p)];
-				tabtile[k].tile_x = (sysinfo.screen.screenWidth / 2) - (-o * sysinfo.map.tileSize);
-				tabtile[k].tile_y = (sysinfo.screen.screenHeight / 2) - (-p * sysinfo.map.tileSize);
-				k++;
-			}
-		}
+		std::vector<Tile> tabtile;
+		tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
+
+		/* ---------------------------------------------------------------------- */
+		/* 4° : Remplisage tableau de tile Citie			 					  */
+		/* ---------------------------------------------------------------------- */
+
+		fillCitieTiles
+					(
+						sysinfo.screen,
+						middletileX,
+						middletileY,
+						sysinfo.var.s_player.selectplayer,
+						sysinfo.map,
+						tabtile
+					);
+
+		/* ---------------------------------------------------------------------- */
+		/* 5° : Création d'un ptr et passage au tableau de Citie du joueur		  */
+		/*    : Destruction ptr de l'Unit										  */
+		/*    : Aucune Unit n'est séléctionnée et aucune Unit à bouger	 		  */
+		/* ---------------------------------------------------------------------- */
 
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 			->addCity(name, x, y, tabtile);
 
 		sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 			->deleteUnit(sysinfo.var.s_player.selectunit);
-		sysinfo.var.s_player.selectunit = -1;
-		sysinfo.var.s_player.unitNameToMove = "";
+		sysinfo.var.s_player.selectunit = NO_UNIT_SELECTED;
+		sysinfo.var.s_player.unitNameToMove = EMPTY_STRING;
 	}
 	else
 	{
@@ -134,16 +124,113 @@ void City::createCity
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
+/* NAME : searchMiddleTile															   */
+/* ROLE : Recherche les indices de la Tile centrale de la Citie						   */
+/* INPUT : const MatriceTile& maps : Matrice de la map								   */
+/* INPUT : unsigned int x :	index en x de la Citie 									   */
+/* INPUT : unsigned int y :	index en y de la Citie 									   */
+/* OUTPUT : unsigned int* middletileX : index en tileSize de x						   */
+/* OUTPUT : unsigned int* middletileX : index en tileSize de y						   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::searchMiddleTile
+(
+	const MatriceTile& maps,
+	unsigned int x,
+	unsigned int y,
+	unsigned int* middletileX,
+	unsigned int* middletileY
+)
+{
+	for (unsigned int i(0); i < maps.size(); i++)
+	{
+		for (unsigned int j(0); j < maps.size(); j++)
+		{
+			if  (
+					maps[i][j].tile_x == x
+					&&
+					maps[i][j].tile_y == y
+				)
+			{
+				*middletileX = i;
+				*middletileY = j;
+				return;
+			}
+			else
+			{
+				/* N/A */
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : fillCitieTiles															   */
+/* ROLE : Rempli le tableau de la Citie avec le point centrale la middletileXY		   */
+/* ROLE : et de largeur et hauteur totale INIT_SIZE_VIEW							   */
+/* INPUT : const Screen& screen	: taille en x et y de l'écran						   */
+/* INPUT : unsigned int middletileX : index en tileSize de x de la Citie			   */
+/* INPUT : unsigned int middletileY : index en tileSize de y de la Citie			   */
+/* INPUT : unsigned int selectplayer : index d'appartenance							   */
+/* INPUT/OUTPUT : Map& map : structure de la Map									   */
+/* OUTPUT : std::vector<Tile>& tabtile : tableau à remplir de la Citie				   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::fillCitieTiles
+(
+	const Screen& screen,
+	unsigned int middletileX,
+	unsigned int middletileY,
+	unsigned int selectplayer,
+	Map& map,
+	std::vector<Tile>& tabtile
+)
+{
+	unsigned int k(0);
+	for (int o(-(int)ceil(INIT_SIZE_VIEW / 2)); o <= (int)ceil(INIT_SIZE_VIEW / 2); o++)
+	{
+		for (int p(-(int)ceil(INIT_SIZE_VIEW / 2)); p <= (int)ceil(INIT_SIZE_VIEW / 2); p++)
+		{
+			if (initSizeInfluenceCondition(o, p))
+			{
+				map.maps[(unsigned int)((double)middletileX + o)]
+						[(unsigned int)((double)middletileY + p)]
+						.appartenance = selectplayer;
+			}
+			else
+			{
+				/* N/A */
+			}
+
+			/* ---------------------------------------------------------------------- */
+			/* Remplissage du tableau de Tile								 		  */
+			/* ---------------------------------------------------------------------- */
+			tabtile[k] = map.maps
+							[(unsigned int)((double)middletileX + o)]
+							[(unsigned int)((double)middletileY + p)];
+			tabtile[k].tile_x = (screen.screenWidth / 2) - (-o * map.tileSize);
+			tabtile[k].tile_y = (screen.screenHeight / 2) - (-p * map.tileSize);
+			k++;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 /* NAME : initSizeInfluenceCondition												   */
 /* ROLE : Conditions des cases de la ville à l'intérieur de zone d'influence		   */
-/* INPUT : unsigned int o :	index en x												   */
-/* INPUT : unsigned int p :	index en y												   */
+/* INPUT : int o :	index en x														   */
+/* INPUT : int p :	index en y														   */
 /* RETURNED VALUE : bool : false -> invalid / true -> valid							   */
+/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 bool City::initSizeInfluenceCondition
 (
-	unsigned int o,
-	unsigned int p
+	int o,
+	int p
 )
 {
 	if	(
@@ -172,50 +259,33 @@ bool City::initSizeInfluenceCondition
 /* INPUT/OUTPUT : Var& : Structure Var												   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 void City::searchCityTile
 (
 	const std::vector<Player*>& tabplayer,
 	Var& var
 )
 {
-	for (unsigned int i(0); i < tabplayer[var.s_player.selectplayer]->GETtabCity().size(); i++) 
+	
+	for (unsigned int i(0); i < tabplayer[var.s_player.selectplayer]->GETtabCity().size(); i++)
 	{
 		if	(
 				tabplayer[var.s_player.selectplayer]
 					->GETtheCity(i)
-						->testPos(var.mouse.GETmouse_x(), var.mouse.GETmouse_y())
+						->testPos
+							(var.mouse.GETmouse_xNormalized(), var.mouse.GETmouse_yNormalized())
 			)
 		{
 			var.s_player.selectCitie = i;
-			var.statescreen = STATEcitiemap;
-			var.select = selectnothing;
-			break;
+			var.statescreen = State_Type::STATEcitiemap;
+			var.select = Select_Type::selectnothing;
+			return;
 		}
 		else
 		{
 			/* N/A */
 		}
 	}
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : createTiles																   */
-/* ROLE : Création d'un tableau de Tile pour la City								   */
-/* INPUT : Tile tile[] : données générale de la map									   */
-/* RETURNED VALUE : std::vector<Tile> : données générale de la cityMap				   */
-/* ----------------------------------------------------------------------------------- */
-std::vector<Tile> City::createTiles
-(
-	Tile tiles[]
-)
-{
-	std::vector<Tile> Atiles;
-	for (unsigned int i(0); i < INIT_SIZE_VIEW * INIT_SIZE_VIEW; i++)
-	{
-		Atiles.push_back(tiles[i]);
-	}
-	return Atiles;
 }
 
 
@@ -245,14 +315,14 @@ City::City
 	const std::string& name,
 	unsigned int x,
 	unsigned int y,
-	Tile tile[]
+	std::vector<Tile>& tiles
 )
 	: _image("citie.png"),
-_name(name), _x(x), _y(y), _tile(createTiles(tile)),
+_name(name), _x(x), _y(y), _tile(tiles),
 _influenceLevel(1),_nbpop(1), _atq(0), _def(0), _nbhappy(0), _nbsad(0), _nbstructurebuild(0),
-_foodStock(0), _foodBalance(tile[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food)
+_foodStock(0), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food)
 {
-	_citizens.push_back(new Citizen(tile[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
+	_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
 
 	LoadConfig::logfileconsole("[INFO]___: Create Citie: " + _name + " Success");
 }
@@ -297,7 +367,7 @@ void City::foodNextTurn()
 
 	_foodStock += _foodBalance ;
 	
-	if (_foodStock < 0)
+	if (0 > _foodStock)
 	{
 		/* ---------------------------------------------------------------------- */
 		/* TODO gestion prioritaire de suppression de Citizen					  */
@@ -419,14 +489,14 @@ void City::affichercitiemap
 {
 
 	/* Affichage des cases qui compose le secteur de la City */
-	for (unsigned int i(0); i < INIT_SIZE_VIEW * INIT_SIZE_VIEW; i++) 
+	for (unsigned int i(0); (i < (INIT_SIZE_VIEW * INIT_SIZE_VIEW)); i++) 
 	{
 		switch (_tile[i].tile_ground)
 		{
-		case grass:
+		case Ground_Type::grass:
 			sysinfo.allTextures.ground["grass.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
 			break;
-		case water:
+		case Ground_Type::water:
 			sysinfo.allTextures.ground["water.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
 			break;
 		default:
@@ -434,7 +504,7 @@ void City::affichercitiemap
 			break;
 		}
 
-		if (_tile[i].tile_spec > 0) 
+		if (GroundSpec_Type::nothing < _tile[i].tile_spec)
 		{
 			sysinfo.allTextures.groundSpec[_tile[i].tile_stringspec]
 				->render(_tile[i].tile_x, _tile[i].tile_y);
@@ -444,7 +514,7 @@ void City::affichercitiemap
 			/* N/A */
 		}
 
-		if (_tile[i].appartenance != -1)
+		if (NO_APPARTENANCE < _tile[i].appartenance)
 		{
 			sysinfo.allTextures.colorapptile["ColorPlayertile" + std::to_string(_tile[i].appartenance) + ".bmp"]
 				->render(_tile[i].tile_x, _tile[i].tile_y);
@@ -533,7 +603,7 @@ unsigned int Citizen::placeCitizen
 	unsigned int condition((unsigned int)citizens.size());
 	unsigned int checkcondition(0);
 	unsigned int place(0);
-	bool continuer = true;
+	bool continuer(true);
 
 	std::vector<unsigned int> tabpos;
 	for (unsigned int j(0); j < condition; j++)
@@ -542,10 +612,10 @@ unsigned int Citizen::placeCitizen
 	}
 
 	
-	for (unsigned int i(0); i < INIT_SIZE_VIEW * INIT_SIZE_VIEW; i++)
+	for (unsigned int i(0); (i < INIT_SIZE_VIEW * INIT_SIZE_VIEW) && (true == continuer); i++)
 	{
 		checkcondition = 0;
-		for (unsigned int p(0); p < condition; p++)
+		for (unsigned int p(0); (p < condition) && (true == continuer); p++)
 		{
 			if (i != tabpos[p])
 			{
@@ -560,20 +630,11 @@ unsigned int Citizen::placeCitizen
 			{
 				place = i;
 				continuer = false;
-				break;
 			}
 			else
 			{
 				/* N/A */
 			}
-		}
-		if (!continuer)
-		{
-			break;
-		}
-		else
-		{
-			/* N/A */
 		}
 	}
 
