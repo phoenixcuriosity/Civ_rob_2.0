@@ -447,19 +447,19 @@ Unit_Movement_Type LoadConfig::xmlGiveMovementType
 	std::string type
 )
 {
-	if (type.compare("ground"))
+	if (type.compare("ground") == IDENTICAL_STRINGS)
 	{
 		return Unit_Movement_Type::ground;
 	}
-	else if(type.compare("air"))
+	else if(type.compare("air") == IDENTICAL_STRINGS)
 	{
 		return Unit_Movement_Type::air;
 	}
-	else if (type.compare("water"))
+	else if (type.compare("water") == IDENTICAL_STRINGS)
 	{
 		return Unit_Movement_Type::water;
 	}
-	else if (type.compare("deepwater"))
+	else if (type.compare("deepwater") == IDENTICAL_STRINGS)
 	{
 		return Unit_Movement_Type::deepwater;
 	}
@@ -1169,31 +1169,31 @@ State_Type LoadConfig::xmlGiveStateType
 	std::string type
 )
 {
-	if (type.compare("error") == 0)
+	if (type.compare("error") == IDENTICAL_STRINGS)
 	{
 		return State_Type::error;
 	}
-	else if (type.compare("STATEtitleScreen") == 0)
+	else if (type.compare("STATEtitleScreen") == IDENTICAL_STRINGS)
 	{
 		return State_Type::STATEtitleScreen;
 	}
-	else if (type.compare("STATEscreennewgame") == 0)
+	else if (type.compare("STATEscreennewgame") == IDENTICAL_STRINGS)
 	{
 		return State_Type::STATEscreennewgame;
 	}
-	else if (type.compare("STATEreload") == 0)
+	else if (type.compare("STATEreload") == IDENTICAL_STRINGS)
 	{
 		return State_Type::STATEreload;
 	}
-	else if (type.compare("STATEmainmap") == 0)
+	else if (type.compare("STATEmainmap") == IDENTICAL_STRINGS)
 	{
 		return State_Type::STATEmainmap;
 	}
-	else if (type.compare("STATEscience") == 0)
+	else if (type.compare("STATEscience") == IDENTICAL_STRINGS)
 	{
 		return State_Type::STATEscience;
 	}
-	else if (type.compare("STATEcitiemap") == 0)
+	else if (type.compare("STATEcitiemap") == IDENTICAL_STRINGS)
 	{
 		return State_Type::STATEcitiemap;
 	}
@@ -1208,27 +1208,27 @@ Select_Type LoadConfig::xmlGiveSelectType
 	std::string type
 )
 {
-	if (type.compare("selectnothing") == 0)
+	if (type.compare("selectnothing") == IDENTICAL_STRINGS)
 	{
 		return Select_Type::selectnothing;
 	}
-	else if (type.compare("NotToSelect") == 0)
+	else if (type.compare("NotToSelect") == IDENTICAL_STRINGS)
 	{
 		return Select_Type::NotToSelect;
 	}
-	else if (type.compare("selectcreate") == 0)
+	else if (type.compare("selectcreate") == IDENTICAL_STRINGS)
 	{
 		return Select_Type::selectcreate;
 	}
-	else if (type.compare("selectinspect") == 0)
+	else if (type.compare("selectinspect") == IDENTICAL_STRINGS)
 	{
 		return Select_Type::selectinspect;
 	}
-	else if (type.compare("selectmove") == 0)
+	else if (type.compare("selectmove") == IDENTICAL_STRINGS)
 	{
 		return Select_Type::selectmove;
 	}
-	else if (type.compare("selectmoveCitizen") == 0)
+	else if (type.compare("selectmoveCitizen") == IDENTICAL_STRINGS)
 	{
 		return Select_Type::selectmoveCitizen;
 	}
@@ -1244,19 +1244,19 @@ std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur
 	std::string type
 )
 {
-	if (type.compare("titleScreen") == 0)
+	if (type.compare("titleScreen") == IDENTICAL_STRINGS)
 	{
 		return allTextes.titleScreen;
 	}
-	else if (type.compare("newGame") == 0)
+	else if (type.compare("newGame") == IDENTICAL_STRINGS)
 	{
 		return allTextes.newGame;
 	}
-	else if (type.compare("mainMap") == 0)
+	else if (type.compare("mainMap") == IDENTICAL_STRINGS)
 	{
 		return allTextes.mainMap;
 	}
-	else if (type.compare("citieMap") == 0)
+	else if (type.compare("citieMap") == IDENTICAL_STRINGS)
 	{
 		return allTextes.citieMap;
 	}
@@ -1271,11 +1271,11 @@ Texte_Type LoadConfig::xmlGiveTexteType
 	std::string type
 )
 {
-	if (type.compare("blended") == 0)
+	if (type.compare("blended") == IDENTICAL_STRINGS)
 	{
 		return Texte_Type::blended;
 	}
-	else if (type.compare("shaded") == 0)
+	else if (type.compare("shaded") == IDENTICAL_STRINGS)
 	{
 		return Texte_Type::shaded;
 	}
@@ -1290,43 +1290,43 @@ SDL_Color LoadConfig::xmlGiveColor
 	std::string type
 )
 {
-	if (type.compare("Black") == 0)
+	if (type.compare("Black") == IDENTICAL_STRINGS)
 	{
 		return Black;
 	}
-	else if (type.compare("White") == 0)
+	else if (type.compare("White") == IDENTICAL_STRINGS)
 	{
 		return White;
 	}
-	else if (type.compare("Red") == 0)
+	else if (type.compare("Red") == IDENTICAL_STRINGS)
 	{
 		return Red;
 	}
-	else if (type.compare("Green") == 0)
+	else if (type.compare("Green") == IDENTICAL_STRINGS)
 	{
 		return Green;
 	}
-	else if (type.compare("Blue") == 0)
+	else if (type.compare("Blue") == IDENTICAL_STRINGS)
 	{
 		return Blue;
 	}
-	else if (type.compare("Blue") == 0)
+	else if (type.compare("Blue") == IDENTICAL_STRINGS)
 	{
 		return Blue;
 	}
-	else if (type.compare("Yellow") == 0)
+	else if (type.compare("Yellow") == IDENTICAL_STRINGS)
 	{
 		return Yellow;
 	}
-	else if (type.compare("WriteColorButton") == 0)
+	else if (type.compare("WriteColorButton") == IDENTICAL_STRINGS)
 	{
 		return WriteColorButton;
 	}
-	else if (type.compare("BackColorButton") == 0)
+	else if (type.compare("BackColorButton") == IDENTICAL_STRINGS)
 	{
 		return BackColorButton;
 	}
-	else if (type.compare("NoColor") == 0)
+	else if (type.compare("NoColor") == IDENTICAL_STRINGS)
 	{
 		return NoColor;
 	}
@@ -1341,15 +1341,15 @@ Transparance_Type LoadConfig::xmlGiveAlpha
 	std::string type
 )
 {
-	if (type.compare("nonTransparent") == 0)
+	if (type.compare("nonTransparent") == IDENTICAL_STRINGS)
 	{
 		return nonTransparent;
 	}
-	else if (type.compare("semiTransparent") == 0)
+	else if (type.compare("semiTransparent") == IDENTICAL_STRINGS)
 	{
 		return semiTransparent;
 	}
-	else if (type.compare("transparent") == 0)
+	else if (type.compare("transparent") == IDENTICAL_STRINGS)
 	{
 		return transparent;
 	}
@@ -1364,11 +1364,11 @@ Uint16 LoadConfig::xmlGiveAngle
 	std::string type
 )
 {
-	if (type.compare("no_angle") == 0)
+	if (type.compare("no_angle") == IDENTICAL_STRINGS)
 	{
 		return no_angle;
 	}
-	else if (type.compare("inverse") == 0)
+	else if (type.compare("inverse") == IDENTICAL_STRINGS)
 	{
 		return inverse;
 	}
@@ -1383,19 +1383,19 @@ Center_Type LoadConfig::xmlGiveCenter
 	std::string type
 )
 {
-	if (type.compare("nocenter") == 0)
+	if (type.compare("nocenter") == IDENTICAL_STRINGS)
 	{
 		return Center_Type::nocenter;
 	}
-	else if (type.compare("center_x") == 0)
+	else if (type.compare("center_x") == IDENTICAL_STRINGS)
 	{
 		return Center_Type::center_x;
 	}
-	else if (type.compare("center_y") == 0)
+	else if (type.compare("center_y") == IDENTICAL_STRINGS)
 	{
 		return Center_Type::center_y;
 	}
-	else if (type.compare("center") == 0)
+	else if (type.compare("center") == IDENTICAL_STRINGS)
 	{
 		return Center_Type::center;
 	}

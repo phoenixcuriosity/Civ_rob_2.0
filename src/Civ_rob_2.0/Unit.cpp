@@ -189,30 +189,76 @@ Move_Type Unit::searchToMove
 )
 {
 
-	/* ---------------------------------------------------------------------- */
-	/* conditions de mouvement :											  */
-	/*	- que la case cible soit du sol et									  */
-	/*		- que la case cible est libre									  */
-	/*		- ou que la case cible est occupée par un ennemi				  */
-	/*		  susceptible de mourrir par l'attaque							  */
-	/* ---------------------------------------------------------------------- */
+	/* --------------------------------------------------------------------------------------- */
+	/* conditions de mouvement :														 	   */
+	/*	- que la case cible soit du ground si l'Unit et de type ground						   */
+	/*	- ou que la case cible soit de l'air ou water et si l'Unit et de type air		   	   */
+	/*	- ou que la case cible soit de la water et si l'Unit et de type water				   */
+	/*	- ou que la case cible soit de la deepwater ou water et si l'Unit et de type deepwater */
+	/*		- que la case cible est libre													   */
+	/*		- ou que la case cible est occupée par un ennemi								   */
+	/*		  susceptible de mourrir par l'attaque											   */
+	/* --------------------------------------------------------------------------------------- */
 
-	bool onGround(false);
+	bool nextTileValidToMove(false);
 	bool condition(false);
 
-	for (unsigned int i(0); (i < maps.size()) && (false == onGround); i++)
+	for (unsigned int i(0); (i < maps.size()) && (false == nextTileValidToMove); i++)
 	{
-		for (unsigned int j(0); (j < maps[i].size()) && (false == onGround); j++)
+		for (unsigned int j(0); (j < maps[i].size()) && (false == nextTileValidToMove); j++)
 		{
 			condition = checkNextTile(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit), maps[i][j], x, y);
 			if	(true == condition)
 			{
-				if (maps[i][j].tile_ground == Ground_Type::grass)
+				if	(
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::ground
+						&&
+						maps[i][j].tile_ground == Ground_Type::grass
+					)
 				{
-					onGround = true;
+					nextTileValidToMove = true;
+				}
+				else 
+				if (
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::air
+						&&
+						(
+							maps[i][j].tile_ground == Ground_Type::grass
+							||
+							maps[i][j].tile_ground == Ground_Type::water
+						)
+					)
+				{
+					nextTileValidToMove = true;
+				}
+				else
+				if  (
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::water
+						&&
+						maps[i][j].tile_ground == Ground_Type::water
+					)
+				{
+					nextTileValidToMove = true;
+				}
+				else
+				if (
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::deepwater
+						&&
+						(
+							maps[i][j].tile_ground == Ground_Type::deepwater
+							||
+							maps[i][j].tile_ground == Ground_Type::water
+						)
+					)
+				{
+					nextTileValidToMove = true;
 				}
 				else
 				{
+					/* ---------------------------------------------------------------------- */
+					/* nextTileValidToMove = false : Unit cannot move						  */
+					/* ---------------------------------------------------------------------- */
+
 					/* N/A */
 				}
 			}
@@ -224,7 +270,7 @@ Move_Type Unit::searchToMove
 	}
 
 	condition = false;
-	if (onGround)
+	if (nextTileValidToMove)
 	{
 		/* ---------------------------------------------------------------------- */
 		/* Next Tile is a ground Tile 											  */

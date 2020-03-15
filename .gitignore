@@ -1,6 +1,10 @@
 #Perso
 *.ipch
 *.vs
+*.ilk
+*.pdb
+*.idb
+*.tlog
 
 # Prerequisites
 *.d
