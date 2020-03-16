@@ -912,6 +912,7 @@ void GamePlay::nextTurn
 		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 		{
 			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn();
+			sysinfo.tabplayer[i]->GETtheCity(j)->computeEmotion();
 		}
 	}
 	sysinfo.var.nbturn++;

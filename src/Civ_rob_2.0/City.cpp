@@ -319,7 +319,7 @@ City::City
 )
 	: _image("citie.png"),
 _name(name), _x(x), _y(y), _tile(tiles),
-_influenceLevel(1),_nbpop(1), _atq(0), _def(0), _nbhappy(0), _nbsad(0), _nbstructurebuild(0),
+_influenceLevel(1),_nbpop(1), _atq(0), _def(0), _emotion(0), _nbstructurebuild(0),
 _foodStock(0), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food)
 {
 	_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
@@ -437,6 +437,50 @@ bool City::testPos
 		return true;
 	}	
 	return false;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : computeEmotion															   */
+/* ROLE : Calcul sur une echelle de 0 à 100 le bonheur de la Citie					   */
+/* INPUT : void																		   */
+/* INTERNAL OUTPUT : _emotion : bonheur de la Citie									   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::computeEmotion()
+{
+	double result(0);
+
+	/* ---------------------------------------------------------------------- */
+	/* Result limit : -inf / inf											  */
+	/* ---------------------------------------------------------------------- */
+	for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
+	{
+		result += (int)_citizens[nbCitizen]->GEThappiness();
+	}
+
+	/* ---------------------------------------------------------------------- */
+	/* Result limit : -2.0 / 2.0											  */
+	/* ---------------------------------------------------------------------- */
+	result /= _citizens.size();
+
+	/* ---------------------------------------------------------------------- */
+	/* Result limit : -100.0 / 100.0										  */
+	/* ---------------------------------------------------------------------- */
+	result *= 50.0;
+
+	/* ---------------------------------------------------------------------- */
+	/* Result limit : 0.0 / 200.0											  */
+	/* ---------------------------------------------------------------------- */
+	result += 100.0;
+
+	/* ---------------------------------------------------------------------- */
+	/* Result limit : 0.0 / 100.0											  */
+	/* ---------------------------------------------------------------------- */
+	result /= 2.0;
+
+	_emotion = (unsigned int)result;
 }
 
 /* *********************************************************

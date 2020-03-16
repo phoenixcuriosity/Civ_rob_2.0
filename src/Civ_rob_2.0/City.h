@@ -254,6 +254,16 @@ public:
 		unsigned int y
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : computeEmotion															   */
+	/* ROLE : Calcul sur une echelle de 0 à 100 le bonheur de la Citie					   */
+	/* INPUT : void																		   */
+	/* INTERNAL OUTPUT : _emotion : bonheur de la Citie									   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void computeEmotion();
 
 public:
 	/* *********************************************************
@@ -293,8 +303,35 @@ public:
 	 *				City::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline virtual unsigned int GETx()const { return _x; };
-	inline virtual unsigned int GETy()const { return _y; };
+	inline virtual std::string GETimage()const					{ return _image; };
+	inline virtual std::string GETname()const					{ return _name; };
+	inline virtual unsigned int GETx()const					    { return _x; };
+	inline virtual unsigned int GETy()const					    { return _y; };
+	inline virtual std::vector<Tile>& GETtile()					{ return _tile; };
+	inline virtual std::vector<Citizen*>& GETcitizens()			{ return _citizens; };
+	inline virtual unsigned int GETinfluenceLevel()const		{ return _influenceLevel; };
+	inline virtual unsigned int GETnbpop()const					{ return _nbpop; };
+	inline virtual unsigned int GETatq()const					{ return _atq; };
+	inline virtual unsigned int GETdef()const					{ return _def; };
+	inline virtual unsigned int GETemotion()const				{ return _emotion; };
+	inline virtual unsigned int GETnbstructurebuild()const		{ return _nbstructurebuild; };
+	inline virtual double GETfoodStock()const					{ return _foodStock; };
+	inline virtual double GETfoodBalance()const					{ return _foodBalance; };
+
+	inline virtual void SETimage(std::string image)							{ _image = image; };
+	inline virtual void SETname(std::string name)							{ _name = name; };
+	inline virtual void SETx(unsigned int x)								{ _x = x; };
+	inline virtual void SETy(unsigned int y)								{ _y = y; };
+	inline virtual void SETtile(std::vector<Tile>& tile)					{ _tile = tile; };
+	inline virtual void SETcitizens(std::vector<Citizen*>& citizens)		{ _citizens = citizens; };
+	inline virtual void SETinfluenceLevel(unsigned int influenceLevel)		{ _influenceLevel = influenceLevel; };
+	inline virtual void SETnbpop(unsigned int nbpop)						{ _nbpop = nbpop; };
+	inline virtual void SETatq(unsigned int atq)							{ _atq = atq; };
+	inline virtual void SETdef(unsigned int def)							{ _def = def; };
+	inline virtual void SETemotion(unsigned int emotion)					{ _emotion = emotion; };
+	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild)	{ _nbstructurebuild = nbstructurebuild; };
+	inline virtual void SETfoodStock(double foodStock)						{ _foodStock = foodStock; };
+	inline virtual void SETfoodBalance(double foodBalance)					{ _foodBalance = foodBalance; };
 
 	
 private:
@@ -312,8 +349,7 @@ private:
 	unsigned int _nbpop;
 	unsigned int _atq;
 	unsigned int _def;
-	unsigned int _nbhappy;
-	unsigned int _nbsad;
+	unsigned int _emotion;
 	unsigned int _nbstructurebuild;
 
 	double _foodStock;
