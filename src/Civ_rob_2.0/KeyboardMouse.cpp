@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.12
+	last modification on this file on version:0.20.0.5
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,12 +27,15 @@
  ********************************************************* */
 
 #include "KeyboardMouse.h"
+
 #include "civ_lib.h"
 #include "IHM.h"
 #include "SaveReload.h"
 #include "GamePlay.h"
 #include "End.h"
 #include "LoadConfig.h"
+#include "Player.h"
+#include "Utility.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -684,7 +687,7 @@ void KeyboardMouse::keySDLK_F6(Sysinfo& sysinfo)
 		}
 		GamePlay::newGameSettlerSpawn
 		(
-			sysinfo.var.s_player.tabUnit_Struct,
+			sysinfo.var.s_player.tabUnit_Template,
 			sysinfo.map,
 			sysinfo.tabplayer
 		);
@@ -1003,7 +1006,7 @@ void KeyboardMouse::keySDLK_b(Sysinfo& sysinfo)
 		);
 		break;
 	case CinState_Type::cinMainMap:
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 			City::createCity(sysinfo);
 		break;
 	default:
@@ -1214,7 +1217,7 @@ void KeyboardMouse::keySDLK_i(Sysinfo& sysinfo)
 		);
 		break;
 	case CinState_Type::cinMainMap:
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 			Unit::irrigate(sysinfo);
 		break;
 	default:
@@ -1772,7 +1775,7 @@ void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1820,7 +1823,7 @@ void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
 		);
 		break;
 	case CinState_Type::cinMainMap:
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1868,7 +1871,7 @@ void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1917,7 +1920,7 @@ void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2002,7 +2005,7 @@ void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2051,7 +2054,7 @@ void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2100,7 +2103,7 @@ void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2150,7 +2153,7 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2171,39 +2174,6 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : conditionTryToMove																		    	  */
-/* ROLE : Condition pour vouloir bouger une Unit														      */
-/* ROLE : S'il y au moins 1 joueur et qu'une Unit est sélectionné et que ...							      */
-/* ROLE : statescreen =	STATEmainmap et que select = selectmove	alors l'Unit peut essayer de bouger		      */
-/* INPUT : const Var var : structure des variables de types joueurs et Unit								      */
-/* RETURNED VALUE : bool -> false : une ou toutes les conditions ne sont pas remplies						  */
-/* RETURNED VALUE : bool -> true : toutes les conditions sont remplies										  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-bool KeyboardMouse::conditionTryToMove
-(
-	const Var var
-)
-{
-	if	(
-			State_Type::STATEmainmap == var.statescreen
-			&&
-			Select_Type::selectmove == var.select
-			&&
-			NO_PLAYER_SELECTED < var.s_player.selectplayer
-			&&
-			NO_UNIT_SELECTED < var.s_player.selectunit
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 /* *********************************************************
  *			END KeyboardMouse::STATIC::UNE TOUCHE		   *
@@ -2589,19 +2559,19 @@ bool KeyboardMouse::checkSTATEcitiemap
 
 	if (Select_Type::selectcreate == sysinfo.var.select)
 	{
-		for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+		for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 		{
-			if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Struct[i].name]
+			if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Template[i].name]
 					->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 			{
-				sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Struct[i].name;
-				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Struct[i].name,
+				sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Template[i].name;
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Template[i].name,
 					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETx(),
 					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETy(),
-					sysinfo.var.s_player.tabUnit_Struct[i].type,
-					sysinfo.var.s_player.tabUnit_Struct[i].life, sysinfo.var.s_player.tabUnit_Struct[i].atq,
-					sysinfo.var.s_player.tabUnit_Struct[i].def, sysinfo.var.s_player.tabUnit_Struct[i].movement,
-					sysinfo.var.s_player.tabUnit_Struct[i].level);
+					sysinfo.var.s_player.tabUnit_Template[i].type,
+					sysinfo.var.s_player.tabUnit_Template[i].life, sysinfo.var.s_player.tabUnit_Template[i].atq,
+					sysinfo.var.s_player.tabUnit_Template[i].def, sysinfo.var.s_player.tabUnit_Template[i].movement,
+					sysinfo.var.s_player.tabUnit_Template[i].level);
 
 				sysinfo.var.select = Select_Type::selectnothing;
 				return true;
@@ -2635,9 +2605,9 @@ void KeyboardMouse::cliqueDroit
 			case Select_Type::selectcreate:
 
 				int selectunit(NO_UNIT_SELECTED);
-				for (unsigned int p(0); (p < sysinfo.var.s_player.tabUnit_Struct.size()) && (NO_UNIT_SELECTED == selectunit); p++)
+				for (unsigned int p(0); (p < sysinfo.var.s_player.tabUnit_Template.size()) && (NO_UNIT_SELECTED == selectunit); p++)
 				{
-					if (sysinfo.var.s_player.unitNameToCreate.compare(sysinfo.var.s_player.tabUnit_Struct[p].name) == 0)
+					if (sysinfo.var.s_player.unitNameToCreate.compare(sysinfo.var.s_player.tabUnit_Template[p].name) == 0)
 					{
 						selectunit = p;
 					}
@@ -2645,10 +2615,10 @@ void KeyboardMouse::cliqueDroit
 				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit
 				(sysinfo.var.s_player.unitNameToCreate,
 					sysinfo.var.mouse.GETmouse_xNormalized(), sysinfo.var.mouse.GETmouse_yNormalized(),
-					sysinfo.var.s_player.tabUnit_Struct[selectunit].type,
-					sysinfo.var.s_player.tabUnit_Struct[selectunit].life, sysinfo.var.s_player.tabUnit_Struct[selectunit].atq,
-					sysinfo.var.s_player.tabUnit_Struct[selectunit].def, sysinfo.var.s_player.tabUnit_Struct[selectunit].movement,
-					sysinfo.var.s_player.tabUnit_Struct[selectunit].level
+					sysinfo.var.s_player.tabUnit_Template[selectunit].type,
+					sysinfo.var.s_player.tabUnit_Template[selectunit].life, sysinfo.var.s_player.tabUnit_Template[selectunit].atq,
+					sysinfo.var.s_player.tabUnit_Template[selectunit].def, sysinfo.var.s_player.tabUnit_Template[selectunit].movement,
+					sysinfo.var.s_player.tabUnit_Template[selectunit].level
 				);
 				break;
 			}
@@ -2677,7 +2647,7 @@ void KeyboardMouse::wheel(Sysinfo& sysinfo, int& wheel)
 		}
 		else if (MOUSE_SCROLL_DOWN == wheel)
 		{
-			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.tabUnit_Struct.size() - 1)
+			if (sysinfo.var.s_player.unitToCreate < sysinfo.var.s_player.tabUnit_Template.size() - 1)
 				sysinfo.var.s_player.unitToCreate++;
 		}
 		Unit::searchUnit(sysinfo.var.s_player);

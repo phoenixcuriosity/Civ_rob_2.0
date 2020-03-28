@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.12
+	last modification on this file on version:0.20.0.5
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,7 +30,6 @@
  ********************************************************* */
 
 #include "LIB.h"
-#include "Player.h"
 
 /* *********************************************************
  *						Constantes						   *
@@ -163,34 +162,6 @@ public:
 	static void afficherSupertiles
 	(
 		Sysinfo&
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : checkPlayerUnitSelection													   */
-	/* ROLE : Check si un joueur et une unitée sont selectionnés						   */
-	/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-	/* RETURNED VALUE : bool : false -> joueur et/ou unité non selectionné (==-1)		   */
-	/* RETURNED VALUE : bool : true -> joueur et unité selectionné (!=-1)				   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static bool checkPlayerUnitSelection
-	(
-		const SubcatPlayer& s_player
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : checkPlayerCitieSelection													   */
-	/* ROLE : Check si un joueur et une Citie sont selectionnés							   */
-	/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-	/* RETURNED VALUE : bool : false -> joueur et/ou Citie non selectionné (==-1)		   */
-	/* RETURNED VALUE : bool : true -> joueur et Citie selectionné (!=-1)				   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static bool checkPlayerCitieSelection
-	(
-		const SubcatPlayer& s_player
 	);
 
 	/* ----------------------------------------------------------------------------------- */

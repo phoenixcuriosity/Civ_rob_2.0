@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.9
+	last modification on this file on version:0.20.0.3
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -44,10 +44,15 @@
  ********************************************************* */
 
 #include "LIB.h"
+
 #include "Texture.h"
 #include "LTimer.h"
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
+#include "GamePlay.h"
+#include "Unit.h"
+#include "City.h"
+#include "Player.h"
 
 /* *********************************************************
  *				Calcul des Constantes					   *
@@ -76,80 +81,17 @@ const std::string configFilePath = "bin/config.xml";
 #define NO_PLAYER_SELECTED -1
 #define NO_UNIT_SELECTED -1
 #define NO_CITIE_SELECTED -1
-#define NO_APPARTENANCE -1
-#define EMPTY_STRING ""
 
 /* *********************************************************
  *						 Enum							   *
  ********************************************************* */
 
-// spécifications de la séléction CinState_Type
-enum class CinState_Type : Uint8
-{
-	cinNothing,
-	cinTitleScreen,
-	cinScreenNewGameNbPlayer,
-	cinScreenNewGameNamePlayer,
-	cinMainMap,
-};
-
-// type de sol
-enum class Ground_Type : Uint8
-{
-	error,
-	grass,
-	water,
-	deepwater,
-	dirt,
-	sand
-};
-
-// spécifications du terrain
-enum class GroundSpec_Type : Uint8
-{
-	nothing,
-	coal,
-	copper,
-	iron,
-	tree,
-	stone,
-	uranium,
-	horse,
-	fish,
-	petroleum
-};
-
-enum class Unit_Movement_Type : Uint8
-{
-	ground,
-	air,
-	water,
-	deepwater
-};
+/* N/A */
 
 /* *********************************************************
  *						Structures						   *
  ********************************************************* */
 
-//---------------------- Structure niveau 3 ---------------------------------------------------------------------------------------------------------
-struct Unit_Struct
-{
-
-	// nom de l'unité -> /bin/UNITNAME.txt
-	std::string name;
-
-	/*
-		statistiques concernant l'unité -> /bin/UNIT.txt
-	*/
-	Unit_Movement_Type type = Unit_Movement_Type::ground;
-	unsigned int life = 0;
-	unsigned int atq = 0;
-	unsigned int def = 0;
-	unsigned int movement = 0;
-	unsigned int level = 0;
-	unsigned int nbturnToBuild = 0;
-
-};
 //---------------------- Structure niveau 2 ---------------------------------------------------------------------------------------------------------
 struct SubcatPlayer
 {
@@ -197,7 +139,7 @@ struct SubcatPlayer
 	std::vector<std::string> tabPlayerName;
 
 	// tableau des statistiques par défauts des unités
-	std::vector<Unit_Struct> tabUnit_Struct;
+	std::vector<Unit_Template> tabUnit_Template;
 
 	// nombre de joueur sans nom
 	unsigned int nbNoNamePlayer = 0;
@@ -205,48 +147,7 @@ struct SubcatPlayer
 	// nombre de cité maximal différentes à créer 
 	unsigned int citieNameMaxToCreate = 0;
 };
-struct Tile
-{
 
-	// index en X de la case : en tileSize
-	Uint8 indexX = 0;
-
-	// index en Y de la case : en tileSize
-	Uint8 indexY = 0;
-
-	// index en X de la case : en pixel
-	unsigned int tile_x = 0;
-
-	// index en Y de la case : en pixel
-	unsigned int tile_y = 0;
-
-	// nom du type de sol
-	std::string tile_stringground = EMPTY_STRING;
-
-	// type de sol -> enum Ground_Type : Uint8 { noGround, grass, water, deepwater, dirt, sand};
-	Ground_Type tile_ground = Ground_Type::error;
-
-	// nom du type de spécification de la case
-	std::string tile_stringspec = EMPTY_STRING;
-
-	/* 
-		type de spécification
-		-> enum GroundSpec_Type : Uint8 { nothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum }; 
-	*/
-	GroundSpec_Type tile_spec = GroundSpec_Type::nothing;
-
-	// index d'appartenance d'un case à un joueur : appartenance neutre = -1
-	int appartenance = NO_APPARTENANCE;
-
-	// indice de nourriture de la case
-	int8_t food = -1;
-
-	// indice de production de la case
-	int8_t work = -1;
-
-	// indice financier de la case
-	int8_t gold = -1;
-};
 struct CitieMap
 {
 	unsigned int ToolbarButtonsH = 0;
@@ -322,7 +223,6 @@ struct Var
 		enum Select_Type : Uint8 
 		{ 
 			selectnothing,
-			NotToSelect,
 			selectcreate,
 			selectinspect,
 			selectmove,

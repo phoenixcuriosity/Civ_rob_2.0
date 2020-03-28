@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.5
+	last modification on this file on version:0.20.0.3
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,13 +30,14 @@
  ********************************************************* */
 
 #include "LIB.h"
-#include "civ_lib.h"
+#include "Unit.h"
 #include "Texture.h"
 
 /* *********************************************************
  *						Constantes						   *
  ********************************************************* */
 
+/* Define that the compared strings are identical */
 #define IDENTICAL_STRINGS 0
 
 /* *********************************************************
@@ -173,14 +174,14 @@ public:
 	/* NAME : loadUnitAndSpec															   */
 	/* ROLE : Chargement des informations concernant les unités à partir d'un fichier	   */
 	/* INPUT : const std::string& : nom du fichier à ouvrir								   */
-	/* OUTPUT : std::vector<Unit_Struct>& : Vecteur des Unit							   */
+	/* OUTPUT : std::vector<Unit_Template>& : Vecteur des Unit							   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static void loadUnitAndSpec
 	(
 		const std::string& UNIT,
-		std::vector<Unit_Struct>& tabUnit_Struct
+		std::vector<Unit_Template>& tabUnit_Template
 	);
 
 	static Unit_Movement_Type xmlGiveMovementType

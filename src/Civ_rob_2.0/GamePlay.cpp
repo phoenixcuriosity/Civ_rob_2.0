@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.10
+	last modification on this file on version:0.20.0.3
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,10 +27,10 @@
  ********************************************************* */
 
 #include "GamePlay.h"
+
 #include "IHM.h"
-#include "SaveReload.h"
-#include "KeyboardMouse.h"
 #include "LoadConfig.h"
+#include "civ_lib.h"
 
 /* *********************************************************
  *			START GamePlay::STATIC::NEW-GAME			   *
@@ -132,7 +132,7 @@ void GamePlay::newGame
 	groundGen(sysinfo.map, sysinfo.screen.screenWidth);
 	newGameSettlerSpawn
 		(
-			sysinfo.var.s_player.tabUnit_Struct,
+			sysinfo.var.s_player.tabUnit_Template,
 			sysinfo.map,
 			sysinfo.tabplayer
 		);
@@ -638,7 +638,7 @@ void GamePlay::tileAffectation
 /* ----------------------------------------------------------------------------------- */
 /* NAME : newGameSettlerSpawn														   */
 /* ROLE : Création des position pour les settlers de chaque joueurs					   */
-/* INPUT : const std::vector<Unit_Struct>& : tableau des statistiques ...			   */
+/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
 /* INPUT : ...  par défauts des unités												   */
 /* INPUT : const struct Map& map : structure globale de la map						   */
 /* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
@@ -647,7 +647,7 @@ void GamePlay::tileAffectation
 /* ----------------------------------------------------------------------------------- */
 void GamePlay::newGameSettlerSpawn
 (
-	const std::vector<Unit_Struct>& tabUnit_Struct,
+	const std::vector<Unit_Template>& tabUnit_Template,
 	const Map& map,
 	std::vector<Player*>& tabplayer
 )
@@ -658,9 +658,9 @@ void GamePlay::newGameSettlerSpawn
 	/* ---------------------------------------------------------------------- */
 	unsigned int selectunit(0);
 	bool continuer(true);
-	for (unsigned int p(0); (p < tabUnit_Struct.size()) && (continuer); p++)
+	for (unsigned int p(0); (p < tabUnit_Template.size()) && (continuer); p++)
 	{
-		if (tabUnit_Struct[p].name.compare("settler") == 0)
+		if (tabUnit_Template[p].name.compare("settler") == 0)
 		{
 			selectunit = p;
 			continuer = false;
@@ -690,12 +690,12 @@ void GamePlay::newGameSettlerSpawn
 		(	"settler",
 			tabRandom[i].x,
 			tabRandom[i].y,
-			tabUnit_Struct[selectunit].type,
-			tabUnit_Struct[selectunit].life,
-			tabUnit_Struct[selectunit].atq,
-			tabUnit_Struct[selectunit].def,
-			tabUnit_Struct[selectunit].movement,
-			tabUnit_Struct[selectunit].level);
+			tabUnit_Template[selectunit].type,
+			tabUnit_Template[selectunit].life,
+			tabUnit_Template[selectunit].atq,
+			tabUnit_Template[selectunit].def,
+			tabUnit_Template[selectunit].movement,
+			tabUnit_Template[selectunit].level);
 	}
 }
 
@@ -912,6 +912,7 @@ void GamePlay::nextTurn
 		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 		{
 			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn();
+			sysinfo.tabplayer[i]->GETtheCity(j)->computeEmotion();
 		}
 	}
 	sysinfo.var.nbturn++;

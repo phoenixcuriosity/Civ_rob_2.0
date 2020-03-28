@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.20.0.4
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,204 +22,219 @@
 
 */
 
-#ifndef Player_H
-#define Player_H
+#ifndef Citizen_H
+#define Citizen_H
 
 /* *********************************************************
  *						Includes						   *
  ********************************************************* */
 
 #include "LIB.h"
-#include "Unit.h"
 
 /* *********************************************************
- *						Constantes						   *
+ *					 Constantes							   *
+ ********************************************************* */
+
+/* N/A */
+
+/* *********************************************************
+ *						 Structs						   *
  ********************************************************* */
 
  /* N/A */
 
 /* *********************************************************
- *						 Enum							   *
+ *							 Enum						   *
  ********************************************************* */
 
-/* N/A */
+enum class Religion_Type : Uint8
+{
+	catholic,
+	protestant,
+	reformed,
+	anglican,
+	orthodox,
+	coptic,
+	sunni,
+	shiite,
+	ibadi,
+	buddhism,
+	vajrayana,
+	mahayana,
+	confucianism,
+	shinto,
+	hinduism,
+	sikhism,
+	animism,
+	shamanism,
+	totemism,
+	inti,
+	nahuatl,
+	jewish,
+	zoroastrian
+};
 
-/* *********************************************************
- *						Structures						   *
- ********************************************************* */
-
-/* N/A */
+enum class Emotion_Type : int8_t
+{
+	ecstatic	=	2,
+	happy		=	1,
+	neutre		=	0,
+	sad			=  -1,
+	angry		=  -2
+};
 
 /* *********************************************************
  *						 Classes						   *
  ********************************************************* */
 
-class Player
+class Citizen
 {
 public:
 	/* *********************************************************
-	 *					Player::METHODS						   *
+	 *					Citizen::STATIC						   *
 	 ********************************************************* */
-	 
+
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : Player																	   */
-	/* ROLE : Constructeur par défaut													   */
+	/* NAME : placeCitizen																   */
+	/* ROLE : Placement d'un Citizen en fonction des cases occup�es de la City			   */
+	/* INPUT : std::vector<Tile> : carte de la City										   */
+	/* INPUT : std::vector<Citizen> : tableau de Citizen								   */
+	/* INPUT : int& _food, int& _work, int& _gold : spec de la case						   */
+	/* RETURNED VALUE    : unsigned int : la place allou�e								   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static unsigned int placeCitizen
+	(
+		std::vector<Tile>& tile,
+		std::vector<Citizen*>& citizens,
+		int& _food,
+		int& _work,
+		int& _gold
+	);
+
+
+	/* *********************************************************
+	 *					Citizen::METHODS					   *
+	 ********************************************************* */
+
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : Citizen																	   */
+	/* ROLE : Constructeur par d�faut													   */
 	/* INPUT : void																		   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	Player();
+	Citizen();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : Player																	   */
-	/* ROLE : Constructeur par nom du joueur											   */
-	/* INPUT : const std::string&														   */
+	/* NAME : Citizen																	   */
+	/* ROLE : Constructeur par une Tile													   */
+	/* INPUT : Tile tile : tile centrale de la Citie									   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	Player
+	Citizen
 	(
-		const std::string&
+		Tile tile
 	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : ~Player																	   */
-	/* ROLE : Initialisation d'une Unit vide											   */
+	/* NAME : Citizen																	   */
+	/* ROLE : Constructeur par une Tile													   */
+	/* INPUT : std::vector<Tile>& tile : tableau de Tile de la Citie					   */
+	/* INPUT : std::vector<Citizen*>& citizens : tableau de Citizens					   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	~Player();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : operator=																	   */
-	/* ROLE : Redéfinition de l'opérateur =												   */
-	/* INPUT : const Player& player : l'objet à copier									   */
-	/* RETURNED VALUE : Player&	: l'objet recopié										   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	Player& operator=
+	Citizen
 	(
-		const Player& player
+		std::vector<Tile>& tile,
+		std::vector<Citizen*>& citizens
 	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : deletePlayer																   */
-	/* ROLE : Destruction de l'objet et de ses ptr										   */
+	/* NAME : ~Citizen																	   */
+	/* ROLE : Destructeur																   */
 	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void deletePlayer();
+	~Citizen();
+
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : addEmptyUnit																   */
-	/* ROLE : Initialisation d'une Unit vide											   */
-	/* INPUT : void																		   */
+	/* NAME : placeCitizenWithMouse														   */
+	/* ROLE : TODO																		   */
+	/* INPUT : void 																	   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void placeCitizenWithMouse();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficher																	   */
+	/* ROLE : affichage du citizen sur la case de la citie map							   */
+	/* INPUT : std::unordered_map<std::string,Texture*>& : tableau de Texture de la Citie  */
+	/* INPUT : unsigned int x : index en x du Citizen									   */
+	/* INPUT : unsigned int y : index en y du Citizen									   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void addEmptyUnit();
-	
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : addUnit																	   */
-	/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
-	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void addUnit
+	virtual void afficher
 	(
-		const std::string &name,
+		std::unordered_map<std::string, Texture*>& citieMap,
 		unsigned int x,
-		unsigned int y,
-		Unit_Movement_Type movementType,
-		unsigned int life,
-		unsigned int atq,
-		unsigned int def,
-		unsigned int move,
-		unsigned int level
-	);	
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : deleteUnit																   */
-	/* ROLE : Suppression d'une Unit du joueur											   */
-	/* INPUT : unsigned int : index de Unit dans le tableau								   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void deleteUnit
-	(
-		unsigned int index
+		unsigned int y
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : addCity																	   */
-	/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
-	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void addCity
-	(
-		const std::string &,
-		unsigned int,
-		unsigned int,
-		std::vector<Tile>& tiles
-	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : deleteCity																   */
-	/* ROLE : Suppression d'une City du joueur											   */
-	/* INPUT : unsigned int : index de City dans le tableau								   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void deleteCity
-	(
-		unsigned int
-	);
 
-	
 public:
 	/* *********************************************************
-	 *				Player::METHODS::GET/SET				   *
+	 *				Citizen::METHODS::GET/SET				   *
 	 ********************************************************* */
-	 
-	 
-	inline virtual std::string GETname() const					{ return _name; };
-	inline virtual Unit* GETtheUnit(unsigned int index) const	{ return _tabUnit[index]; };
-	inline virtual std::vector<Unit*> GETtabUnit() const		{ return _tabUnit; };
-	inline virtual City* GETtheCity(unsigned int index) const	{ return _tabCity[index]; };
-	inline virtual std::vector<City*> GETtabCity() const		{ return _tabCity; };
 
-	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
+	inline void SETtileOccupied(unsigned int tileOccupied) { _tileOccupied = tileOccupied; };
+	inline void SEThappiness(Emotion_Type happiness) { _happiness = happiness; };
+	inline void SETfood(int food) { _food = food; };
+	inline void SETwork(int work) { _work = work; };
+	inline void SETgold(int gold) { _gold = gold; };
+	inline void SETrevolt(int revolt) { _revolt = revolt; };
+	inline void SETreligion(Religion_Type religion) { _religion = religion; };
+	inline void SETplace(bool place) { _place = place; };
 
-	
-	
+	inline unsigned int GETtileOccupied()const { return _tileOccupied; };
+	inline Emotion_Type GEThappiness()const { return _happiness; };
+	inline int GETfood()const { return _food; };
+	inline int GETwork()const { return _work; };
+	inline int GETgold()const { return _gold; };
+	inline int GETrevolt()const { return _revolt; };
+	inline Religion_Type GETreligion()const { return _religion; };
+	inline bool GETplace()const { return _place; };
+
 private:
 	/* *********************************************************
-	 *					Player::ATTRIBUTS					   *
+	 *					Citizen::ATTRIBUTS					   *
 	 ********************************************************* */
-	 
-	 
-	std::string _name;
-	std::vector<Unit*> _tabUnit;
-	std::vector<City*> _tabCity;
+
+	unsigned int _tileOccupied;
+	Emotion_Type _happiness;
+	int _food;
+	int _work;
+	int _gold;
+	int _revolt;
+	Religion_Type _religion;
+
+	bool _place;
 };
 
-
-
-#endif /* Player_H */
-
+#endif /* Citizen_H */
 
 /*
-*	End Of File : Player.h
+*	End Of File : Citizen.h
 */

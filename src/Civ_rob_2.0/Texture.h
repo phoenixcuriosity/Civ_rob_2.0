@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.10
+	last modification on this file on version:0.20.0.3
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,21 +33,22 @@
 #include "LIB.h"
 
 /* *********************************************************
- *					 Constantes							   *
+ *						Constants						   *
  ********************************************************* */
 
-//--- Constantes concernant la taille des différents tableaux  --------------------------------------------------------------------------------------
+//--- Constants related to the size of arrays ---------------------------------------------------------------------------------------------------
 
-// nombre maximal de polices de la font (ici arial)
+/* Define the max number of font */
 const Uint8 MAX_FONT = 160;
 
+/* Define a max angle to rotate Texture */
 const Uint16 MAX_ANGLE = 360;
 
-//--- Constantes concernant la SDL  -----------------------------------------------------------------------------------------------------------------
+//--- Constants related to SDL  -----------------------------------------------------------------------------------------------------------------
 
 /*
-	SDL_Color name {Red, Green, Blue, Alpha (transparance)}
-	chaque parametre est codé sur 8 bit -> Uint8  (de 0 à 255)
+	SDL_Color name {Red, Green, Blue, Alpha (transparency)}
+	Each parameter uses 8 bits -> Uint8  (from 0 to 255)
 */
 
 const SDL_Color Black = { 0, 0, 0, 255 };
@@ -60,88 +61,78 @@ const SDL_Color WriteColorButton = { 255, 64, 0, 255 }; // orange
 const SDL_Color BackColorButton = { 64, 64, 64, 255 }; // gris
 const SDL_Color NoColor = { 0, 0, 0, 0 };
 
-// font utilisée pour ce programme
+// font use for the game
 const std::string fontFile = "arial.ttf";
 
+//--- Constants related to the screen  ----------------------------------------------------------------------------------------------------------
+
+/* Define a pixel out of range of the screen on x */
 #define SCREEN_MIN_X_OUT_OF_RANGE -1
+
+/* Define a pixel out of range of the screen on y */
 #define SCREEN_MIN_Y_OUT_OF_RANGE -1
 
 /* *********************************************************
  *					 Enum								   *
  ********************************************************* */
 
- // différents état de l'écran
+// Define all State of the game, relate to screen
 enum class State_Type : Uint8
 {
-	error,
-	STATEtitleScreen,
-	STATEscreennewgame,
-	STATEreload,
-	STATEmainmap,
-	STATEscience,
-	STATEcitiemap
+	error,					/* ### Reserved on error detection ### */
+	STATEtitleScreen,		/* Title screen : first screen selection */
+	STATEscreennewgame,		/* New game screen : selection of options of a new game */
+	STATEreload,			/* Load screen : selection of saves to load */
+	STATEmainmap,			/* Maip map screen */
+	STATEscience,			/* Science screen ### Not implemented as of 0.20.0.3  ### */
+	STATEcitiemap			/* Citie map screen : Unit and buildings creation */
 };
 
-// spécifications de la séléction
+// Define all Selection in the game, relate to mouse click
 enum class Select_Type : Uint8
 {
-	selectnothing,
-	NotToSelect,
-	selectcreate,
-	selectinspect,
-	selectmove,
-	selectmoveCitizen
+	selectnothing,			/* Nothing is selected */
+	selectcreate,			/* ### Reserved on debug as of 0.20.0.3 ### */
+	selectinspect,			/* ### Reserved on debug as of 0.20.0.3 ### */
+	selectmove,				/* Selection to move a Unit */
+	selectmoveCitizen		/* ### Not use as of 0.20.0.3 ### */
 };
 
-  //--- enum concernant les objets Texture  -----------------------------------------------------------------------------------------------------------
+//--- enum related to Texture -----------------------------------------------------------------------------------------------------------
 
-  /*
-	  * type de texte :
-	  *	-> blended : sans couleur de fond
-	  *	-> shaded : avec une couleur de fond
-  */
+/* Define Text type in SDL_ttf */
 enum class Texte_Type : Uint8 
 {
-	blended,
-	shaded
+	blended,	/* No background color */
+	shaded		/* With background color */
 };
 
-/*
-	* type de transparance :
-	*	-> 0 transparance totale
-	*	-> 255 totalement visible
-*/
+/* Define transparency type in SDL_ttf */
 enum Transparance_Type : Uint8
 { 
-	transparent = 0,
-	semiTransparent = 128,
-	nonTransparent = 255
+	transparent = 0,			/* Total transparency */
+	semiTransparent = 128,		/* Half transparency */
+	nonTransparent = 255		/* No transparency  */
 };
 
-/*
-	* type de centrage :
-	*	-> nocenter : les positions x et y ne changent pas
-	*	-> center_x : la position y ne change pas et centre la position x en focntion de la longueur du texte
-	*	-> center_y : la position x ne change pas et centre la position y en focntion de hauteur du texte
-	*	-> center : centre totalement le texte en fonction de sa longueur et de sa hauteur
-*/
+/* Define center type for Texture to print on the screen */
 enum class Center_Type : Uint8
 {
-	nocenter,
-	center_x,
-	center_y,
-	center
+	nocenter,	/* Positions x and y are unchanged */
+	center_x,	/* Positions y is unchanged and x is center depending on the length of the texte */
+	center_y,	/* Positions x is unchanged and y is center depending on the height of the texte */
+	center		/* Positions x and y are center depending on the length and the height of the texte */
 };
 
-/*
-	* type de rotation des textures
-	* valeur en degrès (min 0 / max 359)
-	* par défaut les textures n'ont pas d'angle
-*/
+/* 
+ * Define rotation type to apply on Texture
+ * The angle is in degrees (from 0 to 360)
+ * ### TODO as of 0.20.0.3 : change type to double ###
+ */
 enum Rotation_Type : Uint16 
 {
-	no_angle,
-	inverse = 180
+	no_angle,			/* No angle */
+	inverse = 180		/* Rotate the Texture by 180 degrees */
 };
 
 
@@ -164,22 +155,26 @@ public:
 	 *					Texture::STATIC						   *
 	 ********************************************************* */
 
-	 
-	/*
-	 * NAME : loadImage
-	 * ROLE : Allocation dynamique d'une Texture avec ses caractéristiques
-	 * INPUT : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
-	 * INPUT : std::vector<Texture*>& tabTexture : le tableau dans lequel sera stocké la Texture (allocation dynamique)
-	 * INPUT : Uint8 stateScreen, Uint8 select : les variables qui décrivent les différents état de l'écran et les spécifications de la séléction
-	 * INPUT : std::string path : le chemin d'accès ainsi que le nom de l'image à partir du fichier (inclure le type .png , .bmp ...)
-     * INPUT : std::string msg : le nom qui permettra d'identifier la Texture dans le tableau
-	 * INPUT : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
-	 * INPUT : int x, int y	: les valeurs en pixel de la future position
-	 * INPUT : unsigned int w, unsigned int h : les valeurs de longueur et de largeur permettant de changer la définition de l'image originale sinon mettre NULL
-	 * INPUT : Uint16 angle : enum Uint16
-	 * INPUT : Uint8 cnt : le type de centrage -> enum Center_Type
-	 * RETURNED VALUE    : void
-	 */
+
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : loadImage																			*/
+	/* ROLE : Dynamic allocation of the Texture with specifications								*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* OUT : std::unordered_map<std::string, Texture*>& : map where the Texture will be stored  */
+	/* IN : Uint8 stateScreen : enum class State_Type											*/
+	/* IN : Uint8 select : enum class Select_Type												*/
+	/* IN : std::string path : Path to the picture											    */
+	/* IN : std::string msg : Name of the Texture									  		    */
+	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : unsigned int w : length of the Texture (compute length of Picture if w == 0)	    */
+	/* IN : unsigned int h : height of the Texture (compute height of Picture if h == 0)	    */
+	/* IN : Uint16 angle : enum Rotation_Type : will compute modulo if over 360				    */
+	/* IN : Uint8 cnt : enum class Center_Type											        */
+	/* RETURNED VALUE    : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	static void loadImage
 	(
 		SDL_Renderer*& renderer,

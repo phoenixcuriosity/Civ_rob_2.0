@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.22
+	last modification on this file on version:0.20.0.5
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,10 +27,11 @@
  ********************************************************* */
 
 #include "IHM.h"
-#include "GamePlay.h"
-#include "SaveReload.h"
+
 #include "LoadConfig.h"
 #include "End.h"
+#include "civ_lib.h"
+#include "Utility.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -353,24 +354,22 @@ void IHM::mainmap
 	switch (sysinfo.var.select)
 	{
 	case Select_Type::selectcreate:
+#ifdef _DEBUG_MODE
 		/* ---------------------------------------------------------------------- */
 		/* Affiche les unités pour rendre l'unité à créer						  */
 		/* ---------------------------------------------------------------------- */
-		if (sysinfo.var.s_player.unitNameToCreate.compare(EMPTY_STRING) != 0)
+		if (sysinfo.var.s_player.unitNameToCreate.compare(EMPTY_STRING) != IDENTICAL_STRINGS)
 		{
 			sysinfo.allTextures.unit[sysinfo.var.s_player.unitNameToCreate]
 				->render(100, 432);
 		}
-		else
-		{
-			/* N/A */
-		}
+#endif // DEBUG_MODE
 		break;
 	case Select_Type::selectmove:
 		/* ---------------------------------------------------------------------- */
 		/* Selectionne l'unité à faire bouger	 								  */
 		/* ---------------------------------------------------------------------- */
-		if	(checkPlayerUnitSelection(sysinfo.var.s_player))
+		if	(Utility::checkPlayerUnitSelection(sysinfo.var.s_player))
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 				->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
@@ -520,62 +519,6 @@ void IHM::afficherSupertiles
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-/* NAME : checkPlayerUnitSelection													   */
-/* ROLE : Check si un joueur et une unitée sont selectionnés						   */
-/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-/* RETURNED VALUE : bool : false -> joueur et/ou unité non selectionné (==-1)		   */
-/* RETURNED VALUE : bool : true -> joueur et unité selectionné (!=-1)				   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-bool IHM::checkPlayerUnitSelection
-(
-	const SubcatPlayer& s_player
-)
-{
-	if  (
-			NO_PLAYER_SELECTED < s_player.selectplayer
-			&&
-			NO_UNIT_SELECTED < s_player.selectunit
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : checkPlayerCitieSelection													   */
-/* ROLE : Check si un joueur et une Citie sont selectionnés							   */
-/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-/* RETURNED VALUE : bool : false -> joueur et/ou Citie non selectionné (==-1)		   */
-/* RETURNED VALUE : bool : true -> joueur et Citie selectionné (!=-1)				   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-bool IHM::checkPlayerCitieSelection
-(
-	const SubcatPlayer& s_player
-)
-{
-	if	(
-			NO_PLAYER_SELECTED < s_player.selectplayer
-			&&
-			NO_CITIE_SELECTED < s_player.selectCitie
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : citiemap																	   */
 /* ROLE : Affichage de la fenetre citiemap											   */
 /* ROLE : fonctionnement selon l'état : enum State_Type = STATEcitiemap				   */
@@ -622,10 +565,10 @@ void IHM::citiemap
 			if	(
 					((unsigned __int64)sysinfo.var.s_player.unitToCreate + j)
 					<
-					sysinfo.var.s_player.tabUnit_Struct.size()
+					sysinfo.var.s_player.tabUnit_Template.size()
 				)
 			{
-				buildName = sysinfo.var.s_player.tabUnit_Struct
+				buildName = sysinfo.var.s_player.tabUnit_Template
 					[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].name;
 			}	
 			else
@@ -638,10 +581,10 @@ void IHM::citiemap
 			sysinfo.allTextures.unit[buildName]
 				->render((sysinfo.screen.screenWidth / 2) - 50, initspace);
 			sysinfo.allTextes.citieMap[
-				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].life) +
-				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].atq) +
-				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].def) +
-				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].movement)]
+				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].life) +
+				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].atq) +
+				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].def) +
+				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].movement)]
 				->render((sysinfo.screen.screenWidth / 2) + 200, initspace);
 		}
 

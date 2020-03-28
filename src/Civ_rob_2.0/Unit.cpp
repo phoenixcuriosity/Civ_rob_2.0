@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.11
+	last modification on this file on version:0.20.0.3
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,9 +27,10 @@
  ********************************************************* */
 
 #include "Unit.h"
+
 #include "IHM.h"
 #include "LoadConfig.h"
-#include "GamePlay.h"
+#include "civ_lib.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -52,7 +53,7 @@ void Unit::searchUnit
 	SubcatPlayer& s_player
 )
 {
-	s_player.unitNameToCreate = s_player.tabUnit_Struct[s_player.unitToCreate].name;
+	s_player.unitNameToCreate = s_player.tabUnit_Template[s_player.unitToCreate].name;
 }
 
 /* ----------------------------------------------------------------------------------- */
