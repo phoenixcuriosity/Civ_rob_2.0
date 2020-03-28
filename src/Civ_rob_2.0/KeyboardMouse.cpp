@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.13
+	last modification on this file on version:0.20.0.5
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,6 +27,7 @@
  ********************************************************* */
 
 #include "KeyboardMouse.h"
+
 #include "civ_lib.h"
 #include "IHM.h"
 #include "SaveReload.h"
@@ -34,6 +35,7 @@
 #include "End.h"
 #include "LoadConfig.h"
 #include "Player.h"
+#include "Utility.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -1004,7 +1006,7 @@ void KeyboardMouse::keySDLK_b(Sysinfo& sysinfo)
 		);
 		break;
 	case CinState_Type::cinMainMap:
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 			City::createCity(sysinfo);
 		break;
 	default:
@@ -1215,7 +1217,7 @@ void KeyboardMouse::keySDLK_i(Sysinfo& sysinfo)
 		);
 		break;
 	case CinState_Type::cinMainMap:
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 			Unit::irrigate(sysinfo);
 		break;
 	default:
@@ -1773,7 +1775,7 @@ void KeyboardMouse::keySDLK_KP_1(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1821,7 +1823,7 @@ void KeyboardMouse::keySDLK_KP_2(Sysinfo& sysinfo)
 		);
 		break;
 	case CinState_Type::cinMainMap:
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1869,7 +1871,7 @@ void KeyboardMouse::keySDLK_KP_3(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -1918,7 +1920,7 @@ void KeyboardMouse::keySDLK_KP_4(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2003,7 +2005,7 @@ void KeyboardMouse::keySDLK_KP_6(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2052,7 +2054,7 @@ void KeyboardMouse::keySDLK_KP_7(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2101,7 +2103,7 @@ void KeyboardMouse::keySDLK_KP_8(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2151,7 +2153,7 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 		break;
 	case CinState_Type::cinMainMap:
 
-		if (conditionTryToMove(sysinfo.var))
+		if (Utility::conditionTryToMove(sysinfo.var))
 		{
 			Unit::tryToMove
 			(
@@ -2172,39 +2174,6 @@ void KeyboardMouse::keySDLK_KP_9(Sysinfo& sysinfo)
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : conditionTryToMove																		    	  */
-/* ROLE : Condition pour vouloir bouger une Unit														      */
-/* ROLE : S'il y au moins 1 joueur et qu'une Unit est sélectionné et que ...							      */
-/* ROLE : statescreen =	STATEmainmap et que select = selectmove	alors l'Unit peut essayer de bouger		      */
-/* INPUT : const Var var : structure des variables de types joueurs et Unit								      */
-/* RETURNED VALUE : bool -> false : une ou toutes les conditions ne sont pas remplies						  */
-/* RETURNED VALUE : bool -> true : toutes les conditions sont remplies										  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-bool KeyboardMouse::conditionTryToMove
-(
-	const Var var
-)
-{
-	if	(
-			State_Type::STATEmainmap == var.statescreen
-			&&
-			Select_Type::selectmove == var.select
-			&&
-			NO_PLAYER_SELECTED < var.s_player.selectplayer
-			&&
-			NO_UNIT_SELECTED < var.s_player.selectunit
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 /* *********************************************************
  *			END KeyboardMouse::STATIC::UNE TOUCHE		   *

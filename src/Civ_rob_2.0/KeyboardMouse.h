@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.7
+	last modification on this file on version:0.20.0.5
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -200,22 +200,6 @@ public:
 	static void keySDLK_KP_7(Sysinfo&);
 	static void keySDLK_KP_8(Sysinfo&);
 	static void keySDLK_KP_9(Sysinfo&);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : conditionTryToMove																		    	  */
-	/* ROLE : Condition pour vouloir bouger une Unit														      */
-	/* ROLE : S'il y au moins 1 joueur et qu'une Unit est sélectionné et que ...							      */
-	/* ROLE : statescreen =	STATEmainmap et que select = selectmove	alors l'Unit peut essayer de bouger		      */
-	/* INPUT : const Var var : structure des variables de types joueurs et Unit								      */
-	/* RETURNED VALUE : bool -> false : une ou toutes les conditions ne sont pas remplies						  */
-	/* RETURNED VALUE : bool -> true : toutes les conditions sont remplies										  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static bool conditionTryToMove
-	(
-		const Var var
-	);
 
 
 public:

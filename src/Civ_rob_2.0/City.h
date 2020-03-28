@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.4
+	last modification on this file on version:0.20.0.5
 	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
@@ -59,7 +59,7 @@ const Uint8 MAX_CITY_PER_PLAYER = 5;
  *							 Enum						   *
  ********************************************************* */
 
-
+ /* N/A */
 
 /* *********************************************************
  *						 Classes						   *

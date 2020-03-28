@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.23
+	last modification on this file on version:0.20.0.5
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,7 @@
 #include "LoadConfig.h"
 #include "End.h"
 #include "civ_lib.h"
+#include "Utility.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -368,7 +369,7 @@ void IHM::mainmap
 		/* ---------------------------------------------------------------------- */
 		/* Selectionne l'unité à faire bouger	 								  */
 		/* ---------------------------------------------------------------------- */
-		if	(checkPlayerUnitSelection(sysinfo.var.s_player))
+		if	(Utility::checkPlayerUnitSelection(sysinfo.var.s_player))
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 				->GETtheUnit(sysinfo.var.s_player.selectunit)->cmpblit();
@@ -514,62 +515,6 @@ void IHM::afficherSupertiles
 	//t2 = clock();
 	//std::cout << std::endl << "temps d'execution de alwaysrender : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : checkPlayerUnitSelection													   */
-/* ROLE : Check si un joueur et une unitée sont selectionnés						   */
-/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-/* RETURNED VALUE : bool : false -> joueur et/ou unité non selectionné (==-1)		   */
-/* RETURNED VALUE : bool : true -> joueur et unité selectionné (!=-1)				   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-bool IHM::checkPlayerUnitSelection
-(
-	const SubcatPlayer& s_player
-)
-{
-	if  (
-			NO_PLAYER_SELECTED < s_player.selectplayer
-			&&
-			NO_UNIT_SELECTED < s_player.selectunit
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : checkPlayerCitieSelection													   */
-/* ROLE : Check si un joueur et une Citie sont selectionnés							   */
-/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-/* RETURNED VALUE : bool : false -> joueur et/ou Citie non selectionné (==-1)		   */
-/* RETURNED VALUE : bool : true -> joueur et Citie selectionné (!=-1)				   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-bool IHM::checkPlayerCitieSelection
-(
-	const SubcatPlayer& s_player
-)
-{
-	if	(
-			NO_PLAYER_SELECTED < s_player.selectplayer
-			&&
-			NO_CITIE_SELECTED < s_player.selectCitie
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 /* ----------------------------------------------------------------------------------- */
