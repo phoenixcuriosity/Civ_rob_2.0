@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.4
+	last modification on this file on version:0.20.0.3
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -69,7 +69,7 @@
  *					Structures							   *
  ********************************************************* */
 
-typedef struct Unit_Struct Unit_Struct;
+typedef struct Unit_Template Unit_Template;
 typedef struct SubcatPlayer SubcatPlayer;
 typedef struct Tile Tile;
 typedef struct CitieMap CitieMap;
@@ -82,8 +82,10 @@ typedef struct AllTextes AllTextes;
 typedef struct AllButtons AllButtons;
 typedef struct Sysinfo Sysinfo;
 
+typedef struct randomPos randomPos;
+
 /* *********************************************************
- *					Classes								   *
+ *						Classes							   *
  ********************************************************* */
 
 class IHM;
@@ -110,6 +112,8 @@ typedef std::unordered_map<std::string, Texture*>		MapTexture;
 typedef std::unordered_map<std::string, Texte*>			MapTexte;
 typedef std::unordered_map<std::string, ButtonTexte*>	MapButtonTexte;
 typedef std::vector<Player*>							TabPlayer;
+
+#define EMPTY_STRING ""
 
 #endif
 

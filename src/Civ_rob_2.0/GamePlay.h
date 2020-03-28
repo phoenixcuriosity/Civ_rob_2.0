@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.4
+	last modification on this file on version:0.20.0.3
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,19 +29,17 @@
  *						Includes						   *
  ********************************************************* */
 
-/* For struct Sysinfo and derived structs */
 #include "LIB.h"
-#include "civ_lib.h"
 
 /* *********************************************************
  *						Constantes						   *
  ********************************************************* */
 
- /* MAP -> taille max - min de la mer */
+ /* MAP -> Max size - Min size of the map for sea borders */
 const Uint8 MAP_BORDER_MAX = 4;
 const Uint8 MAP_BORDER_MIN = 1;
 
-/* MAP -> valeur deep_water */
+/* MAP -> value deep_water */
 const Uint8 MAP_BORDER_ZERO = 0;
 
 /* MAP_GEN_RANDOM */
@@ -68,21 +66,90 @@ const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
 /* Minimum space beetween two or more settlers */
 const Uint8 MIN_SPACE_BETWEEN_SETTLER = 16;
 
+/* The tile is not own by a player */
+#define NO_APPARTENANCE -1
+
 /* *********************************************************
  *						 Enum							   *
  ********************************************************* */
 
-/* N/A */
+// Define Ground type use on the map
+enum class Ground_Type : Uint8
+{
+	error,			/* ### Reserved on error detection ### */
+	grass,			
+	water,
+	deepwater,
+	dirt,			/* ### Not use as of 0.20.0.3 ### */
+	sand			/* ### Not use as of 0.20.0.3 ### */
+};
+
+// Define specification for a tile on the map
+enum class GroundSpec_Type : Uint8
+{
+	nothing,		/* The Tile has no specification */
+	coal,
+	copper,
+	iron,
+	tree,
+	stone,
+	uranium,
+	horse,
+	fish,
+	petroleum
+};
 
 /* *********************************************************
  *						 Structs						   *
  ********************************************************* */
 
+struct Tile
+{
+
+	// index en X de la case : en tileSize
+	Uint8 indexX = 0;
+
+	// index en Y de la case : en tileSize
+	Uint8 indexY = 0;
+
+	// index en X de la case : en pixel
+	unsigned int tile_x = 0;
+
+	// index en Y de la case : en pixel
+	unsigned int tile_y = 0;
+
+	// nom du type de sol
+	std::string tile_stringground = EMPTY_STRING;
+
+	// type de sol -> enum Ground_Type : Uint8 { noGround, grass, water, deepwater, dirt, sand};
+	Ground_Type tile_ground = Ground_Type::error;
+
+	// nom du type de spécification de la case
+	std::string tile_stringspec = EMPTY_STRING;
+
+	/*
+		type de spécification
+		-> enum GroundSpec_Type : Uint8 { nothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum };
+	*/
+	GroundSpec_Type tile_spec = GroundSpec_Type::nothing;
+
+	// index d'appartenance d'un case à un joueur : appartenance neutre = -1
+	int appartenance = NO_APPARTENANCE;
+
+	// indice de nourriture de la case
+	int8_t food = -1;
+
+	// indice de production de la case
+	int8_t work = -1;
+
+	// indice financier de la case
+	int8_t gold = -1;
+};
+
 /* ---------------------------------------------------------------------- */
 /* Structure d'un couple de positions									  */
 /* Positions en x et y permettant le spawn des settlers					  */
 /* ---------------------------------------------------------------------- */
-typedef struct randomPos randomPos;
 struct randomPos
 {
 	unsigned int x;
@@ -209,7 +276,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : newGameSettlerSpawn														   */
 	/* ROLE : Création des position pour les settlers de chaque joueurs					   */
-	/* INPUT : const std::vector<Unit_Struct>& : tableau des statistiques ...			   */
+	/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
 	/* INPUT : ...  par défauts des unités												   */
 	/* INPUT : const struct Map& map : structure globale de la map						   */
 	/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
@@ -218,7 +285,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static void newGameSettlerSpawn
 	(
-		const std::vector<Unit_Struct>& tabUnit_Struct,
+		const std::vector<Unit_Template>& tabUnit_Template,
 		const Map& map,
 		std::vector<Player*>& tabplayer
 	);

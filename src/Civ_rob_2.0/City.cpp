@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.2
-	file version : 1.12
+	last modification on this file on version:0.20.0.3
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,9 +27,10 @@
  ********************************************************* */
 
 #include "City.h"
+
 #include "IHM.h"
 #include "LoadConfig.h"
-#include "GamePlay.h"
+#include "civ_lib.h"
 
 /* *********************************************************
  *					START City::STATIC					   *

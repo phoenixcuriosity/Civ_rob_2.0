@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.6
+	last modification on this file on version:0.20.0.3
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,17 +35,31 @@
  *						Constantes						   *
  ********************************************************* */
 
+/* SDL : Define the number of mouse click ONE */
 #define ONE_CLICK 1
+
+/* SDL : Define the number of mouse clicks TWO */
 #define TWO_CLICKS 2
 
+/* SDL : Define if the wheel scroll up */
 #define MOUSE_SCROLL_UP 1
+
+/* SDL : Define if the wheel scroll down */
 #define MOUSE_SCROLL_DOWN -1
 
 /* *********************************************************
  *						 Enum							   *
  ********************************************************* */
 
-/* N/A */
+/* Define input from keyboard in a context */
+enum class CinState_Type : Uint8
+{
+	cinNothing,						/* Inputs from keyboards are discard */
+	cinTitleScreen,					/* Inputs from keyboards are use in Title Screen */
+	cinScreenNewGameNbPlayer,		/* Inputs from keyboards are use in New Game : for number of player */
+	cinScreenNewGameNamePlayer,		/* Inputs from keyboards are use in New Game : for names of players */
+	cinMainMap,						/* Inputs from keyboards are use in Main map */
+};
 
 /* *********************************************************
  *						Structures						   *

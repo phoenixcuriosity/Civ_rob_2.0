@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.12
+	last modification on this file on version:0.20.0.3
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,8 +28,9 @@
 
 #include "LoadConfig.h"
 #include "civ_lib.h"
-#include  "IHM.h"
+#include "IHM.h"
 #include "End.h"
+#include "Player.h"
 
 /* *********************************************************
  *					Variable Globale					   *
@@ -129,7 +130,7 @@ void LoadConfig::initStructs
 
 	sysinfo.var.s_player.tabCitieName.clear();
 	sysinfo.var.s_player.tabPlayerName.clear();
-	sysinfo.var.s_player.tabUnit_Struct.clear();
+	sysinfo.var.s_player.tabUnit_Template.clear();
 
 	sysinfo.var.s_player.nbNoNamePlayer = 0;
 	sysinfo.var.s_player.citieNameMaxToCreate = 0;
@@ -398,14 +399,14 @@ void LoadConfig::initTile
 /* NAME : loadUnitAndSpec															   */
 /* ROLE : Chargement des informations concernant les unités à partir d'un fichier	   */
 /* INPUT : const std::string& : nom du fichier à ouvrir								   */
-/* OUTPUT : std::vector<Unit_Struct>& : Vecteur des Unit							   */
+/* OUTPUT : std::vector<Unit_Template>& : Vecteur des Unit							   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void LoadConfig::loadUnitAndSpec
 (
 	const std::string& UNIT,
-	std::vector<Unit_Struct>& tabUnit_Struct
+	std::vector<Unit_Template>& tabUnit_Template
 )
 {
 	tinyxml2::XMLDocument texteFile;
@@ -423,7 +424,7 @@ void LoadConfig::loadUnitAndSpec
 						* s_Level("Level");
 
 	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
-	Unit_Struct currentUnit;
+	Unit_Template currentUnit;
 
 	while (nullptr != node)
 	{
@@ -435,7 +436,7 @@ void LoadConfig::loadUnitAndSpec
 		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)&currentUnit.movement);
 		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
 
-		tabUnit_Struct.push_back(currentUnit);
+		tabUnit_Template.push_back(currentUnit);
 
 		/* Recherche du noeud Model suivant */
 		node = node->NextSibling();
@@ -677,10 +678,10 @@ void LoadConfig::calculImage
 	/*
 		sysinfo.allTextures.unit
 	*/
-	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.unit, sysinfo.var.statescreen, sysinfo.var.select,
-			IPath + "units/" + sysinfo.var.s_player.tabUnit_Struct[i].name + ".bmp",
-			sysinfo.var.s_player.tabUnit_Struct[i].name, nonTransparent, 100, 432, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+			IPath + "units/" + sysinfo.var.s_player.tabUnit_Template[i].name + ".bmp",
+			sysinfo.var.s_player.tabUnit_Template[i].name, nonTransparent, 100, 432, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 
@@ -926,11 +927,11 @@ void LoadConfig::calculImage
 		Texte_Type::shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 164,
 		nonTransparent, no_angle, Center_Type::center_x);
 
-	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
-			Texte_Type::shaded, sysinfo.var.s_player.tabUnit_Struct[i].name, { 255, 64, 0, 255 }, BackColorButton, 24, 64, 400,
+			Texte_Type::shaded, sysinfo.var.s_player.tabUnit_Template[i].name, { 255, 64, 0, 255 }, BackColorButton, 24, 64, 400,
 			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
@@ -979,7 +980,6 @@ void LoadConfig::calculImage
 			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
-	sysinfo.var.select = Select_Type::NotToSelect;
 	for (unsigned int i(0); i < nbcitie; i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
@@ -990,25 +990,25 @@ void LoadConfig::calculImage
 
 
 	sysinfo.var.select = Select_Type::selectcreate;
-	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
-			Texte_Type::blended, sysinfo.var.s_player.tabUnit_Struct[i].name, { 0, 64, 255, 255 }, NoColor, 18, 64, 400,
+			Texte_Type::blended, sysinfo.var.s_player.tabUnit_Template[i].name, { 0, 64, 255, 255 }, NoColor, 18, 64, 400,
 			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
 	/*** STATEcitiemap ***/
 	sysinfo.var.statescreen = State_Type::STATEcitiemap;
 	sysinfo.var.select = Select_Type::selectcreate;
-	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Struct.size(); i++)
+	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
-			Texte_Type::blended, "life:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].life) +
-			"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].atq) +
-			"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].def) +
-			"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Struct[i].movement),
+			Texte_Type::blended, "life:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[i].life) +
+			"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[i].atq) +
+			"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[i].def) +
+			"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[i].movement),
 			{ 255, 64, 0, 255 }, NoColor, 24, 0, 0, nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
@@ -1211,10 +1211,6 @@ Select_Type LoadConfig::xmlGiveSelectType
 	if (type.compare("selectnothing") == IDENTICAL_STRINGS)
 	{
 		return Select_Type::selectnothing;
-	}
-	else if (type.compare("NotToSelect") == IDENTICAL_STRINGS)
-	{
-		return Select_Type::NotToSelect;
 	}
 	else if (type.compare("selectcreate") == IDENTICAL_STRINGS)
 	{

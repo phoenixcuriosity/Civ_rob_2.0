@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.8
+	last modification on this file on version:0.20.0.3
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -42,7 +42,8 @@
  *						Includes						   *
  ********************************************************* */
 
-#include "civ_lib.h"
+#include "LIB.h"
+#include "Texture.h"
 
 /* *********************************************************
  *						Constantes						   *
@@ -54,11 +55,44 @@
  *						 Enum							   *
  ********************************************************* */
 
+/* Define movement for the Unit in case of tryToMove */
 enum class Move_Type : Uint8 
 { 
-	cannotMove,
-	canMove,
-	attackMove
+	cannotMove,		/* The Unit cannot move to the next Tile */
+	canMove,		/* The Unit can move to the next Tile */
+	attackMove		/* The Unit can move to the next Tile and attack the other Unit standing on the this Tile */
+};
+
+/* Define movement type of the Unit */
+enum class Unit_Movement_Type : Uint8
+{
+	ground,			/* The Unit can move on ground (dirt,grass,...) */
+	air,			/* The Unit can move on ground (dirt,grass,...) or on water */
+	water,			/* The Unit can move on water */
+	deepwater		/* The Unit can move on deepwater or on water */
+};
+
+/* *********************************************************
+ *						 Structs						   *
+ ********************************************************* */
+
+struct Unit_Template
+{
+
+	// nom de l'unité -> /bin/UNITNAME.txt
+	std::string name;
+
+	/*
+		statistiques concernant l'unité -> /bin/UNIT.txt
+	*/
+	Unit_Movement_Type type = Unit_Movement_Type::ground;
+	unsigned int life = 0;
+	unsigned int atq = 0;
+	unsigned int def = 0;
+	unsigned int movement = 0;
+	unsigned int level = 0;
+	unsigned int nbturnToBuild = 0;
+
 };
 
 /* *********************************************************

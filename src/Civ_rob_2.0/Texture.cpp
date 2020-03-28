@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.19
-	file version : 1.12
+	last modification on this file on version:0.20.0.3
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,37 +35,28 @@
  ********************************************************* */
 
 
-/*
- * NAME : loadImage
- * ROLE : Allocation dynamique d'une Texture avec ses caractéristiques
- * INPUT : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
- * INPUT : std::vector<Texture*>& tabTexture : le tableau dans lequel sera stocké la Texture (allocation dynamique)
- * INPUT : Uint8 stateScreen, Uint8 select : les variables qui décrivent les différents état de l'écran et les spécifications de la séléction
- * INPUT : std::string path : le chemin d'accès ainsi que le nom de l'image à partir du fichier (inclure le type .png , .bmp ...)
- * INPUT : std::string msg : le nom qui permettra d'identifier la Texture dans le tableau
- * INPUT : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
- * INPUT : int x, int y	: les valeurs en pixel de la future position
- * INPUT : unsigned int w, unsigned int h : les valeurs de longueur et de largeur permettant de changer la définition de l'image originale sinon mettre NULL
- * INPUT : Uint16 angle : enum Uint16
- * INPUT : Uint8 cnt : le type de centrage -> enum Center_Type
- * OUTPUT : Allocation dynamique d'une Texture dans le tableau correspondant
- * RETURNED VALUE    : void
- */
+/* ---------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------- */
+/* NAME : loadImage																			*/
+/* ROLE : Dynamic allocation of the Texture with specifications								*/
+/* RETURNED VALUE : void																	*/
+/* ---------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------- */
 void Texture::loadImage
 (	
-	SDL_Renderer*& renderer,
-	std::unordered_map<std::string, Texture*>& tabTexture,
-	State_Type stateScreen,
-	Select_Type select,
-	std::string path,
-	std::string msg,
-	Transparance_Type alpha,
-	int x,
-	int y,
-	unsigned int w,
-	unsigned int h,
-	Uint16 angle,
-	Center_Type cnt
+	SDL_Renderer*& renderer,								/* IN : Ptr on SDL_Renderer */
+	std::unordered_map<std::string, Texture*>& tabTexture,  /* OUT : map where the Texture will be stored */
+	State_Type stateScreen,									/* IN : enum class State_Type */
+	Select_Type select,										/* IN : Select_Type */		
+	std::string path,										/* IN : Path to the picture */
+	std::string msg,										/* IN : Name of the Texture */
+	Transparance_Type alpha,								/* IN : enum Transparance_Type */					
+	int x,													/* IN : Position x before center of the Texture */
+	int y,													/* IN : Position y before center of the Texture */
+	unsigned int w,											/* IN : length of the Texture(compute length of Picture if w == 0) */
+	unsigned int h,											/* IN : height of the Texture(compute height of Picture if h == 0) */
+	Uint16 angle,											/* IN : enum Rotation_Type : will compute modulo if over 360 */
+	Center_Type cnt											/* IN : Uint8 cnt : enum class Center_Type */
 )
 {
 	int xt(0), yt(0), wt(0), ht(0);
