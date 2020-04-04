@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.4
-	file version : 1.14
+	last modification on this file on version:0.20.1.1
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,6 +32,7 @@
 #include "LoadConfig.h"
 #include "civ_lib.h"
 #include "Citizen.h"
+#include "Utility.h"
 
 /* *********************************************************
  *					START City::STATIC					   *
@@ -51,7 +52,7 @@ void City::createCity
 	Sysinfo& sysinfo
 )
 {
-	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == 0)
+	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == IDENTICAL_STRINGS)
 	{
 		/* ---------------------------------------------------------------------- */
 		/* 1° : Recherche du nom de la nouvelle Citie 							  */
@@ -452,42 +453,46 @@ bool City::testPos
 /* ----------------------------------------------------------------------------------- */
 void City::computeEmotion()
 {
-	/* ---------------------------------------------------------------------- */
-	/* Protection for safe division											  */
-	/* ---------------------------------------------------------------------- */
 	if (_citizens.size() > 0)
 	{
 		double result(0);
 
-		/* ---------------------------------------------------------------------- */
-		/* Result limit : -inf / inf											  */
-		/* ---------------------------------------------------------------------- */
 		for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
 		{
-			result += (int)_citizens[nbCitizen]->GEThappiness();
+			result += (double)_citizens[nbCitizen]->GEThappiness();
 		}
 
-		/* ---------------------------------------------------------------------- */
-		/* Result limit : -2.0 / 2.0											  */
-		/* ---------------------------------------------------------------------- */
-		result /= _citizens.size();
-
-		/* ---------------------------------------------------------------------- */
-		/* Result limit : -100.0 / 100.0										  */
-		/* ---------------------------------------------------------------------- */
-		result *= 50.0;
-
-		/* ---------------------------------------------------------------------- */
-		/* Result limit : 0.0 / 200.0											  */
-		/* ---------------------------------------------------------------------- */
-		result += 100.0;
-
-		/* ---------------------------------------------------------------------- */
-		/* Result limit : 0.0 / 100.0											  */
-		/* ---------------------------------------------------------------------- */
-		result /= 2.0;
-
-		_emotion = (unsigned int)result;
+		try
+		{
+			_emotion = (unsigned int)Utility::computeValueToScale
+			(
+				result,
+				(double)Emotion_Type::angry,
+				(double)Emotion_Type::ecstatic,
+				0.0,
+				100.0,
+				(int)_citizens.size()
+			);
+		}
+		catch (std::string const& msg)
+		{
+			if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
+			{
+#ifdef _DEBUG_MODE
+				throw(msg);
+#endif // DEBUG_MODE
+				LoadConfig::logfileconsole(msg);
+				_emotion = 50;
+			}
+			else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
+			{
+#ifdef _DEBUG_MODE
+				throw(msg);
+#endif // DEBUG_MODE
+				LoadConfig::logfileconsole(msg);
+				_emotion = 50;
+			}
+		}
 	}
 	else
 	{
