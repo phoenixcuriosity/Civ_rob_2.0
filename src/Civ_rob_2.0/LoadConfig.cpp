@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.13
+	last modification on this file on version:0.20.1.2
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,7 @@
 #include "IHM.h"
 #include "End.h"
 #include "Player.h"
+#include "Utility.h"
 
 /* *********************************************************
  *					Variable Globale					   *
@@ -313,9 +314,9 @@ void LoadConfig::computeSize
 	/* ---------------------------------------------------------------------- */
 	/* 2° : Maimap														 	  */
 	/* ---------------------------------------------------------------------- */
-	map.toolBarSize = (screen.screenWidth / 10) / map.tileSize;
-	map.screenOffsetXIndexMax = ((screen.screenWidth * 9) / 10) / map.tileSize;
-	map.screenOffsetYIndexMax = screen.screenHeight / map.tileSize;
+	map.toolBarSize = Utility::protectedDiv((screen.screenWidth / 10), map.tileSize);
+	map.screenOffsetXIndexMax = Utility::protectedDiv(((screen.screenWidth * 9) / 10), map.tileSize);
+	map.screenOffsetYIndexMax = Utility::protectedDiv(screen.screenHeight, map.tileSize);
 
 	/* ---------------------------------------------------------------------- */
 	/* 3° : CitieMap													 	  */
@@ -634,11 +635,14 @@ void LoadConfig::calculImage
 		 sysinfo.allTextures.ground
 	 */
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/water.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "ground/water.bmp", "water.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/deepwater.bmp", "deepwater.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "ground/deepwater.bmp", "deepwater.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 	// chargement de l'image de la toolbar
@@ -663,7 +667,8 @@ void LoadConfig::calculImage
 			name = EMPTY_STRING;
 			SPECNAME >> name;
 			Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.groundSpec, sysinfo.var.statescreen, sysinfo.var.select,
-				IPath + "spec/" + name, name, nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+				IPath + "spec/" + name, name, nonTransparent,
+				SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 		}
 	}
 	else
@@ -690,11 +695,12 @@ void LoadConfig::calculImage
 	*/
 	sysinfo.var.statescreen = State_Type::STATEmainmap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
+		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
 	for (int i(9); i >= 0; i--)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "barre de vie/0." + std::to_string(i) + "life.bmp", "0." + std::to_string(i) + "life.bmp", nonTransparent,
-			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle, Center_Type::nocenter);
+			SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle, Center_Type::nocenter);
 
 
 
@@ -704,7 +710,7 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapp, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayer" + std::to_string(i) + ".bmp", nonTransparent,
-			-1, -1, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle, Center_Type::nocenter);
+			SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle, Center_Type::nocenter);
 
 
 	/*
@@ -713,7 +719,7 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapptile, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayertile" + std::to_string(i) + ".bmp", (Transparance_Type)96,
-			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+			SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 	/*
@@ -734,19 +740,26 @@ void LoadConfig::calculImage
 	*/
 	sysinfo.var.statescreen = State_Type::STATEcitiemap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citie/citie.png", "citie.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "citie/citie.png", "citie.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citie/food.png", "food.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "citie/food.png", "food.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Adore.png", "Adore.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+		IPath + "citizen/Adore.png", "Adore.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Laugh.png", "Laugh.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+		IPath + "citizen/Laugh.png", "Laugh.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Cool.png", "Cool.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+		IPath + "citizen/Cool.png", "Cool.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Cry.png", "Cry.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+		IPath + "citizen/Cry.png", "Cry.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Furious.png", "Furious.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+		IPath + "citizen/Furious.png", "Furious.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 
 
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
@@ -1086,7 +1099,7 @@ void LoadConfig::readXmlTexte
 	while (node != nullptr)
 	{
 		if (strcmp(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
-			->FirstChildElement(s_FontColor_Simple_Condition)->GetText(), "true") == 0)
+				->FirstChildElement(s_FontColor_Simple_Condition)->GetText(), "true") == 0)
 		{
 			fontColor = xmlGiveColor(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
 				->FirstChildElement(s_FontColor_Simple_Color)->GetText());
@@ -1108,7 +1121,7 @@ void LoadConfig::readXmlTexte
 		}
 
 		if (strcmp(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
-			->FirstChildElement(s_BackColor_Simple_Condition)->GetText(), "true") == 0)
+				->FirstChildElement(s_BackColor_Simple_Condition)->GetText(), "true") == 0)
 		{
 			backColor = xmlGiveColor(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
 				->FirstChildElement(s_BackColor_Simple_Color)->GetText());
@@ -1444,16 +1457,7 @@ int LoadConfig::determineCoor
 		numI = std::stoi(num);
 		denI = std::stoi(den);
 
-		if (denI == 0)
-		{
-			throw(" div/0 -> den == 0");
-		}
-		else
-		{
-			/* N/A */
-		}
-
-		return somme = (unsigned int)(numI / denI);
+		return somme = (unsigned int)Utility::protectedDiv(numI, denI);
 	}
 	else
 	{
