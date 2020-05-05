@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.1.1
-	file version : 1.6
+	last modification on this file on version:0.20.2.1
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,6 +41,7 @@
 #include <cmath>
 #include <vector>
 #include <unordered_map>
+#include <queue>
 #include <exception>
 #include <stdexcept>
 #include "wtypes.h"
@@ -111,6 +112,7 @@ typedef std::vector<std::vector<Tile>>					MatriceTile;
 typedef std::unordered_map<std::string, Texture*>		MapTexture;
 typedef std::unordered_map<std::string, Texte*>			MapTexte;
 typedef std::unordered_map<std::string, ButtonTexte*>	MapButtonTexte;
+typedef std::deque<ButtonTexte*>						DequeButtonTexte;
 typedef std::vector<Player*>							TabPlayer;
 
 #define EMPTY_STRING ""

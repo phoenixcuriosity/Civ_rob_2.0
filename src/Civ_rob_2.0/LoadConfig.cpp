@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.1.2
-	file version : 1.14
+	last modification on this file on version:0.20.2.1
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -314,9 +314,9 @@ void LoadConfig::computeSize
 	/* ---------------------------------------------------------------------- */
 	/* 2° : Maimap														 	  */
 	/* ---------------------------------------------------------------------- */
-	map.toolBarSize = Utility::protectedDiv((screen.screenWidth / 10), map.tileSize);
-	map.screenOffsetXIndexMax = Utility::protectedDiv(((screen.screenWidth * 9) / 10), map.tileSize);
-	map.screenOffsetYIndexMax = Utility::protectedDiv(screen.screenHeight, map.tileSize);
+	map.toolBarSize = (unsigned int)Utility::protectedDiv((screen.screenWidth / 10), map.tileSize);
+	map.screenOffsetXIndexMax = (unsigned int)Utility::protectedDiv(((screen.screenWidth * 9) / 10), map.tileSize);
+	map.screenOffsetYIndexMax = (unsigned int)Utility::protectedDiv(screen.screenHeight, map.tileSize);
 
 	/* ---------------------------------------------------------------------- */
 	/* 3° : CitieMap													 	  */
@@ -422,7 +422,8 @@ void LoadConfig::loadUnitAndSpec
 						* s_Atq("Atq"),
 						* s_Def("Def"),
 						* s_Mouvement("Mouvement"),
-						* s_Level("Level");
+						* s_Level("Level"),
+						* s_WorkToBuild("WorkToBuild");
 
 	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
 	Unit_Template currentUnit;
@@ -436,6 +437,8 @@ void LoadConfig::loadUnitAndSpec
 		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
 		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)&currentUnit.movement);
 		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
+		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
+		node->FirstChildElement(s_WorkToBuild)->QueryDoubleText((double*)&currentUnit.workToBuild);
 
 		tabUnit_Template.push_back(currentUnit);
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.5
-	file version : 1.24
+	last modification on this file on version:0.20.2.1
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -216,7 +216,7 @@ void IHM::alwaysrender
 
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() > 0)
 		{
-			if (NO_CITIE_SELECTED != sysinfo.var.s_player.selectCitie)
+			if (NO_CITIE_SELECTED < sysinfo.var.s_player.selectCitie)
 			{
 				if (
 						sysinfo.var.s_player.selectCitie
@@ -560,7 +560,7 @@ void IHM::citiemap
 	if (Select_Type::selectcreate == sysinfo.var.select)
 	{
 		initspace = 96;
-		for (Uint8 j(0); j < 10; j++)
+		for (Uint8 j(0); j < MAX_UNIT_TO_DISPLAY_CITIEMAP; j++)
 		{
 			if	(
 					((unsigned __int64)sysinfo.var.s_player.unitToCreate + j)

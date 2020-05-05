@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.1.1
-	file version : 1.1
+	last modification on this file on version:0.20.2.1
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -126,7 +126,7 @@ bool Utility::conditionTryToMove
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* NAME : protectedDiv																				    	  */
-/* ROLE : Check if the denominator is 0.0 then throw error, else do the division.						      */
+/* ROLE : Check if the denominator is lower than PRECISION_DIV then throw error, else do the division.		  */
 /* IN : double num : The numerator																		      */
 /* IN : double den : The denominator																	      */
 /* RETURNED VALUE : double -> result from division															  */
@@ -138,7 +138,7 @@ double Utility::protectedDiv
 	double den
 )
 {
-	if (den != 0.0)
+	if (den > PRECISION_DIV)
 	{
 		return num / den;
 	}

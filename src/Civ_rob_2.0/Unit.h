@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.9
+	last modification on this file on version:0.20.2.1
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -92,7 +92,7 @@ struct Unit_Template
 	unsigned int movement = 0;
 	unsigned int level = 0;
 	unsigned int nbturnToBuild = 0;
-
+	double workToBuild = 0.0;
 };
 
 /* *********************************************************
@@ -106,6 +106,21 @@ public:
 	 *					Unit::STATIC						   *
 	 ********************************************************* */
 
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : searchUnitByName															   */
+	/* ROLE : Search the unit in vector template by name								   */
+	/* INPUT : std::string name : name to compared										   */
+	/* INPUT : std::vector<Unit_Template>& : vector of template unit 					   */
+	/* RETURNED VALUE : Uint8 : index of the unit										   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static Uint8 searchUnitByName
+	(
+		std::string name,
+		std::vector<Unit_Template>& tabUnit_Template
+	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */

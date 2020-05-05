@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.12
+	last modification on this file on version:0.20.2.1
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,6 +39,31 @@
 /* *********************************************************
  *					START Unit::STATIC					   *
  ********************************************************* */
+
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : searchUnitByName															   */
+/* ROLE : Search the unit in vector template by name								   */
+/* INPUT : std::string name : name to compared										   */
+/* INPUT : std::vector<Unit_Template>& : vector of template unit 					   */
+/* RETURNED VALUE : Uint8 : index of the unit										   */
+/* ----------------------------------------------------------------------------------- */
+Uint8 Unit::searchUnitByName
+(
+	std::string name,
+	std::vector<Unit_Template>& tabUnit_Template
+)
+{
+	for (Uint8 p(0); p < tabUnit_Template.size(); p++)
+	{
+		if (tabUnit_Template[p].name.compare(name) == IDENTICAL_STRINGS)
+		{
+			return p;
+		}
+	}
+	return 0;
+}
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */

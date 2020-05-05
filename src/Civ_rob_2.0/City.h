@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.5
-	file version : 1.8
+	last modification on this file on version:0.20.2.1
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -49,6 +49,12 @@ const Uint8 MAX_POP = 50;
 /* Nombre de noms de Citie dans CITIENAME.txt */
 const Uint8 MAX_CITY_PER_PLAYER = 5;
 
+/* Define the multiplier coefficient to convert work to food */
+#define MULTIPLIER_CONVERSION_WORK_TO_FOOD 10.0
+
+/* Define the multiplier coefficient to convert food to work */
+#define MULTIPLIER_CONVERSION_FOOD_TO_WORK (1.0 / MULTIPLIER_CONVERSION_WORK_TO_FOOD)
+
 /* *********************************************************
  *						 Structs						   *
  ********************************************************* */
@@ -59,7 +65,22 @@ const Uint8 MAX_CITY_PER_PLAYER = 5;
  *							 Enum						   *
  ********************************************************* */
 
- /* N/A */
+enum class build_Type : Uint8
+{
+	building,
+	unit
+};
+
+/* *********************************************************
+ *						TypeDef							   *
+ ********************************************************* */
+
+struct build
+{
+	double remainingWork;
+	std::string name;
+	build_Type type;
+};
 
 /* *********************************************************
  *						 Classes						   *
@@ -230,6 +251,69 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void computeEmotion();
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : computeWork																   */
+	/* ROLE : Calculate the work for the turn											   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void computeWork();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : computeWorkToBuild														   */
+	/* ROLE : Compute the remaining work to build a building or unit					   */
+	/* ROLE : if the remaining work is zero then the building or unit is created		   */
+	/* ROLE : if the build is created and there work Surplus then either apply it ...	   */
+	/* ROLE : ... to next build or convert it to food									   */
+	/* INPUT : Player* : ptr to the selected player										   */
+	/* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void computeWorkToBuild
+	(
+		Player* player,
+		std::vector<Unit_Template>& tabUnit_Template,
+		DequeButtonTexte& citieMapBuildQueue
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertWorkSurplusToFood													   */
+	/* ROLE : Convert work to food ; Place in _foodStock								   */
+	/* INPUT : double workSurplus : work surplus to convert into food					   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void convertWorkSurplusToFood
+	(
+		double workSurplus
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : addBuildToQueue															   */
+	/* ROLE : Push build to buildQueue													   */
+	/* INPUT : build buildToQueue : build to push into buildQueue						   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void addBuildToQueue
+	(
+		build buildToQueue,
+		DequeButtonTexte& citieMapBuildQueue,
+		SDL_Renderer*& renderer,
+		TTF_Font* font[]
+	);
+
+	virtual void removeBuildToQueue
+	(
+		DequeButtonTexte& citieMapBuildQueue
+	);
+
 public:
 	/* *********************************************************
 	 *				City::METHODS::Affichage				   *
@@ -252,7 +336,9 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : affichercitiemap															   */
-	/* ROLE : Affichage des cases qui compose le secteur de la City						   */
+	/* ROLE : Display City Tiles to the citieMap with Citizen							   */
+	/* ROLE : Display the food stock of the city										   */
+	/* ROLE : Display the build Queue													   */
 	/* INPUT : truct Sysinfo& : structure globale du programme							   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
@@ -260,6 +346,49 @@ public:
 	virtual void affichercitiemap
 	(
 		Sysinfo&
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficherCitieTiles														   */
+	/* ROLE : Display City Tiles to the citieMap with Citizen							   */
+	/* INPUT : truct Sysinfo& : Global struct											   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void afficherCitieTiles
+	(
+		Sysinfo& sysinfo
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficherCitieFood															   */
+	/* ROLE : Display the food stock of the city										   */
+	/* INPUT : unsigned int tileSize : Size of tile in the city							   */
+	/* INPUT : MapTexture& citieMap : UnorderMap of City Texture 						   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void afficherCitieFood
+	(
+		unsigned int tileSize,
+		MapTexture& citieMap
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficherCitieBuildToQueue													   */
+	/* ROLE : Display the build Queue													   */
+	/* INPUT : MapTexte& citieMap : UnorderMap of City Texte							   */
+	/* INPUT : DequeButtonTexte& : Deque of buttons use in build Queue					   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void afficherCitieBuildToQueue
+	(
+		MapTexte& citieMap,
+		DequeButtonTexte& citieMapBuildQueue
 	);
 	 
 	
@@ -319,6 +448,10 @@ private:
 
 	double _foodStock;
 	double _foodBalance;
+
+	double _workBalance;
+
+	std::deque<build> _buildQueue;
 };
 
 #endif /* City_H */

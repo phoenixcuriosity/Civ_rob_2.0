@@ -10,6 +10,7 @@
 		<Def>30</Def>
 		<Mouvement>5</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>50</WorkToBuild>
 	</Unit>
 	<Unit>
 		<Name>biter</Name>
@@ -19,6 +20,7 @@
 		<Def>3</Def>
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>5</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>bombardier</Name>
@@ -28,6 +30,7 @@
 		<Def>2</Def>
 		<Mouvement>10</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>75</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>car</Name>
@@ -37,6 +40,7 @@
 		<Def>5</Def>
 		<Mouvement>5</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>25</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_1</Name>
@@ -46,6 +50,7 @@
 		<Def>0</Def>
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>10</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_2</Name>
@@ -55,6 +60,7 @@
 		<Def>0</Def>
 		<Mouvement>2</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>50</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_3</Name>
@@ -64,6 +70,7 @@
 		<Def>0</Def>
 		<Mouvement>3</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>200</WorkToBuild>
 	</Unit>
 	<Unit>
 		<Name>robot</Name>
@@ -73,6 +80,7 @@
 		<Def>10</Def>
 		<Mouvement>3</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>50</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>rocket</Name>
@@ -82,6 +90,7 @@
 		<Def>10</Def>
 		<Mouvement>100</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>200</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>rover</Name>
@@ -91,6 +100,7 @@
 		<Def>2</Def>
 		<Mouvement>2</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>22</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>satellite</Name>
@@ -100,6 +110,7 @@
 		<Def>0</Def>
 		<Mouvement>100</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>100</WorkToBuild>
 	</Unit>
 	<Unit>
 		<Name>settler</Name>
@@ -109,6 +120,7 @@
 		<Def>0</Def>
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>12</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>spitter</Name>
@@ -118,6 +130,7 @@
 		<Def>2</Def>
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>10</WorkToBuild>
 	</Unit>
 	<Unit>
 		<Name>tank</Name>
@@ -127,6 +140,7 @@
 		<Def>50</Def>
 		<Mouvement>3</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>50</WorkToBuild>
 	</Unit>	
 	<Unit>
 		<Name>transport_plan</Name>
@@ -136,6 +150,7 @@
 		<Def>10</Def>
 		<Mouvement>10</Mouvement>
 		<Level>1</Level>
+		<WorkToBuild>40</WorkToBuild>
 	</Unit>	
 
 

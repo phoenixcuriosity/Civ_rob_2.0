@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.13
+	last modification on this file on version:0.20.2.1
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -1032,6 +1032,68 @@ void ButtonTexte::createButtonTexte
 	centrage(x, y, iW, iH, centerButtonTexte);
 	tabButtonTexte[msg] = new ButtonTexte(renderer, font, image, msg, stateScreen, select, x, y, iW, iH,
 		type, color, backcolor, size, alpha, angle, imageOn, centerButtonTexte);
+
+	LoadConfig::logfileconsole("[INFO]___: Create ButtonTexte n:" + std::to_string(tabButtonTexte.size() - 1) + " msg = " + msg + " Success");
+}
+
+/*
+ * NAME : createButtonTexte
+ * ROLE : création et ajout d'un objet ButtonTexte dans le tableau de ButtonTexte choisi
+ * INPUT  PARAMETERS : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
+ * INPUT  PARAMETERS : TTF_Font* font[] : tableau de police de la font
+ * INPUT  PARAMETERS : Uint8 stateScreen, Uint8 select : les variables qui décrivent les différents état de l'écran et les spécifications de la séléction
+ * INPUT  PARAMETERS : std::vector<ButtonTexte*>& : le tableau dans lequel sera stocké la ButtonTexte (allocation dynamique)
+ * INPUT  PARAMETERS : Uint8 type : enum Texte_Type
+ * INPUT  PARAMETERS : std::string msg : le nom qui permettra d'identifier la Texture dans le tableau
+ * INPUT  PARAMETERS : SDL_Color color : couleur du Texte
+ * INPUT  PARAMETERS : SDL_Color colorback : couleur du fond du Texte
+ * INPUT  PARAMETERS : Uint8 : la taille du Texte
+ * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
+ * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
+ * INPUT  PARAMETERS : Uint16 angle : enum Uint16
+ * INPUT  PARAMETERS : Uint8 cnt : le type de centrage -> enum Center_Type
+ * OUTPUT PARAMETERS : création et ajout d'un objet ButtonTexte
+ * RETURNED VALUE    : void
+ */
+void ButtonTexte::createButtonTexte
+(
+	SDL_Renderer*& renderer,
+	TTF_Font* font[],
+	State_Type stateScreen,
+	Select_Type select,
+	DequeButtonTexte& tabButtonTexte,
+	Texte_Type type,
+	std::string msg,
+	SDL_Color color,
+	SDL_Color backcolor,
+	Uint8 size,
+	int x,
+	int y,
+	Transparance_Type alpha,
+	Uint16 angle,
+	Center_Type centerButtonTexte
+)
+{
+	int iW(0), iH(0);
+
+	assertRangeAngle(&angle);
+
+	SDL_Texture* image(createSDL_TextureFromTexte(renderer, type, msg, color, backcolor, font[size]));
+	SDL_Texture* imageOn(createSDL_TextureFromTexte(renderer, type, msg, color, { 64,128,64,255 }, font[size]));
+
+	if (alpha != nonTransparent)
+	{
+		SDL_SetTextureAlphaMod(image, alpha);
+		SDL_SetTextureAlphaMod(imageOn, alpha);
+	}
+	SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
+	centrage(x, y, iW, iH, centerButtonTexte);
+	tabButtonTexte.push_back
+		(
+			new ButtonTexte
+				(renderer, font, image, msg, stateScreen, select, x, y, iW, iH,
+				type, color, backcolor, size, alpha, angle, imageOn, centerButtonTexte)
+		);
 
 	LoadConfig::logfileconsole("[INFO]___: Create ButtonTexte n:" + std::to_string(tabButtonTexte.size() - 1) + " msg = " + msg + " Success");
 }

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.1.1
-	file version : 1.1
+	last modification on this file on version:0.20.2.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,7 +35,8 @@
  *					 Constantes							   *
  ********************************************************* */
 
- /* N/A */
+/* Define the lowest value to perform a division */
+#define PRECISION_DIV 1e-12
 
 /* *********************************************************
  *						 Structs						   *

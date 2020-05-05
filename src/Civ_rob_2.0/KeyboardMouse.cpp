@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.5
-	file version : 1.15
+	last modification on this file on version:0.20.2.1
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,6 +36,7 @@
 #include "LoadConfig.h"
 #include "Player.h"
 #include "Utility.h"
+#include "City.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -2564,14 +2565,19 @@ bool KeyboardMouse::checkSTATEcitiemap
 			if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Template[i].name]
 					->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 			{
-				sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Template[i].name;
-				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Template[i].name,
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETx(),
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETy(),
-					sysinfo.var.s_player.tabUnit_Template[i].type,
-					sysinfo.var.s_player.tabUnit_Template[i].life, sysinfo.var.s_player.tabUnit_Template[i].atq,
-					sysinfo.var.s_player.tabUnit_Template[i].def, sysinfo.var.s_player.tabUnit_Template[i].movement,
-					sysinfo.var.s_player.tabUnit_Template[i].level);
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+					->GETtheCity(sysinfo.var.s_player.selectCitie)
+						->addBuildToQueue
+							(
+								{
+									sysinfo.var.s_player.tabUnit_Template[i].workToBuild,
+									sysinfo.var.s_player.tabUnit_Template[i].name,
+									build_Type::unit 
+								},
+								sysinfo.allButton.citieMapBuildQueue,
+								sysinfo.screen.renderer,
+								sysinfo.allTextures.font
+							);
 
 				sysinfo.var.select = Select_Type::selectnothing;
 				return true;
