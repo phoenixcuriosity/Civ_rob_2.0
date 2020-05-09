@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.16
+	last modification on this file on version:0.20.3.1
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -324,7 +324,9 @@ City::City
 	: _image("citie.png"),
 _name(name), _x(x), _y(y), _tile(tiles),
 _influenceLevel(1),_nbpop(1), _atq(0), _def(0), _emotion(0), _nbstructurebuild(0),
-_foodStock(0), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food)
+_foodStock(0), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food),
+_foodSurplusPreviousTurn(0), _workBalance(0), _workSurplusPreviousTurn(0),
+_conversionToApply(conversionSurplus_Type::No_Conversion)
 {
 	_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
 
@@ -366,12 +368,10 @@ void City::foodNextTurn()
 {
 	double foodLimitPerLevelCurrent(15 + ((double)_nbpop - 1) * 6 + pow((_nbpop - 1), 1.8));
 	double foodLimitPerLevelMinusOne(15 + ((double)_nbpop - 1 - 1) * 6 + pow((_nbpop - 1 - 1), 1.8));
-	double sommeFoodCitizen(0);
-	bool change(false);
 
-	_foodStock += _foodBalance ;
+	_foodStock += _foodBalance;
 	
-	if (0 > _foodStock)
+	if (0.0 > _foodStock)
 	{
 		/* ---------------------------------------------------------------------- */
 		/* TODO gestion prioritaire de suppression de Citizen					  */
@@ -387,7 +387,6 @@ void City::foodNextTurn()
 		}
 		_citizens.pop_back();
 		_foodStock = foodLimitPerLevelMinusOne;
-		change = true;
 	}
 	else if (_foodStock >= foodLimitPerLevelCurrent)
 	{
@@ -395,7 +394,6 @@ void City::foodNextTurn()
 		
 		_citizens.push_back(new Citizen(_tile, _citizens));
 		_foodStock -= foodLimitPerLevelCurrent;
-		change = true;
 	}
 	else
 	{
@@ -405,15 +403,51 @@ void City::foodNextTurn()
 		/* N/A */
 	}
 
-	if (change)
+	double emotionOnFoodModifier((double)_emotion / SCALE_RANGE_MEAN_EMOTION);
+	double consumptionFoodCity(2.0 * ((double)_nbpop - 1.0));
+	double sommeFoodCitizen(0);
+
+	for (unsigned int i(0); i < _citizens.size(); i++)
 	{
-		for (unsigned int i(0); i < _citizens.size(); i++)
-			sommeFoodCitizen += _citizens[i]->GETfood();
-		_foodBalance = sommeFoodCitizen - (2 * ((double)_nbpop - 1));
+		sommeFoodCitizen += _citizens[i]->GETfood();
 	}
-	else
+
+	/* Applying Emotion multiplier */
+	sommeFoodCitizen *= emotionOnFoodModifier;
+
+	_foodBalance = _foodSurplusPreviousTurn + sommeFoodCitizen - consumptionFoodCity;
+	_foodSurplusPreviousTurn = 0.0;
+
+	if (_foodBalance > 0.0)
 	{
-		/* N/A */
+		switch (_conversionToApply)
+		{
+		case conversionSurplus_Type::No_Conversion:
+			/* N/A */
+			break;
+		case conversionSurplus_Type::FoodToWork:
+			convertFoodSurplusToWork(_foodBalance);
+			_foodBalance = 0.0;
+			break;
+		case conversionSurplus_Type::FoodToGold:
+			/* TODO */
+			break;
+		case conversionSurplus_Type::WorkToFood:
+			/* N/A */
+			break;
+		case conversionSurplus_Type::WorkToGold:
+			/* N/A */
+			break;
+		case conversionSurplus_Type::GoldToFood:
+			/* N/A */
+			break;
+		case conversionSurplus_Type::GoldToWork:
+			/* N/A */
+			break;
+		default:
+			/* N/A */
+			break;
+		}
 	}
 }
 
@@ -470,8 +504,8 @@ void City::computeEmotion()
 				result,
 				(double)Emotion_Type::angry,
 				(double)Emotion_Type::ecstatic,
-				0.0,
-				100.0,
+				SCALE_RANGE_MIN_EMOTION,
+				SCALE_RANGE_MAX_EMOTION,
 				(int)_citizens.size()
 			);
 		}
@@ -480,7 +514,7 @@ void City::computeEmotion()
 			if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
 			{
 				LoadConfig::logfileconsole(msg);
-				_emotion = 50;
+				_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG_MODE
 				throw(msg);
 #endif // DEBUG_MODE
@@ -488,7 +522,7 @@ void City::computeEmotion()
 			else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
 			{
 				LoadConfig::logfileconsole(msg);
-				_emotion = 50;
+				_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG_MODE
 				throw(msg);
 #endif // DEBUG_MODE
@@ -512,11 +546,18 @@ void City::computeEmotion()
 /* ----------------------------------------------------------------------------------- */
 void City::computeWork()
 {
-	_workBalance = 0;
+	_workBalance = 0.0;
 	for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
 	{
 		_workBalance += (double)_citizens[nbCitizen]->GETwork();
 	}
+
+	/* Applying Emotion multiplier */
+	_workBalance *= ((double)_emotion / SCALE_RANGE_MEAN_EMOTION);
+
+	/* Applying the work which was converted from food in the previous turn */
+	_workBalance += _workSurplusPreviousTurn;
+	_workSurplusPreviousTurn = 0;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -526,15 +567,16 @@ void City::computeWork()
 /* ROLE : if the remaining work is zero then the building or unit is created		   */
 /* ROLE : if the build is created and there work Surplus then either apply it ...	   */
 /* ROLE : ... to next build or convert it to food									   */
-/* INPUT : Player* : ptr to the selected player										   */
+/* OUT : Player* : ptr to the selected player										   */
 /* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
+/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::computeWorkToBuild
 (
 	Player* player,
-	std::vector<Unit_Template>& tabUnit_Template,
+	const std::vector<Unit_Template>& tabUnit_Template,
 	DequeButtonTexte& citieMapBuildQueue
 )
 {
@@ -542,7 +584,8 @@ void City::computeWorkToBuild
 	{
 		_buildQueue.front().remainingWork -= _workBalance;
 
-		if (_buildQueue.front().remainingWork < 0.0)
+		double workSurplus(0.0);
+		while (_buildQueue.front().remainingWork < 0.0)
 		{
 			if (build_Type::unit == _buildQueue.front().type)
 			{
@@ -574,17 +617,18 @@ void City::computeWorkToBuild
 #endif // DEBUG_MODE
 			}
 
-			double workSurplus( - (_buildQueue.front().remainingWork));
+			workSurplus = - (_buildQueue.front().remainingWork);
 
 			removeBuildToQueue(citieMapBuildQueue);
 
-			if (_buildQueue.size() > 1)
+			if (_buildQueue.size() > 0)
 			{
 				_buildQueue.front().remainingWork -= workSurplus;
 			}
 			else
 			{
 				convertWorkSurplusToFood(workSurplus);
+				return;
 			}
 		}
 	}
@@ -593,7 +637,7 @@ void City::computeWorkToBuild
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : convertWorkSurplusToFood													   */
-/* ROLE : Convert work to food ; Place in _foodStock								   */
+/* ROLE : Convert work to food ; Place in _foodSurplusPreviousTurn					   */
 /* INPUT : double workSurplus : work surplus to convert into food					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
@@ -603,14 +647,33 @@ void City::convertWorkSurplusToFood
 	double workSurplus
 )
 {
-	_foodStock += workSurplus * MULTIPLIER_CONVERSION_WORK_TO_FOOD;
+	_foodSurplusPreviousTurn = workSurplus * MULTIPLIER_CONVERSION_WORK_TO_FOOD;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : convertWorkSurplusToFood													   */
+/* ROLE : Convert food to work ; Place in _workSurplusPreviousTurn					   */
+/* INPUT : double workSurplus : food surplus to convert into work					   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::convertFoodSurplusToWork
+(
+	double foodSurplus
+)
+{
+	_workSurplusPreviousTurn = foodSurplus * MULTIPLIER_CONVERSION_FOOD_TO_WORK;
 }
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : addBuildToQueue															   */
 /* ROLE : Push build to buildQueue													   */
-/* INPUT : build buildToQueue : build to push into buildQueue						   */
+/* IN : build buildToQueue : build to push into buildQueue							   */
+/* OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
+/* INPUT : SDL_Renderer*& renderer : ptr SDL_renderer								   */
+/* INPUT : TTF_Font* font[] : array of SDL font										   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -633,9 +696,9 @@ void City::addBuildToQueue
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-/* NAME : addBuildToQueue															   */
-/* ROLE : Push build to buildQueue													   */
-/* INPUT : build buildToQueue : build to push into buildQueue						   */
+/* NAME : removeBuildToQueue														   */
+/* ROLE : Pop build to buildQueue													   */
+/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -648,6 +711,7 @@ void City::removeBuildToQueue
 	if (nullptr != citieMapBuildQueue.front())
 	{
 		delete citieMapBuildQueue.front();
+		citieMapBuildQueue.front() = nullptr;
 	}
 	else
 	{

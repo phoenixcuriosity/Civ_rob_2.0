@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.9
+	last modification on this file on version:0.20.3.1
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -49,30 +49,49 @@ const Uint8 MAX_POP = 50;
 /* Nombre de noms de Citie dans CITIENAME.txt */
 const Uint8 MAX_CITY_PER_PLAYER = 5;
 
+/* Define the maximum range of emotion */
+#define SCALE_RANGE_MAX_EMOTION 100.0
+
+/* Define the minimum range of emotion */
+#define SCALE_RANGE_MIN_EMOTION 0.0
+
+/* Define the mean value of emotion range */
+#define SCALE_RANGE_MEAN_EMOTION ((abs(SCALE_RANGE_MAX_EMOTION) + abs(SCALE_RANGE_MIN_EMOTION)) / 2.0)
+
 /* Define the multiplier coefficient to convert work to food */
 #define MULTIPLIER_CONVERSION_WORK_TO_FOOD 10.0
 
 /* Define the multiplier coefficient to convert food to work */
 #define MULTIPLIER_CONVERSION_FOOD_TO_WORK (1.0 / MULTIPLIER_CONVERSION_WORK_TO_FOOD)
 
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
-
-/* N/A */
+/* Define the multiplier coefficient to convert work to gold */
+#define MULTIPLIER_CONVERSION_WORK_TO_GOLD (10.0 * MULTIPLIER_CONVERSION_WORK_TO_FOOD)
 
 /* *********************************************************
  *							 Enum						   *
  ********************************************************* */
 
+/* Define the types of builds that a city can create */
 enum class build_Type : Uint8
 {
-	building,
+	building,	/* ### Not implemented as of 0.20.3.1 ### */
 	unit
 };
 
+/* Define types of conversion that a city can apply to the ressources */
+enum class conversionSurplus_Type : Uint8
+{
+	No_Conversion,
+	FoodToWork, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_WORK */
+	FoodToGold, /* ### Not implemented as of 0.20.3.1 ### */
+	WorkToFood, /* Apply MULTIPLIER_CONVERSION_WORK_TO_FOOD */
+	WorkToGold, /* Apply MULTIPLIER_CONVERSION_WORK_TO_GOLD */
+	GoldToFood, /* ### Not implemented as of 0.20.3.1 ### */
+	GoldToWork  /* ### Not implemented as of 0.20.3.1 ### */
+};
+
 /* *********************************************************
- *						TypeDef							   *
+ *						 Structs						   *
  ********************************************************* */
 
 struct build
@@ -276,14 +295,14 @@ public:
 	virtual void computeWorkToBuild
 	(
 		Player* player,
-		std::vector<Unit_Template>& tabUnit_Template,
+		const std::vector<Unit_Template>& tabUnit_Template,
 		DequeButtonTexte& citieMapBuildQueue
 	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertWorkSurplusToFood													   */
-	/* ROLE : Convert work to food ; Place in _foodStock								   */
+	/* ROLE : Convert work to food ; Place in _foodSurplusPreviousTurn					   */
 	/* INPUT : double workSurplus : work surplus to convert into food					   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
@@ -295,9 +314,25 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertWorkSurplusToFood													   */
+	/* ROLE : Convert food to work ; Place in _workSurplusPreviousTurn					   */
+	/* INPUT : double workSurplus : food surplus to convert into work					   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void convertFoodSurplusToWork
+	(
+		double foodSurplus
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	/* NAME : addBuildToQueue															   */
 	/* ROLE : Push build to buildQueue													   */
-	/* INPUT : build buildToQueue : build to push into buildQueue						   */
+	/* IN : build buildToQueue : build to push into buildQueue							   */
+	/* OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
+	/* INPUT : SDL_Renderer*& renderer : ptr SDL_renderer								   */
+	/* INPUT : TTF_Font* font[] : array of SDL font										   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -309,6 +344,14 @@ public:
 		TTF_Font* font[]
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : removeBuildToQueue														   */
+	/* ROLE : Pop build to buildQueue													   */
+	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void removeBuildToQueue
 	(
 		DequeButtonTexte& citieMapBuildQueue
@@ -448,8 +491,12 @@ private:
 
 	double _foodStock;
 	double _foodBalance;
+	double _foodSurplusPreviousTurn;
 
 	double _workBalance;
+	double _workSurplusPreviousTurn;
+
+	conversionSurplus_Type _conversionToApply;
 
 	std::deque<build> _buildQueue;
 };

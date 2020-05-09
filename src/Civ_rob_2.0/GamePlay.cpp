@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.12
+	last modification on this file on version:0.20.3.1
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -911,8 +911,10 @@ void GamePlay::nextTurn
 		}
 		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 		{
-			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn();
+			/* computeEmotion must be in first : Emotion use on other computations */
 			sysinfo.tabplayer[i]->GETtheCity(j)->computeEmotion();
+
+			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn();
 			sysinfo.tabplayer[i]->GETtheCity(j)->computeWork();
 			sysinfo.tabplayer[i]->GETtheCity(j)
 				->computeWorkToBuild
