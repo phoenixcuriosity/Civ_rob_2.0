@@ -195,7 +195,7 @@ void IHM::alwaysrender
 
 	switch (sysinfo.var.statescreen)
 	{
-	case State_Type::STATEmainmap:
+	case State_Type::STATEmainMap:
 
 		/* *********************************************************
 		 *					START Affichage mainmap				   *
@@ -208,7 +208,7 @@ void IHM::alwaysrender
 		 ********************************************************* */
 
 		break;
-	case State_Type::STATEcitiemap:
+	case State_Type::STATEcityMap:
 
 		/* *********************************************************
 		 *				START Affichage citieMap				   *
@@ -216,10 +216,10 @@ void IHM::alwaysrender
 
 		if (sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size() > 0)
 		{
-			if (NO_CITIE_SELECTED < sysinfo.var.s_player.selectCitie)
+			if (NO_CITY_SELECTED < sysinfo.var.s_player.selectCity)
 			{
 				if (
-						sysinfo.var.s_player.selectCitie
+						sysinfo.var.s_player.selectCity
 						<
 						(int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size()
 					)
@@ -534,17 +534,17 @@ void IHM::citiemap
 	SDL_RenderClear(sysinfo.screen.renderer);
 
 
-	sysinfo.allTextures.citieMap["CitieToolbarButtons"]->render();
-	sysinfo.allTextures.citieMap["CitieToolbarStats"]->render();
+	sysinfo.allTextures.cityMap["CitieToolbarButtons"]->render();
+	sysinfo.allTextures.cityMap["CitieToolbarStats"]->render();
 	
 	/* *********************************************************
 	 *					START Button						   *				
 	 ********************************************************* */
 	
-	sysinfo.allButton.citieMap["Map"]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.citieMap["Build"]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.citieMap["Food"]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.citieMap["Place Citizen"]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.cityMap["Map"]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.cityMap["Build"]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.cityMap["Food"]->renderButtonTexte(sysinfo.var.statescreen);
+	sysinfo.allButton.cityMap["Place Citizen"]->renderButtonTexte(sysinfo.var.statescreen);
 
 
 	/* *********************************************************
@@ -576,11 +576,11 @@ void IHM::citiemap
 				break;
 			}		
 
-			sysinfo.allButton.citieMap[buildName]
+			sysinfo.allButton.cityMap[buildName]
 				->renderButtonTexte(sysinfo.var.statescreen, sysinfo.screen.screenWidth / 2, initspace += space);
 			sysinfo.allTextures.unit[buildName]
 				->render((sysinfo.screen.screenWidth / 2) - 50, initspace);
-			sysinfo.allTextes.citieMap[
+			sysinfo.allTextes.cityMap[
 				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].life) +
 				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].atq) +
 				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].def) +
@@ -588,10 +588,10 @@ void IHM::citiemap
 				->render((sysinfo.screen.screenWidth / 2) + 200, initspace);
 		}
 
-		sysinfo.allTextes.citieMap["Scroll up or down"]->render();
-		sysinfo.allTextes.citieMap["Left click to Select"]->render();
-		sysinfo.allTextes.citieMap["create : "]->render();
-		sysinfo.allTextes.citieMap["selectcreate"]->render();
+		sysinfo.allTextes.cityMap["Scroll up or down"]->render();
+		sysinfo.allTextes.cityMap["Left click to Select"]->render();
+		sysinfo.allTextes.cityMap["create : "]->render();
+		sysinfo.allTextes.cityMap["selectcreate"]->render();
 	}
 	else
 	{
@@ -603,7 +603,7 @@ void IHM::citiemap
 	 ********************************************************* */
 
 	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-		->GETtheCity(sysinfo.var.s_player.selectCitie)
+		->GETtheCity(sysinfo.var.s_player.selectCity)
 			->affichercitiemap(sysinfo);
 
 }

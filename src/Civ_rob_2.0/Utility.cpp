@@ -80,7 +80,7 @@ bool Utility::checkPlayerCitieSelection
 	if	(
 			NO_PLAYER_SELECTED < s_player.selectplayer
 			&&
-			NO_CITIE_SELECTED < s_player.selectCitie
+			NO_CITY_SELECTED < s_player.selectCity
 		)
 	{
 		return true;
@@ -108,7 +108,7 @@ bool Utility::conditionTryToMove
 )
 {
 	if	(
-			State_Type::STATEmainmap == var.statescreen
+			State_Type::STATEmainMap == var.statescreen
 			&&
 			Select_Type::selectmove == var.select
 			&&

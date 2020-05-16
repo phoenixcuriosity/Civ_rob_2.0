@@ -81,11 +81,11 @@ enum class State_Type : Uint8
 {
 	error,					/* ### Reserved on error detection ### */
 	STATEtitleScreen,		/* Title screen : first screen selection */
-	STATEscreennewgame,		/* New game screen : selection of options of a new game */
+	STATEscreenNewgame,		/* New game screen : selection of options of a new game */
 	STATEreload,			/* Load screen : selection of saves to load */
-	STATEmainmap,			/* Maip map screen */
+	STATEmainMap,			/* Maip map screen */
 	STATEscience,			/* Science screen ### Not implemented as of 0.20.0.3  ### */
-	STATEcitiemap			/* Citie map screen : Unit and buildings creation */
+	STATEcityMap			/* Citie map screen : Unit and buildings creation */
 };
 
 // Define all Selection in the game, relate to mouse click

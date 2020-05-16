@@ -9,17 +9,16 @@
 
 	<FilePaths>
 		<Readme>bin/readme.txt</Readme>
-		<Texte>bin/Texte.xml</Texte>
+		<Texts>bin/texts.xml</Texts>
 
-		<Building>bin/BUILDING.txt</Building>
-		<BuildingName>bin/BUILDINGNAME.txt</BuildingName>
-		<CitieName>bin/CITIENAME.txt</CitieName>
-		<Unit>bin/Unit.xml</Unit>
-		<SpecName>bin/SPECNAME.txt</SpecName>
+		<Buildings>bin/buildings.txt</Buildings>
+		<CitiesNames>bin/citiesNames.txt</CitiesNames>
+		<Units>bin/units.xml</Units>
+		<SpecNames>bin/specNames.txt</SpecNames>
 
-		<SaveInfo>save/SaveInfo.txt</SaveInfo>
-		<SaveMaps>save/SaveMaps.txt</SaveMaps>
-		<SavePlayer>save/SavePlayer.txt</SavePlayer>
+		<SaveInfo>save/saveInfo.txt</SaveInfo>
+		<SaveMaps>saveMaps.txt</SaveMaps>
+		<SavePlayers>savePlayers.txt</SavePlayers>
 	</FilePaths>
 
 

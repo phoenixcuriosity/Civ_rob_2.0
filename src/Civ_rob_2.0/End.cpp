@@ -130,7 +130,7 @@ void End::deleteAll
 
 	deleteTexture(sysinfo.allTextures.titleScreen, "Texture");
 	deleteTexture(sysinfo.allTextures.unit, "Texture");
-	deleteTexture(sysinfo.allTextures.citieMap, "Texture");
+	deleteTexture(sysinfo.allTextures.cityMap, "Texture");
 
 	/* *********************************************************
 	 *				 END delete Texture*					   *
@@ -145,7 +145,7 @@ void End::deleteAll
 	deleteTexte(sysinfo.allTextes.titleScreen, "Texte");
 	deleteTexte(sysinfo.allTextes.newGame, "Texte");
 	deleteTexte(sysinfo.allTextes.mainMap, "Texte");
-	deleteTexte(sysinfo.allTextes.citieMap, "Texte");
+	deleteTexte(sysinfo.allTextes.cityMap, "Texte");
 
 	/* *********************************************************
 	 *					END delete Texte*					   *
@@ -160,7 +160,7 @@ void End::deleteAll
 	deleteButtonTexte(sysinfo.allButton.player, "Button");
 	deleteButtonTexte(sysinfo.allButton.reload, "Button");
 	deleteButtonTexte(sysinfo.allButton.mainMap, "Button");
-	deleteButtonTexte(sysinfo.allButton.citieMap, "Button");
+	deleteButtonTexte(sysinfo.allButton.cityMap, "Button");
 
 	/* *********************************************************
 	 *				 END delete Button*						   *

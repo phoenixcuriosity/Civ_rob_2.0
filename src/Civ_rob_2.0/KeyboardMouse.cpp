@@ -2226,7 +2226,7 @@ void KeyboardMouse::mouse
 	else if (
 				SDL_BUTTON_RIGHT == event.button.button
 				&&
-				State_Type::STATEmainmap == sysinfo.var.statescreen
+				State_Type::STATEmainMap == sysinfo.var.statescreen
 			)
 	{
 		cliqueDroit(sysinfo);
@@ -2255,7 +2255,7 @@ void KeyboardMouse::cliqueGauche
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 	switch (sysinfo.var.statescreen)
 	{
-	case State_Type::STATEmainmap:
+	case State_Type::STATEmainMap:
 		
 		if (checkSTATEmainmap(sysinfo)) return;
 
@@ -2283,7 +2283,7 @@ void KeyboardMouse::cliqueGauche
 		if (checkSTATEreload(sysinfo)) return;
 
 		break;
-	case State_Type::STATEcitiemap:
+	case State_Type::STATEcityMap:
 
 		if (checkSTATEcitiemap(sysinfo)) return;
 
@@ -2499,8 +2499,8 @@ bool KeyboardMouse::checkSTATEreload
 			sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
 				->changeOn();
 			sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
-			sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveMaps.txt";
-			sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SavePlayer.txt";
+			sysinfo.file.saveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/saveMaps.txt";
+			sysinfo.file.savePlayers = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/savePlayer.txt";
 			IHM::reloadScreen(sysinfo);
 			return true;
 		}
@@ -2523,19 +2523,19 @@ bool KeyboardMouse::checkSTATEcitiemap
 	Sysinfo& sysinfo
 )
 {
-	if (sysinfo.allButton.citieMap["Map"]
+	if (sysinfo.allButton.cityMap["Map"]
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
-		sysinfo.var.s_player.selectCitie = NO_CITIE_SELECTED;
-		sysinfo.var.statescreen = State_Type::STATEmainmap;
+		sysinfo.var.s_player.selectCity = NO_CITY_SELECTED;
+		sysinfo.var.statescreen = State_Type::STATEmainMap;
 		sysinfo.var.select = Select_Type::selectnothing;
 		resetButtonCitieMap(sysinfo);
 		return true;
 	}
-	if (sysinfo.allButton.citieMap["Build"]
+	if (sysinfo.allButton.cityMap["Build"]
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
-		sysinfo.allButton.citieMap["Build"]
+		sysinfo.allButton.cityMap["Build"]
 			->changeOn();
 		if (sysinfo.var.select != Select_Type::selectcreate)
 			sysinfo.var.select = Select_Type::selectcreate;
@@ -2544,10 +2544,10 @@ bool KeyboardMouse::checkSTATEcitiemap
 		resetButtonCitieMap(sysinfo);
 		return true;
 	}
-	if (sysinfo.allButton.citieMap["Place Citizen"]
+	if (sysinfo.allButton.cityMap["Place Citizen"]
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
-		sysinfo.allButton.citieMap["Place Citizen"]
+		sysinfo.allButton.cityMap["Place Citizen"]
 			->changeOn();
 		if (sysinfo.var.select != Select_Type::selectmoveCitizen)
 			sysinfo.var.select = Select_Type::selectmoveCitizen;
@@ -2562,11 +2562,11 @@ bool KeyboardMouse::checkSTATEcitiemap
 	{
 		for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 		{
-			if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Template[i].name]
+			if (sysinfo.allButton.cityMap[sysinfo.var.s_player.tabUnit_Template[i].name]
 					->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 			{
 				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-					->GETtheCity(sysinfo.var.s_player.selectCitie)
+					->GETtheCity(sysinfo.var.s_player.selectCity)
 						->addBuildToQueue
 							(
 								{
@@ -2574,7 +2574,7 @@ bool KeyboardMouse::checkSTATEcitiemap
 									sysinfo.var.s_player.tabUnit_Template[i].name,
 									build_Type::unit 
 								},
-								sysinfo.allButton.citieMapBuildQueue,
+								sysinfo.allButton.cityMapBuildQueue,
 								sysinfo.screen.renderer,
 								sysinfo.allTextures.font
 							);
@@ -2605,7 +2605,7 @@ void KeyboardMouse::cliqueDroit
 	{
 		switch (sysinfo.var.statescreen)
 		{
-		case State_Type::STATEmainmap:
+		case State_Type::STATEmainMap:
 			switch (sysinfo.var.select) 
 			{
 			case Select_Type::selectcreate:
@@ -2719,7 +2719,7 @@ void KeyboardMouse::resetButtonPlayerOn(Sysinfo& sysinfo)
 /* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::resetButtonCitieMap(Sysinfo& sysinfo)
 {
-	for (const auto& n : sysinfo.allButton.citieMap)
+	for (const auto& n : sysinfo.allButton.cityMap)
 	{
 		n.second->resetOnstateScreen(sysinfo.var.select);
 	}
@@ -2743,7 +2743,7 @@ void KeyboardMouse::inspect
 {
 	switch (sysinfo.var.statescreen)
 	{
-	case State_Type::STATEmainmap:
+	case State_Type::STATEmainMap:
 
 		sysinfo.var.mouse.refreshMousePos
 		(

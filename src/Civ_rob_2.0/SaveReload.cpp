@@ -47,7 +47,7 @@ void SaveReload::saveMaps
 	Sysinfo& sysinfo
 )
 {
-	std::ofstream saveMaps(sysinfo.file.SaveMaps);
+	std::ofstream saveMaps(sysinfo.file.saveMaps);
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
@@ -70,7 +70,7 @@ void SaveReload::saveMaps
 		}
 	}
 	else
-		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.saveMaps);
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -88,7 +88,7 @@ void SaveReload::loadMaps
 {
 	std::string input(EMPTY_STRING);
 
-	std::ifstream saveMaps(sysinfo.file.SaveMaps);
+	std::ifstream saveMaps(sysinfo.file.saveMaps);
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < sysinfo.map.maps.size(); i++)
@@ -132,7 +132,7 @@ void SaveReload::loadMaps
 		}
 	}
 	else
-		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveMaps);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.saveMaps);
 
 	LoadConfig::logfileconsole("[INFO]___: Save End");
 }
@@ -150,7 +150,7 @@ void SaveReload::savePlayer
 	Sysinfo& sysinfo
 )
 {
-	std::ofstream savePlayer(sysinfo.file.SavePlayer);
+	std::ofstream savePlayer(sysinfo.file.savePlayers);
 	if (savePlayer)
 	{
 		savePlayer << "nbPlayer= " << sysinfo.tabplayer.size();
@@ -196,7 +196,7 @@ void SaveReload::savePlayer
 		}
 	}
 	else
-		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.savePlayers);
 
 }
 
@@ -213,7 +213,7 @@ void SaveReload::loadPlayer
 	Sysinfo& sysinfo
 )
 {
-	sysinfo.var.statescreen = State_Type::STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainMap;
 
 	std::string		destroy(EMPTY_STRING),
 					name(EMPTY_STRING),
@@ -228,7 +228,7 @@ void SaveReload::loadPlayer
 
 	int initspacename(200), spacename(32);
 
-	std::ifstream savePlayer(sysinfo.file.SavePlayer);
+	std::ifstream savePlayer(sysinfo.file.savePlayers);
 	if (savePlayer)
 	{
 		savePlayer >> destroy;
@@ -307,7 +307,7 @@ void SaveReload::loadPlayer
 		}
 	}
 	else
-		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SavePlayer);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.savePlayers);
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -372,7 +372,7 @@ void SaveReload::createSave
 	}
 
 
-	std::ofstream saveInfo(sysinfo.file.SaveInfo);
+	std::ofstream saveInfo(sysinfo.file.saveInfo);
 	if (saveInfo) 
 	{
 		saveInfo << "NbSave=";
@@ -382,14 +382,14 @@ void SaveReload::createSave
 			saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 	}
 	else
-		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.saveInfo);
 
 	std::string save = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave());
 	_mkdir(save.c_str());
 	sysinfo.var.save.SETnbSave(sysinfo.var.save.GETnbSave() + 1);
 
-	sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
-	sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
+	sysinfo.file.saveMaps = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/saveMaps.txt";
+	sysinfo.file.savePlayers = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/savePlayer.txt";
 
 	LoadConfig::logfileconsole("[INFO]___: createSave End");
 }
@@ -431,13 +431,13 @@ void SaveReload::removeSave
 		if (condition) 
 		{
 
-			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SaveMaps.txt";
+			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/saveMaps.txt";
 			if (remove(file.c_str()) != 0)
 				LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
 				LoadConfig::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
-			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/SavePlayer.txt";
+			file = "save/" + std::to_string(sysinfo.var.save.GETcurrentSave()) + "/savePlayer.txt";
 			if (remove(file.c_str()) != 0)
 				LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
@@ -463,7 +463,7 @@ void SaveReload::removeSave
 
 			
 
-			std::ofstream saveInfo(sysinfo.file.SaveInfo);
+			std::ofstream saveInfo(sysinfo.file.saveInfo);
 			if (saveInfo)
 			{
 				saveInfo << "NbSave=";
@@ -473,7 +473,7 @@ void SaveReload::removeSave
 					saveInfo << std::endl << sysinfo.var.save.GETtabSave()[i];
 			}
 			else
-				LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+				LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.saveInfo);
 		}
 		else
 		{
@@ -510,13 +510,13 @@ void SaveReload::clearSave
 	std::string file(EMPTY_STRING);
 	for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 	{
-		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SaveMaps.txt";
+		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/saveMaps.txt";
 		if (remove(file.c_str()) != 0)
 			LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
 			LoadConfig::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
-		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/SavePlayer.txt";
+		file = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[i]) + "/savePlayer.txt";
 		if (remove(file.c_str()) != 0)
 			LoadConfig::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
@@ -529,7 +529,7 @@ void SaveReload::clearSave
 			LoadConfig::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 	}
 
-	std::ofstream saveInfo(sysinfo.file.SaveInfo);
+	std::ofstream saveInfo(sysinfo.file.saveInfo);
 	if (saveInfo)
 	{
 		saveInfo << "NbSave=";
@@ -537,7 +537,7 @@ void SaveReload::clearSave
 		saveInfo << std::endl << "SaveUse=";
 	}
 	else
-		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		LoadConfig::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + sysinfo.file.saveInfo);
 
 	sysinfo.var.save.SETnbSave(0);
 	sysinfo.var.save.SETcurrentSave(0);

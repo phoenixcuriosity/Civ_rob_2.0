@@ -61,7 +61,7 @@ void City::createCity
 		/*  : En fonction du nombre de Citie déjà crées et de MAX_CITY_PER_PLAYER */
 		/* ---------------------------------------------------------------------- */
 
-		std::string name(sysinfo.var.s_player.tabCitieName
+		std::string name(sysinfo.var.s_player.tabCitiesName
 			[
 				(unsigned int)
 				(
@@ -280,8 +280,8 @@ void City::searchCityTile
 							(var.mouse.GETmouse_xNormalized(), var.mouse.GETmouse_yNormalized())
 			)
 		{
-			var.s_player.selectCitie = i;
-			var.statescreen = State_Type::STATEcitiemap;
+			var.s_player.selectCity = i;
+			var.statescreen = State_Type::STATEcityMap;
 			var.select = Select_Type::selectnothing;
 			return;
 		}
@@ -687,7 +687,7 @@ void City::addBuildToQueue
 {
 	ButtonTexte::createButtonTexte
 		(renderer, font,
-		State_Type::STATEcitiemap, Select_Type::selectnothing, citieMapBuildQueue,
+		State_Type::STATEcityMap, Select_Type::selectnothing, citieMapBuildQueue,
 		Texte_Type::shaded, buildToQueue.name, WriteColorButton, BackColorButton, 32,
 		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
 		nonTransparent, no_angle, Center_Type::center);
@@ -751,7 +751,7 @@ void City::afficher
 	unsigned int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
 	unsigned int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
 
-	sysinfo.allTextures.citieMap[_image]->render(x, y);
+	sysinfo.allTextures.cityMap[_image]->render(x, y);
 
 	sysinfo.allTextes.mainMap[_name]->render(x + sysinfo.map.tileSize / 2, y + sysinfo.map.tileSize);
 
@@ -776,9 +776,9 @@ void City::affichercitiemap
 {
 	afficherCitieTiles(sysinfo);
 
-	afficherCitieFood(sysinfo.map.tileSize, sysinfo.allTextures.citieMap);
+	afficherCitieFood(sysinfo.map.tileSize, sysinfo.allTextures.cityMap);
 
-	afficherCitieBuildToQueue(sysinfo.allTextes.citieMap, sysinfo.allButton.citieMapBuildQueue);
+	afficherCitieBuildToQueue(sysinfo.allTextes.cityMap, sysinfo.allButton.cityMapBuildQueue);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -837,7 +837,7 @@ void City::afficherCitieTiles
 		{
 			if (_citizens[nbCitizen]->GETtileOccupied() == i && _citizens[nbCitizen]->GETplace())
 			{
-				_citizens[nbCitizen]->afficher(sysinfo.allTextures.citieMap, _tile[i].tile_x, _tile[i].tile_y);
+				_citizens[nbCitizen]->afficher(sysinfo.allTextures.cityMap, _tile[i].tile_x, _tile[i].tile_y);
 			}
 			else
 			{

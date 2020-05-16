@@ -51,7 +51,7 @@ void GamePlay::newGame
 )
 {
 	LoadConfig::logfileconsole("[INFO]___: Newgame Start");
-	sysinfo.var.statescreen = State_Type::STATEscreennewgame;
+	sysinfo.var.statescreen = State_Type::STATEscreenNewgame;
 
 	SaveReload::createSave(sysinfo);
 
@@ -152,7 +152,7 @@ void GamePlay::newGame
 	/* Création des boutons pour séléctionner les joueurs			 		  */
 	/* ---------------------------------------------------------------------- */
 	int initspacename(200), spacename(24);
-	sysinfo.var.statescreen = State_Type::STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainMap;
 	sysinfo.var.cinState = CinState_Type::cinMainMap;
 	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 	{
@@ -921,7 +921,7 @@ void GamePlay::nextTurn
 					(
 						sysinfo.tabplayer[i],
 						sysinfo.var.s_player.tabUnit_Template,
-						sysinfo.allButton.citieMapBuildQueue
+						sysinfo.allButton.cityMapBuildQueue
 					);
 		}
 	}
