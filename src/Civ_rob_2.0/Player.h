@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.15
-	file version : 1.2
+	last modification on this file on version:0.20.4.1
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,7 +36,7 @@
  *						Constantes						   *
  ********************************************************* */
 
- /* N/A */
+#define INITIAL_GOLD 100.0
 
 /* *********************************************************
  *						 Enum							   *
@@ -48,7 +48,20 @@
  *						Structures						   *
  ********************************************************* */
 
-/* N/A */
+struct GoldStats
+{
+	double gold;
+	double goldBalance;
+	double income;
+	double cost;
+
+	double taxIncome;
+	double commerceIncome;
+	double goldConversionSurplus;
+
+	double armiesCost;
+	double buildingsCost;
+};
 
 /* *********************************************************
  *						 Classes						   *
@@ -187,6 +200,39 @@ public:
 		unsigned int
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : computeGold																   */
+	/* ROLE : Compute income and cost then the balance between the two					   */
+	/* ROLE : Add balance to the player gold											   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void computeGold();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : resetGoldStats															   */
+	/* ROLE : Reset all stats of _goldStats except gold									   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void resetGoldStats();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : resetGoldStats															   */
+	/* ROLE : Reset all stats of _goldStats except gold									   */
+	/* INPUT : double goldToAdd	: gold to add in goldConversionSurplus					   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void addGoldToGoldConversionSurplus
+	(
+		double goldToAdd
+	);
 	
 public:
 	/* *********************************************************
@@ -199,6 +245,7 @@ public:
 	inline virtual std::vector<Unit*> GETtabUnit() const		{ return _tabUnit; };
 	inline virtual City* GETtheCity(unsigned int index) const	{ return _tabCity[index]; };
 	inline virtual std::vector<City*> GETtabCity() const		{ return _tabCity; };
+	inline virtual GoldStats& GETgoldStats()					{ return _goldStats; };
 
 	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
 
@@ -213,6 +260,7 @@ private:
 	std::string _name;
 	std::vector<Unit*> _tabUnit;
 	std::vector<City*> _tabCity;
+	GoldStats _goldStats;
 };
 
 

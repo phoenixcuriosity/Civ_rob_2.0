@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.17
-	file version : 1.1
+	last modification on this file on version:0.20.4.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -134,6 +134,21 @@ public:
 	static void deleteButtonTexte
 	(
 		std::unordered_map<std::string, ButtonTexte*>& unmap,
+		const std::string& name
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteButtonTexte															   */
+	/* ROLE : Destruction des allocations dynamiques de la unordered_map				   */
+	/* INPUT/OUTPUT : DequeButtonTexte& dequeButton: deque ButtonTexte					   */
+	/* INPUT : const std::string name : name de la Texture								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void deleteButtonTexte
+	(
+		DequeButtonTexte& dequeButton,
 		const std::string& name
 	);
 

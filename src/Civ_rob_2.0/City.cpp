@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.3.1
-	file version : 1.17
+	last modification on this file on version:0.20.4.1
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,6 +27,8 @@
  ********************************************************* */
 
 #include "City.h"
+
+#include "ConstCityIHM.h"
 
 #include "IHM.h"
 #include "LoadConfig.h"
@@ -325,7 +327,7 @@ City::City
 _name(name), _x(x), _y(y), _tile(tiles),
 _influenceLevel(1),_nbpop(1), _atq(0), _def(0), _emotion(0), _nbstructurebuild(0),
 _foodStock(0), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food),
-_foodSurplusPreviousTurn(0), _workBalance(0), _workSurplusPreviousTurn(0),
+_foodSurplusPreviousTurn(0), _workBalance(0), _workSurplusPreviousTurn(0), _goldBalance(0.0),
 _conversionToApply(conversionSurplus_Type::No_Conversion)
 {
 	_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
@@ -360,11 +362,14 @@ City::~City()
 /* ----------------------------------------------------------------------------------- */
 /* NAME : foodNextTurn																   */
 /* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
-/* INPUT : void																		   */
+/* OUT : GoldStats& goldStats : Player gold stats									   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void City::foodNextTurn()
+void City::foodNextTurn
+(
+	GoldStats& goldStats
+)
 {
 	double foodLimitPerLevelCurrent(15 + ((double)_nbpop - 1) * 6 + pow((_nbpop - 1), 1.8));
 	double foodLimitPerLevelMinusOne(15 + ((double)_nbpop - 1 - 1) * 6 + pow((_nbpop - 1 - 1), 1.8));
@@ -430,7 +435,8 @@ void City::foodNextTurn()
 			_foodBalance = 0.0;
 			break;
 		case conversionSurplus_Type::FoodToGold:
-			/* TODO */
+			convertFoodSurplusToGold(_foodBalance, goldStats);
+			_foodBalance = 0.0;
 			break;
 		case conversionSurplus_Type::WorkToFood:
 			/* N/A */
@@ -580,18 +586,20 @@ void City::computeWorkToBuild
 	DequeButtonTexte& citieMapBuildQueue
 )
 {
-	if (_buildQueue.size() > 0)
+	if (_conversionToApply != conversionSurplus_Type::WorkToGold)
 	{
-		_buildQueue.front().remainingWork -= _workBalance;
-
-		double workSurplus(0.0);
-		while (_buildQueue.front().remainingWork < 0.0)
+		if (_buildQueue.size() > 0)
 		{
-			if (build_Type::unit == _buildQueue.front().type)
-			{
-				Uint8 unitToBuild(Unit::searchUnitByName(_buildQueue.front().name, tabUnit_Template));
+			_buildQueue.front().remainingWork -= _workBalance;
 
-				player->addUnit
+			double workSurplus(0.0);
+			while (_buildQueue.front().remainingWork < 0.0)
+			{
+				if (build_Type::unit == _buildQueue.front().type)
+				{
+					Uint8 unitToBuild(Unit::searchUnitByName(_buildQueue.front().name, tabUnit_Template));
+
+					player->addUnit
 					(
 						_buildQueue.front().name,
 						_x,
@@ -603,35 +611,77 @@ void City::computeWorkToBuild
 						tabUnit_Template[unitToBuild].movement,
 						tabUnit_Template[unitToBuild].level
 					);
-			}
-			else
-			if (build_Type::building == _buildQueue.front().type)
-			{
-				/* TODO buildings */
-			}
-			else
-			{
-				/* N/A */
+				}
+				else
+					if (build_Type::building == _buildQueue.front().type)
+					{
+						/* TODO buildings */
+					}
+					else
+					{
+						/* N/A */
 #ifdef _DEBUG_MODE
-				throw("[ERROR]___: computeWorkToBuild : _buildQueue.front().type == else");
+						throw("[ERROR]___: computeWorkToBuild : _buildQueue.front().type == else");
 #endif // DEBUG_MODE
-			}
+					}
 
-			workSurplus = - (_buildQueue.front().remainingWork);
+				workSurplus = -(_buildQueue.front().remainingWork);
 
-			removeBuildToQueue(citieMapBuildQueue);
+				removeBuildToQueue(citieMapBuildQueue);
 
-			if (_buildQueue.size() > 0)
-			{
-				_buildQueue.front().remainingWork -= workSurplus;
-			}
-			else
-			{
-				convertWorkSurplusToFood(workSurplus);
-				return;
+				if (_buildQueue.size() > 0)
+				{
+					_buildQueue.front().remainingWork -= workSurplus;
+				}
+				else
+				{
+					convertWorkSurplusToFood(workSurplus);
+					return;
+				}
 			}
 		}
 	}
+	else
+	{
+		player->addGoldToGoldConversionSurplus(_workBalance * MULTIPLIER_CONVERSION_WORK_TO_GOLD);
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : computeGold																   */
+/* ROLE : Calculate the gold for the turn											   */
+/* INPUT : void																		   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::computeGold()
+{
+	_goldBalance = 0.0;
+	for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
+	{
+		_goldBalance += (double)_citizens[nbCitizen]->GETwork();
+	}
+
+	/* Applying Emotion multiplier */
+	_goldBalance *= ((double)_emotion / SCALE_RANGE_MEAN_EMOTION);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : addCityGoldToTaxIncome													   */
+/* ROLE : Add _goldBalance to a player taxIncome 									   */
+/* OUT : GoldStats& goldStats : struct of player gold								   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::addCityGoldToTaxIncome
+(
+	GoldStats& goldStats
+)
+{
+	goldStats.taxIncome += _goldBalance;
+	_goldBalance = 0.0;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -668,6 +718,24 @@ void City::convertFoodSurplusToWork
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
+/* NAME : convertFoodSurplusToGold													   */
+/* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
+/* INPUT : double workSurplus : food surplus to convert into work					   */
+/* OUT : GoldStats& goldStats : gold surplus conversion								   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::convertFoodSurplusToGold
+(
+	double foodSurplus,
+	GoldStats& goldStats
+)
+{
+	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER_CONVERSION_FOOD_TO_GOLD;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 /* NAME : addBuildToQueue															   */
 /* ROLE : Push build to buildQueue													   */
 /* IN : build buildToQueue : build to push into buildQueue							   */
@@ -688,8 +756,8 @@ void City::addBuildToQueue
 	ButtonTexte::createButtonTexte
 		(renderer, font,
 		State_Type::STATEcityMap, Select_Type::selectnothing, citieMapBuildQueue,
-		Texte_Type::shaded, buildToQueue.name, WriteColorButton, BackColorButton, 32,
-		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		Texte_Type::shaded, buildToQueue.name, WriteColorButton, BackColorButton, CITY_BUILD_QUEUE_FONT_SIZE,
+			CITY_BUILD_QUEUE_BEGIN_X, CITY_BUILD_QUEUE_BEGIN_Y + ((unsigned int)citieMapBuildQueue.size() * CITY_BUILD_QUEUE_SPACE_Y),
 		nonTransparent, no_angle, Center_Type::center);
 	_buildQueue.push_back(buildToQueue);
 }
@@ -769,16 +837,106 @@ void City::afficher
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void City::affichercitiemap
+void City::afficherCityMap
 (
 	Sysinfo& sysinfo
 )
 {
-	afficherCitieTiles(sysinfo);
+	displayTexturesTextesButtons
+	(
+		sysinfo.allTextures.cityMap,
+		sysinfo.allTextures.unit,
+		sysinfo.allTextes.cityMap,
+		sysinfo.allButton.cityMap,
+		sysinfo.var,
+		sysinfo.screen.screenWidth
+	);
 
-	afficherCitieFood(sysinfo.map.tileSize, sysinfo.allTextures.cityMap);
+	afficherCityTiles(sysinfo);
 
-	afficherCitieBuildToQueue(sysinfo.allTextes.cityMap, sysinfo.allButton.cityMapBuildQueue);
+	afficherCityFood(sysinfo.map.tileSize, sysinfo.allTextures.cityMap);
+
+	afficherCityBuildToQueue(sysinfo.allTextes.cityMap, sysinfo.allButton.cityMapBuildQueue);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : afficher																	   */
+/* ROLE : Affichage de la City (Texture et nom)										   */
+/* IN : MapTexture& cityMapTextures : CityMap Textures								   */
+/* IN : MapTexture& unit : Unit Textures											   */
+/* IN : MapTexte& cityMapTextes : CityMap Textes									   */
+/* IN : MapButtonTexte& cityMapButtonTexte : CityMap Buttons						   */
+/* IN : Var& var : structure Var													   */
+/* IN : unsigned int screenWidth : screen size width in pixel 						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::displayTexturesTextesButtons
+(
+	MapTexture& cityMapTextures,
+	MapTexture& unit,
+	MapTexte& cityMapTextes,
+	MapButtonTexte& cityMapButtonTexte,
+	Var& var,
+	unsigned int screenWidth
+)
+{
+	cityMapTextures["CitieToolbarButtons"]->render();
+	cityMapTextures["CitieToolbarStats"]->render();
+
+	/* *********************************************************
+	 *					START Button						   *
+	 ********************************************************* */
+
+	std::string buildName(EMPTY_STRING);
+	unsigned int initspace(CITY_BUILDS_BEGIN_Y);
+	if (Select_Type::selectcreate == var.select)
+	{
+		for (Uint8 j(0); j < MAX_UNIT_TO_DISPLAY_CITIEMAP; j++)
+		{
+			if (
+				((unsigned __int64)var.s_player.unitToCreate + j)
+				<
+				var.s_player.tabUnit_Template.size()
+				)
+			{
+				buildName = var.s_player.tabUnit_Template
+					[(unsigned __int64)var.s_player.unitToCreate + j].name;
+			}
+			else
+			{
+				break;
+			}
+
+			cityMapButtonTexte[buildName]
+				->renderButtonTexte(var.statescreen, screenWidth / 2, initspace += CITY_BUILDS_SPACE_Y);
+			unit[buildName]
+				->render((screenWidth / 2) - 50, initspace);
+			cityMapTextes[
+				"life:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].life) +
+					"/atq:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].atq) +
+					"/def:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].def) +
+					"/move:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].movement)]
+				->render((screenWidth / 2) + 200, initspace);
+		}
+
+		cityMapTextes["Scroll up or down"]->render();
+		cityMapTextes["Left click to Select"]->render();
+		cityMapTextes["create : "]->render();
+		cityMapTextes["selectcreate"]->render();
+	}
+	else
+	{
+		/* N/A */
+	}
+
+
+	cityMapButtonTexte["Map"]->renderButtonTexte(var.statescreen);
+	cityMapButtonTexte["Build"]->renderButtonTexte(var.statescreen);
+	cityMapButtonTexte["Food"]->renderButtonTexte(var.statescreen);
+	cityMapButtonTexte["Place Citizen"]->renderButtonTexte(var.statescreen);
+
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -789,7 +947,7 @@ void City::affichercitiemap
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void City::afficherCitieTiles
+void City::afficherCityTiles
 (
 	Sysinfo& sysinfo
 )
@@ -856,19 +1014,19 @@ void City::afficherCitieTiles
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void City::afficherCitieFood
+void City::afficherCityFood
 (
 	unsigned int tileSize,
 	MapTexture& citieMap
 )
 {
 	/* Affichage food */
-	unsigned int renderFoodX(24), renderFoodY(tileSize), offSetRenderX(0), offSetRenderY(0);
-	if (_foodStock > 0)
+	unsigned int renderFoodY(tileSize), offSetRenderX(0), offSetRenderY(0);
+	if (_foodStock > 0.0)
 	{
-		for (double nbfood(0); nbfood < _foodStock; nbfood++)
+		for (double nbfood(0.0); nbfood < _foodStock; nbfood++)
 		{
-			if (((unsigned int)nbfood % 10) == 0)
+			if (((unsigned int)nbfood % CITY_FOOD_NB_PER_ROW) == 0)
 			{
 				offSetRenderY++;
 				offSetRenderX = 0;
@@ -878,7 +1036,9 @@ void City::afficherCitieFood
 				/* N/A */
 			}
 
-			citieMap["food.png"]->render(1400 + (offSetRenderX * renderFoodX), 500 + (offSetRenderY * renderFoodY));
+			citieMap["food.png"]->render
+				(CITY_FOOD_BEGIN_X + (offSetRenderX * CITY_FOOD_SPACE_X),
+				 CITY_FOOD_BEGIN_Y + (offSetRenderY * renderFoodY));
 
 			offSetRenderX++;
 		}
@@ -898,7 +1058,7 @@ void City::afficherCitieFood
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void City::afficherCitieBuildToQueue
+void City::afficherCityBuildToQueue
 (
 	MapTexte& citieMap,
 	DequeButtonTexte& citieMapBuildQueue
@@ -912,7 +1072,7 @@ void City::afficherCitieBuildToQueue
 	{
 		for (unsigned int indexBuildQueue(0); indexBuildQueue < _buildQueue.size(); indexBuildQueue++)
 		{
-			citieMapBuildQueue[indexBuildQueue]->render(100, 600 + 32 * indexBuildQueue);
+			citieMapBuildQueue[indexBuildQueue]->render();
 		}
 	}
 	else

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.25
+	last modification on this file on version:0.20.4.1
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -224,7 +224,11 @@ void IHM::alwaysrender
 						(int)sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtabCity().size()
 					)
 				{
-					citiemap(sysinfo);
+					SDL_RenderClear(sysinfo.screen.renderer);
+
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETtheCity(sysinfo.var.s_player.selectCity)
+							->afficherCityMap(sysinfo);
 				}
 				else
 				{
@@ -515,97 +519,6 @@ void IHM::afficherSupertiles
 	//t2 = clock();
 	//std::cout << std::endl << "temps d'execution de alwaysrender : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : citiemap																	   */
-/* ROLE : Affichage de la fenetre citiemap											   */
-/* ROLE : fonctionnement selon l'état : enum State_Type = STATEcitiemap				   */
-/* INPUT : struct Sysinfo& : structure globale du programme							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void IHM::citiemap
-(
-	Sysinfo& sysinfo
-)
-{
-	SDL_RenderClear(sysinfo.screen.renderer);
-
-
-	sysinfo.allTextures.cityMap["CitieToolbarButtons"]->render();
-	sysinfo.allTextures.cityMap["CitieToolbarStats"]->render();
-	
-	/* *********************************************************
-	 *					START Button						   *				
-	 ********************************************************* */
-	
-	sysinfo.allButton.cityMap["Map"]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.cityMap["Build"]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.cityMap["Food"]->renderButtonTexte(sysinfo.var.statescreen);
-	sysinfo.allButton.cityMap["Place Citizen"]->renderButtonTexte(sysinfo.var.statescreen);
-
-
-	/* *********************************************************
-	 *					END Button							   *
-	 ********************************************************* */
-
-	/* *********************************************************
-	 *			 START select = selectcreate				   *
-	 ********************************************************* */
-
-	std::string buildName(EMPTY_STRING);
-	unsigned int initspace(96), space(32);
-	if (Select_Type::selectcreate == sysinfo.var.select)
-	{
-		initspace = 96;
-		for (Uint8 j(0); j < MAX_UNIT_TO_DISPLAY_CITIEMAP; j++)
-		{
-			if	(
-					((unsigned __int64)sysinfo.var.s_player.unitToCreate + j)
-					<
-					sysinfo.var.s_player.tabUnit_Template.size()
-				)
-			{
-				buildName = sysinfo.var.s_player.tabUnit_Template
-					[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].name;
-			}	
-			else
-			{
-				break;
-			}		
-
-			sysinfo.allButton.cityMap[buildName]
-				->renderButtonTexte(sysinfo.var.statescreen, sysinfo.screen.screenWidth / 2, initspace += space);
-			sysinfo.allTextures.unit[buildName]
-				->render((sysinfo.screen.screenWidth / 2) - 50, initspace);
-			sysinfo.allTextes.cityMap[
-				"life:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].life) +
-				"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].atq) +
-				"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].def) +
-				"/move:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[(unsigned __int64)sysinfo.var.s_player.unitToCreate + j].movement)]
-				->render((sysinfo.screen.screenWidth / 2) + 200, initspace);
-		}
-
-		sysinfo.allTextes.cityMap["Scroll up or down"]->render();
-		sysinfo.allTextes.cityMap["Left click to Select"]->render();
-		sysinfo.allTextes.cityMap["create : "]->render();
-		sysinfo.allTextes.cityMap["selectcreate"]->render();
-	}
-	else
-	{
-		/* N/A */
-	}
-
-	/* *********************************************************
-	 *			 END select = selectcreate					   *
-	 ********************************************************* */
-
-	sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
-		->GETtheCity(sysinfo.var.s_player.selectCity)
-			->affichercitiemap(sysinfo);
-
 }
 
 /* ----------------------------------------------------------------------------------- */

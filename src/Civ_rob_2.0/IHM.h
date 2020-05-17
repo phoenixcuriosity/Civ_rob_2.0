@@ -167,20 +167,6 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : citiemap																	   */
-	/* ROLE : Affichage de la fenetre citiemap											   */
-	/* ROLE : fonctionnement selon l'état : enum State_Type = STATEcitiemap				   */
-	/* INPUT : struct Sysinfo& : structure globale du programme							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void citiemap
-	(
-		Sysinfo&
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : countFrame																   */
 	/* ROLE : Compteur de frames durant le programme 									   */
 	/* ROLE : Début : à la fin de la fonction newGame(...)								   */

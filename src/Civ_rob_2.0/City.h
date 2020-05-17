@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.3.1
-	file version : 1.10
+	last modification on this file on version:0.20.4.1
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -67,6 +67,9 @@ const Uint8 MAX_CITY_PER_PLAYER = 5;
 /* Define the multiplier coefficient to convert work to gold */
 #define MULTIPLIER_CONVERSION_WORK_TO_GOLD (10.0 * MULTIPLIER_CONVERSION_WORK_TO_FOOD)
 
+/* Define the multiplier coefficient to convert food to gold */
+#define MULTIPLIER_CONVERSION_FOOD_TO_GOLD (MULTIPLIER_CONVERSION_WORK_TO_GOLD / MULTIPLIER_CONVERSION_FOOD_TO_WORK)
+
 /* *********************************************************
  *							 Enum						   *
  ********************************************************* */
@@ -83,7 +86,7 @@ enum class conversionSurplus_Type : Uint8
 {
 	No_Conversion,
 	FoodToWork, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_WORK */
-	FoodToGold, /* ### Not implemented as of 0.20.3.1 ### */
+	FoodToGold, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_GOLD */
 	WorkToFood, /* Apply MULTIPLIER_CONVERSION_WORK_TO_FOOD */
 	WorkToGold, /* Apply MULTIPLIER_CONVERSION_WORK_TO_GOLD */
 	GoldToFood, /* ### Not implemented as of 0.20.3.1 ### */
@@ -238,11 +241,14 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : foodNextTurn																   */
 	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
-	/* INPUT : void																		   */
+	/* OUT : GoldStats& goldStats : Player gold stats									   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void foodNextTurn();
+	virtual void foodNextTurn
+	(
+		GoldStats& goldStats
+	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -301,6 +307,29 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
+	/* NAME : computeGold																   */
+	/* ROLE : Calculate the gold for the turn											   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void computeGold();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : addCityGoldToTaxIncome													   */
+	/* ROLE : Add _goldBalance to a player taxIncome 									   */
+	/* OUT : GoldStats& goldStats : struct of player gold								   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void addCityGoldToTaxIncome
+	(
+		GoldStats& goldStats
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertWorkSurplusToFood													   */
 	/* ROLE : Convert work to food ; Place in _foodSurplusPreviousTurn					   */
 	/* INPUT : double workSurplus : work surplus to convert into food					   */
@@ -323,6 +352,21 @@ public:
 	virtual void convertFoodSurplusToWork
 	(
 		double foodSurplus
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertFoodSurplusToGold													   */
+	/* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
+	/* INPUT : double workSurplus : food surplus to convert into work					   */
+	/* OUT : GoldStats& goldStats : gold surplus conversion								   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void convertFoodSurplusToGold
+	(
+		double foodSurplus,
+		GoldStats& goldStats
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -378,6 +422,29 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficher																	   */
+	/* ROLE : Affichage de la City (Texture et nom)										   */
+	/* IN : MapTexture& cityMapTextures : CityMap Textures								   */
+	/* IN : MapTexture& unit : Unit Textures											   */
+	/* IN : MapTexte& cityMapTextes : CityMap Textes									   */
+	/* IN : MapButtonTexte& cityMapButtonTexte : CityMap Buttons						   */
+	/* IN : Var& var : structure Var													   */
+	/* IN : unsigned int screenWidth : screen size width in pixel 						   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void displayTexturesTextesButtons
+	(
+		MapTexture& cityMapTextures,
+		MapTexture& unit,
+		MapTexte& cityMapTextes,
+		MapButtonTexte& cityMapButtonTexte,
+		Var& var,
+		unsigned int screenWidth
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	/* NAME : affichercitiemap															   */
 	/* ROLE : Display City Tiles to the citieMap with Citizen							   */
 	/* ROLE : Display the food stock of the city										   */
@@ -386,7 +453,7 @@ public:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void affichercitiemap
+	virtual void afficherCityMap
 	(
 		Sysinfo&
 	);
@@ -399,7 +466,7 @@ public:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherCitieTiles
+	virtual void afficherCityTiles
 	(
 		Sysinfo& sysinfo
 	);
@@ -413,7 +480,7 @@ public:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherCitieFood
+	virtual void afficherCityFood
 	(
 		unsigned int tileSize,
 		MapTexture& citieMap
@@ -428,7 +495,7 @@ public:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherCitieBuildToQueue
+	virtual void afficherCityBuildToQueue
 	(
 		MapTexte& citieMap,
 		DequeButtonTexte& citieMapBuildQueue
@@ -495,6 +562,8 @@ private:
 
 	double _workBalance;
 	double _workSurplusPreviousTurn;
+
+	double _goldBalance;
 
 	conversionSurplus_Type _conversionToApply;
 
