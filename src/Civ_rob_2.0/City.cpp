@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.1
-	file version : 1.18
+	last modification on this file on version:0.20.4.2
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -627,7 +627,7 @@ void City::computeWorkToBuild
 
 				workSurplus = -(_buildQueue.front().remainingWork);
 
-				removeBuildToQueue(citieMapBuildQueue);
+				removeBuildToQueueFront(citieMapBuildQueue);
 
 				if (_buildQueue.size() > 0)
 				{
@@ -764,18 +764,17 @@ void City::addBuildToQueue
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-/* NAME : removeBuildToQueue														   */
+/* NAME : removeBuildToQueueFront													   */
 /* ROLE : Pop build to buildQueue													   */
 /* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void City::removeBuildToQueue
+void City::removeBuildToQueueFront
 (
 	DequeButtonTexte& citieMapBuildQueue
 )
 {
-	
 	if (nullptr != citieMapBuildQueue.front())
 	{
 		delete citieMapBuildQueue.front();
@@ -785,11 +784,84 @@ void City::removeBuildToQueue
 	{
 		/* N/A */
 #ifdef _DEBUG_MODE
-		throw("[ERROR]___: removeBuildToQueue : nullptr == citieMapBuildQueue.front()");
+		throw("[ERROR]___: removeBuildToQueueFront : nullptr == citieMapBuildQueue.front()");
 #endif // DEBUG_MODE
 	}
+
+	for (unsigned int i(1); i < citieMapBuildQueue.size(); i++)
+	{
+		citieMapBuildQueue[i]->SETdsty(citieMapBuildQueue[i]->GETdsty() - CITY_BUILD_QUEUE_SPACE_Y);
+	}
+
 	citieMapBuildQueue.pop_front();
 	_buildQueue.pop_front();
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : removeBuildToQueue														   */
+/* ROLE : remove build to buildQueue at index										   */
+/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
+/* IN : unsigned int index : index to remove										   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::removeBuildToQueue
+(
+	DequeButtonTexte& citieMapBuildQueue,
+	unsigned int index
+)
+{
+	if (index < citieMapBuildQueue.size())
+	{
+		if (nullptr != citieMapBuildQueue[index])
+		{
+			delete citieMapBuildQueue[index];
+			citieMapBuildQueue[index] = nullptr;
+		}
+		else
+		{
+			/* N/A */
+#ifdef _DEBUG_MODE
+			throw("[ERROR]___: removeBuildToQueue : nullptr == citieMapBuildQueue.front()");
+#endif // DEBUG_MODE
+		}
+
+		copyLoopBuildQueue(citieMapBuildQueue, index);
+
+		citieMapBuildQueue.pop_back();
+		_buildQueue.pop_back();
+	}
+	else
+	{
+#ifdef _DEBUG_MODE
+		throw("[ERROR]___: removeBuildToQueue : index > citieMapBuildQueue.size() ");
+#endif // DEBUG_MODE
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : copyLoopBuildQueue														   */
+/* ROLE : copy index + 1 to index, start at index									   */
+/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
+/* IN : unsigned int index : start of loop											   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::copyLoopBuildQueue
+(
+	DequeButtonTexte& citieMapBuildQueue,
+	unsigned int index
+)
+{
+	for (unsigned int i(index); i < citieMapBuildQueue.size() - 1; i++)
+	{
+		citieMapBuildQueue[i] = citieMapBuildQueue[(unsigned __int64)i + 1];
+		citieMapBuildQueue[i]->SETdsty(citieMapBuildQueue[i]->GETdsty() - CITY_BUILD_QUEUE_SPACE_Y);
+		citieMapBuildQueue[(unsigned __int64)i + 1] = nullptr;
+		_buildQueue[i] = _buildQueue[(unsigned __int64)i + 1];
+	}
 }
 
 /* *********************************************************

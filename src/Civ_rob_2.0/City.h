@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.1
-	file version : 1.11
+	last modification on this file on version:0.20.4.2
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -390,15 +390,45 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : removeBuildToQueue														   */
+	/* NAME : removeBuildToQueueFront													   */
 	/* ROLE : Pop build to buildQueue													   */
 	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void removeBuildToQueue
+	virtual void removeBuildToQueueFront
 	(
 		DequeButtonTexte& citieMapBuildQueue
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : removeBuildToQueue														   */
+	/* ROLE : remove build to buildQueue at index										   */
+	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
+	/* IN : unsigned int index : index to remove										   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void removeBuildToQueue
+	(
+		DequeButtonTexte& citieMapBuildQueue,
+		unsigned int index
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : copyLoopBuildQueue														   */
+	/* ROLE : copy index + 1 to index, start at index									   */
+	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
+	/* IN : unsigned int index : start of loop											   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void copyLoopBuildQueue
+	(
+		DequeButtonTexte& citieMapBuildQueue,
+		unsigned int index
 	);
 
 public:
@@ -521,6 +551,7 @@ public:
 	inline virtual unsigned int GETnbstructurebuild()const		{ return _nbstructurebuild; };
 	inline virtual double GETfoodStock()const					{ return _foodStock; };
 	inline virtual double GETfoodBalance()const					{ return _foodBalance; };
+	inline virtual std::deque<build>& GETbuildQueue()			{ return _buildQueue; };
 
 	inline virtual void SETimage(std::string image)							{ _image = image; };
 	inline virtual void SETname(std::string name)							{ _name = name; };

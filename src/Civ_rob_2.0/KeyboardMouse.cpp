@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.16
+	last modification on this file on version:0.20.4.2
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -2555,6 +2555,20 @@ bool KeyboardMouse::checkSTATEcitiemap
 			sysinfo.var.select = Select_Type::selectnothing;
 		resetButtonCitieMap(sysinfo);
 		return true;
+	}
+
+	for (unsigned int i(0);i < sysinfo.allButton.cityMapBuildQueue.size(); i++)
+	{
+		if	(
+				sysinfo.allButton.cityMapBuildQueue[i]->searchButtonTexte
+					(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y())
+			)
+		{
+			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+				->GETtheCity(sysinfo.var.s_player.selectCity)
+					->removeBuildToQueue(sysinfo.allButton.cityMapBuildQueue, i);
+			return true;
+		}
 	}
 
 
