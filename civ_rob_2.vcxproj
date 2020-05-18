@@ -30,6 +30,7 @@
     <ClInclude Include="src\Civ_rob_2.0\Citizen.h" />
     <ClInclude Include="src\Civ_rob_2.0\City.h" />
     <ClInclude Include="src\Civ_rob_2.0\civ_lib.h" />
+    <ClInclude Include="src\Civ_rob_2.0\ConstCityIHM.h" />
     <ClInclude Include="src\Civ_rob_2.0\End.h" />
     <ClInclude Include="src\Civ_rob_2.0\GamePlay.h" />
     <ClInclude Include="src\Civ_rob_2.0\IHM.h" />
@@ -164,13 +165,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>

@@ -75,6 +75,9 @@
     <ClInclude Include="src\Civ_rob_2.0\Utility.h">
       <Filter>Fichiers d%27en-tête\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\ConstCityIHM.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\tinyxml2\tinyxml2.cpp">

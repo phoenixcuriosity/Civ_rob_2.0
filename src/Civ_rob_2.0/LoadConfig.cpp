@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.15
+	last modification on this file on version:0.20.4.4
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -490,7 +490,7 @@ void LoadConfig::logfileconsole
 	time_t now(time(0));
 	struct tm  tstruct;
 	char  buf[80];
-	tstruct = *localtime(&now);
+	localtime_s(&tstruct, &now);
 	strftime(buf, sizeof(buf), "%F %X", &tstruct);
 
 #ifdef _DEBUG_MODE
