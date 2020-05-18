@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.1
-	file version : 1.5
+	last modification on this file on version:0.20.4.3
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -95,6 +95,7 @@ Player& Player::operator=
 		_name = player.GETname();
 		_tabUnit = player.GETtabUnit();
 		_tabCity = player.GETtabCity();
+		_goldStats = player.GETgoldStatsConst();
 	}
 	return *this;
 }

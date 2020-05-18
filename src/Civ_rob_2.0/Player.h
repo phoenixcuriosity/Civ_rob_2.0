@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.1
-	file version : 1.3
+	last modification on this file on version:0.20.4.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -246,6 +246,7 @@ public:
 	inline virtual City* GETtheCity(unsigned int index) const	{ return _tabCity[index]; };
 	inline virtual std::vector<City*> GETtabCity() const		{ return _tabCity; };
 	inline virtual GoldStats& GETgoldStats()					{ return _goldStats; };
+	inline virtual GoldStats GETgoldStatsConst()const			{ return _goldStats; };
 
 	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
 
