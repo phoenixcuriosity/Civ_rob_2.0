@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.2
-	file version : 1.19
+	last modification on this file on version:0.20.4.5
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -65,9 +65,9 @@ void City::createCity
 
 		std::string name(sysinfo.var.s_player.tabCitiesName
 			[
-				(unsigned int)
+				(unsigned __int64)
 				(
-					((unsigned int)sysinfo.var.s_player.selectplayer * (double)MAX_CITY_PER_PLAYER)
+					((unsigned __int64)sysinfo.var.s_player.selectplayer * MAX_CITY_PER_PLAYER)
 					+ sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 						->GETtabCity().size()
 				)
@@ -756,8 +756,8 @@ void City::addBuildToQueue
 	ButtonTexte::createButtonTexte
 		(renderer, font,
 		State_Type::STATEcityMap, Select_Type::selectnothing, citieMapBuildQueue,
-		Texte_Type::shaded, buildToQueue.name, WriteColorButton, BackColorButton, CITY_BUILD_QUEUE_FONT_SIZE,
-			CITY_BUILD_QUEUE_BEGIN_X, CITY_BUILD_QUEUE_BEGIN_Y + ((unsigned int)citieMapBuildQueue.size() * CITY_BUILD_QUEUE_SPACE_Y),
+		Texte_Type::shaded, buildToQueue.name, WriteColorButton, BackColorButton, (Uint8)CITY_BUILD_QUEUE_FONT_SIZE,
+		(int)CITY_BUILD_QUEUE_BEGIN_X, (int)(CITY_BUILD_QUEUE_BEGIN_Y + ((unsigned int)citieMapBuildQueue.size() * CITY_BUILD_QUEUE_SPACE_Y)),
 		nonTransparent, no_angle, Center_Type::center);
 	_buildQueue.push_back(buildToQueue);
 }
@@ -888,15 +888,15 @@ void City::afficher
 	Sysinfo& sysinfo
 )
 {
-	unsigned int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
-	unsigned int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
+	int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
+	int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
 
 	sysinfo.allTextures.cityMap[_image]->render(x, y);
 
-	sysinfo.allTextes.mainMap[_name]->render(x + sysinfo.map.tileSize / 2, y + sysinfo.map.tileSize);
+	sysinfo.allTextes.mainMap[_name]->render(x + (int)(sysinfo.map.tileSize / 2), y + (int)(sysinfo.map.tileSize));
 
 	sysinfo.allTextes.number[std::to_string((unsigned int)floor(_nbpop))]
-		->render(x + sysinfo.map.tileSize / 2 - 20, y + sysinfo.map.tileSize - 6);
+		->render(x + (int)sysinfo.map.tileSize / 2 - 20, y + (int)sysinfo.map.tileSize - 6);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -1029,11 +1029,25 @@ void City::afficherCityTiles
 	{
 		switch (_tile[i].tile_ground)
 		{
+		case Ground_Type::error:
+#ifdef _DEBUG_MODE
+			throw("[ERROR]___: affichercitiemap : sysinfo.allTextures.ground[]");
+#endif // DEBUG_MODE
+			break;
 		case Ground_Type::grass:
 			sysinfo.allTextures.ground["grass.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
 			break;
 		case Ground_Type::water:
 			sysinfo.allTextures.ground["water.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
+			break;
+		case Ground_Type::deepwater:
+			/* ### As of 0.20.4.5 : deepwater cannoit be seen in a city ### */
+			break;
+		case Ground_Type::dirt:
+			/* ### As of 0.20.4.5 : not implemented ### */
+			break;
+		case Ground_Type::sand:
+			/* ### As of 0.20.4.5 : not implemented ### */
 			break;
 		default:
 			/* N/A */

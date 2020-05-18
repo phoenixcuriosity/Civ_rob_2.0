@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.12
+	last modification on this file on version:0.20.4.5
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -245,7 +245,7 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
-	~Texture();
+	virtual ~Texture();
 
 
 	/*
@@ -530,7 +530,7 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
-	~Texte();
+	virtual ~Texte();
 
 	
 	/*
@@ -672,7 +672,7 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
-	~ButtonImage();
+	virtual ~ButtonImage();
 
 
 	/*
@@ -859,7 +859,7 @@ public:
 	);
 
 
-	~ButtonTexte();
+	virtual ~ButtonTexte();
 
 
 	/*
