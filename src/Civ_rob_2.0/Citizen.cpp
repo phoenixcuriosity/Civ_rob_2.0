@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.4
-	file version : 1.0
+	last modification on this file on version:0.20.4.5
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -224,19 +224,19 @@ void Citizen::afficher
 	switch (_happiness)
 	{
 	case Emotion_Type::ecstatic:
-		citieMap["Adore.png"]->render(x, y);
+		citieMap["Adore.png"]->render((int)x, (int)y);
 		break;
 	case Emotion_Type::happy:
-		citieMap["Laugh.png"]->render(x, y);
+		citieMap["Laugh.png"]->render((int)x, (int)y);
 		break;
 	case Emotion_Type::neutre:
-		citieMap["Cool.png"]->render(x, y);
+		citieMap["Cool.png"]->render((int)x, (int)y);
 		break;
 	case Emotion_Type::sad:
-		citieMap["Cry.png"]->render(x, y);
+		citieMap["Cry.png"]->render((int)x, (int)y);
 		break;
 	case Emotion_Type::angry:
-		citieMap["Furious.png"]->render(x, y);
+		citieMap["Furious.png"]->render((int)x, (int)y);
 		break;
 	default:
 		/* TODO ERROR */
