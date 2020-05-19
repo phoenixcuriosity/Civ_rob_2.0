@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.7
-	file version : 1.27
+	last modification on this file on version:0.20.5.1
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -411,12 +411,17 @@ void IHM::mainmap
 						);
 			}
 		}
-
-			
+	
 		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 		{
 			// affiche pour chaque joueurs les cités existantes
 			sysinfo.tabplayer[i]->GETtheCity(j)->afficher(sysinfo);
+		}
+
+		if (NO_PLAYER_SELECTED < sysinfo.var.s_player.selectplayer)
+		{
+			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+				->displayGoldStats(sysinfo.screen.renderer, sysinfo.allTextures.font);
 		}
 	}
 	

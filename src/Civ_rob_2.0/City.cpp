@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.7
-	file version : 1.21
+	last modification on this file on version:0.20.5.1
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -890,12 +890,15 @@ void City::afficher
 	int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
 	int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
 
-	sysinfo.allTextures.cityMap[_image]->render(x, y);
+	if (_x > (x - sysinfo.map.tileSize * sysinfo.map.toolBarSize) && _y >= y)
+	{
+		sysinfo.allTextures.cityMap[_image]->render(x, y);
 
-	sysinfo.allTextes.mainMap[_name]->render(x + (int)(sysinfo.map.tileSize / 2), y + (int)(sysinfo.map.tileSize));
+		sysinfo.allTextes.mainMap[_name]->render(x + (int)(sysinfo.map.tileSize / 2), y + (int)(sysinfo.map.tileSize));
 
-	sysinfo.allTextes.number[std::to_string((unsigned int)floor(_nbpop))]
-		->render(x + (int)sysinfo.map.tileSize / 2 - 20, y + (int)sysinfo.map.tileSize - 6);
+		sysinfo.allTextes.number[std::to_string((unsigned int)floor(_nbpop))]
+			->render(x + (int)sysinfo.map.tileSize / 2 - 20, y + (int)sysinfo.map.tileSize - 6);
+	}
 }
 
 /* ----------------------------------------------------------------------------------- */

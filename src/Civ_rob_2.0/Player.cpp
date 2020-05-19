@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.7
-	file version : 1.7
+	last modification on this file on version:0.20.5.1
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -317,6 +317,28 @@ void Player::addGoldToGoldConversionSurplus
 )
 {
 	_goldStats.goldConversionSurplus += goldToAdd;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : displayGoldStats															   */
+/* ROLE : Display gold Stats per player												   */
+/* INPUT : SDL_Renderer*& : ptr on SDL Renderer										   */
+/* INPUT : TTF_Font* font[]	: ptr on font array										   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void Player::displayGoldStats
+(
+	SDL_Renderer*& renderer,
+	TTF_Font* font[]
+)
+{
+	Texte::writeTexte(renderer, font,
+		Texte_Type::shaded, std::to_string(_goldStats.gold),
+		{ 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24,
+		0, 900,
+		no_angle, Center_Type::nocenter);
 }
 
 
