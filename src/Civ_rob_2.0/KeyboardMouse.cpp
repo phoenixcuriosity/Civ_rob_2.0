@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.2
-	file version : 1.17
+	last modification on this file on version:0.20.4.7
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -2396,7 +2396,7 @@ bool KeyboardMouse::inspectCitie
 {
 	if (NO_PLAYER_SELECTED < var.s_player.selectplayer)
 	{
-		if (tabplayer[var.s_player.selectplayer]->GETtabCity().size() > 0)
+		if (!tabplayer[var.s_player.selectplayer]->GETtabCity().empty())
 		{
 			City::searchCityTile(tabplayer, var);
 			return true;

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.5
-	file version : 1.20
+	last modification on this file on version:0.20.4.7
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -378,20 +378,27 @@ void City::foodNextTurn
 	
 	if (0.0 > _foodStock)
 	{
-		/* ---------------------------------------------------------------------- */
-		/* TODO gestion prioritaire de suppression de Citizen					  */
-		/* ---------------------------------------------------------------------- */
-		_nbpop--;
-		if (nullptr != _citizens[_citizens.size() - 1])
+		if (_citizens.size() == 1)
 		{
-			delete _citizens[_citizens.size() - 1];
+			_foodStock = 0.0;
 		}
 		else
 		{
-			/* TODO Throw error */
+			/* ---------------------------------------------------------------------- */
+			/* TODO gestion prioritaire de suppression de Citizen					  */
+			/* ---------------------------------------------------------------------- */
+			_nbpop--;
+			if (nullptr != _citizens[_citizens.size() - 1])
+			{
+				delete _citizens[_citizens.size() - 1];
+			}
+			else
+			{
+				/* TODO Throw error */
+			}
+			_citizens.pop_back();
+			_foodStock = foodLimitPerLevelMinusOne;
 		}
-		_citizens.pop_back();
-		_foodStock = foodLimitPerLevelMinusOne;
 	}
 	else if (_foodStock >= foodLimitPerLevelCurrent)
 	{
@@ -494,51 +501,43 @@ bool City::testPos
 /* ----------------------------------------------------------------------------------- */
 void City::computeEmotion()
 {
-	if (_citizens.size() > 0)
+	double result(0);
+
+	for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
 	{
-		double result(0);
-
-		for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
-		{
-			result += (double)_citizens[nbCitizen]->GEThappiness();
-		}
-
-		try
-		{
-			_emotion = (unsigned int)Utility::computeValueToScale
-			(
-				result,
-				(double)Emotion_Type::angry,
-				(double)Emotion_Type::ecstatic,
-				SCALE_RANGE_MIN_EMOTION,
-				SCALE_RANGE_MAX_EMOTION,
-				(int)_citizens.size()
-			);
-		}
-		catch (std::string const& msg)
-		{
-			if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
-			{
-				LoadConfig::logfileconsole(msg);
-				_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
-#ifdef _DEBUG_MODE
-				throw(msg);
-#endif // DEBUG_MODE
-			}
-			else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
-			{
-				LoadConfig::logfileconsole(msg);
-				_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
-#ifdef _DEBUG_MODE
-				throw(msg);
-#endif // DEBUG_MODE
-			}
-		}
+		result += (double)_citizens[nbCitizen]->GEThappiness();
 	}
-	else
+
+	try
 	{
-		_emotion = 50;
-		throw("[ERROR]___: computeEmotion : _citizens.size() == 0");
+		_emotion = (unsigned int)Utility::computeValueToScale
+		(
+			result,
+			(double)Emotion_Type::angry,
+			(double)Emotion_Type::ecstatic,
+			SCALE_RANGE_MIN_EMOTION,
+			SCALE_RANGE_MAX_EMOTION,
+			(int)_citizens.size()
+		);
+	}
+	catch (std::string const& msg)
+	{
+		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
+		{
+			LoadConfig::logfileconsole(msg);
+			_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
+#ifdef _DEBUG_MODE
+			throw(msg);
+#endif // DEBUG_MODE
+		}
+		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
+		{
+			LoadConfig::logfileconsole(msg);
+			_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
+#ifdef _DEBUG_MODE
+			throw(msg);
+#endif // DEBUG_MODE
+		}
 	}
 }
 
@@ -588,7 +587,7 @@ void City::computeWorkToBuild
 {
 	if (_conversionToApply != conversionSurplus_Type::WorkToGold)
 	{
-		if (_buildQueue.size() > 0)
+		if (!_buildQueue.empty())
 		{
 			_buildQueue.front().remainingWork -= _workBalance;
 
@@ -629,7 +628,7 @@ void City::computeWorkToBuild
 
 				removeBuildToQueueFront(citieMapBuildQueue);
 
-				if (_buildQueue.size() > 0)
+				if (!_buildQueue.empty())
 				{
 					_buildQueue.front().remainingWork -= workSurplus;
 				}

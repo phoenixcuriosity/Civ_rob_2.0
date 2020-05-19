@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.3
-	file version : 1.6
+	last modification on this file on version:0.20.4.7
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -122,10 +122,10 @@ void Player::deletePlayer()
 	for (unsigned int i(0); i < size; i++)
 		_tabUnit.pop_back();
 
-	if (_tabUnit.size() > 0)
-		LoadConfig::logfileconsole("[ERROR]__: _tabunit.size() != 0");
-	else
+	if (_tabUnit.empty())
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Unit of Player:" + _name + " Success");
+	else
+		LoadConfig::logfileconsole("[ERROR]__: _tabunit.size() != 0");
 
 
 	size = (unsigned int)_tabCity.size();
@@ -140,10 +140,10 @@ void Player::deletePlayer()
 	for (unsigned int i(0); i < size; i++)
 		_tabCity.pop_back();
 
-	if (_tabCity.size() > 0)
-		LoadConfig::logfileconsole("[ERROR]__: _tabcities.size() != 0");
-	else
+	if (_tabCity.empty())
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
+	else
+		LoadConfig::logfileconsole("[ERROR]__: _tabcities.size() != 0");
 }
 
 /* ----------------------------------------------------------------------------------- */

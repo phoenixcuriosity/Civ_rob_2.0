@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.6
+	last modification on this file on version:0.20.4.7
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -154,45 +154,36 @@ void SaveReload::savePlayer
 	if (savePlayer)
 	{
 		savePlayer << "nbPlayer= " << sysinfo.tabplayer.size();
-		if (sysinfo.tabplayer.size() != 0)
+		for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 		{
-			for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
+			savePlayer << std::endl << std::endl << "player= " + std::to_string(i);
+			savePlayer << std::endl << "name= " << sysinfo.tabplayer[i]->GETname();
+			savePlayer << std::endl << "nbunitTotal= " << sysinfo.tabplayer[i]->GETtabUnit().size();
+		
+			for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
 			{
-				savePlayer << std::endl << std::endl << "player= " + std::to_string(i);
-				savePlayer << std::endl << "name= " << sysinfo.tabplayer[i]->GETname();
-				savePlayer << std::endl << "nbunitTotal= " << sysinfo.tabplayer[i]->GETtabUnit().size();
-				if (sysinfo.tabplayer[i]->GETtabUnit().size() != 0)
-				{
-					for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++)
-					{
-						savePlayer << std::endl << std::endl << "\tunit= " << j;
-						savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETname();
-						savePlayer << std::endl << "\tx= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETx();
-						savePlayer << std::endl << "\ty= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETy();
-						savePlayer << std::endl << "\tmovementType= " << (unsigned int)sysinfo.tabplayer[i]->GETtheUnit(j)->GETmovementType();
-						savePlayer << std::endl << "\tlife= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlife();
-						savePlayer << std::endl << "\tatq= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETatq();
-						savePlayer << std::endl << "\tdef= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETdef();
-						savePlayer << std::endl << "\tmovement= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETmovement();
-						savePlayer << std::endl << "\tlevel= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlevel();
-					}
-				}
-				else
-				{
-					/* N/A */
-				}
-
-				//savePlayer << endl << "nbcitie= " << tabplayer[i]->GETtabcities().size();
-				/*
-				if (tabplayer[i]->GETtabcities().size() != 0){
-					for (int j = 0; j < tabplayer[i]->GETtabcities().size(); j++){
-
-
-
-					}
-				}
-				*/
+				savePlayer << std::endl << std::endl << "\tunit= " << j;
+				savePlayer << std::endl << "\tname= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETname();
+				savePlayer << std::endl << "\tx= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETx();
+				savePlayer << std::endl << "\ty= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETy();
+				savePlayer << std::endl << "\tmovementType= " << (unsigned int)sysinfo.tabplayer[i]->GETtheUnit(j)->GETmovementType();
+				savePlayer << std::endl << "\tlife= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlife();
+				savePlayer << std::endl << "\tatq= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETatq();
+				savePlayer << std::endl << "\tdef= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETdef();
+				savePlayer << std::endl << "\tmovement= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETmovement();
+				savePlayer << std::endl << "\tlevel= " << sysinfo.tabplayer[i]->GETtheUnit(j)->GETlevel();
 			}
+
+			//savePlayer << endl << "nbcitie= " << tabplayer[i]->GETtabcities().size();
+			/*
+			if (tabplayer[i]->GETtabcities().size() != 0){
+				for (int j = 0; j < tabplayer[i]->GETtabcities().size(); j++){
+
+
+
+				}
+			}
+			*/
 		}
 	}
 	else
