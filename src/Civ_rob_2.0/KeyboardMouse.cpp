@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.7
-	file version : 1.18
+	last modification on this file on version:0.20.6.1
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -2769,24 +2769,52 @@ void KeyboardMouse::inspect
 		);
 
 
-		for (unsigned int selectedPlayer(0); selectedPlayer < sysinfo.tabplayer.size(); selectedPlayer++)
+		if  (
+				sysinfo.var.mouse.GETmouse_xNormalized()
+				>
+				(	
+					sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize
+					+ 
+					(sysinfo.map.toolBarSize - 1) * sysinfo.map.tileSize
+				)
+			)
 		{
-			for (unsigned int i(0); i < sysinfo.tabplayer[selectedPlayer]->GETtabUnit().size(); i++)
+			for (unsigned int selectedPlayer(0); selectedPlayer < sysinfo.tabplayer.size(); selectedPlayer++)
 			{
-				if	(sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->testPos
-						(sysinfo.var.mouse.GETmouse_xNormalized(),sysinfo.var.mouse.GETmouse_yNormalized())
-					)
+				for (unsigned int i(0); i < sysinfo.tabplayer[selectedPlayer]->GETtabUnit().size(); i++)
 				{
-					sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(true);
-					return;
-				}
-				else
-				{
-					sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(false);
+					if (sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->testPos
+							(sysinfo.var.mouse.GETmouse_xNormalized(), sysinfo.var.mouse.GETmouse_yNormalized())
+						)
+					{
+						sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(true);
+						return;
+					}
+					else
+					{
+						sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(false);
+					}
 				}
 			}
 		}
+		else
+		{
+			if (NO_PLAYER_SELECTED < sysinfo.var.s_player.selectplayer)
+			{
+				if (sysinfo.var.mouse.GETmouse_y() > 900 && sysinfo.var.mouse.GETmouse_y() < 924)
+				{
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETonOffDisplay().showContextGoldStats = true;
+				}
+				else
+				{
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETonOffDisplay().showContextGoldStats = false;
+				}
 
+			}
+		}
+		
 		break;
 	}
 }

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.5.1
-	file version : 1.22
+	last modification on this file on version:0.20.6.1
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -890,7 +890,7 @@ void City::afficher
 	int x(_x - sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize);
 	int y(_y - sysinfo.map.screenOffsetYIndexMin * sysinfo.map.tileSize);
 
-	if (_x > (x - sysinfo.map.tileSize * sysinfo.map.toolBarSize) && _y >= y)
+	if ((int)_x > (x - (int)(sysinfo.map.tileSize * sysinfo.map.toolBarSize)) && (int)_y >= y)
 	{
 		sysinfo.allTextures.cityMap[_image]->render(x, y);
 

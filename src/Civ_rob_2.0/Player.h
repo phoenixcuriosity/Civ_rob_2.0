@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.5.1
-	file version : 1.6
+	last modification on this file on version:0.20.6.1
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -61,6 +61,11 @@ struct GoldStats
 
 	double armiesCost;
 	double buildingsCost;
+};
+
+struct OnOffDisplay
+{
+	bool showContextGoldStats;
 };
 
 /* *********************************************************
@@ -262,6 +267,8 @@ public:
 	inline virtual std::vector<City*> GETtabCity() const		{ return _tabCity; };
 	inline virtual GoldStats& GETgoldStats()					{ return _goldStats; };
 	inline virtual GoldStats GETgoldStatsConst()const			{ return _goldStats; };
+	inline virtual OnOffDisplay& GETonOffDisplay()				{ return _onOffDisplay; };
+	inline virtual OnOffDisplay GETonOffDisplayConst()const		{ return _onOffDisplay; };
 
 	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
 
@@ -277,6 +284,7 @@ private:
 	std::vector<Unit*> _tabUnit;
 	std::vector<City*> _tabCity;
 	GoldStats _goldStats;
+	OnOffDisplay _onOffDisplay;
 };
 
 
