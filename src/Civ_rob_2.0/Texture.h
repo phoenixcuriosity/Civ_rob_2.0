@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.11
+	last modification on this file on version:0.20.4.5
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -81,11 +81,11 @@ enum class State_Type : Uint8
 {
 	error,					/* ### Reserved on error detection ### */
 	STATEtitleScreen,		/* Title screen : first screen selection */
-	STATEscreennewgame,		/* New game screen : selection of options of a new game */
+	STATEscreenNewgame,		/* New game screen : selection of options of a new game */
 	STATEreload,			/* Load screen : selection of saves to load */
-	STATEmainmap,			/* Maip map screen */
+	STATEmainMap,			/* Maip map screen */
 	STATEscience,			/* Science screen ### Not implemented as of 0.20.0.3  ### */
-	STATEcitiemap			/* Citie map screen : Unit and buildings creation */
+	STATEcityMap			/* Citie map screen : Unit and buildings creation */
 };
 
 // Define all Selection in the game, relate to mouse click
@@ -245,7 +245,7 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
-	~Texture();
+	virtual ~Texture();
 
 
 	/*
@@ -530,7 +530,7 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
-	~Texte();
+	virtual ~Texte();
 
 	
 	/*
@@ -672,7 +672,7 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
-	~ButtonImage();
+	virtual ~ButtonImage();
 
 
 	/*
@@ -810,6 +810,25 @@ public:
 		Center_Type centerButtonTexte = Center_Type::nocenter
 	);
 
+	static void createButtonTexte
+	(
+		SDL_Renderer*& renderer,
+		TTF_Font* font[],
+		State_Type stateScreen,
+		Select_Type select,
+		DequeButtonTexte& tabButtonTexte,
+		Texte_Type type,
+		std::string msg,
+		SDL_Color color,
+		SDL_Color backcolor,
+		Uint8 size,
+		int x,
+		int y,
+		Transparance_Type alpha,
+		Uint16 angle,
+		Center_Type centerButtonTexte
+	);
+
 
 
 public:
@@ -839,7 +858,8 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
-	~ButtonTexte();
+
+	virtual ~ButtonTexte();
 
 
 	/*

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.5
-	file version : 1.15
+	last modification on this file on version:0.20.6.1
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,6 +36,7 @@
 #include "LoadConfig.h"
 #include "Player.h"
 #include "Utility.h"
+#include "City.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -2225,7 +2226,7 @@ void KeyboardMouse::mouse
 	else if (
 				SDL_BUTTON_RIGHT == event.button.button
 				&&
-				State_Type::STATEmainmap == sysinfo.var.statescreen
+				State_Type::STATEmainMap == sysinfo.var.statescreen
 			)
 	{
 		cliqueDroit(sysinfo);
@@ -2254,7 +2255,7 @@ void KeyboardMouse::cliqueGauche
 	// recherche du bouton par comparaison de string et des positions x et y du clic
 	switch (sysinfo.var.statescreen)
 	{
-	case State_Type::STATEmainmap:
+	case State_Type::STATEmainMap:
 		
 		if (checkSTATEmainmap(sysinfo)) return;
 
@@ -2282,7 +2283,7 @@ void KeyboardMouse::cliqueGauche
 		if (checkSTATEreload(sysinfo)) return;
 
 		break;
-	case State_Type::STATEcitiemap:
+	case State_Type::STATEcityMap:
 
 		if (checkSTATEcitiemap(sysinfo)) return;
 
@@ -2395,7 +2396,7 @@ bool KeyboardMouse::inspectCitie
 {
 	if (NO_PLAYER_SELECTED < var.s_player.selectplayer)
 	{
-		if (tabplayer[var.s_player.selectplayer]->GETtabCity().size() > 0)
+		if (!tabplayer[var.s_player.selectplayer]->GETtabCity().empty())
 		{
 			City::searchCityTile(tabplayer, var);
 			return true;
@@ -2498,8 +2499,8 @@ bool KeyboardMouse::checkSTATEreload
 			sysinfo.allButton.reload["Save : " + std::to_string(sysinfo.var.save.GETtabSave()[j])]
 				->changeOn();
 			sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
-			sysinfo.file.SaveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SaveMaps.txt";
-			sysinfo.file.SavePlayer = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/SavePlayer.txt";
+			sysinfo.file.saveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/saveMaps.txt";
+			sysinfo.file.savePlayers = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/savePlayer.txt";
 			IHM::reloadScreen(sysinfo);
 			return true;
 		}
@@ -2522,19 +2523,19 @@ bool KeyboardMouse::checkSTATEcitiemap
 	Sysinfo& sysinfo
 )
 {
-	if (sysinfo.allButton.citieMap["Map"]
+	if (sysinfo.allButton.cityMap["Map"]
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
-		sysinfo.var.s_player.selectCitie = NO_CITIE_SELECTED;
-		sysinfo.var.statescreen = State_Type::STATEmainmap;
+		sysinfo.var.s_player.selectCity = NO_CITY_SELECTED;
+		sysinfo.var.statescreen = State_Type::STATEmainMap;
 		sysinfo.var.select = Select_Type::selectnothing;
 		resetButtonCitieMap(sysinfo);
 		return true;
 	}
-	if (sysinfo.allButton.citieMap["Build"]
+	if (sysinfo.allButton.cityMap["Build"]
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
-		sysinfo.allButton.citieMap["Build"]
+		sysinfo.allButton.cityMap["Build"]
 			->changeOn();
 		if (sysinfo.var.select != Select_Type::selectcreate)
 			sysinfo.var.select = Select_Type::selectcreate;
@@ -2543,10 +2544,10 @@ bool KeyboardMouse::checkSTATEcitiemap
 		resetButtonCitieMap(sysinfo);
 		return true;
 	}
-	if (sysinfo.allButton.citieMap["Place Citizen"]
+	if (sysinfo.allButton.cityMap["Place Citizen"]
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
-		sysinfo.allButton.citieMap["Place Citizen"]
+		sysinfo.allButton.cityMap["Place Citizen"]
 			->changeOn();
 		if (sysinfo.var.select != Select_Type::selectmoveCitizen)
 			sysinfo.var.select = Select_Type::selectmoveCitizen;
@@ -2556,22 +2557,41 @@ bool KeyboardMouse::checkSTATEcitiemap
 		return true;
 	}
 
+	for (unsigned int i(0);i < sysinfo.allButton.cityMapBuildQueue.size(); i++)
+	{
+		if	(
+				sysinfo.allButton.cityMapBuildQueue[i]->searchButtonTexte
+					(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y())
+			)
+		{
+			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+				->GETtheCity(sysinfo.var.s_player.selectCity)
+					->removeBuildToQueue(sysinfo.allButton.cityMapBuildQueue, i);
+			return true;
+		}
+	}
+
 
 	if (Select_Type::selectcreate == sysinfo.var.select)
 	{
 		for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 		{
-			if (sysinfo.allButton.citieMap[sysinfo.var.s_player.tabUnit_Template[i].name]
+			if (sysinfo.allButton.cityMap[sysinfo.var.s_player.tabUnit_Template[i].name]
 					->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 			{
-				sysinfo.var.s_player.toBuild = sysinfo.var.s_player.tabUnit_Template[i].name;
-				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->addUnit(sysinfo.var.s_player.tabUnit_Template[i].name,
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETx(),
-					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCitie)->GETy(),
-					sysinfo.var.s_player.tabUnit_Template[i].type,
-					sysinfo.var.s_player.tabUnit_Template[i].life, sysinfo.var.s_player.tabUnit_Template[i].atq,
-					sysinfo.var.s_player.tabUnit_Template[i].def, sysinfo.var.s_player.tabUnit_Template[i].movement,
-					sysinfo.var.s_player.tabUnit_Template[i].level);
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+					->GETtheCity(sysinfo.var.s_player.selectCity)
+						->addBuildToQueue
+							(
+								{
+									sysinfo.var.s_player.tabUnit_Template[i].workToBuild,
+									sysinfo.var.s_player.tabUnit_Template[i].name,
+									build_Type::unit 
+								},
+								sysinfo.allButton.cityMapBuildQueue,
+								sysinfo.screen.renderer,
+								sysinfo.allTextures.font
+							);
 
 				sysinfo.var.select = Select_Type::selectnothing;
 				return true;
@@ -2599,7 +2619,7 @@ void KeyboardMouse::cliqueDroit
 	{
 		switch (sysinfo.var.statescreen)
 		{
-		case State_Type::STATEmainmap:
+		case State_Type::STATEmainMap:
 			switch (sysinfo.var.select) 
 			{
 			case Select_Type::selectcreate:
@@ -2713,7 +2733,7 @@ void KeyboardMouse::resetButtonPlayerOn(Sysinfo& sysinfo)
 /* ---------------------------------------------------------------------------------------------------------- */
 void KeyboardMouse::resetButtonCitieMap(Sysinfo& sysinfo)
 {
-	for (const auto& n : sysinfo.allButton.citieMap)
+	for (const auto& n : sysinfo.allButton.cityMap)
 	{
 		n.second->resetOnstateScreen(sysinfo.var.select);
 	}
@@ -2737,7 +2757,7 @@ void KeyboardMouse::inspect
 {
 	switch (sysinfo.var.statescreen)
 	{
-	case State_Type::STATEmainmap:
+	case State_Type::STATEmainMap:
 
 		sysinfo.var.mouse.refreshMousePos
 		(
@@ -2749,24 +2769,52 @@ void KeyboardMouse::inspect
 		);
 
 
-		for (unsigned int selectedPlayer(0); selectedPlayer < sysinfo.tabplayer.size(); selectedPlayer++)
+		if  (
+				sysinfo.var.mouse.GETmouse_xNormalized()
+				>
+				(	
+					sysinfo.map.screenOffsetXIndexMin * sysinfo.map.tileSize
+					+ 
+					(sysinfo.map.toolBarSize - 1) * sysinfo.map.tileSize
+				)
+			)
 		{
-			for (unsigned int i(0); i < sysinfo.tabplayer[selectedPlayer]->GETtabUnit().size(); i++)
+			for (unsigned int selectedPlayer(0); selectedPlayer < sysinfo.tabplayer.size(); selectedPlayer++)
 			{
-				if	(sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->testPos
-						(sysinfo.var.mouse.GETmouse_xNormalized(),sysinfo.var.mouse.GETmouse_yNormalized())
-					)
+				for (unsigned int i(0); i < sysinfo.tabplayer[selectedPlayer]->GETtabUnit().size(); i++)
 				{
-					sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(true);
-					return;
-				}
-				else
-				{
-					sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(false);
+					if (sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->testPos
+							(sysinfo.var.mouse.GETmouse_xNormalized(), sysinfo.var.mouse.GETmouse_yNormalized())
+						)
+					{
+						sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(true);
+						return;
+					}
+					else
+					{
+						sysinfo.tabplayer[selectedPlayer]->GETtheUnit(i)->SETshowStats(false);
+					}
 				}
 			}
 		}
+		else
+		{
+			if (NO_PLAYER_SELECTED < sysinfo.var.s_player.selectplayer)
+			{
+				if (sysinfo.var.mouse.GETmouse_y() > 900 && sysinfo.var.mouse.GETmouse_y() < 924)
+				{
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETonOffDisplay().showContextGoldStats = true;
+				}
+				else
+				{
+					sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+						->GETonOffDisplay().showContextGoldStats = false;
+				}
 
+			}
+		}
+		
 		break;
 	}
 }

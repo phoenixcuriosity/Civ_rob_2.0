@@ -9,6 +9,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release_Civ_Rob_2.0|x64 = Release_Civ_Rob_2.0|x64
+		Release_Civ_Rob_2.0|x86 = Release_Civ_Rob_2.0|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -17,6 +19,10 @@ Global
 		{FAB3E946-350D-41EF-B556-1E99143787CF}.Debug|x64.Build.0 = Debug|x64
 		{FAB3E946-350D-41EF-B556-1E99143787CF}.Debug|x86.ActiveCfg = Debug|Win32
 		{FAB3E946-350D-41EF-B556-1E99143787CF}.Debug|x86.Build.0 = Debug|Win32
+		{FAB3E946-350D-41EF-B556-1E99143787CF}.Release_Civ_Rob_2.0|x64.ActiveCfg = 2.0|x64
+		{FAB3E946-350D-41EF-B556-1E99143787CF}.Release_Civ_Rob_2.0|x64.Build.0 = 2.0|x64
+		{FAB3E946-350D-41EF-B556-1E99143787CF}.Release_Civ_Rob_2.0|x86.ActiveCfg = 2.0|Win32
+		{FAB3E946-350D-41EF-B556-1E99143787CF}.Release_Civ_Rob_2.0|x86.Build.0 = 2.0|Win32
 		{FAB3E946-350D-41EF-B556-1E99143787CF}.Release|x64.ActiveCfg = Release|x64
 		{FAB3E946-350D-41EF-B556-1E99143787CF}.Release|x64.Build.0 = Release|x64
 		{FAB3E946-350D-41EF-B556-1E99143787CF}.Release|x86.ActiveCfg = Release|Win32

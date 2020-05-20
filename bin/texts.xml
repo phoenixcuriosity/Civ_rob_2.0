@@ -472,4 +472,20 @@
 		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>nocenter</Center>
 	</Texte>
 
+	<Texte>
+		<Statescreen>STATEcitiemap</Statescreen><Select>selectnothing</Select><TexteName>citieMap</TexteName>
+		<Type>blended</Type>
+		<Texte>Currently no build is being built</Texte>
+		<FontColor>
+			<Simple><Condition>false</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>true</Condition><R>64</R><G>64</G><B>255</B><Alpha>255</Alpha></Complexe>
+		</FontColor>
+		<BackColor>
+			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
+			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
+		</BackColor>
+		<Size>16</Size><X>(SCREEN_WIDTH)/(2)</X><Y>850</Y>
+		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_x</Center>
+	</Texte>
+
 </Config>		

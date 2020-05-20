@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.12
+	last modification on this file on version:0.20.5.1
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,6 +39,31 @@
 /* *********************************************************
  *					START Unit::STATIC					   *
  ********************************************************* */
+
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : searchUnitByName															   */
+/* ROLE : Search the unit in vector template by name								   */
+/* INPUT : std::string name : name to compared										   */
+/* INPUT : std::vector<Unit_Template>& : vector of template unit 					   */
+/* RETURNED VALUE : Uint8 : index of the unit										   */
+/* ----------------------------------------------------------------------------------- */
+Uint8 Unit::searchUnitByName
+(
+	std::string name,
+	const std::vector<Unit_Template>& tabUnit_Template
+)
+{
+	for (Uint8 p(0); p < tabUnit_Template.size(); p++)
+	{
+		if (tabUnit_Template[p].name.compare(name) == IDENTICAL_STRINGS)
+		{
+			return p;
+		}
+	}
+	return 0;
+}
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -713,58 +738,62 @@ void Unit::afficher
 	{
 		unsigned int x(_x - map.screenOffsetXIndexMin * map.tileSize);
 		unsigned int y(_y - map.screenOffsetYIndexMin * map.tileSize);
-		allTextures.unit[_name]->render( x, y);
-	
-		if (_life == _maxlife)
-		{
-			allTextures.barLife["maxlife.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1)))
-		{
-			allTextures.barLife["0.9life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2))) 
-		{
-			allTextures.barLife["0.8life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3)))
-		{
-			allTextures.barLife["0.7life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4)))
-		{
-			allTextures.barLife["0.6life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5)))
-		{
-			allTextures.barLife["0.5life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6))) 
-		{
-			allTextures.barLife["0.4life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7))) 
-		{
-			allTextures.barLife["0.3life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8)))
-		{
-			allTextures.barLife["0.2life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9)))
-		{
-			allTextures.barLife["0.1life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else if (_life < (_maxlife - ceil(_maxlife * 0.9)))
-		{
-			allTextures.barLife["0.0life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
-		}
-		else
-		{
-			/* N/A */
-		}
 
-		allTextures.colorapp["ColorPlayer" + std::to_string(iPlayer) + ".bmp"]->render(x, y + map.tileSize);
+		if (_x > (x - map.tileSize * map.toolBarSize) && _y >= y)
+		{
+			allTextures.unit[_name]->render(x, y);
+
+			if (_life == _maxlife)
+			{
+				allTextures.barLife["maxlife.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < _maxlife && _life >= (_maxlife - ceil(_maxlife * 0.1)))
+			{
+				allTextures.barLife["0.9life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.1)) && _life >= (_maxlife - ceil(_maxlife * 0.2)))
+			{
+				allTextures.barLife["0.8life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.2)) && _life >= (_maxlife - ceil(_maxlife * 0.3)))
+			{
+				allTextures.barLife["0.7life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.3)) && _life >= (_maxlife - ceil(_maxlife * 0.4)))
+			{
+				allTextures.barLife["0.6life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.4)) && _life >= (_maxlife - ceil(_maxlife * 0.5)))
+			{
+				allTextures.barLife["0.5life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.5)) && _life >= (_maxlife - ceil(_maxlife * 0.6)))
+			{
+				allTextures.barLife["0.4life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.6)) && _life >= (_maxlife - ceil(_maxlife * 0.7)))
+			{
+				allTextures.barLife["0.3life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.7)) && _life >= (_maxlife - ceil(_maxlife * 0.8)))
+			{
+				allTextures.barLife["0.2life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.8)) && _life >= (_maxlife - ceil(_maxlife * 0.9)))
+			{
+				allTextures.barLife["0.1life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else if (_life < (_maxlife - ceil(_maxlife * 0.9)))
+			{
+				allTextures.barLife["0.0life.bmp"]->render(x + (map.tileSize / 2) - 4, y + map.tileSize);
+			}
+			else
+			{
+				/* N/A */
+			}
+
+			allTextures.colorapp["ColorPlayer" + std::to_string(iPlayer) + ".bmp"]->render(x, y + map.tileSize);
+		}
 	}
 }
 

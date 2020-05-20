@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.13
+	last modification on this file on version:0.20.4.4
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,7 @@
 #include "IHM.h"
 #include "End.h"
 #include "Player.h"
+#include "Utility.h"
 
 /* *********************************************************
  *					Variable Globale					   *
@@ -90,14 +91,14 @@ void LoadConfig::initStructs
 	 ********************************************************* */
 
 	// sysinfo.file.log = "bin/log/log.txt"; // N/A : const
-	sysinfo.file.BUILDING = EMPTY_STRING;
-	sysinfo.file.CITIENAME = EMPTY_STRING;
+	sysinfo.file.buildings = EMPTY_STRING;
+	sysinfo.file.citiesNames = EMPTY_STRING;
 	sysinfo.file.readme = EMPTY_STRING;
-	sysinfo.file.SaveInfo = EMPTY_STRING;
-	sysinfo.file.SaveMaps = EMPTY_STRING;
-	sysinfo.file.SPECNAME = EMPTY_STRING;
-	sysinfo.file.UNIT = EMPTY_STRING;
-	sysinfo.file.Texte = EMPTY_STRING;
+	sysinfo.file.saveInfo = EMPTY_STRING;
+	sysinfo.file.saveMaps = EMPTY_STRING;
+	sysinfo.file.specNames = EMPTY_STRING;
+	sysinfo.file.units = EMPTY_STRING;
+	sysinfo.file.texts = EMPTY_STRING;
 
 	/* *********************************************************
 	 *					   sysinfo.var						   *
@@ -118,7 +119,7 @@ void LoadConfig::initStructs
 
 	/* sysinfo.var.s_player */
 
-	sysinfo.var.s_player.selectCitie = NO_CITIE_SELECTED;
+	sysinfo.var.s_player.selectCity = NO_CITY_SELECTED;
 	sysinfo.var.s_player.selectplayer = NO_PLAYER_SELECTED;
 	sysinfo.var.s_player.selectPlayerToAttack = NO_PLAYER_SELECTED;
 	sysinfo.var.s_player.selectunit = NO_UNIT_SELECTED;
@@ -128,12 +129,12 @@ void LoadConfig::initStructs
 	sysinfo.var.s_player.unitNameToCreate = EMPTY_STRING;
 	sysinfo.var.s_player.unitNameToMove = EMPTY_STRING;
 
-	sysinfo.var.s_player.tabCitieName.clear();
+	sysinfo.var.s_player.tabCitiesName.clear();
 	sysinfo.var.s_player.tabPlayerName.clear();
 	sysinfo.var.s_player.tabUnit_Template.clear();
 
 	sysinfo.var.s_player.nbNoNamePlayer = 0;
-	sysinfo.var.s_player.citieNameMaxToCreate = 0;
+	sysinfo.var.s_player.citiesNameMaxToCreate = 0;
 
 	/* sysinfo.var.mouse */
 
@@ -163,7 +164,7 @@ void LoadConfig::initStructs
 
 	sysinfo.allTextures.titleScreen.clear();
 	sysinfo.allTextures.unit.clear();
-	sysinfo.allTextures.citieMap.clear();
+	sysinfo.allTextures.cityMap.clear();
 
 	/* *********************************************************
 	 *					  sysinfo.allTextes					   *
@@ -173,7 +174,7 @@ void LoadConfig::initStructs
 	sysinfo.allTextes.titleScreen.clear();
 	sysinfo.allTextes.newGame.clear();
 	sysinfo.allTextes.mainMap.clear();
-	sysinfo.allTextes.citieMap.clear();
+	sysinfo.allTextes.cityMap.clear();
 
 	/* *********************************************************
 	 *					  sysinfo.allButton					   *
@@ -182,7 +183,7 @@ void LoadConfig::initStructs
 	sysinfo.allButton.titleScreen.clear();
 	sysinfo.allButton.reload.clear();
 	sysinfo.allButton.mainMap.clear();
-	sysinfo.allButton.citieMap.clear();
+	sysinfo.allButton.cityMap.clear();
 
 	sysinfo.allButton.player.clear();
 
@@ -259,27 +260,27 @@ void LoadConfig::initMain
 
 			* s_FilePaths("FilePaths"),
 			* s_Readme("Readme"),
-			* s_Texte("Texte"),
-			* s_Building("Building"),
-			* s_CitieName("CitieName"),
-			* s_Unit("Unit"),
-			* s_SpecName("SpecName"),
+			* s_Texte("Texts"),
+			* s_Building("Buildings"),
+			* s_CitieName("CitiesNames"),
+			* s_Unit("Units"),
+			* s_SpecName("SpecNames"),
 			* s_SaveInfo("SaveInfo"),
 			* s_SaveMaps("SaveMaps"),
-			* s_SavePlayer("SavePlayer");
+			* s_SavePlayer("SavePlayers");
 
 		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_TileSize)->QueryUnsignedText(&sysinfo.map.tileSize);
 		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSize)->QueryUnsignedText(&sysinfo.map.mapSize);
 
 		sysinfo.file.readme = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText();
-		sysinfo.file.Texte = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
-		sysinfo.file.BUILDING = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText();
-		sysinfo.file.CITIENAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText();
-		sysinfo.file.UNIT = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText();
-		sysinfo.file.SPECNAME = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText();
-		sysinfo.file.SaveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
-		sysinfo.file.SaveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
-		sysinfo.file.SavePlayer = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
+		sysinfo.file.texts = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
+		sysinfo.file.buildings = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText();
+		sysinfo.file.citiesNames = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText();
+		sysinfo.file.units = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText();
+		sysinfo.file.specNames = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText();
+		sysinfo.file.saveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
+		sysinfo.file.saveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
+		sysinfo.file.savePlayers = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
 	}
 	else
 	{
@@ -313,15 +314,15 @@ void LoadConfig::computeSize
 	/* ---------------------------------------------------------------------- */
 	/* 2° : Maimap														 	  */
 	/* ---------------------------------------------------------------------- */
-	map.toolBarSize = (screen.screenWidth / 10) / map.tileSize;
-	map.screenOffsetXIndexMax = ((screen.screenWidth * 9) / 10) / map.tileSize;
-	map.screenOffsetYIndexMax = screen.screenHeight / map.tileSize;
+	map.toolBarSize = (unsigned int)Utility::protectedDiv((screen.screenWidth / 10), map.tileSize);
+	map.screenOffsetXIndexMax = (unsigned int)Utility::protectedDiv(((screen.screenWidth * 9) / 10), map.tileSize);
+	map.screenOffsetYIndexMax = (unsigned int)Utility::protectedDiv(screen.screenHeight, map.tileSize);
 
 	/* ---------------------------------------------------------------------- */
 	/* 3° : CitieMap													 	  */
 	/* ---------------------------------------------------------------------- */
-	map.citieMap.ToolbarButtonsH = (screen.screenWidth / 3);
-	map.citieMap.ToolbarButtonsW = (screen.screenHeight / 3);
+	map.sizeCityMap.ToolbarButtonsH = (screen.screenWidth / 3);
+	map.sizeCityMap.ToolbarButtonsW = (screen.screenHeight / 3);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -421,7 +422,8 @@ void LoadConfig::loadUnitAndSpec
 						* s_Atq("Atq"),
 						* s_Def("Def"),
 						* s_Mouvement("Mouvement"),
-						* s_Level("Level");
+						* s_Level("Level"),
+						* s_WorkToBuild("WorkToBuild");
 
 	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
 	Unit_Template currentUnit;
@@ -435,6 +437,8 @@ void LoadConfig::loadUnitAndSpec
 		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
 		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)&currentUnit.movement);
 		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
+		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
+		node->FirstChildElement(s_WorkToBuild)->QueryDoubleText((double*)&currentUnit.workToBuild);
 
 		tabUnit_Template.push_back(currentUnit);
 
@@ -486,7 +490,7 @@ void LoadConfig::logfileconsole
 	time_t now(time(0));
 	struct tm  tstruct;
 	char  buf[80];
-	tstruct = *localtime(&now);
+	localtime_s(&tstruct, &now);
 	strftime(buf, sizeof(buf), "%F %X", &tstruct);
 
 #ifdef _DEBUG_MODE
@@ -634,11 +638,14 @@ void LoadConfig::calculImage
 		 sysinfo.allTextures.ground
 	 */
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "ground/grass.bmp", "grass.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/water.bmp", "water.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "ground/water.bmp", "water.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.ground, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "ground/deepwater.bmp", "deepwater.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+		IPath + "ground/deepwater.bmp", "deepwater.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 	// chargement de l'image de la toolbar
@@ -653,7 +660,7 @@ void LoadConfig::calculImage
 	*/
 	unsigned int nbspecname(0);
 	std::string destroy(EMPTY_STRING), name(EMPTY_STRING);
-	std::ifstream SPECNAME(sysinfo.file.SPECNAME);
+	std::ifstream SPECNAME(sysinfo.file.specNames);
 	if (SPECNAME)
 	{
 		SPECNAME >> destroy;
@@ -663,12 +670,13 @@ void LoadConfig::calculImage
 			name = EMPTY_STRING;
 			SPECNAME >> name;
 			Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.groundSpec, sysinfo.var.statescreen, sysinfo.var.select,
-				IPath + "spec/" + name, name, nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+				IPath + "spec/" + name, name, nonTransparent,
+				SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 		}
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + sysinfo.file.SPECNAME);
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.specNames);
 	}
 
 
@@ -688,13 +696,14 @@ void LoadConfig::calculImage
 	/*
 		sysinfo.allTextures.barLife
 	*/
-	sysinfo.var.statescreen = State_Type::STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainMap;
 	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
+		IPath + "barre de vie/maxlife.bmp", "maxlife.bmp", nonTransparent,
+		SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle);
 	for (int i(9); i >= 0; i--)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.barLife, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "barre de vie/0." + std::to_string(i) + "life.bmp", "0." + std::to_string(i) + "life.bmp", nonTransparent,
-			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle, Center_Type::nocenter);
+			SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize / 10, no_angle, Center_Type::nocenter);
 
 
 
@@ -704,7 +713,7 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapp, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayer" + std::to_string(i) + ".bmp", nonTransparent,
-			-1, -1, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle, Center_Type::nocenter);
+			SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize / 4, sysinfo.map.tileSize / 4, no_angle, Center_Type::nocenter);
 
 
 	/*
@@ -713,7 +722,7 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < 9; i++)
 		Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.colorapptile, sysinfo.var.statescreen, sysinfo.var.select,
 			IPath + "couleur d'apartenance/ColorPlayer" + std::to_string(i) + ".bmp", "ColorPlayertile" + std::to_string(i) + ".bmp", (Transparance_Type)96,
-			-1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+			SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
 
 
 	/*
@@ -732,57 +741,64 @@ void LoadConfig::calculImage
 	/*
 		sysinfo.allTextures.citieMap
 	*/
-	sysinfo.var.statescreen = State_Type::STATEcitiemap;
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citie/citie.png", "citie.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citie/food.png", "food.png", nonTransparent, -1, -1, sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Adore.png", "Adore.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Laugh.png", "Laugh.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Cool.png", "Cool.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Cry.png", "Cry.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
-		IPath + "citizen/Furious.png", "Furious.png", nonTransparent, -1, -1, sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+	sysinfo.var.statescreen = State_Type::STATEcityMap;
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citie/citie.png", "citie.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citie/food.png", "food.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize, sysinfo.map.tileSize, no_angle, Center_Type::nocenter);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citizen/Adore.png", "Adore.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citizen/Laugh.png", "Laugh.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citizen/Cool.png", "Cool.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citizen/Cry.png", "Cry.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
+		IPath + "citizen/Furious.png", "Furious.png", nonTransparent, SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE,
+		sysinfo.map.tileSize / 2, sysinfo.map.tileSize / 2, no_angle, Center_Type::nocenter);
 
 
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "toolbar.bmp", "CitieToolbarButtons", nonTransparent, sysinfo.map.tileSize, sysinfo.map.tileSize,
-		sysinfo.map.citieMap.ToolbarButtonsH, sysinfo.map.citieMap.ToolbarButtonsW, no_angle, Center_Type::nocenter);
+		sysinfo.map.sizeCityMap.ToolbarButtonsH, sysinfo.map.sizeCityMap.ToolbarButtonsW, no_angle, Center_Type::nocenter);
 
-	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.citieMap, sysinfo.var.statescreen, sysinfo.var.select,
+	Texture::loadImage(sysinfo.screen.renderer, sysinfo.allTextures.cityMap, sysinfo.var.statescreen, sysinfo.var.select,
 		IPath + "toolbar.bmp", "CitieToolbarStats", nonTransparent,
-		sysinfo.map.tileSize + sysinfo.map.citieMap.ToolbarButtonsH + 2 * sysinfo.map.tileSize + INIT_SIZE_VIEW * sysinfo.map.tileSize,
+		sysinfo.map.tileSize + sysinfo.map.sizeCityMap.ToolbarButtonsH + 2 * sysinfo.map.tileSize + INIT_SIZE_VIEW * sysinfo.map.tileSize,
 		sysinfo.map.tileSize,
-		sysinfo.map.citieMap.ToolbarButtonsH - sysinfo.map.tileSize,
-		sysinfo.map.citieMap.ToolbarButtonsW, no_angle, Center_Type::nocenter);
+		sysinfo.map.sizeCityMap.ToolbarButtonsH - sysinfo.map.tileSize,
+		sysinfo.map.sizeCityMap.ToolbarButtonsW, no_angle, Center_Type::nocenter);
 
 
 	// chargement du nombre de ville ainsi que leur nom
 	unsigned int nbcitie(0);
 	std::string citie(EMPTY_STRING);
-	std::ifstream CITIENAME(sysinfo.file.CITIENAME);
+	std::ifstream CITIENAME(sysinfo.file.citiesNames);
 	if (CITIENAME)
 	{
 		CITIENAME >> destroy;
 		CITIENAME >> nbcitie;
-		sysinfo.var.s_player.citieNameMaxToCreate = nbcitie;
+		sysinfo.var.s_player.citiesNameMaxToCreate = nbcitie;
 		for (unsigned int i(0); i < nbcitie; i++)
 		{
 			CITIENAME >> citie;
-			sysinfo.var.s_player.tabCitieName.push_back(citie);
+			sysinfo.var.s_player.tabCitiesName.push_back(citie);
 		}
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + sysinfo.file.CITIENAME);
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.citiesNames);
 	}
 
 	//chargement du nombre de sauvegardes
-	std::ifstream loadInfo(sysinfo.file.SaveInfo);
+	std::ifstream loadInfo(sysinfo.file.saveInfo);
 	unsigned int currentSave(0), maxSave(0);
 	if (loadInfo)
 	{
@@ -798,7 +814,7 @@ void LoadConfig::calculImage
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + sysinfo.file.SaveInfo);
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.saveInfo);
 	}
 
 	/* *********************************************************
@@ -874,7 +890,7 @@ void LoadConfig::calculImage
 
 
 	/*** STATEmainmap ***/
-	sysinfo.var.statescreen = State_Type::STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainMap;
 
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.mainMap,
@@ -902,35 +918,35 @@ void LoadConfig::calculImage
 
 
 	/*** STATEcitiemap ***/
-	sysinfo.var.statescreen = State_Type::STATEcitiemap;
+	sysinfo.var.statescreen = State_Type::STATEcityMap;
 	sysinfo.var.select = Select_Type::selectnothing;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.cityMap,
 		Texte_Type::shaded, "Map", WriteColorButton, BackColorButton, 24, 96, 0,
 		nonTransparent, no_angle, Center_Type::center_x);
 
 	sysinfo.var.select = Select_Type::selectcreate;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font
-		, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
+		, sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.cityMap,
 		Texte_Type::shaded, "Build", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 100,
 		nonTransparent, no_angle, Center_Type::center_x);
 
 	sysinfo.var.select = Select_Type::selectnothing;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.cityMap,
 		Texte_Type::shaded, "Food", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 132,
 		nonTransparent, no_angle, Center_Type::center_x);
 
 	sysinfo.var.select = Select_Type::selectmoveCitizen;
 	ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
+		sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.cityMap,
 		Texte_Type::shaded, "Place Citizen", WriteColorButton, BackColorButton, 24, sysinfo.screen.screenWidth / 2 - 200, 164,
 		nonTransparent, no_angle, Center_Type::center_x);
 
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 	{
 		ButtonTexte::createButtonTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.citieMap,
+			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allButton.cityMap,
 			Texte_Type::shaded, sysinfo.var.s_player.tabUnit_Template[i].name, { 255, 64, 0, 255 }, BackColorButton, 24, 64, 400,
 			nonTransparent, no_angle, Center_Type::nocenter);
 	}
@@ -951,7 +967,7 @@ void LoadConfig::calculImage
 
 
 	tinyxml2::XMLDocument texteFile;
-	texteFile.LoadFile(sysinfo.file.Texte.c_str());
+	texteFile.LoadFile(sysinfo.file.texts.c_str());
 
 	if (texteFile.ErrorID() == 0)
 	{
@@ -966,11 +982,11 @@ void LoadConfig::calculImage
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + sysinfo.file.Texte);
+		throw("Impossible d'ouvrir le fichier " + sysinfo.file.texts);
 	}
 
 	/*** STATEmainmap ***/
-	sysinfo.var.statescreen = State_Type::STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainMap;
 
 	for (unsigned int i(0); i < MAX_POP; i++)
 	{
@@ -984,7 +1000,7 @@ void LoadConfig::calculImage
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
 			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.mainMap,
-			Texte_Type::blended, sysinfo.var.s_player.tabCitieName[i], { 255, 64, 0, 255 }, NoColor, 12, -1, -1,
+			Texte_Type::blended, sysinfo.var.s_player.tabCitiesName[i], { 255, 64, 0, 255 }, NoColor, 12, -1, -1,
 			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
@@ -993,18 +1009,18 @@ void LoadConfig::calculImage
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
+			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.cityMap,
 			Texte_Type::blended, sysinfo.var.s_player.tabUnit_Template[i].name, { 0, 64, 255, 255 }, NoColor, 18, 64, 400,
 			nonTransparent, no_angle, Center_Type::nocenter);
 	}
 
 	/*** STATEcitiemap ***/
-	sysinfo.var.statescreen = State_Type::STATEcitiemap;
+	sysinfo.var.statescreen = State_Type::STATEcityMap;
 	sysinfo.var.select = Select_Type::selectcreate;
 	for (unsigned int i(0); i < sysinfo.var.s_player.tabUnit_Template.size(); i++)
 	{
 		Texte::loadTexte(sysinfo.screen.renderer, sysinfo.allTextures.font,
-			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.citieMap,
+			sysinfo.var.statescreen, sysinfo.var.select, sysinfo.allTextes.cityMap,
 			Texte_Type::blended, "life:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[i].life) +
 			"/atq:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[i].atq) +
 			"/def:" + std::to_string(sysinfo.var.s_player.tabUnit_Template[i].def) +
@@ -1086,7 +1102,7 @@ void LoadConfig::readXmlTexte
 	while (node != nullptr)
 	{
 		if (strcmp(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
-			->FirstChildElement(s_FontColor_Simple_Condition)->GetText(), "true") == 0)
+				->FirstChildElement(s_FontColor_Simple_Condition)->GetText(), "true") == 0)
 		{
 			fontColor = xmlGiveColor(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
 				->FirstChildElement(s_FontColor_Simple_Color)->GetText());
@@ -1108,7 +1124,7 @@ void LoadConfig::readXmlTexte
 		}
 
 		if (strcmp(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
-			->FirstChildElement(s_BackColor_Simple_Condition)->GetText(), "true") == 0)
+				->FirstChildElement(s_BackColor_Simple_Condition)->GetText(), "true") == 0)
 		{
 			backColor = xmlGiveColor(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
 				->FirstChildElement(s_BackColor_Simple_Color)->GetText());
@@ -1179,7 +1195,7 @@ State_Type LoadConfig::xmlGiveStateType
 	}
 	else if (type.compare("STATEscreennewgame") == IDENTICAL_STRINGS)
 	{
-		return State_Type::STATEscreennewgame;
+		return State_Type::STATEscreenNewgame;
 	}
 	else if (type.compare("STATEreload") == IDENTICAL_STRINGS)
 	{
@@ -1187,7 +1203,7 @@ State_Type LoadConfig::xmlGiveStateType
 	}
 	else if (type.compare("STATEmainmap") == IDENTICAL_STRINGS)
 	{
-		return State_Type::STATEmainmap;
+		return State_Type::STATEmainMap;
 	}
 	else if (type.compare("STATEscience") == IDENTICAL_STRINGS)
 	{
@@ -1195,7 +1211,7 @@ State_Type LoadConfig::xmlGiveStateType
 	}
 	else if (type.compare("STATEcitiemap") == IDENTICAL_STRINGS)
 	{
-		return State_Type::STATEcitiemap;
+		return State_Type::STATEcityMap;
 	}
 	else
 	{
@@ -1254,7 +1270,7 @@ std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur
 	}
 	else if (type.compare("citieMap") == IDENTICAL_STRINGS)
 	{
-		return allTextes.citieMap;
+		return allTextes.cityMap;
 	}
 	else
 	{
@@ -1444,16 +1460,7 @@ int LoadConfig::determineCoor
 		numI = std::stoi(num);
 		denI = std::stoi(den);
 
-		if (denI == 0)
-		{
-			throw(" div/0 -> den == 0");
-		}
-		else
-		{
-			/* N/A */
-		}
-
-		return somme = (unsigned int)(numI / denI);
+		return somme = (unsigned int)Utility::protectedDiv(numI, denI);
 	}
 	else
 	{

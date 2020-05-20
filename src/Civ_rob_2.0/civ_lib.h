@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.10
+	last modification on this file on version:0.20.2.1
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -80,7 +80,7 @@ const std::string configFilePath = "bin/config.xml";
 
 #define NO_PLAYER_SELECTED -1
 #define NO_UNIT_SELECTED -1
-#define NO_CITIE_SELECTED -1
+#define NO_CITY_SELECTED -1
 
 /* *********************************************************
  *						 Enum							   *
@@ -99,7 +99,7 @@ struct SubcatPlayer
 	// *** Index ***//
 
 	// index de la cité actuellement sélectionnée
-	int selectCitie = NO_CITIE_SELECTED;
+	int selectCity = NO_CITY_SELECTED;
 
 	// index du joueur actuellement sélectionné
 	int selectplayer = NO_PLAYER_SELECTED;
@@ -133,7 +133,7 @@ struct SubcatPlayer
 	// *** Vector ***//
 
 	// tableau des noms des citié de tous les joueurs
-	std::vector<std::string> tabCitieName;
+	std::vector<std::string> tabCitiesName;
 
 	// tableau des noms des joueurs
 	std::vector<std::string> tabPlayerName;
@@ -145,10 +145,10 @@ struct SubcatPlayer
 	unsigned int nbNoNamePlayer = 0;
 
 	// nombre de cité maximal différentes à créer 
-	unsigned int citieNameMaxToCreate = 0;
+	unsigned int citiesNameMaxToCreate = 0;
 };
 
-struct CitieMap
+struct SizeCityMap
 {
 	unsigned int ToolbarButtonsH = 0;
 	unsigned int ToolbarButtonsW = 0;
@@ -182,16 +182,16 @@ struct File
 	const std::string log = "bin/log/log.txt";
 
 	std::string readme =		EMPTY_STRING;
-	std::string Texte =			EMPTY_STRING;
-	std::string BUILDING =		EMPTY_STRING;
-	std::string CITIENAME =		EMPTY_STRING;
-	std::string UNIT =			EMPTY_STRING;
-	std::string SPECNAME =		EMPTY_STRING;
+	std::string texts =			EMPTY_STRING;
+	std::string buildings =		EMPTY_STRING;
+	std::string citiesNames =	EMPTY_STRING;
+	std::string units =			EMPTY_STRING;
+	std::string specNames =		EMPTY_STRING;
 
-	std::string SaveInfo =		EMPTY_STRING;
+	std::string saveInfo =		EMPTY_STRING;
 
-	std::string SaveMaps =		EMPTY_STRING;
-	std::string SavePlayer =	EMPTY_STRING;
+	std::string saveMaps =		EMPTY_STRING;
+	std::string savePlayers =	EMPTY_STRING;
 };
 struct Var
 {
@@ -281,7 +281,7 @@ struct Map
 	unsigned int screenOffsetXIndexMax = 0;
 	unsigned int screenOffsetYIndexMax = 0;
 	MatriceTile maps;
-	CitieMap citieMap;
+	SizeCityMap sizeCityMap;
 };
 struct AllTextures
 {
@@ -295,7 +295,7 @@ struct AllTextures
 
 	MapTexture titleScreen;
 	MapTexture unit;
-	MapTexture citieMap;
+	MapTexture cityMap;
 };
 struct AllTextes
 {
@@ -304,14 +304,17 @@ struct AllTextes
 	MapTexte titleScreen;
 	MapTexte newGame;
 	MapTexte mainMap;
-	MapTexte citieMap;
+	MapTexte cityMap;
 };
 struct AllButtons
 {
 	MapButtonTexte titleScreen;
 	MapButtonTexte reload;
 	MapButtonTexte mainMap;
-	MapButtonTexte citieMap;
+
+	MapButtonTexte cityMap;
+	DequeButtonTexte cityMapBuildQueue;
+
 
 	MapButtonTexte player; // init in GamePlay.cpp
 };

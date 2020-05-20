@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.4
+	last modification on this file on version:0.20.6.1
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -44,7 +44,10 @@
 /* INPUT : void																		   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Player::Player() : _name("NoName")
+Player::Player() :
+_name("NoName"),
+_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+_onOffDisplay{ false }
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Player Par Defaut Success");
 }
@@ -56,7 +59,10 @@ Player::Player() : _name("NoName")
 /* INPUT : const std::string&														   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Player::Player(const std::string &msg) : _name(msg)
+Player::Player(const std::string &msg):
+_name(msg),
+_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+_onOffDisplay{ false }
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Player Success");
 }
@@ -91,6 +97,7 @@ Player& Player::operator=
 		_name = player.GETname();
 		_tabUnit = player.GETtabUnit();
 		_tabCity = player.GETtabCity();
+		_goldStats = player.GETgoldStatsConst();
 	}
 	return *this;
 }
@@ -117,10 +124,10 @@ void Player::deletePlayer()
 	for (unsigned int i(0); i < size; i++)
 		_tabUnit.pop_back();
 
-	if (_tabUnit.size() > 0)
-		LoadConfig::logfileconsole("[ERROR]__: _tabunit.size() != 0");
-	else
+	if (_tabUnit.empty())
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Unit of Player:" + _name + " Success");
+	else
+		LoadConfig::logfileconsole("[ERROR]__: _tabunit.size() != 0");
 
 
 	size = (unsigned int)_tabCity.size();
@@ -135,10 +142,10 @@ void Player::deletePlayer()
 	for (unsigned int i(0); i < size; i++)
 		_tabCity.pop_back();
 
-	if (_tabCity.size() > 0)
-		LoadConfig::logfileconsole("[ERROR]__: _tabcities.size() != 0");
-	else
+	if (_tabCity.empty())
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
+	else
+		LoadConfig::logfileconsole("[ERROR]__: _tabcities.size() != 0");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -255,6 +262,173 @@ void Player::deleteCity
 	}
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : computeGold																   */
+/* ROLE : Compute income and cost then the balance between the two					   */
+/* ROLE : Add balance to the player gold											   */
+/* INPUT : void																		   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void Player::computeGold()
+{
+	_goldStats.income =		_goldStats.taxIncome
+						 +  _goldStats.commerceIncome
+						 +  _goldStats.goldConversionSurplus;
+
+	_goldStats.cost =		_goldStats.buildingsCost
+						 +  _goldStats.armiesCost;
+
+	_goldStats.goldBalance = _goldStats.income - _goldStats.cost;
+	_goldStats.gold += _goldStats.goldBalance;
+	
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : resetGoldStats															   */
+/* ROLE : Reset all stats of _goldStats except gold									   */
+/* INPUT : void																		   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void Player::resetGoldStats()
+{
+	_goldStats.goldBalance = 0.0;
+	_goldStats.cost = 0.0;
+	_goldStats.taxIncome = 0.0;
+	_goldStats.commerceIncome = 0.0;
+	_goldStats.goldConversionSurplus = 0.0;
+	_goldStats.buildingsCost = 0.0;
+	_goldStats.armiesCost = 0.0;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : resetGoldStats															   */
+/* ROLE : Reset all stats of _goldStats except gold									   */
+/* INPUT : double goldToAdd	: gold to add in goldConversionSurplus					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void Player::addGoldToGoldConversionSurplus
+(
+	double goldToAdd
+)
+{
+	_goldStats.goldConversionSurplus += goldToAdd;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : displayGoldStats															   */
+/* ROLE : Display gold Stats per player												   */
+/* INPUT : SDL_Renderer*& : ptr on SDL Renderer										   */
+/* INPUT : TTF_Font* font[]	: ptr on font array										   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void Player::displayGoldStats
+(
+	SDL_Renderer*& renderer,
+	TTF_Font* font[]
+)
+{
+	std::ostringstream stream;
+	stream << std::fixed;
+	stream << std::setprecision(1);
+	stream << _goldStats.gold;
+
+	Texte::writeTexte(renderer, font,
+		Texte_Type::shaded, "Gold : " + stream.str(),
+		White, { 64, 64, 64, 255 }, 24,
+		0, 900,
+		no_angle, Center_Type::nocenter);
+
+	if (_onOffDisplay.showContextGoldStats)
+	{
+		unsigned int initX(200), spaceX(150);
+		unsigned int initY(900), spaceY(32);
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.goldBalance;
+
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Balance : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX, initY,
+			no_angle, Center_Type::nocenter);
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.income;
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Income : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX += spaceX, initY,
+			no_angle, Center_Type::nocenter);
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.cost;
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Cost : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX += spaceX, initY,
+			no_angle, Center_Type::nocenter);
+
+
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.taxIncome;
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Tax : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX = 200, initY += spaceY,
+			no_angle, Center_Type::nocenter);
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.commerceIncome;
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Commerce : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX += spaceX, initY,
+			no_angle, Center_Type::nocenter);
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.goldConversionSurplus;
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Surplus : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX += spaceX, initY,
+			no_angle, Center_Type::nocenter);
+
+
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.buildingsCost;
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Building cost : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX = 200, initY += spaceY,
+			no_angle, Center_Type::nocenter);
+
+		stream.str("");
+		stream.clear();
+		stream << _goldStats.armiesCost;
+		Texte::writeTexte(renderer, font,
+			Texte_Type::shaded, "Armies cost : " + stream.str(),
+			White, { 64, 64, 64, 255 }, 18,
+			initX += 200, initY,
+			no_angle, Center_Type::nocenter);
+	}
+}
 
 /* *********************************************************
  *				END Player::METHODS						   *

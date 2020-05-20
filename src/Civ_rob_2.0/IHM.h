@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.5
-	file version : 1.14
+	last modification on this file on version:0.20.2.1
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,7 +35,8 @@
  *						Constantes						   *
  ********************************************************* */
 
-/* N/A */
+/* Define the maximum Unit to display in CitieMap */
+#define MAX_UNIT_TO_DISPLAY_CITIEMAP 10
 
 /* *********************************************************
  *						 Enum							   *
@@ -160,20 +161,6 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static void afficherSupertiles
-	(
-		Sysinfo&
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : citiemap																	   */
-	/* ROLE : Affichage de la fenetre citiemap											   */
-	/* ROLE : fonctionnement selon l'état : enum State_Type = STATEcitiemap				   */
-	/* INPUT : struct Sysinfo& : structure globale du programme							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void citiemap
 	(
 		Sysinfo&
 	);

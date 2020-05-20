@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.11
+	last modification on this file on version:0.20.6.1
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,7 +51,7 @@ void GamePlay::newGame
 )
 {
 	LoadConfig::logfileconsole("[INFO]___: Newgame Start");
-	sysinfo.var.statescreen = State_Type::STATEscreennewgame;
+	sysinfo.var.statescreen = State_Type::STATEscreenNewgame;
 
 	SaveReload::createSave(sysinfo);
 
@@ -152,7 +152,7 @@ void GamePlay::newGame
 	/* Création des boutons pour séléctionner les joueurs			 		  */
 	/* ---------------------------------------------------------------------- */
 	int initspacename(200), spacename(24);
-	sysinfo.var.statescreen = State_Type::STATEmainmap;
+	sysinfo.var.statescreen = State_Type::STATEmainMap;
 	sysinfo.var.cinState = CinState_Type::cinMainMap;
 	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
 	{
@@ -904,6 +904,7 @@ void GamePlay::nextTurn
 {
 	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++) 
 	{
+		sysinfo.tabplayer[i]->resetGoldStats();
 		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabUnit().size(); j++) 
 		{
 			sysinfo.tabplayer[i]->GETtheUnit(j)->RESETmovement();
@@ -911,9 +912,27 @@ void GamePlay::nextTurn
 		}
 		for (unsigned int j(0); j < sysinfo.tabplayer[i]->GETtabCity().size(); j++)
 		{
-			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn();
+			/* computeEmotion must be in first : Emotion use on other computations */
 			sysinfo.tabplayer[i]->GETtheCity(j)->computeEmotion();
+
+			/* Food */
+			sysinfo.tabplayer[i]->GETtheCity(j)->foodNextTurn(sysinfo.tabplayer[i]->GETgoldStats());
+
+			/* Work */
+			sysinfo.tabplayer[i]->GETtheCity(j)->computeWork();
+			sysinfo.tabplayer[i]->GETtheCity(j)
+				->computeWorkToBuild
+					(
+						sysinfo.tabplayer[i],
+						sysinfo.var.s_player.tabUnit_Template,
+						sysinfo.allButton.cityMapBuildQueue
+					);
+
+			/* Gold */
+			sysinfo.tabplayer[i]->GETtheCity(j)->computeGold();
+			sysinfo.tabplayer[i]->GETtheCity(j)->addCityGoldToTaxIncome(sysinfo.tabplayer[i]->GETgoldStats());
 		}
+		sysinfo.tabplayer[i]->computeGold();
 	}
 	sysinfo.var.nbturn++;
 }

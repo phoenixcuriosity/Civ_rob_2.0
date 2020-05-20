@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	}
 	LoadConfig::computeSize(sysinfo.screen, sysinfo.map);
 	LoadConfig::initTile(sysinfo.map);
-	LoadConfig::loadUnitAndSpec(sysinfo.file.UNIT, sysinfo.var.s_player.tabUnit_Template);
+	LoadConfig::loadUnitAndSpec(sysinfo.file.units, sysinfo.var.s_player.tabUnit_Template);
 
 	/* ---------------------------------------------------------------------- */
 	/* 4° : Initialisation SDL												  */

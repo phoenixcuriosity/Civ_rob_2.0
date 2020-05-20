@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.3
+	last modification on this file on version:0.20.4.1
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -130,7 +130,7 @@ void End::deleteAll
 
 	deleteTexture(sysinfo.allTextures.titleScreen, "Texture");
 	deleteTexture(sysinfo.allTextures.unit, "Texture");
-	deleteTexture(sysinfo.allTextures.citieMap, "Texture");
+	deleteTexture(sysinfo.allTextures.cityMap, "Texture");
 
 	/* *********************************************************
 	 *				 END delete Texture*					   *
@@ -145,7 +145,7 @@ void End::deleteAll
 	deleteTexte(sysinfo.allTextes.titleScreen, "Texte");
 	deleteTexte(sysinfo.allTextes.newGame, "Texte");
 	deleteTexte(sysinfo.allTextes.mainMap, "Texte");
-	deleteTexte(sysinfo.allTextes.citieMap, "Texte");
+	deleteTexte(sysinfo.allTextes.cityMap, "Texte");
 
 	/* *********************************************************
 	 *					END delete Texte*					   *
@@ -160,7 +160,8 @@ void End::deleteAll
 	deleteButtonTexte(sysinfo.allButton.player, "Button");
 	deleteButtonTexte(sysinfo.allButton.reload, "Button");
 	deleteButtonTexte(sysinfo.allButton.mainMap, "Button");
-	deleteButtonTexte(sysinfo.allButton.citieMap, "Button");
+	deleteButtonTexte(sysinfo.allButton.cityMap, "Button");
+	deleteButtonTexte(sysinfo.allButton.cityMapBuildQueue, "Button");
 
 	/* *********************************************************
 	 *				 END delete Button*						   *
@@ -179,7 +180,7 @@ void End::deleteAll
 	}
 	else
 	{
-		/* N/A */
+		LoadConfig::logfileconsole("[ERROR]___: [END] : nullptr == sysinfo.screen.renderer");
 	}
 
 	if (nullptr != sysinfo.screen.window)
@@ -189,7 +190,7 @@ void End::deleteAll
 	}
 	else
 	{
-		/* N/A */
+		LoadConfig::logfileconsole("[ERROR]___: [END] : nullptr == sysinfo.screen.window");
 	}
 
 	TTF_Quit();
@@ -294,6 +295,33 @@ void End::deleteButtonTexte
 		{
 			/* N/A */
 		}
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : deleteButtonTexte															   */
+/* ROLE : Destruction des allocations dynamiques de la unordered_map				   */
+/* INPUT/OUTPUT : DequeButtonTexte& dequeButton: deque ButtonTexte					   */
+/* INPUT : const std::string name : name de la Texture								   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void End::deleteButtonTexte
+(
+	DequeButtonTexte& dequeButton,
+	const std::string& name
+)
+{
+	for (unsigned int index(0); index < dequeButton.size(); index++)
+	{
+		if (dequeButton.front() != nullptr)
+		{
+			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + dequeButton.front()->GETname() + " Success");
+			delete dequeButton.front();
+			dequeButton.front() = nullptr;
+		}
+		dequeButton.pop_front();
 	}
 }
 

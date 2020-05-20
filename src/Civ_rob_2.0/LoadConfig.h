@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.6
+	last modification on this file on version:0.20.1.1
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,8 +37,7 @@
  *						Constantes						   *
  ********************************************************* */
 
-/* Define that the compared strings are identical */
-#define IDENTICAL_STRINGS 0
+/* N/A */
 
 /* *********************************************************
  *						 Enum							   *

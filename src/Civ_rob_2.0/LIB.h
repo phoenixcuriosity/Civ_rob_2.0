@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.5
+	last modification on this file on version:0.20.6.1
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,6 +41,7 @@
 #include <cmath>
 #include <vector>
 #include <unordered_map>
+#include <queue>
 #include <exception>
 #include <stdexcept>
 #include "wtypes.h"
@@ -72,7 +73,7 @@
 typedef struct Unit_Template Unit_Template;
 typedef struct SubcatPlayer SubcatPlayer;
 typedef struct Tile Tile;
-typedef struct CitieMap CitieMap;
+typedef struct SizeCityMap SizeCityMap;
 typedef struct Screen Screen;
 typedef struct File File;
 typedef struct Var Var;
@@ -83,6 +84,8 @@ typedef struct AllButtons AllButtons;
 typedef struct Sysinfo Sysinfo;
 
 typedef struct randomPos randomPos;
+typedef struct GoldStats GoldStats;
+typedef struct OnOffDisplay OnOffDisplay;
 
 /* *********************************************************
  *						Classes							   *
@@ -111,9 +114,13 @@ typedef std::vector<std::vector<Tile>>					MatriceTile;
 typedef std::unordered_map<std::string, Texture*>		MapTexture;
 typedef std::unordered_map<std::string, Texte*>			MapTexte;
 typedef std::unordered_map<std::string, ButtonTexte*>	MapButtonTexte;
+typedef std::deque<ButtonTexte*>						DequeButtonTexte;
 typedef std::vector<Player*>							TabPlayer;
 
 #define EMPTY_STRING ""
+
+/* Define that the compared strings are identical */
+#define IDENTICAL_STRINGS 0
 
 #endif
 
