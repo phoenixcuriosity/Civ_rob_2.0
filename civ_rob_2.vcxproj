@@ -133,7 +133,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>src\SDL2-2.0.9\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>src\Civ_rob_2.0;$(IncludePath)</IncludePath>
+    <IncludePath>src\tinyxml2;src\SDL2-2.0.9\include;src\Civ_rob_2.0;$(IncludePath)</IncludePath>
     <SourcePath>src\Civ_rob_2.0;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2.0|x64'">
