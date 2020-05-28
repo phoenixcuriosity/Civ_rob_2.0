@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.5
-	file version : 1.12
+	last modification on this file on version:0.21.2.1
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -396,6 +396,49 @@ public:
 		unsigned int mouse_y
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : isGroundMovement_Type														   */
+	/* ROLE : Check if the movement type of the Unit is	ground							   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE : bool : false -> movement type is not ground						   */
+	/* RETURNED VALUE : bool : true -> movement type is ground							   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool isGroundMovement_Type();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : isAirMovement_Type														   */
+	/* ROLE : Check if the movement type of the Unit is	air								   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE : bool : false -> movement type is not air						   */
+	/* RETURNED VALUE : bool : true -> movement type is air								   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool isAirMovement_Type();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : isWaterMovement_Type														   */
+	/* ROLE : Check if the movement type of the Unit is	water							   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE : bool : false -> movement type is not water						   */
+	/* RETURNED VALUE : bool : true -> movement type is water							   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool isWaterMovement_Type();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : isDeepWaterMovement_Type													   */
+	/* ROLE : Check if the movement type of the Unit is	DeepWater						   */
+	/* INPUT : void																		   */
+	/* RETURNED VALUE : bool : false -> movement type is not DeepWater					   */
+	/* RETURNED VALUE : bool : true -> movement type is DeepWater						   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool isDeepWaterMovement_Type();
 
 public:
 	/* *********************************************************
