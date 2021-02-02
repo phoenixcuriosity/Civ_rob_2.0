@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.5.1
-	file version : 1.28
+	last modification on this file on version:0.21.1.2
+	file version : 1.29
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -458,6 +458,9 @@ void IHM::afficherSupertiles
 
 			switch (sysinfo.map.maps[m][n].tile_ground)
 			{
+			case Ground_Type::error:
+				throw("afficherSupertiles : tile_ground == NoGround");
+				break;
 			case Ground_Type::grass:
 				sysinfo.allTextures.ground["grass.bmp"]->render(x, y);
 				break;
@@ -466,6 +469,12 @@ void IHM::afficherSupertiles
 				break;
 			case Ground_Type::deepwater:
 				sysinfo.allTextures.ground["deepwater.bmp"]->render(x, y);
+				break;
+			case Ground_Type::dirt:
+				/* TODO */
+				break;
+			case Ground_Type::sand:
+				/* TODO */
 				break;
 			default:
 				throw("afficherSupertiles : tile_ground == NoGround");

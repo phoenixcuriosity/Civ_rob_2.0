@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.6.1
-	file version : 1.9
+	last modification on this file on version:0.21.1.1
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -53,9 +53,9 @@
  ********************************************************* */
 
 
-#include "../SDL2-2.0.9/include/SDL.h"
-#include "../SDL2-2.0.9/include/SDL_ttf.h"
-#include "../SDL2-2.0.9/include/SDL_image.h"
+#include "SDL.h"
+#include "SDL_ttf.h"
+#include "SDL_image.h"
 
 
 /* *********************************************************
@@ -63,7 +63,7 @@
  ********************************************************* */
 
 
-#include "../tinyxml2/tinyxml2.h"
+#include "tinyxml2.h"
 
 
 /* *********************************************************

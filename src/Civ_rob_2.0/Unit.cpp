@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.5.1
-	file version : 1.15
+	last modification on this file on version:0.21.2.1
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -237,7 +237,7 @@ Move_Type Unit::searchToMove
 			if	(true == condition)
 			{
 				if	(
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::ground
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isGroundMovement_Type()
 						&&
 						maps[i][j].tile_ground == Ground_Type::grass
 					)
@@ -246,7 +246,7 @@ Move_Type Unit::searchToMove
 				}
 				else 
 				if (
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::air
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isAirMovement_Type()
 						&&
 						(
 							maps[i][j].tile_ground == Ground_Type::grass
@@ -259,7 +259,7 @@ Move_Type Unit::searchToMove
 				}
 				else
 				if  (
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::water
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isWaterMovement_Type()
 						&&
 						maps[i][j].tile_ground == Ground_Type::water
 					)
@@ -268,7 +268,7 @@ Move_Type Unit::searchToMove
 				}
 				else
 				if (
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETmovementType() == Unit_Movement_Type::deepwater
+						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isDeepWaterMovement_Type()
 						&&
 						(
 							maps[i][j].tile_ground == Ground_Type::deepwater
@@ -705,6 +705,63 @@ bool Unit::testPos
 	{
 		return false;
 	}	
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : isGroundMovement_Type														   */
+/* ROLE : Check if the movement type of the Unit is	ground							   */
+/* INPUT : void																		   */
+/* RETURNED VALUE : bool : false -> movement type is not ground						   */
+/* RETURNED VALUE : bool : true -> movement type is ground							   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::isGroundMovement_Type()
+{ 
+	return _movementType == Unit_Movement_Type::ground ? true : false;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : isAirMovement_Type														   */
+/* ROLE : Check if the movement type of the Unit is	air								   */
+/* INPUT : void																		   */
+/* RETURNED VALUE : bool : false -> movement type is not air						   */
+/* RETURNED VALUE : bool : true -> movement type is air								   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::isAirMovement_Type()
+{ 
+	return _movementType == Unit_Movement_Type::air ? true : false;
+
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : isWaterMovement_Type														   */
+/* ROLE : Check if the movement type of the Unit is	water							   */
+/* INPUT : void																		   */
+/* RETURNED VALUE : bool : false -> movement type is not water						   */
+/* RETURNED VALUE : bool : true -> movement type is water							   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::isWaterMovement_Type()
+{ 
+	return _movementType == Unit_Movement_Type::water ? true : false;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : isDeepWaterMovement_Type													   */
+/* ROLE : Check if the movement type of the Unit is	DeepWater						   */
+/* INPUT : void																		   */
+/* RETURNED VALUE : bool : false -> movement type is not DeepWater					   */
+/* RETURNED VALUE : bool : true -> movement type is DeepWater						   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::isDeepWaterMovement_Type()
+{ 
+	return _movementType == Unit_Movement_Type::deepwater ? true : false;
 }
 
 /* *********************************************************
