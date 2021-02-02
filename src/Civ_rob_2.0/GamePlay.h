@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.0.3
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,38 +36,40 @@
  ********************************************************* */
 
  /* MAP -> Max size - Min size of the map for sea borders */
-const Uint8 MAP_BORDER_MAX = 4;
-const Uint8 MAP_BORDER_MIN = 1;
+#define MAP_BORDER_MAX 4
+#define MAP_BORDER_MIN 1
 
 /* MAP -> value deep_water */
-const Uint8 MAP_BORDER_ZERO = 0;
+#define MAP_BORDER_ZERO 0
 
 /* MAP_GEN_RANDOM */
-const Uint8 MAP_GEN_RANDOM_RANGE_GROUND = 100;
-const Uint8 MAP_GEN_RANDOM_OFFSET_GROUND = 1;
+#define MAP_GEN_RANDOM_RANGE_GROUND 100
+#define MAP_GEN_RANDOM_OFFSET_GROUND 1
 
-const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_GRASS = 100;
-const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_GRASS = 1;
+#define MAP_GEN_RANDOM_RANGE_SPEC_GRASS 100
+#define MAP_GEN_RANDOM_OFFSET_SPEC_GRASS 1
 
-const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER = 20;
-const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER = 1;
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER 20
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER 1
 
-const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER1 = 10;
-const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER1 = 1;
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER1 10
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER1 1
 
-const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER2 = 10;
-const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER2 = 1;
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER2 10
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER2 1
 
-const Uint8 MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER = 50;
-const Uint8 MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER = 1;
+#define MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER 50
+#define MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER 1
 
-const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
+#define MAX_RANDOM_POS_ITERATION 10000
 
 /* Minimum space beetween two or more settlers */
-const Uint8 MIN_SPACE_BETWEEN_SETTLER = 16;
+#define MIN_SPACE_BETWEEN_SETTLER 8
 
 /* The tile is not own by a player */
 #define NO_APPARTENANCE -1
+
+#define GROUNDSPEC_NOTHING "void"
 
 /* *********************************************************
  *						 Enum							   *
@@ -152,8 +154,8 @@ struct Tile
 /* ---------------------------------------------------------------------- */
 struct randomPos
 {
-	unsigned int x;
-	unsigned int y;
+	int x;
+	int y;
 };
 
 /* *********************************************************
@@ -162,6 +164,34 @@ struct randomPos
 
 class GamePlay
 {
+public:
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : getPtrTileSize															   */
+	/* ROLE : Initialize ptr on tileSize from sysinfo									   */
+	/* INPUT : unsigned int* const : ptr on tileSize									   */
+	/* RETURNED VALUE : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void getPtrTileSize
+	(
+		unsigned int* const ptrtileSize
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : getPtrScreenWidth															   */
+	/* ROLE : Initialize ptr on screenWidth from sysinfo								   */
+	/* INPUT : Uint16* const : ptr on screenWidth										   */
+	/* RETURNED VALUE : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void getPtrScreenWidth
+	(
+		Uint16* const ptrscreenWidth
+	);
+
 public:
 	/* *********************************************************
 	 *				GamePlay::STATIC::NEW-GAME				   *
@@ -339,9 +369,7 @@ public:
 	static bool conditionspace
 	(
 		const randomPos& RandomPOS,
-		const std::vector<randomPos>& tabRandom,
-		unsigned int tileSize,
-		unsigned int i
+		const std::vector<randomPos>& tabRandom
 	);
 	
 	/* ----------------------------------------------------------------------------------- */
@@ -360,7 +388,92 @@ public:
 		const randomPos& RandomPOS
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertIndexToPosX														   */
+	/* ROLE : Convert the index of the matrix Map to a position on X axis in pixel		   */
+	/* ROLE : Offset by toolBar size													   */
+	/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
+	/* INPUT : unsigned int index : index to convert									   */
+	/* RETURNED VALUE : unsigned int : position on X axis in pixel						   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static unsigned int convertIndexToPosX
+	(
+		unsigned int index
+	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertPosXToIndex														   */
+	/* ROLE : Convert position on X axis in pixel of the matrix Map to a index			   */
+	/* ROLE : Offset by toolBar size													   */
+	/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
+	/* INPUT : unsigned int index : position on X axis in pixel	to convert				   */
+	/* RETURNED VALUE : unsigned int : index											   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static unsigned int convertPosXToIndex
+	(
+		unsigned int posX
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertIndexToPosY														   */
+	/* ROLE : Convert the index of the matrix Map to a position on Y axis in pixel		   */
+	/* ROLE : Use 1 input static const ptr : s_tileSize									   */
+	/* INPUT : unsigned int index : index to convert									   */
+	/* RETURNED VALUE : unsigned int : position on Y axis in pixel						   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static unsigned int convertIndexToPosY
+	(
+		unsigned int index
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertPosXToIndex														   */
+	/* ROLE : Convert position on Y axis in pixel of the matrix Map to a index			   */
+	/* ROLE : Use 1 input static const ptr : s_tileSize									   */
+	/* INPUT : unsigned int index : position on Y axis in pixel	to convert				   */
+	/* RETURNED VALUE : unsigned int : index											   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static unsigned int convertPosYToIndex
+	(
+		unsigned int posY
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : assertRangeMapIndex														   */
+	/* ROLE : assert that the index provided is between 0 and size						   */
+	/* INPUT : unsigned int indexToTest : index to compare to size						   */
+	/* INPUT : size_t size : reference size								 				   */
+	/* RETURNED VALUE : bool : false -> indexToTest is equal or > than size				   */
+	/* RETURNED VALUE : bool : true -> indexToTest is <	than size						   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static bool assertRangeMapIndex
+	(
+		unsigned int indexToTest,
+		size_t size
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : createPlayerButton														   */
+	/* ROLE : Create a number of Buttons equal to the number of player					   */
+	/* INPUT/OUTPUT : struct Sysinfo& : Global structure								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void createPlayerButton
+	(
+		Sysinfo& sysinfo
+	);
 
 public:
 	/* *********************************************************

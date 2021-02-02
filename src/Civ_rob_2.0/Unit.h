@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.21.2.1
-	file version : 1.13
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -49,7 +49,38 @@
  *						Constantes						   *
  ********************************************************* */
 
-/* N/A */
+#define NO_MOVEMENT 0
+
+#define ENOUGH_DAMAGE_TO_KILL 0
+
+#define ZERO_LIFE 0
+
+#define ZERO_BLIT 0
+
+/*
+	use as 1/x
+	default : x = 20
+*/
+#define COEF_DIV_HEAL_NO_APPARTENANCE 20
+
+/*
+	use as 1/x
+	default : x = 5
+*/
+#define COEF_DIV_HEAL_APPARTENANCE 5
+
+/*
+	use as 1/x
+	default : x = 4
+*/
+#define COEF_DIV_LEVELUP 4
+
+/* 
+	use as 1/x
+	Use for screen_refresh_rate/BLIT_RATE
+	default = 2
+*/
+#define BLIT_RATE 2
 
 /* *********************************************************
  *						 Enum							   *
@@ -251,6 +282,24 @@ public:
 		Sysinfo&
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : resetShowWhenChangePU														   */
+	/* ROLE : Reset show to true (alaways visible) 										   */
+	/* ROLE : when a new Unit or a new Player is selected								   */
+	/* INPUT : TabPlayer& tabPlayer : Array of Player ptr								   */
+	/* INPUT : unsigned int playerIndex : Index to the current selected Player			   */
+	/* INPUT : unsigned int unitIndex : Index to the current selected Unit				   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static void resetShowWhenChangePU
+	(
+		TabPlayer& tabPlayer,
+		unsigned int playerIndex,
+		unsigned int unitIndex
+	);
+
 public:
 	/* *********************************************************
 	 *					Unit::METHODS						   *
@@ -323,7 +372,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void defend
 	(
-		unsigned int dmg
+		int dmg
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -498,19 +547,19 @@ public:
 	 ********************************************************* */
 
 	inline std::string GETname()				const { return _name; };
-	inline unsigned int GETx()					const { return _x; };
-	inline unsigned int GETy()					const { return _y; };
+	inline int GETx()							const { return _x; };
+	inline int GETy()							const { return _y; };
 	inline Unit_Movement_Type GETmovementType() const { return _movementType; };
-	inline unsigned int GETmaxlife()			const { return _maxlife; };
-	inline unsigned int GETmaxatq()				const { return _maxatq; };
-	inline unsigned int GETmaxdef()				const { return _maxdef; };
-	inline unsigned int GETmaxmovement()		const { return _maxmovement; };
-	inline unsigned int GETmaxlevel()			const { return _maxlevel; };
-	inline unsigned int GETlife()				const { return _life; };
-	inline unsigned int GETatq()				const { return _atq; };
-	inline unsigned int GETdef()				const { return _def; };
-	inline unsigned int GETmovement()			const { return _movement; };
-	inline unsigned int GETlevel()				const { return _level; };
+	inline int GETmaxlife()						const { return _maxlife; };
+	inline int GETmaxatq()						const { return _maxatq; };
+	inline int GETmaxdef()						const { return _maxdef; };
+	inline int GETmaxmovement()					const { return _maxmovement; };
+	inline int GETmaxlevel()					const { return _maxlevel; };
+	inline int GETlife()						const { return _life; };
+	inline int GETatq()							const { return _atq; };
+	inline int GETdef()							const { return _def; };
+	inline int GETmovement()					const { return _movement; };
+	inline int GETlevel()						const { return _level; };
 	inline bool GETalive()						const { return _alive; };
 	inline unsigned int GETblit()				const { return _blit; };
 	inline bool GETshow()						const { return _show; };
@@ -518,14 +567,19 @@ public:
 
 
 	inline void SETname(const std::string &name)					{ _name = name; };
-	inline void SETx(unsigned int x)								{ _x = x; };
-	inline void SETy(unsigned int y)								{ _y = y; };
+	inline void SETx(int x)											{ _x = x; };
+	inline void SETy(int y)											{ _y = y; };
 	inline void SETmovementType(Unit_Movement_Type movementType)	{ _movementType = movementType; };
-	inline void SETlife(unsigned int life)							{ _life = life; };
-	inline void SETatq(unsigned int atq)							{ _atq = atq; };
-	inline void SETdef(unsigned int def)							{ _def = def; };
-	inline void SETmovement(unsigned int movement)					{ _movement = movement; };
-	inline void SETlevel(unsigned int level)						{ _level = level; };
+	inline void SETmaxlife(int life)								{ _maxlife = life; };
+	inline void SETmaxatq(int atq)									{ _maxatq = atq; };
+	inline void SETmaxdef(int def)									{ _maxdef = def; };
+	inline void SETmaxmovement(int movement)						{ _maxmovement = movement; };
+	inline void SETmaxlevel(int level)								{ _maxlevel = level; };
+	inline void SETlife(int life)									{ _life = life; };
+	inline void SETatq(int atq)										{ _atq = atq; };
+	inline void SETdef(int def)										{ _def = def; };
+	inline void SETmovement(int movement)							{ _movement = movement; };
+	inline void SETlevel(int level)									{ _level = level; };
 	inline void SETalive(bool alive)								{ _alive = alive; };
 	inline void SETblit(unsigned int blit)							{ _blit = blit; };
 	inline void SETshow(bool show)									{ _show = show; };
@@ -536,21 +590,21 @@ private:
 	 *					Unit::ATTRIBUTS					       *
 	 ********************************************************* */
 	std::string _name;
-	unsigned int _x;
-	unsigned int _y;
+	int _x;
+	int _y;
 	Unit_Movement_Type _movementType;
 
-	unsigned int _maxlife;
-	unsigned int _maxatq;
-	unsigned int _maxdef;
-	unsigned int _maxmovement;
-	unsigned int _maxlevel;
+	int _maxlife;
+	int _maxatq;
+	int _maxdef;
+	int _maxmovement;
+	int _maxlevel;
 
-	unsigned int _life;
-	unsigned int _atq;
-	unsigned int _def;
-	unsigned int _movement;
-	unsigned int _level;
+	int _life;
+	int _atq;
+	int _def;
+	int _movement;
+	int _level;
 	bool _alive;
 
 	unsigned int _blit;

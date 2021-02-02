@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.6.1
-	file version : 1.7
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -272,6 +272,13 @@ public:
 
 	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
 
+protected:
+
+	static bool assertSize
+	(
+		size_t size,
+		unsigned int index
+	);
 	
 	
 private:

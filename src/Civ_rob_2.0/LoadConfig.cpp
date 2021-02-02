@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.4
-	file version : 1.16
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,6 +32,8 @@
 #include "End.h"
 #include "Player.h"
 #include "Utility.h"
+#include "GamePlay.h"
+#include "XmlConvertValue.h"
 
 /* *********************************************************
  *					Variable Globale					   *
@@ -175,6 +177,7 @@ void LoadConfig::initStructs
 	sysinfo.allTextes.newGame.clear();
 	sysinfo.allTextes.mainMap.clear();
 	sysinfo.allTextes.cityMap.clear();
+	Texte::initializeStaticVectorTextes();
 
 	/* *********************************************************
 	 *					  sysinfo.allButton					   *
@@ -371,6 +374,23 @@ Uint16 LoadConfig::getVertical
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
+/* NAME : updateStaticValues														   */
+/* ROLE : Update new static of tileSize and screenWidth	in GamePlay.cpp				   */
+/* INPUT : struct Sysinfo& : structure globale du programme							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void LoadConfig::updateStaticValues
+(
+	Sysinfo& sysinfo
+)
+{
+	GamePlay::getPtrTileSize(&sysinfo.map.tileSize);
+	GamePlay::getPtrScreenWidth(&sysinfo.screen.screenWidth);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 /* NAME : initTile																	   */
 /* ROLE : Initialisation des cases de la map en fonction de sa taille				   */
 /* INPUT : struct Map& : données générale de la map : taille						   */
@@ -522,7 +542,7 @@ bool LoadConfig::initSDL
 		/* 1° : Si l'initialisation de tous les services de la SDL est failed	  */
 		/* ---------------------------------------------------------------------- */
 
-		logfileconsole("[ERROR]___: SDL could not initialize! SDL_Error: " + (std::string)SDL_GetError());
+		logfileconsole("[ERROR]: SDL could not initialize! SDL_Error: " + (std::string)SDL_GetError());
 		return false;
 	}
 	else
@@ -1104,7 +1124,7 @@ void LoadConfig::readXmlTexte
 		if (strcmp(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
 				->FirstChildElement(s_FontColor_Simple_Condition)->GetText(), "true") == 0)
 		{
-			fontColor = xmlGiveColor(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
+			fontColor = XmlConvertValue::xmlGiveColor(node->FirstChildElement(s_FontColor)->FirstChildElement(s_FontColor_Simple)
 				->FirstChildElement(s_FontColor_Simple_Color)->GetText());
 		}
 		else
@@ -1126,7 +1146,7 @@ void LoadConfig::readXmlTexte
 		if (strcmp(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
 				->FirstChildElement(s_BackColor_Simple_Condition)->GetText(), "true") == 0)
 		{
-			backColor = xmlGiveColor(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
+			backColor = XmlConvertValue::xmlGiveColor(node->FirstChildElement(s_BackColor)->FirstChildElement(s_BackColor_Simple)
 				->FirstChildElement(s_BackColor_Simple_Color)->GetText());
 		}
 		else
@@ -1155,19 +1175,19 @@ void LoadConfig::readXmlTexte
 			Texte::loadTexte
 				(	renderer,
 					font,
-					xmlGiveStateType(node->FirstChildElement(s_Statescreen)->GetText()),
-					xmlGiveSelectType(node->FirstChildElement(s_Select)->GetText()),
-					xmlGiveTexteConteneur(allTextes, node->FirstChildElement(s_TexteName)->GetText()),
-					xmlGiveTexteType(node->FirstChildElement(s_Type)->GetText()),
+					XmlConvertValue::xmlGiveStateType(node->FirstChildElement(s_Statescreen)->GetText()),
+					XmlConvertValue::xmlGiveSelectType(node->FirstChildElement(s_Select)->GetText()),
+					XmlConvertValue::xmlGiveTexteConteneur(allTextes, node->FirstChildElement(s_TexteName)->GetText()),
+					XmlConvertValue::xmlGiveTexteType(node->FirstChildElement(s_Type)->GetText()),
 					node->FirstChildElement(s_Texte)->GetText(),
 					fontColor,
 					backColor,
 					(Uint8)size,
 					determineCoor(node->FirstChildElement(s_X)->GetText(), screenWidth, screenHeight),
 					determineCoor(node->FirstChildElement(s_Y)->GetText(), screenWidth, screenHeight),
-					xmlGiveAlpha(node->FirstChildElement(s_Alpha)->GetText()),
-					xmlGiveAngle(node->FirstChildElement(s_Angle)->GetText()),
-					xmlGiveCenter(node->FirstChildElement(s_Center)->GetText())
+					XmlConvertValue::xmlGiveAlpha(node->FirstChildElement(s_Alpha)->GetText()),
+					XmlConvertValue::xmlGiveAngle(node->FirstChildElement(s_Angle)->GetText()),
+					XmlConvertValue::xmlGiveCenter(node->FirstChildElement(s_Center)->GetText())
 				);
 		}
 		catch (const std::string & msg)
@@ -1177,243 +1197,6 @@ void LoadConfig::readXmlTexte
 
 		/* Recherche du noeud Model suivant */
 		node = node->NextSibling();
-	}
-}
-
-State_Type LoadConfig::xmlGiveStateType
-(
-	std::string type
-)
-{
-	if (type.compare("error") == IDENTICAL_STRINGS)
-	{
-		return State_Type::error;
-	}
-	else if (type.compare("STATEtitleScreen") == IDENTICAL_STRINGS)
-	{
-		return State_Type::STATEtitleScreen;
-	}
-	else if (type.compare("STATEscreennewgame") == IDENTICAL_STRINGS)
-	{
-		return State_Type::STATEscreenNewgame;
-	}
-	else if (type.compare("STATEreload") == IDENTICAL_STRINGS)
-	{
-		return State_Type::STATEreload;
-	}
-	else if (type.compare("STATEmainmap") == IDENTICAL_STRINGS)
-	{
-		return State_Type::STATEmainMap;
-	}
-	else if (type.compare("STATEscience") == IDENTICAL_STRINGS)
-	{
-		return State_Type::STATEscience;
-	}
-	else if (type.compare("STATEcitiemap") == IDENTICAL_STRINGS)
-	{
-		return State_Type::STATEcityMap;
-	}
-	else
-	{
-		return State_Type::error;
-	}
-}
-
-Select_Type LoadConfig::xmlGiveSelectType
-(
-	std::string type
-)
-{
-	if (type.compare("selectnothing") == IDENTICAL_STRINGS)
-	{
-		return Select_Type::selectnothing;
-	}
-	else if (type.compare("selectcreate") == IDENTICAL_STRINGS)
-	{
-		return Select_Type::selectcreate;
-	}
-	else if (type.compare("selectinspect") == IDENTICAL_STRINGS)
-	{
-		return Select_Type::selectinspect;
-	}
-	else if (type.compare("selectmove") == IDENTICAL_STRINGS)
-	{
-		return Select_Type::selectmove;
-	}
-	else if (type.compare("selectmoveCitizen") == IDENTICAL_STRINGS)
-	{
-		return Select_Type::selectmoveCitizen;
-	}
-	else
-	{
-		return Select_Type::selectnothing;
-	}
-}
-
-std::unordered_map<std::string, Texte*>& LoadConfig::xmlGiveTexteConteneur
-(
-	AllTextes& allTextes,
-	std::string type
-)
-{
-	if (type.compare("titleScreen") == IDENTICAL_STRINGS)
-	{
-		return allTextes.titleScreen;
-	}
-	else if (type.compare("newGame") == IDENTICAL_STRINGS)
-	{
-		return allTextes.newGame;
-	}
-	else if (type.compare("mainMap") == IDENTICAL_STRINGS)
-	{
-		return allTextes.mainMap;
-	}
-	else if (type.compare("citieMap") == IDENTICAL_STRINGS)
-	{
-		return allTextes.cityMap;
-	}
-	else
-	{
-		return allTextes.titleScreen;
-	}
-}
-
-Texte_Type LoadConfig::xmlGiveTexteType
-(
-	std::string type
-)
-{
-	if (type.compare("blended") == IDENTICAL_STRINGS)
-	{
-		return Texte_Type::blended;
-	}
-	else if (type.compare("shaded") == IDENTICAL_STRINGS)
-	{
-		return Texte_Type::shaded;
-	}
-	else
-	{
-		return Texte_Type::blended;
-	}
-}
-
-SDL_Color LoadConfig::xmlGiveColor
-(
-	std::string type
-)
-{
-	if (type.compare("Black") == IDENTICAL_STRINGS)
-	{
-		return Black;
-	}
-	else if (type.compare("White") == IDENTICAL_STRINGS)
-	{
-		return White;
-	}
-	else if (type.compare("Red") == IDENTICAL_STRINGS)
-	{
-		return Red;
-	}
-	else if (type.compare("Green") == IDENTICAL_STRINGS)
-	{
-		return Green;
-	}
-	else if (type.compare("Blue") == IDENTICAL_STRINGS)
-	{
-		return Blue;
-	}
-	else if (type.compare("Blue") == IDENTICAL_STRINGS)
-	{
-		return Blue;
-	}
-	else if (type.compare("Yellow") == IDENTICAL_STRINGS)
-	{
-		return Yellow;
-	}
-	else if (type.compare("WriteColorButton") == IDENTICAL_STRINGS)
-	{
-		return WriteColorButton;
-	}
-	else if (type.compare("BackColorButton") == IDENTICAL_STRINGS)
-	{
-		return BackColorButton;
-	}
-	else if (type.compare("NoColor") == IDENTICAL_STRINGS)
-	{
-		return NoColor;
-	}
-	else
-	{
-		return NoColor;
-	}
-}
-
-Transparance_Type LoadConfig::xmlGiveAlpha
-(
-	std::string type
-)
-{
-	if (type.compare("nonTransparent") == IDENTICAL_STRINGS)
-	{
-		return nonTransparent;
-	}
-	else if (type.compare("semiTransparent") == IDENTICAL_STRINGS)
-	{
-		return semiTransparent;
-	}
-	else if (type.compare("transparent") == IDENTICAL_STRINGS)
-	{
-		return transparent;
-	}
-	else
-	{
-		return nonTransparent;
-	}
-}
-
-Uint16 LoadConfig::xmlGiveAngle
-(
-	std::string type
-)
-{
-	if (type.compare("no_angle") == IDENTICAL_STRINGS)
-	{
-		return no_angle;
-	}
-	else if (type.compare("inverse") == IDENTICAL_STRINGS)
-	{
-		return inverse;
-	}
-	else
-	{
-		return no_angle;
-	}
-}
-
-Center_Type LoadConfig::xmlGiveCenter
-(
-	std::string type
-)
-{
-	if (type.compare("nocenter") == IDENTICAL_STRINGS)
-	{
-		return Center_Type::nocenter;
-	}
-	else if (type.compare("center_x") == IDENTICAL_STRINGS)
-	{
-		return Center_Type::center_x;
-	}
-	else if (type.compare("center_y") == IDENTICAL_STRINGS)
-	{
-		return Center_Type::center_y;
-	}
-	else if (type.compare("center") == IDENTICAL_STRINGS)
-	{
-		return Center_Type::center;
-	}
-	else
-	{
-		return Center_Type::nocenter;
 	}
 }
 

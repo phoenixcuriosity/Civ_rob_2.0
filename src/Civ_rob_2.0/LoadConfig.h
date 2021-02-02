@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.1.1
-	file version : 1.7
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -129,6 +129,11 @@ public:
 		Map& map
 	);
 
+	static void updateStaticValues
+	(
+		Sysinfo& sysinfo
+	);
+
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : getHorizontal																   */
@@ -249,47 +254,6 @@ public:
 		AllTextes& allTextes,
 		Uint16 screenWidth,
 		Uint16 screenHeight
-	);
-
-	static State_Type xmlGiveStateType
-	(
-		std::string type
-	);
-
-	static Select_Type xmlGiveSelectType
-	(
-		std::string type
-	);
-
-	static std::unordered_map<std::string, Texte*>& xmlGiveTexteConteneur
-	(
-		AllTextes& allTextes,
-		std::string type
-	);
-
-	static Texte_Type xmlGiveTexteType
-	(
-		std::string type
-	);
-
-	static SDL_Color xmlGiveColor
-	(
-		std::string type
-	);
-
-	static Transparance_Type xmlGiveAlpha
-	(
-		std::string type
-	);
-
-	static Uint16 xmlGiveAngle
-	(
-		std::string type
-	);
-
-	static Center_Type xmlGiveCenter
-	(
-		std::string type
 	);
 
 	static int determineCoor

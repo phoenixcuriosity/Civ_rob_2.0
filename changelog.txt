@@ -1,5 +1,174 @@
 This is a list of major changes in Civ_rob_2 version history.
 
+
+---------------------------------------------------------------------------
+0.22.0.0: "A new Save and Reload"
+---------------------------------------------------------------------------
+-> City.h :
+	-> Constant Var : replace : const by #define
+	-> Add a structure Bulding logic "build" : Unit or City building
+		-> name / type / remaining work
+	-> Add a structure cityBuildQueue : use for multiple "build" Queue and Button IHM
+	-> Delete function : searchMiddleTile : obsolete
+	-> Add resetTabCitizen
+	-> Function computeWorkToBuild -> remove argument : DequeButtonTexte& citieMapBuildQueue : obsolete
+	-> Function addBuildToQueue -> remove argument : DequeButtonTexte& citieMapBuildQueue : obsolete
+	-> Function removeBuildToQueueFront -> remove argument : DequeButtonTexte& citieMapBuildQueue : obsolete
+	-> Function removeBuildToQueue -> remove argument : DequeButtonTexte& citieMapBuildQueue : obsolete
+	-> Function copyLoopBuildQueue -> remove argument : DequeButtonTexte& citieMapBuildQueue : obsolete
+	-> Function afficherCityBuildToQueue -> remove argument : DequeButtonTexte& citieMapBuildQueue : obsolete
+	-> Add attribut to City class : cityBuildQueue _buildQueue
+	-> Add missing GET/SET for attribut
+
+-> City.cpp :
+	-> createCity : -> delete function : searchMiddleTile : obsolete
+						-> replace with convertPosXToIndex and convertPosYToIndex
+	-> Add function resetTabCitizen : remove all Citizen from a City
+	-> Change ~City : use resetTabCitizen and removeBuildToQueue
+	-> Change in all file : Use #define to better define constants
+	-> Change functions computeWorkToBuild, addBuildToQueue, ... to work with new class attribut cityBuildQueue _buildQueue
+
+-> civ_lib.h :
+	-> Remove DequeButtonTexte cityMapBuildQueue : obsolete : new attribut to City class : cityBuildQueue _buildQueue
+
+->ConstCityIHM.h :
+	-> Add missing #define ConstCityIHM_H to avoid multiple includes
+
+-> Add ConstUnitIHM.h : define Constants for Unit IHM
+
+-> End.h :
+	-> Add function deleteTexte : Use for delete static Texte in Texture.cpp
+
+-> End.cpp :
+	-> Function exitError : Add missiong close on logger before exiting program
+	-> Function deleteAll : remove DequeButtonTexte : obsolete : new attribut to City class : cityBuildQueue _buildQueue
+	-> Add function deleteTexte : Use for delete static Texte in Texture.cpp
+
+-> GamePlay.h
+	-> In all file : replace const var by #define
+	-> Add GROUNDSPEC_NOTHING "void" : was missing to define empty groundSpec
+	-> Change in randomPos from unsigned int to int
+	-> Add functions getPtrTileSize and getPtrScreenWidth : Initialize ptr from Sysinfo
+	-> conditionspace : Remove arguments unsigned int tileSize and unsigned int i : obsolete
+		-> replace with var from getPtrTileSize and getPtrScreenWidth
+	-> Add Functions convertIndexToPosX, convertIndexToPosY, convertPosXToIndex, convertPosYToIndex
+		-> convert directly position to Index or Index to position / replace City::searchMiddleTile
+	-> Add function createPlayerButton : add a button for each Player
+
+-> GamePlay.cpp : 
+	-> Add functions getPtrTileSize and getPtrScreenWidth : Initialize ptr from Sysinfo
+	-> Add static unsigned int* s_tileSize and static Uint16* s_screenWidth
+		-> Replace some arguments in some functions / Avoid use of struct Sysinfo in other part of the program
+	-> Function newGame :
+		-> Add new Player name in a static Texte array / optimize render Texte
+		-> Replace call of saveMaps and savePlayer by save / fusion of these 2 functions
+		-> Use the new function createPlayerButton / same code
+	-> Function groundGen :
+		-> Use the new convertIndexToPosX and convertIndexToPosY / same code
+		-> Replace EMPTY_STRING by GROUNDSPEC_NOTHING when calling tileAffectation / Was causing error in loadMaps
+	-> newGameSettlerSpawn :
+		-> Change Unit selection for settler spawn with new function Unit::searchUnitByName / same code
+		-> remove Try/catch
+	-> makeRandomPosTab : 
+		-> Change max loop iteration to call exitError in _DEBUG_MODE
+		-> Rework Settler spawn conditions
+	-> conditionspace : This function was not working as intended / Rework / use new s_tileSize
+	-> conditionground : 
+		-> Use new convertPosXToIndex, convertPosYToIndex
+		-> Add use of size assertion
+	-> Add Functions convertIndexToPosX, convertIndexToPosY, convertPosXToIndex, convertPosYToIndex / optimization
+	-> Add Function size assertion for Map
+	-> nextTurn : Remove DequeButtonTexte cityMapBuildQueue : obsolete : new attribut to City class : cityBuildQueue _buildQueue
+
+-> IHM.cpp
+	-> Use new Index_staticIndexVectorTextes in Texture.h/.cpp : optimization
+
+-> KeyboardMouse.cpp
+	-> checkSTATEmainmap :
+		-> Replace call of saveMaps and savePlayer by save / fusion of these 2 functions
+		-> Add call to Unit::resetShowWhenChangePU / fix bug : when the previous selected Unit is not visible (show/blit) and a new Unit is selected 
+	-> checkSTATEreload : 
+		-> Fix : Add condition to avoid error when User clik on LOAD and a save is not selected
+		-> Change savePlayers.txt by savePlayers.xml 
+	-> checkSTATEcitiemap : Remove DequeButtonTexte cityMapBuildQueue : obsolete : new attribut to City class : cityBuildQueue _buildQueue
+
+LIB.h : 
+	-> Fix : Use #define NOMINMAX to use std::max and std::min
+	-> Add new structs : build and cityBuildQueue define in City.h
+	-> Add typedef std::vector<Texte*> / simplify
+	-> Add #define MODULO_ZERO 0 / use in modulo operation
+
+LoadConfig.h :
+	-> Add function : updateStaticValues use for static in Texture.cpp
+
+LoadConfig.cpp :
+	-> Add new include to use new class XmlConvertValue
+	-> Add in initStructs : initializeStaticVectorTextes / use for static in Texture.cpp
+	-> Add function updateStaticValues / use for update value in GamePlay.cpp
+	-> Remove all xmlGive functions / use in new class XmlConvertValue
+
+main.cpp :
+	-> Add call to LoadConfig::updateStaticValues / use for GamePlay.cpp
+
+Player.h :
+	-> Add generic function assertSize / use for safety for std::vector ...
+
+Player.cpp :
+	-> deleteUnit : add use assertSize
+	-> deleteCity : add use assertSize
+	-> displayGoldStats : use Index_staticIndexVectorTextes in Texture.h/.cpp
+	-> Add generic function assertSize / use for safety for std::vector ...
+
+SaveReload.h :
+	-> In class SaveReload : change attribut unsigned int _currentSave to int _currentSave / use for -1 = error
+	-> Add #define NO_CURRENT_SAVE_SELECTED -1 / use with _currentSave
+	-> Add function save : fusion of saveMaps and savePlayer
+	-> Add functions savePlayer, loadPlayer, loadGoldStatsXML, loadUnitXML, loadCityXML 
+
+SaveReload.cpp :
+	-> Add function save : fusion of saveMaps and savePlayer
+	-> Add function savePlayer : 
+		-> Save in a XML file
+		-> Save Player stats 
+		-> Loops : Player / Units / City / Citizens / build
+	-> Add loadPlayer, loadGoldStatsXML, loadUnitXML, loadCityXML to reload informations save in the XML file
+		-> There is a lot of call of exitError if an error is detected : XML file is not properly formated
+	-> Use NO_CURRENT_SAVE_SELECTED in the class's constructor
+
+Texture.h :
+	-> Add enum class Index_staticIndexVectorTextes / optimization to render Texte
+	-> Add and Rework comments
+	-> In class : the function SETname is protected because the name attribut is the only attribut that can organised Texture (std::vector,...)
+	-> Add functions : initializeStaticVectorTextes and deleteStaticVectorTextes / use with Index_staticIndexVectorTextes
+
+Texture.cpp :
+	-> Add static var staticIndexVectorTextes / optimization to render Texte
+	-> In loadImage : Fix bug : when x and y are not both equal to -1 (SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE)
+	-> In render : Fix bug : when x and y are not both equal to -1 (SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE)
+	-> Add functions : initializeStaticVectorTextes and deleteStaticVectorTextes / use with Index_staticIndexVectorTextes
+	-> Add a second function writeTexte to work with the new Index_staticIndexVectorTextes
+	-> In createButtonImage : Fix bug : when x and y are not both equal to -1 (SCREEN_MIN_X_OUT_OF_RANGE, SCREEN_MIN_Y_OUT_OF_RANGE)
+
+Unit.h :
+	-> Add different #define to better understand conditions
+	-> Add function resetShowWhenChangePU / use to fix bug : when the previous selected Unit is not visible (show/blit) and a new Unit is selected
+	-> In function defend : change argument fron unsigned int to int
+	-> Change most of attribut fron unsigned int to int -> Rework GET/SET
+
+Unit.cpp :
+	-> In searchUnitTile : use resetShowWhenChangePU
+	-> In searchToMove : use new convertPosXToIndex / convertPosYToIndex
+	-> Add function resetShowWhenChangePU
+	-> In heal : use new convertPosXToIndex / convertPosYToIndex
+	-> In afficherstat : use new Index_staticIndexVectorTextes
+
+Add XmlConvertValue.h and XmlConvertValue.cpp : fusion with functions previously in SaveReload and new functions 
+
+Update SDL version : from 2.0.9 to 2.0.14
+
+Update Changelog : add version 0.22.0.0
+
+
 ---------------------------------------------------------------------------
 0.15: "Through the map v2.0"
 ---------------------------------------------------------------------------

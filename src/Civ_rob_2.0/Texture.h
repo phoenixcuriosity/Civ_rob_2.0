@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.5
-	file version : 1.13
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -73,13 +73,14 @@ const std::string fontFile = "arial.ttf";
 #define SCREEN_MIN_Y_OUT_OF_RANGE -1
 
 /* *********************************************************
- *					 Enum								   *
+ *						 Enum							   *
  ********************************************************* */
 
 // Define all State of the game, relate to screen
 enum class State_Type : Uint8
 {
 	error,					/* ### Reserved on error detection ### */
+	STATEnothing,			/* ### Reserved for fast writeTxt  ### */
 	STATEtitleScreen,		/* Title screen : first screen selection */
 	STATEscreenNewgame,		/* New game screen : selection of options of a new game */
 	STATEreload,			/* Load screen : selection of saves to load */
@@ -135,6 +136,55 @@ enum Rotation_Type : Uint16
 	inverse = 180		/* Rotate the Texture by 180 degrees */
 };
 
+/* Define index of sysinfo.AllTextes.staticIndexVectorTextes */
+enum class Index_staticIndexVectorTextes : Uint8
+{
+	/* 0 - 50 : MainMap */
+
+	FPS_MAIN_MAP						=	0,
+	NB_TURN								=	1,
+
+	PLAYER_GOLD							=	10,
+	PLAYER_GOLD_BALANCE					=	11,
+	PLAYER_INCOME						=	12,
+	PLAYER_COST							=	13,
+	PLAYER_TAX_INCOME					=	14,
+	PLAYER_COMMERCE_INCOME				=	15,
+	PLAYER_GOLD_CONVERSION_SURPLUS		=	16,
+	PLAYER_ARMIES_COST					=	17,
+	PLAYER_BUILDINGS_COST				=	18,
+
+	UNIT_NAME							=	20,
+	UNIT_X								=	21,
+	UNIT_Y								=	22,
+	UNIT_LIFE							=	23,
+	UNIT_ATQ							=	24,
+	UNIT_DEF							=	25,
+	UNIT_MOVEMENT						=	26,
+	UNIT_LEVEL							=	27,
+
+	/* 51 - 100 : NewGame */
+
+	NB_PLAYER							=	51,
+	PLAYERS_NAME						=	52,
+	PLAYER_NAME							=	53,
+
+	/* 101 - 151 : TBD */
+
+		/* none */
+
+	/* 151 - 200 : TBD */
+
+		/* none */
+
+	/* 201 - 254 : TBD */
+
+		/* none */
+
+	/* ### Reserved ### */
+	MAX_INDEX							=	255
+};
+
 
 /* *********************************************************
  *						 Classes						   *
@@ -162,8 +212,8 @@ public:
 	/* ROLE : Dynamic allocation of the Texture with specifications								*/
 	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
 	/* OUT : std::unordered_map<std::string, Texture*>& : map where the Texture will be stored  */
-	/* IN : Uint8 stateScreen : enum class State_Type											*/
-	/* IN : Uint8 select : enum class Select_Type												*/
+	/* IN : State_Type stateScreen : enum class State_Type										*/
+	/* IN : Select_Type select : enum class Select_Type											*/
 	/* IN : std::string path : Path to the picture											    */
 	/* IN : std::string msg : Name of the Texture									  		    */
 	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
@@ -191,28 +241,32 @@ public:
 		Uint16 angle,
 		Center_Type cnt = Center_Type::nocenter
 	);
-		
-	/*
-	 * NAME : assertRangeAngle
-	 * ROLE : Limitation sur 360°
-	 * INPUT  PARAMETERS : Uint16* angle : angle de rotation
-	 * OUTPUT PARAMETERS : angle %= MAX_ANGLE
-	 * RETURNED VALUE    : void
-	 */
+
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : assertRangeAngle																	*/
+	/* ROLE : Limit the range on angle from 0.0 to 360.0										*/
+	/* IN/OUT : Uint16* angle : rotation angle													*/
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	static void assertRangeAngle
 	(
 		Uint16* angle
 	);
 
-	/*
-	 * NAME : deleteAll
-	 * ROLE : Permet de centrer la Texture selon enum Center_Type
-	 * INPUT  PARAMETERS : int& xc, int& yc : positions demandées
-	 * INPUT  PARAMETERS : int iW, int iH : largeur et hauteur de la Texture
-	 * INPUT  PARAMETERS : Uint8 cnt : type de centrage : par défaut nocenter
-	 * OUTPUT PARAMETERS : Permet de centrer la Texture
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : centrage																			*/
+	/* ROLE : Permet de centrer la Texture selon enum Center_Type								*/
+	/* IN/OUT : int& xc : X position in pixels to center										*/
+	/* IN/OUT : int& yc : Y position in pixels to center										*/
+	/* IN : int iW : width of the Texture														*/
+	/* IN : int iH : height of the Texture														*/
+	/* IN : Uint8 cnt : enum class Center_Type ### default type : nocenter ###					*/
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	static void centrage
 	(	
 		int& xc,
@@ -229,6 +283,24 @@ public:
 	 *					Texture::METHODES					   *
 	 ********************************************************* */
 
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : Texture																			*/
+	/* ROLE : Default constructor by value														*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* IN : SDL_Texture* image : ptr on picture create by SDL									*/
+	/* IN : std::string msg : Name of the Texture									  		    */
+	/* IN : Uint8 stateScreen : enum class State_Type											*/
+	/* IN : Uint8 select : enum class Select_Type												*/
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : unsigned int w : length of the Texture (compute length of Picture if w == 0)	    */
+	/* IN : unsigned int h : height of the Texture (compute height of Picture if h == 0)	    */
+	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
+	/* IN : Uint16 angle : enum Rotation_Type												    */
+	/* IN : Uint8 cnt : enum class Center_Type											        */
+	/* RETURNED VALUE    : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	Texture
 	(	
 		SDL_Renderer*& renderer,
@@ -245,16 +317,25 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : ~Texture																			*/
+	/* ROLE : Default Destructor																*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual ~Texture();
 
-
-	/*
-	 * NAME : rectangle
-	 * ROLE : Création d'un SDL_Rect à partir des positions x, y et des longueur et hauteur
-	 * INPUT  PARAMETERS : int xc, int yc, int w, int h : positions du rectangle
-	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
-	 * RETURNED VALUE    : SDL_Rect : Rectangle
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : rectangle																			*/
+	/* ROLE : Create a SDL Rectangle with with x, y, w and h inputs dimensions					*/
+	/* IN : int x : upper left corner pixel														*/
+	/* IN : int y : bottom left corner pixel													*/
+	/* IN : int w : width of the Texture													    */
+	/* IN : int h : height of the Texture														*/
+	/* RETURNED VALUE : SDL_Rect : Rectangle with x, y, w and h dimensions						*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	SDL_Rect rectangle
 	(	
 		int xc,
@@ -269,26 +350,35 @@ public:
 	 *				Texture::METHODES::Affichage			   *
 	 ********************************************************* */
 
-	/*
-	 * NAME : render
-	 * ROLE : Permet de rendre la Texture au coordonnées voulues
-	 * INPUT  PARAMETERS : int = -1, int = -1 : coordonnées optionnelles
-	 * OUTPUT PARAMETERS : rendre la Texture
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : render																			*/
+	/* ROLE : By default render with Texture positions											*/
+	/* ROLE : If x or y are not equal to SCREEN_MIN_X_OUT_OF_RANGE or SCREEN_MIN_Y_OUT_OF_RANGE */
+	/* ROLE : then change Texture positions and render											*/
+	/* IN : int = SCREEN_MIN_X_OUT_OF_RANGE														*/
+	/* IN : int = SCREEN_MIN_Y_OUT_OF_RANGE														*/
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual void render
 	(	
 		int = SCREEN_MIN_X_OUT_OF_RANGE,
 		int = SCREEN_MIN_Y_OUT_OF_RANGE
 	);
 
-	/*
-	 * NAME : renderTextureTestStates
-	 * ROLE : Test les attributs _stateScreen et _select qui correspondent
-	 * INPUT  PARAMETERS : struct Sysinfo& : structure globale du programme
-	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : renderTextureTestStates															*/
+	/* ROLE : By default render with Texture positions if the input state and selection is		*/
+	/* ROLE : equal to the Texture																*/
+	/* IN : State_Type stateScreen : enum class State_Type										*/
+	/* IN : Select_Type select : enum class Select_Type											*/
+	/* IN : int = SCREEN_MIN_X_OUT_OF_RANGE	: x position to render in pixel # default value #	*/
+	/* IN : int = SCREEN_MIN_Y_OUT_OF_RANGE	: y position to render in pixel # default value #	*/
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual bool renderTextureTestStates
 	(	
 		State_Type stateScreen,
@@ -336,7 +426,6 @@ public:
 	inline virtual void SETdsty(int y) { _dst.y = y; };
 	inline virtual void SETdstw(int w) { _dst.w = w; };
 	inline virtual void SETdsth(int h) { _dst.h = h; };
-	inline virtual void SETname(std::string msg) { _name = msg; };
 	inline virtual void SETalpha(Transparance_Type alpha)
 	{
 		if (_alpha != alpha)
@@ -359,6 +448,8 @@ public:
 protected:
 	inline SDL_Renderer *& GETrenderer() { return _renderer; };
 
+	/* ### Not allowed to change name as of 0.21.3.1 ### */
+	inline virtual void SETname(std::string msg) { _name = msg; };
 	
 private:
 	/* *********************************************************
@@ -404,21 +495,41 @@ public:
 	/* *********************************************************
 	 *				Texte::STATIC							   *
 	 ********************************************************* */
+
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : initializeStaticVectorTextes														*/
+	/* ROLE : Clear and initialize the vector staticIndexVectorTextes					 		*/
+	/* IN : void																				*/
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	static void initializeStaticVectorTextes();
+
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : deleteStaticVectorTextes															*/
+	/* ROLE : Delete ptr in staticIndexVectorTextes then clear							 		*/
+	/* IN : void																				*/
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	static void deleteStaticVectorTextes();
 	 
-	 
-	/*
-	 * NAME : createSDL_TextureFromTexte
-	 * ROLE : Permet de créer un ptr sur une SDL_Texture
-	 * ROLE : pour par la suite créer un objet Texte
-	 * INPUT  PARAMETERS : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
-	 * INPUT  PARAMETERS : Uint8 type : enum Texte_Type
-	 * INPUT  PARAMETERS : std::string message : Texte
-	 * INPUT  PARAMETERS : SDL_Color color : couleur du Texte
-     * INPUT  PARAMETERS : SDL_Color colorback : couleur du fond du Texte
-	 * INPUT  PARAMETERS : TTF_Font* font : Taille de la font utilisée
-	 * OUTPUT PARAMETERS : Permet de créer un ptr sur une SDL_Texture
-	 * RETURNED VALUE    : SDL_Texture*
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : createSDL_TextureFromTexte														*/
+	/* ROLE : Create a pointer on an SDL_Texture compute by the inputs parameters				*/
+	/* ROLE : Use to create SDL_Texture for Texte								 				*/
+	/* IN: SDL_Renderer*& renderer : ptr on SDL_Renderer										*/
+	/* IN : Uint8 type : enum class Texte_Type												    */
+	/* IN : std::string message : Texte	to render												*/
+	/* IN : SDL_Color color : Texte color														*/
+	/* IN : SDL_Color colorback : background color											    */
+	/* IN : TTF_Font* font : Size of the font in use										    */
+	/* RETURNED VALUE : ptr on SDL_Texture														*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	static SDL_Texture* createSDL_TextureFromTexte
 	(	
 		SDL_Renderer*& renderer,
@@ -429,26 +540,27 @@ public:
 		TTF_Font* font
 	);
 
-		
-	/*
-	 * NAME : loadTexte
-	 * ROLE : création et ajout d'un objet Texte dans le tableau de Texte choisi
-	 * INPUT  PARAMETERS : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
-	 * INPUT  PARAMETERS : TTF_Font* font[] : tableau de police de la font
-	 * INPUT  PARAMETERS : Uint8 stateScreen, Uint8 select : les variables qui décrivent les différents état de l'écran et les spécifications de la séléction
-	 * INPUT  PARAMETERS : std::vector<Texte*>& tabTexte : tableau de Texte* ou sera rangé le nouveau Texte
-	 * INPUT  PARAMETERS : Uint8 type : enum Texte_Type
-     * INPUT  PARAMETERS : std::string msg : Le Texte dans le tableau
-	 * INPUT  PARAMETERS : SDL_Color color : couleur du Texte
-     * INPUT  PARAMETERS : SDL_Color colorback : couleur du fond du Texte
-	 * INPUT  PARAMETERS : Uint8 : la taille du Texte
-	 * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
-	 * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
-	 * INPUT  PARAMETERS : Uint16 angle : enum Uint16
-	 * INPUT  PARAMETERS : Uint8 cnt : enum Center_Type
-	 * OUTPUT PARAMETERS : création et ajout d'un objet Texte
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : loadTexte																			*/
+	/* ROLE : Dynamic allocation of the Texte with specifications								*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* IN : TTF_Font* font[] : array of ptr on font in use										*/
+	/* IN : State_Type stateScreen : enum class State_Type										*/
+	/* IN : Select_Type select : enum class Select_Type											*/
+	/* OUT : std::unordered_map<std::string, Texte*>& : map where the Texte will be stored		*/
+	/* IN : Texte_Type type : enum class Texte_Type											    */
+	/* IN : std::string msg : Texte to render										  		    */
+	/* IN : SDL_Color color : Texte color												  	    */
+	/* IN : SDL_Color colorback : background color										  	    */
+	/* IN : Uint8 size : size to render the Texte (use in TTF_Font* font[])				  	    */
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
+	/* IN : Uint16 angle : enum Rotation_Type : will compute modulo if over 360				    */
+	/* IN : Uint8 cnt : enum class Center_Type	### default Center_Type::nocenter ###		    */
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	static void loadTexte
 	(	
 		SDL_Renderer*& renderer,
@@ -468,29 +580,67 @@ public:
 		Center_Type cnt = Center_Type::nocenter
 	);
 
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : loadTexteStaticVector																*/
+	/* ROLE : Dynamic allocation of the Texte with specifications in staticIndexVectorTextes	*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* IN : TTF_Font* font[] : array of ptr on font in use										*/
+	/* IN : Index_staticIndexVectorTextes : index enum class Index_staticIndexVectorTextes		*/
+	/* IN : Texte_Type type : enum class Texte_Type											    */
+	/* IN : std::string msg : Texte to render										  		    */
+	/* IN : SDL_Color color : Texte color												  	    */
+	/* IN : SDL_Color colorback : background color										  	    */
+	/* IN : Uint8 size : size to render the Texte (use in TTF_Font* font[])				  	    */
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
+	/* IN : Uint16 angle : enum Rotation_Type : will compute modulo if over 360				    */
+	/* IN : Uint8 cnt : enum class Center_Type	### default Center_Type::nocenter ###		    */
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	static void loadTexteStaticVector
+	(
+		SDL_Renderer*& renderer,
+		TTF_Font* font[],
+		Index_staticIndexVectorTextes index,
+		Texte_Type type,
+		std::string msg,
+		SDL_Color color,
+		SDL_Color backcolor,
+		Uint8 size,
+		int x,
+		int y,
+		Transparance_Type alpha,
+		Uint16 angle,
+		Center_Type cnt = Center_Type::nocenter
+	);
 
-	/*
-	 * NAME : writeTexte
-	 * ROLE : créer un ptr sur SDL_Texture temporaire pour afficher le texte à l'écran
-	 * ROLE : le ptr et la SDL_Texture sont détruit après l'affichage
-	 * INPUT  PARAMETERS : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
-	 * INPUT  PARAMETERS : TTF_Font* font[] : tableau de police de la font
-	 * INPUT  PARAMETERS : Uint8 type : enum Texte_Type
-     * INPUT  PARAMETERS : std::string msg : Le Texte dans le tableau
-	 * INPUT  PARAMETERS : SDL_Color color : couleur du Texte
-     * INPUT  PARAMETERS : SDL_Color colorback : couleur du fond du Texte
-	 * INPUT  PARAMETERS : Uint8 : la taille du Texte
-	 * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
-	 * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
-	 * INPUT  PARAMETERS : Uint16 angle : enum Uint16
-	 * INPUT  PARAMETERS : Uint8 cnt : enum Center_Type
-	 * OUTPUT PARAMETERS : créer un ptr sur SDL_Texture temporaire pour afficher le texte à l'écran
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : writeTexte																		*/
+	/* ROLE : Fast load and render Texte														*/
+	/* ROLE : ### Only works with enum class Index_staticIndexVectorTextes ###					*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* IN : TTF_Font* font[] : array of ptr on font in use										*/
+	/* IN : Index_staticIndexVectorTextes : index enum class Index_staticIndexVectorTextes		*/
+	/* IN : Texte_Type type : enum class Texte_Type											    */
+	/* IN : std::string msg : Texte to render										  		    */
+	/* IN : SDL_Color color : Texte color												  	    */
+	/* IN : SDL_Color colorback : background color										  	    */
+	/* IN : Uint8 size : size to render the Texte (use in TTF_Font* font[])				  	    */
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
+	/* IN : Uint16 angle : enum Rotation_Type : will compute modulo if over 360				    */
+	/* IN : Uint8 cnt : enum class Center_Type	### default Center_Type::nocenter ###		    */
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	static void writeTexte
 	(	
 		SDL_Renderer*& renderer,
 		TTF_Font* font[],
+		Index_staticIndexVectorTextes index,
 		Texte_Type type,
 		std::string msg,
 		SDL_Color color,
@@ -498,6 +648,7 @@ public:
 		Uint8 size,
 		unsigned int x,
 		unsigned int y,
+		Transparance_Type alpha,
 		Uint16 angle,
 		Center_Type cnt = Center_Type::nocenter
 	);
@@ -509,6 +660,29 @@ public:
 	 *				Texte::METHODES							   *
 	 ********************************************************* */
 
+
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : Texte																				*/
+	/* ROLE : Constructor by Value																*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* IN : TTF_Font* font[] : array of ptr on font in use										*/
+	/* IN : SDL_Texture* : ptr on Texture of the Texte											*/
+	/* IN : std::string msg : Texte to render										  		    */
+	/* IN : State_Type stateScreen : enum class State_Type										*/
+	/* IN : Select_Type select : enum class Select_Type											*/
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : unsigned int w : length of the Texture 											    */
+	/* IN : unsigned int h : height of the Texture											    */
+	/* IN : Texte_Type type : enum class Texte_Type											    */
+	/* IN : SDL_Color color : Texte color												  	    */
+	/* IN : SDL_Color colorback : background color										  	    */
+	/* IN : Uint8 size : size to render the Texte (use in TTF_Font* font[])				  	    */
+	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
+	/* IN : Uint16 angle : enum Rotation_Type : will compute modulo if over 360				    */
+	/* IN : Uint8 cnt : enum class Center_Type	### default Center_Type::nocenter ###		    */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	Texte
 	(	
 		SDL_Renderer*& renderer,
@@ -530,33 +704,40 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : ~Texte																			*/
+	/* ROLE : Default Destructor																*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual ~Texte();
 
-	
-	/*
-	 * NAME : isSameColor
-	 * ROLE : Comparaison de 2 couleurs SDL_Color
-	 * INPUT  PARAMETERS : SDL_Color, SDL_Color: couleur à comparer
-	 * OUTPUT PARAMETERS : Destruction des allocations dynamique du programme
-	 * RETURNED VALUE    : bool : false = pas les meme/ true = meme couleur
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : isSameColor																		*/
+	/* ROLE : Compare 2 SDL_Color by the 4 parameters											*/
+	/* IN : SDL_Color color1																	*/
+	/* IN : SDL_Color color2																	*/
+	/* RETURNED VALUE : bool : false -> The colors are differents								*/
+	/* RETURNED VALUE : bool : true -> The colors are the same									*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual bool isSameColor
-	(	
-		SDL_Color,
-		SDL_Color
-	) const;
+	(
+		SDL_Color color1,
+		SDL_Color color2
+	)const;
 
-
-	/*
-	 * NAME : resizeTexte
-	 * ROLE : recentre le Texte lors de changement de taille du texte
-	 * INPUT  PARAMETERS : void
-	 * OUTPUT PARAMETERS : recentre le Texte lors de changement de taille du texte
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : resizeTexte																		*/
+	/* ROLE : Resize the Texte																	*/
+	/* IN : void																				*/
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual void resizeTexte();
 
-	
 	
 public:
 	/* *********************************************************
@@ -564,11 +745,10 @@ public:
 	 ********************************************************* */
 
 	inline virtual Texte_Type GETtype()const				{ return _type; };
-	inline virtual SDL_Color GETtxtcolor() const	{ return _txtcolor; };
-	inline virtual SDL_Color GETbackcolor() const	{ return _backcolor; };
-	inline virtual Uint8 GETsize()const				{ return _size; };
+	inline virtual SDL_Color GETtxtcolor() const			{ return _txtcolor; };
+	inline virtual SDL_Color GETbackcolor() const			{ return _backcolor; };
+	inline virtual Uint8 GETsize()const						{ return _size; };
 
-	virtual void SETname(std::string msg);
 	virtual void SETtype(Texte_Type type);
 	virtual void SETsize(Uint8 type);
 	virtual void SETtxtcolor(SDL_Color txtcolor);
@@ -577,6 +757,11 @@ public:
 protected:
 	inline TTF_Font** GETfont() { return _font; };
 
+	/* ### Not allowed to change name as of 0.21.3.1 ### */
+	virtual void SETname
+	(
+		std::string msg
+	);
 	
 	
 private:
@@ -616,22 +801,25 @@ public:
 	 ********************************************************* */
 	 
 
-	/*
-	 * NAME : createButtonImage
-	 * ROLE : création et ajout d'un objet ButtonTexte dans le tableau de ButtonTexte choisi
-	 * INPUT  PARAMETERS : SDL_Renderer*& renderer : le ptr sur la variable contenant SDL_Renderer
-	 * INPUT  PARAMETERS : std::vector<ButtonImage*>& : le tableau dans lequel sera stocké la ButtonImage (allocation dynamique)
-	 * INPUT  PARAMETERS : Uint8 stateScreen, Uint8 select : les variables qui décrivent les différents état de l'écran et les spécifications de la séléction
-	 * INPUT  PARAMETERS : std::string path : le chemin d'accès ainsi que le nom de l'image à partir du fichier (inclure le type .png , .bmp ...)
-     * INPUT  PARAMETERS : std::string msg : le nom qui permettra d'identifier la Texture dans le tableau
-	 * INPUT  PARAMETERS : Uint8 alpha : la valeur de transparance de la Texture -> enum Transparance_Type
-	 * INPUT  PARAMETERS : int x, int y	: les valeurs en pixel de la future position
-	 * INPUT  PARAMETERS : unsigned int w, unsigned int h : les valeurs de longueur et de largeur permettant de changer la définition de l'image originale sinon mettre NULL
-	 * INPUT  PARAMETERS : Uint16 angle : enum Uint16
-	 * INPUT  PARAMETERS : Uint8 cnt : le type de centrage -> enum Center_Type
-	 * OUTPUT PARAMETERS : création et ajout d'un objet ButtonTexte
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : createButtonImage																	*/
+	/* ROLE : Dynamic allocation of the ButtonImage with specifications							*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* OUT : std::unordered_map<std::string, ButtonImage*>& : unmap selected					*/
+	/* IN : State_Type stateScreen : enum class State_Type										*/
+	/* IN : Select_Type select : enum class Select_Type											*/
+	/* IN : Texte_Type type : enum class Texte_Type											    */
+	/* IN : std::string path : Path to the Image									  		    */
+	/* IN : std::string msg : Texte to render										  		    */
+	/* IN : Uint8 alpha : enum Transparance_Type										 	    */
+	/* IN : Uint8 size : size to render the Texte (use in TTF_Font* font[])				  	    */
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : Uint16 angle : enum Rotation_Type : will compute modulo if over 360				    */
+	/* IN : Uint8 cnt : enum class Center_Type	### default Center_Type::nocenter ###		    */
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	static void createButtonImage
 	(	
 		SDL_Renderer*& renderer,
@@ -655,6 +843,25 @@ public:
 	 *					ButtonImage::METHODES				   *
 	 ********************************************************* */
 
+
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : ButtonImage																		*/
+	/* ROLE : Constructor by Value																*/
+	/* IN : SDL_Renderer*& renderer : Ptr on SDL_Renderer										*/
+	/* IN : SDL_Texture* : ptr on Texture of the image											*/
+	/* IN : std::string msg : Texte to render										  		    */
+	/* IN : State_Type stateScreen : enum class State_Type										*/
+	/* IN : Select_Type select : enum class Select_Type											*/
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* IN : unsigned int w : length of the Texture 											    */
+	/* IN : unsigned int h : height of the Texture											    */
+	/* IN : Transparance_Type alpha : enum Transparance_Type							 	    */
+	/* IN : Uint16 angle : enum Rotation_Type : will compute modulo if over 360				    */
+	/* IN : SDL_Texture* : ptr on Texture of the imageOn										*/
+	/* IN : Center_Type cnt : enum class Center_Type	### default Center_Type::nocenter ###   */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	ButtonImage
 	(	
 		SDL_Renderer*& renderer,
@@ -672,17 +879,24 @@ public:
 		Center_Type center = Center_Type::nocenter
 	);
 
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : ~ButtonImage																		*/
+	/* ROLE : Default Destructor																*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual ~ButtonImage();
 
-
-	/*
-	 * NAME : searchButtonImage
-	 * ROLE : Recherche si les coordonnées en entrée sont celles du bouton
-	 * INPUT  PARAMETERS : Uint8 stateScreen : enum State_Type
-	 * INPUT  PARAMETERS : signed int x, signed int y : coordonnées souris
-	 * OUTPUT PARAMETERS : Validation ou non du bouton
-	 * RETURNED VALUE    : bool : false = pas valide / true = valide
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : searchButtonImage																	*/
+	/* ROLE : Search the position of ButtonImage / depends of State_Type						*/
+	/* IN : State_Type stateScreen : State_Type to compare with the ButtonImage				    */
+	/* IN : int x, int y : Positions before center of the Texture							    */
+	/* RETURNED VALUE : bool : false -> x or/and y are not in the range	of the ButtonImage		*/
+	/* RETURNED VALUE : bool : true -> x and y are in the range of the ButtonImage				*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual bool searchButtonImage
 	(	
 		State_Type stateScreen,
@@ -690,27 +904,28 @@ public:
 		signed int y
 	);
 
-
-	/*
-	 * NAME : renderButtonImage
-	 * ROLE : Affiche le bouton si le contexte est valide
-	 * INPUT  PARAMETERS : Uint8 stateScreen :  enum State_Type
-	 * OUTPUT PARAMETERS : Affiche le bouton
-	 * RETURNED VALUE    : bool : false = non affiché / true = affichage
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : renderButtonImage																	*/
+	/* ROLE : Render the ButtonImage if the State_Type is identical								*/
+	/* IN : State_Type stateScreen : State_Type to compare with the ButtonImage				    */
+	/* RETURNED VALUE : bool : false -> ButtonImage	is not render								*/
+	/* RETURNED VALUE : bool : true -> ButtonImage is render									*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual bool renderButtonImage
 	(
 		State_Type stateScreen
 	);
 
-
-	/*
-	 * NAME : changeOn
-	 * ROLE : alterne l'attribut booléen _on
-	 * INPUT  PARAMETERS : void
-	 * OUTPUT PARAMETERS : alterne l'attribut booléen _on
-	 * RETURNED VALUE    : void
-	 */
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
+	/* NAME : changeOn																			*/
+	/* ROLE : Change bool state of _on															*/
+	/* IN : void																			    */
+	/* RETURNED VALUE : void																	*/
+	/* ---------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------- */
 	virtual void changeOn();
 
 	

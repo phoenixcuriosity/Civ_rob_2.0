@@ -1,8 +1,8 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.21.2.1
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
 	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
@@ -28,9 +28,12 @@
 
 #include "Unit.h"
 
+#include "ConstUnitIHM.h"
+
 #include "IHM.h"
 #include "LoadConfig.h"
 #include "civ_lib.h"
+#include "End.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -109,6 +112,8 @@ bool Unit::searchUnitTile
 						->testPos(mouse.GETmouse_xNormalized(), mouse.GETmouse_yNormalized())
 				)
 			{
+				resetShowWhenChangePU(tabplayer, s_player.selectplayer, s_player.selectunit);
+
 				s_player.selectunit = i;
 				s_player.unitNameToMove = tabplayer[s_player.selectplayer]->GETtheUnit(i)->GETname();
 
@@ -183,7 +188,7 @@ void Unit::tryToMove
 			tryToMove(maps, s_player, tabplayer, select, x, y);
 		}
 		tabplayer[s_player.selectplayer]
-			->GETtheUnit(s_player.selectunit)->SETmovement(0);
+			->GETtheUnit(s_player.selectunit)->SETmovement(NO_MOVEMENT);
 		break;
 	default:
 		/* N/A */
@@ -227,75 +232,74 @@ Move_Type Unit::searchToMove
 	/* --------------------------------------------------------------------------------------- */
 
 	bool nextTileValidToMove(false);
-	bool condition(false);
+	unsigned int xIndex
+	(
+		GamePlay::convertPosXToIndex
+		(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETx() + x)
+	);
+	unsigned int yIndex
+	(
+		GamePlay::convertPosYToIndex
+		(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->GETy() + y)
+	);
 
-	for (unsigned int i(0); (i < maps.size()) && (false == nextTileValidToMove); i++)
-	{
-		for (unsigned int j(0); (j < maps[i].size()) && (false == nextTileValidToMove); j++)
+	Unit* unit(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit));
+
+	if	(
+				unit->isGroundMovement_Type()
+				&&
+				maps[xIndex][yIndex].tile_ground == Ground_Type::grass
+			)
 		{
-			condition = checkNextTile(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit), maps[i][j], x, y);
-			if	(true == condition)
-			{
-				if	(
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isGroundMovement_Type()
-						&&
-						maps[i][j].tile_ground == Ground_Type::grass
-					)
-				{
-					nextTileValidToMove = true;
-				}
-				else 
-				if (
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isAirMovement_Type()
-						&&
-						(
-							maps[i][j].tile_ground == Ground_Type::grass
-							||
-							maps[i][j].tile_ground == Ground_Type::water
-						)
-					)
-				{
-					nextTileValidToMove = true;
-				}
-				else
-				if  (
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isWaterMovement_Type()
-						&&
-						maps[i][j].tile_ground == Ground_Type::water
-					)
-				{
-					nextTileValidToMove = true;
-				}
-				else
-				if (
-						tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit)->isDeepWaterMovement_Type()
-						&&
-						(
-							maps[i][j].tile_ground == Ground_Type::deepwater
-							||
-							maps[i][j].tile_ground == Ground_Type::water
-						)
-					)
-				{
-					nextTileValidToMove = true;
-				}
-				else
-				{
-					/* ---------------------------------------------------------------------- */
-					/* nextTileValidToMove = false : Unit cannot move						  */
-					/* ---------------------------------------------------------------------- */
-
-					/* N/A */
-				}
-			}
-			else
-			{
-				/* N/A */
-			}
+			nextTileValidToMove = true;
 		}
+	else 
+	if (
+			unit->isAirMovement_Type()
+			&&
+			(
+				maps[xIndex][yIndex].tile_ground == Ground_Type::grass
+				||
+				maps[xIndex][yIndex].tile_ground == Ground_Type::water
+			)
+		)
+	{
+		nextTileValidToMove = true;
 	}
+	else
+	if  (
+			unit->isWaterMovement_Type()
+			&&
+			maps[xIndex][yIndex].tile_ground == Ground_Type::water
+		)
+	{
+		nextTileValidToMove = true;
+	}
+	else
+	if (
+			unit->isDeepWaterMovement_Type()
+			&&
+			(
+				maps[xIndex][yIndex].tile_ground == Ground_Type::deepwater
+				||
+				maps[xIndex][yIndex].tile_ground == Ground_Type::water
+			)
+		)
+	{
+		nextTileValidToMove = true;
+	}
+	else
+	{
+		/* ---------------------------------------------------------------------- */
+		/* nextTileValidToMove = false : Unit cannot move						  */
+		/* ---------------------------------------------------------------------- */
 
-	condition = false;
+		/* N/A */
+	}
+			
+
+
+	bool condition(false);
 	if (nextTileValidToMove)
 	{
 		/* ---------------------------------------------------------------------- */
@@ -306,7 +310,7 @@ Move_Type Unit::searchToMove
 		{
 			for (unsigned int j = 0; j < tabplayer[i]->GETtabUnit().size(); j++) 
 			{
-				condition = checkUnitNextTile(tabplayer[s_player.selectplayer]->GETtheUnit(s_player.selectunit),tabplayer[i]->GETtheUnit(j),x, y);
+				condition = checkUnitNextTile(unit,tabplayer[i]->GETtheUnit(j),x, y);
 				if	(true == condition)
 				{
 					if (s_player.selectplayer == (int)i)
@@ -394,9 +398,9 @@ bool Unit::checkNextTile
 	int y
 )
 {
-	if ((from->GETx() + x) == (to.tile_x))
+	if ((from->GETx() + (unsigned __int64)x) == (to.tile_x))
 	{
-		if ((from->GETy() + y) == (to.tile_y))
+		if ((from->GETy() + (unsigned __int64)y) == (to.tile_y))
 		{
 			return true;
 		}
@@ -426,6 +430,35 @@ bool Unit::irrigate
 	return false;
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : resetShowWhenChangePU														   */
+/* ROLE : Reset show to true (alaways visible) 										   */
+/* ROLE : when a new Unit or a new Player is selected								   */
+/* INPUT : TabPlayer& tabPlayer : Array of Player ptr								   */
+/* INPUT : unsigned int playerIndex : Index to the current selected Player			   */
+/* INPUT : unsigned int unitIndex : Index to the current selected Unit				   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void Unit::resetShowWhenChangePU
+(
+	TabPlayer& tabPlayer,
+	unsigned int playerIndex,
+	unsigned int unitIndex
+)
+{
+	if  (
+			playerIndex != NO_PLAYER_SELECTED
+			&&
+			unitIndex != NO_UNIT_SELECTED
+		)
+	{
+		tabPlayer[playerIndex]->GETtheUnit(unitIndex)->SETshow(true);
+	}
+}
+
+
 /* *********************************************************
  *					END Units::STATIC					   *
  ********************************************************* */
@@ -442,9 +475,9 @@ bool Unit::irrigate
 /* INPUT : void																		   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Unit::Unit() :	_name(""), _x(0), _y(0),
-				_maxlife(0), _maxatq(0), _maxdef(0), _maxmovement(0), _maxlevel(0),
-				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true), _blit(0), _show(true), _showStats(false)
+Unit::Unit() :	_name(EMPTY_STRING), _x(0), _y(0), _movementType(Unit_Movement_Type::ground),
+				_maxlife(100), _maxatq(10), _maxdef(5), _maxmovement(1), _maxlevel(100),
+				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
@@ -477,7 +510,7 @@ Unit::Unit
 )
 	: _name(name), _x(x), _y(y), _movementType(movementType),
 	_maxlife(life), _maxatq(atq), _maxdef(def), _maxmovement(move), _maxlevel(level),
-	_life(life), _atq(atq), _def(def), _movement(move), _level(level), _alive(true), _blit(0), _show(true), _showStats(false)
+	_life(life), _atq(atq), _def(def), _movement(move), _level(level), _alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit:  Success");
 }
@@ -507,13 +540,9 @@ void Unit::attack
 	Unit* cible
 )
 {
-	if (_movement > 0)
+	if (_movement > NO_MOVEMENT)
 	{
 		cible->defend(_atq);
-	}
-	else
-	{
-		/* N/A */
 	}
 }
 
@@ -527,25 +556,20 @@ void Unit::attack
 /* ----------------------------------------------------------------------------------- */
 void Unit::defend
 (
-	unsigned int dmg
+	int dmg
 )
 {
-	int test(0);
 	if (dmg > _def)
 	{
-		if ((test = (_life - (dmg - _def))) <= 0) 
+		if ((_life - (dmg - _def)) <= ENOUGH_DAMAGE_TO_KILL)
 		{
-			_life = 0;
+			_life = ZERO_LIFE;
 			_alive = false;
 		}
 		else
 		{
 			_life -= (dmg - _def);
 		}
-	}
-	else
-	{
-		/* N/A */
 	}
 }
 
@@ -569,27 +593,19 @@ void Unit::move
 	int y
 )
 {
-	if (_movement > 0)
+	if (NO_MOVEMENT < _movement)
 	{
 		_x += x;
 		_y += y;
 		_movement--;
 	}
-	else
-	{
-		/* N/A */
-	}
 	
-	if (_movement == 0)
+	if (NO_MOVEMENT == _movement)
 	{
 		select = Select_Type::selectnothing;
 		selectunit = NO_UNIT_SELECTED;
-		_blit = 0;
+		_blit = ZERO_BLIT;
 		_show = true;
-	}
-	else
-	{
-		/* N/A */
 	}
 }
 
@@ -608,49 +624,31 @@ void Unit::heal
 	unsigned int selectplayer
 )
 {
-	for (unsigned int i(0); i < tiles.size(); i++) 
+	int i(GamePlay::convertPosXToIndex(_x));
+	int j(GamePlay::convertPosYToIndex(_y));
+
+	if (NO_APPARTENANCE == tiles[i][j].appartenance)
 	{
-		for (unsigned int j(0); j < tiles[i].size(); j++)
+		_life += (unsigned int)ceil(_maxlife / COEF_DIV_HEAL_NO_APPARTENANCE);
+		if (_life > _maxlife)
 		{
-			if (_x == tiles[i][j].tile_x && _y == tiles[i][j].tile_y)
-			{
-				if (NO_APPARTENANCE == tiles[i][j].appartenance)
-				{
-					_life += (unsigned int)ceil(_maxlife / 20);
-					if (_life > _maxlife)
-					{
-						_life = _maxlife;
-					}
-					else
-					{
-						/* N/A */
-					}	
-					return;
-				}
-				else if (tiles[i][j].appartenance == (int)selectplayer)
-				{
-					_life += (unsigned int)ceil(_maxlife / 5);
-					if (_life > _maxlife)
-					{
-						_life = _maxlife;
-					}
-					else
-					{
-						/* N/A */
-					}	
-					return;
-				}
-				else
-				{
-					return;
-				}	
-			}
-			else
-			{
-				/* N/A */
-			}
+			_life = _maxlife;
 		}
+		return;
 	}
+	else if (tiles[i][j].appartenance == (int)selectplayer)
+	{
+		_life += (unsigned int)ceil(_maxlife / COEF_DIV_HEAL_APPARTENANCE);
+		if (_life > _maxlife)
+		{
+			_life = _maxlife;
+		}
+		return;
+	}
+	else
+	{
+		return;
+	}	
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -664,6 +662,9 @@ void Unit::heal
 void Unit::levelup()
 {
 	_level++;
+
+	_maxlife += (int)ceil(_maxlife / COEF_DIV_LEVELUP);
+	_life = _maxlife;
 
 	/* Todo */
 	//heal();
@@ -697,7 +698,11 @@ bool Unit::testPos
 	unsigned int mouse_y
 ) 
 {
-	if (_x == mouse_x && _y == mouse_y)
+	if  (
+			(unsigned __int64)_x == mouse_x
+			&&
+			(unsigned __int64)_y == mouse_y
+		)
 	{
 		return true;
 	}
@@ -733,7 +738,6 @@ bool Unit::isGroundMovement_Type()
 bool Unit::isAirMovement_Type()
 { 
 	return _movementType == Unit_Movement_Type::air ? true : false;
-
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -796,7 +800,11 @@ void Unit::afficher
 		unsigned int x(_x - map.screenOffsetXIndexMin * map.tileSize);
 		unsigned int y(_y - map.screenOffsetYIndexMin * map.tileSize);
 
-		if (_x > (x - map.tileSize * map.toolBarSize) && _y >= y)
+		if  (
+				((unsigned __int64)_x > (x - map.tileSize * map.toolBarSize))
+				&&
+				((unsigned __int64)_y >= y)
+			)
 		{
 			allTextures.unit[_name]->render(x, y);
 
@@ -875,55 +883,61 @@ void Unit::afficherstat
 	{
 		unsigned int x(_x - map.screenOffsetXIndexMin * map.tileSize);
 		unsigned int y(_y - map.screenOffsetYIndexMin * map.tileSize);
-		unsigned int space(14);
 		
-
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "Name: "  + _name, Red, White,
-			12, x + map.tileSize, y, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_NAME, Texte_Type::blended,
+			"Name: "  + _name, Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y, nonTransparent, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "X: " + std::to_string(_x), Red, White,
-			12, x + map.tileSize, y += space, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_X, Texte_Type::blended,
+			"X: " + std::to_string(_x), Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y += UNIT_STATS_SPACE_Y, nonTransparent, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "Y: " + std::to_string(_y), Red, White,
-			12, x + map.tileSize, y += space, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_Y, Texte_Type::blended,
+			"Y: " + std::to_string(_y), Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y += UNIT_STATS_SPACE_Y, nonTransparent, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "life: " + std::to_string(_life), Red, White,
-			12, x + map.tileSize, y += space, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_LIFE, Texte_Type::blended,
+			"life: " + std::to_string(_life), Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y += UNIT_STATS_SPACE_Y, nonTransparent, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "atq: " + std::to_string(_atq), Red, White,
-			12, x + map.tileSize, y += space, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_ATQ, Texte_Type::blended,
+			"atq: " + std::to_string(_atq), Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y += UNIT_STATS_SPACE_Y, nonTransparent, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "def: " + std::to_string(_def), Red, White,
-			(Uint8)12, x + map.tileSize, y += space, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_DEF, Texte_Type::blended,
+			"def: " + std::to_string(_def), Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y += UNIT_STATS_SPACE_Y, nonTransparent, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "movement: " + std::to_string(_movement), Red, White,
-			(Uint8)12, x + map.tileSize, y += space, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_MOVEMENT, Texte_Type::blended,
+			"movement: " + std::to_string(_movement), Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y += UNIT_STATS_SPACE_Y, nonTransparent, no_angle
 		);
 
 		Texte::writeTexte
 		(
-			renderer, font, Texte_Type::blended, "level: " + std::to_string(_level), Red, White,
-			(Uint8)12, x + map.tileSize, y += space, no_angle
+			renderer, font, Index_staticIndexVectorTextes::UNIT_LEVEL, Texte_Type::blended,
+			"level: " + std::to_string(_level), Red, White,
+			UNIT_STATS_FONT_SIZE, x + map.tileSize, y += UNIT_STATS_SPACE_Y, nonTransparent, no_angle
 		);
 	}
 	else
@@ -946,7 +960,7 @@ void Unit::cmpblit()
 	/* ---------------------------------------------------------------------- */
 	/* 50% off 50% on , environ 1s le cycle									  */
 	/* ---------------------------------------------------------------------- */
-	if((++_blit %= (SCREEN_REFRESH_RATE / 2)) == 0)
+	if((++_blit %= (SCREEN_REFRESH_RATE / BLIT_RATE)) == MODULO_ZERO)
 	{
 		_show = !_show;
 	}

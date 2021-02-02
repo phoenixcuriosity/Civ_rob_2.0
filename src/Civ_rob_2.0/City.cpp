@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.6.1
-	file version : 1.23
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,7 +46,7 @@
 /* ----------------------------------------------------------------------------------- */
 /* NAME : createCity																   */
 /* ROLE : Création d'une City à partir d'un settler sur la carte					   */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+/* INPUT/OUTPUT : struct Sysinfo& : Global structure								   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -89,7 +89,8 @@ void City::createCity
 		/* ---------------------------------------------------------------------- */
 
 		unsigned int middletileX(0), middletileY(0);
-		searchMiddleTile(sysinfo.map.maps, x, y, &middletileX, &middletileY);
+		middletileX = GamePlay::convertPosXToIndex(x);
+		middletileY = GamePlay::convertPosYToIndex(y);
 
 		std::vector<Tile> tabtile;
 		tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
@@ -125,49 +126,6 @@ void City::createCity
 	else
 	{
 		/* N/A */
-	}
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : searchMiddleTile															   */
-/* ROLE : Recherche les indices de la Tile centrale de la Citie						   */
-/* INPUT : const MatriceTile& maps : Matrice de la map								   */
-/* INPUT : unsigned int x :	index en x de la Citie 									   */
-/* INPUT : unsigned int y :	index en y de la Citie 									   */
-/* OUTPUT : unsigned int* middletileX : index en tileSize de x						   */
-/* OUTPUT : unsigned int* middletileX : index en tileSize de y						   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void City::searchMiddleTile
-(
-	const MatriceTile& maps,
-	unsigned int x,
-	unsigned int y,
-	unsigned int* middletileX,
-	unsigned int* middletileY
-)
-{
-	for (unsigned int i(0); i < maps.size(); i++)
-	{
-		for (unsigned int j(0); j < maps.size(); j++)
-		{
-			if  (
-					maps[i][j].tile_x == x
-					&&
-					maps[i][j].tile_y == y
-				)
-			{
-				*middletileX = i;
-				*middletileY = j;
-				return;
-			}
-			else
-			{
-				/* N/A */
-			}
-		}
 	}
 }
 
@@ -344,18 +302,33 @@ _conversionToApply(conversionSurplus_Type::No_Conversion)
 /* ----------------------------------------------------------------------------------- */
 City::~City()
 {
+	resetTabCitizen();
+
+	for (unsigned int i(0); i <_buildQueue.cityMapBuildQueue.size(); i++)
+	{
+		removeBuildToQueue(i);
+	}
+	
+	LoadConfig::logfileconsole("[INFO]___: Destroy Citie: " + _name + " Success");
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : resetTabCitizen															   */
+/* ROLE : Remove all Citizens in the City											   */
+/* RETURNED VALUE : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::resetTabCitizen()
+{
 	for (const auto& n : _citizens)
 	{
 		if (nullptr != n)
 		{
 			delete n;
 		}
-		else
-		{
-			/* TODO Throw error */
-		}
 	}
-	LoadConfig::logfileconsole("[INFO]___: Destroy Citie: " + _name + " Success");
+	_citizens.resize(0);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -376,11 +349,11 @@ void City::foodNextTurn
 
 	_foodStock += _foodBalance;
 	
-	if (0.0 > _foodStock)
+	if (CITY_ZERO_FOOD > _foodStock)
 	{
-		if (_citizens.size() == 1)
+		if (_citizens.size() == MIN_POP)
 		{
-			_foodStock = 0.0;
+			_foodStock = CITY_ZERO_FOOD;
 		}
 		else
 		{
@@ -581,26 +554,25 @@ void City::computeWork()
 void City::computeWorkToBuild
 (
 	Player* player,
-	const std::vector<Unit_Template>& tabUnit_Template,
-	DequeButtonTexte& citieMapBuildQueue
+	const std::vector<Unit_Template>& tabUnit_Template
 )
 {
 	if (_conversionToApply != conversionSurplus_Type::WorkToGold)
 	{
-		if (!_buildQueue.empty())
+		if (!_buildQueue.buildQueue.empty())
 		{
-			_buildQueue.front().remainingWork -= _workBalance;
+			_buildQueue.buildQueue.front().remainingWork -= _workBalance;
 
 			double workSurplus(0.0);
-			while (_buildQueue.front().remainingWork < 0.0)
+			while (_buildQueue.buildQueue.front().remainingWork < 0.0)
 			{
-				if (build_Type::unit == _buildQueue.front().type)
+				if (build_Type::unit == _buildQueue.buildQueue.front().type)
 				{
-					Uint8 unitToBuild(Unit::searchUnitByName(_buildQueue.front().name, tabUnit_Template));
+					Uint8 unitToBuild(Unit::searchUnitByName(_buildQueue.buildQueue.front().name, tabUnit_Template));
 
 					player->addUnit
 					(
-						_buildQueue.front().name,
+						_buildQueue.buildQueue.front().name,
 						_x,
 						_y,
 						tabUnit_Template[unitToBuild].type,
@@ -612,25 +584,25 @@ void City::computeWorkToBuild
 					);
 				}
 				else
-					if (build_Type::building == _buildQueue.front().type)
-					{
-						/* TODO buildings */
-					}
-					else
-					{
-						/* N/A */
-#ifdef _DEBUG_MODE
-						throw("[ERROR]___: computeWorkToBuild : _buildQueue.front().type == else");
-#endif // DEBUG_MODE
-					}
-
-				workSurplus = -(_buildQueue.front().remainingWork);
-
-				removeBuildToQueueFront(citieMapBuildQueue);
-
-				if (!_buildQueue.empty())
+				if (build_Type::building == _buildQueue.buildQueue.front().type)
 				{
-					_buildQueue.front().remainingWork -= workSurplus;
+					/* TODO buildings */
+				}
+				else
+				{
+					/* N/A */
+#ifdef _DEBUG_MODE
+					throw("[ERROR]___: computeWorkToBuild : _buildQueue.front().type == else");
+#endif // DEBUG_MODE
+				}
+
+				workSurplus = -(_buildQueue.buildQueue.front().remainingWork);
+
+				removeBuildToQueueFront();
+
+				if (!_buildQueue.buildQueue.empty())
+				{
+					_buildQueue.buildQueue.front().remainingWork -= workSurplus;
 				}
 				else
 				{
@@ -747,18 +719,18 @@ void City::convertFoodSurplusToGold
 void City::addBuildToQueue
 (
 	build buildToQueue,
-	DequeButtonTexte& citieMapBuildQueue,
 	SDL_Renderer*& renderer,
 	TTF_Font* font[]
 )
 {
 	ButtonTexte::createButtonTexte
 		(renderer, font,
-		State_Type::STATEcityMap, Select_Type::selectnothing, citieMapBuildQueue,
+		State_Type::STATEcityMap, Select_Type::selectnothing, _buildQueue.cityMapBuildQueue,
 		Texte_Type::shaded, buildToQueue.name, WriteColorButton, BackColorButton, (Uint8)CITY_BUILD_QUEUE_FONT_SIZE,
-		(int)CITY_BUILD_QUEUE_BEGIN_X, (int)(CITY_BUILD_QUEUE_BEGIN_Y + ((unsigned int)citieMapBuildQueue.size() * CITY_BUILD_QUEUE_SPACE_Y)),
+		(int)CITY_BUILD_QUEUE_BEGIN_X,
+		(int)(CITY_BUILD_QUEUE_BEGIN_Y + ((unsigned int)_buildQueue.cityMapBuildQueue.size() * CITY_BUILD_QUEUE_SPACE_Y)),
 		nonTransparent, no_angle, Center_Type::center);
-	_buildQueue.push_back(buildToQueue);
+	_buildQueue.buildQueue.push_back(buildToQueue);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -769,15 +741,12 @@ void City::addBuildToQueue
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-void City::removeBuildToQueueFront
-(
-	DequeButtonTexte& citieMapBuildQueue
-)
+void City::removeBuildToQueueFront()
 {
-	if (nullptr != citieMapBuildQueue.front())
+	if (nullptr != _buildQueue.cityMapBuildQueue.front())
 	{
-		delete citieMapBuildQueue.front();
-		citieMapBuildQueue.front() = nullptr;
+		delete _buildQueue.cityMapBuildQueue.front();
+		_buildQueue.cityMapBuildQueue.front() = nullptr;
 	}
 	else
 	{
@@ -787,13 +756,13 @@ void City::removeBuildToQueueFront
 #endif // DEBUG_MODE
 	}
 
-	for (unsigned int i(1); i < citieMapBuildQueue.size(); i++)
+	for (unsigned int i(CITY_IHM_SECOND_INDEX); i < _buildQueue.cityMapBuildQueue.size(); i++)
 	{
-		citieMapBuildQueue[i]->SETdsty(citieMapBuildQueue[i]->GETdsty() - CITY_BUILD_QUEUE_SPACE_Y);
+		_buildQueue.cityMapBuildQueue[i]->SETdsty(_buildQueue.cityMapBuildQueue[i]->GETdsty() - CITY_BUILD_QUEUE_SPACE_Y);
 	}
 
-	citieMapBuildQueue.pop_front();
-	_buildQueue.pop_front();
+	_buildQueue.cityMapBuildQueue.pop_front();
+	_buildQueue.buildQueue.pop_front();
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -807,16 +776,15 @@ void City::removeBuildToQueueFront
 /* ----------------------------------------------------------------------------------- */
 void City::removeBuildToQueue
 (
-	DequeButtonTexte& citieMapBuildQueue,
 	unsigned int index
 )
 {
-	if (index < citieMapBuildQueue.size())
+	if (index < _buildQueue.cityMapBuildQueue.size())
 	{
-		if (nullptr != citieMapBuildQueue[index])
+		if (nullptr != _buildQueue.cityMapBuildQueue[index])
 		{
-			delete citieMapBuildQueue[index];
-			citieMapBuildQueue[index] = nullptr;
+			delete _buildQueue.cityMapBuildQueue[index];
+			_buildQueue.cityMapBuildQueue[index] = nullptr;
 		}
 		else
 		{
@@ -826,10 +794,10 @@ void City::removeBuildToQueue
 #endif // DEBUG_MODE
 		}
 
-		copyLoopBuildQueue(citieMapBuildQueue, index);
+		copyLoopBuildQueue(index);
 
-		citieMapBuildQueue.pop_back();
-		_buildQueue.pop_back();
+		_buildQueue.cityMapBuildQueue.pop_back();
+		_buildQueue.buildQueue.pop_back();
 	}
 	else
 	{
@@ -850,16 +818,15 @@ void City::removeBuildToQueue
 /* ----------------------------------------------------------------------------------- */
 void City::copyLoopBuildQueue
 (
-	DequeButtonTexte& citieMapBuildQueue,
 	unsigned int index
 )
 {
-	for (unsigned int i(index); i < citieMapBuildQueue.size() - 1; i++)
+	for (unsigned int i(index); i < _buildQueue.cityMapBuildQueue.size() - 1; i++)
 	{
-		citieMapBuildQueue[i] = citieMapBuildQueue[(unsigned __int64)i + 1];
-		citieMapBuildQueue[i]->SETdsty(citieMapBuildQueue[i]->GETdsty() - CITY_BUILD_QUEUE_SPACE_Y);
-		citieMapBuildQueue[(unsigned __int64)i + 1] = nullptr;
-		_buildQueue[i] = _buildQueue[(unsigned __int64)i + 1];
+		_buildQueue.cityMapBuildQueue[i] = _buildQueue.cityMapBuildQueue[(__int64)i + 1];
+		_buildQueue.cityMapBuildQueue[i]->SETdsty(_buildQueue.cityMapBuildQueue[i]->GETdsty() - CITY_BUILD_QUEUE_SPACE_Y);
+		_buildQueue.cityMapBuildQueue[(__int64)i + 1] = nullptr;
+		_buildQueue.buildQueue[i] = _buildQueue.buildQueue[(__int64)i + 1];
 	}
 }
 
@@ -930,7 +897,7 @@ void City::afficherCityMap
 
 	afficherCityFood(sysinfo.map.tileSize, sysinfo.allTextures.cityMap);
 
-	afficherCityBuildToQueue(sysinfo.allTextes.cityMap, sysinfo.allButton.cityMapBuildQueue);
+	afficherCityBuildToQueue(sysinfo.allTextes.cityMap);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -988,10 +955,10 @@ void City::displayTexturesTextesButtons
 			unit[buildName]
 				->render((screenWidth / 2) - 50, initspace);
 			cityMapTextes[
-				"life:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].life) +
-					"/atq:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].atq) +
-					"/def:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].def) +
-					"/move:" + std::to_string(var.s_player.tabUnit_Template[(unsigned __int64)var.s_player.unitToCreate + j].movement)]
+				"life:" + std::to_string(var.s_player.tabUnit_Template[(__int64)var.s_player.unitToCreate + j].life) +
+					"/atq:" + std::to_string(var.s_player.tabUnit_Template[(__int64)var.s_player.unitToCreate + j].atq) +
+					"/def:" + std::to_string(var.s_player.tabUnit_Template[(__int64)var.s_player.unitToCreate + j].def) +
+					"/move:" + std::to_string(var.s_player.tabUnit_Template[(__int64)var.s_player.unitToCreate + j].movement)]
 				->render((screenWidth / 2) + 200, initspace);
 		}
 
@@ -1110,11 +1077,11 @@ void City::afficherCityFood
 {
 	/* Affichage food */
 	unsigned int renderFoodY(tileSize), offSetRenderX(0), offSetRenderY(0);
-	if (_foodStock > 0.0)
+	if (_foodStock > CITY_ZERO_FOOD)
 	{
-		for (double nbfood(0.0); nbfood < _foodStock; nbfood++)
+		for (double nbfood(CITY_ZERO_FOOD); nbfood < _foodStock; nbfood++)
 		{
-			if (((unsigned int)nbfood % CITY_FOOD_NB_PER_ROW) == 0)
+			if (((unsigned int)nbfood % CITY_FOOD_NB_PER_ROW) == MODULO_ZERO)
 			{
 				offSetRenderY++;
 				offSetRenderX = 0;
@@ -1148,19 +1115,18 @@ void City::afficherCityFood
 /* ----------------------------------------------------------------------------------- */
 void City::afficherCityBuildToQueue
 (
-	MapTexte& citieMap,
-	DequeButtonTexte& citieMapBuildQueue
+	MapTexte& citieMap
 )
 {
 	if  (
-			_buildQueue.empty() == false
+			_buildQueue.buildQueue.empty() == false
 			&&
-			_buildQueue.size() == citieMapBuildQueue.size()
+			_buildQueue.buildQueue.size() == _buildQueue.cityMapBuildQueue.size()
 		)
 	{
-		for (unsigned int indexBuildQueue(0); indexBuildQueue < _buildQueue.size(); indexBuildQueue++)
+		for (unsigned int indexBuildQueue(0); indexBuildQueue < _buildQueue.buildQueue.size(); indexBuildQueue++)
 		{
-			citieMapBuildQueue[indexBuildQueue]->render();
+			_buildQueue.cityMapBuildQueue[indexBuildQueue]->render();
 		}
 	}
 	else

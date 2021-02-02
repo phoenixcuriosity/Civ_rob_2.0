@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.6.1
-	file version : 1.9
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -198,19 +198,22 @@ void Player::deleteUnit
 	unsigned int index
 )
 {
-	if (nullptr != _tabUnit[index])
+	if (assertSize(_tabUnit.size(), index))
 	{
-		delete _tabUnit[index];
-		if (_tabUnit.size() > 1 && index < _tabUnit.size() - 1)
+		if (nullptr != _tabUnit[index])
 		{
-			for (unsigned int i(index); i < (_tabUnit.size() - 1); i++)
-				_tabUnit[i] = _tabUnit[(unsigned __int64)i + 1];
+			delete _tabUnit[index];
+			if (_tabUnit.size() > 1 && index < _tabUnit.size() - 1)
+			{
+				for (unsigned int i(index); i < (_tabUnit.size() - 1); i++)
+					_tabUnit[i] = _tabUnit[(unsigned __int64)i + 1];
+			}
+			_tabUnit.pop_back();
 		}
-		_tabUnit.pop_back();
-	}
-	else
-	{
-		throw("[ERROR]__: deleteUnit : nullptr == _tabUnit[index]");
+		else
+		{
+			throw("[ERROR]__: deleteUnit : nullptr == _tabUnit[index]");
+		}
 	}
 }
 
@@ -246,19 +249,22 @@ void Player::deleteCity
 	unsigned int index
 )
 {
-	if (nullptr != _tabCity[index])
+	if (assertSize(_tabCity.size(), index))
 	{
-		delete _tabCity[index];
-		if (_tabCity.size() > 1 && index < _tabCity.size() - 1)
+		if (nullptr != _tabCity[index])
 		{
-			for (unsigned int i(index); i < (_tabCity.size() - 1); i++)
-				_tabCity[i] = _tabCity[(unsigned __int64)i + 1];
+			delete _tabCity[index];
+			if (_tabCity.size() > 1 && index < _tabCity.size() - 1)
+			{
+				for (unsigned int i(index); i < (_tabCity.size() - 1); i++)
+					_tabCity[i] = _tabCity[(unsigned __int64)i + 1];
+			}
+			_tabCity.pop_back();
 		}
-		_tabCity.pop_back();
-	}
-	else
-	{
-		throw("[ERROR]__: deleteCity : nullptr == _tabCity[index]");
+		else
+		{
+			throw("[ERROR]__: deleteCity : nullptr == _tabCity[index]");
+		}
 	}
 }
 
@@ -340,11 +346,9 @@ void Player::displayGoldStats
 	stream << std::setprecision(1);
 	stream << _goldStats.gold;
 
-	Texte::writeTexte(renderer, font,
-		Texte_Type::shaded, "Gold : " + stream.str(),
-		White, { 64, 64, 64, 255 }, 24,
-		0, 900,
-		no_angle, Center_Type::nocenter);
+	Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_GOLD, Texte_Type::shaded,
+		"Gold : " + stream.str(), White, { 64, 64, 64, 255 }, 24,
+		0, 900, nonTransparent, no_angle, Center_Type::nocenter);
 
 	if (_onOffDisplay.showContextGoldStats)
 	{
@@ -355,79 +359,77 @@ void Player::displayGoldStats
 		stream.clear();
 		stream << _goldStats.goldBalance;
 
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Balance : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
-			initX, initY,
-			no_angle, Center_Type::nocenter);
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_GOLD_BALANCE, Texte_Type::shaded,
+			"Balance : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
+			initX, initY,nonTransparent, no_angle, Center_Type::nocenter);
 
 		stream.str("");
 		stream.clear();
 		stream << _goldStats.income;
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Income : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
-			initX += spaceX, initY,
-			no_angle, Center_Type::nocenter);
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_INCOME, Texte_Type::shaded,
+			"Income : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
+			initX += spaceX, initY, nonTransparent, no_angle, Center_Type::nocenter);
 
 		stream.str("");
 		stream.clear();
 		stream << _goldStats.cost;
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Cost : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
-			initX += spaceX, initY,
-			no_angle, Center_Type::nocenter);
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_COST, Texte_Type::shaded,
+			"Cost : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
+			initX += spaceX, initY, nonTransparent, no_angle, Center_Type::nocenter);
 
 
 
 		stream.str("");
 		stream.clear();
 		stream << _goldStats.taxIncome;
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Tax : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_TAX_INCOME, Texte_Type::shaded,
+			"Tax : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
 			initX = 200, initY += spaceY,
-			no_angle, Center_Type::nocenter);
+			nonTransparent, no_angle, Center_Type::nocenter);
 
 		stream.str("");
 		stream.clear();
 		stream << _goldStats.commerceIncome;
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Commerce : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_COMMERCE_INCOME, Texte_Type::shaded,
+			"Commerce : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
 			initX += spaceX, initY,
-			no_angle, Center_Type::nocenter);
+			nonTransparent, no_angle, Center_Type::nocenter);
 
 		stream.str("");
 		stream.clear();
 		stream << _goldStats.goldConversionSurplus;
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Surplus : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_GOLD_CONVERSION_SURPLUS, Texte_Type::shaded,
+			"Surplus : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
 			initX += spaceX, initY,
-			no_angle, Center_Type::nocenter);
+			nonTransparent, no_angle, Center_Type::nocenter);
 
 
 
 		stream.str("");
 		stream.clear();
 		stream << _goldStats.buildingsCost;
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Building cost : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_BUILDINGS_COST, Texte_Type::shaded,
+			"Building cost : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
 			initX = 200, initY += spaceY,
-			no_angle, Center_Type::nocenter);
+			nonTransparent, no_angle, Center_Type::nocenter);
 
 		stream.str("");
 		stream.clear();
 		stream << _goldStats.armiesCost;
-		Texte::writeTexte(renderer, font,
-			Texte_Type::shaded, "Armies cost : " + stream.str(),
-			White, { 64, 64, 64, 255 }, 18,
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_ARMIES_COST, Texte_Type::shaded,
+			"Armies cost : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
 			initX += 200, initY,
-			no_angle, Center_Type::nocenter);
+			nonTransparent, no_angle, Center_Type::nocenter);
 	}
+}
+
+bool Player::assertSize
+(
+	size_t size,
+	unsigned int index
+)
+{
+	return index < size ? true : false;
 }
 
 /* *********************************************************
