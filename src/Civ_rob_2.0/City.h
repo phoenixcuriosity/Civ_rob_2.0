@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.5
-	file version : 1.13
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,18 +36,21 @@
  ********************************************************* */
 
 /* taille de la carte transposée dans la citiemap */
-const Uint8 INIT_SIZE_VIEW = 7;
+#define INIT_SIZE_VIEW 7
 
 /* taille de l'influence de la citie initialement */
-const Uint8 INIT_SIZE_INFLUENCE = 2;
+#define INIT_SIZE_INFLUENCE 2
 
 /* Population maximale dans une Citie */
-const Uint8 MAX_POP = 50;
+#define MAX_POP 50
+
+/* Minimal population in City */
+#define MIN_POP 1
 
 /* Todo : généralisation : compter nb Citie par player dans CITIENAME.txt */
 
 /* Nombre de noms de Citie dans CITIENAME.txt */
-const Uint8 MAX_CITY_PER_PLAYER = 5;
+#define MAX_CITY_PER_PLAYER 5
 
 /* Define the maximum range of emotion */
 #define SCALE_RANGE_MAX_EMOTION 100.0
@@ -69,6 +72,11 @@ const Uint8 MAX_CITY_PER_PLAYER = 5;
 
 /* Define the multiplier coefficient to convert food to gold */
 #define MULTIPLIER_CONVERSION_FOOD_TO_GOLD (MULTIPLIER_CONVERSION_WORK_TO_GOLD / MULTIPLIER_CONVERSION_FOOD_TO_WORK)
+
+#define CITY_IHM_SECOND_INDEX 1
+
+/* Define the minimum food in a City */
+#define CITY_ZERO_FOOD 0.0
 
 /* *********************************************************
  *							 Enum						   *
@@ -96,12 +104,28 @@ enum class conversionSurplus_Type : Uint8
 /* *********************************************************
  *						 Structs						   *
  ********************************************************* */
-
+ 
+/* 
+	Define a building in a City
+	Use for building Queue
+*/
 struct build
 {
-	double remainingWork;
 	std::string name;
 	build_Type type;
+	double remainingWork;
+};
+
+/* 
+	Define 2 arrays : 
+	-> buildQueue : use for City process
+	-> cityMapBuildQueue : use for City IHM
+	Error if both are not with the same size
+*/
+struct cityBuildQueue
+{
+	std::deque<build> buildQueue;
+	DequeButtonTexte cityMapBuildQueue;
 };
 
 /* *********************************************************
@@ -127,27 +151,6 @@ public:
 	static void createCity
 	(
 		Sysinfo& sysinfo
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : searchMiddleTile															   */
-	/* ROLE : Recherche les indices de la Tile centrale de la Citie						   */
-	/* INPUT : const MatriceTile& maps : Matrice de la map								   */
-	/* INPUT : unsigned int x :	index en x de la Citie 									   */
-	/* INPUT : unsigned int y :	index en y de la Citie 									   */
-	/* OUTPUT : unsigned int* middletileX : index en tileSize de x						   */
-	/* OUTPUT : unsigned int* middletileX : index en tileSize de y						   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void searchMiddleTile
-	(
-		const MatriceTile& maps,
-		unsigned int x,
-		unsigned int y,
-		unsigned int* middletileX,
-		unsigned int* middletileY
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -239,6 +242,15 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
+	/* NAME : resetTabCitizen															   */
+	/* ROLE : Remove all Citizens in the City											   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	virtual void resetTabCitizen();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	/* NAME : foodNextTurn																   */
 	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
 	/* OUT : GoldStats& goldStats : Player gold stats									   */
@@ -301,8 +313,7 @@ public:
 	virtual void computeWorkToBuild
 	(
 		Player* player,
-		const std::vector<Unit_Template>& tabUnit_Template,
-		DequeButtonTexte& citieMapBuildQueue
+		const std::vector<Unit_Template>& tabUnit_Template
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -383,7 +394,6 @@ public:
 	virtual void addBuildToQueue
 	(
 		build buildToQueue,
-		DequeButtonTexte& citieMapBuildQueue,
 		SDL_Renderer*& renderer,
 		TTF_Font* font[]
 	);
@@ -396,10 +406,7 @@ public:
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void removeBuildToQueueFront
-	(
-		DequeButtonTexte& citieMapBuildQueue
-	);
+	virtual void removeBuildToQueueFront();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -412,7 +419,6 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void removeBuildToQueue
 	(
-		DequeButtonTexte& citieMapBuildQueue,
 		unsigned int index
 	);
 
@@ -427,7 +433,6 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void copyLoopBuildQueue
 	(
-		DequeButtonTexte& citieMapBuildQueue,
 		unsigned int index
 	);
 
@@ -527,8 +532,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void afficherCityBuildToQueue
 	(
-		MapTexte& citieMap,
-		DequeButtonTexte& citieMapBuildQueue
+		MapTexte& citieMap
 	);
 	 
 	
@@ -551,7 +555,10 @@ public:
 	inline virtual unsigned int GETnbstructurebuild()const		{ return _nbstructurebuild; };
 	inline virtual double GETfoodStock()const					{ return _foodStock; };
 	inline virtual double GETfoodBalance()const					{ return _foodBalance; };
-	inline virtual std::deque<build>& GETbuildQueue()			{ return _buildQueue; };
+	inline virtual double GETfoodSurplusPreviousTurn()const		{ return _foodSurplusPreviousTurn; };
+	inline virtual double GETgoldBalance()const					{ return _goldBalance; };
+	inline virtual conversionSurplus_Type GETconversionToApply()const		{ return _conversionToApply; };
+	inline virtual cityBuildQueue& GETbuildQueue()				{ return _buildQueue; };
 
 	inline virtual void SETimage(std::string image)							{ _image = image; };
 	inline virtual void SETname(std::string name)							{ _name = name; };
@@ -567,6 +574,9 @@ public:
 	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild)	{ _nbstructurebuild = nbstructurebuild; };
 	inline virtual void SETfoodStock(double foodStock)						{ _foodStock = foodStock; };
 	inline virtual void SETfoodBalance(double foodBalance)					{ _foodBalance = foodBalance; };
+	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn)		{ _foodSurplusPreviousTurn = foodSurplusPreviousTurn; };
+	inline virtual void SETgoldBalance(double goldBalance)					{ _goldBalance = goldBalance; };
+	inline virtual void SETconversionToApply(conversionSurplus_Type type)	{ _conversionToApply = type; };
 
 	
 private:
@@ -598,7 +608,7 @@ private:
 
 	conversionSurplus_Type _conversionToApply;
 
-	std::deque<build> _buildQueue;
+	cityBuildQueue _buildQueue;
 };
 
 #endif /* City_H */

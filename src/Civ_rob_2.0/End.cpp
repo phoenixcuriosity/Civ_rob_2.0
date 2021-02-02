@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.1
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -78,6 +78,7 @@ void End::exitError
 	LoadConfig::logfileconsole("[ERROR]___: " + msg);
 	deleteAll(*ptrSysinfo);
 	LoadConfig::logfileconsole("[ERROR]___: Last msg before exitError : " + msg);
+	logger->close();
 	exit(EXIT_FAILURE);
 }
 
@@ -146,6 +147,7 @@ void End::deleteAll
 	deleteTexte(sysinfo.allTextes.newGame, "Texte");
 	deleteTexte(sysinfo.allTextes.mainMap, "Texte");
 	deleteTexte(sysinfo.allTextes.cityMap, "Texte");
+	Texte::deleteStaticVectorTextes();
 
 	/* *********************************************************
 	 *					END delete Texte*					   *
@@ -161,7 +163,6 @@ void End::deleteAll
 	deleteButtonTexte(sysinfo.allButton.reload, "Button");
 	deleteButtonTexte(sysinfo.allButton.mainMap, "Button");
 	deleteButtonTexte(sysinfo.allButton.cityMap, "Button");
-	deleteButtonTexte(sysinfo.allButton.cityMapBuildQueue, "Button");
 
 	/* *********************************************************
 	 *				 END delete Button*						   *
@@ -207,7 +208,6 @@ void End::deleteAll
 
 	LoadConfig::logfileconsole("[INFO]___: SDL_Quit Success");
 	LoadConfig::logfileconsole("[INFO]___:________PROGRAMME FINISH________");
-
 	logger->close();
 }
 
@@ -261,6 +261,35 @@ void End::deleteTexte
 		{
 			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n.second->GETname() + " Success");
 			delete n.second;
+		}
+		else
+		{
+			/* N/A */
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : deleteTexte																   */
+/* ROLE : Destruction des allocations dynamiques de la unordered_map				   */
+/* INPUT/OUTPUT : std::unordered_map<std::string, Texture*>& unmap : map Texte		   */
+/* INPUT : const std::string name : name de la Texture								   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void End::deleteTexte
+(
+	std::vector<Texte*>& staticIndexVectorTextes,
+	const std::string& name
+)
+{
+	for (const auto& n : staticIndexVectorTextes)
+	{
+		if (nullptr != n)
+		{
+			LoadConfig::logfileconsole("[INFO]___: Delete " + name + " name = " + n->GETname() + " Success");
+			delete n;
 		}
 		else
 		{

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.1
-	file version : 1.2
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -119,6 +119,21 @@ public:
 	static void deleteTexte
 	(
 		std::unordered_map<std::string, Texte*>& unmap,
+		const std::string& name
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteTexte																   */
+	/* ROLE : Destruction des allocations dynamiques de la unordered_map				   */
+	/* INPUT/OUTPUT : std::unordered_map<std::string, Texture*>& unmap : map Texte		   */
+	/* INPUT : const std::string name : name de la Texture								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void deleteTexte
+	(
+		std::vector<Texte*>& staticIndexVectorTextes,
 		const std::string& name
 	);
 

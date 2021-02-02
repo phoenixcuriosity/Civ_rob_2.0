@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.21.1.1
-	file version : 1.10
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,8 @@
  *				Include Standard						   *
  ********************************************************* */
 
+#define NOMINMAX // forbid to redifine std::max/min by Windows.h and Visual Studio
+
 #include <iostream>
 #include <ostream>
 #include <fstream>
@@ -46,7 +48,7 @@
 #include <stdexcept>
 #include "wtypes.h"
 #include <direct.h>
-
+#include <algorithm>
 
 /* *********************************************************
  *						Include SDL						   *
@@ -86,6 +88,8 @@ typedef struct Sysinfo Sysinfo;
 typedef struct randomPos randomPos;
 typedef struct GoldStats GoldStats;
 typedef struct OnOffDisplay OnOffDisplay;
+typedef struct build build;
+typedef struct cityBuildQueue cityBuildQueue;
 
 /* *********************************************************
  *						Classes							   *
@@ -113,6 +117,7 @@ class LoadConfig;
 typedef std::vector<std::vector<Tile>>					MatriceTile;
 typedef std::unordered_map<std::string, Texture*>		MapTexture;
 typedef std::unordered_map<std::string, Texte*>			MapTexte;
+typedef std::vector<Texte*>								VectorTexte;
 typedef std::unordered_map<std::string, ButtonTexte*>	MapButtonTexte;
 typedef std::deque<ButtonTexte*>						DequeButtonTexte;
 typedef std::vector<Player*>							TabPlayer;
@@ -121,6 +126,9 @@ typedef std::vector<Player*>							TabPlayer;
 
 /* Define that the compared strings are identical */
 #define IDENTICAL_STRINGS 0
+
+/* Define 0 for module use */
+#define MODULO_ZERO 0
 
 #endif
 

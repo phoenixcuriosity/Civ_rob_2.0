@@ -18,7 +18,7 @@
 
 		<SaveInfo>save/saveInfo.txt</SaveInfo>
 		<SaveMaps>saveMaps.txt</SaveMaps>
-		<SavePlayers>savePlayers.txt</SavePlayers>
+		<SavePlayers>savePlayers.xml</SavePlayers>
 	</FilePaths>
 
 

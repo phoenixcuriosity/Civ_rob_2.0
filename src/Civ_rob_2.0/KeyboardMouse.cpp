@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.6.1
-	file version : 1.19
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -2223,11 +2223,12 @@ void KeyboardMouse::mouse
 	{
 		cliqueGauche(sysinfo, event);
 	}
-	else if (
-				SDL_BUTTON_RIGHT == event.button.button
-				&&
-				State_Type::STATEmainMap == sysinfo.var.statescreen
-			)
+	else
+	if (
+			SDL_BUTTON_RIGHT == event.button.button
+			&&
+			State_Type::STATEmainMap == sysinfo.var.statescreen
+	   )
 	{
 		cliqueDroit(sysinfo);
 	}
@@ -2314,8 +2315,7 @@ bool KeyboardMouse::checkSTATEmainmap
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
 		sysinfo.var.cinState = CinState_Type::cinTitleScreen;
-		SaveReload::saveMaps(sysinfo);
-		SaveReload::savePlayer(sysinfo);
+		SaveReload::save(sysinfo);
 		resetButtonOn(sysinfo);
 		LoadConfig::logfileconsole("__________________________");
 		IHM::titleScreen(sysinfo);
@@ -2363,6 +2363,15 @@ bool KeyboardMouse::checkSTATEmainmap
 			if (sysinfo.allButton.player[n.second->GETname()]
 					->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 			{
+
+				Unit::resetShowWhenChangePU
+				(
+					sysinfo.tabplayer,
+					sysinfo.var.s_player.selectplayer,
+					sysinfo.var.s_player.selectunit
+				);
+
+
 				sysinfo.allButton.player[n.second->GETname()]->changeOn();
 				if (sysinfo.var.s_player.selectplayer != (int)i)
 					sysinfo.var.s_player.selectplayer = (int)i;
@@ -2480,7 +2489,10 @@ bool KeyboardMouse::checkSTATEreload
 	if (sysinfo.allButton.reload["Load"]
 			->searchButtonTexte(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y()))
 	{
-		SaveReload::reload(sysinfo);
+		if (sysinfo.var.save.GETcurrentSave() > NO_CURRENT_SAVE_SELECTED)
+		{
+			SaveReload::reload(sysinfo);
+		}
 		return true;
 	}
 	if (sysinfo.allButton.reload["Remove"]
@@ -2500,7 +2512,7 @@ bool KeyboardMouse::checkSTATEreload
 				->changeOn();
 			sysinfo.var.save.SETcurrentSave(sysinfo.var.save.GETtabSave()[j]);
 			sysinfo.file.saveMaps = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/saveMaps.txt";
-			sysinfo.file.savePlayers = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/savePlayer.txt";
+			sysinfo.file.savePlayers = "save/" + std::to_string(sysinfo.var.save.GETtabSave()[j]) + "/savePlayers.xml";
 			IHM::reloadScreen(sysinfo);
 			return true;
 		}
@@ -2557,16 +2569,24 @@ bool KeyboardMouse::checkSTATEcitiemap
 		return true;
 	}
 
-	for (unsigned int i(0);i < sysinfo.allButton.cityMapBuildQueue.size(); i++)
+	for (
+			unsigned int i(0);
+			i < sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]->GETtheCity(sysinfo.var.s_player.selectCity)->GETbuildQueue().buildQueue.size();
+			i++
+		)
 	{
 		if	(
-				sysinfo.allButton.cityMapBuildQueue[i]->searchButtonTexte
-					(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y())
+				sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
+					->GETtheCity(sysinfo.var.s_player.selectCity)
+						->GETbuildQueue()
+							.cityMapBuildQueue[i]
+								->searchButtonTexte
+						(sysinfo.var.statescreen, sysinfo.var.mouse.GETmouse_x(), sysinfo.var.mouse.GETmouse_y())
 			)
 		{
 			sysinfo.tabplayer[sysinfo.var.s_player.selectplayer]
 				->GETtheCity(sysinfo.var.s_player.selectCity)
-					->removeBuildToQueue(sysinfo.allButton.cityMapBuildQueue, i);
+					->removeBuildToQueue(i);
 			return true;
 		}
 	}
@@ -2584,11 +2604,10 @@ bool KeyboardMouse::checkSTATEcitiemap
 						->addBuildToQueue
 							(
 								{
-									sysinfo.var.s_player.tabUnit_Template[i].workToBuild,
 									sysinfo.var.s_player.tabUnit_Template[i].name,
-									build_Type::unit 
+									build_Type::unit,
+									sysinfo.var.s_player.tabUnit_Template[i].workToBuild
 								},
-								sysinfo.allButton.cityMapBuildQueue,
 								sysinfo.screen.renderer,
 								sysinfo.allTextures.font
 							);

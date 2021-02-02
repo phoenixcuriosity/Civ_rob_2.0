@@ -25,6 +25,9 @@
     <Filter Include="Fichiers d%27en-tête\Classes\Misc">
       <UniqueIdentifier>{3eef87d9-77e3-420f-b5cb-a28e9f3c748f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\IHMConst">
+      <UniqueIdentifier>{ac3a79ee-eca6-4caf-9e3b-940dea59cf93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Civ_rob_2.0\City.h">
@@ -66,9 +69,6 @@
     <ClInclude Include="src\tinyxml2\tinyxml2.h">
       <Filter>Fichiers d%27en-tête\Classes\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="src\Civ_rob_2.0\End.h">
-      <Filter>Fichiers d%27en-tête\Classes</Filter>
-    </ClInclude>
     <ClInclude Include="src\Civ_rob_2.0\Citizen.h">
       <Filter>Fichiers d%27en-tête\Classes</Filter>
     </ClInclude>
@@ -76,7 +76,16 @@
       <Filter>Fichiers d%27en-tête\Classes</Filter>
     </ClInclude>
     <ClInclude Include="src\Civ_rob_2.0\ConstCityIHM.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\IHMConst</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\ConstUnitIHM.h">
+      <Filter>Fichiers d%27en-tête\IHMConst</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\End.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Civ_rob_2.0\XmlConvertValue.h">
+      <Filter>Fichiers d%27en-tête\Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +132,9 @@
       <Filter>Fichiers sources\Classes</Filter>
     </ClCompile>
     <ClCompile Include="src\Civ_rob_2.0\Utility.cpp">
+      <Filter>Fichiers sources\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Civ_rob_2.0\XmlConvertValue.cpp">
       <Filter>Fichiers sources\Classes</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.6.1
-	file version : 1.15
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,50 @@
 #include "IHM.h"
 #include "LoadConfig.h"
 #include "civ_lib.h"
+#include "End.h"
+
+/* *********************************************************
+ *					  Static Var						   *
+ ********************************************************* */
+
+/* Init in main with LoadConfig::updateStaticValues -> GamePlay::getPtrTileSize */
+static unsigned int* s_tileSize;
+
+/* Init in main with LoadConfig::updateStaticValues -> GamePlay::getScreenWidth */
+static Uint16* s_screenWidth;
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getPtrTileSize															   */
+/* ROLE : Initialize ptr on tileSize from sysinfo									   */
+/* INPUT : unsigned int* const : ptr on tileSize									   */
+/* RETURNED VALUE : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void GamePlay::getPtrTileSize
+(
+	 unsigned int* const ptrtileSize
+)
+{
+	s_tileSize = ptrtileSize;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getPtrScreenWidth															   */
+/* ROLE : Initialize ptr on screenWidth from sysinfo								   */
+/* INPUT : Uint16* const : ptr on screenWidth										   */
+/* RETURNED VALUE : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void GamePlay::getPtrScreenWidth
+(
+	Uint16* const ptrscreenWidth
+)
+{
+	s_screenWidth = ptrscreenWidth;
+}
+
 
 /* *********************************************************
  *			START GamePlay::STATIC::NEW-GAME			   *
@@ -97,17 +141,9 @@ void GamePlay::newGame
 	{
 		sysinfo.var.waitEvent = true;
 
-		Texte::writeTexte
-		(sysinfo.screen.renderer,
-			sysinfo.allTextures.font,
-			Texte_Type::blended,
-			"Name of player nb:" + std::to_string(i),
-			{ 255, 0, 0, 255 },
-			NoColor,
-			24, 
-			sysinfo.screen.screenWidth / 2,
-			sysinfo.var.tempY,
-			no_angle, Center_Type::center_x);
+		Texte::writeTexte(sysinfo.screen.renderer, sysinfo.allTextures.font, Index_staticIndexVectorTextes::PLAYER_NAME,
+			Texte_Type::blended, "Name of player nb:" + std::to_string(i), { 255, 0, 0, 255 }, NoColor,
+			24, sysinfo.screen.screenWidth / 2, sysinfo.var.tempY, nonTransparent, no_angle, Center_Type::center_x);
 
 		SDL_RenderPresent(sysinfo.screen.renderer);
 
@@ -141,8 +177,7 @@ void GamePlay::newGame
 	 *							Save						   *
 	 ********************************************************* */
 
-	SaveReload::saveMaps(sysinfo);
-	SaveReload::savePlayer(sysinfo);
+	SaveReload::save(sysinfo);
 
 	/* *********************************************************
 	 *					 Button Creation					   *
@@ -151,28 +186,11 @@ void GamePlay::newGame
 	/* ---------------------------------------------------------------------- */
 	/* Création des boutons pour séléctionner les joueurs			 		  */
 	/* ---------------------------------------------------------------------- */
-	int initspacename(200), spacename(24);
+	
 	sysinfo.var.statescreen = State_Type::STATEmainMap;
 	sysinfo.var.cinState = CinState_Type::cinMainMap;
-	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
-	{
-		ButtonTexte::createButtonTexte
-		(	sysinfo.screen.renderer,
-			sysinfo.allTextures.font,
-			sysinfo.var.statescreen,
-			sysinfo.var.select,
-			sysinfo.allButton.player,
-			Texte_Type::shaded,
-			sysinfo.var.s_player.tabPlayerName[i],
-			{ 127, 255, 127, 255 },
-			{ 64, 64, 64, 255 },
-			16,
-			0,
-			initspacename += spacename,
-			nonTransparent,
-			no_angle);
-	}
-
+	
+	GamePlay::createPlayerButton(sysinfo);
 	
 	sysinfo.screen.enableFPS = true;
 	sysinfo.screen.fpsTimer.start();
@@ -206,8 +224,8 @@ void GamePlay::groundGen
 			
 			map.maps[i][j].indexX = i + (Uint8)((screenWidth / 10) / map.tileSize);
 			map.maps[i][j].indexY = j;
-			map.maps[i][j].tile_x = map.tileSize * i + (screenWidth / 10);
-			map.maps[i][j].tile_y = map.tileSize * j;
+			map.maps[i][j].tile_x = convertIndexToPosX(i);
+			map.maps[i][j].tile_y = convertIndexToPosY(j);
 			
 
 			/* *********************************************************
@@ -226,7 +244,7 @@ void GamePlay::groundGen
 					Ground_Type::deepwater,
 					(std::string)"deepwater.bmp",
 					GroundSpec_Type::nothing,
-					EMPTY_STRING,
+					GROUNDSPEC_NOTHING,
 					0,
 					0,
 					0
@@ -342,7 +360,7 @@ void GamePlay::mapBorders
 			Ground_Type::water,
 			(std::string)"water.bmp",
 			GroundSpec_Type::nothing,
-			EMPTY_STRING,
+			GROUNDSPEC_NOTHING,
 			1,
 			1,
 			1);
@@ -427,7 +445,7 @@ void GamePlay::mapIntern
 		else if (randomspecgrass > 32)
 		{
 			maps[i][j].tile_spec = GroundSpec_Type::nothing;
-			maps[i][j].tile_stringspec = EMPTY_STRING;
+			maps[i][j].tile_stringspec = GROUNDSPEC_NOTHING;
 			maps[i][j].food = 2;
 			maps[i][j].work = 1;
 			maps[i][j].gold = 1;
@@ -490,7 +508,7 @@ void GamePlay::mapIntern
 					Ground_Type::water,
 					(std::string)"water.bmp",
 					GroundSpec_Type::nothing,
-					EMPTY_STRING,
+					GROUNDSPEC_NOTHING,
 					1,
 					1,
 					1);
@@ -540,7 +558,7 @@ void GamePlay::mapIntern
 					Ground_Type::water,
 					(std::string)"water.bmp",
 					GroundSpec_Type::nothing,
-					EMPTY_STRING,
+					GROUNDSPEC_NOTHING,
 					1,
 					1,
 					1);
@@ -590,7 +608,7 @@ void GamePlay::mapIntern
 					Ground_Type::water,
 					(std::string)"water.bmp",
 					GroundSpec_Type::nothing,
-					EMPTY_STRING,
+					GROUNDSPEC_NOTHING,
 					1,
 					1,
 					1);
@@ -657,35 +675,14 @@ void GamePlay::newGameSettlerSpawn
 	/* avec les settlers de départ											  */
 	/* ---------------------------------------------------------------------- */
 	unsigned int selectunit(0);
-	bool continuer(true);
-	for (unsigned int p(0); (p < tabUnit_Template.size()) && (continuer); p++)
-	{
-		if (tabUnit_Template[p].name.compare("settler") == 0)
-		{
-			selectunit = p;
-			continuer = false;
-		}
-		else
-		{
-			/* N/A */
-		}
-	}
+	selectunit = Unit::searchUnitByName("settler", tabUnit_Template);
 
 	std::vector<randomPos> tabRandom;
 	for (unsigned int i(0); i < tabplayer.size(); i++)
 	{
-		try
-		{
-			makeRandomPosTab(map, tabRandom);
-		}
-		catch (const std::string& msg)
-		{
-			randomPos RandomPOS;
-			makeRandomPos(RandomPOS, map.maps, map.toolBarSize, map.tileSize);
-			tabRandom.push_back(RandomPOS);
-			LoadConfig::logfileconsole(msg);
-			throw("[ERROR]___: [Catch]___: makeRandomPosTab, Too many Iterations : No Critical Error -> Continue");
-		}
+
+		makeRandomPosTab(map, tabRandom);
+
 		tabplayer[i]->addUnit
 		(	"settler",
 			tabRandom[i].x,
@@ -716,53 +713,26 @@ void GamePlay::makeRandomPosTab
 {
 	randomPos RandomPOS;
 	bool continuer(true);
-	unsigned int nbConditionCheck(0);
 	unsigned int iteration(0);
 
 	while (continuer)
 	{
+		if (iteration >= MAX_RANDOM_POS_ITERATION)
+		{
+#ifdef _DEBUG_MODE
+			End::exitError("[ERROR]___: makeRandomPosTab, Too many Iterations");
+#endif // DEBUG_MODE
+			/*
+			TODO : remove existing settlers and players 
+				 : return to main menu with error message "too many player with this map size"
+			*/
+		}
 		iteration++;
-		if (iteration > MAX_RANDOM_POS_ITERATION)
-		{
-			throw("[ERROR]___: makeRandomPosTab, Too many Iterations");
-		}
-		else
-		{
-			/* N/A */
-		}
 
 		makeRandomPos(RandomPOS, map.maps, map.toolBarSize, map.tileSize);
 		if (conditionground(map.maps, RandomPOS))
 		{
-			if (tabRandom.size() > 1)
-			{
-				nbConditionCheck = 0;
-				for (unsigned int i = 0; (i < tabRandom.size()) && (continuer); i++)
-				{
-					if (conditionspace(RandomPOS, tabRandom, map.tileSize, i))
-					{
-						nbConditionCheck++;
-						if (nbConditionCheck == tabRandom.size())
-						{
-							continuer = false;
-						}
-						else
-						{
-							/* N/A */
-						}
-					}
-					else
-					{
-						/* N/A */
-					}
-				}
-			}
-			else
-				continuer = false;
-		}
-		else
-		{
-			/* N/A */
+			continuer = !conditionspace(RandomPOS, tabRandom);
 		}
 	}
 	tabRandom.push_back(RandomPOS);
@@ -808,29 +778,27 @@ void GamePlay::makeRandomPos
 bool GamePlay::conditionspace
 (	
 	const randomPos& RandomPOS,
-	const std::vector<randomPos>& tabRandom,
-	unsigned int tileSize,
-	unsigned int i
+	const std::vector<randomPos>& tabRandom
 )
 {
-	int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
+	int spaceBetweenSettler(*s_tileSize * MIN_SPACE_BETWEEN_SETTLER);
 
-	if	(
-			RandomPOS.x < (tabRandom[i].x - spaceBetweenSettler)
-			||
-			RandomPOS.x >(tabRandom[i].x + spaceBetweenSettler)
-			||
-			RandomPOS.y < (tabRandom[i].y - spaceBetweenSettler)
-			||
-			RandomPOS.y >(tabRandom[i].y + spaceBetweenSettler)
-		)
+	for (unsigned int i(0); i < tabRandom.size(); i++)
 	{
-		return true;
+		if	(
+				(RandomPOS.x >= (tabRandom[i].x - spaceBetweenSettler)) /* West */
+				&&
+				(RandomPOS.x <= (tabRandom[i].x + spaceBetweenSettler)) /* East */
+				&&
+				(RandomPOS.y >= (tabRandom[i].y - spaceBetweenSettler)) /* North */
+				&&
+				(RandomPOS.y <= (tabRandom[i].y + spaceBetweenSettler)) /* South */
+			)
+		{
+			return false;
+		}
 	}
-	else
-	{
-		return false;
-	}	
+	return true;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -849,33 +817,158 @@ bool GamePlay::conditionground
 	const randomPos& RandomPOS
 )
 {
-	for (unsigned int i(0); i < maps.size(); i++) 
+	unsigned int x(convertPosXToIndex(RandomPOS.x));
+	unsigned int y(convertPosYToIndex(RandomPOS.y));
+
+	if	(
+			assertRangeMapIndex(x, maps.size())
+			&&
+			assertRangeMapIndex(y, maps[x].size())
+		)
 	{
-		for (unsigned int j(0); j < maps[i].size(); j++) 
+		if	(
+				maps[x][y].tile_ground
+				==
+				Ground_Type::grass
+			)
 		{
-			if	(
-					maps[i][j].tile_x == RandomPOS.x
-					&&
-					maps[i][j].tile_y == RandomPOS.y
-				) 
-			{
-				if (maps[i][j].tile_ground == Ground_Type::grass)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}	
-			}
-			else
-			{
-				/* N/A */
-			}
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
-	return false;
+	else
+	{
+		throw("[ERROR]___: GamePlay::conditionground : assertRangeMapIndex == false");
+	}
 }
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : convertIndexToPosX														   */
+/* ROLE : Convert the index of the matrix Map to a position on X axis in pixel		   */
+/* ROLE : Offset by toolBar size													   */
+/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
+/* INPUT : unsigned int index : index to convert									   */
+/* RETURNED VALUE : unsigned int : position on X axis in pixel						   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+unsigned int GamePlay::convertIndexToPosX
+(
+	unsigned int index
+)
+{
+	return *s_tileSize * index + (*s_screenWidth / 10);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : convertPosXToIndex														   */
+/* ROLE : Convert position on X axis in pixel of the matrix Map to a index			   */
+/* ROLE : Offset by toolBar size													   */
+/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
+/* INPUT : unsigned int index : position on X axis in pixel	to convert				   */
+/* RETURNED VALUE : unsigned int : index											   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+unsigned int GamePlay::convertPosXToIndex
+(
+	unsigned int posX
+)
+{
+	return (posX - (*s_screenWidth / 10)) / *s_tileSize;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : convertIndexToPosY														   */
+/* ROLE : Convert the index of the matrix Map to a position on Y axis in pixel		   */
+/* ROLE : Use 1 input static const ptr : s_tileSize									   */
+/* INPUT : unsigned int index : index to convert									   */
+/* RETURNED VALUE : unsigned int : position on Y axis in pixel						   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+unsigned int GamePlay::convertIndexToPosY
+(
+	unsigned int index
+)
+{
+	return *s_tileSize * index;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : convertPosXToIndex														   */
+/* ROLE : Convert position on Y axis in pixel of the matrix Map to a index			   */
+/* ROLE : Use 1 input static const ptr : s_tileSize									   */
+/* INPUT : unsigned int index : position on Y axis in pixel	to convert				   */
+/* RETURNED VALUE : unsigned int : index											   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+unsigned int GamePlay::convertPosYToIndex
+(
+	unsigned int posY
+)
+{
+	return posY / *s_tileSize;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : assertRangeMapIndex														   */
+/* ROLE : assert that the index provided is between 0 and size						   */
+/* INPUT : unsigned int indexToTest : index to compare to size						   */
+/* INPUT : size_t size : reference size								 				   */
+/* RETURNED VALUE : bool : false -> indexToTest is equal or > than size				   */
+/* RETURNED VALUE : bool : true -> indexToTest is <	than size						   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+bool GamePlay::assertRangeMapIndex
+(
+	unsigned int indexToTest,
+	size_t size
+)
+{
+	return indexToTest < size ? true : false;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : createPlayerButton														   */
+/* ROLE : Create a number of Buttons equal to the number of player					   */
+/* INPUT/OUTPUT : struct Sysinfo& : Global structure								   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void GamePlay::createPlayerButton
+(
+	Sysinfo& sysinfo
+)
+{
+	int initspacename(200), spacename(24);
+
+	for (unsigned int i(0); i < sysinfo.tabplayer.size(); i++)
+	{
+		ButtonTexte::createButtonTexte
+		(sysinfo.screen.renderer,
+			sysinfo.allTextures.font,
+			sysinfo.var.statescreen,
+			sysinfo.var.select,
+			sysinfo.allButton.player,
+			Texte_Type::shaded,
+			sysinfo.var.s_player.tabPlayerName[i],
+			{ 127, 255, 127, 255 },
+			{ 64, 64, 64, 255 },
+			16,
+			0,
+			initspacename += spacename,
+			nonTransparent,
+			no_angle);
+	}
+}
+
 
 /* *********************************************************
  *			 END GamePlay::STATIC::NEW-GAME				   *
@@ -924,8 +1017,7 @@ void GamePlay::nextTurn
 				->computeWorkToBuild
 					(
 						sysinfo.tabplayer[i],
-						sysinfo.var.s_player.tabUnit_Template,
-						sysinfo.allButton.cityMapBuildQueue
+						sysinfo.var.s_player.tabUnit_Template
 					);
 
 			/* Gold */

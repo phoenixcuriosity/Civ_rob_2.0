@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.21.1.2
-	file version : 1.29
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.0.0
+	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -104,9 +104,10 @@ void IHM::refreshNbPlayerTxt
 	const Var& var
 )
 {
-	Texte::writeTexte(renderer, font,
+	Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::NB_PLAYER,
 		Texte_Type::shaded, "Number of player(s)" + std::to_string(var.nbPlayer),
-		{ 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24, var.tempX, var.tempY, no_angle, Center_Type::center_x);
+		{ 255, 127, 127, 255 }, { 64, 64, 64, 255 }, 24,
+		var.tempX, var.tempY, nonTransparent, no_angle, Center_Type::center_x);
 
 	SDL_RenderPresent(renderer);
 }
@@ -130,15 +131,15 @@ void IHM::refreshNamePlayerTxt
 {
 	if (!var.tempPlayerName.empty())
 	{
-		Texte::writeTexte(renderer, font,
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_NAME,
 			Texte_Type::shaded, var.tempPlayerName, { 255, 127, 127, 255 }, { 64, 64, 64, 255 },
-			24, var.tempX + 12, var.tempY, no_angle, Center_Type::center_x);
+			24, var.tempX + 12, var.tempY, nonTransparent, no_angle, Center_Type::center_x);
 	}
 	else
 	{
-		Texte::writeTexte(renderer, font,
+		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_NAME,
 			Texte_Type::shaded, "_", { 255, 127, 127, 255 }, { 64, 64, 64, 255 },
-			24, var.tempX + 12, var.tempY, no_angle, Center_Type::center_x);
+			24, var.tempX + 12, var.tempY, nonTransparent, no_angle, Center_Type::center_x);
 	}
 	SDL_RenderPresent(renderer);
 }
@@ -249,17 +250,9 @@ void IHM::alwaysrender
 		break;
 	}
 	Texte::writeTexte
-	(sysinfo.screen.renderer,
-		sysinfo.allTextures.font,
-		Texte_Type::blended,
-		std::to_string(sysinfo.screen.avgFPS),
-		{ 0, 64, 255, 255 },
-		NoColor,
-		24,
-		sysinfo.screen.screenWidth / 2,
-		50,
-		no_angle,
-		Center_Type::center_x);
+	(sysinfo.screen.renderer, sysinfo.allTextures.font, Index_staticIndexVectorTextes::FPS_MAIN_MAP, Texte_Type::blended,
+		std::to_string(sysinfo.screen.avgFPS), { 0, 64, 255, 255 }, NoColor,
+		24, sysinfo.screen.screenWidth / 2, 50, nonTransparent, no_angle, Center_Type::center_x);
 
 	/* ### Don't put code below here ### */
 
@@ -309,16 +302,9 @@ void IHM::mainmap
 	}
 
 	Texte::writeTexte
-	(sysinfo.screen.renderer,
-		sysinfo.allTextures.font,
-		Texte_Type::blended,
-		std::to_string(sysinfo.var.nbturn),
-		{ 0, 64, 255, 255 },
-		NoColor,
-		24,
-		80,
-		850,
-		no_angle);
+	(sysinfo.screen.renderer, sysinfo.allTextures.font,Index_staticIndexVectorTextes::NB_TURN,Texte_Type::blended,
+		std::to_string(sysinfo.var.nbturn), { 0, 64, 255, 255 }, NoColor,
+		24, 80, 850, nonTransparent, no_angle);
 
 	/* *********************************************************
 	 *					END Texte							   *
