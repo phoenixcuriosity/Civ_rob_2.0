@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.14
+	last modification on this file on version:0.22.2.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,16 +36,16 @@
  ********************************************************* */
 
 /* taille de la carte transposée dans la citiemap */
-#define INIT_SIZE_VIEW 7
-
-/* taille de l'influence de la citie initialement */
-#define INIT_SIZE_INFLUENCE 2
+#define INIT_SIZE_VIEW 9
 
 /* Population maximale dans une Citie */
 #define MAX_POP 50
 
 /* Minimal population in City */
 #define MIN_POP 1
+
+/* Minimal influence level in City */
+#define MIN_INFLUENCE_LEVEL 1
 
 /* Todo : généralisation : compter nb Citie par player dans CITIENAME.txt */
 
@@ -57,6 +57,9 @@
 
 /* Define the minimum range of emotion */
 #define SCALE_RANGE_MIN_EMOTION 0.0
+
+/* Define the mean emotion */
+#define MEAN_EMOTION ((SCALE_RANGE_MAX_EMOTION + SCALE_RANGE_MIN_EMOTION) / 2.0)
 
 /* Define the mean value of emotion range */
 #define SCALE_RANGE_MEAN_EMOTION ((abs(SCALE_RANGE_MAX_EMOTION) + abs(SCALE_RANGE_MIN_EMOTION)) / 2.0)
@@ -100,6 +103,14 @@ enum class conversionSurplus_Type : Uint8
 	GoldToFood, /* ### Not implemented as of 0.20.3.1 ### */
 	GoldToWork  /* ### Not implemented as of 0.20.3.1 ### */
 };
+
+/* Define a type to resize Units Texture between city and mainmap */
+enum class resizeUnitTexture_Type : Uint8
+{
+	mainmap,	
+	city
+};
+
 
 /* *********************************************************
  *						 Structs						   *
@@ -174,7 +185,8 @@ public:
 		unsigned int middletileY,
 		unsigned int selectplayer,
 		Map& map,
-		std::vector<Tile>& tabtile
+		std::vector<Tile>& tabtile,
+		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -189,7 +201,26 @@ public:
 	static bool initSizeInfluenceCondition
 	(
 		int o,
-		int p
+		int p,
+		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : cornerCheck																   */
+	/* ROLE : Conditions des cases de la ville à l'intérieur de zone d'influence		   */
+	/* IN : int o :	index en x															   */
+	/* IN : int p :	index en y															   */
+	/* IN : unsigned int influenceLevel : City influence level 							   */
+	/* RETURNED VALUE : bool : false -> this tile is a corner							   */
+	/* RETURNED VALUE : bool : true -> this tile is not a corner						   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static bool cornerCheck
+	(
+		int o,
+		int p,
+		unsigned int influenceLevel
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -205,6 +236,23 @@ public:
 	(
 		const std::vector<Player*>& tabplayer,
 		Var& var
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : resizeUnitTextureCity														   */
+	/* ROLE : Resize all Textures in Unit depends on resizeUnitTexture_Type				   */
+	/* OUTPUT : MapTexture& unit : Unit vector to resize								   */
+	/* INPUT : unsigned int tileSize : size for unit in case of mainmap					   */
+	/* INPUT : resizeUnitTexture_Type type : type to resize the Texture					   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static void resizeUnitTextureCity
+	(
+		MapTexture& unit,
+		unsigned int tileSize,
+		resizeUnitTexture_Type type
 	);
 	
 public:

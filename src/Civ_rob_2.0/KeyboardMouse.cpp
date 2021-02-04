@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.20
+	last modification on this file on version:0.22.2.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,6 +37,7 @@
 #include "Player.h"
 #include "Utility.h"
 #include "City.h"
+#include "ConstCityIHM.h"
 
 /* *********************************************************
  *						 Classes						   *
@@ -2266,7 +2267,16 @@ void KeyboardMouse::cliqueGauche
 		}
 		else if(TWO_CLICKS == event.button.clicks)
 		{
-			if (inspectCitie(sysinfo.tabplayer, sysinfo.var)) return;
+			if (inspectCitie(sysinfo.tabplayer, sysinfo.var))
+			{
+				City::resizeUnitTextureCity
+				(
+					sysinfo.allTextures.unit,
+					sysinfo.map.tileSize,
+					resizeUnitTexture_Type::city
+				);
+				return;
+			}
 		}
 		else
 		{
@@ -2542,6 +2552,12 @@ bool KeyboardMouse::checkSTATEcitiemap
 		sysinfo.var.statescreen = State_Type::STATEmainMap;
 		sysinfo.var.select = Select_Type::selectnothing;
 		resetButtonCitieMap(sysinfo);
+		City::resizeUnitTextureCity
+		(
+			sysinfo.allTextures.unit,
+			sysinfo.map.tileSize,
+			resizeUnitTexture_Type::mainmap
+		);
 		return true;
 	}
 	if (sysinfo.allButton.cityMap["Build"]

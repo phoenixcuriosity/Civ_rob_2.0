@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.16
+	last modification on this file on version:0.22.2.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -291,6 +291,25 @@ SDL_Rect Texture::rectangle
 	return rectangle;
 }
 
+/* ---------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------- */
+/* NAME : resizeLl																			*/
+/* ROLE : Resize the Texture by length and width with centrage								*/
+/* IN : unsigned int length : upper right corner of the Texture	/ relative to x				*/
+/* IN : unsigned int width : bottom right corner of the Texture	/ relative to y				*/
+/* RETURNED VALUE : void																	*/
+/* ---------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------- */
+void Texture::resizeLl
+(
+	unsigned int length,
+	unsigned int width
+)
+{
+	_dst.w = length;
+	_dst.h = width;
+	centrage(_dst.x, _dst.y, _dst.w, _dst.h, _center);
+}
 
 /* *********************************************************
  *				END Texture::METHODS					   *
