@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.13
+	last modification on this file on version:0.22.1.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	/* 4° : Initialisation SDL												  */
 	/*    : Initialisation des images, textes et boutons 					  */
 	/*    : Mise en place de l'Ecran titre				 					  */
-	/*    : Boucle principale : Event SDL et Affichage et countFrame	 	  */
+	/*    : Boucle principale : Event SDL et Affichage					 	  */
 	/* ---------------------------------------------------------------------- */
 
 		/* ---------------------------------------------------------------------- */
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 		IHM::titleScreen(sysinfo);
 
 		/* ---------------------------------------------------------------------- */
-		/* 4.4° : Boucle principale : Event SDL et Affichage et countFrame		  */
+		/* 4.4° : Boucle principale : Event SDL et Affichage					  */
 		/* ---------------------------------------------------------------------- */
 
 		while (sysinfo.var.continuer)
@@ -135,13 +135,7 @@ int main(int argc, char* argv[])
 			KeyboardMouse::checkCaseSDL(sysinfo);
 
 			/* ---------------------------------------------------------------------- */
-			/* 4.4.2° : countFrame													  */
-			/* ---------------------------------------------------------------------- */
-
-			IHM::countFrame(sysinfo.screen);
-
-			/* ---------------------------------------------------------------------- */
-			/* 4.4.3° : Affichage													  */
+			/* 4.4.2° : Affichage													  */
 			/* ---------------------------------------------------------------------- */
 
 			try 

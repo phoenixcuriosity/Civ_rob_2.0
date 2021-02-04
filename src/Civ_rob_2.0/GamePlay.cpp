@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.16
+	last modification on this file on version:0.22.1.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -191,9 +191,6 @@ void GamePlay::newGame
 	sysinfo.var.cinState = CinState_Type::cinMainMap;
 	
 	GamePlay::createPlayerButton(sysinfo);
-	
-	sysinfo.screen.enableFPS = true;
-	sysinfo.screen.fpsTimer.start();
 
 	/* ### Don't put code below here ### */
 

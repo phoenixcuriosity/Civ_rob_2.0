@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.17
+	last modification on this file on version:0.22.1.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -83,10 +83,6 @@ void LoadConfig::initStructs
 	sysinfo.screen.renderer = nullptr;
 	sysinfo.screen.screenWidth = 0;
 	sysinfo.screen.screenHeight = 0;
-	sysinfo.screen.enableFPS = false;
-	// sysinfo.screen.fpsTimer // N/A
-	sysinfo.screen.avgFPS = 0;
-	sysinfo.screen.countedFrames = 0;
 	
 	/* *********************************************************
 	 *					   sysinfo.file						   *
