@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.2.1
-	file version : 1.26
+	last modification on this file on version:0.22.2.2
+	file version : 1.27
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -353,7 +353,7 @@ City::City
 )
 	: _image("citie.png"),
 _name(name), _x(x), _y(y), _tile(tiles),
-_influenceLevel(2),_nbpop(MIN_POP), _atq(0), _def(0), _emotion((unsigned int)MEAN_EMOTION), _nbstructurebuild(0),
+_influenceLevel(MIN_INFLUENCE_LEVEL),_nbpop(MIN_POP), _atq(0), _def(0), _emotion((unsigned int)MEAN_EMOTION), _nbstructurebuild(0),
 _foodStock(CITY_ZERO_FOOD), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food),
 _foodSurplusPreviousTurn(CITY_ZERO_FOOD), _workBalance(0), _workSurplusPreviousTurn(0), _goldBalance(0.0),
 _conversionToApply(conversionSurplus_Type::No_Conversion)
