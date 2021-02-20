@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.2.1
-	file version : 1.9
+	last modification on this file on version:0.22.3.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -189,6 +189,7 @@ void SaveReload::savePlayer
 			tinyxml2::XMLElement* unitDefElement = xmlDoc.NewElement("Def");
 			tinyxml2::XMLElement* unitMovementElement = xmlDoc.NewElement("Movement");
 			tinyxml2::XMLElement* unitLevelElement = xmlDoc.NewElement("Level");
+			tinyxml2::XMLElement* unitMaintenanceElement = xmlDoc.NewElement("Maintenance");
 
 			unitNameElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETname().c_str());
 			unitXElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETx());
@@ -199,6 +200,7 @@ void SaveReload::savePlayer
 			unitDefElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETdef());
 			unitMovementElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETmovement());
 			unitLevelElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETlevel());
+			unitMaintenanceElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETlevel());
 
 			unitElement->InsertEndChild(unitNameElement);
 			unitElement->InsertEndChild(unitXElement);
@@ -209,6 +211,7 @@ void SaveReload::savePlayer
 			unitElement->InsertEndChild(unitDefElement);
 			unitElement->InsertEndChild(unitMovementElement);
 			unitElement->InsertEndChild(unitLevelElement);
+			unitElement->InsertEndChild(unitMaintenanceElement);
 
 			tabUnitElement->InsertEndChild(unitElement);
 			playerElement->InsertEndChild(tabUnitElement);
@@ -647,6 +650,10 @@ void SaveReload::loadUnitXML
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) End::exitError("[ERROR]___: loadPlayer : Unit->level == nullptr");
 		blankUnit->SETlevel(std::stoul(inputNode->FirstChild()->Value()));
+
+		inputNode = inputNode->NextSibling();
+		if (nullptr == inputNode) End::exitError("[ERROR]___: loadPlayer : Unit->maintenance == nullptr");
+		blankUnit->SETmaintenance(std::stoul(inputNode->FirstChild()->Value()));
 
 		blankUnitTemp =
 			sysinfo.var.s_player.tabUnit_Template

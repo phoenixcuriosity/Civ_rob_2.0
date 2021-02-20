@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.14
+	last modification on this file on version:0.22.3.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -124,6 +124,7 @@ struct Unit_Template
 	unsigned int level = 0;
 	unsigned int nbturnToBuild = 0;
 	double workToBuild = 0.0;
+	double maintenance = 0.0;
 };
 
 /* *********************************************************
@@ -338,7 +339,8 @@ public:
 		unsigned int atq,
 		unsigned int def,
 		unsigned int move,
-		unsigned int level
+		unsigned int level,
+		double maintenance
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -561,6 +563,7 @@ public:
 	inline int GETmovement()					const { return _movement; };
 	inline int GETlevel()						const { return _level; };
 	inline bool GETalive()						const { return _alive; };
+	inline double GETmaintenance()				const { return _maintenance; }
 	inline unsigned int GETblit()				const { return _blit; };
 	inline bool GETshow()						const { return _show; };
 	inline bool GETshowStats()					const { return _showStats; };
@@ -581,6 +584,7 @@ public:
 	inline void SETmovement(int movement)							{ _movement = movement; };
 	inline void SETlevel(int level)									{ _level = level; };
 	inline void SETalive(bool alive)								{ _alive = alive; };
+	inline void SETmaintenance(double maintenance)					{ _maintenance = maintenance; }
 	inline void SETblit(unsigned int blit)							{ _blit = blit; };
 	inline void SETshow(bool show)									{ _show = show; };
 	inline void SETshowStats(bool showStats)						{ _showStats = showStats; };
@@ -606,6 +610,8 @@ private:
 	int _movement;
 	int _level;
 	bool _alive;
+
+	double _maintenance;
 
 	unsigned int _blit;
 	bool _show;

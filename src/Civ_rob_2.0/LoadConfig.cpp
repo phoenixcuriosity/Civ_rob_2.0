@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.1.0
-	file version : 1.18
+	last modification on this file on version:0.22.3.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -439,7 +439,8 @@ void LoadConfig::loadUnitAndSpec
 						* s_Def("Def"),
 						* s_Mouvement("Mouvement"),
 						* s_Level("Level"),
-						* s_WorkToBuild("WorkToBuild");
+						* s_WorkToBuild("WorkToBuild"),
+						* s_Maintenance("Maintenance");
 
 	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
 	Unit_Template currentUnit;
@@ -455,6 +456,7 @@ void LoadConfig::loadUnitAndSpec
 		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
 		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
 		node->FirstChildElement(s_WorkToBuild)->QueryDoubleText((double*)&currentUnit.workToBuild);
+		node->FirstChildElement(s_Maintenance)->QueryDoubleText((double*)&currentUnit.maintenance);
 
 		tabUnit_Template.push_back(currentUnit);
 

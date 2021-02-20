@@ -11,6 +11,7 @@
 		<Mouvement>5</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>
 	<Unit>
 		<Name>biter</Name>
@@ -21,6 +22,7 @@
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>5</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>bombardier</Name>
@@ -31,6 +33,7 @@
 		<Mouvement>10</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>75</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>car</Name>
@@ -41,6 +44,7 @@
 		<Mouvement>5</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>25</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_1</Name>
@@ -51,6 +55,7 @@
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>10</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_2</Name>
@@ -61,6 +66,7 @@
 		<Mouvement>2</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>ouvrier_tier_3</Name>
@@ -71,6 +77,7 @@
 		<Mouvement>3</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>200</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>
 	<Unit>
 		<Name>robot</Name>
@@ -81,6 +88,7 @@
 		<Mouvement>3</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>rocket</Name>
@@ -91,6 +99,7 @@
 		<Mouvement>100</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>200</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>rover</Name>
@@ -101,6 +110,7 @@
 		<Mouvement>2</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>22</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>satellite</Name>
@@ -111,6 +121,7 @@
 		<Mouvement>100</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>100</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>
 	<Unit>
 		<Name>settler</Name>
@@ -121,6 +132,7 @@
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>12</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>spitter</Name>
@@ -131,6 +143,7 @@
 		<Mouvement>1</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>10</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>
 	<Unit>
 		<Name>tank</Name>
@@ -141,6 +154,7 @@
 		<Mouvement>3</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 	<Unit>
 		<Name>transport_plan</Name>
@@ -151,6 +165,7 @@
 		<Mouvement>10</Mouvement>
 		<Level>1</Level>
 		<WorkToBuild>40</WorkToBuild>
+		<Maintenance>1</Maintenance>
 	</Unit>	
 
 

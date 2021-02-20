@@ -179,10 +179,11 @@ void Player::addUnit
 	unsigned int atq,
 	unsigned int def,
 	unsigned int move,
-	unsigned int level
+	unsigned int level,
+	double maintenance
 ) 
 {
-	_tabUnit.push_back(new Unit(name, x, y, movementType, life, atq, def, move, level));
+	_tabUnit.push_back(new Unit(name, x, y, movementType, life, atq, def, move, level, maintenance));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -279,6 +280,8 @@ void Player::deleteCity
 /* ----------------------------------------------------------------------------------- */
 void Player::computeGold()
 {
+	computeMaintenanceCostUnit();
+
 	_goldStats.income =		_goldStats.taxIncome
 						 +  _goldStats.commerceIncome
 						 +  _goldStats.goldConversionSurplus;
@@ -289,6 +292,14 @@ void Player::computeGold()
 	_goldStats.goldBalance = _goldStats.income - _goldStats.cost;
 	_goldStats.gold += _goldStats.goldBalance;
 	
+}
+
+void Player::computeMaintenanceCostUnit()
+{
+	for (unsigned int i(0); i < _tabUnit.size(); i++)
+	{
+		_goldStats.armiesCost += _tabUnit[i]->GETmaintenance();
+	}
 }
 
 /* ----------------------------------------------------------------------------------- */

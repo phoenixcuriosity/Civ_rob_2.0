@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.8
+	last modification on this file on version:0.22.3.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -160,7 +160,8 @@ public:
 		unsigned int atq,
 		unsigned int def,
 		unsigned int move,
-		unsigned int level
+		unsigned int level,
+		double maintenance
 	);	
 
 	/* ----------------------------------------------------------------------------------- */
@@ -215,6 +216,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void computeGold();
+
+	virtual void computeMaintenanceCostUnit();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
