@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.8
+	last modification on this file on version:0.22.3.1
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -189,6 +189,7 @@ void SaveReload::savePlayer
 			tinyxml2::XMLElement* unitDefElement = xmlDoc.NewElement("Def");
 			tinyxml2::XMLElement* unitMovementElement = xmlDoc.NewElement("Movement");
 			tinyxml2::XMLElement* unitLevelElement = xmlDoc.NewElement("Level");
+			tinyxml2::XMLElement* unitMaintenanceElement = xmlDoc.NewElement("Maintenance");
 
 			unitNameElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETname().c_str());
 			unitXElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETx());
@@ -199,6 +200,7 @@ void SaveReload::savePlayer
 			unitDefElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETdef());
 			unitMovementElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETmovement());
 			unitLevelElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETlevel());
+			unitMaintenanceElement->SetText(sysinfo.tabplayer[p]->GETtheUnit(i)->GETmaintenance());
 
 			unitElement->InsertEndChild(unitNameElement);
 			unitElement->InsertEndChild(unitXElement);
@@ -209,6 +211,7 @@ void SaveReload::savePlayer
 			unitElement->InsertEndChild(unitDefElement);
 			unitElement->InsertEndChild(unitMovementElement);
 			unitElement->InsertEndChild(unitLevelElement);
+			unitElement->InsertEndChild(unitMaintenanceElement);
 
 			tabUnitElement->InsertEndChild(unitElement);
 			playerElement->InsertEndChild(tabUnitElement);
@@ -474,7 +477,7 @@ void SaveReload::loadPlayer
 			if (errCheck.compare("Name") != IDENTICAL_STRINGS) End::exitError("[ERROR]___: loadPlayer : nName != Name");
 
 			sysinfo.tabplayer.push_back(new Player(nName->FirstChild()->Value()));
-			sysinfo.var.s_player.selectplayer = sysinfo.tabplayer.size() - 1;
+			sysinfo.var.s_player.selectplayer = (int)sysinfo.tabplayer.size() - 1;
 
 			sysinfo.var.s_player.tabPlayerName.push_back(nName->FirstChild()->Value());
 
@@ -648,6 +651,10 @@ void SaveReload::loadUnitXML
 		if (nullptr == inputNode) End::exitError("[ERROR]___: loadPlayer : Unit->level == nullptr");
 		blankUnit->SETlevel(std::stoul(inputNode->FirstChild()->Value()));
 
+		inputNode = inputNode->NextSibling();
+		if (nullptr == inputNode) End::exitError("[ERROR]___: loadPlayer : Unit->maintenance == nullptr");
+		blankUnit->SETmaintenance(std::stoul(inputNode->FirstChild()->Value()));
+
 		blankUnitTemp =
 			sysinfo.var.s_player.tabUnit_Template
 			[Unit::searchUnitByName(blankUnit->GETname(), sysinfo.var.s_player.tabUnit_Template)];
@@ -678,7 +685,7 @@ void SaveReload::loadCityXML
 	tinyxml2::XMLNode* nCity
 )
 {
-	unsigned int middletileX(0), middletileY(0);
+	unsigned int middletileX(0), middletileY(0), influenceLevel(MIN_INFLUENCE_LEVEL);
 	std::vector<Tile> tabtile;
 	tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
 
@@ -710,7 +717,11 @@ void SaveReload::loadCityXML
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) End::exitError("[ERROR]___: loadCityXML : City->y == nullptr");
 		blankCity.y = std::stoul(inputNode->FirstChild()->Value());
-		
+
+		inputNode = inputNode->NextSibling();
+		if (nullptr == inputNode) End::exitError("[ERROR]___: loadCityXML : City->InfluenceLevel == nullptr");
+		influenceLevel = std::stoul(inputNode->FirstChild()->Value());
+
 		middletileX = GamePlay::convertPosXToIndex(blankCity.x);
 		middletileY = GamePlay::convertPosYToIndex(blankCity.y);
 
@@ -721,16 +732,15 @@ void SaveReload::loadCityXML
 			middletileY,
 			sysinfo.var.s_player.selectplayer,
 			sysinfo.map,
-			tabtile
+			tabtile,
+			influenceLevel
 		);
 
 		ptrPlayer->addCity(blankCity.name, blankCity.x, blankCity.y, tabtile);
 
-		ptrCity = ptrPlayer->GETtheCity(ptrPlayer->GETtabCity().size() - 1);
+		ptrCity = ptrPlayer->GETtheCity((unsigned int)ptrPlayer->GETtabCity().size() - 1);
 
-		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) End::exitError("[ERROR]___: loadCityXML : City->InfluenceLevel == nullptr");
-		ptrCity->SETinfluenceLevel(std::stoul(inputNode->FirstChild()->Value()));
+		ptrCity->SETinfluenceLevel(influenceLevel);
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) End::exitError("[ERROR]___: loadCityXML : City->NbPop == nullptr");
@@ -939,7 +949,7 @@ void SaveReload::removeSave
 
 		for (unsigned int i(0); i < sysinfo.var.save.GETnbSave(); i++)
 		{
-			if (sysinfo.var.save.GETcurrentSave() == sysinfo.var.save.GETtabSave()[i]) 
+			if (sysinfo.var.save.GETcurrentSave() == (int)sysinfo.var.save.GETtabSave()[i]) 
 			{
 				condition = true;
 				break;

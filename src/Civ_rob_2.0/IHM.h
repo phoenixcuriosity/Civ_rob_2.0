@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.2.1
-	file version : 1.15
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.1.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -163,20 +163,6 @@ public:
 	static void afficherSupertiles
 	(
 		Sysinfo&
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : countFrame																   */
-	/* ROLE : Compteur de frames durant le programme 									   */
-	/* ROLE : Début : à la fin de la fonction newGame(...)								   */
-	/* INPUT : Screen& screen : données concernant la fenetre SDL						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void countFrame
-	(
-		Screen& screen
 	);
 };
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.16
+	last modification on this file on version:0.22.3.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -477,7 +477,8 @@ void Unit::resetShowWhenChangePU
 /* ----------------------------------------------------------------------------------- */
 Unit::Unit() :	_name(EMPTY_STRING), _x(0), _y(0), _movementType(Unit_Movement_Type::ground),
 				_maxlife(100), _maxatq(10), _maxdef(5), _maxmovement(1), _maxlevel(100),
-				_life(100), _atq(10), _def(5), _movement(1), _level(1), _alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
+				_life(100), _atq(10), _def(5), _movement(1), _level(1), _maintenance(1),
+				_alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
@@ -506,11 +507,14 @@ Unit::Unit
 	unsigned int atq,
 	unsigned int def,
 	unsigned int move,
-	unsigned int level
+	unsigned int level,
+	double maintenance
 )
 	: _name(name), _x(x), _y(y), _movementType(movementType),
 	_maxlife(life), _maxatq(atq), _maxdef(def), _maxmovement(move), _maxlevel(level),
-	_life(life), _atq(atq), _def(def), _movement(move), _level(level), _alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
+	_life(life), _atq(atq), _def(def), _movement(move), _level(level),
+	_maintenance(maintenance),
+	_alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
 {
 	LoadConfig::logfileconsole("[INFO]___: Create Unit:  Success");
 }

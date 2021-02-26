@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.24
+	last modification on this file on version:0.22.3.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -52,7 +52,8 @@
 /* ----------------------------------------------------------------------------------- */
 void City::createCity
 (
-	Sysinfo& sysinfo
+	Sysinfo& sysinfo,
+	unsigned int influenceLevel
 )
 {
 	if (sysinfo.var.s_player.unitNameToMove.compare("settler") == IDENTICAL_STRINGS)
@@ -106,7 +107,8 @@ void City::createCity
 						middletileY,
 						sysinfo.var.s_player.selectplayer,
 						sysinfo.map,
-						tabtile
+						tabtile,
+						influenceLevel
 					);
 
 		/* ---------------------------------------------------------------------- */
@@ -150,15 +152,18 @@ void City::fillCitieTiles
 	unsigned int middletileY,
 	unsigned int selectplayer,
 	Map& map,
-	std::vector<Tile>& tabtile
+	std::vector<Tile>& tabtile,
+	unsigned int influenceLevel
 )
 {
 	unsigned int k(0);
+
+
 	for (int o(-(int)ceil(INIT_SIZE_VIEW / 2)); o <= (int)ceil(INIT_SIZE_VIEW / 2); o++)
 	{
 		for (int p(-(int)ceil(INIT_SIZE_VIEW / 2)); p <= (int)ceil(INIT_SIZE_VIEW / 2); p++)
 		{
-			if (initSizeInfluenceCondition(o, p))
+			if (initSizeInfluenceCondition(o, p, influenceLevel))
 			{
 				map.maps[(unsigned int)((double)middletileX + o)]
 						[(unsigned int)((double)middletileY + p)]
@@ -194,17 +199,20 @@ void City::fillCitieTiles
 bool City::initSizeInfluenceCondition
 (
 	int o,
-	int p
+	int p,
+	unsigned int influenceLevel
 )
 {
 	if	(
-			o > -(int16_t)INIT_SIZE_INFLUENCE
+			o >= (int16_t)(-(int16_t)MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
 			&&
-			o < INIT_SIZE_INFLUENCE
+			o <= (int16_t)(MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
 			&&
-			p > -(int16_t)INIT_SIZE_INFLUENCE
+			p >= (int16_t)(-(int16_t)MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
 			&&
-			p < INIT_SIZE_INFLUENCE
+			p <= (int16_t)(MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
+			&&
+			cornerCheck(o, p, influenceLevel)
 		)
 	{
 		return true;
@@ -213,6 +221,37 @@ bool City::initSizeInfluenceCondition
 	{
 		return false;
 	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : cornerCheck																   */
+/* ROLE : Conditions des cases de la ville à l'intérieur de zone d'influence		   */
+/* IN : int o :	index en x															   */
+/* IN : int p :	index en y															   */
+/* IN : unsigned int influenceLevel : City influence level 							   */
+/* RETURNED VALUE : bool : false -> this tile is a corner							   */
+/* RETURNED VALUE : bool : true -> this tile is not a corner						   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+bool City::cornerCheck
+(
+	int o,
+	int p,
+	unsigned int influenceLevel
+)
+{
+	if	(
+			MIN_INFLUENCE_LEVEL < influenceLevel
+			&&
+			std::abs(o) == std::abs(p)
+			&&
+			(MIN_INFLUENCE_LEVEL * influenceLevel) == (unsigned int)std::abs(o)
+		)
+	{
+		return false;
+	}
+	return true;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -252,6 +291,37 @@ void City::searchCityTile
 	}
 }
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : resizeUnitTextureCity														   */
+/* ROLE : Resize all Textures in Unit depends on resizeUnitTexture_Type				   */
+/* OUTPUT : MapTexture& unit : Unit vector to resize								   */
+/* INPUT : unsigned int tileSize : size for unit in case of mainmap					   */
+/* INPUT : resizeUnitTexture_Type type : type to resize the Texture					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void City::resizeUnitTextureCity
+(
+	MapTexture& unit,
+	unsigned int tileSize,
+	resizeUnitTexture_Type type
+)
+{
+	for (const auto& n : unit)
+	{
+		switch (type)
+		{
+		case resizeUnitTexture_Type::mainmap:
+			n.second->resizeLl(tileSize, tileSize);
+			break;
+		case resizeUnitTexture_Type::city:
+			n.second->resizeLl(CITY_BUILDS_SPACE_Y, CITY_BUILDS_SPACE_Y);
+			break;
+		}
+	}
+}
+
 
 /* *********************************************************
  *					END City::STATIC					   *
@@ -283,9 +353,9 @@ City::City
 )
 	: _image("citie.png"),
 _name(name), _x(x), _y(y), _tile(tiles),
-_influenceLevel(1),_nbpop(1), _atq(0), _def(0), _emotion(0), _nbstructurebuild(0),
-_foodStock(0), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food),
-_foodSurplusPreviousTurn(0), _workBalance(0), _workSurplusPreviousTurn(0), _goldBalance(0.0),
+_influenceLevel(MIN_INFLUENCE_LEVEL),_nbpop(MIN_POP), _atq(0), _def(0), _emotion((unsigned int)MEAN_EMOTION), _nbstructurebuild(0),
+_foodStock(CITY_ZERO_FOOD), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW*INIT_SIZE_VIEW) / 2)].food),
+_foodSurplusPreviousTurn(CITY_ZERO_FOOD), _workBalance(0), _workSurplusPreviousTurn(0), _goldBalance(0.0),
 _conversionToApply(conversionSurplus_Type::No_Conversion)
 {
 	_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
@@ -580,7 +650,8 @@ void City::computeWorkToBuild
 						tabUnit_Template[unitToBuild].atq,
 						tabUnit_Template[unitToBuild].def,
 						tabUnit_Template[unitToBuild].movement,
-						tabUnit_Template[unitToBuild].level
+						tabUnit_Template[unitToBuild].level,
+						tabUnit_Template[unitToBuild].maintenance
 					);
 				}
 				else
@@ -993,9 +1064,11 @@ void City::afficherCityTiles
 	Sysinfo& sysinfo
 )
 {
+	unsigned int offsetY(192), y(0);
 	/* Affichage des cases qui compose le secteur de la City */
 	for (unsigned int i(0); (i < (INIT_SIZE_VIEW * INIT_SIZE_VIEW)); i++)
 	{
+		y = _tile[i].tile_y + offsetY;
 		switch (_tile[i].tile_ground)
 		{
 		case Ground_Type::error:
@@ -1004,10 +1077,10 @@ void City::afficherCityTiles
 #endif // DEBUG_MODE
 			break;
 		case Ground_Type::grass:
-			sysinfo.allTextures.ground["grass.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
+			sysinfo.allTextures.ground["grass.bmp"]->render(_tile[i].tile_x, y);
 			break;
 		case Ground_Type::water:
-			sysinfo.allTextures.ground["water.bmp"]->render(_tile[i].tile_x, _tile[i].tile_y);
+			sysinfo.allTextures.ground["water.bmp"]->render(_tile[i].tile_x, y);
 			break;
 		case Ground_Type::deepwater:
 			/* ### As of 0.20.4.5 : deepwater cannoit be seen in a city ### */
@@ -1029,7 +1102,7 @@ void City::afficherCityTiles
 		if (GroundSpec_Type::nothing < _tile[i].tile_spec)
 		{
 			sysinfo.allTextures.groundSpec[_tile[i].tile_stringspec]
-				->render(_tile[i].tile_x, _tile[i].tile_y);
+				->render(_tile[i].tile_x, y);
 		}
 		else
 		{
@@ -1039,7 +1112,7 @@ void City::afficherCityTiles
 		if (NO_APPARTENANCE < _tile[i].appartenance)
 		{
 			sysinfo.allTextures.colorapptile["ColorPlayertile" + std::to_string(_tile[i].appartenance) + ".bmp"]
-				->render(_tile[i].tile_x, _tile[i].tile_y);
+				->render(_tile[i].tile_x, y);
 		}
 		else
 		{
@@ -1050,7 +1123,7 @@ void City::afficherCityTiles
 		{
 			if (_citizens[nbCitizen]->GETtileOccupied() == i && _citizens[nbCitizen]->GETplace())
 			{
-				_citizens[nbCitizen]->afficher(sysinfo.allTextures.cityMap, _tile[i].tile_x, _tile[i].tile_y);
+				_citizens[nbCitizen]->afficher(sysinfo.allTextures.cityMap, _tile[i].tile_x, y);
 			}
 			else
 			{

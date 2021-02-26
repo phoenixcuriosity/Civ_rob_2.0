@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.6
+	last modification on this file on version:0.22.3.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -70,6 +70,9 @@
 #define NO_APPARTENANCE -1
 
 #define GROUNDSPEC_NOTHING "void"
+
+/* The first settler to spawn in the map for each Player does not cost maintenance */
+#define MAINTENANCE_COST_1TH_SETTLER 0.0
 
 /* *********************************************************
  *						 Enum							   *

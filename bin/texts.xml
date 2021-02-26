@@ -484,7 +484,7 @@
 			<Simple><Condition>true</Condition><Color>NoColor</Color></Simple>
 			<Complexe><Condition>false</Condition><R>0</R><G>0</G><B>0</B><Alpha>255</Alpha></Complexe>
 		</BackColor>
-		<Size>16</Size><X>(SCREEN_WIDTH)/(2)</X><Y>850</Y>
+		<Size>16</Size><X>(SCREEN_WIDTH)/(2)</X><Y>100</Y>
 		<Alpha>nonTransparent</Alpha><Angle>no_angle</Angle><Center>center_x</Center>
 	</Texte>
 

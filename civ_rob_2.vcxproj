@@ -38,7 +38,6 @@
     <ClInclude Include="src\Civ_rob_2.0\KeyboardMouse.h" />
     <ClInclude Include="src\Civ_rob_2.0\LIB.h" />
     <ClInclude Include="src\Civ_rob_2.0\LoadConfig.h" />
-    <ClInclude Include="src\Civ_rob_2.0\LTimer.h" />
     <ClInclude Include="src\Civ_rob_2.0\Player.h" />
     <ClInclude Include="src\Civ_rob_2.0\SaveReload.h" />
     <ClInclude Include="src\Civ_rob_2.0\Texture.h" />
@@ -55,7 +54,6 @@
     <ClCompile Include="src\Civ_rob_2.0\IHM.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\KeyboardMouse.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\LoadConfig.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\LTimer.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\main.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\Player.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\SaveReload.cpp" />
@@ -176,6 +174,7 @@
       <PreprocessorDefinitions>_DEBUG_MODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

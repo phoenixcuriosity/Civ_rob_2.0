@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.30
+	last modification on this file on version:0.22.1.0
+	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -249,10 +249,6 @@ void IHM::alwaysrender
 		/* N/A */
 		break;
 	}
-	Texte::writeTexte
-	(sysinfo.screen.renderer, sysinfo.allTextures.font, Index_staticIndexVectorTextes::FPS_MAIN_MAP, Texte_Type::blended,
-		std::to_string(sysinfo.screen.avgFPS), { 0, 64, 255, 255 }, NoColor,
-		24, sysinfo.screen.screenWidth / 2, 50, nonTransparent, no_angle, Center_Type::center_x);
 
 	/* ### Don't put code below here ### */
 
@@ -492,39 +488,6 @@ void IHM::afficherSupertiles
 	//t2 = clock();
 	//std::cout << std::endl << "temps d'execution de alwaysrender : " + std::to_string(((double)t2 - (double)t1) / CLOCKS_PER_SEC);
 	
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : countFrame																   */
-/* ROLE : Compteur de frames durant le programme 									   */
-/* ROLE : Début : à la fin de la fonction newGame(...)								   */
-/* INPUT : Screen& screen : données concernant la fenetre SDL						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void IHM::countFrame
-(
-	Screen& screen
-)
-{
-	if (screen.enableFPS)
-	{
-		screen.avgFPS = (int)ceil(screen.countedFrames / (screen.fpsTimer.getTicks() / 1000.f));
-		if (screen.avgFPS > 20000)
-		{
-			screen.avgFPS = 0;
-		}	
-		else
-		{
-			/* N/A */
-		}
-		++screen.countedFrames;
-	}
-	else
-	{
-		/* N/A */
-	}
 }
 
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.12
+	last modification on this file on version:0.22.1.0
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,7 +46,6 @@
 #include "LIB.h"
 
 #include "Texture.h"
-#include "LTimer.h"
 #include "SaveReload.h"
 #include "KeyboardMouse.h"
 #include "GamePlay.h"
@@ -166,16 +165,6 @@ struct Screen
 	Uint16 screenWidth = 0;
 
 	Uint16 screenHeight = 0;
-
-	// autorise le début du compteur de fps
-	bool enableFPS = false;
-
-	LTimer fpsTimer;
-
-	// fps moyen
-	int avgFPS = 0;
-
-	int countedFrames = 0;
 };
 struct File
 {

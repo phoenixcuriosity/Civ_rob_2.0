@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.20.4.5
-	file version : 1.1
+	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
+	last modification on this file on version:0.22.2.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -69,26 +69,29 @@ unsigned int Citizen::placeCitizen
 
 	for (unsigned int i(0); (i < INIT_SIZE_VIEW * INIT_SIZE_VIEW) && (true == continuer); i++)
 	{
-		checkcondition = 0;
-		for (unsigned int p(0); (p < condition) && (true == continuer); p++)
+		if (tile[i].appartenance == tile[citizens[0]->GETtileOccupied()].appartenance)
 		{
-			if (i != tabpos[p])
+			checkcondition = 0;
+			for (unsigned int p(0); (p < condition) && (true == continuer); p++)
 			{
-				checkcondition++;
-			}
-			else
-			{
-				/* N/A */
-			}
+				if (i != tabpos[p])
+				{
+					checkcondition++;
+				}
+				else
+				{
+					/* N/A */
+				}
 
-			if (checkcondition == condition)
-			{
-				place = i;
-				continuer = false;
-			}
-			else
-			{
-				/* N/A */
+				if (checkcondition == condition)
+				{
+					place = i;
+					continuer = false;
+				}
+				else
+				{
+					/* N/A */
+				}
 			}
 		}
 	}
