@@ -27,40 +27,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Civ_rob_2.0\Citizen.h" />
-    <ClInclude Include="src\Civ_rob_2.0\City.h" />
-    <ClInclude Include="src\Civ_rob_2.0\civ_lib.h" />
-    <ClInclude Include="src\Civ_rob_2.0\ConstCityIHM.h" />
-    <ClInclude Include="src\Civ_rob_2.0\ConstUnitIHM.h" />
-    <ClInclude Include="src\Civ_rob_2.0\End.h" />
-    <ClInclude Include="src\Civ_rob_2.0\GamePlay.h" />
-    <ClInclude Include="src\Civ_rob_2.0\IHM.h" />
-    <ClInclude Include="src\Civ_rob_2.0\KeyboardMouse.h" />
+    <ClInclude Include="src\Civ_rob_2.0\GameInput.h" />
     <ClInclude Include="src\Civ_rob_2.0\LIB.h" />
-    <ClInclude Include="src\Civ_rob_2.0\LoadConfig.h" />
+    <ClInclude Include="src\Civ_rob_2.0\MainGame.h" />
     <ClInclude Include="src\Civ_rob_2.0\Player.h" />
-    <ClInclude Include="src\Civ_rob_2.0\SaveReload.h" />
-    <ClInclude Include="src\Civ_rob_2.0\Texture.h" />
-    <ClInclude Include="src\Civ_rob_2.0\Unit.h" />
-    <ClInclude Include="src\Civ_rob_2.0\Utility.h" />
-    <ClInclude Include="src\Civ_rob_2.0\XmlConvertValue.h" />
     <ClInclude Include="src\tinyxml2\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Civ_rob_2.0\Citizen.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\City.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\End.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\GamePlay.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\IHM.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\KeyboardMouse.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\LoadConfig.cpp" />
+    <ClCompile Include="src\Civ_rob_2.0\GameInput.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\main.cpp" />
+    <ClCompile Include="src\Civ_rob_2.0\MainGame.cpp" />
     <ClCompile Include="src\Civ_rob_2.0\Player.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\SaveReload.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\Texture.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\Unit.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\Utility.cpp" />
-    <ClCompile Include="src\Civ_rob_2.0\XmlConvertValue.cpp" />
     <ClCompile Include="src\tinyxml2\tinyxml2.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -133,8 +110,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>src\SDL2-2.0.14\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>src\tinyxml2;src\SDL2-2.0.14\include;src\Civ_rob_2.0;$(IncludePath)</IncludePath>
+    <LibraryPath>src\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>src\tinyxml2;src\include;src\Civ_rob_2.0;$(IncludePath)</IncludePath>
     <SourcePath>src\Civ_rob_2.0;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2.0|x64'">
@@ -180,7 +157,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2.0|x64'">

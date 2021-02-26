@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.11
+	last modification on this file on version:0.23.0.0
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -50,14 +50,15 @@
 #include <direct.h>
 #include <algorithm>
 
+#include <Windows.h>
+
 /* *********************************************************
  *						Include SDL						   *
  ********************************************************* */
 
 
-#include "SDL.h"
-#include "SDL_ttf.h"
-#include "SDL_image.h"
+#include <SDL.h>
+#include <glew.h>
 
 
 /* *********************************************************
@@ -69,58 +70,11 @@
 
 
 /* *********************************************************
- *					Structures							   *
- ********************************************************* */
-
-typedef struct Unit_Template Unit_Template;
-typedef struct SubcatPlayer SubcatPlayer;
-typedef struct Tile Tile;
-typedef struct SizeCityMap SizeCityMap;
-typedef struct Screen Screen;
-typedef struct File File;
-typedef struct Var Var;
-typedef struct Map Map;
-typedef struct AllTextures AllTextures;
-typedef struct AllTextes AllTextes;
-typedef struct AllButtons AllButtons;
-typedef struct Sysinfo Sysinfo;
-
-typedef struct randomPos randomPos;
-typedef struct GoldStats GoldStats;
-typedef struct OnOffDisplay OnOffDisplay;
-typedef struct build build;
-typedef struct cityBuildQueue cityBuildQueue;
-
-/* *********************************************************
- *						Classes							   *
- ********************************************************* */
-
-class IHM;
-class SaveReload;
-class KeyboardMouse;
-class GamePlay;
-class Texture;
-class Texte;
-class ButtonImage;
-class ButtonTexte;
-class City;
-class Citizen;
-class LTimer;
-class Player;
-class Unit;
-class LoadConfig;
-
-/* *********************************************************
  *					Redéfinition Type					   *
  ********************************************************* */
 
-typedef std::vector<std::vector<Tile>>					MatriceTile;
-typedef std::unordered_map<std::string, Texture*>		MapTexture;
-typedef std::unordered_map<std::string, Texte*>			MapTexte;
-typedef std::vector<Texte*>								VectorTexte;
-typedef std::unordered_map<std::string, ButtonTexte*>	MapButtonTexte;
-typedef std::deque<ButtonTexte*>						DequeButtonTexte;
-typedef std::vector<Player*>							TabPlayer;
+class MainGame;
+
 
 #define EMPTY_STRING ""
 
@@ -129,6 +83,32 @@ typedef std::vector<Player*>							TabPlayer;
 
 /* Define 0 for module use */
 #define MODULO_ZERO 0
+
+
+
+
+ // Define all State of the game, relate to screen
+enum class State_Type : Uint8
+{
+	error,					/* ### Reserved on error detection ### */
+	STATEnothing,			/* ### Reserved for fast writeTxt  ### */
+	STATEtitleScreen,		/* Title screen : first screen selection */
+	STATEscreenNewgame,		/* New game screen : selection of options of a new game */
+	STATEreload,			/* Load screen : selection of saves to load */
+	STATEmainMap,			/* Maip map screen */
+	STATEscience,			/* Science screen ### Not implemented as of 0.20.0.3  ### */
+	STATEcityMap			/* Citie map screen : Unit and buildings creation */
+};
+
+// Define all Selection in the game, relate to mouse click
+enum class Select_Type : Uint8
+{
+	selectnothing,			/* Nothing is selected */
+	selectcreate,			/* ### Reserved on debug as of 0.20.0.3 ### */
+	selectinspect,			/* ### Reserved on debug as of 0.20.0.3 ### */
+	selectmove,				/* Selection to move a Unit */
+	selectmoveCitizen		/* ### Not use as of 0.20.0.3 ### */
+};
 
 #endif
 

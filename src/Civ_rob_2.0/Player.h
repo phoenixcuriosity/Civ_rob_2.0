@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.3.0
-	file version : 1.9
+	last modification on this file on version:0.23.0.0
+	file version : 1.xx
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,12 +25,8 @@
 #ifndef Player_H
 #define Player_H
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "LIB.h"
-#include "Unit.h"
+
 
 /* *********************************************************
  *						Constantes						   *
@@ -42,7 +38,7 @@
  *						 Enum							   *
  ********************************************************* */
 
-/* N/A */
+  /* N/A */
 
 /* *********************************************************
  *						Structures						   *
@@ -78,12 +74,12 @@ public:
 	/* *********************************************************
 	 *					Player::METHODS						   *
 	 ********************************************************* */
-	 
+
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : Player																	   */
-	/* ROLE : Constructeur par dÃ©faut													   */
+	/* ROLE : Constructeur par défaut													   */
 	/* INPUT : void																		   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -112,9 +108,9 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : operator=																	   */
-	/* ROLE : RedÃ©finition de l'opÃ©rateur =												   */
-	/* INPUT : const Player& player : l'objet Ã  copier									   */
-	/* RETURNED VALUE : Player&	: l'objet recopiÃ©										   */
+	/* ROLE : Redéfinition de l'opérateur =												   */
+	/* INPUT : const Player& player : l'objet à copier									   */
+	/* RETURNED VALUE : Player&	: l'objet recopié										   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	Player& operator=
@@ -139,20 +135,20 @@ public:
 	/* INPUT : void																		   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- 
 	virtual void addEmptyUnit();
-	
+
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : addUnit																	   */
-	/* ROLE : Ajout une Unit avec les spÃ©cifications demandÃ©es (nom, positions, ...)	   */
-	/* INPUT : SpÃ©cifications demandÃ©es (nom, positions, ...)							   */
+	/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
+	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- 
 	virtual void addUnit
 	(
-		const std::string &name,
+		const std::string& name,
 		unsigned int x,
 		unsigned int y,
 		Unit_Movement_Type movementType,
@@ -162,7 +158,8 @@ public:
 		unsigned int move,
 		unsigned int level,
 		double maintenance
-	);	
+	);
+	*/
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -171,27 +168,28 @@ public:
 	/* INPUT : unsigned int : index de Unit dans le tableau								   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- 
 	virtual void deleteUnit
 	(
 		unsigned int index
 	);
+	*/
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : addCity																	   */
-	/* ROLE : Ajout une City avec les spÃ©cifications demandÃ©es (nom, positions, ...)	   */
-	/* INPUT : SpÃ©cifications demandÃ©es (nom, positions, ...)							   */
+	/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
+	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- 
 	virtual void addCity
 	(
-		const std::string &,
+		const std::string&,
 		unsigned int,
 		unsigned int,
 		std::vector<Tile>& tiles
-	);
+	);*/
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -200,11 +198,11 @@ public:
 	/* INPUT : unsigned int : index de City dans le tableau								   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- 
 	virtual void deleteCity
 	(
 		unsigned int
-	);
+	);*/
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -242,38 +240,24 @@ public:
 		double goldToAdd
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : displayGoldStats															   */
-	/* ROLE : Display gold Stats per player												   */
-	/* INPUT : SDL_Renderer*& : ptr on SDL Renderer										   */
-	/* INPUT : TTF_Font* font[]	: ptr on font array										   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void displayGoldStats
-	(
-		SDL_Renderer*& renderer,
-		TTF_Font* font[]
-	);
-	
+
 public:
 	/* *********************************************************
 	 *				Player::METHODS::GET/SET				   *
 	 ********************************************************* */
-	 
-	 
-	inline virtual std::string GETname() const					{ return _name; };
-	inline virtual Unit* GETtheUnit(unsigned int index) const	{ return _tabUnit[index]; };
-	inline virtual std::vector<Unit*> GETtabUnit() const		{ return _tabUnit; };
-	inline virtual City* GETtheCity(unsigned int index) const	{ return _tabCity[index]; };
-	inline virtual std::vector<City*> GETtabCity() const		{ return _tabCity; };
-	inline virtual GoldStats& GETgoldStats()					{ return _goldStats; };
-	inline virtual GoldStats GETgoldStatsConst()const			{ return _goldStats; };
-	inline virtual OnOffDisplay& GETonOffDisplay()				{ return _onOffDisplay; };
-	inline virtual OnOffDisplay GETonOffDisplayConst()const		{ return _onOffDisplay; };
 
-	inline virtual void SETname(const std::string& msg)			{ _name = msg; };
+
+	inline virtual std::string GETname() const { return _name; };
+	//inline virtual Unit* GETtheUnit(unsigned int index) const { return _tabUnit[index]; };
+	//inline virtual std::vector<Unit*> GETtabUnit() const { return _tabUnit; };
+	//inline virtual City* GETtheCity(unsigned int index) const { return _tabCity[index]; };
+	//inline virtual std::vector<City*> GETtabCity() const { return _tabCity; };
+	inline virtual GoldStats& GETgoldStats() { return _goldStats; };
+	inline virtual GoldStats GETgoldStatsConst()const { return _goldStats; };
+	inline virtual OnOffDisplay& GETonOffDisplay() { return _onOffDisplay; };
+	inline virtual OnOffDisplay GETonOffDisplayConst()const { return _onOffDisplay; };
+
+	inline virtual void SETname(const std::string& msg) { _name = msg; };
 
 protected:
 
@@ -282,25 +266,29 @@ protected:
 		size_t size,
 		unsigned int index
 	);
-	
-	
+
+
 private:
 	/* *********************************************************
 	 *					Player::ATTRIBUTS					   *
 	 ********************************************************* */
-	 
-	 
+
+
 	std::string _name;
-	std::vector<Unit*> _tabUnit;
-	std::vector<City*> _tabCity;
+	//std::vector<Unit*> _tabUnit;
+	//std::vector<City*> _tabCity;
 	GoldStats _goldStats;
 	OnOffDisplay _onOffDisplay;
 };
 
 
+/* *********************************************************
+ *						Typedef							   *
+ ********************************************************* */
+
+typedef std::vector<Player*> VectPlayer;
 
 #endif /* Player_H */
-
 
 /*
 *	End Of File : Player.h

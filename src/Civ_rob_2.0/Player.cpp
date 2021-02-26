@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.22.0.0
-	file version : 1.10
+	last modification on this file on version:0.23.0.0
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,28 +28,26 @@
 
 #include "Player.h"
 
-#include "IHM.h"
-#include "LoadConfig.h"
-#include "civ_lib.h"
+#include "MainGame.h"
 
-/* *********************************************************
- *				START Player::METHODS					   *
- ********************************************************* */
+ /* *********************************************************
+  *				START Player::METHODS					   *
+  ********************************************************* */
 
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : Player																	   */
-/* ROLE : Constructeur par dÃ©faut													   */
-/* INPUT : void																		   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
+  /* ----------------------------------------------------------------------------------- */
+  /* ----------------------------------------------------------------------------------- */
+  /* NAME : Player																	   */
+  /* ROLE : Constructeur par défaut													   */
+  /* INPUT : void																		   */
+  /* ----------------------------------------------------------------------------------- */
+  /* ----------------------------------------------------------------------------------- */
 Player::Player() :
-_name("NoName"),
-_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
-_onOffDisplay{ false }
+	_name("NoName"),
+	_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	_onOffDisplay{ false }
 {
-	LoadConfig::logfileconsole("[INFO]___: Create Player Par Defaut Success");
+	MainGame::logfileconsole("[INFO]___: Create Player Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -59,12 +57,12 @@ _onOffDisplay{ false }
 /* INPUT : const std::string&														   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Player::Player(const std::string &msg):
-_name(msg),
-_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
-_onOffDisplay{ false }
+Player::Player(const std::string& msg) :
+	_name(msg),
+	_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	_onOffDisplay{ false }
 {
-	LoadConfig::logfileconsole("[INFO]___: Create Player Success");
+	MainGame::logfileconsole("[INFO]___: Create Player Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -81,22 +79,22 @@ Player::~Player()
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : operator=																	   */
-/* ROLE : RedÃ©finition de l'opÃ©rateur =												   */
-/* INPUT : const Player& player : l'objet Ã  copier									   */
-/* RETURNED VALUE : Player&	: l'objet recopiÃ©										   */
+/* ROLE : Redéfinition de l'opérateur =												   */
+/* INPUT : const Player& player : l'objet à copier									   */
+/* RETURNED VALUE : Player&	: l'objet recopié										   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 Player& Player::operator=
 (
 	const Player& player
-)
+	)
 {
 	if (this != &player)
 	{
 		deletePlayer();
 		_name = player.GETname();
-		_tabUnit = player.GETtabUnit();
-		_tabCity = player.GETtabCity();
+		//_tabUnit = player.GETtabUnit();
+		//_tabCity = player.GETtabCity();
 		_goldStats = player.GETgoldStatsConst();
 	}
 	return *this;
@@ -112,6 +110,7 @@ Player& Player::operator=
 /* ----------------------------------------------------------------------------------- */
 void Player::deletePlayer()
 {
+	/*
 	unsigned int size((unsigned int)_tabUnit.size());
 
 	for (unsigned int i(0); i < size; i++)
@@ -146,6 +145,7 @@ void Player::deletePlayer()
 		LoadConfig::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
 	else
 		LoadConfig::logfileconsole("[ERROR]__: _tabcities.size() != 0");
+		*/
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -155,7 +155,7 @@ void Player::deletePlayer()
 /* INPUT : void																		   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- 
 void Player::addEmptyUnit()
 {
 	_tabUnit.push_back(new Unit());
@@ -164,14 +164,14 @@ void Player::addEmptyUnit()
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : addUnit																	   */
-/* ROLE : Ajout une Unit avec les spÃ©cifications demandÃ©es (nom, positions, ...)	   */
-/* INPUT : SpÃ©cifications demandÃ©es (nom, positions, ...)							   */
+/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
+/* INPUT : Spécifications demandées (nom, positions, ...)							   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- 
 void Player::addUnit
 (
-	const std::string &name,
+	const std::string& name,
 	unsigned int x,
 	unsigned int y,
 	Unit_Movement_Type movementType,
@@ -181,7 +181,7 @@ void Player::addUnit
 	unsigned int move,
 	unsigned int level,
 	double maintenance
-) 
+)
 {
 	_tabUnit.push_back(new Unit(name, x, y, movementType, life, atq, def, move, level, maintenance));
 }
@@ -193,7 +193,7 @@ void Player::addUnit
 /* INPUT : unsigned int : index de Unit dans le tableau								   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- 
 void Player::deleteUnit
 (
 	unsigned int index
@@ -221,14 +221,14 @@ void Player::deleteUnit
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : addCity																	   */
-/* ROLE : Ajout une City avec les spÃ©cifications demandÃ©es (nom, positions, ...)	   */
-/* INPUT : SpÃ©cifications demandÃ©es (nom, positions, ...)							   */
+/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
+/* INPUT : Spécifications demandées (nom, positions, ...)							   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- 
 void Player::addCity
 (
-	const std::string &name,
+	const std::string& name,
 	unsigned int x,
 	unsigned int y,
 	std::vector<Tile>& tiles
@@ -244,12 +244,13 @@ void Player::addCity
 /* INPUT : unsigned int : index de City dans le tableau								   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- 
 void Player::deleteCity
 (
 	unsigned int index
 )
 {
+
 	if (assertSize(_tabCity.size(), index))
 	{
 		if (nullptr != _tabCity[index])
@@ -282,24 +283,26 @@ void Player::computeGold()
 {
 	computeMaintenanceCostUnit();
 
-	_goldStats.income =		_goldStats.taxIncome
-						 +  _goldStats.commerceIncome
-						 +  _goldStats.goldConversionSurplus;
+	_goldStats.income = _goldStats.taxIncome
+		+ _goldStats.commerceIncome
+		+ _goldStats.goldConversionSurplus;
 
-	_goldStats.cost =		_goldStats.buildingsCost
-						 +  _goldStats.armiesCost;
+	_goldStats.cost = _goldStats.buildingsCost
+		+ _goldStats.armiesCost;
 
 	_goldStats.goldBalance = _goldStats.income - _goldStats.cost;
 	_goldStats.gold += _goldStats.goldBalance;
-	
+
 }
 
 void Player::computeMaintenanceCostUnit()
 {
+	/*
 	for (unsigned int i(0); i < _tabUnit.size(); i++)
 	{
 		_goldStats.armiesCost += _tabUnit[i]->GETmaintenance();
 	}
+	*/
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -337,103 +340,6 @@ void Player::addGoldToGoldConversionSurplus
 	_goldStats.goldConversionSurplus += goldToAdd;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : displayGoldStats															   */
-/* ROLE : Display gold Stats per player												   */
-/* INPUT : SDL_Renderer*& : ptr on SDL Renderer										   */
-/* INPUT : TTF_Font* font[]	: ptr on font array										   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void Player::displayGoldStats
-(
-	SDL_Renderer*& renderer,
-	TTF_Font* font[]
-)
-{
-	std::ostringstream stream;
-	stream << std::fixed;
-	stream << std::setprecision(1);
-	stream << _goldStats.gold;
-
-	Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_GOLD, Texte_Type::shaded,
-		"Gold : " + stream.str(), White, { 64, 64, 64, 255 }, 24,
-		0, 900, nonTransparent, no_angle, Center_Type::nocenter);
-
-	if (_onOffDisplay.showContextGoldStats)
-	{
-		unsigned int initX(200), spaceX(150);
-		unsigned int initY(900), spaceY(32);
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.goldBalance;
-
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_GOLD_BALANCE, Texte_Type::shaded,
-			"Balance : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX, initY,nonTransparent, no_angle, Center_Type::nocenter);
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.income;
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_INCOME, Texte_Type::shaded,
-			"Income : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX += spaceX, initY, nonTransparent, no_angle, Center_Type::nocenter);
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.cost;
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_COST, Texte_Type::shaded,
-			"Cost : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX += spaceX, initY, nonTransparent, no_angle, Center_Type::nocenter);
-
-
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.taxIncome;
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_TAX_INCOME, Texte_Type::shaded,
-			"Tax : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX = 200, initY += spaceY,
-			nonTransparent, no_angle, Center_Type::nocenter);
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.commerceIncome;
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_COMMERCE_INCOME, Texte_Type::shaded,
-			"Commerce : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX += spaceX, initY,
-			nonTransparent, no_angle, Center_Type::nocenter);
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.goldConversionSurplus;
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_GOLD_CONVERSION_SURPLUS, Texte_Type::shaded,
-			"Surplus : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX += spaceX, initY,
-			nonTransparent, no_angle, Center_Type::nocenter);
-
-
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.buildingsCost;
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_BUILDINGS_COST, Texte_Type::shaded,
-			"Building cost : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX = 200, initY += spaceY,
-			nonTransparent, no_angle, Center_Type::nocenter);
-
-		stream.str("");
-		stream.clear();
-		stream << _goldStats.armiesCost;
-		Texte::writeTexte(renderer, font, Index_staticIndexVectorTextes::PLAYER_ARMIES_COST, Texte_Type::shaded,
-			"Armies cost : " + stream.str(), White, { 64, 64, 64, 255 }, 18,
-			initX += 200, initY,
-			nonTransparent, no_angle, Center_Type::nocenter);
-	}
-}
-
 bool Player::assertSize
 (
 	size_t size,
@@ -447,6 +353,6 @@ bool Player::assertSize
  *				END Player::METHODS						   *
  ********************************************************* */
 
-/*
-*	End Of File : Player.cpp
-*/
+ /*
+ *	End Of File : Player.cpp
+ */
