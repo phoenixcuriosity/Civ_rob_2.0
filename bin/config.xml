@@ -4,7 +4,9 @@
 
 	<Map>
 		<TileSize>64</TileSize>
-		<MapSize>2048</MapSize>
+		<MapSizeX>2048</MapSizeX>
+		<MapSizeY>2048</MapSizeY>
+
 	</Map>
 
 	<FilePaths>
@@ -19,6 +21,10 @@
 		<SaveInfo>save/saveInfo.txt</SaveInfo>
 		<SaveMaps>saveMaps.txt</SaveMaps>
 		<SavePlayers>savePlayers.xml</SavePlayers>
+
+		<ColorShadingVert>shaders/ColorShading.vert</ColorShadingVert>
+		<ColorShadingFrag>shaders/ColorShading.frag</ColorShadingFrag>
+
 	</FilePaths>
 
 

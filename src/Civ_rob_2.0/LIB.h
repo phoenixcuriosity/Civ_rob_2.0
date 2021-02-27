@@ -37,6 +37,7 @@
 #include <sstream>
 #include <string>
 #include <cstdlib>
+#include <cstddef>
 #include <ctime>
 #include <chrono>
 #include <iomanip>
@@ -74,6 +75,32 @@
  ********************************************************* */
 
 class MainGame;
+
+class Players;
+class Player;
+class GameInput;
+class Unit;
+class MainMap;
+class City;
+class Citizen;
+class SaveReload;
+
+typedef struct Var Var;
+typedef struct Unit_Template Unit_Template;
+typedef struct Tile Tile;
+typedef struct GoldStats GoldStats;
+typedef struct OnOffDisplay OnOffDisplay;
+typedef struct build build;
+typedef struct cityBuildQueue cityBuildQueue;
+typedef struct Screen Screen;
+
+
+typedef std::vector<Player*> VectPlayer;
+typedef std::vector<std::vector<Tile>> MatriceMap;
+typedef std::vector<Tile> VectMap;
+typedef std::vector<std::string> VectCityName;
+typedef std::vector<Unit_Template> VectUnitTemplate;
+typedef std::vector<Citizen*> VectCitizen;
 
 
 #define EMPTY_STRING ""

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.0.0
-	file version : 1.22
+	last modification on this file on version:0.23.1.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -62,7 +62,8 @@ void GameInput::run_SDL(MainGame& mainGame)
 			/* ---------------------------------------------------------------------- */
 		case SDL_QUIT:
 			mainGame.GETvar().continuer = 0;
-			break;
+			break; 
+		
 
 			/* ---------------------------------------------------------------------- */
 			/* Test sur le type d'�v�nement touche enfonc�							  */
@@ -75,6 +76,9 @@ void GameInput::run_SDL(MainGame& mainGame)
 			case SDLK_ESCAPE:
 				keySDLK_ESCAPE();
 				break;
+			case SDLK_BACKSPACE:
+				mainGame.GETvar().tempPlayerName.pop_back();
+				break;
 
 			default:
 				/* N/A */
@@ -85,6 +89,13 @@ void GameInput::run_SDL(MainGame& mainGame)
 			/* ---------------------------------------------------------------------- */
 			/* test sur le type d'�v�nement click souris (enfonc�)					  */
 			/* ---------------------------------------------------------------------- */
+		case SDL_TEXTEDITING:
+
+			break;
+		case SDL_TEXTINPUT:
+			mainGame.GETvar().nbturn++;
+			mainGame.GETvar().tempPlayerName += mainGame.GETscreen().evnt.text.text;
+			break;
 
 		case SDL_MOUSEBUTTONDOWN:
 			mouse(mainGame);
@@ -154,9 +165,9 @@ void GameInput::mouse
 	(
 		mainGame.GETscreen().evnt.button.x,
 		mainGame.GETscreen().evnt.button.y,
-		mainGame.GETmap().tileSize,
-		mainGame.GETmap().screenOffsetXIndexMin,
-		mainGame.GETmap().screenOffsetYIndexMin
+		mainGame.GETmainMap().GETtileSize(),
+		mainGame.GETmainMap().GETscreenOffsetXIndexMin(),
+		mainGame.GETmainMap().GETscreenOffsetYIndexMin()
 	);
 
 	if (SDL_BUTTON_LEFT == mainGame.GETscreen().evnt.button.button)

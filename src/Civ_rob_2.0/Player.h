@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.0.0
-	file version : 1.xx
+	last modification on this file on version:0.23.1.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,12 +27,17 @@
 
 #include "LIB.h"
 
+#include "Unit.h"
 
 /* *********************************************************
  *						Constantes						   *
  ********************************************************* */
 
 #define INITIAL_GOLD 100.0
+
+#define NO_PLAYER_SELECTED -1
+#define NO_UNIT_SELECTED -1
+#define NO_CITY_SELECTED -1
 
 /* *********************************************************
  *						 Enum							   *
@@ -63,6 +68,8 @@ struct OnOffDisplay
 {
 	bool showContextGoldStats;
 };
+
+
 
 /* *********************************************************
  *						 Classes						   *
@@ -135,7 +142,7 @@ public:
 	/* INPUT : void																		   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- 
+	/* ----------------------------------------------------------------------------------- */
 	virtual void addEmptyUnit();
 
 	/* ----------------------------------------------------------------------------------- */
@@ -145,7 +152,7 @@ public:
 	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- 
+	/* ----------------------------------------------------------------------------------- */
 	virtual void addUnit
 	(
 		const std::string& name,
@@ -159,7 +166,7 @@ public:
 		unsigned int level,
 		double maintenance
 	);
-	*/
+	
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -168,12 +175,12 @@ public:
 	/* INPUT : unsigned int : index de Unit dans le tableau								   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- 
+	/* ----------------------------------------------------------------------------------- */
 	virtual void deleteUnit
 	(
 		unsigned int index
 	);
-	*/
+	
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -182,14 +189,14 @@ public:
 	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- 
+	/* ----------------------------------------------------------------------------------- */
 	virtual void addCity
 	(
 		const std::string&,
 		unsigned int,
 		unsigned int,
-		std::vector<Tile>& tiles
-	);*/
+		VectMap& tiles
+	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -198,11 +205,11 @@ public:
 	/* INPUT : unsigned int : index de City dans le tableau								   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- 
+	/* ----------------------------------------------------------------------------------- */
 	virtual void deleteCity
 	(
 		unsigned int
-	);*/
+	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -248,25 +255,20 @@ public:
 
 
 	inline virtual std::string GETname() const { return _name; };
-	//inline virtual Unit* GETtheUnit(unsigned int index) const { return _tabUnit[index]; };
-	//inline virtual std::vector<Unit*> GETtabUnit() const { return _tabUnit; };
-	//inline virtual City* GETtheCity(unsigned int index) const { return _tabCity[index]; };
-	//inline virtual std::vector<City*> GETtabCity() const { return _tabCity; };
+	inline virtual Unit* GETtheUnit(unsigned int index) const { return _tabUnit[index]; };
+	inline virtual std::vector<Unit*> GETtabUnit() const { return _tabUnit; };
+	inline virtual City* GETtheCity(unsigned int index) const { return _tabCity[index]; };
+	inline virtual std::vector<City*> GETtabCity() const { return _tabCity; };
+	inline virtual int GETselectedUnit()const { return _selectedUnit; };
+	inline virtual int GETselectedCity() { return _selectedCity; };
 	inline virtual GoldStats& GETgoldStats() { return _goldStats; };
 	inline virtual GoldStats GETgoldStatsConst()const { return _goldStats; };
 	inline virtual OnOffDisplay& GETonOffDisplay() { return _onOffDisplay; };
 	inline virtual OnOffDisplay GETonOffDisplayConst()const { return _onOffDisplay; };
 
 	inline virtual void SETname(const std::string& msg) { _name = msg; };
-
-protected:
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
+	inline virtual void SETselectedUnit(int selectedUnit) { _selectedUnit = selectedUnit; };
+	inline virtual void SETselectedCity(int selectedCity) { _selectedCity = selectedCity; };
 
 private:
 	/* *********************************************************
@@ -275,18 +277,62 @@ private:
 
 
 	std::string _name;
-	//std::vector<Unit*> _tabUnit;
-	//std::vector<City*> _tabCity;
+	std::vector<Unit*> _tabUnit;
+	std::vector<City*> _tabCity;
+	int _selectedCity;
+	int _selectedUnit;
 	GoldStats _goldStats;
 	OnOffDisplay _onOffDisplay;
 };
 
 
-/* *********************************************************
- *						Typedef							   *
- ********************************************************* */
 
-typedef std::vector<Player*> VectPlayer;
+
+class Players
+{
+public:
+	Players();
+	~Players();
+
+	inline int GETselectedPlayer()const { return _selectedPlayer; };
+	inline unsigned int GETnbNoNamePlayer()const { return _nbNoNamePlayer; };
+	inline unsigned int GETcitiesNameMaxToCreate()const { return _citiesNameMaxToCreate; };
+	inline VectCityName& GETvectCityName() { return _vectCityName; };
+	inline VectUnitTemplate& GETvectUnitTemplate() { return _vectUnitTemplate; };
+	inline VectPlayer& GETvectPlayer() { return _vectPlayer; };
+
+	inline void SETselectedPlayer(int selectedPlayer) { _selectedPlayer = selectedPlayer; };
+	inline void SETnbNoNamePlayer(unsigned int nbNoNamePlayer) { _nbNoNamePlayer = nbNoNamePlayer; };
+	inline void SETcitiesNameMaxToCreate(unsigned int citiesNameMaxToCreate) { _citiesNameMaxToCreate = citiesNameMaxToCreate; };
+
+public:
+	void addPlayer();
+
+	void removeIndexPlayer
+	(
+		unsigned int index
+	);
+
+private:
+
+	// index du joueur actuellement sélectionné
+	int _selectedPlayer;
+
+	// nombre de joueur sans nom
+	unsigned int _nbNoNamePlayer;
+
+	// nombre de cité maximal différentes à créer 
+	unsigned int _citiesNameMaxToCreate;
+
+	VectCityName _vectCityName;
+
+	// tableau des statistiques par défauts des unités
+	VectUnitTemplate _vectUnitTemplate;
+
+	VectPlayer _vectPlayer;
+};
+
+
 
 #endif /* Player_H */
 

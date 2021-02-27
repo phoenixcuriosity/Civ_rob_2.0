@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.0.0
-	file version : 1.0
+	last modification on this file on version:0.23.1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,11 +24,16 @@
 
 #include "MainGame.h"
 
+#include "MainMap.h"
+#include "Utility.h"
+#include "Sprite.h"
+#include "GLSLProgram.h"
+#include "XmlConvertValue.h"
 
 static std::ofstream* ptrlogger;
 static MainGame* ptrMainGame;
 
-
+//----------------------------------------------------------Const/Destr----------------------------------------------------------------//
 
 MainGame::MainGame()
 {
@@ -44,6 +49,7 @@ void MainGame::init()
 {
 	initStructs();
 	initMain();
+	_mainMap.initTile();
 	computeSize();
 	if (!initSDL())
 	{
@@ -100,33 +106,7 @@ void MainGame::initStructs()
 	_var.tempY = 0;
 	_var.select = Select_Type::selectnothing;
 	_var.statescreen = State_Type::error;
-	//_var.cinState = CinState_Type::cinNothing;
-
-	/* sysinfo.var.s_player */
-
-	_var.s_player.selectCity = NO_CITY_SELECTED;
-	_var.s_player.selectplayer = NO_PLAYER_SELECTED;
-	_var.s_player.selectPlayerToAttack = NO_PLAYER_SELECTED;
-	_var.s_player.selectunit = NO_UNIT_SELECTED;
-	_var.s_player.selectUnitToAttack = NO_UNIT_SELECTED;
-	_var.s_player.unitToCreate = 0;
-	_var.s_player.toBuild = EMPTY_STRING;
-	_var.s_player.unitNameToCreate = EMPTY_STRING;
-	_var.s_player.unitNameToMove = EMPTY_STRING;
-
-	_var.s_player.tabCitiesName.clear();
-	_var.s_player.tabPlayerName.clear();
-	//_var.s_player.tabUnit_Template.clear();
-
-	_var.s_player.nbNoNamePlayer = 0;
-	_var.s_player.citiesNameMaxToCreate = 0;
-
-	/* sysinfo.var.mouse */
-
-	//KeyboardMouse mouse;
-	//_var.mouse = mouse;
-
-	/* sysinfo.var.save */
+	_var.cinState = CinState_Type::cinNothing;
 
 	//SaveReload save;
 	//_var.save = save;
@@ -136,27 +116,9 @@ void MainGame::initStructs()
 	 ********************************************************* */
 
 
-
-	 /* *********************************************************
-	  *					    sysinfo.map						   *
-	  ********************************************************* */
-
-	_map.mapSize = 0;
-	_map.tileSize = 0;
-	_map.toolBarSize = 0;
-	_map.screenOffsetXIndexMin = 0;
-	_map.screenOffsetYIndexMin = 0;
-	_map.screenOffsetXIndexMax = 0;
-	_map.screenOffsetYIndexMax = 0;
-	//_map.matriceMap.clear();
-	initTile(_map);
-
-
 	/* *********************************************************
 	 *					    sysinfo							   *
 	 ********************************************************* */
-
-	_vectPlayer.clear();
 
 	initFile();
 
@@ -164,32 +126,6 @@ void MainGame::initStructs()
 	ptrlogger = &_logger;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initTile																	   */
-/* ROLE : Initialisation des cases de la map en fonction de sa taille				   */
-/* INPUT : struct Map& : données générale de la map : taille						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void MainGame::initTile
-(
-	Map& map
-)
-{
-	/*
-	Tile blankTile;
-	std::vector<Tile> blank;
-	for (unsigned int i(0); i < map.mapSize / map.tileSize; i++)
-	{
-		map.matriceMap.push_back(blank);
-		for (unsigned int j(0); j < map.mapSize / map.tileSize; j++)
-		{
-			map.matriceMap[i].push_back(blankTile);
-		}
-	}
-	*/
-}
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -229,6 +165,7 @@ void MainGame::initMain
 
 	tinyxml2::XMLDocument config;
 	config.LoadFile(configFilePath.c_str());
+	unsigned int tmp(0);
 
 	if (config.ErrorID() == 0)
 	{
@@ -237,7 +174,8 @@ void MainGame::initMain
 
 		const char* s_Map("Map"),
 			* s_TileSize("TileSize"),
-			* s_MapSize("MapSize"),
+			* s_MapSizeX("MapSizeX"),
+			* s_MapSizeY("MapSizeY"),
 
 			* s_FilePaths("FilePaths"),
 			* s_Readme("Readme"),
@@ -248,10 +186,16 @@ void MainGame::initMain
 			* s_SpecName("SpecNames"),
 			* s_SaveInfo("SaveInfo"),
 			* s_SaveMaps("SaveMaps"),
-			* s_SavePlayer("SavePlayers");
+			* s_SavePlayer("SavePlayers"),
+			* s_ColorShadingVert("ColorShadingVert"),
+			* s_ColorShadingFrag("ColorShadingFrag");
 
-		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_TileSize)->QueryUnsignedText(&_map.tileSize);
-		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSize)->QueryUnsignedText(&_map.mapSize);
+		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_TileSize)->QueryUnsignedText(&tmp);
+		_mainMap.SETtileSize(tmp);
+		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSizeX)->QueryUnsignedText(&tmp);
+		_mainMap.SETmapSizePixX(tmp);
+		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSizeY)->QueryUnsignedText(&tmp);
+		_mainMap.SETmapSizePixY(tmp);
 
 		_file.readme = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText();
 		_file.texts = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
@@ -262,6 +206,8 @@ void MainGame::initMain
 		_file.saveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
 		_file.saveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
 		_file.savePlayers = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
+		_file.colorShadingVert = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingVert)->GetText();
+		_file.colorShadingFrag = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingFrag)->GetText();
 	}
 	else
 	{
@@ -288,65 +234,15 @@ void MainGame::computeSize
 	/* ---------------------------------------------------------------------- */
 	/* 1° : Screen														 	  */
 	/* ---------------------------------------------------------------------- */
-	_screen.screenWidth = getHorizontal(_map.tileSize);
-	_screen.screenHeight = getVertical(_map.tileSize);
+	_screen.screenWidth = getHorizontal(_mainMap.GETtileSize());
+	_screen.screenHeight = getVertical(_mainMap.GETtileSize());
 
 	/* ---------------------------------------------------------------------- */
 	/* 2° : Maimap														 	  */
 	/* ---------------------------------------------------------------------- */
-	//_map.toolBarSize = (unsigned int)Utility::protectedDiv((_screen.screenWidth / 10), _map.tileSize);
-	//_map.screenOffsetXIndexMax = (unsigned int)Utility::protectedDiv(((_screen.screenWidth * 9) / 10), _map.tileSize);
-	//_map.screenOffsetYIndexMax = (unsigned int)Utility::protectedDiv(_screen.screenHeight, _map.tileSize);
-
-	/* ---------------------------------------------------------------------- */
-	/* 3° : CitieMap													 	  */
-	/* ---------------------------------------------------------------------- */
-	_map.sizeCityMap.ToolbarButtonsH = (_screen.screenWidth / 3);
-	_map.sizeCityMap.ToolbarButtonsW = (_screen.screenHeight / 3);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : getHorizontal																   */
-/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
-/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-Uint16 MainGame::getHorizontal
-(
-	unsigned int tileSize
-)
-{
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.right % (Uint16)tileSize)) == 0)
-		return (Uint16)desktop.right;
-	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : getVertical																   */
-/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
-/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-Uint16 MainGame::getVertical
-(
-	unsigned int tileSize
-)
-{
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.bottom % (Uint16)tileSize)) == 0)
-		return (Uint16)desktop.bottom;
-	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
+	_mainMap.SETtoolBarSize((unsigned int)Utility::protectedDiv((_screen.screenWidth / 10), _mainMap.GETtileSize()));
+	_mainMap.SETscreenOffsetXIndexMax((unsigned int)Utility::protectedDiv(((_screen.screenWidth * 9) / 10), _mainMap.GETtileSize()));
+	_mainMap.SETscreenOffsetYIndexMax((unsigned int)Utility::protectedDiv(_screen.screenHeight, _mainMap.GETtileSize()));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -411,9 +307,11 @@ bool MainGame::initSDL()
 			{
 				logfileconsole("[ERROR]___: GLenum Failed");
 			}
-			logfileconsole("[ERROR]___: GLenum Success");
+			logfileconsole("[INFO]___: GLenum Success");
 
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+			glClearColor(0.0f,0.0f,0.0f,1.0f);
 		}
 
 		logfileconsole("[INFO]___: SDL_Init Success");
@@ -421,8 +319,53 @@ bool MainGame::initSDL()
 	}
 }
 
+//----------------------------------------------------------Screen width/height----------------------------------------------------------------//
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getHorizontal																   */
+/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
+/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+Uint16 MainGame::getHorizontal
+(
+	unsigned int tileSize
+)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.right % (Uint16)tileSize)) == 0)
+		return (Uint16)desktop.right;
+	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
+}
 
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getVertical																   */
+/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
+/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+Uint16 MainGame::getVertical
+(
+	unsigned int tileSize
+)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.bottom % (Uint16)tileSize)) == 0)
+		return (Uint16)desktop.bottom;
+	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
+}
+
+//----------------------------------------------------------Load----------------------------------------------------------------//
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -435,7 +378,6 @@ bool MainGame::initSDL()
 /* ----------------------------------------------------------------------------------- */
 void MainGame::loadUnitAndSpec()
 {
-	/*
 	tinyxml2::XMLDocument texteFile;
 	texteFile.LoadFile(_file.units.c_str());
 
@@ -468,26 +410,308 @@ void MainGame::loadUnitAndSpec()
 		node->FirstChildElement(s_WorkToBuild)->QueryDoubleText((double*)&currentUnit.workToBuild);
 		node->FirstChildElement(s_Maintenance)->QueryDoubleText((double*)&currentUnit.maintenance);
 
-		_var.s_player.tabUnit_Template.push_back(currentUnit);
+		_players.GETvectUnitTemplate().push_back(currentUnit);
 
 		node = node->NextSibling();
 	}
-	*/
-
 }
+
+//----------------------------------------------------------GameLoop----------------------------------------------------------------//
 
 void MainGame::runGameLoop()
 {
+	Sprite sprite(-1.0f,-1.0f,1.0f,1.0f);
+	Sprite sprite2(-0.5f,-0.5f,1.0f,1.0f);
+	GLSLProgram shader;
+
+	shader.compileShaders(_file.colorShadingVert, _file.colorShadingFrag);
+	shader.addAttribut("vertexPosition");
+	shader.addAttribut("vertexColor");
+	shader.linkShaders();
+
 	while (_var.continuer)
 	{
-		//_var.mouse.run_SDL(*this);
+		GameInput::run_SDL(*this);
+
+		glClearDepth(1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		shader.use();
+
+		sprite.draw(); 
+
+		shader.unuse();
+
+		sprite2.draw();
 
 
+
+		SDL_GL_SwapWindow(_screen.window);
 	}
+}
 
+//----------------------------------------------------------NewGame----------------------------------------------------------------//
+
+void MainGame::newGame()
+{
+	logfileconsole("[INFO]___: Newgame Start");
+	_var.statescreen = State_Type::STATEscreenNewgame;
+
+	SaveReload::createSave(*this);
+
+	//SDL_RenderClear(sysinfo.screen.renderer);
+
+	/* *********************************************************
+	 *						Nb player ?						   *
+	 ********************************************************* */
+
+	 /* ---------------------------------------------------------------------- */
+	 /* Première demande au joueur : 										  */
+	 /* Le nombre de joueurs ?												  */
+	 /* ---------------------------------------------------------------------- */
+	
+
+	/* ---------------------------------------------------------------------- */
+	/* Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1 		  */
+	/* ---------------------------------------------------------------------- */
+	
+
+	/* *********************************************************
+	 *					Name of player ?					   *
+	 ********************************************************* */
+
+	
+
+	/* ---------------------------------------------------------------------- */
+	/* Deuxième demande au joueur : 										  */
+	/* Le nom des joueurs													  */
+	/* ---------------------------------------------------------------------- */
+	
+
+	/* *********************************************************
+	 *					Map Generation						   *
+	 ********************************************************* */
+
+	_mainMap.generateMap();
+
+	newGameSettlerSpawn();
+
+	/* *********************************************************
+	 *							Save						   *
+	 ********************************************************* */
+
+	SaveReload::save(*this);
+
+	/* *********************************************************
+	 *					 Button Creation					   *
+	 ********************************************************* */
+
+	 /* ---------------------------------------------------------------------- */
+	 /* Création des boutons pour séléctionner les joueurs			 		  */
+	 /* ---------------------------------------------------------------------- */
+
+	_var.statescreen = State_Type::STATEmainMap;
+	_var.cinState = CinState_Type::cinMainMap;
+
+	
+
+	/* ### Don't put code below here ### */
+
+	logfileconsole("[INFO]___: Newgame End");
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : newGameSettlerSpawn														   */
+/* ROLE : Création des position pour les settlers de chaque joueurs					   */
+/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
+/* INPUT : ...  par défauts des unités												   */
+/* INPUT : const struct Map& map : structure globale de la map						   */
+/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void MainGame::newGameSettlerSpawn()
+{
+	/* ---------------------------------------------------------------------- */
+	/* association des vecteurs de position (x,y)							  */
+	/* avec les settlers de départ											  */
+	/* ---------------------------------------------------------------------- */
+	unsigned int selectunit(0);
+	selectunit = Unit::searchUnitByName("settler", _players.GETvectUnitTemplate());
+
+	std::vector<randomPos> tabRandom;
+	for (unsigned int i(0); i < _players.GETvectPlayer().size(); i++)
+	{
+
+		makeRandomPosTab(_mainMap, tabRandom);
+
+		_players.GETvectPlayer()[i]->addUnit
+		("settler",
+			tabRandom[i].x,
+			tabRandom[i].y,
+			_players.GETvectUnitTemplate()[selectunit].type,
+			_players.GETvectUnitTemplate()[selectunit].life,
+			_players.GETvectUnitTemplate()[selectunit].atq,
+			_players.GETvectUnitTemplate()[selectunit].def,
+			_players.GETvectUnitTemplate()[selectunit].movement,
+			_players.GETvectUnitTemplate()[selectunit].level,
+			MAINTENANCE_COST_1TH_SETTLER);
+	}
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : makeRandomPosTab															   */
+/* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial			   */
+/* INPUT : const Map& map : structure globale de la map								   */
+/* INPUT/OUTPUT : std::vector<randomPos>& : vecteurs de positions					   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void MainGame::makeRandomPosTab
+(
+	const MainMap& mainMap,
+	std::vector<randomPos>& tabRandom
+)
+{
+	randomPos RandomPOS;
+	bool continuer(true);
+	unsigned int iteration(0);
+
+	while (continuer)
+	{
+		if (iteration >= MAX_RANDOM_POS_ITERATION)
+		{
+#ifdef _DEBUG_MODE
+			exitError("[ERROR]___: makeRandomPosTab, Too many Iterations");
+#endif // DEBUG_MODE
+			/*
+			TODO : remove existing settlers and players
+				 : return to main menu with error message "too many player with this map size"
+			*/
+		}
+		iteration++;
+
+		makeRandomPos(RandomPOS, mainMap.GETmatriceMapConst(), mainMap.GETtoolBarSize(), mainMap.GETtileSize());
+		if (conditionground(mainMap.GETmatriceMapConst(), RandomPOS))
+		{
+			continuer = !conditionspace(RandomPOS, tabRandom, mainMap.GETtileSize());
+		}
+	}
+	tabRandom.push_back(RandomPOS);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : makeRandomPos																   */
+/* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran */
+/* OUTPUT : randomPos& RandomPOS : couple de positions								   */
+/* INPUT : const std::vector<std::vector<Tile>>& maps : Matrice maps				   */
+/* INPUT : unsigned int toolBarSize: taille de la barre d'outil						   */
+/* INPUT : unsigned int tileSize													   */
+/* RETURNED VALUE    : void															   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+void MainGame::makeRandomPos
+(
+	randomPos& RandomPOS,
+	const std::vector<std::vector<Tile>>& maps,
+	unsigned int toolBarSize,
+	unsigned int tileSize
+)
+{
+	int x((rand() % ((unsigned int)(maps.size() * tileSize) - (unsigned int)(toolBarSize * tileSize))) + (toolBarSize * tileSize));
+	int y((rand() % (maps[0].size() * tileSize)));
+	RandomPOS.x = (int)ceil(x / tileSize) * tileSize;
+	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : conditionspace															   */
+/* ROLE : condition pour valider les coordonnées crées:								   */
+/* ROLE : etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée */
+/* INPUT : const randomPos& RandomPOS : couple de positions							   */
+/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+/* INPUT : unsigned int tileSize													   */
+/* INPUT : unsigned int i : couple de positions courant								   */
+/* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+bool MainGame::conditionspace
+(
+	const randomPos& RandomPOS,
+	const std::vector<randomPos>& tabRandom,
+	unsigned int tileSize
+)
+{
+	int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
+
+	for (unsigned int i(0); i < tabRandom.size(); i++)
+	{
+		if (
+			(RandomPOS.x >= (tabRandom[i].x - spaceBetweenSettler)) /* West */
+			&&
+			(RandomPOS.x <= (tabRandom[i].x + spaceBetweenSettler)) /* East */
+			&&
+			(RandomPOS.y >= (tabRandom[i].y - spaceBetweenSettler)) /* North */
+			&&
+			(RandomPOS.y <= (tabRandom[i].y + spaceBetweenSettler)) /* South */
+			)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : conditionground															   */
+/* ROLE : condition pour valider les coordonnées crées:								   */
+/* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol			   */
+/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la map				   */
+/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+/* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
+/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------- */
+bool MainGame::conditionground
+(
+	const MatriceMap& matriceMap,
+	const randomPos& RandomPOS
+)
+{
+	unsigned int x(MainMap::convertPosXToIndex(RandomPOS.x));
+	unsigned int y(MainMap::convertPosYToIndex(RandomPOS.y));
+
+	if (
+			MainMap::assertRangeMapIndex(x, matriceMap.size())
+			&&
+			MainMap::assertRangeMapIndex(y, matriceMap[x].size())
+		)
+	{
+		if (
+			matriceMap[x][y].tile_ground
+			==
+			Ground_Type::grass
+			)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		throw("[ERROR]___: GamePlay::conditionground : assertRangeMapIndex == false");
+	}
 }
 
 
+//----------------------------------------------------------Destroy----------------------------------------------------------------//
 
 void MainGame::destroy()
 {
@@ -562,6 +786,8 @@ void MainGame::deleteAll
 	logfileconsole("[INFO]___:________PROGRAMME FINISH________");
 	ptrlogger->close();
 }
+
+//----------------------------------------------------------Logger----------------------------------------------------------------//
 
 
 /* ----------------------------------------------------------------------------------- */

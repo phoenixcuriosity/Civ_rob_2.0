@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.0.0
-	file version : 1.11
+	last modification on this file on version:0.23.1.0
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,21 +29,25 @@
 #include "Player.h"
 
 #include "MainGame.h"
+#include "Unit.h"
+#include "City.h"
+#include "Utility.h"
 
  /* *********************************************************
   *				START Player::METHODS					   *
   ********************************************************* */
 
 
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
-  /* NAME : Player																	   */
-  /* ROLE : Constructeur par défaut													   */
-  /* INPUT : void																		   */
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : Player																	   */
+/* ROLE : Constructeur par défaut													   */
+/* INPUT : void																		   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
 Player::Player() :
 	_name("NoName"),
+	_selectedUnit(NO_UNIT_SELECTED), _selectedCity(NO_CITY_SELECTED),
 	_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	_onOffDisplay{ false }
 {
@@ -59,6 +63,7 @@ Player::Player() :
 /* ----------------------------------------------------------------------------------- */
 Player::Player(const std::string& msg) :
 	_name(msg),
+	_selectedUnit(NO_UNIT_SELECTED), _selectedCity(NO_CITY_SELECTED),
 	_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	_onOffDisplay{ false }
 {
@@ -93,8 +98,8 @@ Player& Player::operator=
 	{
 		deletePlayer();
 		_name = player.GETname();
-		//_tabUnit = player.GETtabUnit();
-		//_tabCity = player.GETtabCity();
+		_tabUnit = player.GETtabUnit();
+		_tabCity = player.GETtabCity();
 		_goldStats = player.GETgoldStatsConst();
 	}
 	return *this;
@@ -110,42 +115,42 @@ Player& Player::operator=
 /* ----------------------------------------------------------------------------------- */
 void Player::deletePlayer()
 {
-	/*
+
 	unsigned int size((unsigned int)_tabUnit.size());
 
 	for (unsigned int i(0); i < size; i++)
 	{
 		delete _tabUnit[i];
 
-		LoadConfig::logfileconsole("[INFO]___: Kill Unit n:" + std::to_string(i) + " of Player: " + _name + " Success");
+		MainGame::logfileconsole("[INFO]___: Kill Unit n:" + std::to_string(i) + " of Player: " + _name + " Success");
 	}
 
 	for (unsigned int i(0); i < size; i++)
 		_tabUnit.pop_back();
 
 	if (_tabUnit.empty())
-		LoadConfig::logfileconsole("[INFO]___: Kill ALL Unit of Player:" + _name + " Success");
+		MainGame::logfileconsole("[INFO]___: Kill ALL Unit of Player:" + _name + " Success");
 	else
-		LoadConfig::logfileconsole("[ERROR]__: _tabunit.size() != 0");
+		MainGame::logfileconsole("[ERROR]__: _tabunit.size() != 0");
 
-
+	
 	size = (unsigned int)_tabCity.size();
 
 	for (unsigned int i(0); i < size; i++)
 	{
 		delete _tabCity[i];
 
-		LoadConfig::logfileconsole("[INFO]___: Kill Citie n:" + std::to_string(i) + " of Player: " + _name + " Success");
+		MainGame::logfileconsole("[INFO]___: Kill Citie n:" + std::to_string(i) + " of Player: " + _name + " Success");
 	}
 
 	for (unsigned int i(0); i < size; i++)
 		_tabCity.pop_back();
 
 	if (_tabCity.empty())
-		LoadConfig::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
+		MainGame::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
 	else
-		LoadConfig::logfileconsole("[ERROR]__: _tabcities.size() != 0");
-		*/
+		MainGame::logfileconsole("[ERROR]__: _tabcities.size() != 0");
+		
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -155,7 +160,7 @@ void Player::deletePlayer()
 /* INPUT : void																		   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- 
+/* ----------------------------------------------------------------------------------- */
 void Player::addEmptyUnit()
 {
 	_tabUnit.push_back(new Unit());
@@ -168,7 +173,7 @@ void Player::addEmptyUnit()
 /* INPUT : Spécifications demandées (nom, positions, ...)							   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- 
+/* ----------------------------------------------------------------------------------- */
 void Player::addUnit
 (
 	const std::string& name,
@@ -193,13 +198,13 @@ void Player::addUnit
 /* INPUT : unsigned int : index de Unit dans le tableau								   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- 
+/* ----------------------------------------------------------------------------------- */
 void Player::deleteUnit
 (
 	unsigned int index
 )
 {
-	if (assertSize(_tabUnit.size(), index))
+	if (Utility::assertSize(_tabUnit.size(), index))
 	{
 		if (nullptr != _tabUnit[index])
 		{
@@ -225,13 +230,13 @@ void Player::deleteUnit
 /* INPUT : Spécifications demandées (nom, positions, ...)							   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- 
+/* ----------------------------------------------------------------------------------- */
 void Player::addCity
 (
 	const std::string& name,
 	unsigned int x,
 	unsigned int y,
-	std::vector<Tile>& tiles
+	VectMap& tiles
 )
 {
 	_tabCity.push_back(new City(name, x, y, tiles));
@@ -244,14 +249,14 @@ void Player::addCity
 /* INPUT : unsigned int : index de City dans le tableau								   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- 
+/* ----------------------------------------------------------------------------------- */
 void Player::deleteCity
 (
 	unsigned int index
 )
 {
 
-	if (assertSize(_tabCity.size(), index))
+	if (Utility::assertSize(_tabCity.size(), index))
 	{
 		if (nullptr != _tabCity[index])
 		{
@@ -340,18 +345,54 @@ void Player::addGoldToGoldConversionSurplus
 	_goldStats.goldConversionSurplus += goldToAdd;
 }
 
-bool Player::assertSize
-(
-	size_t size,
-	unsigned int index
-)
-{
-	return index < size ? true : false;
-}
 
 /* *********************************************************
  *				END Player::METHODS						   *
  ********************************************************* */
+
+
+
+
+
+
+Players::Players()
+:_selectedPlayer(NO_PLAYER_SELECTED), _nbNoNamePlayer(0), _citiesNameMaxToCreate(0)
+{
+
+}
+
+Players::~Players()
+{
+	for (unsigned int i(0); i < _vectPlayer.size(); i++)
+	{
+		removeIndexPlayer(i);
+	}
+}
+
+void Players::addPlayer()
+{
+
+}
+
+void Players::removeIndexPlayer
+(
+	unsigned int index
+)
+{
+	if (Utility::assertSize(_vectPlayer.size(), index))
+	{
+		if (nullptr != _vectPlayer[index])
+		{
+			delete _vectPlayer[index];
+		}
+	}
+	else
+	{
+		throw("[ERROR]__: removeIndexPlayer : assertSize");
+	}
+}
+
+
 
  /*
  *	End Of File : Player.cpp

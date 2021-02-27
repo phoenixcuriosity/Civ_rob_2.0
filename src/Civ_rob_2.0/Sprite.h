@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
 	last modification on this file on version:0.23.1.0
-	file version : 1.16
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,29 +22,68 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
+#ifndef Sprite_H
+#define Sprite_H
 
-#include "MainGame.h"
+#include "LIB.h"
 
-/* *********************************************************
- *						MAIN							   *
- ********************************************************* */
-
-int main(int argc, char* argv[])
+struct dot2D
 {
-	MainGame mainGame;
-	mainGame.GETvar().argc = argc;
-	mainGame.GETvar().argv = argv;
+	float x;
+	float y;
+};
 
-	mainGame.runGameLoop();
+struct sprite_square
+{
+	dot2D origin;
+	float width;
+	float height;
+};
 
-	mainGame.destroy();
-	
-	return EXIT_SUCCESS;
-}
+struct Vertex
+{
+	dot2D point;
+	struct Color
+	{
+		GLubyte r;
+		GLubyte g;
+		GLubyte b;
+		GLubyte a;
+	} color;
+};
 
-/*
-*	End Of File : main.cpp
-*/
+class Sprite
+{
+public:
+	Sprite
+	(
+		float x,
+		float y,
+		float width,
+		float height
+	);
+	~Sprite();
+
+private:
+	void init
+	(
+		float x,
+		float y,
+		float width,
+		float height
+	);
+
+public:
+
+	void draw();
+
+private:
+
+	GLuint _vboID;
+	sprite_square _coor;
+
+};
+
+
+#endif // !Sprite_H
+

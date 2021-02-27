@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
 	last modification on this file on version:0.23.1.0
-	file version : 1.16
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,29 +22,52 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
+#ifndef GLSLProgram_H
+#define GLSLProgram_H
 
-#include "MainGame.h"
+#include "LIB.h"
 
-/* *********************************************************
- *						MAIN							   *
- ********************************************************* */
-
-int main(int argc, char* argv[])
+class GLSLProgram
 {
-	MainGame mainGame;
-	mainGame.GETvar().argc = argc;
-	mainGame.GETvar().argv = argv;
+public:
+	GLSLProgram();
+	~GLSLProgram();
 
-	mainGame.runGameLoop();
+private:
 
-	mainGame.destroy();
-	
-	return EXIT_SUCCESS;
-}
 
-/*
-*	End Of File : main.cpp
-*/
+public:
+
+	void compileShaders
+	(
+		const std::string& filePathColorShadingVert,
+		const std::string& filePathColorShadingFrag
+	);
+
+	void linkShaders();
+
+	void addAttribut(const std::string& name);
+
+	void use();
+
+	void unuse();
+
+private:
+
+	void getFileCompile
+	(
+		const std::string& filePath,
+		GLuint id
+	);
+
+private:
+	int _numAttribut;
+
+	GLuint _programID;
+	GLuint _vertexID;
+	GLuint _fragID;
+
+};
+
+
+#endif // !GLSLProgram_H

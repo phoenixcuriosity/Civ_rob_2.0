@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.0.0
-	file version : 1.0
+	last modification on this file on version:0.23.1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,21 +29,9 @@
 
 #include "Player.h"
 #include "GameInput.h"
-
-//--- Constants related to the screen  ----------------------------------------------------------------------------------------------------------
-
-/* Define a pixel out of range of the screen on x */
-#define SCREEN_MIN_X_OUT_OF_RANGE -1
-
-/* Define a pixel out of range of the screen on y */
-#define SCREEN_MIN_Y_OUT_OF_RANGE -1
-
-/* *********************************************************
- *						 Enum							   *
- ********************************************************* */
-
-
-//--- enum related to Texture -----------------------------------------------------------------------------------------------------------
+#include "MainMap.h"
+#include "SaveReload.h"
+#include "GameEngine.h"
 
 
 /* Define center type for Texture to print on the screen */
@@ -75,72 +63,9 @@ const Uint8 SCREEN_REFRESH_RATE = getRefreshRate();
 
 const std::string configFilePath = "bin/config.xml";
 
-#define NO_PLAYER_SELECTED -1
-#define NO_UNIT_SELECTED -1
-#define NO_CITY_SELECTED -1
-
-struct SubcatPlayer
-{
-
-	// *** Index ***//
-
-	// index de la cité actuellement sélectionnée
-	int selectCity = NO_CITY_SELECTED;
-
-	// index du joueur actuellement sélectionné
-	int selectplayer = NO_PLAYER_SELECTED;
-
-	// index du joueur actuellement sélectionné, action : Attaquer
-	int selectPlayerToAttack = NO_PLAYER_SELECTED;
-
-	// index de l'unité actuellement sélectionnée
-	int selectunit = NO_UNIT_SELECTED;
-
-	// index de l'unité actuellement sélectionnée, action : Attaquer
-	int selectUnitToAttack = NO_UNIT_SELECTED;
-
-	// index de l'unité actuellement sélectionnée, action : Créer
-	unsigned int unitToCreate = 0;
 
 
-	// *** Name ***//
-
-
-	// nom de l'unité à créer à partir du menu citieMap
-	std::string toBuild;
-
-	// nom de l'unité à créer à partir du menu mainMap
-	std::string unitNameToCreate;
-
-	// nom de l'unité à effectuer un mouvement à partir du menu mainMap
-	std::string unitNameToMove;
-
-
-	// *** Vector ***//
-
-	// tableau des noms des citié de tous les joueurs
-	std::vector<std::string> tabCitiesName;
-
-	// tableau des noms des joueurs
-	std::vector<std::string> tabPlayerName;
-
-	// tableau des statistiques par défauts des unités
-	//std::vector<Unit_Template> tabUnit_Template;
-
-	// nombre de joueur sans nom
-	unsigned int nbNoNamePlayer = 0;
-
-	// nombre de cité maximal différentes à créer 
-	unsigned int citiesNameMaxToCreate = 0;
-};
-
-struct SizeCityMap
-{
-	unsigned int ToolbarButtonsH = 0;
-	unsigned int ToolbarButtonsW = 0;
-};
-
-//---------------------- Structure niveau 1 ---------------------------------------------------------------------------------------------------------
+//---------------------- Structure niveau 1 ------------------------------------------------------------------------------//
 struct Screen
 {
 	// ptr sur la fenetre crée par la SDL
@@ -167,6 +92,9 @@ struct File
 
 	std::string saveMaps = EMPTY_STRING;
 	std::string savePlayers = EMPTY_STRING;
+
+	std::string colorShadingVert = EMPTY_STRING;
+	std::string colorShadingFrag = EMPTY_STRING;
 };
 struct Var
 {
@@ -232,150 +160,20 @@ struct Var
 				cinMainMap,
 			};
 		*/
-	//CinState_Type cinState = CinState_Type::cinNothing;
-
-
-
-	/*** type personnalisé	***/
-
-	SubcatPlayer s_player;
-
+	CinState_Type cinState = CinState_Type::cinNothing;
 };
-struct Map
-{
-	/*
-		Attention config spéciale de visual studio 2017 pour dépasser 1Mo de données dans un tableau
-		propriété -> éditeur de lien -> système -> taille de la réserve de la pile -> mettre une valeur plus grande que 1Mo
-	*/
-	unsigned int mapSize = 0; // en pixels
-	unsigned int tileSize = 0;
-	unsigned int toolBarSize = 0;
-	unsigned int screenOffsetXIndexMin = 0;
-	unsigned int screenOffsetYIndexMin = 0;
-	unsigned int screenOffsetXIndexMax = 0;
-	unsigned int screenOffsetYIndexMax = 0;
-	//MatriceMap matriceMap;
-	SizeCityMap sizeCityMap;
-};
+
+
 
 class MainGame
 {
 public:
+	/* *********************************************************
+	 *						Const and Destr					   *
+	 ********************************************************* */
+
 	MainGame();
 	~MainGame();
-
-	
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : getHorizontal																   */
-	/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
-	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getHorizontal
-	(
-		unsigned int tileSize
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : getVertical																   */
-	/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
-	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getVertical
-	(
-		unsigned int tileSize
-	);
-
-public:
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : loadUnitAndSpec															   */
-	/* ROLE : Chargement des informations concernant les unit�s � partir d'un fichier	   */
-	/* INPUT : const std::string& : nom du fichier � ouvrir								   */
-	/* OUTPUT : std::vector<Unit_Template>& : Vecteur des Unit							   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-
-
-	void loadUnitAndSpec();
-
-public:
-
-	void runGameLoop();
-
-public:
-
-	void destroy();
-
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : exitError																	   */
-	/* ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée	   */
-	/* INPUT : const std::string msg : message de l'erreur								   */
-	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	static void exitError
-	(
-		const std::string msg
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : deleteAll																	   */
-	/* ROLE : Destruction des allocations dynamique du programme						   */
-	/* ROLE : Destruction de la fenetre et du Renderer de la SDL						   */
-	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
-	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	static void deleteAll
-	(
-		MainGame& mainGame
-	);
-
-
-public:
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : logfileconsole															   */
-	/* ROLE : Transmission du message sur la console et dans le fichier log.txt			   */
-	/* INPUT : const std::string msg : message											   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void logfileconsole
-	(
-		const std::string msg
-	);
-
-public:
-	
-
-	inline Screen& GETscreen() { return _screen; };
-	inline File& GETfile() { return _file; };
-	inline Var& GETvar() { return _var; };
-	inline Map& GETmap() { return _map; };
-	inline VectPlayer& GETvectPlayer() { return _vectPlayer; };
-	inline GameInput& GETgameInput() { return _gameInput; };
-	inline std::ofstream& GETlogger() { return _logger; };
-
-	inline void SETscreen(Screen& screen) { _screen = screen; };
-	inline void SETfile(File& file) { _file = file; };
-	inline void SETvar(Var& var) {_var = var; };
-	inline void SETmap(Map& map) { _map = map; };
-	inline void SETvectPlayer(VectPlayer& vectPlayer) {  _vectPlayer = vectPlayer; };
-	inline void SETgameInput(GameInput& gameInput) {  _gameInput= gameInput; };
-	/* NO SET : _logger */
 
 private:
 
@@ -434,20 +232,6 @@ private:
 
 	);
 
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : initTile																	   */
-	/* ROLE : Initialisation des cases de la map en fonction de sa taille				   */
-	/* INPUT : struct Map& : donn�es g�n�rale de la map : taille						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	void initTile
-	(
-		Map& map
-	);
-
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initSDL																	   */
@@ -461,8 +245,251 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	bool initSDL();
 
+public:
+
+	/* *********************************************************
+	*					Screen width and height				   *
+	********************************************************* */
+	
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : getHorizontal																   */
+	/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
+	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static Uint16 getHorizontal
+	(
+		unsigned int tileSize
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : getVertical																   */
+	/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
+	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static Uint16 getVertical
+	(
+		unsigned int tileSize
+	);
+
+public:
+
+	/* *********************************************************
+	 *							Load						   *
+	 ********************************************************* */
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : loadUnitAndSpec															   */
+	/* ROLE : Chargement des informations concernant les unit�s � partir d'un fichier	   */
+	/* INPUT : const std::string& : nom du fichier � ouvrir								   */
+	/* OUTPUT : std::vector<Unit_Template>& : Vecteur des Unit							   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	void loadUnitAndSpec();
+
+public:
+
+	/* *********************************************************
+	 *						GameLoop						   *
+	 ********************************************************* */
+
+	void runGameLoop();
 
 private:
+
+public:
+
+	/* *********************************************************
+     *						NewGame							   *
+     ********************************************************* */
+
+	void newGame();
+
+private:
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : newGameSettlerSpawn														   */
+	/* ROLE : Création des position pour les settlers de chaque joueurs					   */
+	/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
+	/* INPUT : ...  par défauts des unités												   */
+	/* INPUT : const struct Map& map : structure globale de la map						   */
+	/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	void newGameSettlerSpawn();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : makeRandomPosTab															   */
+	/* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial			   */
+	/* INPUT : const Map& map : structure globale de la map								   */
+	/* INPUT/OUTPUT : std::vector<randomPos>& : vecteurs de positions					   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	void makeRandomPosTab
+	(
+		const MainMap& mainMap,
+		std::vector<randomPos>& tabRandom
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : makeRandomPos																   */
+	/* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran */
+	/* OUTPUT : randomPos& RandomPOS : couple de positions								   */
+	/* INPUT : const std::vector<std::vector<Tile>>& maps : Matrice maps				   */
+	/* INPUT : unsigned int toolBarSize: taille de la barre d'outil						   */
+	/* INPUT : unsigned int tileSize													   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	void makeRandomPos
+	(
+		randomPos& RandomPOS,
+		const MatriceMap& matriceMap,
+		unsigned int toolBarSize,
+		unsigned int tileSize
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : conditionspace															   */
+	/* ROLE : condition pour valider les coordonnées crées:								   */
+	/* ROLE : etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée */
+	/* INPUT : const randomPos& RandomPOS : couple de positions							   */
+	/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+	/* INPUT : unsigned int tileSize													   */
+	/* INPUT : unsigned int i : couple de positions courant								   */
+	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	bool conditionspace
+	(
+		const randomPos& RandomPOS,
+		const std::vector<randomPos>& tabRandom,
+		unsigned int tileSize
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : conditionground															   */
+	/* ROLE : condition pour valider les coordonnées crées:								   */
+	/* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol			   */
+	/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la map				   */
+	/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
+	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	bool conditionground
+	(
+		const MatriceMap& matriceMap,
+		const randomPos& RandomPOS
+	);
+
+
+public:
+
+	/* *********************************************************
+	 *						Destroy							   *
+	 ********************************************************* */
+
+	void destroy();
+
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : exitError																	   */
+	/* ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée	   */
+	/* INPUT : const std::string msg : message de l'erreur								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void exitError
+	(
+		const std::string msg
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteAll																	   */
+	/* ROLE : Destruction des allocations dynamique du programme						   */
+	/* ROLE : Destruction de la fenetre et du Renderer de la SDL						   */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void deleteAll
+	(
+		MainGame& mainGame
+	);
+
+
+public:
+
+	/* *********************************************************
+	 *						Logger							   *
+	 ********************************************************* */
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : logfileconsole															   */
+	/* ROLE : Transmission du message sur la console et dans le fichier log.txt			   */
+	/* INPUT : const std::string msg : message											   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static void logfileconsole
+	(
+		const std::string msg
+	);
+
+public:
+	
+	/* *********************************************************
+	 *						GET/SET							   *
+	 ********************************************************* */
+
+	inline Screen& GETscreen() { return _screen; };
+	inline const Screen& GETscreen()const { return _screen; };
+	inline File& GETfile() { return _file; };
+	inline const File& GETfile()const { return _file; };
+	inline Var& GETvar() { return _var; };
+	inline const Var& GETvar()const { return _var; };
+	inline MainMap& GETmainMap() { return _mainMap; };
+	inline const MainMap& GETmainMap()const { return _mainMap; };
+	inline Players& GETPlayers() { return _players; };
+	inline const Players& GETPlayers()const { return _players; };
+	inline GameInput& GETgameInput() { return _gameInput; };
+	inline const GameInput& GETgameInput()const { return _gameInput; };
+	inline SaveReload& GETsaveReload() { return _saveReload; };
+	inline const SaveReload& GETsaveReload()const { return _saveReload; };
+	inline GameEngine& GETgameEngine() { return _gameEngine; };
+	inline const GameEngine& GETgameEngine()const { return _gameEngine; };
+	inline std::ofstream& GETlogger() { return _logger; };
+
+	inline void SETscreen(Screen& screen) { _screen = screen; };
+	inline void SETfile(File& file) { _file = file; };
+	inline void SETvar(Var& var) {_var = var; };
+	inline void SETmainMap(MainMap& mainMap) { _mainMap = mainMap; };
+	inline void SETPlayers(Players& players) {  _players = players; };
+	inline void SETgameInput(GameInput& gameInput) {  _gameInput= gameInput; };
+	inline void SETsaveReload(SaveReload& saveReload) {  _saveReload = saveReload; };
+	/* NO SET : _logger */
+
+private:
+
+	/* *********************************************************
+	 *						Attributs						   *
+	 ********************************************************* */
 	
 	Screen _screen;
 
@@ -470,11 +497,15 @@ private:
 
 	Var _var;
 
-	Map _map;
+	MainMap _mainMap;
 
-	VectPlayer _vectPlayer;
+	Players _players;
 
 	GameInput _gameInput;
+
+	GameEngine _gameEngine;
+	
+	SaveReload _saveReload;
 
 	std::ofstream _logger;
 

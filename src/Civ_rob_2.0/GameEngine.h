@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
 	last modification on this file on version:0.23.1.0
-	file version : 1.16
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,29 +22,23 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
+#ifndef GameEngine_H
+#define GameEngine_H
 
-#include "MainGame.h"
+#include "LIB.h"
 
-/* *********************************************************
- *						MAIN							   *
- ********************************************************* */
 
-int main(int argc, char* argv[])
+class GameEngine
 {
-	MainGame mainGame;
-	mainGame.GETvar().argc = argc;
-	mainGame.GETvar().argv = argv;
+public:
+	GameEngine();
+	~GameEngine();
 
-	mainGame.runGameLoop();
+private:
 
-	mainGame.destroy();
-	
-	return EXIT_SUCCESS;
-}
+};
 
-/*
-*	End Of File : main.cpp
-*/
+
+
+#endif // !GameEngine_H
+
