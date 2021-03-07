@@ -1,0 +1,18 @@
+﻿  Citizen.cpp
+  City.cpp
+C:\Users\Robin\Documents\GitHub\Civ_Rob_2.0\Civ_Rob_2.0\src\City.cpp(783,15): warning C4100: 'index': unreferenced formal parameter
+C:\Users\Robin\Documents\GitHub\Civ_Rob_2.0\Civ_Rob_2.0\src\City.cpp(800,15): warning C4100: 'index': unreferenced formal parameter
+  Civ_Rob_2.0.cpp
+  GameInput.cpp
+C:\Users\Robin\Documents\GitHub\Civ_Rob_2.0\Civ_Rob_2.0\src\GameInput.cpp(255,12): warning C4100: 'mainGame': unreferenced formal parameter
+C:\Users\Robin\Documents\GitHub\Civ_Rob_2.0\Civ_Rob_2.0\src\GameInput.cpp(272,12): warning C4100: 'mainGame': unreferenced formal parameter
+  MainGame.cpp
+C:\Users\Robin\Documents\GitHub\Civ_Rob_2.0\Civ_Rob_2.0\src\MainGame.cpp(440,33): error C2374: 'texture': redefinition; multiple initialization
+C:\Users\Robin\Documents\GitHub\Civ_Rob_2.0\Civ_Rob_2.0\src\MainGame.cpp(436): message : see declaration of 'texture'
+C:\Users\Robin\Documents\GitHub\Civ_Rob_2.0\Civ_Rob_2.0\src\MainGame.cpp(440,114): fatal error C1903: unable to recover from previous error(s); stopping compilation
+  MainMap.cpp
+  Player.cpp
+  SaveReload.cpp
+  Unit.cpp
+  Utility.cpp
+  XmlConvertValue.cpp

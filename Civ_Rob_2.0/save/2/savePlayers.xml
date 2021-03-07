@@ -1,0 +1,30 @@
+<SavePlayers>
+    <Player>
+        <Name>NoName0</Name>
+        <GoldStats>
+            <Gold>100</Gold>
+            <GoldBalance>0</GoldBalance>
+            <Income>0</Income>
+            <Cost>0</Cost>
+            <TaxIncome>0</TaxIncome>
+            <CommerceIncome>0</CommerceIncome>
+            <GoldConversionSurplus>0</GoldConversionSurplus>
+            <ArmiesCost>0</ArmiesCost>
+            <BuildingsCost>0</BuildingsCost>
+        </GoldStats>
+        <TabUnit>
+            <Unit>
+                <Name>settler</Name>
+                <X>896</X>
+                <Y>1472</Y>
+                <MovementType>0</MovementType>
+                <Life>1</Life>
+                <Atq>0</Atq>
+                <Def>0</Def>
+                <Movement>1</Movement>
+                <Level>1</Level>
+                <Maintenance>0</Maintenance>
+            </Unit>
+        </TabUnit>
+    </Player>
+</SavePlayers>

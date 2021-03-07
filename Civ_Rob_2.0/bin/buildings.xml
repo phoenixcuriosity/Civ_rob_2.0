@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<buildings>
+
+	<building>
+		<Name>Furnance</Name>
+		<ImagePath>bin/image/buildings/furnance.png</ImagePath>
+		<WorkToBuild>50</WorkToBuild>
+		<Maintenance>1</Maintenance>
+		<Stats>
+			<WorkMultiplier>1.25</WorkMultiplier>
+			
+		</Stats>
+		<WorkSlots>2</WorkSlots>
+	</building>
+
+</buildings>
