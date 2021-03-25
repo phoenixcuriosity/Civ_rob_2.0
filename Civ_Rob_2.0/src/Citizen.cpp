@@ -40,7 +40,7 @@
 /* ROLE : Placement d'un Citizen en fonction des cases occup�es de la City			   */
 /* INPUT : std::vector<Tile> : carte de la City										   */
 /* INPUT : std::vector<Citizen> : tableau de Citizen								   */
-/* INPUT : int& _food, int& _work, int& _gold : spec de la case						   */
+/* INPUT : int& m_food, int& m_work, int& m_gold : spec de la case						   */
 /* RETURNED VALUE    : unsigned int : la place allou�e								   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -48,9 +48,9 @@ unsigned int Citizen::placeCitizen
 (
 	VectMap& tile,
 	VectCitizen& citizens,
-	int& _food,
-	int& _work,
-	int& _gold
+	int& m_food,
+	int& m_work,
+	int& m_gold
 )
 {
 	unsigned int condition((unsigned int)citizens.size());
@@ -94,9 +94,9 @@ unsigned int Citizen::placeCitizen
 		}
 	}
 
-	_food = tile[place].food;
-	_work = tile[place].work;
-	_gold = tile[place].gold;
+	m_food = tile[place].food;
+	m_work = tile[place].work;
+	m_gold = tile[place].gold;
 	return place;
 }
 
@@ -121,14 +121,14 @@ unsigned int Citizen::placeCitizen
 /* ----------------------------------------------------------------------------------- */
 Citizen::Citizen()
 	:
-	_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
-	_happiness(Emotion_Type::neutre),
-	_food(2),
-	_work(1),
-	_gold(1),
-	_revolt(0),
-	_religion(Religion_Type::catholic),
-	_place(false)
+	m_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
+	m_happiness(Emotion_Type::neutre),
+	m_food(2),
+	m_work(1),
+	m_gold(1),
+	m_revolt(0),
+	m_religion(Religion_Type::catholic),
+	m_place(false)
 {
 	MainGame::logfileconsole("[INFO]___: Create Citizen Success");
 }
@@ -145,14 +145,14 @@ Citizen::Citizen
 	Tile tile
 )
 	:
-	_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
-	_happiness(Emotion_Type::neutre),
-	_food(tile.food),
-	_work(tile.work),
-	_gold(tile.gold),
-	_revolt(0),
-	_religion(Religion_Type::catholic),
-	_place(true)
+	m_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
+	m_happiness(Emotion_Type::neutre),
+	m_food(tile.food),
+	m_work(tile.work),
+	m_gold(tile.gold),
+	m_revolt(0),
+	m_religion(Religion_Type::catholic),
+	m_place(true)
 {
 	MainGame::logfileconsole("[INFO]___: Create Citizen Success");
 }
@@ -171,11 +171,11 @@ Citizen::Citizen
 	VectCitizen& citizens
 )
 	:
-	_tileOccupied(placeCitizen(tile, citizens, _food, _work, _gold)),
-	_happiness(Emotion_Type::neutre),
-	_revolt(0),
-	_religion(Religion_Type::catholic),
-	_place(true)
+	m_tileOccupied(placeCitizen(tile, citizens, m_food, m_work, m_gold)),
+	m_happiness(Emotion_Type::neutre),
+	m_revolt(0),
+	m_religion(Religion_Type::catholic),
+	m_place(true)
 {
 	MainGame::logfileconsole("[INFO]___: Create Citizen Success");
 }

@@ -31,6 +31,8 @@
 #include "Utility.h"
 #include "MainGame.h"
 
+#include <RealEngine2D/src/ResourceManager.h>
+
  /* *********************************************************
   *				START Player::METHODS					   *
   ********************************************************* */
@@ -44,10 +46,10 @@
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 Player::Player() :
-	_name("NoName"),
-	_selectedUnit(NO_UNIT_SELECTED), _selectedCity(NO_CITY_SELECTED),
-	_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
-	_onOffDisplay{ false }
+	m_name("NoName"),
+	m_selectedUnit(NO_UNIT_SELECTED), m_selectedCity(NO_CITY_SELECTED),
+	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	m_onOffDisplay{ false }
 {
 	MainGame::logfileconsole("[INFO]___: Create Player Par Defaut Success");
 }
@@ -60,10 +62,10 @@ Player::Player() :
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 Player::Player(const std::string& msg) :
-	_name(msg),
-	_selectedUnit(NO_UNIT_SELECTED), _selectedCity(NO_CITY_SELECTED),
-	_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
-	_onOffDisplay{ false }
+	m_name(msg),
+	m_selectedUnit(NO_UNIT_SELECTED), m_selectedCity(NO_CITY_SELECTED),
+	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	m_onOffDisplay{ false }
 {
 	MainGame::logfileconsole("[INFO]___: Create Player Success");
 }
@@ -95,10 +97,10 @@ Player& Player::operator=
 	if (this != &player)
 	{
 		deletePlayer();
-		_name = player.GETname();
-		_tabUnit = player.GETtabUnit();
-		_tabCity = player.GETtabCity();
-		_goldStats = player.GETgoldStatsConst();
+		m_name = player.GETname();
+		m_tabUnit = player.GETtabUnit();
+		m_tabCity = player.GETtabCity();
+		m_goldStats = player.GETgoldStatsConst();
 	}
 	return *this;
 }
@@ -114,40 +116,25 @@ Player& Player::operator=
 void Player::deletePlayer()
 {
 
-	unsigned int size((unsigned int)_tabUnit.size());
+	unsigned int size((unsigned int)m_tabUnit.size());
 
 	for (unsigned int i(0); i < size; i++)
 	{
-		delete _tabUnit[i];
+		delete m_tabUnit[i];
 
-		MainGame::logfileconsole("[INFO]___: Kill Unit n:" + std::to_string(i) + " of Player: " + _name + " Success");
+		//MainGame::logfileconsole("[INFO]___: Kill Unit n:" + std::to_string(i) + " of Player: " + m_name + " Success");
 	}
-
-	for (unsigned int i(0); i < size; i++)
-		_tabUnit.pop_back();
-
-	if (_tabUnit.empty())
-		MainGame::logfileconsole("[INFO]___: Kill ALL Unit of Player:" + _name + " Success");
-	else
-		MainGame::logfileconsole("[ERROR]__: _tabunit.size() != 0");
-
+	m_tabUnit.clear();
 	
-	size = (unsigned int)_tabCity.size();
+	size = (unsigned int)m_tabCity.size();
 
 	for (unsigned int i(0); i < size; i++)
 	{
-		delete _tabCity[i];
+		delete m_tabCity[i];
 
-		MainGame::logfileconsole("[INFO]___: Kill Citie n:" + std::to_string(i) + " of Player: " + _name + " Success");
+		//MainGame::logfileconsole("[INFO]___: Kill Citie n:" + std::to_string(i) + " of Player: " + m_name + " Success");
 	}
-
-	for (unsigned int i(0); i < size; i++)
-		_tabCity.pop_back();
-
-	if (_tabCity.empty())
-		MainGame::logfileconsole("[INFO]___: Kill ALL Cities of Player:" + _name + " Success");
-	else
-		MainGame::logfileconsole("[ERROR]__: _tabcities.size() != 0");
+	m_tabCity.clear();
 		
 }
 
@@ -161,7 +148,7 @@ void Player::deletePlayer()
 /* ----------------------------------------------------------------------------------- */
 void Player::addEmptyUnit()
 {
-	_tabUnit.push_back(new Unit());
+	m_tabUnit.push_back(new Unit());
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -186,7 +173,7 @@ void Player::addUnit
 	double maintenance
 )
 {
-	_tabUnit.push_back(new Unit(name, x, y, movementType, life, atq, def, move, level, maintenance));
+	m_tabUnit.push_back(new Unit(name, x, y, movementType, life, atq, def, move, level, maintenance));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -202,21 +189,21 @@ void Player::deleteUnit
 	unsigned int index
 )
 {
-	if (Utility::assertSize(_tabUnit.size(), index))
+	if (Utility::assertSize(m_tabUnit.size(), index))
 	{
-		if (nullptr != _tabUnit[index])
+		if (nullptr != m_tabUnit[index])
 		{
-			delete _tabUnit[index];
-			if (_tabUnit.size() > 1 && index < _tabUnit.size() - 1)
+			delete m_tabUnit[index];
+			if (m_tabUnit.size() > 1 && index < m_tabUnit.size() - 1)
 			{
-				for (unsigned int i(index); i < (_tabUnit.size() - 1); i++)
-					_tabUnit[i] = _tabUnit[(unsigned __int64)i + 1];
+				for (unsigned int i(index); i < (m_tabUnit.size() - 1); i++)
+					m_tabUnit[i] = m_tabUnit[(unsigned __int64)i + 1];
 			}
-			_tabUnit.pop_back();
+			m_tabUnit.pop_back();
 		}
 		else
 		{
-			throw("[ERROR]__: deleteUnit : nullptr == _tabUnit[index]");
+			throw("[ERROR]__: deleteUnit : nullptr == m_tabUnit[index]");
 		}
 	}
 }
@@ -237,7 +224,7 @@ void Player::addCity
 	VectMap& tiles
 )
 {
-	_tabCity.push_back(new City(name, x, y, tiles));
+	m_tabCity.push_back(new City(name, x, y, tiles));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -254,21 +241,21 @@ void Player::deleteCity
 )
 {
 
-	if (Utility::assertSize(_tabCity.size(), index))
+	if (Utility::assertSize(m_tabCity.size(), index))
 	{
-		if (nullptr != _tabCity[index])
+		if (nullptr != m_tabCity[index])
 		{
-			delete _tabCity[index];
-			if (_tabCity.size() > 1 && index < _tabCity.size() - 1)
+			delete m_tabCity[index];
+			if (m_tabCity.size() > 1 && index < m_tabCity.size() - 1)
 			{
-				for (unsigned int i(index); i < (_tabCity.size() - 1); i++)
-					_tabCity[i] = _tabCity[(unsigned __int64)i + 1];
+				for (unsigned int i(index); i < (m_tabCity.size() - 1); i++)
+					m_tabCity[i] = m_tabCity[(unsigned __int64)i + 1];
 			}
-			_tabCity.pop_back();
+			m_tabCity.pop_back();
 		}
 		else
 		{
-			throw("[ERROR]__: deleteCity : nullptr == _tabCity[index]");
+			throw("[ERROR]__: deleteCity : nullptr == m_tabCity[index]");
 		}
 	}
 }
@@ -286,24 +273,24 @@ void Player::computeGold()
 {
 	computeMaintenanceCostUnit();
 
-	_goldStats.income = _goldStats.taxIncome
-		+ _goldStats.commerceIncome
-		+ _goldStats.goldConversionSurplus;
+	m_goldStats.income = m_goldStats.taxIncome
+		+ m_goldStats.commerceIncome
+		+ m_goldStats.goldConversionSurplus;
 
-	_goldStats.cost = _goldStats.buildingsCost
-		+ _goldStats.armiesCost;
+	m_goldStats.cost = m_goldStats.buildingsCost
+		+ m_goldStats.armiesCost;
 
-	_goldStats.goldBalance = _goldStats.income - _goldStats.cost;
-	_goldStats.gold += _goldStats.goldBalance;
+	m_goldStats.goldBalance = m_goldStats.income - m_goldStats.cost;
+	m_goldStats.gold += m_goldStats.goldBalance;
 
 }
 
 void Player::computeMaintenanceCostUnit()
 {
 	/*
-	for (unsigned int i(0); i < _tabUnit.size(); i++)
+	for (unsigned int i(0); i < m_tabUnit.size(); i++)
 	{
-		_goldStats.armiesCost += _tabUnit[i]->GETmaintenance();
+		m_goldStats.armiesCost += m_tabUnit[i]->GETmaintenance();
 	}
 	*/
 }
@@ -311,26 +298,26 @@ void Player::computeMaintenanceCostUnit()
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : resetGoldStats															   */
-/* ROLE : Reset all stats of _goldStats except gold									   */
+/* ROLE : Reset all stats of m_goldStats except gold									   */
 /* INPUT : void																		   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void Player::resetGoldStats()
 {
-	_goldStats.goldBalance = 0.0;
-	_goldStats.cost = 0.0;
-	_goldStats.taxIncome = 0.0;
-	_goldStats.commerceIncome = 0.0;
-	_goldStats.goldConversionSurplus = 0.0;
-	_goldStats.buildingsCost = 0.0;
-	_goldStats.armiesCost = 0.0;
+	m_goldStats.goldBalance = 0.0;
+	m_goldStats.cost = 0.0;
+	m_goldStats.taxIncome = 0.0;
+	m_goldStats.commerceIncome = 0.0;
+	m_goldStats.goldConversionSurplus = 0.0;
+	m_goldStats.buildingsCost = 0.0;
+	m_goldStats.armiesCost = 0.0;
 }
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : resetGoldStats															   */
-/* ROLE : Reset all stats of _goldStats except gold									   */
+/* ROLE : Reset all stats of m_goldStats except gold									   */
 /* INPUT : double goldToAdd	: gold to add in goldConversionSurplus					   */
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
@@ -340,7 +327,7 @@ void Player::addGoldToGoldConversionSurplus
 	double goldToAdd
 )
 {
-	_goldStats.goldConversionSurplus += goldToAdd;
+	m_goldStats.goldConversionSurplus += goldToAdd;
 }
 
 
@@ -354,22 +341,52 @@ void Player::addGoldToGoldConversionSurplus
 
 
 Players::Players()
-:_selectedPlayer(NO_PLAYER_SELECTED), _nbNoNamePlayer(0), _citiesNameMaxToCreate(0)
+:m_selectedPlayer(NO_PLAYER_SELECTED), m_citiesNameMaxToCreate(0)
 {
 
 }
 
 Players::~Players()
 {
-	for (unsigned int i(0); i < _vectPlayer.size(); i++)
+	for (unsigned int i(0); i < m_vectPlayer.size(); i++)
 	{
 		removeIndexPlayer(i);
 	}
 }
 
-void Players::addPlayer()
+void Players::init(const std::string& filePath)
 {
+	m_vectID.resize(m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + NB_MAX_PLAYER);
 
+	/* Unit Texture */
+	for (unsigned int i(0); i < m_vectUnitTemplate.size(); i++)
+	{
+		m_vectID[i] = RealEngine2D::ResourceManager::getTexture(filePath + "units/" + m_vectUnitTemplate[i].name + EXTENSION_PNG)->GETid();
+	}
+
+	/* Lifebar Texture */
+	for (unsigned int i(0); i < LIFE_BAR_NB_SUBDIVISION - 1; i++)
+	{
+		m_vectID[m_vectUnitTemplate.size() + i]
+			= RealEngine2D::ResourceManager::getTexture(filePath + "barre de vie/" + "0." + std::to_string(i) + "life" + EXTENSION_PNG)->GETid();
+	}
+
+	m_vectID[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION - 1]
+		= RealEngine2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
+
+	/* Appartenance Texture */
+	for (unsigned int i(0); i < NB_MAX_PLAYER; i++)
+	{
+		m_vectID[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + i]
+			= RealEngine2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
+	}
+
+	m_spriteBatchUnit.init();
+}
+
+void Players::addPlayer(const std::string& name)
+{
+	m_vectPlayer.push_back(new Player(name));
 }
 
 void Players::removeIndexPlayer
@@ -377,11 +394,11 @@ void Players::removeIndexPlayer
 	unsigned int index
 )
 {
-	if (Utility::assertSize(_vectPlayer.size(), index))
+	if (Utility::assertSize(m_vectPlayer.size(), index))
 	{
-		if (nullptr != _vectPlayer[index])
+		if (nullptr != m_vectPlayer[index])
 		{
-			delete _vectPlayer[index];
+			delete m_vectPlayer[index];
 		}
 	}
 	else
@@ -390,7 +407,87 @@ void Players::removeIndexPlayer
 	}
 }
 
+void Players::drawUnit
+(
+	const MainMap& mainMap,
+	RealEngine2D::Camera2D& camera
+)
+{
+	if (m_needToUpdateDrawUnit)
+	{
+		m_spriteBatchUnit.begin();
+		unsigned int tileSize = mainMap.GETtileSize();
 
+		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
+		{
+			for (unsigned int j(0); j < m_vectPlayer[i]->GETtabUnit().size(); j++)
+			{
+				Unit* unit = m_vectPlayer[i]->GETtabUnit()[j];
+				if	(
+						camera.isBoxInView
+						(
+							{ unit->GETx(), unit->GETy() },
+							{ tileSize , tileSize },
+							mainMap.GETtoolBarSize() * tileSize
+						)
+					)
+				{
+					/* Unit Texture */
+					m_spriteBatchUnit.draw
+					(
+						glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
+						RealEngine2D::FULL_RECT,
+						m_vectID[Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate)],
+						0.0f,
+						RealEngine2D::COLOR_WHITE
+					);
+
+					/* Lifebar Texture */
+					m_spriteBatchUnit.draw
+					(
+						glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize /2, 3),
+						RealEngine2D::FULL_RECT,
+						m_vectID
+						[
+							m_vectUnitTemplate.size() - 1
+							+ 
+							(int)std::floor(Utility::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
+						],
+						0.0f,
+						RealEngine2D::COLOR_WHITE
+					);
+
+					/* Appartenance Texture */
+					m_spriteBatchUnit.draw
+					(
+						glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
+						RealEngine2D::FULL_RECT,
+						m_vectID
+						[
+							m_vectUnitTemplate.size()
+							+
+							LIFE_BAR_NB_SUBDIVISION
+							+
+							i
+						],
+						0.0f,
+						RealEngine2D::COLOR_WHITE
+					);
+
+				}
+			}
+		}
+
+		m_spriteBatchUnit.end();
+
+		m_needToUpdateDrawUnit = false;
+	}
+}
+
+void Players::renderUnit()
+{
+	m_spriteBatchUnit.renderBatch();
+}
 
  /*
  *	End Of File : Player.cpp

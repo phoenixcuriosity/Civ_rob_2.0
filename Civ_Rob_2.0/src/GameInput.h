@@ -31,6 +31,8 @@
 
 #include "LIB.h"
 
+#include <SDL/SDL_events.h>
+
 class MainGame;
 
  /* *********************************************************
@@ -95,7 +97,8 @@ public:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void inputSDL
 	(
-		MainGame& mainGame
+		MainGame& mainGame,
+		SDL_Event& ev
 	);
 
 
@@ -104,7 +107,7 @@ public:
 	 *			KeyboardMouse::STATIC::UNE TOUCHE			   *
 	 ********************************************************* */
 
-	static void keySDLK_ESCAPE();
+	static void keySDLK_ESCAPE(MainGame& mainGame);
 	
 
 
@@ -167,89 +170,10 @@ public:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void wheel
 	(
-		MainGame& mainGame
+		MainGame& mainGame,
+		SDL_Event& ev
 	);
 
-
-
-public:
-	/* *********************************************************
-	 *				KeyboardMouse::METHODS			  		   *
-	 ********************************************************* */
-
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : KeyboardMouse																				    	  */
-	/* ROLE : Constructeur par d�faut de la classe KeyboardMouse											      */
-	/* INPUT : void																							      */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	GameInput();
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : ~KeyboardMouse																			    	  */
-	/* ROLE : Destructeur par d�faut de la classe KeyboardMouse												      */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	~GameInput() {};
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : refreshMousePos																			    	  */
-	/* ROLE : Inspect les cases survol�es par la souris par la SDL_MOUSE_MOTION								      */
-	/* INPUT : Sint32 x	: position en x de la souris selon SDL												      */
-	/* INPUT : Sint32 y	: position en y de la souris selon SDL												      */
-	/* INPUT : unsigned int tileSize : taille d'une tile													      */
-	/* INPUT : unsigned int screenOffsetXIndexMin : offset en pixel sur l'axe X								      */
-	/* INPUT : unsigned int screenOffsetYIndexMin : offset en pixel sur l'axe Y									  */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	void refreshMousePos
-	(
-		int x,
-		int y,
-		unsigned int tileSize,
-		unsigned int screenOffsetXIndexMin,
-		unsigned int screenOffsetYIndexMin
-	);
-
-
-
-public:
-	/* *********************************************************
-	 *			KeyboardMouse::METHODS::GET/SET				   *
-	 ********************************************************* */
-
-
-	inline unsigned int GETmouse_x()const { return _mouse_x; };
-	inline unsigned int GETmouse_y()const { return _mouse_y; };
-	inline unsigned int GETmouse_xNormalized()const { return _mouse_xNormalized; };
-	inline unsigned int GETmouse_yNormalized()const { return _mouse_yNormalized; };
-	inline unsigned int GETywheel()const { return _ywheel; };
-	inline unsigned int GETxwheel()const { return _xwheel; };
-
-	inline void SETmouse_x(unsigned int mouse_x) { _mouse_x = mouse_x; };
-	inline void SETmouse_y(unsigned int mouse_y) { _mouse_y = mouse_y; };
-	inline void SETmouse_xNormalized(unsigned int mouse_xNormalized) { _mouse_xNormalized = mouse_xNormalized; };
-	inline void SETmouse_yNormalized(unsigned int mouse_yNormalized) { _mouse_yNormalized = mouse_yNormalized; };
-	inline void SETywheel(unsigned int ywheel) { _ywheel = ywheel; };
-	inline void SETxwheel(unsigned int xwheel) { _xwheel = xwheel; };
-
-
-private:
-	/* *********************************************************
-	 *				KeyboardMouse::ATTIBUTS					   *
-	 ********************************************************* */
-
-	unsigned int _mouse_x;
-	unsigned int _mouse_y;
-	unsigned int _mouse_xNormalized;
-	unsigned int _mouse_yNormalized;
-	unsigned int _ywheel;
-	unsigned int _xwheel;
 };
 
 #endif /* GameInput_H */

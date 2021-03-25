@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.0
+	last modification on this file on version:0.23.3.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -23,21 +23,22 @@
 */
 
 #include "Window.h"
-#include "Error.h"
 
 #include <SDL\glew.h>
+#include "RealEngineError.h"
 
-using namespace RealEngine2D;
+namespace RealEngine2D 
+{
 
 Window::Window()
-: _sdlWindow(nullptr), _screenWidth(0), _screenHeight(0)
+	: m_sdlWindow(nullptr), m_screenWidth(0), m_screenHeight(0)
 {
 }
 
 Window::~Window()
 {
-	SDL_DestroyWindow(_sdlWindow);
-	_sdlWindow = nullptr;
+	SDL_DestroyWindow(m_sdlWindow);
+	m_sdlWindow = nullptr;
 }
 
 int Window::create
@@ -49,6 +50,9 @@ int Window::create
 )
 {
 	Uint32 flags = SDL_WINDOW_OPENGL;
+
+	m_screenWidth = screenWidth;
+	m_screenHeight = screenHeight;
 
 	if (currentFlags & INVISIBLE)
 	{
@@ -63,28 +67,28 @@ int Window::create
 		flags |= SDL_WINDOW_BORDERLESS;
 	}
 
-	_sdlWindow = SDL_CreateWindow(name.c_str(),
-			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			screenWidth, screenHeight,
-			SDL_WINDOW_OPENGL);
+	m_sdlWindow = SDL_CreateWindow(name.c_str(),
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		screenWidth, screenHeight,
+		SDL_WINDOW_OPENGL);
 
-	if (nullptr == _sdlWindow)
+	if (nullptr == m_sdlWindow)
 	{
 		fatalError("[ERROR]___: CreateWindow Failed");
 		return false;
 	}
 	else
 	{
-		
 
-		SDL_GLContext glContext = SDL_GL_CreateContext(_sdlWindow);
+
+		SDL_GLContext glContext = SDL_GL_CreateContext(m_sdlWindow);
 
 		if (nullptr == glContext)
 		{
 			fatalError("[ERROR]___: glContext Failed");
 			return false;
 		}
-		
+
 
 		GLenum error = glewInit();
 		if (GLEW_OK != error)
@@ -107,5 +111,56 @@ int Window::create
 
 void  Window::swap()
 {
-	SDL_GL_SwapWindow(_sdlWindow);
+	SDL_GL_SwapWindow(m_sdlWindow);
+}
+
+
+
+//----------------------------------------------------------Screen width/height----------------------------------------------------------------//
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getHorizontal																   */
+/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
+/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+Uint16 Window::getHorizontal
+(
+	unsigned int tileSize
+)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.right % (Uint16)tileSize)) == 0)
+		return (Uint16)desktop.right;
+	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : getVertical																   */
+/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
+/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+Uint16 Window::getVertical
+(
+	unsigned int tileSize
+)
+{
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Uint16 complete = 0;
+	if ((complete = ((Uint16)desktop.bottom % (Uint16)tileSize)) == 0)
+		return (Uint16)desktop.bottom;
+	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
+}
+
+
 }

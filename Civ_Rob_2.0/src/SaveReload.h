@@ -32,10 +32,10 @@
 #include "LIB.h"
 
 #include "Player.h"
-
 #include <tinyxml2/tinyxml2.h>
 
 class MainGame;
+struct File;
 
  /* *********************************************************
   *						Constantes						   *
@@ -66,6 +66,8 @@ public:
 	 *					SaveReload::STATIC					   *
 	 ********************************************************* */
 
+	void init(const std::string& filePath);
+
 	 /* ---------------------------------------------------------------------------------------------------------- */
 	 /* ---------------------------------------------------------------------------------------------------------- */
 	 /* NAME : reload																					    	   */
@@ -79,6 +81,7 @@ public:
 		MainGame& mainGame
 	);
 
+private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : savemaps																					    	  */
@@ -105,6 +108,7 @@ public:
 		MainGame& mainGame
 	);
 
+public:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : reload																					    	  */
@@ -118,7 +122,7 @@ public:
 		MainGame& mainGame
 	);
 
-
+private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : loadMaps																					    	  */
@@ -194,6 +198,8 @@ public:
 		tinyxml2::XMLNode* nCity
 	);
 
+public:
+
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : createSave																				    	  */
@@ -202,9 +208,9 @@ public:
 	/* RETURNED VALUE    : void																					  */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
-	static void createSave
+	void createSave
 	(
-		MainGame& mainGame
+		File& files
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
@@ -215,10 +221,7 @@ public:
 	/* RETURNED VALUE    : void																					  */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
-	static void removeSave
-	(
-		MainGame& mainGame
-	);
+	void removeSave(const std::string& filePath);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
@@ -228,10 +231,7 @@ public:
 	/* RETURNED VALUE    : void																					  */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
-	static void clearSave
-	(
-		MainGame& mainGame
-	);
+	void clearSave(const std::string& filePath);
 
 
 
@@ -262,13 +262,11 @@ public:
 	 *			SaveReload::METHODS::GET/SET				   *
 	 ********************************************************* */
 
-	inline std::vector<unsigned int>& GETtabSave() { return _tabSave; };
-	inline int GETcurrentSave()const { return _currentSave; };
-	inline unsigned int GETnbSave()const { return _nbSave; };
+	inline std::vector<unsigned int>& GETtabSave() { return m_tabSave; };
+	inline int GETcurrentSave()const { return m_currentSave; };
 
-	inline void SETtabSave(std::vector<unsigned int>& tab) { _tabSave = tab; };
-	inline void SETcurrentSave(int currentSave) { _currentSave = currentSave; };
-	inline void SETnbSave(unsigned int nbSave) { _nbSave = nbSave; };
+	inline void SETtabSave(std::vector<unsigned int>& tab) { m_tabSave = tab; };
+	inline void SETcurrentSave(int currentSave) { m_currentSave = currentSave; };
 
 
 
@@ -278,9 +276,8 @@ private:
 	 ********************************************************* */
 
 
-	std::vector<unsigned int> _tabSave;
-	int _currentSave;
-	unsigned int _nbSave;
+	std::vector<unsigned int> m_tabSave;
+	int m_currentSave;
 };
 
 

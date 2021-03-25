@@ -106,7 +106,7 @@ public:
 	/* ROLE : Placement d'un Citizen en fonction des cases occup�es de la City			   */
 	/* INPUT : std::vector<Tile> : carte de la City										   */
 	/* INPUT : std::vector<Citizen> : tableau de Citizen								   */
-	/* INPUT : int& _food, int& _work, int& _gold : spec de la case						   */
+	/* INPUT : int& m_food, int& m_work, int& m_gold : spec de la case						   */
 	/* RETURNED VALUE    : unsigned int : la place allou�e								   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -114,9 +114,9 @@ public:
 	(
 		VectMap& tile,
 		VectCitizen& citizens,
-		int& _food,
-		int& _work,
-		int& _gold
+		int& m_food,
+		int& m_work,
+		int& m_gold
 	);
 
 
@@ -202,38 +202,38 @@ public:
 	 *				Citizen::METHODS::GET/SET				   *
 	 ********************************************************* */
 
-	inline void SETtileOccupied(unsigned int tileOccupied) { _tileOccupied = tileOccupied; };
-	inline void SEThappiness(Emotion_Type happiness) { _happiness = happiness; };
-	inline void SETfood(int food) { _food = food; };
-	inline void SETwork(int work) { _work = work; };
-	inline void SETgold(int gold) { _gold = gold; };
-	inline void SETrevolt(int revolt) { _revolt = revolt; };
-	inline void SETreligion(Religion_Type religion) { _religion = religion; };
-	inline void SETplace(bool place) { _place = place; };
+	inline void SETtileOccupied(unsigned int tileOccupied) { m_tileOccupied = tileOccupied; };
+	inline void SEThappiness(Emotion_Type happiness) { m_happiness = happiness; };
+	inline void SETfood(int food) { m_food = food; };
+	inline void SETwork(int work) { m_work = work; };
+	inline void SETgold(int gold) { m_gold = gold; };
+	inline void SETrevolt(int revolt) { m_revolt = revolt; };
+	inline void SETreligion(Religion_Type religion) { m_religion = religion; };
+	inline void SETplace(bool place) { m_place = place; };
 
-	inline unsigned int GETtileOccupied()const { return _tileOccupied; };
-	inline Emotion_Type GEThappiness()const { return _happiness; };
-	inline int GETfood()const { return _food; };
-	inline int GETwork()const { return _work; };
-	inline int GETgold()const { return _gold; };
-	inline int GETrevolt()const { return _revolt; };
-	inline Religion_Type GETreligion()const { return _religion; };
-	inline bool GETplace()const { return _place; };
+	inline unsigned int GETtileOccupied()const { return m_tileOccupied; };
+	inline Emotion_Type GEThappiness()const { return m_happiness; };
+	inline int GETfood()const { return m_food; };
+	inline int GETwork()const { return m_work; };
+	inline int GETgold()const { return m_gold; };
+	inline int GETrevolt()const { return m_revolt; };
+	inline Religion_Type GETreligion()const { return m_religion; };
+	inline bool GETplace()const { return m_place; };
 
 private:
 	/* *********************************************************
 	 *					Citizen::ATTRIBUTS					   *
 	 ********************************************************* */
 
-	unsigned int _tileOccupied;
-	Emotion_Type _happiness;
-	int _food;
-	int _work;
-	int _gold;
-	int _revolt;
-	Religion_Type _religion;
+	unsigned int m_tileOccupied;
+	Emotion_Type m_happiness;
+	int m_food;
+	int m_work;
+	int m_gold;
+	int m_revolt;
+	Religion_Type m_religion;
 
-	bool _place;
+	bool m_place;
 };
 
 

@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
+	last modification on this file on version:0.23.3.0
 	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
@@ -36,20 +36,20 @@ Sprite::Sprite
 	float height,
 	const std::string& filePath
 )
-: _vboID(0), _coor{0,0,0,0}, _gLTexture(nullptr)
+: m_vboID(0), m_coor{0,0,0,0}, m_gLTexture(nullptr)
 {
 	init(x, y, width, height, filePath);
 }
 
 Sprite::~Sprite()
 {
-	if (_vboID)
+	if (m_vboID)
 	{
-		glDeleteBuffers(1, &_vboID);
+		glDeleteBuffers(1, &m_vboID);
 	}
-	if (nullptr != _gLTexture)
+	if (nullptr != m_gLTexture)
 	{
-		delete _gLTexture;
+		delete m_gLTexture;
 	}
 }
 
@@ -62,41 +62,41 @@ void Sprite::init
 	const std::string& filePath
 )
 {
-	_coor.origin.x = x;
-	_coor.origin.y = y;
-	_coor.width = width;
-	_coor.height = height;
+	m_coor.origin.x = x;
+	m_coor.origin.y = y;
+	m_coor.width = width;
+	m_coor.height = height;
 
-	if (_vboID == 0)
+	if (m_vboID == 0)
 	{
-		glGenBuffers(1, &_vboID);
+		glGenBuffers(1, &m_vboID);
 	}
 
-	_gLTexture = ResourceManager::getTexture(filePath);
+	m_gLTexture = ResourceManager::getTexture(filePath);
 
 	Vertex vertexData[6] = {};
 
-	vertexData[0].setPoint(_coor.origin.x + _coor.width, _coor.origin.y + _coor.height);
+	vertexData[0].setPoint(m_coor.origin.x + m_coor.width, m_coor.origin.y + m_coor.height);
 	vertexData[0].setColor(255, 255, 255, 255);
 	vertexData[0].setUV(1.0f, 1.0f);
 
-	vertexData[1].setPoint(_coor.origin.x, _coor.origin.y + _coor.height);
+	vertexData[1].setPoint(m_coor.origin.x, m_coor.origin.y + m_coor.height);
 	vertexData[1].setColor(255, 255, 255, 0255);
 	vertexData[1].setUV(0.0f, 1.0f);
 	 
-	vertexData[2].setPoint(_coor.origin.x, _coor.origin.y);
+	vertexData[2].setPoint(m_coor.origin.x, m_coor.origin.y);
 	vertexData[2].setColor(255, 255, 255, 255);
 	vertexData[2].setUV(0.0f, 0.0f);
 
 	vertexData[3] = vertexData[2];
 
-	vertexData[4].setPoint(_coor.origin.x + _coor.width, _coor.origin.y);
+	vertexData[4].setPoint(m_coor.origin.x + m_coor.width, m_coor.origin.y);
 	vertexData[4].setColor(255, 255, 255, 255);
 	vertexData[4].setUV(1.0f, 0.0f);
 
 	vertexData[5] = vertexData[0];
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -104,9 +104,9 @@ void Sprite::init
 
 void Sprite::draw()
 {
-	glBindTexture(GL_TEXTURE_2D, _gLTexture->GETid());
+	glBindTexture(GL_TEXTURE_2D, m_gLTexture->GETid());
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
 	
 

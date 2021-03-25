@@ -34,6 +34,7 @@
 #include <vector>
 
 #include <RealEngine2D/src/SpriteBatch.h>
+#include <RealEngine2D/src/Camera2D.h>
 
  /* *********************************************************
   *						Constantes						   *
@@ -74,9 +75,6 @@ const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
 const int NO_APPARTENANCE = - 1;
 
 const std::string GROUNDSPEC_NOTHING = "void";
-
-/* The first settler to spawn in the map for each Player does not cost maintenance */
-const double MAINTENANCE_COST_1TH_SETTLER = 0.0;
 
 /* *********************************************************
  *						 Enum							   *
@@ -158,15 +156,6 @@ struct Tile
 typedef std::vector<Tile> VectMap;
 typedef std::vector<VectMap> MatriceMap;
 
-/* ---------------------------------------------------------------------- */
-/* Structure d'un couple de positions									  */
-/* Positions en x et y permettant le spawn des settlers					  */
-/* ---------------------------------------------------------------------- */
-struct randomPos
-{
-	int x;
-	int y;
-};
 
 /* *********************************************************
  *						  Classe						   *
@@ -273,22 +262,30 @@ public:
 
 	void generateMap();
 
-	void drawMap(RealEngine2D::SpriteBatch& spriteBatch);
+	void drawMap
+	(
+		RealEngine2D::Camera2D& camera
+	);
+
+	void renderMap();
 
 public:
 
-	inline unsigned int GETmapSizePixX()const { return _mapSizePixX; };
-	inline unsigned int GETmapSizePixY()const { return _mapSizePixY; };
-	inline unsigned int GETtileSize()const { return _tileSize; };
-	inline unsigned int GETtoolBarSize()const { return _toolBarSize; };
-	inline MatriceMap& GETmatriceMap() { return _matriceMap; };
-	inline const MatriceMap& GETmatriceMapConst()const { return _matriceMap; };
+	inline unsigned int GETmapSizePixX()const { return m_mapSizePixX; };
+	inline unsigned int GETmapSizePixY()const { return m_mapSizePixY; };
+	inline unsigned int GETtileSize()const { return m_tileSize; };
+	inline unsigned int* GETtileSizePtr() { return &m_tileSize; };
+	inline unsigned int GETtoolBarSize()const { return m_toolBarSize; };
+	inline MatriceMap& GETmatriceMap() { return m_matriceMap; };
+	inline const MatriceMap& GETmatriceMapConst()const { return m_matriceMap; };
+	RealEngine2D::SpriteBatch& GETspriteBatch() { return m_spriteBatch; };
 
-	inline void SETmapSizePixX(unsigned int mapSizePixX){  _mapSizePixX = mapSizePixX; };
-	inline void SETmapSizePixY(unsigned int mapSizePixY) {  _mapSizePixY = mapSizePixY; };
-	inline void SETtileSize(unsigned int tileSize) {  _tileSize = tileSize; };
-	inline void SETtoolBarSize(unsigned int toolBarSize) {  _toolBarSize = toolBarSize; };
-	inline void SETmatriceMap(MatriceMap& matriceMap) {  _matriceMap = matriceMap; };
+	inline void SETmapSizePixX(unsigned int mapSizePixX){  m_mapSizePixX = mapSizePixX; };
+	inline void SETmapSizePixY(unsigned int mapSizePixY) {  m_mapSizePixY = mapSizePixY; };
+	inline void SETtileSize(unsigned int tileSize) {  m_tileSize = tileSize; };
+	inline void SETtoolBarSize(unsigned int toolBarSize) {  m_toolBarSize = toolBarSize; };
+	inline void SETmatriceMap(MatriceMap& matriceMap) {  m_matriceMap = matriceMap; };
+	inline void SETneedToUpdateDraw(bool needToUpdateDraw) { m_needToUpdateDraw = needToUpdateDraw; };
 
 private:
 
@@ -349,9 +346,9 @@ private:
 	/* NAME : tileAffectation															   */
 	/* ROLE : Affectation des caract�ristiques � une case								   */
 	/* OUTPUT : Tile& tile, : la case � affecter										   */
-	/* INPUT : unsigned int tile_ground, std::string tile_stringground,						   */
-	/* INPUT : unsigned int tile_spec, std::string tile_stringspec,							   */
-	/* INPUT : int food, int work, int gold									   */
+	/* INPUT : unsigned int tile_ground, std::string tile_stringground,					   */
+	/* INPUT : unsigned int tile_spec, std::string tile_stringspec,						   */
+	/* INPUT : int food, int work, int gold												   */
 	/* RETURNED VALUE : void															   */
 	/* ------------------------------------------------------------------------------------*/
 	/* ----------------------------------------------------------------------------------- */
@@ -369,12 +366,26 @@ private:
 
 private:
 
-	unsigned int _mapSizePixX;
-	unsigned int _mapSizePixY;
-	unsigned int _tileSize;
-	unsigned int _toolBarSize;
-	MatriceMap _matriceMap;
+	/* Width of the map in pixels */
+	unsigned int m_mapSizePixX;
 
+	/* Height of the map in pixels */
+	unsigned int m_mapSizePixY;
+
+	/* Size of a default tile in the map */
+	unsigned int m_tileSize;
+
+	/* Size of the toolBar in pixels */
+	unsigned int m_toolBarSize;
+
+	/* Matrice x,y of tiles */
+	MatriceMap m_matriceMap;
+
+	/* Need to update re-draw when the camera moved */
+	bool m_needToUpdateDraw;
+
+	/* Dedicated spriteBatch for the map */
+	RealEngine2D::SpriteBatch m_spriteBatch;
 };
 
 #endif /* GamePlay_H */

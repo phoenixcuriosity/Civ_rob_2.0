@@ -168,14 +168,14 @@ public:
 	 ********************************************************* */
 
 
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* NAME : createCity																   */
-	 /* ROLE : Cr�ation d'une City � partir d'un settler sur la carte					   */
-	 /* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
-	 /* RETURNED VALUE    : void															   */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : createCity																   */
+	/* ROLE : Cr�ation d'une City � partir d'un settler sur la carte					   */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	static void createCity
 	(
 		MainGame& mainGame,
@@ -206,6 +206,8 @@ public:
 		VectMap& tabtile,
 		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
+
+private:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -332,7 +334,7 @@ public:
 	/* NAME : computeEmotion															   */
 	/* ROLE : Calcul sur une echelle de 0 � 100 le bonheur de la Citie					   */
 	/* INPUT : void																		   */
-	/* INTERNAL OUTPUT : _emotion : bonheur de la Citie									   */
+	/* INTERNAL OUTPUT : m_emotion : bonheur de la Citie									   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -362,8 +364,9 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void computeWorkToBuild
 	(
-		Player* player,
-		const VectUnitTemplate& tabUnit_Template
+		Player& player,
+		const VectUnitTemplate& vectUnitTemplate,
+		bool* needToUpdateDrawUnit
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -379,7 +382,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : addCityGoldToTaxIncome													   */
-	/* ROLE : Add _goldBalance to a player taxIncome 									   */
+	/* ROLE : Add m_goldBalance to a player taxIncome 									   */
 	/* OUT : GoldStats& goldStats : struct of player gold								   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
@@ -392,7 +395,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertWorkSurplusToFood													   */
-	/* ROLE : Convert work to food ; Place in _foodSurplusPreviousTurn					   */
+	/* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
 	/* INPUT : double workSurplus : work surplus to convert into food					   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
@@ -405,7 +408,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertWorkSurplusToFood													   */
-	/* ROLE : Convert food to work ; Place in _workSurplusPreviousTurn					   */
+	/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
 	/* INPUT : double workSurplus : food surplus to convert into work					   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
@@ -490,14 +493,14 @@ public:
 	 ********************************************************* */
 
 
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* NAME : afficher																	   */
-	 /* ROLE : Affichage de la City (Texture et nom)										   */
-	 /* INPUT : truct Sysinfo& : structure globale du programme							   */
-	 /* RETURNED VALUE    : void															   */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : afficher																	   */
+	/* ROLE : Affichage de la City (Texture et nom)										   */
+	/* INPUT : truct Sysinfo& : structure globale du programme							   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void afficher
 	(
 		
@@ -583,42 +586,42 @@ public:
 	 *				City::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline virtual std::string GETimage()const { return _image; };
-	inline virtual std::string GETname()const { return _name; };
-	inline virtual unsigned int GETx()const { return _x; };
-	inline virtual unsigned int GETy()const { return _y; };
-	inline virtual VectMap& GETtile() { return _tile; };
-	inline virtual std::vector<Citizen*>& GETcitizens() { return _citizens; };
-	inline virtual unsigned int GETinfluenceLevel()const { return _influenceLevel; };
-	inline virtual unsigned int GETnbpop()const { return _nbpop; };
-	inline virtual unsigned int GETatq()const { return _atq; };
-	inline virtual unsigned int GETdef()const { return _def; };
-	inline virtual unsigned int GETemotion()const { return _emotion; };
-	inline virtual unsigned int GETnbstructurebuild()const { return _nbstructurebuild; };
-	inline virtual double GETfoodStock()const { return _foodStock; };
-	inline virtual double GETfoodBalance()const { return _foodBalance; };
-	inline virtual double GETfoodSurplusPreviousTurn()const { return _foodSurplusPreviousTurn; };
-	inline virtual double GETgoldBalance()const { return _goldBalance; };
-	inline virtual conversionSurplus_Type GETconversionToApply()const { return _conversionToApply; };
-	inline virtual cityBuildQueue& GETbuildQueue() { return _buildQueue; };
+	inline virtual std::string GETimage()const { return m_image; };
+	inline virtual std::string GETname()const { return m_name; };
+	inline virtual unsigned int GETx()const { return m_x; };
+	inline virtual unsigned int GETy()const { return m_y; };
+	inline virtual VectMap& GETtile() { return m_tile; };
+	inline virtual std::vector<Citizen*>& GETcitizens() { return m_citizens; };
+	inline virtual unsigned int GETinfluenceLevel()const { return m_influenceLevel; };
+	inline virtual unsigned int GETnbpop()const { return m_nbpop; };
+	inline virtual unsigned int GETatq()const { return m_atq; };
+	inline virtual unsigned int GETdef()const { return m_def; };
+	inline virtual unsigned int GETemotion()const { return m_emotion; };
+	inline virtual unsigned int GETnbstructurebuild()const { return m_nbstructurebuild; };
+	inline virtual double GETfoodStock()const { return m_foodStock; };
+	inline virtual double GETfoodBalance()const { return m_foodBalance; };
+	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodSurplusPreviousTurn; };
+	inline virtual double GETgoldBalance()const { return m_goldBalance; };
+	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
+	inline virtual cityBuildQueue& GETbuildQueue() { return m_buildQueue; };
 
-	inline virtual void SETimage(std::string image) { _image = image; };
-	inline virtual void SETname(std::string name) { _name = name; };
-	inline virtual void SETx(unsigned int x) { _x = x; };
-	inline virtual void SETy(unsigned int y) { _y = y; };
-	inline virtual void SETtile(VectMap& tile) { _tile = tile; };
-	inline virtual void SETcitizens(std::vector<Citizen*>& citizens) { _citizens = citizens; };
-	inline virtual void SETinfluenceLevel(unsigned int influenceLevel) { _influenceLevel = influenceLevel; };
-	inline virtual void SETnbpop(unsigned int nbpop) { _nbpop = nbpop; };
-	inline virtual void SETatq(unsigned int atq) { _atq = atq; };
-	inline virtual void SETdef(unsigned int def) { _def = def; };
-	inline virtual void SETemotion(unsigned int emotion) { _emotion = emotion; };
-	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild) { _nbstructurebuild = nbstructurebuild; };
-	inline virtual void SETfoodStock(double foodStock) { _foodStock = foodStock; };
-	inline virtual void SETfoodBalance(double foodBalance) { _foodBalance = foodBalance; };
-	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { _foodSurplusPreviousTurn = foodSurplusPreviousTurn; };
-	inline virtual void SETgoldBalance(double goldBalance) { _goldBalance = goldBalance; };
-	inline virtual void SETconversionToApply(conversionSurplus_Type type) { _conversionToApply = type; };
+	inline virtual void SETimage(std::string image) { m_image = image; };
+	inline virtual void SETname(std::string name) { m_name = name; };
+	inline virtual void SETx(unsigned int x) { m_x = x; };
+	inline virtual void SETy(unsigned int y) { m_y = y; };
+	inline virtual void SETtile(VectMap& tile) { m_tile = tile; };
+	inline virtual void SETcitizens(std::vector<Citizen*>& citizens) { m_citizens = citizens; };
+	inline virtual void SETinfluenceLevel(unsigned int influenceLevel) { m_influenceLevel = influenceLevel; };
+	inline virtual void SETnbpop(unsigned int nbpop) { m_nbpop = nbpop; };
+	inline virtual void SETatq(unsigned int atq) { m_atq = atq; };
+	inline virtual void SETdef(unsigned int def) { m_def = def; };
+	inline virtual void SETemotion(unsigned int emotion) { m_emotion = emotion; };
+	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild) { m_nbstructurebuild = nbstructurebuild; };
+	inline virtual void SETfoodStock(double foodStock) { m_foodStock = foodStock; };
+	inline virtual void SETfoodBalance(double foodBalance) { m_foodBalance = foodBalance; };
+	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { m_foodSurplusPreviousTurn = foodSurplusPreviousTurn; };
+	inline virtual void SETgoldBalance(double goldBalance) { m_goldBalance = goldBalance; };
+	inline virtual void SETconversionToApply(conversionSurplus_Type type) { m_conversionToApply = type; };
 
 
 private:
@@ -626,31 +629,31 @@ private:
 	 *					City::ATTRIBUTS						   *
 	 ********************************************************* */
 
-	std::string _image;
-	std::string _name;
-	unsigned int _x;
-	unsigned int _y;
-	VectMap _tile;
-	std::vector<Citizen*> _citizens;
-	unsigned int _influenceLevel;
-	unsigned int _nbpop;
-	unsigned int _atq;
-	unsigned int _def;
-	unsigned int _emotion;
-	unsigned int _nbstructurebuild;
+	std::string m_image;
+	std::string m_name;
+	unsigned int m_x;
+	unsigned int m_y;
+	VectMap m_tile;
+	std::vector<Citizen*> m_citizens;
+	unsigned int m_influenceLevel;
+	unsigned int m_nbpop;
+	unsigned int m_atq;
+	unsigned int m_def;
+	unsigned int m_emotion;
+	unsigned int m_nbstructurebuild;
 
-	double _foodStock;
-	double _foodBalance;
-	double _foodSurplusPreviousTurn;
+	double m_foodStock;
+	double m_foodBalance;
+	double m_foodSurplusPreviousTurn;
 
-	double _workBalance;
-	double _workSurplusPreviousTurn;
+	double m_workBalance;
+	double m_workSurplusPreviousTurn;
 
-	double _goldBalance;
+	double m_goldBalance;
 
-	conversionSurplus_Type _conversionToApply;
+	conversionSurplus_Type m_conversionToApply;
 
-	cityBuildQueue _buildQueue;
+	cityBuildQueue m_buildQueue;
 };
 
 #endif /* City_H */

@@ -6,7 +6,6 @@
 		<TileSize>64</TileSize>
 		<MapSizeX>2048</MapSizeX>
 		<MapSizeY>2048</MapSizeY>
-
 	</Map>
 
 	<FilePaths>
@@ -25,9 +24,13 @@
 		<ColorShadingVert>shaders/ColorShading.vert</ColorShadingVert>
 		<ColorShadingFrag>shaders/ColorShading.frag</ColorShadingFrag>
 
-		<ImagesPath>bin/image</ImagesPath>
-
+		<ImagesPath>bin/image/</ImagesPath>
+		<GUIPath>GUI</GUIPath>
 	</FilePaths>
+
+	<GUI>
+		
+	</GUI>
 
 
 

@@ -41,7 +41,7 @@ namespace RealEngine2D
 		GLTexture* getTexture(const std::string& name);
 
 	private:
-		std::map<std::string, GLTexture*> _textureMap;
+		std::map<std::string, GLTexture*> m_textureMap;
 	};
 }
 #endif // !TextureCache_H

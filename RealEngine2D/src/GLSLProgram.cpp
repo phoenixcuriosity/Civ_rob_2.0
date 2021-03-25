@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.0
+	last modification on this file on version:0.23.3.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -23,13 +23,16 @@
 */
 
 #include "GLSLProgram.h"
+
+#include "RealEngineError.h"
+
 #include <fstream>
 #include <vector>
 
 using namespace RealEngine2D;
 
 GLSLProgram::GLSLProgram()
-: _numAttribut(0), _programID(0), _vertexID(0), _fragID(0)
+: m_numAttribut(0), m_programID(0), m_vertexID(0), m_fragID(0)
 {
 
 }
@@ -45,22 +48,22 @@ void GLSLProgram::compileShaders
 	const std::string& filePathColorShadingFrag
 )
 {
-	_programID = glCreateProgram();
+	m_programID = glCreateProgram();
 
-	_vertexID = glCreateShader(GL_VERTEX_SHADER);
-	if (_vertexID == 0)
+	m_vertexID = glCreateShader(GL_VERTEX_SHADER);
+	if (m_vertexID == 0)
 	{
-		//MainGame::exitError("[ERROR]___: compileShaders : _vertexID == 0 ");
+		fatalError("[ERROR]___: compileShaders : m_vertexID == 0 ");
 	}
 
-	_fragID = glCreateShader(GL_FRAGMENT_SHADER);
-	if (_fragID == 0)
+	m_fragID = glCreateShader(GL_FRAGMENT_SHADER);
+	if (m_fragID == 0)
 	{
-		//MainGame::exitError("[ERROR]___: compileShaders : _fragID == 0 ");
+		fatalError("[ERROR]___: compileShaders : m_fragID == 0 ");
 	}
 
-	getFileCompile(filePathColorShadingVert, _vertexID);
-	getFileCompile(filePathColorShadingFrag, _fragID);
+	getFileCompile(filePathColorShadingVert, m_vertexID);
+	getFileCompile(filePathColorShadingFrag, m_fragID);
 
 
 }
@@ -74,7 +77,7 @@ void GLSLProgram::getFileCompile
 	std::ifstream vertexFile(filePath);
 	if (vertexFile.fail())
 	{
-		//MainGame::exitError("[ERROR]___: compileShaders :" + filePath);
+		fatalError("[ERROR]___: compileShaders :" + filePath);
 	}
 
 	std::string fileContent("");
@@ -101,7 +104,7 @@ void GLSLProgram::getFileCompile
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
 
 		// The maxLength includes the NULL character
-		std::vector<GLchar> errorLog(maxLength);
+		std::vector<GLchar> errorLog((size_t)maxLength);
 		glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
 
 		line = "";
@@ -112,7 +115,7 @@ void GLSLProgram::getFileCompile
 		}
 
 
-		//MainGame::exitError("[ERROR]___: compileShaders : compile failed" + filePath + " gg : " + line);
+		fatalError("[ERROR]___: compileShaders : compile failed" + filePath + " gg : " + line);
 
 
 		// Provide the infolog in whatever manor you deem best.
@@ -126,59 +129,59 @@ void GLSLProgram::linkShaders()
 {
 	
 
-	glAttachShader(_programID, _vertexID);
-	glAttachShader(_programID, _fragID);
+	glAttachShader(m_programID, m_vertexID);
+	glAttachShader(m_programID, m_fragID);
 
-	glLinkProgram(_programID);
+	glLinkProgram(m_programID);
 
 	GLint isLinked = 0;
-	glGetProgramiv(_programID, GL_LINK_STATUS, (int*)&isLinked);
+	glGetProgramiv(m_programID, GL_LINK_STATUS, (int*)&isLinked);
 	if (isLinked == GL_FALSE)
 	{
 		GLint maxLength = 0;
-		glGetProgramiv(_programID, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &maxLength);
 
 		// The maxLength includes the NULL character
-		std::vector<GLchar> infoLog(maxLength);
-		glGetProgramInfoLog(_programID, maxLength, &maxLength, &infoLog[0]);
+		std::vector<GLchar> infoLog((size_t)maxLength);
+		glGetProgramInfoLog(m_programID, maxLength, &maxLength, &infoLog[0]);
 
 		// We don't need the program anymore.
-		glDeleteProgram(_programID);
+		glDeleteProgram(m_programID);
 		// Don't leak shaders either.
-		glDeleteShader(_vertexID);
-		glDeleteShader(_fragID);
+		glDeleteShader(m_vertexID);
+		glDeleteShader(m_fragID);
 
-		//MainGame::exitError("[ERROR]___: linkShaders : compile failed ");
+		fatalError("[ERROR]___: linkShaders : compile failed ");
 
 		return;
 	}
 
 	// Always detach shaders after a successful link.
-	glDetachShader(_programID, _vertexID);
-	glDetachShader(_programID, _fragID);
-	glDeleteShader(_vertexID);
-	glDeleteShader(_fragID);
+	glDetachShader(m_programID, m_vertexID);
+	glDetachShader(m_programID, m_fragID);
+	glDeleteShader(m_vertexID);
+	glDeleteShader(m_fragID);
 }
 
 void GLSLProgram::addAttribut(const std::string& name)
 {
-	glBindAttribLocation( _programID, _numAttribut++, name.c_str());
+	glBindAttribLocation( m_programID, m_numAttribut++, name.c_str());
 }
 
-GLuint GLSLProgram::getUnitformLocation(const std::string& uniformName)
+GLint GLSLProgram::getUnitformLocation(const std::string& uniformName)
 {
-	GLint location = glGetUniformLocation(_programID, uniformName.c_str());
+	GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
 	if (location == GL_INVALID_INDEX)
 	{
-		//MainGame::exitError("[ERROR]___: getUnitformLocation : location == GL_INVALID_INDEX");
+		fatalError("[ERROR]___: getUnitformLocation : location == GL_INVALID_INDEX");
 	}
 	return location;
 }
 
 void GLSLProgram::use()
 {
-	glUseProgram(_programID);
-	for (int i(0); i < _numAttribut; i++)
+	glUseProgram(m_programID);
+	for (GLuint i(0); i < m_numAttribut; i++)
 	{
 		glEnableVertexAttribArray(i);
 	}
@@ -187,7 +190,7 @@ void GLSLProgram::use()
 void GLSLProgram::unuse()
 {
 	glUseProgram(0);
-	for (int i(0); i < _numAttribut; i++)
+	for (GLuint i(0); i < m_numAttribut; i++)
 	{
 		glDisableVertexAttribArray(i);
 	}

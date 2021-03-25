@@ -79,7 +79,7 @@ unsigned int Unit::searchUnitByName
 bool Unit::searchUnitTile
 (
 	Players& players,
-	const GameInput& mouse,
+	const glm::i32vec2& mouseCoorNorm,
 	Select_Type* select
 )
 {
@@ -89,20 +89,20 @@ bool Unit::searchUnitTile
 
 		for (unsigned int i(0); i < selPlayer->GETtabUnit().size(); i++)
 		{
-			if (selPlayer->GETtheUnit(i)->testPos(mouse.GETmouse_xNormalized(), mouse.GETmouse_yNormalized()))
+			if (selPlayer->GETtabUnit()[i]->testPos(mouseCoorNorm.x, mouseCoorNorm.y))
 			{
 			
 
 				selPlayer->SETselectedUnit(i);
 
-				selPlayer->GETtheUnit(i)->SETshow(true);
+				selPlayer->GETtabUnit()[i]->SETshow(true);
 				MainGame::logfileconsole("[INFO]___: Unit select to move n:" + std::to_string(i));
 				*select = Select_Type::selectmove;
 				return true;
 			}
 			else
 			{
-				/* N/A */
+
 			}
 		}
 	}
@@ -132,38 +132,41 @@ void Unit::tryToMove
 	int y
 )
 {
-	Player* selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
-	int playerToAttack(NO_PLAYER_SELECTED), unitToAttack(NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
-
-	switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
+	if (players.GETselectedPlayer() != NO_PLAYER_SELECTED)
 	{
-	case Move_Type::cannotMove:
-		/*
-		* N/A
-		*/
-		break;
-	case Move_Type::canMove:
+		Player* selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
+		int playerToAttack(NO_PLAYER_SELECTED), unitToAttack(NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
-		selPlayer->GETtheUnit(selectunit)->move(select, selectunit, x, y);
-		break;
-	case Move_Type::attackMove:
+		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
+		{
+		case Move_Type::cannotMove:
+			/*
+			* N/A
+			*/
+			break;
+		case Move_Type::canMove:
+
+			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, x, y);
+			break;
+		case Move_Type::attackMove:
 		{
 			Player* attackPlayer(players.GETvectPlayer()[playerToAttack]);
 
-			selPlayer->GETtheUnit(selectunit)
-				->attack(attackPlayer->GETtheUnit(unitToAttack));
+			selPlayer->GETtabUnit()[selectunit]
+				->attack(attackPlayer->GETtabUnit()[unitToAttack]);
 
-			if (attackPlayer->GETtheUnit(unitToAttack)->GETalive() == false)
+			if (attackPlayer->GETtabUnit()[unitToAttack]->GETalive() == false)
 			{
 				attackPlayer->deleteUnit(unitToAttack);
 				tryToMove(maps, players, select, x, y);
 			}
-			selPlayer->GETtheUnit(selectunit)->SETmovement(NO_MOVEMENT);
+			selPlayer->GETtabUnit()[selectunit]->SETmovement(NO_MOVEMENT);
 			break;
 		}
-	default:
-		/* N/A */
-		break;
+		default:
+			/* N/A */
+			break;
+		}
 	}
 }
 
@@ -204,7 +207,7 @@ Move_Type Unit::searchToMove
 	/* --------------------------------------------------------------------------------------- */
 
 	Player* selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
-	Unit* unit(selPlayer->GETtheUnit(selPlayer->GETselectedUnit()));
+	Unit* unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 	bool nextTileValidToMove(false);
 	unsigned int xIndex(MainMap::convertPosXToIndex(unit->GETx() + x));
@@ -275,7 +278,7 @@ Move_Type Unit::searchToMove
 		{
 			for (unsigned int j = 0; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
 			{
-				condition = checkUnitNextTile(unit, players.GETvectPlayer()[i]->GETtheUnit(j), x, y);
+				condition = checkUnitNextTile(unit, players.GETvectPlayer()[i]->GETtabUnit()[j], x, y);
 				if (true == condition)
 				{
 					if (players.GETselectedPlayer() == (int)i)
@@ -412,10 +415,10 @@ bool Unit::irrigate
   /* INPUT : void																		   */
   /* ----------------------------------------------------------------------------------- */
   /* ----------------------------------------------------------------------------------- */
-Unit::Unit() : _name(EMPTY_STRING), _x(0), _y(0), _movementType(Unit_Movement_Type::ground),
-_maxlife(100), _maxatq(10), _maxdef(5), _maxmovement(1), _maxlevel(100),
-_life(100), _atq(10), _def(5), _movement(1), _level(1), _maintenance(1),
-_alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
+Unit::Unit() : m_name(EMPTY_STRING), m_x(0), m_y(0), m_movementType(Unit_Movement_Type::ground),
+m_maxlife(100), m_maxatq(10), m_maxdef(5), m_maxmovement(1), m_maxlevel(100),
+m_life(100), m_atq(10), m_def(5), m_movement(1), m_level(1), m_maintenance(1),
+m_alive(true), m_blit(ZERO_BLIT), m_show(true), m_showStats(false)
 {
 	MainGame::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
@@ -447,11 +450,11 @@ Unit::Unit
 	unsigned int level,
 	double maintenance
 )
-	: _name(name), _x(x), _y(y), _movementType(movementType),
-	_maxlife(life), _maxatq(atq), _maxdef(def), _maxmovement(move), _maxlevel(level),
-	_life(life), _atq(atq), _def(def), _movement(move), _level(level),
-	_maintenance(maintenance),
-	_alive(true), _blit(ZERO_BLIT), _show(true), _showStats(false)
+	: m_name(name), m_x(x), m_y(y), m_movementType(movementType),
+	m_maxlife(life), m_maxatq(atq), m_maxdef(def), m_maxmovement(move), m_maxlevel(level),
+	m_life(life), m_atq(atq), m_def(def), m_movement(move), m_level(level),
+	m_maintenance(maintenance),
+	m_alive(true), m_blit(ZERO_BLIT), m_show(true), m_showStats(false)
 {
 	MainGame::logfileconsole("[INFO]___: Create Unit:  Success");
 }
@@ -481,9 +484,9 @@ void Unit::attack
 	Unit* cible
 )
 {
-	if (_movement > NO_MOVEMENT)
+	if (m_movement > NO_MOVEMENT)
 	{
-		cible->defend(_atq);
+		cible->defend(m_atq);
 	}
 }
 
@@ -500,16 +503,16 @@ void Unit::defend
 	int dmg
 )
 {
-	if (dmg > _def)
+	if (dmg > m_def)
 	{
-		if ((_life - (dmg - _def)) <= ENOUGH_DAMAGE_TO_KILL)
+		if ((m_life - (dmg - m_def)) <= ENOUGH_DAMAGE_TO_KILL)
 		{
-			_life = ZERO_LIFE;
-			_alive = false;
+			m_life = ZERO_LIFE;
+			m_alive = false;
 		}
 		else
 		{
-			_life -= (dmg - _def);
+			m_life -= (dmg - m_def);
 		}
 	}
 }
@@ -534,19 +537,19 @@ void Unit::move
 	int y
 )
 {
-	if (NO_MOVEMENT < _movement)
+	if (NO_MOVEMENT < m_movement)
 	{
-		_x += x;
-		_y += y;
-		_movement--;
+		m_x += x;
+		m_y += y;
+		m_movement--;
 	}
 
-	if (NO_MOVEMENT == _movement)
+	if (NO_MOVEMENT == m_movement)
 	{
 		select = Select_Type::selectnothing;
 		selectunit = NO_UNIT_SELECTED;
-		_blit = ZERO_BLIT;
-		_show = true;
+		m_blit = ZERO_BLIT;
+		m_show = true;
 	}
 }
 
@@ -565,24 +568,24 @@ void Unit::heal
 	unsigned int selectplayer
 )
 {
-	int i(MainMap::convertPosXToIndex(_x));
-	int j(MainMap::convertPosYToIndex(_y));
+	int i(MainMap::convertPosXToIndex(m_x));
+	int j(MainMap::convertPosYToIndex(m_y));
 
 	if (NO_APPARTENANCE == tiles[i][j].appartenance)
 	{
-		_life += (unsigned int)ceil(_maxlife / COEF_DIV_HEAL_NO_APPARTENANCE);
-		if (_life > _maxlife)
+		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_NO_APPARTENANCE);
+		if (m_life > m_maxlife)
 		{
-			_life = _maxlife;
+			m_life = m_maxlife;
 		}
 		return;
 	}
 	else if (tiles[i][j].appartenance == (int)selectplayer)
 	{
-		_life += (unsigned int)ceil(_maxlife / COEF_DIV_HEAL_APPARTENANCE);
-		if (_life > _maxlife)
+		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_APPARTENANCE);
+		if (m_life > m_maxlife)
 		{
-			_life = _maxlife;
+			m_life = m_maxlife;
 		}
 		return;
 	}
@@ -602,10 +605,10 @@ void Unit::heal
 /* ----------------------------------------------------------------------------------- */
 void Unit::levelup()
 {
-	_level++;
+	m_level++;
 
-	_maxlife += (int)ceil(_maxlife / COEF_DIV_LEVELUP);
-	_life = _maxlife;
+	m_maxlife += (int)ceil(m_maxlife / COEF_DIV_LEVELUP);
+	m_life = m_maxlife;
 
 	/* Todo */
 	//heal();
@@ -621,7 +624,7 @@ void Unit::levelup()
 /* ----------------------------------------------------------------------------------- */
 void Unit::RESETmovement()
 {
-	_movement = _maxmovement;
+	m_movement = m_maxmovement;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -640,9 +643,9 @@ bool Unit::testPos
 )
 {
 	if (
-		(unsigned __int64)_x == mouse_x
+		(unsigned __int64)m_x == mouse_x
 		&&
-		(unsigned __int64)_y == mouse_y
+		(unsigned __int64)m_y == mouse_y
 		)
 	{
 		return true;
@@ -664,7 +667,7 @@ bool Unit::testPos
 /* ----------------------------------------------------------------------------------- */
 bool Unit::isGroundMovement_Type()
 {
-	return _movementType == Unit_Movement_Type::ground ? true : false;
+	return m_movementType == Unit_Movement_Type::ground ? true : false;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -678,7 +681,7 @@ bool Unit::isGroundMovement_Type()
 /* ----------------------------------------------------------------------------------- */
 bool Unit::isAirMovement_Type()
 {
-	return _movementType == Unit_Movement_Type::air ? true : false;
+	return m_movementType == Unit_Movement_Type::air ? true : false;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -692,7 +695,7 @@ bool Unit::isAirMovement_Type()
 /* ----------------------------------------------------------------------------------- */
 bool Unit::isWaterMovement_Type()
 {
-	return _movementType == Unit_Movement_Type::water ? true : false;
+	return m_movementType == Unit_Movement_Type::water ? true : false;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -706,7 +709,7 @@ bool Unit::isWaterMovement_Type()
 /* ----------------------------------------------------------------------------------- */
 bool Unit::isDeepWaterMovement_Type()
 {
-	return _movementType == Unit_Movement_Type::deepwater ? true : false;
+	return m_movementType == Unit_Movement_Type::deepwater ? true : false;
 }
 
 /* *********************************************************
@@ -718,42 +721,6 @@ bool Unit::isDeepWaterMovement_Type()
   *			START Units::METHODS::AFFICHAGE				   *
   ********************************************************* */
 
-
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
-  /* NAME : afficher																	   */
-  /* ROLE : Affichage de la Texture de l'unit� ainsi que la barre de vie et couleur	   */
-  /* INPUT/OUPUT : AllTextures& : Structure contenant toutes les Textures				   */
-  /* INPUT : const struct Map& : donn�es g�n�rale de la map							   */
-  /* INPUT : unsigned int iPlayer : joueur s�lectionn�								   */
-  /* RETURNED VALUE    : void															   */
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
-void Unit::afficher
-(
-
-)
-{
-
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : afficherstat																   */
-/* ROLE : Affichage des statistiques de l'unit� (nom, x, y ...)						   */
-/* INPUT : const Map& map : donn�es de la map										   */
-/* INPUT : TTF_Font* font[] : tableau de ptr de font SDL							   */
-/* INPUT/OUTPUT : SDL_Renderer*& : ptr sur le renderer SDL							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void Unit::afficherstat
-(
-
-)
-{
-	
-}
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -769,9 +736,9 @@ void Unit::cmpblit()
 	/* ---------------------------------------------------------------------- */
 	/* 50% off 50% on , environ 1s le cycle									  */
 	/* ---------------------------------------------------------------------- */
-	if ((++_blit %= (SCREEN_REFRESH_RATE / BLIT_RATE)) == MODULO_ZERO)
+	if ((++m_blit %= (RealEngine2D::SCREEN_REFRESH_RATE / BLIT_RATE)) == MODULO_ZERO)
 	{
-		_show = !_show;
+		m_show = !m_show;
 	}
 	else
 	{

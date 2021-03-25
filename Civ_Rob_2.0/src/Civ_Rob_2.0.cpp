@@ -33,6 +33,8 @@
 #include <iostream>
 #include <filesystem>
 
+//#include "App.h"
+
  /* *********************************************************
   *						MAIN							   *
   ********************************************************* */
@@ -43,6 +45,7 @@ int main(int argc, char* argv[])
 	mainGame.GETvar().argc = argc;
 	mainGame.GETvar().argv = argv;
 
+	srand((unsigned int)time(NULL));
 	/*
 
 	for (auto& p : std::filesystem::recursive_directory_iterator("bin"))
@@ -53,7 +56,9 @@ int main(int argc, char* argv[])
 	mainGame.runGameLoop();
 
 	mainGame.destroy();
-	
+
+	//App app;
+	//app.run();
 
 	return EXIT_SUCCESS;
 }

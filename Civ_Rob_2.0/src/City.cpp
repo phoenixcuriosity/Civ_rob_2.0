@@ -51,80 +51,83 @@ void City::createCity
 	unsigned int influenceLevel
 )
 {
-	unsigned int selectedPlayer(mainGame.GETPlayers().GETselectedPlayer());
-	Player* splayer(mainGame.GETPlayers().GETvectPlayer()[selectedPlayer]);
-	unsigned int selectedUnit(splayer->GETselectedUnit());
-	Unit* sUnit(splayer->GETtheUnit(selectedUnit));
+	if (mainGame.GETPlayers().GETselectedPlayer() != NO_PLAYER_SELECTED)
+	{
+		unsigned int selectedPlayer(mainGame.GETPlayers().GETselectedPlayer());
+		Player* splayer(mainGame.GETPlayers().GETvectPlayer()[selectedPlayer]);
+		unsigned int selectedUnit(splayer->GETselectedUnit());
+		Unit* sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-	if	(
+		if (
 			sUnit->GETname().compare("settler")
 			==
 			IDENTICAL_STRINGS
-		)
-	{
-		/* ---------------------------------------------------------------------- */
-		/* 1� : Recherche du nom de la nouvelle Citie 							  */
-		/*    : Recherche dans le tableau global des noms de Citie				  */
-		/*  : En fonction du nombre de Citie d�j� cr�es et de MAX_CITY_PER_PLAYER */
-		/* ---------------------------------------------------------------------- */
+			)
+		{
+			/* ---------------------------------------------------------------------- */
+			/* 1� : Recherche du nom de la nouvelle Citie 							  */
+			/*    : Recherche dans le tableau global des noms de Citie				  */
+			/*  : En fonction du nombre de Citie d�j� cr�es et de MAX_CITY_PER_PLAYER */
+			/* ---------------------------------------------------------------------- */
 
-		std::string name(mainGame.GETPlayers().GETvectCityName()
-			[
-				(unsigned __int64)
-				(
-					((unsigned __int64)selectedPlayer * MAX_CITY_PER_PLAYER)
-					+ 
-					splayer->GETtabCity().size()
-					)
-			]);
+			std::string name(mainGame.GETPlayers().GETvectCityName()
+				[
+					(unsigned __int64)
+					(
+						((unsigned __int64)selectedPlayer * MAX_CITY_PER_PLAYER)
+						+
+						splayer->GETtabCity().size()
+						)
+				]);
 
-		/* ---------------------------------------------------------------------- */
-		/* 2� : Recherche du position de la nouvelle Citie = position settler 	  */
-		/* ---------------------------------------------------------------------- */
+			/* ---------------------------------------------------------------------- */
+			/* 2� : Recherche du position de la nouvelle Citie = position settler 	  */
+			/* ---------------------------------------------------------------------- */
 
-		unsigned int x(sUnit->GETx());
-		unsigned int y(sUnit->GETy());
+			unsigned int x(sUnit->GETx());
+			unsigned int y(sUnit->GETy());
 
-		/* ---------------------------------------------------------------------- */
-		/* 3� : Recherche de la tile ou se trouve le settler 					  */
-		/* ---------------------------------------------------------------------- */
+			/* ---------------------------------------------------------------------- */
+			/* 3� : Recherche de la tile ou se trouve le settler 					  */
+			/* ---------------------------------------------------------------------- */
 
-		unsigned int middletileX(0), middletileY(0);
-		middletileX = MainMap::convertPosXToIndex(x);
-		middletileY = MainMap::convertPosYToIndex(y);
+			unsigned int middletileX(0), middletileY(0);
+			middletileX = MainMap::convertPosXToIndex(x);
+			middletileY = MainMap::convertPosYToIndex(y);
 
-		std::vector<Tile> tabtile;
-		tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
+			std::vector<Tile> tabtile;
+			tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
 
-		/* ---------------------------------------------------------------------- */
-		/* 4� : Remplisage tableau de tile Citie			 					  */
-		/* ---------------------------------------------------------------------- */
+			/* ---------------------------------------------------------------------- */
+			/* 4� : Remplisage tableau de tile Citie			 					  */
+			/* ---------------------------------------------------------------------- */
 
-		fillCitieTiles
-		(
-			mainGame.GETscreen(),
-			middletileX,
-			middletileY,
-			selectedPlayer,
-			mainGame.GETmainMap(),
-			tabtile,
-			influenceLevel
-		);
+			fillCitieTiles
+			(
+				mainGame.GETscreen(),
+				middletileX,
+				middletileY,
+				selectedPlayer,
+				mainGame.GETmainMap(),
+				tabtile,
+				influenceLevel
+			);
 
-		/* ---------------------------------------------------------------------- */
-		/* 5� : Cr�ation d'un ptr et passage au tableau de Citie du joueur		  */
-		/*    : Destruction ptr de l'Unit										  */
-		/*    : Aucune Unit n'est s�l�ctionn�e et aucune Unit � bouger	 		  */
-		/* ---------------------------------------------------------------------- */
+			/* ---------------------------------------------------------------------- */
+			/* 5� : Cr�ation d'un ptr et passage au tableau de Citie du joueur		  */
+			/*    : Destruction ptr de l'Unit										  */
+			/*    : Aucune Unit n'est s�l�ctionn�e et aucune Unit � bouger	 		  */
+			/* ---------------------------------------------------------------------- */
 
-		splayer->addCity(name, x, y, tabtile);
+			splayer->addCity(name, x, y, tabtile);
 
-		splayer->deleteUnit(selectedUnit);
-		splayer->SETselectedUnit(NO_UNIT_SELECTED);
-	}
-	else
-	{
-		/* N/A */
+			splayer->deleteUnit(selectedUnit);
+			splayer->SETselectedUnit(NO_UNIT_SELECTED);
+		}
+		else
+		{
+			/* N/A */
+		}
 	}
 }
 
@@ -267,6 +270,7 @@ void City::searchCityTile
 	Var& var
 )
 {
+	/*
 	Player* selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
 
 	for (unsigned int i(0); i < selPlayer->GETtabCity().size(); i++)
@@ -280,9 +284,10 @@ void City::searchCityTile
 		}
 		else
 		{
-			/* N/A */
+		
 		}
 	}
+	*/
 }
 
 
@@ -314,16 +319,16 @@ City::City
 	unsigned int y,
 	VectMap& tiles
 )
-	: _image("citie.png"),
-	_name(name), _x(x), _y(y), _tile(tiles),
-	_influenceLevel(MIN_INFLUENCE_LEVEL), _nbpop(MIN_POP), _atq(0), _def(0), _emotion((unsigned int)MEAN_EMOTION), _nbstructurebuild(0),
-	_foodStock(CITY_ZERO_FOOD), _foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)].food),
-	_foodSurplusPreviousTurn(CITY_ZERO_FOOD), _workBalance(0), _workSurplusPreviousTurn(0), _goldBalance(0.0),
-	_conversionToApply(conversionSurplus_Type::No_Conversion)
+	: m_image("citie.png"),
+	m_name(name), m_x(x), m_y(y), m_tile(tiles),
+	m_influenceLevel(MIN_INFLUENCE_LEVEL), m_nbpop(MIN_POP), m_atq(0), m_def(0), m_emotion((unsigned int)MEAN_EMOTION), m_nbstructurebuild(0),
+	m_foodStock(CITY_ZERO_FOOD), m_foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)].food),
+	m_foodSurplusPreviousTurn(CITY_ZERO_FOOD), m_workBalance(0), m_workSurplusPreviousTurn(0), m_goldBalance(0.0),
+	m_conversionToApply(conversionSurplus_Type::No_Conversion)
 {
-	_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
+	m_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
 
-	MainGame::logfileconsole("[INFO]___: Create Citie: " + _name + " Success");
+	MainGame::logfileconsole("[INFO]___: Create Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -340,7 +345,7 @@ City::~City()
 
 
 
-	MainGame::logfileconsole("[INFO]___: Destroy Citie: " + _name + " Success");
+	MainGame::logfileconsole("[INFO]___: Destroy Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -352,14 +357,14 @@ City::~City()
 /* ----------------------------------------------------------------------------------- */
 void City::resetTabCitizen()
 {
-	for (const auto& n : _citizens)
+	for (const auto& n : m_citizens)
 	{
 		if (nullptr != n)
 		{
 			delete n;
 		}
 	}
-	_citizens.resize(0);
+	m_citizens.resize(0);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -375,41 +380,41 @@ void City::foodNextTurn
 	GoldStats& goldStats
 )
 {
-	double foodLimitPerLevelCurrent(15 + ((double)_nbpop - 1) * 6 + pow((_nbpop - 1), 1.8));
-	double foodLimitPerLevelMinusOne(15 + ((double)_nbpop - 1 - 1) * 6 + pow((_nbpop - 1 - 1), 1.8));
+	double foodLimitPerLevelCurrent(15 + ((double)m_nbpop - 1) * 6 + pow((m_nbpop - 1), 1.8));
+	double foodLimitPerLevelMinusOne(15 + ((double)m_nbpop - 1 - 1) * 6 + pow((m_nbpop - 1 - 1), 1.8));
 
-	_foodStock += _foodBalance;
+	m_foodStock += m_foodBalance;
 
-	if (CITY_ZERO_FOOD > _foodStock)
+	if (CITY_ZERO_FOOD > m_foodStock)
 	{
-		if (_citizens.size() == MIN_POP)
+		if (m_citizens.size() == MIN_POP)
 		{
-			_foodStock = CITY_ZERO_FOOD;
+			m_foodStock = CITY_ZERO_FOOD;
 		}
 		else
 		{
 			/* ---------------------------------------------------------------------- */
 			/* TODO gestion prioritaire de suppression de Citizen					  */
 			/* ---------------------------------------------------------------------- */
-			_nbpop--;
-			if (nullptr != _citizens[_citizens.size() - 1])
+			m_nbpop--;
+			if (nullptr != m_citizens[m_citizens.size() - 1])
 			{
-				delete _citizens[_citizens.size() - 1];
+				delete m_citizens[m_citizens.size() - 1];
 			}
 			else
 			{
 				/* TODO Throw error */
 			}
-			_citizens.pop_back();
-			_foodStock = foodLimitPerLevelMinusOne;
+			m_citizens.pop_back();
+			m_foodStock = foodLimitPerLevelMinusOne;
 		}
 	}
-	else if (_foodStock >= foodLimitPerLevelCurrent)
+	else if (m_foodStock >= foodLimitPerLevelCurrent)
 	{
-		_nbpop++;
+		m_nbpop++;
 
-		_citizens.push_back(new Citizen(_tile, _citizens));
-		_foodStock -= foodLimitPerLevelCurrent;
+		m_citizens.push_back(new Citizen(m_tile, m_citizens));
+		m_foodStock -= foodLimitPerLevelCurrent;
 	}
 	else
 	{
@@ -419,35 +424,35 @@ void City::foodNextTurn
 		/* N/A */
 	}
 
-	double emotionOnFoodModifier((double)_emotion / SCALE_RANGE_MEAN_EMOTION);
-	double consumptionFoodCity(2.0 * ((double)_nbpop - 1.0));
+	double emotionOnFoodModifier((double)m_emotion / SCALE_RANGE_MEAN_EMOTION);
+	double consumptionFoodCity(2.0 * ((double)m_nbpop - 1.0));
 	double sommeFoodCitizen(0);
 
-	for (unsigned int i(0); i < _citizens.size(); i++)
+	for (unsigned int i(0); i < m_citizens.size(); i++)
 	{
-		sommeFoodCitizen += _citizens[i]->GETfood();
+		sommeFoodCitizen += m_citizens[i]->GETfood();
 	}
 
 	/* Applying Emotion multiplier */
 	sommeFoodCitizen *= emotionOnFoodModifier;
 
-	_foodBalance = _foodSurplusPreviousTurn + sommeFoodCitizen - consumptionFoodCity;
-	_foodSurplusPreviousTurn = 0.0;
+	m_foodBalance = m_foodSurplusPreviousTurn + sommeFoodCitizen - consumptionFoodCity;
+	m_foodSurplusPreviousTurn = 0.0;
 
-	if (_foodBalance > 0.0)
+	if (m_foodBalance > 0.0)
 	{
-		switch (_conversionToApply)
+		switch (m_conversionToApply)
 		{
 		case conversionSurplus_Type::No_Conversion:
 			/* N/A */
 			break;
 		case conversionSurplus_Type::FoodToWork:
-			convertFoodSurplusToWork(_foodBalance);
-			_foodBalance = 0.0;
+			convertFoodSurplusToWork(m_foodBalance);
+			m_foodBalance = 0.0;
 			break;
 		case conversionSurplus_Type::FoodToGold:
-			convertFoodSurplusToGold(_foodBalance, goldStats);
-			_foodBalance = 0.0;
+			convertFoodSurplusToGold(m_foodBalance, goldStats);
+			m_foodBalance = 0.0;
 			break;
 		case conversionSurplus_Type::WorkToFood:
 			/* N/A */
@@ -484,9 +489,9 @@ bool City::testPos
 )
 {
 	if (
-		_x == mouse_x
+		m_x == mouse_x
 		&&
-		_y == mouse_y
+		m_y == mouse_y
 		)
 	{
 		return true;
@@ -499,7 +504,7 @@ bool City::testPos
 /* NAME : computeEmotion															   */
 /* ROLE : Calcul sur une echelle de 0 � 100 le bonheur de la Citie					   */
 /* INPUT : void																		   */
-/* INTERNAL OUTPUT : _emotion : bonheur de la Citie									   */
+/* INTERNAL OUTPUT : m_emotion : bonheur de la Citie									   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -507,21 +512,21 @@ void City::computeEmotion()
 {
 	double result(0);
 
-	for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
+	for (unsigned int nbCitizen(0); nbCitizen < m_citizens.size(); nbCitizen++)
 	{
-		result += (double)_citizens[nbCitizen]->GEThappiness();
+		result += (double)m_citizens[nbCitizen]->GEThappiness();
 	}
 
 	try
 	{
-		_emotion = (unsigned int)Utility::computeValueToScale
+		m_emotion = (unsigned int)Utility::computeValueToScale
 		(
 			result,
 			(double)Emotion_Type::angry,
 			(double)Emotion_Type::ecstatic,
 			SCALE_RANGE_MIN_EMOTION,
 			SCALE_RANGE_MAX_EMOTION,
-			(int)_citizens.size()
+			(int)m_citizens.size()
 		);
 	}
 	catch (std::string const& msg)
@@ -529,7 +534,7 @@ void City::computeEmotion()
 		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
 		{
 			MainGame::logfileconsole(msg);
-			_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
+			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG_MODE
 			throw(msg);
 #endif // DEBUG_MODE
@@ -537,7 +542,7 @@ void City::computeEmotion()
 		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
 		{
 			MainGame::logfileconsole(msg);
-			_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
+			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG_MODE
 			throw(msg);
 #endif // DEBUG_MODE
@@ -555,18 +560,18 @@ void City::computeEmotion()
 /* ----------------------------------------------------------------------------------- */
 void City::computeWork()
 {
-	_workBalance = 0.0;
-	for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
+	m_workBalance = 0.0;
+	for (unsigned int nbCitizen(0); nbCitizen < m_citizens.size(); nbCitizen++)
 	{
-		_workBalance += (double)_citizens[nbCitizen]->GETwork();
+		m_workBalance += (double)m_citizens[nbCitizen]->GETwork();
 	}
 
 	/* Applying Emotion multiplier */
-	_workBalance *= ((double)_emotion / SCALE_RANGE_MEAN_EMOTION);
+	m_workBalance *= ((double)m_emotion / SCALE_RANGE_MEAN_EMOTION);
 
 	/* Applying the work which was converted from food in the previous turn */
-	_workBalance += _workSurplusPreviousTurn;
-	_workSurplusPreviousTurn = 0;
+	m_workBalance += m_workSurplusPreviousTurn;
+	m_workSurplusPreviousTurn = 0;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -584,39 +589,41 @@ void City::computeWork()
 /* ----------------------------------------------------------------------------------- */
 void City::computeWorkToBuild
 (
-	Player* player,
-	const VectUnitTemplate& tabUnit_Template
+	Player& player,
+	const VectUnitTemplate& vectUnitTemplate,
+	bool* needToUpdateDrawUnit
 )
 {
-	if (_conversionToApply != conversionSurplus_Type::WorkToGold)
+	if (m_conversionToApply != conversionSurplus_Type::WorkToGold)
 	{
-		if (!_buildQueue.buildQueue.empty())
+		if (!m_buildQueue.buildQueue.empty())
 		{
-			_buildQueue.buildQueue.front().remainingWork -= _workBalance;
+			m_buildQueue.buildQueue.front().remainingWork -= m_workBalance;
 
 			double workSurplus(0.0);
-			while (_buildQueue.buildQueue.front().remainingWork < 0.0)
+			while (m_buildQueue.buildQueue.front().remainingWork < 0.0)
 			{
-				if (build_Type::unit == _buildQueue.buildQueue.front().type)
+				if (build_Type::unit == m_buildQueue.buildQueue.front().type)
 				{
-					unsigned int unitToBuild(Unit::searchUnitByName(_buildQueue.buildQueue.front().name, tabUnit_Template));
+					unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.buildQueue.front().name, vectUnitTemplate));
 
-					player->addUnit
+					player.addUnit
 					(
-						_buildQueue.buildQueue.front().name,
-						_x,
-						_y,
-						tabUnit_Template[unitToBuild].type,
-						tabUnit_Template[unitToBuild].life,
-						tabUnit_Template[unitToBuild].atq,
-						tabUnit_Template[unitToBuild].def,
-						tabUnit_Template[unitToBuild].movement,
-						tabUnit_Template[unitToBuild].level,
-						tabUnit_Template[unitToBuild].maintenance
+						m_buildQueue.buildQueue.front().name,
+						m_x,
+						m_y,
+						vectUnitTemplate[unitToBuild].type,
+						vectUnitTemplate[unitToBuild].life,
+						vectUnitTemplate[unitToBuild].atq,
+						vectUnitTemplate[unitToBuild].def,
+						vectUnitTemplate[unitToBuild].movement,
+						vectUnitTemplate[unitToBuild].level,
+						vectUnitTemplate[unitToBuild].maintenance
 					);
+					*needToUpdateDrawUnit = true;
 				}
 				else
-					if (build_Type::building == _buildQueue.buildQueue.front().type)
+					if (build_Type::building == m_buildQueue.buildQueue.front().type)
 					{
 						/* TODO buildings */
 					}
@@ -624,17 +631,17 @@ void City::computeWorkToBuild
 					{
 						/* N/A */
 #ifdef _DEBUG_MODE
-						throw("[ERROR]___: computeWorkToBuild : _buildQueue.front().type == else");
+						throw("[ERROR]___: computeWorkToBuild : m_buildQueue.front().type == else");
 #endif // DEBUG_MODE
 					}
 
-				workSurplus = -(_buildQueue.buildQueue.front().remainingWork);
+				workSurplus = -(m_buildQueue.buildQueue.front().remainingWork);
 
 				removeBuildToQueueFront();
 
-				if (!_buildQueue.buildQueue.empty())
+				if (!m_buildQueue.buildQueue.empty())
 				{
-					_buildQueue.buildQueue.front().remainingWork -= workSurplus;
+					m_buildQueue.buildQueue.front().remainingWork -= workSurplus;
 				}
 				else
 				{
@@ -646,7 +653,7 @@ void City::computeWorkToBuild
 	}
 	else
 	{
-		player->addGoldToGoldConversionSurplus(_workBalance * MULTIPLIER_CONVERSION_WORK_TO_GOLD);
+		player.addGoldToGoldConversionSurplus(m_workBalance * MULTIPLIER_CONVERSION_WORK_TO_GOLD);
 	}
 }
 
@@ -660,20 +667,20 @@ void City::computeWorkToBuild
 /* ----------------------------------------------------------------------------------- */
 void City::computeGold()
 {
-	_goldBalance = 0.0;
-	for (unsigned int nbCitizen(0); nbCitizen < _citizens.size(); nbCitizen++)
+	m_goldBalance = 0.0;
+	for (unsigned int nbCitizen(0); nbCitizen < m_citizens.size(); nbCitizen++)
 	{
-		_goldBalance += (double)_citizens[nbCitizen]->GETwork();
+		m_goldBalance += (double)m_citizens[nbCitizen]->GETwork();
 	}
 
 	/* Applying Emotion multiplier */
-	_goldBalance *= ((double)_emotion / SCALE_RANGE_MEAN_EMOTION);
+	m_goldBalance *= ((double)m_emotion / SCALE_RANGE_MEAN_EMOTION);
 }
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : addCityGoldToTaxIncome													   */
-/* ROLE : Add _goldBalance to a player taxIncome 									   */
+/* ROLE : Add m_goldBalance to a player taxIncome 									   */
 /* OUT : GoldStats& goldStats : struct of player gold								   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
@@ -683,14 +690,14 @@ void City::addCityGoldToTaxIncome
 	GoldStats& goldStats
 )
 {
-	goldStats.taxIncome += _goldBalance;
-	_goldBalance = 0.0;
+	goldStats.taxIncome += m_goldBalance;
+	m_goldBalance = 0.0;
 }
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : convertWorkSurplusToFood													   */
-/* ROLE : Convert work to food ; Place in _foodSurplusPreviousTurn					   */
+/* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
 /* INPUT : double workSurplus : work surplus to convert into food					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
@@ -700,13 +707,13 @@ void City::convertWorkSurplusToFood
 	double workSurplus
 )
 {
-	_foodSurplusPreviousTurn = workSurplus * MULTIPLIER_CONVERSION_WORK_TO_FOOD;
+	m_foodSurplusPreviousTurn = workSurplus * MULTIPLIER_CONVERSION_WORK_TO_FOOD;
 }
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : convertWorkSurplusToFood													   */
-/* ROLE : Convert food to work ; Place in _workSurplusPreviousTurn					   */
+/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
 /* INPUT : double workSurplus : food surplus to convert into work					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
@@ -716,7 +723,7 @@ void City::convertFoodSurplusToWork
 	double foodSurplus
 )
 {
-	_workSurplusPreviousTurn = foodSurplus * MULTIPLIER_CONVERSION_FOOD_TO_WORK;
+	m_workSurplusPreviousTurn = foodSurplus * MULTIPLIER_CONVERSION_FOOD_TO_WORK;
 }
 
 /* ----------------------------------------------------------------------------------- */

@@ -48,11 +48,13 @@ static unsigned int* s_tileSize;
 /* ----------------------------------------------------------------------------------- */
 void MainMap::setStaticPtrTileSize()
 {
-	s_tileSize = &_tileSize;
+	s_tileSize = &m_tileSize;
 }
 
 
 MainMap::MainMap()
+:m_needToUpdateDraw(true), m_mapSizePixX(0), m_mapSizePixY(0),
+m_tileSize(0), m_toolBarSize(0)
 {
 	setStaticPtrTileSize();
 }
@@ -75,12 +77,12 @@ void MainMap::initTile()
 {
 	Tile blankTile;
 	std::vector<Tile> blank;
-	for (unsigned int i(0); i < _mapSizePixX / _tileSize; i++)
+	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
 	{
-		_matriceMap.push_back(blank);
-		for (unsigned int j(0); j < _mapSizePixY / _tileSize; j++)
+		m_matriceMap.push_back(blank);
+		for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
 		{
-			_matriceMap[i].push_back(blankTile);
+			m_matriceMap[i].push_back(blankTile);
 		}
 	}
 }
@@ -98,15 +100,15 @@ void MainMap::generateMap()
 {
 	MainGame::logfileconsole("[INFO]___: Groundgen Start");
 
-	for (unsigned int i(0); i < _mapSizePixX / _tileSize; i++)
+	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
 	{
-		for (unsigned int j(0); j < _mapSizePixY / _tileSize; j++)
+		for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
 		{
 
-			_matriceMap[i][j].indexX = i;
-			_matriceMap[i][j].indexY = j;
-			_matriceMap[i][j].tile_x = convertIndexToPosX(i);
-			_matriceMap[i][j].tile_y = convertIndexToPosY(j);
+			m_matriceMap[i][j].indexX = i;
+			m_matriceMap[i][j].indexY = j;
+			m_matriceMap[i][j].tile_x = convertIndexToPosX(i);
+			m_matriceMap[i][j].tile_y = convertIndexToPosY(j);
 
 
 			/* *********************************************************
@@ -115,14 +117,14 @@ void MainMap::generateMap()
 
 			if  (
 						(i == MAP_BORDER_ZERO)
-					||	(i == (_mapSizePixX / _tileSize) - (MAP_BORDER_ZERO + 1))
+					||	(i == (m_mapSizePixX / m_tileSize) - (MAP_BORDER_ZERO + 1))
 					||	(j == MAP_BORDER_ZERO)
-					||	(j == (_mapSizePixY / _tileSize) - (MAP_BORDER_ZERO + 1))
+					||	(j == (m_mapSizePixY / m_tileSize) - (MAP_BORDER_ZERO + 1))
 				)
 			{
 				tileAffectation
 				(
-					_matriceMap[i][j],
+					m_matriceMap[i][j],
 					Ground_Type::deepwater,
 					(std::string)"deepwater.bmp",
 					GroundSpec_Type::nothing,
@@ -139,7 +141,7 @@ void MainMap::generateMap()
 
 			else if (mapBordersConditions(i, j))
 			{
-				mapBorders(_matriceMap[i][j]);
+				mapBorders(m_matriceMap[i][j]);
 			}
 
 			/* *********************************************************
@@ -147,7 +149,7 @@ void MainMap::generateMap()
 			 ********************************************************* */
 			else
 			{
-				mapIntern(_matriceMap, i, j);
+				mapIntern(m_matriceMap, i, j);
 			}
 		}
 	}
@@ -176,11 +178,11 @@ bool MainMap::mapBordersConditions
 		if (
 			(i == index)
 			||
-			(i == (_mapSizePixX / _tileSize) - (index + 1))
+			(i == (m_mapSizePixX / m_tileSize) - (index + 1))
 			||
 			(j == index)
 			||
-			(j == (_mapSizePixY / _tileSize) - (index + 1))
+			(j == (m_mapSizePixY / m_tileSize) - (index + 1))
 			)
 		{
 			return true;
@@ -628,44 +630,123 @@ bool MainMap::assertRangeMapIndex
 
 
 
-void MainMap::drawMap(RealEngine2D::SpriteBatch& spriteBatch)
+void MainMap::drawMap
+(
+	RealEngine2D::Camera2D& camera
+)
 {
-
 	static GLuint idGrass(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
 	static GLuint idWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
 	static GLuint idDeepWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
-	GLuint id(0);
-	
 
-	for (unsigned int i(0); i < _mapSizePixX / _tileSize; i++)
+	static GLuint idCoal(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
+	static GLuint idCopper(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
+	static GLuint idFish(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
+	static GLuint idHorse(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
+	static GLuint idIron(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
+	static GLuint idPetroleum(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
+	static GLuint idStone(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
+	static GLuint idtree1(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
+	static GLuint iduranium(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
+
+	if (m_needToUpdateDraw)
 	{
-		for (unsigned int j(0); j < _mapSizePixY / _tileSize; j++)
-		{
-			switch (_matriceMap[i][j].tile_ground)
-			{
-			case Ground_Type::grass:
-				id = idGrass;
-				break;
-			case Ground_Type::water:
-				id = idWater;
-				break;
-			case Ground_Type::deepwater:
-				id = idDeepWater;
-				break;
-			}
+		GLuint id(0);
 
-			spriteBatch.draw
-			(
-				glm::vec4(_matriceMap[i][j].tile_x, _matriceMap[i][j].tile_y, _tileSize, _tileSize),
-				glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-				id,
-				0.0f,
-				RealEngine2D::COLOR_WHITE
-			);
+		/* Use this because map is static */
+		m_spriteBatch.begin();
+
+		for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
+		{
+			for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
+			{
+				if (
+					camera.isBoxInView
+					(
+						{ m_matriceMap[i][j].tile_x , m_matriceMap[i][j].tile_y },
+						{ m_tileSize , m_tileSize },
+						(m_toolBarSize - 1) * m_tileSize
+					)
+					)
+				{
+					switch (m_matriceMap[i][j].tile_ground)
+					{
+					case Ground_Type::grass:
+						id = idGrass;
+						break;
+					case Ground_Type::water:
+						id = idWater;
+						break;
+					case Ground_Type::deepwater:
+						id = idDeepWater;
+						break;
+					}
+
+					m_spriteBatch.draw
+					(
+						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+						glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+						id,
+						0.0f,
+						RealEngine2D::COLOR_WHITE
+					);
+
+					switch (m_matriceMap[i][j].tile_spec)
+					{
+					case GroundSpec_Type::coal:
+						id = idCoal;
+						break;
+					case GroundSpec_Type::copper:
+						id = idCopper;
+						break;
+					case GroundSpec_Type::fish:
+						id = idFish;
+						break;
+					case GroundSpec_Type::horse:
+						id = idHorse;
+						break;
+					case GroundSpec_Type::iron:
+						id = idIron;
+						break;
+					case GroundSpec_Type::petroleum:
+						id = idPetroleum;
+						break;
+					case GroundSpec_Type::stone:
+						id = idStone;
+						break;
+					case GroundSpec_Type::tree:
+						id = idtree1;
+						break;
+					case GroundSpec_Type::uranium:
+						id = iduranium;
+						break;
+					case GroundSpec_Type::nothing:
+						/* N/A */
+						break;
+					}
+
+					m_spriteBatch.draw
+					(
+						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+						glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+						id,
+						0.0f,
+						RealEngine2D::COLOR_WHITE
+					);
+				}
+			}
 		}
+
+		m_spriteBatch.end();
+
+		m_needToUpdateDraw = false;
 	}
 }
 
+void MainMap::renderMap()
+{
+	m_spriteBatch.renderBatch();
+}
 
 
  /*

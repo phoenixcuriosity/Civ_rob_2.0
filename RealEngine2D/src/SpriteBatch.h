@@ -33,6 +33,9 @@
 namespace RealEngine2D
 {
 
+/* Define to use for full Rect to draw */
+const glm::vec4 FULL_RECT = { 0.0f, 0.0f, 1.0f, 1.0f };
+
 enum class GlyphSortType
 {
 	NONE,
@@ -41,8 +44,37 @@ enum class GlyphSortType
 	TEXTURE
 };
 
-struct Glyph
+class Glyph
 {
+public:
+	Glyph() {};
+	Glyph
+	(
+		const glm::vec4& destRec,
+		const  glm::vec4& uvRect,
+		GLuint Texture,
+		float Depth,
+		const  ColorRGBA8& color
+	)
+		:texture(Texture), depth(Depth)
+	{
+		topLeft.color = color;
+		topLeft.setPoint(destRec.x, destRec.y + destRec.w);
+		topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
+
+		BottomLeft.color = color;
+		BottomLeft.setPoint(destRec.x, destRec.y);
+		BottomLeft.setUV(uvRect.x, uvRect.y);
+
+		BottomRight.color = color;
+		BottomRight.setPoint(destRec.x + destRec.z, destRec.y);
+		BottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
+
+		topRight.color = color;
+		topRight.setPoint(destRec.x + destRec.z, destRec.y + destRec.w);
+		topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+	}
+
 	GLuint texture;
 	float depth;
 
@@ -105,12 +137,13 @@ private:
 
 private:
 
-	GLuint _vbo;
-	GLuint _vao;
-	GlyphSortType _sortType;
+	GLuint m_vbo;
+	GLuint m_vao;
+	GlyphSortType m_sortType;
 
-	std::vector<Glyph*> _glyphs;
-	std::vector<RenderBatch> _renderBatches;
+	std::vector<Glyph*> m_glyphsPtr;
+	std::vector<Glyph> m_glyphs;
+	std::vector<RenderBatch> m_renderBatches;
 };
 
 }

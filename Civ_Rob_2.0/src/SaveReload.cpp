@@ -34,6 +34,34 @@
  *				START SaveReload::STATIC				   *
  ********************************************************* */
 
+
+
+void SaveReload::init(const std::string& filePath)
+{
+	std::string destroy(EMPTY_STRING);
+
+	//chargement du nombre de sauvegardes
+	std::ifstream loadInfo(filePath);
+	unsigned int currentSave(0), size(0);
+	if (loadInfo)
+	{
+		loadInfo >> destroy;
+		loadInfo >> size;
+		m_tabSave.resize(size);
+		loadInfo >> destroy;
+		for (unsigned int i(0); i < m_tabSave.size(); i++)
+		{
+			loadInfo >> currentSave;
+			m_tabSave[i] = currentSave;
+		}
+	}
+	else
+	{
+		throw("Impossible d'ouvrir le fichier " + filePath);
+	}
+}
+
+
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* NAME : save																						    	  */
@@ -189,16 +217,16 @@ void SaveReload::savePlayer
 			tinyxml2::XMLElement* unitLevelElement = xmlDoc.NewElement("Level");
 			tinyxml2::XMLElement* unitMaintenanceElement = xmlDoc.NewElement("Maintenance");
 
-			unitNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETname().c_str());
-			unitXElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETx());
-			unitYElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETy());
-			unitMovementTypeElement->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETmovementType());
-			unitLifeElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETlife());
-			unitAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETatq());
-			unitDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETdef());
-			unitMovementElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETmovement());
-			unitLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETlevel());
-			unitMaintenanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheUnit(i)->GETmaintenance());
+			unitNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETname().c_str());
+			unitXElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETx());
+			unitYElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETy());
+			unitMovementTypeElement->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmovementType());
+			unitLifeElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETlife());
+			unitAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETatq());
+			unitDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETdef());
+			unitMovementElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmovement());
+			unitLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETlevel());
+			unitMaintenanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmaintenance());
 
 			unitElement->InsertEndChild(unitNameElement);
 			unitElement->InsertEndChild(unitXElement);
@@ -237,19 +265,19 @@ void SaveReload::savePlayer
 			tinyxml2::XMLElement* cityBuildQueueElement = xmlDoc.NewElement("BuildQueue");
 			tinyxml2::XMLElement* cityTabCitizenElement = xmlDoc.NewElement("TabCitizen");
 
-			cityNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETname().c_str());
-			cityXElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETx());
-			cityYElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETy());
-			cityInfluenceLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETinfluenceLevel());
-			cityNbPopElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETnbpop());
-			cityAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETatq());
-			cityDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETdef());
-			cityEmotionElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETemotion());
-			cityFoodStockElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETfoodStock());
-			cityFoodBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETfoodBalance());
-			cityFoodSurplusPreviousTurnElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETfoodSurplusPreviousTurn());
-			cityGoldBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETgoldBalance());
-			cityConversionToApplyElement->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETconversionToApply());
+			cityNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETname().c_str());
+			cityXElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETx());
+			cityYElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETy());
+			cityInfluenceLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETinfluenceLevel());
+			cityNbPopElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETnbpop());
+			cityAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETatq());
+			cityDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETdef());
+			cityEmotionElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETemotion());
+			cityFoodStockElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodStock());
+			cityFoodBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodBalance());
+			cityFoodSurplusPreviousTurnElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodSurplusPreviousTurn());
+			cityGoldBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETgoldBalance());
+			cityConversionToApplyElement->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETconversionToApply());
 
 			cityElement->InsertEndChild(cityNameElement);
 			cityElement->InsertEndChild(cityXElement);
@@ -267,7 +295,7 @@ void SaveReload::savePlayer
 
 			for (
 				unsigned int indexBuild(0);
-				indexBuild < mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETbuildQueue().buildQueue.size();
+				indexBuild < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue.size();
 				indexBuild++
 				)
 			{
@@ -278,11 +306,11 @@ void SaveReload::savePlayer
 				tinyxml2::XMLElement* cityBuildInQueueRemainingWorkElement = xmlDoc.NewElement("RemainingWork");
 
 				cityBuildInQueueNameElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETbuildQueue().buildQueue[indexBuild].name.c_str());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue[indexBuild].name.c_str());
 				cityBuildInQueueTypeElement
-					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETbuildQueue().buildQueue[indexBuild].type);
+					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue[indexBuild].type);
 				cityBuildInQueueRemainingWorkElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETbuildQueue().buildQueue[indexBuild].remainingWork);
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue[indexBuild].remainingWork);
 
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueNameElement);
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueTypeElement);
@@ -291,7 +319,7 @@ void SaveReload::savePlayer
 				cityBuildQueueElement->InsertEndChild(cityBuildInQueueElement);
 			}
 
-			for (unsigned int indexCitizen(0); indexCitizen < mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens().size(); indexCitizen++)
+			for (unsigned int indexCitizen(0); indexCitizen < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens().size(); indexCitizen++)
 			{
 				tinyxml2::XMLElement* cityCitizensElement = xmlDoc.NewElement("Citizens");
 				tinyxml2::XMLElement* cityCitizensTileOccupiedElement = xmlDoc.NewElement("TileOccupied");
@@ -304,21 +332,21 @@ void SaveReload::savePlayer
 				tinyxml2::XMLElement* cityCitizensPlaceElement = xmlDoc.NewElement("Place");
 
 				cityCitizensTileOccupiedElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GETtileOccupied());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETtileOccupied());
 				cityCitizensHappinessElement
-					->SetText((int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GEThappiness());
+					->SetText((int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GEThappiness());
 				cityCitizensFoodElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GETfood());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETfood());
 				cityCitizensWorkElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GETwork());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETwork());
 				cityCitizensGoldElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GETgold());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETgold());
 				cityCitizensRevoltElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GETrevolt());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETrevolt());
 				cityCitizensReligionElement
-					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GETreligion());
+					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETreligion());
 				cityCitizensPlaceElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtheCity(i)->GETcitizens()[indexCitizen]->GETplace());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETplace());
 
 				cityCitizensElement->InsertEndChild(cityCitizensTileOccupiedElement);
 				cityCitizensElement->InsertEndChild(cityCitizensHappinessElement);
@@ -612,7 +640,7 @@ void SaveReload::loadUnitXML
 		Player* blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayer()]);
 		blankPlayer->addEmptyUnit();
 
-		Unit* blankUnit = blankPlayer->GETtheUnit((unsigned int)(blankPlayer->GETtabUnit().size() - 1));
+		Unit* blankUnit = blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)];
 
 		inputNode = nUnit->FirstChild();
 		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->Name == nullptr");
@@ -737,7 +765,7 @@ void SaveReload::loadCityXML
 
 		ptrPlayer->addCity(blankCity.name, blankCity.x, blankCity.y, tabtile);
 
-		ptrCity = ptrPlayer->GETtheCity((unsigned int)ptrPlayer->GETtabCity().size() - 1);
+		ptrCity = ptrPlayer->GETtabCity()[(unsigned int)ptrPlayer->GETtabCity().size() - 1];
 
 		ptrCity->SETinfluenceLevel(influenceLevel);
 
@@ -866,31 +894,26 @@ void SaveReload::loadCityXML
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void SaveReload::createSave
-(
-	MainGame& mainGame
-)
+void SaveReload::createSave(File& files)
 {
 	MainGame::logfileconsole("[INFO]___: createSave Start");
 	std::string destroy;
 
-	for (unsigned int i(0); i < mainGame.GETsaveReload().GETnbSave(); i++)
+	for (unsigned int i(0); i < m_tabSave.size(); i++)
 	{
-		if ((i + 1) != mainGame.GETsaveReload().GETtabSave()[i])
+		if ((i + 1) != m_tabSave[i])
 		{
-			mainGame.GETsaveReload().SETcurrentSave(i + 1);
-			mainGame.GETsaveReload().GETtabSave().push_back(mainGame.GETsaveReload().GETcurrentSave());
-			break;
-		}
-		else
-		{
-			/* N/A */
+			m_currentSave = i + 1;
+			m_tabSave.push_back(m_currentSave);
+			goto L10;
 		}
 	}
-	if (mainGame.GETsaveReload().GETcurrentSave() <= 0)
+
+L10:
+	if (m_currentSave <= 0)
 	{
-		mainGame.GETsaveReload().SETcurrentSave(mainGame.GETsaveReload().GETnbSave() + 1);
-		mainGame.GETsaveReload().GETtabSave().push_back(mainGame.GETsaveReload().GETcurrentSave());
+		m_currentSave = (int)m_tabSave.size() + 1;
+		m_tabSave.push_back(m_currentSave);
 	}
 	else
 	{
@@ -898,24 +921,29 @@ void SaveReload::createSave
 	}
 
 
-	std::ofstream saveInfo(mainGame.GETfile().saveInfo);
+	std::ofstream saveInfo(files.saveInfo);
 	if (saveInfo)
 	{
 		saveInfo << "NbSave=";
-		saveInfo << std::endl << mainGame.GETsaveReload().GETnbSave() + 1;
+		saveInfo << std::endl << m_tabSave.size();
 		saveInfo << std::endl << "SaveUse=";
-		for (unsigned int i(0); i < mainGame.GETsaveReload().GETnbSave() + 1; i++)
-			saveInfo << std::endl << mainGame.GETsaveReload().GETtabSave()[i];
+		for (unsigned int i(0); i < m_tabSave.size(); i++)
+			saveInfo << std::endl << m_tabSave[i];
 	}
 	else
-		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.GETfile().saveInfo);
+		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + files.saveInfo);
 
-	std::string save = "save/" + std::to_string(mainGame.GETsaveReload().GETcurrentSave());
-	_mkdir(save.c_str());
-	mainGame.GETsaveReload().SETnbSave(mainGame.GETsaveReload().GETnbSave() + 1);
+	std::string save = "save/" + std::to_string(m_currentSave);
 
-	mainGame.GETfile().saveMaps = "save/" + std::to_string(mainGame.GETsaveReload().GETcurrentSave()) + "/" + mainGame.GETfile().saveMaps;
-	mainGame.GETfile().savePlayers = "save/" + std::to_string(mainGame.GETsaveReload().GETcurrentSave()) + "/" + mainGame.GETfile().savePlayers;
+	if (_mkdir(save.c_str()) != 0)
+	{
+		MainGame::logfileconsole("[ERROR]___: mkdir failed ");
+	}
+		
+
+
+	files.saveMaps = "save/" + std::to_string(m_currentSave) + "/" + files.saveMaps;
+	files.savePlayers = "save/" + std::to_string(m_currentSave) + "/" + files.savePlayers;
 
 	MainGame::logfileconsole("[INFO]___: createSave End");
 }
@@ -928,21 +956,18 @@ void SaveReload::createSave
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void SaveReload::removeSave
-(
-	MainGame& mainGame
-)
+void SaveReload::removeSave(const std::string& filePath)
 {
 	MainGame::logfileconsole("[INFO]___: removeSave Start");
 	std::string file(EMPTY_STRING);
 	bool condition(false);
 
-	if (mainGame.GETsaveReload().GETcurrentSave() != 0)
+	if (m_currentSave != NO_CURRENT_SAVE_SELECTED)
 	{
 
-		for (unsigned int i(0); i < mainGame.GETsaveReload().GETnbSave(); i++)
+		for (unsigned int i(0); i < m_tabSave.size(); i++)
 		{
-			if (mainGame.GETsaveReload().GETcurrentSave() == (int)mainGame.GETsaveReload().GETtabSave()[i])
+			if (m_currentSave == (int)m_tabSave[i])
 			{
 				condition = true;
 				break;
@@ -957,45 +982,43 @@ void SaveReload::removeSave
 		if (condition)
 		{
 
-			file = "save/" + std::to_string(mainGame.GETsaveReload().GETcurrentSave()) + "/saveMaps.txt";
+			file = "save/" + std::to_string(m_currentSave) + "/saveMaps.txt";
 			if (remove(file.c_str()) != 0)
 				MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
 				MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
-			file = "save/" + std::to_string(mainGame.GETsaveReload().GETcurrentSave()) + "/savePlayers.xml";
+			file = "save/" + std::to_string(m_currentSave) + "/savePlayers.xml";
 			if (remove(file.c_str()) != 0)
 				MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
 				MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
-			file = "save/" + std::to_string(mainGame.GETsaveReload().GETcurrentSave());
+			file = "save/" + std::to_string(m_currentSave);
 			if (_rmdir(file.c_str()) != 0)
 				MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 			else
 				MainGame::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 
-			mainGame.GETsaveReload().SETnbSave(mainGame.GETsaveReload().GETnbSave() - 1);
-			if (mainGame.GETsaveReload().GETnbSave() == 0)
-				mainGame.GETsaveReload().GETtabSave().clear();
+			if (m_tabSave.size() == 1)
+				m_tabSave.clear();
 			else
-				mainGame.GETsaveReload().GETtabSave().erase
-				(mainGame.GETsaveReload().GETtabSave().begin() + mainGame.GETsaveReload().GETcurrentSave() - 1);
+				m_tabSave.erase(m_tabSave.begin() + m_currentSave - 1);
+
+			m_currentSave = NO_CURRENT_SAVE_SELECTED;
 
 
-
-
-			std::ofstream saveInfo(mainGame.GETfile().saveInfo);
+			std::ofstream saveInfo(filePath);
 			if (saveInfo)
 			{
 				saveInfo << "NbSave=";
-				saveInfo << std::endl << mainGame.GETsaveReload().GETnbSave();
+				saveInfo << std::endl << m_tabSave.size();
 				saveInfo << std::endl << "SaveUse=";
-				for (unsigned int i(0); i < mainGame.GETsaveReload().GETnbSave(); i++)
-					saveInfo << std::endl << mainGame.GETsaveReload().GETtabSave()[i];
+				for (unsigned int i(0); i < m_tabSave.size(); i++)
+					saveInfo << std::endl << m_tabSave[i];
 			}
 			else
-				MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.GETfile().saveInfo);
+				MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 		}
 		else
 		{
@@ -1016,41 +1039,38 @@ void SaveReload::removeSave
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void SaveReload::clearSave
-(
-	MainGame& mainGame
-)
+void SaveReload::clearSave(const std::string& filePath)
 {
 	MainGame::logfileconsole("[INFO]___: clearSave Start");
 
-	for (unsigned int j(0); j < mainGame.GETsaveReload().GETnbSave(); j++)
+	for (unsigned int j(0); j < m_tabSave.size(); j++)
 	{
-		
+		/* TODO for buuton save */
 	}
 
 	std::string file(EMPTY_STRING);
-	for (unsigned int i(0); i < mainGame.GETsaveReload().GETnbSave(); i++)
+	for (unsigned int i(0); i < m_tabSave.size(); i++)
 	{
-		file = "save/" + std::to_string(mainGame.GETsaveReload().GETtabSave()[i]) + "/saveMaps.txt";
+		file = "save/" + std::to_string(m_tabSave[i]) + "/saveMaps.txt";
 		if (remove(file.c_str()) != 0)
 			MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
 			MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
-		file = "save/" + std::to_string(mainGame.GETsaveReload().GETtabSave()[i]) + "/savePlayers.xml";
+		file = "save/" + std::to_string(m_tabSave[i]) + "/savePlayers.xml";
 		if (remove(file.c_str()) != 0)
 			MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
 			MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
-		file = "save/" + std::to_string(mainGame.GETsaveReload().GETtabSave()[i]);
+		file = "save/" + std::to_string(m_tabSave[i]);
 		if (_rmdir(file.c_str()) != 0)
 			MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 		else
 			MainGame::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 	}
 
-	std::ofstream saveInfo(mainGame.GETfile().saveInfo);
+	std::ofstream saveInfo(filePath);
 	if (saveInfo)
 	{
 		saveInfo << "NbSave=";
@@ -1058,11 +1078,10 @@ void SaveReload::clearSave
 		saveInfo << std::endl << "SaveUse=";
 	}
 	else
-		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.GETfile().saveInfo);
+		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 
-	mainGame.GETsaveReload().SETnbSave(0);
-	mainGame.GETsaveReload().SETcurrentSave(0);
-	mainGame.GETsaveReload().GETtabSave().clear();
+	m_currentSave = NO_CURRENT_SAVE_SELECTED;
+	m_tabSave.clear();
 
 	MainGame::logfileconsole("[INFO]___: clearSave End");
 }
@@ -1087,7 +1106,7 @@ void SaveReload::clearSave
   /* INPUT : void																							      */
   /* ---------------------------------------------------------------------------------------------------------- */
   /* ---------------------------------------------------------------------------------------------------------- */
-SaveReload::SaveReload() : _nbSave(0), _currentSave(NO_CURRENT_SAVE_SELECTED)
+SaveReload::SaveReload() : m_currentSave(NO_CURRENT_SAVE_SELECTED)
 {
 }
 

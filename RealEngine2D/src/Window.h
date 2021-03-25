@@ -27,45 +27,91 @@
 
 #include <SDL\SDL.h>
 #include <string>
+#include <Windows.h> // DEVMODE
 
 namespace RealEngine2D
 {
 
-	enum WindowFlags
+enum WindowFlags
+{
+	INVISIBLE = 0x1,
+	FULLSCREEN = 0x2,
+	BORDERLESS = 0x4
+};
+
+
+// Donne la fréquence de rafraichissement de l'écran en Hz
+inline unsigned int getRefreshRate()
+{
+	DEVMODE screen;
+	memset(&screen, 0, sizeof(DEVMODE));
+	if (EnumDisplaySettings(NULL, 0, &screen))
 	{
-		INVISIBLE = 0x1,
-		FULLSCREEN = 0x2,
-		BORDERLESS = 0x4
-	};
+		return (unsigned int)screen.dmDisplayFrequency;
+	}
+	return 0;
+}
+// fréquence de rafraichissement de l'écran en Hz
+const unsigned int SCREEN_REFRESH_RATE = getRefreshRate();
 
-	class Window
-	{
-	public:
-		Window();
-		~Window();
 
-		int create
-		(
-			const std::string& name,
-			int screenWidth,
-			int screenHeight,
-			unsigned int currentFlags
-		);
+class Window
+{
+public:
+	Window();
+	~Window();
 
-		void swap();
+	int create
+	(
+		const std::string& name,
+		int screenWidth,
+		int screenHeight,
+		unsigned int currentFlags
+	);
 
-		int GETscreenWidth() { return _screenWidth; };
-		int GETscreenHeight() { return _screenHeight; };
+	void swap();
 
-		int SETscreenWidth(int screenWidth) { _screenWidth = screenWidth; };
-		int SETscreenHeight(int screenHeight) { _screenHeight = screenHeight; };
+	int GETscreenWidth() { return m_screenWidth; };
+	int GETscreenHeight() { return m_screenHeight; };
 
-	private:
+	int SETscreenWidth(int screenWidth) { m_screenWidth = screenWidth; };
+	int SETscreenHeight(int screenHeight) { m_screenHeight = screenHeight; };
 
-		SDL_Window* _sdlWindow;
-		int _screenWidth = 0;
-		int _screenHeight = 0;
-	};
+
+public:
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : getHorizontal																   */
+	/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
+	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static Uint16 getHorizontal
+	(
+		unsigned int tileSize
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : getVertical																   */
+	/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
+	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static Uint16 getVertical
+	(
+		unsigned int tileSize
+	);
+
+private:
+
+	SDL_Window* m_sdlWindow;
+	int m_screenWidth = 0;
+	int m_screenHeight = 0;
+};
 
 }
 

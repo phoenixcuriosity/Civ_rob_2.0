@@ -41,6 +41,9 @@
 #define NO_UNIT_SELECTED -1
 #define NO_CITY_SELECTED -1
 
+const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
+const unsigned int NB_MAX_PLAYER = 9;
+
 /* *********************************************************
  *						 Enum							   *
  ********************************************************* */
@@ -231,7 +234,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : resetGoldStats															   */
-	/* ROLE : Reset all stats of _goldStats except gold									   */
+	/* ROLE : Reset all stats of m_goldStats except gold									   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
@@ -241,7 +244,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : resetGoldStats															   */
-	/* ROLE : Reset all stats of _goldStats except gold									   */
+	/* ROLE : Reset all stats of m_goldStats except gold									   */
 	/* INPUT : double goldToAdd	: gold to add in goldConversionSurplus					   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
@@ -258,21 +261,19 @@ public:
 	 ********************************************************* */
 
 
-	inline virtual std::string GETname() const { return _name; };
-	inline virtual Unit* GETtheUnit(unsigned int index) const { return _tabUnit[index]; };
-	inline virtual std::vector<Unit*> GETtabUnit() const { return _tabUnit; };
-	inline virtual City* GETtheCity(unsigned int index) const { return _tabCity[index]; };
-	inline virtual std::vector<City*> GETtabCity() const { return _tabCity; };
-	inline virtual int GETselectedUnit()const { return _selectedUnit; };
-	inline virtual int GETselectedCity() { return _selectedCity; };
-	inline virtual GoldStats& GETgoldStats() { return _goldStats; };
-	inline virtual GoldStats GETgoldStatsConst()const { return _goldStats; };
-	inline virtual OnOffDisplay& GETonOffDisplay() { return _onOffDisplay; };
-	inline virtual OnOffDisplay GETonOffDisplayConst()const { return _onOffDisplay; };
+	inline virtual std::string GETname() const { return m_name; };
+	inline virtual std::vector<Unit*> GETtabUnit() const { return m_tabUnit; };
+	inline virtual std::vector<City*> GETtabCity() const { return m_tabCity; };
+	inline virtual int GETselectedUnit()const { return m_selectedUnit; };
+	inline virtual int GETselectedCity() { return m_selectedCity; };
+	inline virtual GoldStats& GETgoldStats() { return m_goldStats; };
+	inline virtual GoldStats GETgoldStatsConst()const { return m_goldStats; };
+	inline virtual OnOffDisplay& GETonOffDisplay() { return m_onOffDisplay; };
+	inline virtual OnOffDisplay GETonOffDisplayConst()const { return m_onOffDisplay; };
 
-	inline virtual void SETname(const std::string& msg) { _name = msg; };
-	inline virtual void SETselectedUnit(int selectedUnit) { _selectedUnit = selectedUnit; };
-	inline virtual void SETselectedCity(int selectedCity) { _selectedCity = selectedCity; };
+	inline virtual void SETname(const std::string& msg) { m_name = msg; };
+	inline virtual void SETselectedUnit(int selectedUnit) { m_selectedUnit = selectedUnit; };
+	inline virtual void SETselectedCity(int selectedCity) { m_selectedCity = selectedCity; };
 
 private:
 	/* *********************************************************
@@ -280,13 +281,13 @@ private:
 	 ********************************************************* */
 
 
-	std::string _name;
-	std::vector<Unit*> _tabUnit;
-	std::vector<City*> _tabCity;
-	int _selectedCity;
-	int _selectedUnit;
-	GoldStats _goldStats;
-	OnOffDisplay _onOffDisplay;
+	std::string m_name;
+	std::vector<Unit*> m_tabUnit;
+	std::vector<City*> m_tabCity;
+	int m_selectedCity;
+	int m_selectedUnit;
+	GoldStats m_goldStats;
+	OnOffDisplay m_onOffDisplay;
 };
 
 typedef std::vector<Player*> VectPlayer;
@@ -298,42 +299,55 @@ public:
 	Players();
 	~Players();
 
-	inline int GETselectedPlayer()const { return _selectedPlayer; };
-	inline unsigned int GETnbNoNamePlayer()const { return _nbNoNamePlayer; };
-	inline unsigned int GETcitiesNameMaxToCreate()const { return _citiesNameMaxToCreate; };
-	inline VectCityName& GETvectCityName() { return _vectCityName; };
-	inline VectUnitTemplate& GETvectUnitTemplate() { return _vectUnitTemplate; };
-	inline VectPlayer& GETvectPlayer() { return _vectPlayer; };
+	inline int GETselectedPlayer()const { return m_selectedPlayer; };
+	inline unsigned int GETcitiesNameMaxToCreate()const { return m_citiesNameMaxToCreate; };
+	inline VectCityName& GETvectCityName() { return m_vectCityName; };
+	inline VectUnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
+	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
+	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
 
-	inline void SETselectedPlayer(int selectedPlayer) { _selectedPlayer = selectedPlayer; };
-	inline void SETnbNoNamePlayer(unsigned int nbNoNamePlayer) { _nbNoNamePlayer = nbNoNamePlayer; };
-	inline void SETcitiesNameMaxToCreate(unsigned int citiesNameMaxToCreate) { _citiesNameMaxToCreate = citiesNameMaxToCreate; };
+	inline void SETselectedPlayer(int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
+	inline void SETcitiesNameMaxToCreate(unsigned int citiesNameMaxToCreate) { m_citiesNameMaxToCreate = citiesNameMaxToCreate; };
+	inline void SETneedToUpdateDrawUnit(bool need) { m_needToUpdateDrawUnit = need; };
 
 public:
-	void addPlayer();
+
+	void init(const std::string& filePath);
+
+	void addPlayer(const std::string& name);
 
 	void removeIndexPlayer
 	(
 		unsigned int index
 	);
 
+	void drawUnit
+	(
+		const MainMap& mainMap,
+		RealEngine2D::Camera2D& camera
+	);
+
+	void renderUnit();
+
 private:
 
 	// index du joueur actuellement sélectionné
-	int _selectedPlayer;
-
-	// nombre de joueur sans nom
-	unsigned int _nbNoNamePlayer;
+	int m_selectedPlayer;
 
 	// nombre de cité maximal différentes à créer 
-	unsigned int _citiesNameMaxToCreate;
+	unsigned int m_citiesNameMaxToCreate;
 
-	VectCityName _vectCityName;
+	VectCityName m_vectCityName;
 
 	// tableau des statistiques par défauts des unités
-	VectUnitTemplate _vectUnitTemplate;
+	VectUnitTemplate m_vectUnitTemplate;
+	std::vector<GLuint> m_vectID;
 
-	VectPlayer _vectPlayer;
+	VectPlayer m_vectPlayer;
+
+	/* Dedicated spriteBatch for all Unit */
+	RealEngine2D::SpriteBatch m_spriteBatchUnit;
+	bool m_needToUpdateDrawUnit = true;
 };
 
 

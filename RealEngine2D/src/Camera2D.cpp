@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.1
+	last modification on this file on version:0.23.3.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,9 +27,9 @@
 using namespace RealEngine2D;
 
 Camera2D::Camera2D()
-: _screenWidth(NULL), _screenHeight(NULL),
-_needMatixUpdate(true), _scale(1.0f), _position(0.0f, 0.0f),
-_cameraMatrix(1.0f), _orthoMatrix(1)
+: m_screenWidth(1280), m_screenHeight(720),
+m_needMatixUpdate(true), m_scale(1.0f), m_position(0.0f, 0.0f),
+m_orthoMatrix(1), m_cameraMatrix(1.0f)
 {
 
 }
@@ -40,38 +40,71 @@ Camera2D::~Camera2D()
 
 void Camera2D::init(int screenWidth, int screenHeight)
 {
-	_screenWidth = screenWidth;
-	_screenHeight = screenHeight;
-	_orthoMatrix = glm::ortho(0.0f, (float)_screenWidth, 0.0f, (float)_screenHeight);
+	m_screenWidth = screenWidth;
+	m_screenHeight = screenHeight;
+	m_orthoMatrix = glm::ortho(0.0f, (float)m_screenWidth, 0.0f, (float)m_screenHeight);
 }
 
 void Camera2D::update()
 {
-	if (_needMatixUpdate)
+	if (m_needMatixUpdate)
 	{
 		glm::vec3 translate
-		(-_position.x + _screenWidth / 2, -_position.y + _screenHeight / 2, 0.0f);
-		_cameraMatrix = glm::translate(_orthoMatrix, translate);
+		(-m_position.x + ((float)m_screenWidth / 2.0f), -m_position.y + ((float)m_screenHeight / 2.0f), 0.0f);
+		m_cameraMatrix = glm::translate(m_orthoMatrix, translate);
 
-		glm::vec3 scale(_scale, _scale, 0.0f);
-		_cameraMatrix = glm::scale(glm::mat4(1.0f), scale) * _cameraMatrix;
-		_needMatixUpdate = false;
+		glm::vec3 scale(m_scale, m_scale, 0.0f);
+		m_cameraMatrix = glm::scale(glm::mat4(1.0f), scale) * m_cameraMatrix;
+		m_needMatixUpdate = false;
 	}
 }
 
 glm::vec2 Camera2D::convertScreenToMap(glm::vec2 screenPos)
 {
 	/*invert y*/
-	screenPos.y = _screenHeight - screenPos.y;
+	screenPos.y = (float)m_screenHeight - screenPos.y;
 
 	/* center pos 0,0 to middle */
-	screenPos -= glm::vec2(_screenWidth/2, _screenHeight/2);
+	screenPos -= glm::vec2((float)m_screenWidth/2.0f, (float)m_screenHeight/2.0f);
 
 	/* scale */
-	screenPos /= _scale;
+	screenPos /= m_scale;
 
 	/* translation */
-	screenPos += _position;
+	screenPos += m_position;
 
 	return screenPos;
+}
+
+bool Camera2D::isBoxInView
+(
+	const glm::vec2& position,
+	const glm::vec2& dim,
+	unsigned int toolBarSize
+)
+{
+	glm::vec2 scaledDim
+	(
+		(float)((float)m_screenWidth - (float)toolBarSize) / m_scale,
+		(float)m_screenHeight / m_scale
+	);
+
+	const float MIN_DISTANCE_X(dim.x / 2.0f + scaledDim.x / 2.0f);
+	const float MIN_DISTANCE_Y(dim.y / 2.0f + scaledDim.y / 2.0f);
+
+	glm::vec2 centerPos(position + dim / 2.0f);
+
+	glm::vec2 io(m_position.x + ((float)toolBarSize/ m_scale), m_position.y);
+
+	glm::vec2 distVect(centerPos - io);
+
+	float xDepth(MIN_DISTANCE_X - abs(distVect.x));
+	float yDepth(MIN_DISTANCE_Y - abs(distVect.y));
+
+
+	if (xDepth > 0.0f && yDepth > 0.0f)
+	{
+		return true;
+	}
+	return false;
 }

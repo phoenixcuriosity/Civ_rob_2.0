@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
+	last modification on this file on version:0.23.3.0
 	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
@@ -28,20 +28,13 @@ namespace RealEngine2D
 {
 	
 SpriteBatch::SpriteBatch()
-: _vbo(0), _vao(0), _sortType(GlyphSortType::NONE)
+: m_vbo(0), m_vao(0), m_sortType(GlyphSortType::NONE)
 {
 
 }
 SpriteBatch::~SpriteBatch()
 {
-	for (unsigned int i(0); i < _glyphs.size(); i++)
-	{
-		if (nullptr != _glyphs[i])
-		{
-			delete _glyphs[i];
-		}
-	}
-	_glyphs.clear();
+	m_glyphsPtr.clear();
 }
 void SpriteBatch::init()
 {
@@ -53,20 +46,19 @@ void SpriteBatch::begin
 	GlyphSortType sortType /* = GlyphSortType::TEXTURE */
 )
 {
-	_sortType = sortType;
-	_renderBatches.clear();
-	for (unsigned int i(0); i < _glyphs.size(); i++)
-	{
-		if (nullptr != _glyphs[i])
-		{
-			delete _glyphs[i];
-		}
-	}
-	_glyphs.clear();
+	m_sortType = sortType;
+	m_renderBatches.clear();
+	m_glyphs.clear();
 }
 
 void SpriteBatch::end()
 {
+	m_glyphsPtr.resize(m_glyphs.size());
+	for (unsigned int i(0); i < m_glyphs.size(); i++)
+	{
+		m_glyphsPtr[i] = &m_glyphs[i];
+	}
+
 	sortGlyphs();
 	createRenderBatches();
 }
@@ -80,81 +72,61 @@ void SpriteBatch::draw
 	const  ColorRGBA8& color
 )
 {
-	Glyph* nGlyph = new Glyph;
-	nGlyph->texture = texture;
-	nGlyph->depth = depth;
-
-	nGlyph->topLeft.color = color;
-	nGlyph->topLeft.setPoint(destRec.x, destRec.y + destRec.w);
-	nGlyph->topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
-	
-	nGlyph->BottomLeft.color = color;
-	nGlyph->BottomLeft.setPoint(destRec.x, destRec.y);
-	nGlyph->BottomLeft.setUV(uvRect.x, uvRect.y);
-		
-	nGlyph->BottomRight.color = color;
-	nGlyph->BottomRight.setPoint(destRec.x + destRec.z, destRec.y);
-	nGlyph->BottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
-		  
-	nGlyph->topRight.color = color;
-	nGlyph->topRight.setPoint(destRec.x + destRec.z, destRec.y + destRec.w);
-	nGlyph->topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-
-	_glyphs.push_back(nGlyph);
+	m_glyphs.emplace_back(destRec, uvRect, texture, depth, color);
 }
 
 void SpriteBatch::renderBatch()
 {
-	glBindVertexArray(_vao);
+	glBindVertexArray(m_vao);
 
-	for (unsigned int i(0); i < _renderBatches.size(); i++)
+	for (unsigned int i(0); i < m_renderBatches.size(); i++)
 	{
-		glBindTexture(GL_TEXTURE_2D, _renderBatches[i]._texture);
+		glBindTexture(GL_TEXTURE_2D, m_renderBatches[i]._texture);
 
-		glDrawArrays(GL_TRIANGLES, _renderBatches[i]._offset, _renderBatches[i]._numVertices);
+		glDrawArrays(GL_TRIANGLES, m_renderBatches[i]._offset, m_renderBatches[i]._numVertices);
 	}
 	glBindVertexArray(0);
 }
 
 void SpriteBatch::createRenderBatches()
 {
-	if (_glyphs.empty()) return;
+	if (m_glyphs.empty()) return;
 
 	std::vector<Vertex> vertices;
-	vertices.resize(_glyphs.size() * 6);
+	vertices.resize(m_glyphs.size() * 6);
 
 	int cv(0);
 	int offset(0);
-	_renderBatches.emplace_back(0, 6, _glyphs[0]->texture);
-	vertices[cv++] = _glyphs[0]->topLeft;
-	vertices[cv++] = _glyphs[0]->BottomLeft;
-	vertices[cv++] = _glyphs[0]->BottomRight;
-	vertices[cv++] = _glyphs[0]->BottomRight;
-	vertices[cv++] = _glyphs[0]->topRight;
-	vertices[cv++] = _glyphs[0]->topLeft;
+	m_renderBatches.emplace_back(0, 6, m_glyphsPtr[0]->texture);
+	vertices[cv++] = m_glyphsPtr[0]->topLeft;
+	vertices[cv++] = m_glyphsPtr[0]->BottomLeft;
+	vertices[cv++] = m_glyphsPtr[0]->BottomRight;
+	vertices[cv++] = m_glyphsPtr[0]->BottomRight;
+	vertices[cv++] = m_glyphsPtr[0]->topRight;
+	vertices[cv++] = m_glyphsPtr[0]->topLeft;
 	offset += 6;
 
-	for (unsigned int cg(1); cg < _glyphs.size(); cg++)
+	for (unsigned int cg(1); cg < m_glyphs.size(); cg++)
 	{
-		if (_glyphs[cg]->texture != _glyphs[cg - 1]->texture)
+		if (m_glyphsPtr[cg]->texture != m_glyphsPtr[cg - 1]->texture)
 		{
-			_renderBatches.emplace_back(offset, 6, _glyphs[cg]->texture);
+			m_renderBatches.emplace_back(offset, 6, m_glyphsPtr[cg]->texture);
 		}
 		else
 		{
-			_renderBatches.back()._numVertices += 6;
+			m_renderBatches.back()._numVertices += 6;
 		}
 		
-		vertices[cv++] = _glyphs[cg]->topLeft;
-		vertices[cv++] = _glyphs[cg]->BottomLeft;
-		vertices[cv++] = _glyphs[cg]->BottomRight;
-		vertices[cv++] = _glyphs[cg]->BottomRight;
-		vertices[cv++] = _glyphs[cg]->topRight;
-		vertices[cv++] = _glyphs[cg]->topLeft;
+		vertices[cv++] = m_glyphsPtr[cg]->topLeft;
+		vertices[cv++] = m_glyphsPtr[cg]->BottomLeft;
+		vertices[cv++] = m_glyphsPtr[cg]->BottomRight;
+		vertices[cv++] = m_glyphsPtr[cg]->BottomRight;
+		vertices[cv++] = m_glyphsPtr[cg]->topRight;
+		vertices[cv++] = m_glyphsPtr[cg]->topLeft;
 		offset += 6;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW); /* delete data */
 	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
 
@@ -164,18 +136,18 @@ void SpriteBatch::createRenderBatches()
 
 void SpriteBatch::createVertexArray()
 {
-	if (_vao == 0)
+	if (m_vao == 0)
 	{
-		glGenVertexArrays(1, &_vao);
+		glGenVertexArrays(1, &m_vao);
 	}
-	glBindVertexArray(_vao);
+	glBindVertexArray(m_vao);
 
 
-	if (_vbo == 0)
+	if (m_vbo == 0)
 	{
-		glGenBuffers(1, &_vbo);
+		glGenBuffers(1, &m_vbo);
 	}
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -193,18 +165,18 @@ void SpriteBatch::createVertexArray()
 
 void SpriteBatch::sortGlyphs()
 {
-	switch (_sortType)
+	switch (m_sortType)
 	{
 	case GlyphSortType::NONE :
 		break;
 	case GlyphSortType::FRONT_TO_BACK:
-		std::stable_sort(_glyphs.begin(), _glyphs.end(), compareFrontToBack);
+		std::stable_sort(m_glyphsPtr.begin(), m_glyphsPtr.end(), compareFrontToBack);
 		break;
 	case GlyphSortType::BACK_TO_FRONT :
-		std::stable_sort(_glyphs.begin(), _glyphs.end(), compareBackToFront);
+		std::stable_sort(m_glyphsPtr.begin(), m_glyphsPtr.end(), compareBackToFront);
 		break;
 	case GlyphSortType::TEXTURE :
-		std::stable_sort(_glyphs.begin(), _glyphs.end(), compareTexture);
+		std::stable_sort(m_glyphsPtr.begin(), m_glyphsPtr.end(), compareTexture);
 		break;
 	default:
 		break;

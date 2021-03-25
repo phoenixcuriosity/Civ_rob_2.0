@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.0
+	last modification on this file on version:0.23.3.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,7 +51,7 @@ namespace RealEngine2D
 
 		void addAttribut(const std::string& name);
 
-		GLuint getUnitformLocation(const std::string& uniformName);
+		GLint getUnitformLocation(const std::string& uniformName);
 
 		void use();
 
@@ -66,11 +66,11 @@ namespace RealEngine2D
 		);
 
 	private:
-		int _numAttribut;
+		GLuint m_numAttribut;
 
-		GLuint _programID;
-		GLuint _vertexID;
-		GLuint _fragID;
+		GLuint m_programID;
+		GLuint m_vertexID;
+		GLuint m_fragID;
 
 	};
 }

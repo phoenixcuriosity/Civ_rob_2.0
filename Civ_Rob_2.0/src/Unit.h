@@ -29,7 +29,7 @@
 	Cet objet est d�crit par un nom qui sera li� par un objet de type Texture du meme nom lors de la cr�ation
 	Cet objet a une position lors de la cr�ation qui correspond au coin haut gauche de la tile s�l�ctionn�e
 	Les objets de type Unit ont des caract�ristiques de vie, d'attaque ...
-	_blit et _show permettent de savoir lorsqu'il faut afficher l'unit� ou la faire clignoter
+	m_blit et m_show permettent de savoir lorsqu'il faut afficher l'unit� ou la faire clignoter
 
 
 
@@ -47,7 +47,7 @@
 #include "MainMap.h"
 
 #include <vector>
-
+#include <glm/glm.hpp>
 
 class Players;
 class GameInput;
@@ -178,7 +178,7 @@ public:
 	static bool searchUnitTile
 	(
 		Players& players,
-		const GameInput& mouse,
+		const glm::i32vec2& mouseCoorNorm,
 		Select_Type* select
 	);
 
@@ -204,6 +204,8 @@ public:
 		int x,
 		int y
 	);
+
+private:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -267,6 +269,8 @@ public:
 		int y
 	);
 
+public:
+
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : irrigate																	   */
@@ -329,6 +333,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual ~Unit();
 
+private:
+
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : attack																	   */
@@ -375,6 +381,8 @@ public:
 		int y
 	);
 
+public:
+
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : heal																		   */
@@ -409,6 +417,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void RESETmovement();
+
+private:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -474,37 +484,6 @@ public:
 	 *				Unit::METHODS::AFFICHAGE				   *
 	 ********************************************************* */
 
-
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* NAME : afficher																	   */
-	 /* ROLE : Affichage de la Texture de l'unit� ainsi que la barre de vie et couleur	   */
-	 /* INPUT/OUPUT : AllTextures& : Structure contenant toutes les Textures				   */
-	 /* INPUT : const struct Map& : donn�es g�n�rale de la map							   */
-	 /* INPUT : unsigned int iPlayer : joueur s�lectionn�								   */
-	 /* RETURNED VALUE    : void															   */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
-	virtual void afficher
-	(
-
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : afficherstat																   */
-	/* ROLE : Affichage des statistiques de l'unit� (nom, x, y ...)						   */
-	/* INPUT : const Map& map : donn�es de la map										   */
-	/* INPUT : TTF_Font* font[] : tableau de ptr de font SDL							   */
-	/* INPUT/OUTPUT : SDL_Renderer*& : ptr sur le renderer SDL							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherstat
-	(
-
-	);
-
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : cmpblit																	   */
@@ -522,74 +501,74 @@ public:
 	 *				Unit::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline std::string GETname()				const { return _name; };
-	inline int GETx()							const { return _x; };
-	inline int GETy()							const { return _y; };
-	inline Unit_Movement_Type GETmovementType() const { return _movementType; };
-	inline int GETmaxlife()						const { return _maxlife; };
-	inline int GETmaxatq()						const { return _maxatq; };
-	inline int GETmaxdef()						const { return _maxdef; };
-	inline int GETmaxmovement()					const { return _maxmovement; };
-	inline int GETmaxlevel()					const { return _maxlevel; };
-	inline int GETlife()						const { return _life; };
-	inline int GETatq()							const { return _atq; };
-	inline int GETdef()							const { return _def; };
-	inline int GETmovement()					const { return _movement; };
-	inline int GETlevel()						const { return _level; };
-	inline bool GETalive()						const { return _alive; };
-	inline double GETmaintenance()				const { return _maintenance; }
-	inline unsigned int GETblit()				const { return _blit; };
-	inline bool GETshow()						const { return _show; };
-	inline bool GETshowStats()					const { return _showStats; };
+	inline std::string GETname()				const { return m_name; };
+	inline int GETx()							const { return m_x; };
+	inline int GETy()							const { return m_y; };
+	inline Unit_Movement_Type GETmovementType() const { return m_movementType; };
+	inline int GETmaxlife()						const { return m_maxlife; };
+	inline int GETmaxatq()						const { return m_maxatq; };
+	inline int GETmaxdef()						const { return m_maxdef; };
+	inline int GETmaxmovement()					const { return m_maxmovement; };
+	inline int GETmaxlevel()					const { return m_maxlevel; };
+	inline int GETlife()						const { return m_life; };
+	inline int GETatq()							const { return m_atq; };
+	inline int GETdef()							const { return m_def; };
+	inline int GETmovement()					const { return m_movement; };
+	inline int GETlevel()						const { return m_level; };
+	inline bool GETalive()						const { return m_alive; };
+	inline double GETmaintenance()				const { return m_maintenance; }
+	inline unsigned int GETblit()				const { return m_blit; };
+	inline bool GETshow()						const { return m_show; };
+	inline bool GETshowStats()					const { return m_showStats; };
 
 
-	inline void SETname(const std::string& name) { _name = name; };
-	inline void SETx(int x) { _x = x; };
-	inline void SETy(int y) { _y = y; };
-	inline void SETmovementType(Unit_Movement_Type movementType) { _movementType = movementType; };
-	inline void SETmaxlife(int life) { _maxlife = life; };
-	inline void SETmaxatq(int atq) { _maxatq = atq; };
-	inline void SETmaxdef(int def) { _maxdef = def; };
-	inline void SETmaxmovement(int movement) { _maxmovement = movement; };
-	inline void SETmaxlevel(int level) { _maxlevel = level; };
-	inline void SETlife(int life) { _life = life; };
-	inline void SETatq(int atq) { _atq = atq; };
-	inline void SETdef(int def) { _def = def; };
-	inline void SETmovement(int movement) { _movement = movement; };
-	inline void SETlevel(int level) { _level = level; };
-	inline void SETalive(bool alive) { _alive = alive; };
-	inline void SETmaintenance(double maintenance) { _maintenance = maintenance; }
-	inline void SETblit(unsigned int blit) { _blit = blit; };
-	inline void SETshow(bool show) { _show = show; };
-	inline void SETshowStats(bool showStats) { _showStats = showStats; };
+	inline void SETname(const std::string& name) { m_name = name; };
+	inline void SETx(int x) { m_x = x; };
+	inline void SETy(int y) { m_y = y; };
+	inline void SETmovementType(Unit_Movement_Type movementType) { m_movementType = movementType; };
+	inline void SETmaxlife(int life) { m_maxlife = life; };
+	inline void SETmaxatq(int atq) { m_maxatq = atq; };
+	inline void SETmaxdef(int def) { m_maxdef = def; };
+	inline void SETmaxmovement(int movement) { m_maxmovement = movement; };
+	inline void SETmaxlevel(int level) { m_maxlevel = level; };
+	inline void SETlife(int life) { m_life = life; };
+	inline void SETatq(int atq) { m_atq = atq; };
+	inline void SETdef(int def) { m_def = def; };
+	inline void SETmovement(int movement) { m_movement = movement; };
+	inline void SETlevel(int level) { m_level = level; };
+	inline void SETalive(bool alive) { m_alive = alive; };
+	inline void SETmaintenance(double maintenance) { m_maintenance = maintenance; }
+	inline void SETblit(unsigned int blit) { m_blit = blit; };
+	inline void SETshow(bool show) { m_show = show; };
+	inline void SETshowStats(bool showStats) { m_showStats = showStats; };
 
 private:
 	/* *********************************************************
 	 *					Unit::ATTRIBUTS					       *
 	 ********************************************************* */
-	std::string _name;
-	int _x;
-	int _y;
-	Unit_Movement_Type _movementType;
+	std::string m_name;
+	int m_x;
+	int m_y;
+	Unit_Movement_Type m_movementType;
 
-	int _maxlife;
-	int _maxatq;
-	int _maxdef;
-	int _maxmovement;
-	int _maxlevel;
+	int m_maxlife;
+	int m_maxatq;
+	int m_maxdef;
+	int m_maxmovement;
+	int m_maxlevel;
 
-	int _life;
-	int _atq;
-	int _def;
-	int _movement;
-	int _level;
-	bool _alive;
+	int m_life;
+	int m_atq;
+	int m_def;
+	int m_movement;
+	int m_level;
+	bool m_alive;
 
-	double _maintenance;
+	double m_maintenance;
 
-	unsigned int _blit;
-	bool _show;
-	bool _showStats;
+	unsigned int m_blit;
+	bool m_show;
+	bool m_showStats;
 };
 
 

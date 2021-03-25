@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.1
+	last modification on this file on version:0.23.3.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,7 +30,7 @@ namespace RealEngine2D
 
 	
 FpsLimiter::FpsLimiter()
-:_fps(0.0f), _maxFPS(0.0f), _frameTime(0), _startTicks(0)
+:m_fps(0.0f), m_maxFPS(0.0f), m_frameTime(0), m_startTicks(0)
 {
 
 }
@@ -51,12 +51,12 @@ void FpsLimiter::setMaxFPS
 	float maxFps
 )
 {
-	_maxFPS = maxFps;
+	m_maxFPS = maxFps;
 }
 
 void FpsLimiter::begin()
 {
-	_startTicks = SDL_GetTicks();
+	m_startTicks = SDL_GetTicks();
 }
 
 float FpsLimiter::end()
@@ -64,13 +64,13 @@ float FpsLimiter::end()
 	calculateFPS();
 
 	
-	Uint32 frameTicks(SDL_GetTicks() - _startTicks);
-	if ((1000.0f / _maxFPS) > frameTicks)
+	Uint32 frameTicks(SDL_GetTicks() - m_startTicks);
+	if ((1000.0f / m_maxFPS) > frameTicks)
 	{
-		SDL_Delay((Uint32)((1000.0f / _maxFPS) - frameTicks));
+		SDL_Delay((Uint32)((1000.0f / m_maxFPS) - frameTicks));
 	}
 
-	return _fps;
+	return m_fps;
 }
 
 void FpsLimiter::calculateFPS()
@@ -83,8 +83,8 @@ void FpsLimiter::calculateFPS()
 
 	Uint32 currentTicks(SDL_GetTicks());
 
-	_frameTime = currentTicks - prevTicks;
-	frameTimes[currentFrame % NUM_SAMPLES] = _frameTime;
+	m_frameTime = currentTicks - prevTicks;
+	frameTimes[currentFrame % NUM_SAMPLES] = m_frameTime;
 
 	prevTicks = currentTicks;
 
@@ -109,11 +109,11 @@ void FpsLimiter::calculateFPS()
 
 	if (frameTimeAverage > 0.0f)
 	{
-		_fps = 1000.0f / frameTimeAverage;
+		m_fps = 1000.0f / frameTimeAverage;
 	}
 	else
 	{
-		_fps = 10000.0f;
+		m_fps = 10000.0f;
 	}
 }
 

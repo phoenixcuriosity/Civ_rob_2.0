@@ -50,129 +50,75 @@
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::inputSDL(MainGame& mainGame)
+void GameInput::inputSDL
+(
+	MainGame& mainGame,
+	SDL_Event& ev
+)
 {
-	while (SDL_PollEvent(&mainGame.GETscreen().evnt))
+	switch (ev.type)
 	{
-		switch (mainGame.GETscreen().evnt.type)
-		{
 
-			/* ---------------------------------------------------------------------- */
-			/* Permet de quitter le jeu												  */
-			/* ---------------------------------------------------------------------- */
-		case SDL_QUIT:
-			mainGame.GETvar().continuer = 0;
-			break; 
+		/* ---------------------------------------------------------------------- */
+		/* Permet de quitter le jeu												  */
+		/* ---------------------------------------------------------------------- */
+	case SDL_QUIT:
+		mainGame.GETvar().continuer = 0;
+		break; 
 		
 
-			/* ---------------------------------------------------------------------- */
-			/* Test sur le type d'�v�nement touche enfonc�							  */
-			/* ---------------------------------------------------------------------- */
-		case SDL_KEYDOWN:
-			mainGame.GETscreen().openGLScreen.inputManager
-				.pressKey(mainGame.GETscreen().evnt.key.keysym.sym);
+		/* ---------------------------------------------------------------------- */
+		/* Test sur le type d'�v�nement touche enfonc�							  */
+		/* ---------------------------------------------------------------------- */
+	case SDL_KEYDOWN:
+		mainGame.GETscreen().openGLScreen.inputManager
+			.pressKey(ev.key.keysym.sym);
 			
-			break;
-		case SDL_KEYUP:
-			mainGame.GETscreen().openGLScreen.inputManager
-				.releaseKey(mainGame.GETscreen().evnt.key.keysym.sym);
-			break;
-			/* ---------------------------------------------------------------------- */
-			/* test sur le type d'�v�nement click souris (enfonc�)					  */
-			/* ---------------------------------------------------------------------- */
-		case SDL_TEXTEDITING:
+		break;
+	case SDL_KEYUP:
+		mainGame.GETscreen().openGLScreen.inputManager
+			.releaseKey(ev.key.keysym.sym);
+		break;
+		/* ---------------------------------------------------------------------- */
+		/* test sur le type d'�v�nement click souris (enfonc�)					  */
+		/* ---------------------------------------------------------------------- */
 
-			break;
-		case SDL_TEXTINPUT:
-			mainGame.GETvar().nbturn++;
-			mainGame.GETvar().tempPlayerName += mainGame.GETscreen().evnt.text.text;
-			break;
+	case SDL_MOUSEBUTTONDOWN:
+		mainGame.GETscreen().openGLScreen.inputManager
+			.pressKey(ev.button.button);
+		break;
+	case SDL_MOUSEBUTTONUP:
+		mainGame.GETscreen().openGLScreen.inputManager
+			.releaseKey(ev.button.button);
+		break;
 
-		case SDL_MOUSEBUTTONDOWN:
-			mainGame.GETscreen().openGLScreen.inputManager
-				.releaseKey(mainGame.GETscreen().evnt.button.button);
-			break;
-		case SDL_MOUSEBUTTONUP:
-			mainGame.GETscreen().openGLScreen.inputManager
-				.releaseKey(mainGame.GETscreen().evnt.button.button);
-			break;
+		/* ---------------------------------------------------------------------- */
+		/* test sur le type d'�v�nement wheel									  */
+		/* ---------------------------------------------------------------------- */
 
-			/* ---------------------------------------------------------------------- */
-			/* test sur le type d'�v�nement wheel									  */
-			/* ---------------------------------------------------------------------- */
+	case SDL_MOUSEWHEEL:
+		wheel(mainGame, ev);
+		break;
 
-		case SDL_MOUSEWHEEL:
-			wheel(mainGame);
-			break;
+		/* ---------------------------------------------------------------------- */
+		/* test sur le type d'�v�nement motion									  */
+		/* ---------------------------------------------------------------------- */
 
-			/* ---------------------------------------------------------------------- */
-			/* test sur le type d'�v�nement motion									  */
-			/* ---------------------------------------------------------------------- */
+	case SDL_MOUSEMOTION:
+		mainGame.GETscreen().openGLScreen.inputManager
+			.setMouseCoords(ev.motion.x, ev.motion.y);
+		break;
 
-		case SDL_MOUSEMOTION:
-			mainGame.GETscreen().openGLScreen.inputManager
-				.setMouseCoords(mainGame.GETscreen().evnt.motion.x, mainGame.GETscreen().evnt.motion.y);
-			break;
-
-		default:
-			/* N/A */
-			break;
-		}
+	default:
+		/* N/A */
+		break;
 	}
 
 	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDLK_ESCAPE))
 	{
-		keySDLK_ESCAPE();
-	}
-	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDLK_z))
-	{
-		mainGame.GETscreen().openGLScreen.camera
-			.SETposition
-			(
-				mainGame.GETscreen().openGLScreen.camera.GETposition()
-				+
-				glm::vec2(0.0f, KEY_SPEED_MOVE)
-			);
-	}
-	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDLK_s))
-	{
-		mainGame.GETscreen().openGLScreen.camera
-			.SETposition
-			(
-				mainGame.GETscreen().openGLScreen.camera.GETposition()
-				+
-				glm::vec2(0.0f, -KEY_SPEED_MOVE)
-			);
-	}
-	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDLK_q))
-	{
-		mainGame.GETscreen().openGLScreen.camera
-			.SETposition
-			(
-				mainGame.GETscreen().openGLScreen.camera.GETposition()
-				+
-				glm::vec2(-KEY_SPEED_MOVE, 0.0f)
-			);
-	}
-	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDLK_d))
-	{
-		mainGame.GETscreen().openGLScreen.camera
-			.SETposition
-			(
-				mainGame.GETscreen().openGLScreen.camera.GETposition()
-				+
-				glm::vec2(KEY_SPEED_MOVE, 0.0f)
-			);
+		keySDLK_ESCAPE(mainGame);
 	}
 
-	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDL_BUTTON_LEFT))
-	{
-		
-	}
-	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDL_BUTTON_RIGHT))
-	{
-
-	}
 
 }
 
@@ -182,9 +128,9 @@ void GameInput::inputSDL(MainGame& mainGame)
 
 
 
-void GameInput::keySDLK_ESCAPE()
+void GameInput::keySDLK_ESCAPE(MainGame& mainGame)
 {
-	MainGame::exitError("[INFO]__: keySDLK_ESCAPE");
+	mainGame.GETvar().continuer = 0;
 }
 
  /* *********************************************************
@@ -214,23 +160,7 @@ void GameInput::mouse
 
 	*/
 
-	if (SDL_BUTTON_LEFT == mainGame.GETscreen().evnt.button.button)
-	{
-		cliqueGauche(mainGame);
-	}
-	else
-		if (
-			SDL_BUTTON_RIGHT == mainGame.GETscreen().evnt.button.button
-			&&
-			State_Type::STATEmainMap == mainGame.GETvar().statescreen
-			)
-		{
-			cliqueDroit(mainGame);
-		}
-		else
-		{
-			/* N/A */
-		}
+	
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -307,7 +237,11 @@ void GameInput::cliqueDroit
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::wheel(MainGame& mainGame)
+void GameInput::wheel
+(
+	MainGame& mainGame,
+	SDL_Event& ev
+)
 {
 	/*
 	if (Select_Type::selectcreate == mainGame.GETvar().select)
@@ -340,76 +274,19 @@ void GameInput::wheel(MainGame& mainGame)
 		}
 	}
 	*/
-	if (MOUSE_SCROLL_UP == mainGame.GETscreen().evnt.wheel.y)
+	if (MOUSE_SCROLL_UP == ev.wheel.y)
 	{
 		mainGame.GETscreen().openGLScreen.camera
 			.SETscale(mainGame.GETscreen().openGLScreen.camera.GETscale()
 						+ MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().openGLScreen.camera.GETscale());
 	}
-	else if (MOUSE_SCROLL_DOWN == mainGame.GETscreen().evnt.wheel.y)
+	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
 		mainGame.GETscreen().openGLScreen.camera
 			.SETscale(mainGame.GETscreen().openGLScreen.camera.GETscale() 
 				- MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().openGLScreen.camera.GETscale());
 	}
 }
-
-
-
-/* *********************************************************
- *			END KeyboardMouse::STATIC::SOURIS			   *
- ********************************************************* */
-
-
-
- /* *********************************************************
-  *				START KeyboardMouse::METHODS			   *
-  ********************************************************* */
-
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : KeyboardMouse																				    	  */
-/* ROLE : Constructeur par d�faut de la classe KeyboardMouse											      */
-/* INPUT : void																							      */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-GameInput::GameInput()
-: _mouse_x(0), _mouse_y(0), _mouse_xNormalized(0), _mouse_yNormalized(0), _ywheel(0), _xwheel(0)
-{
-}
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : refreshMousePos																			    	  */
-/* ROLE : Inspect les cases survol�es par la souris par la SDL_MOUSE_MOTION								      */
-/* INPUT : Sint32 x	: position en x de la souris selon SDL												      */
-/* INPUT : Sint32 y	: position en y de la souris selon SDL												      */
-/* INPUT : unsigned int tileSize : taille d'une tile													      */
-/* INPUT : unsigned int screenOffsetXIndexMin : offset en pixel sur l'axe X								      */
-/* INPUT : unsigned int screenOffsetYIndexMin : offset en pixel sur l'axe Y									  */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::refreshMousePos
-(
-	Sint32 x,
-	Sint32 y,
-	unsigned int tileSize,
-	unsigned int screenOffsetXIndexMin,
-	unsigned int screenOffsetYIndexMin
-)
-{
-	_mouse_x = x;
-	_mouse_y = y;
-	_mouse_xNormalized = ((unsigned int)ceil(x / tileSize) * tileSize) + (screenOffsetXIndexMin * tileSize);
-	_mouse_yNormalized = ((unsigned int)ceil(y / tileSize) * tileSize) + (screenOffsetYIndexMin * tileSize);
-}
-
-
-/* *********************************************************
- *				END KeyboardMouse::METHODS				   *
- ********************************************************* */
 
  /*
  *	End Of File : KeyboardMouse.cpp

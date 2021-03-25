@@ -2,7 +2,7 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
+	last modification on this file on version:0.23.3.0
 	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
@@ -37,6 +37,8 @@ public:
 	InputManager();
 	~InputManager();
 
+	void init(unsigned int* tileSize);
+
 	void update();
 
 	void pressKey(unsigned int keyID);
@@ -53,16 +55,19 @@ public:
 	);
 
 
-	glm::vec2 GETmouseCoords()const { return _mouseCoords; }
+	glm::vec2 GETmouseCoords()const { return m_mouseCoords; }
+	glm::vec2 GETmouseCoordsTile()const { return { m_mouseCoords.x / *m_tileSize, m_mouseCoords.y / *m_tileSize }; }
 
 private:
 
 	bool wasKeyDown(unsigned int keyID);
 
 private:
-	std::unordered_map<unsigned int, bool> _keyMap;
-	std::unordered_map<unsigned int, bool> _previousKeyMap;
-	glm::ivec2 _mouseCoords;
+	std::unordered_map<unsigned int, bool> m_keyMap;
+	std::unordered_map<unsigned int, bool> m_previousKeyMap;
+	glm::i32vec2 m_mouseCoords;
+
+	unsigned int* m_tileSize = nullptr;
 };
 }
 

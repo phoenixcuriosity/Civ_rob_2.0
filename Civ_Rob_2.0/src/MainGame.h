@@ -27,7 +27,7 @@
 
 #include "LIB.h"
 
-#include <Windows.h> // DEVMODE
+
 #include <fstream> // logger
 #include <vector>
 
@@ -39,11 +39,15 @@
 #include <RealEngine2D\src\SpriteBatch.h>
 #include <RealEngine2D\src\InputManager.h>
 #include <RealEngine2D\src\Timing.h>
+#include <RealEngine2D\src\SpriteFont.h>
+#include <RealEngine2D/src/AudioEngine.h>
+#include <RealEngine2D/src/GUI.h>
 
 #include "Player.h"
 #include "GameInput.h"
 #include "MainMap.h"
 #include "SaveReload.h"
+#include "NextTurn.h"
 
 /* Define center type for Texture to print on the screen */
 enum class Center_Type
@@ -54,20 +58,6 @@ enum class Center_Type
 	center		/* Positions x and y are center depending on the length and the height of the texte */
 };
 
-// Donne la fréquence de rafraichissement de l'écran en Hz
-inline unsigned int getRefreshRate()
-{
-	DEVMODE screen;
-	memset(&screen, 0, sizeof(DEVMODE));
-	if (EnumDisplaySettings(NULL, 0, &screen))
-	{
-		return (unsigned int)screen.dmDisplayFrequency;
-	}
-	return 0;
-}
-// fréquence de rafraichissement de l'écran en Hz
-const unsigned int SCREEN_REFRESH_RATE = getRefreshRate();
-
 /* *********************************************************
  *						Constantes						   *
  ********************************************************* */
@@ -75,27 +65,41 @@ const unsigned int SCREEN_REFRESH_RATE = getRefreshRate();
 const std::string configFilePath = "bin/config.xml";
 
 
+const float MS_PER_SECOND(1000.0f);
+const float TARGET_FRAMETIME = MS_PER_SECOND / RealEngine2D::SCREEN_REFRESH_RATE;
+const unsigned int MAX_PHYSICS_STEPS(6);
+const float MAX_DELTA_TIME(1.0f);
+
+
 
 //---------------------- Structure niveau 1 ------------------------------------------------------------------------------//
 struct OpenGLScreen
 {
 	RealEngine2D::GLSLProgram gLSLProgram;
+
 	RealEngine2D::Camera2D camera;
-	RealEngine2D::SpriteBatch spriteBatch;
+	RealEngine2D::Camera2D cameraHUD;
+
 	RealEngine2D::InputManager inputManager;
+
 	RealEngine2D::FpsLimiter fpsLimiter;
+
+	RealEngine2D::SpriteFont* spriteFont;
+	RealEngine2D::SpriteBatch spriteBatchHUDDynamic;
+	RealEngine2D::SpriteBatch spriteBatchHUDStatic;
+
+	RealEngine2D::AudioEngine audioEngine;
+
+	RealEngine2D::GUI m_gui;
 };
 
 struct Screen
 {
-	// ptr sur la fenetre crée par la SDL
 	RealEngine2D::Window window;
 
 	int screenWidth = 0;
 	int screenHeight = 0;
 	float fps = 0.0;
-
-	SDL_Event evnt;
 
 	OpenGLScreen openGLScreen;
 };
@@ -119,6 +123,7 @@ struct File
 	std::string colorShadingFrag = EMPTY_STRING;
 
 	std::string imagesPath = EMPTY_STRING;
+	std::string GUIPath = EMPTY_STRING;
 };
 struct Var
 {
@@ -132,13 +137,7 @@ struct Var
 	// variable permettant de quitter la boucle principale donc le jeu
 	bool continuer = true;
 
-	// nombre de tours passé dans le jeu
-	unsigned int nbturn = 0;
-
 	std::string tempPlayerName = EMPTY_STRING;
-
-	unsigned int tempX = 0;
-	unsigned int tempY = 0;
 
 	/*
 		état de la sélection du joueur
@@ -240,51 +239,41 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initSDL																	   */
-	/* ROLE : Initialisation de la SDL fenetre et renderer ...							   */
-	/* ROLE : ... ainsi que le tableau de police de font								   */
-	/* INPUT : SDL_Window*& : pointeur sur la fenetre de la SDL							   */
-	/* INPUT : SDL_Renderer*& : pointeur sur le Renderer de la SDL						   */
-	/* INPUT : TTF_Font*[] : pointeur sur le tableau de police de font					   */
-	/* RETURNED VALUE    : bool : true = pas d'erreur lors de l'initialisation de la SDL   */
+	/* ROLE : Init SDL, create window													   */
+	/* RETURNED VALUE    : bool : true = no Error										   */
+	/* RETURNED VALUE    : bool : flase = Error											   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	bool initSDL();
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : initOpenGLScreen															   */
+	/* ROLE : Init m_screen.openGLScreen and m_mainMap									   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	void initOpenGLScreen();
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : initShaders																   */
+	/* ROLE : Init shaders for OpenGL													   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	void initShaders();
 
-public:
-
-	/* *********************************************************
-	*					Screen width and height				   *
-	********************************************************* */
-	
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : getHorizontal																   */
-	/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
-	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
+	/* NAME : initHUDText																   */
+	/* ROLE : Init static Text in HUD													   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getHorizontal
-	(
-		unsigned int tileSize
-	);
+	void initHUDText();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : getVertical																   */
-	/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
-	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getVertical
-	(
-		unsigned int tileSize
-	);
+	void initUI();
 
 public:
 
@@ -309,102 +298,31 @@ public:
 	 *						GameLoop						   *
 	 ********************************************************* */
 
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : runGameLoop																   */
+	/* ROLE : Run the game main's loop													   */
+	/* ROLE : fpsLimiter, update inputManager, inputSDL, moveCameraByDeltaTime			   */
+	/* ROLE : camera update, drawGame, fpsLimiter										   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
 	void runGameLoop();
+
+private:
+
+	void inputUpdate();
+
+	void moveCameraByDeltaTime();
+
+	void moveCamera(float deltaTime);
 
 	void drawGame();
 
-private:
-
-public:
-
-	/* *********************************************************
-     *						NewGame							   *
-     ********************************************************* */
-
-	void newGame();
+	void drawHUD();
 
 private:
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : newGameSettlerSpawn														   */
-	/* ROLE : Création des position pour les settlers de chaque joueurs					   */
-	/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
-	/* INPUT : ...  par défauts des unités												   */
-	/* INPUT : const struct Map& map : structure globale de la map						   */
-	/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
-	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	void newGameSettlerSpawn();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : makeRandomPosTab															   */
-	/* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial			   */
-	/* INPUT : const Map& map : structure globale de la map								   */
-	/* INPUT/OUTPUT : std::vector<randomPos>& : vecteurs de positions					   */
-	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	void makeRandomPosTab
-	(
-		const MainMap& mainMap,
-		std::vector<randomPos>& tabRandom
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : makeRandomPos																   */
-	/* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran */
-	/* OUTPUT : randomPos& RandomPOS : couple de positions								   */
-	/* INPUT : const std::vector<std::vector<Tile>>& maps : Matrice maps				   */
-	/* INPUT : unsigned int toolBarSize: taille de la barre d'outil						   */
-	/* INPUT : unsigned int tileSize													   */
-	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	void makeRandomPos
-	(
-		randomPos& RandomPOS,
-		const MatriceMap& matriceMap,
-		unsigned int toolBarSize,
-		unsigned int tileSize
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : conditionspace															   */
-	/* ROLE : condition pour valider les coordonnées crées:								   */
-	/* ROLE : etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée */
-	/* INPUT : const randomPos& RandomPOS : couple de positions							   */
-	/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
-	/* INPUT : unsigned int tileSize													   */
-	/* INPUT : unsigned int i : couple de positions courant								   */
-	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	bool conditionspace
-	(
-		const randomPos& RandomPOS,
-		const std::vector<randomPos>& tabRandom,
-		unsigned int tileSize
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : conditionground															   */
-	/* ROLE : condition pour valider les coordonnées crées:								   */
-	/* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol			   */
-	/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la map				   */
-	/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
-	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	bool conditionground
-	(
-		const MatriceMap& matriceMap,
-		const randomPos& RandomPOS
-	);
+	
 
 
 public:
@@ -469,30 +387,30 @@ public:
 	 *						GET/SET							   *
 	 ********************************************************* */
 
-	inline Screen& GETscreen() { return _screen; };
-	inline const Screen& GETscreen()const { return _screen; };
-	inline File& GETfile() { return _file; };
-	inline const File& GETfile()const { return _file; };
-	inline Var& GETvar() { return _var; };
-	inline const Var& GETvar()const { return _var; };
-	inline MainMap& GETmainMap() { return _mainMap; };
-	inline const MainMap& GETmainMap()const { return _mainMap; };
-	inline Players& GETPlayers() { return _players; };
-	inline const Players& GETPlayers()const { return _players; };
-	inline GameInput& GETgameInput() { return _gameInput; };
-	inline const GameInput& GETgameInput()const { return _gameInput; };
-	inline SaveReload& GETsaveReload() { return _saveReload; };
-	inline const SaveReload& GETsaveReload()const { return _saveReload; };
-	inline std::ofstream& GETlogger() { return _logger; };
+	inline Screen& GETscreen() { return m_screen; };
+	inline const Screen& GETscreen()const { return m_screen; };
+	inline File& GETfile() { return m_file; };
+	inline const File& GETfile()const { return m_file; };
+	inline Var& GETvar() { return m_var; };
+	inline const Var& GETvar()const { return m_var; };
+	inline MainMap& GETmainMap() { return m_mainMap; };
+	inline const MainMap& GETmainMap()const { return m_mainMap; };
+	inline Players& GETPlayers() { return m_players; };
+	inline const Players& GETPlayers()const { return m_players; };
+	inline GameInput& GETgameInput() { return m_gameInput; };
+	inline const GameInput& GETgameInput()const { return m_gameInput; };
+	inline SaveReload& GETsaveReload() { return m_saveReload; };
+	inline const SaveReload& GETsaveReload()const { return m_saveReload; };
+	inline std::ofstream& GETlogger() { return m_logger; };
 
-	inline void SETscreen(Screen& screen) { _screen = screen; };
-	inline void SETfile(File& file) { _file = file; };
-	inline void SETvar(Var& var) {_var = var; };
-	inline void SETmainMap(MainMap& mainMap) { _mainMap = mainMap; };
-	inline void SETPlayers(Players& players) {  _players = players; };
-	inline void SETgameInput(GameInput& gameInput) {  _gameInput= gameInput; };
-	inline void SETsaveReload(SaveReload& saveReload) {  _saveReload = saveReload; };
-	/* NO SET : _logger */
+	inline void SETscreen(Screen& screen) { m_screen = screen; };
+	inline void SETfile(File& file) { m_file = file; };
+	inline void SETvar(Var& var) {m_var = var; };
+	inline void SETmainMap(MainMap& mainMap) { m_mainMap = mainMap; };
+	inline void SETPlayers(Players& players) {  m_players = players; };
+	inline void SETgameInput(GameInput& gameInput) {  m_gameInput= gameInput; };
+	inline void SETsaveReload(SaveReload& saveReload) {  m_saveReload = saveReload; };
+	/* NO SET : m_logger */
 
 private:
 
@@ -500,21 +418,23 @@ private:
 	 *						Attributs						   *
 	 ********************************************************* */
 	
-	Screen _screen;
+	Screen m_screen;
 
-	File _file;
+	File m_file;
 
-	Var _var;
+	Var m_var;
 
-	MainMap _mainMap;
+	MainMap m_mainMap;
 
-	Players _players;
+	NextTurn m_nextTurn;
 
-	GameInput _gameInput;
+	Players m_players;
+
+	GameInput m_gameInput;
 	
-	SaveReload _saveReload;
+	SaveReload m_saveReload;
 
-	std::ofstream _logger;
+	std::ofstream m_logger;
 
 };
 

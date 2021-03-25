@@ -25,6 +25,8 @@
 #ifndef LIB_H
 #define LIB_H
 
+#define NOMINMAX // forbid to redifine std::max/min by Windows.h and Visual Studio
+
 #include <string>
 
 const std::string EMPTY_STRING = "";

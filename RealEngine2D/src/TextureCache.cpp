@@ -38,12 +38,12 @@ TextureCache::~TextureCache()
 
 GLTexture* TextureCache::getTexture(const std::string& name)
 {
-	auto it =  _textureMap.find(name);
+	auto it =  m_textureMap.find(name);
 
-	if (it == _textureMap.end())
+	if (it == m_textureMap.end())
 	{
 		GLTexture* newTexture = new GLTexture(name);
-		_textureMap.insert({ name, newTexture });
+		m_textureMap.insert({ name, newTexture });
 		return newTexture;
 	}
 	return it->second;

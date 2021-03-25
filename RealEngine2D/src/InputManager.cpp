@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.0
+	last modification on this file on version:0.23.3.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,7 +28,7 @@ namespace RealEngine2D
 {
 
 InputManager::InputManager()
-:_mouseCoords({0.0f, 0.0f})
+:m_mouseCoords({0.0f, 0.0f}), m_tileSize(nullptr)
 {
 
 }
@@ -37,11 +37,16 @@ InputManager::~InputManager()
 
 }
 
+void InputManager::init(unsigned int* tileSize)
+{
+	m_tileSize = tileSize;
+}
+
 void InputManager::update()
 {
-	for (auto& it : _keyMap)
+	for (auto& it : m_keyMap)
 	{
-		_previousKeyMap[it.first] = it.second;
+		m_previousKeyMap[it.first] = it.second;
 	}
 }
 
@@ -50,18 +55,18 @@ void InputManager::pressKey
 	unsigned int keyID
 )
 {
-	_keyMap[keyID] = true;
+	m_keyMap[keyID] = true;
 }
 
 void InputManager::releaseKey(unsigned int keyID)
 {
-	_keyMap[keyID] = false;
+	m_keyMap[keyID] = false;
 }
 
 bool InputManager::isKeyDown(unsigned int keyID)
 {
-	auto it = _keyMap.find(keyID);
-	if (it != _keyMap.end())
+	auto it = m_keyMap.find(keyID);
+	if (it != m_keyMap.end())
 	{
 		return it->second;
 	}
@@ -83,15 +88,15 @@ void InputManager::setMouseCoords
 	Sint32 y
 )
 {
-	_mouseCoords.x = x;
-	_mouseCoords.y = y;
+	m_mouseCoords.x = x;
+	m_mouseCoords.y = y;
 }
 
 
 bool InputManager::wasKeyDown(unsigned int keyID)
 {
-	auto it = _previousKeyMap.find(keyID);
-	if (it != _previousKeyMap.end())
+	auto it = m_previousKeyMap.find(keyID);
+	if (it != m_previousKeyMap.end())
 	{
 		return it->second;
 	}
