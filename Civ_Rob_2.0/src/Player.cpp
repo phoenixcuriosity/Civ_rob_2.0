@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.13
+	last modification on this file on version:0.23.4.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,7 +29,7 @@
 #include "Player.h"
 
 #include "Utility.h"
-#include "MainGame.h"
+#include "App.h"
 
 #include <RealEngine2D/src/ResourceManager.h>
 
@@ -51,7 +51,7 @@ Player::Player() :
 	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	MainGame::logfileconsole("[INFO]___: Create Player Par Defaut Success");
+	App::logfileconsole("[INFO]___: Create Player Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -67,7 +67,7 @@ Player::Player(const std::string& msg) :
 	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	MainGame::logfileconsole("[INFO]___: Create Player Success");
+	App::logfileconsole("[INFO]___: Create Player Success");
 }
 
 /* ----------------------------------------------------------------------------------- */

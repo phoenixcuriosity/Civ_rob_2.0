@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.4
+	last modification on this file on version:0.23.4.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,7 +28,7 @@
 
 #include "Utility.h"
 
-#include "MainGame.h"
+#include "App.h"
 #include "Player.h"
 
  /* *********************************************************

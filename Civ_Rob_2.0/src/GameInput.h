@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.1
+	last modification on this file on version:0.23.4.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,7 +33,7 @@
 
 #include <SDL/SDL_events.h>
 
-class MainGame;
+class GamePlayScreen;
 
  /* *********************************************************
   *						Constantes						   *
@@ -97,17 +97,9 @@ public:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void inputSDL
 	(
-		MainGame& mainGame,
+		GamePlayScreen& mainGame,
 		SDL_Event& ev
 	);
-
-
-public:
-	/* *********************************************************
-	 *			KeyboardMouse::STATIC::UNE TOUCHE			   *
-	 ********************************************************* */
-
-	static void keySDLK_ESCAPE(MainGame& mainGame);
 	
 
 
@@ -115,49 +107,6 @@ public:
 	/* *********************************************************
 	 *			KeyboardMouse::STATIC::SOURIS				   *
 	 ********************************************************* */
-
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : mouse																						    	  */
-	/* ROLE : Dispatch entre clique droit ou clique gauche													      */
-	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-	/* INPUT : SDL_Event : l'�venement du clique			    												  */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void mouse
-	(
-		MainGame& mainGame
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : cliqueGauche																				    	  */
-	/* ROLE : Recherche de la zone ou le clique � lieu sur chaque case de STATE								      */
-	/* ROLE : En fonction de la zone touch�e une action peut avoir lieu (boutons)							      */
-	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void cliqueGauche
-	(
-		MainGame& mainGame
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : cliqueDroit																				    	  */
-	/* ROLE : Recherche de la zone ou le clique � lieu														      */
-	/* ROLE : En fonction de la zone touch�e une action peut avoir lieu (boutons)							      */
-	/* INPUT : struct Sysinfo& : structure globale du programme													  */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void cliqueDroit
-	(
-		MainGame& mainGame
-	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
@@ -170,7 +119,7 @@ public:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void wheel
 	(
-		MainGame& mainGame,
+		GamePlayScreen& mainGame,
 		SDL_Event& ev
 	);
 

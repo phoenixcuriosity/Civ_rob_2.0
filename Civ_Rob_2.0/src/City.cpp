@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.29
+	last modification on this file on version:0.23.4.0
+	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,9 +28,12 @@
 
 #include "City.h"
 
-#include "MainGame.h"
 #include "Utility.h"
 #include "Citizen.h"
+
+#include "GamePlaySrceen.h"
+#include "App.h"
+#include <RealEngine2D/src/Window.h>
 
  /* *********************************************************
   *					START City::STATIC					   *
@@ -47,15 +50,15 @@
 /* ----------------------------------------------------------------------------------- */
 void City::createCity
 (
-	MainGame& mainGame,
+	GamePlayScreen& mainGame,
 	unsigned int influenceLevel
 )
 {
 	if (mainGame.GETPlayers().GETselectedPlayer() != NO_PLAYER_SELECTED)
 	{
-		unsigned int selectedPlayer(mainGame.GETPlayers().GETselectedPlayer());
+		unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayer());
 		Player* splayer(mainGame.GETPlayers().GETvectPlayer()[selectedPlayer]);
-		unsigned int selectedUnit(splayer->GETselectedUnit());
+		unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
 		Unit* sUnit(splayer->GETtabUnit()[selectedUnit]);
 
 		if (
@@ -72,9 +75,9 @@ void City::createCity
 
 			std::string name(mainGame.GETPlayers().GETvectCityName()
 				[
-					(unsigned __int64)
+					(size_t)
 					(
-						((unsigned __int64)selectedPlayer * MAX_CITY_PER_PLAYER)
+						((size_t)selectedPlayer * MAX_CITY_PER_PLAYER)
 						+
 						splayer->GETtabCity().size()
 						)
@@ -104,7 +107,7 @@ void City::createCity
 
 			fillCitieTiles
 			(
-				mainGame.GETscreen(),
+				*mainGame.getwindow(),
 				middletileX,
 				middletileY,
 				selectedPlayer,
@@ -147,7 +150,7 @@ void City::createCity
 /* ----------------------------------------------------------------------------------- */
 void City::fillCitieTiles
 (
-	const Screen& screen,
+	const RealEngine2D::Window& window,
 	unsigned int middletileX,
 	unsigned int middletileY,
 	unsigned int selectplayer,
@@ -158,7 +161,7 @@ void City::fillCitieTiles
 {
 	unsigned int k(0);
 
-
+	
 	for (int o(-(int)ceil(INIT_SIZE_VIEW / 2)); o <= (int)ceil(INIT_SIZE_VIEW / 2); o++)
 	{
 		for (int p(-(int)ceil(INIT_SIZE_VIEW / 2)); p <= (int)ceil(INIT_SIZE_VIEW / 2); p++)
@@ -167,7 +170,7 @@ void City::fillCitieTiles
 			{
 				mainMap.GETmatriceMap()[(unsigned int)((double)middletileX + o)]
 					[(unsigned int)((double)middletileY + p)]
-				.appartenance = selectplayer;
+				.appartenance = (int)selectplayer;
 			}
 			else
 			{
@@ -180,8 +183,8 @@ void City::fillCitieTiles
 			tabtile[k] = mainMap.GETmatriceMap()
 				[(unsigned int)((double)middletileX + o)]
 			[(unsigned int)((double)middletileY + p)];
-			tabtile[k].tile_x = (screen.screenWidth / 2) - (-o * mainMap.GETtileSize());
-			tabtile[k].tile_y = (screen.screenHeight / 2) - (-p * mainMap.GETtileSize());
+			tabtile[k].tile_x = (window.GETscreenWidth() / 2) - (-o * mainMap.GETtileSize());
+			tabtile[k].tile_y = (window.GETscreenHeight() / 2) - (-p * mainMap.GETtileSize());
 			k++;
 		}
 	}
@@ -328,7 +331,7 @@ City::City
 {
 	m_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
 
-	MainGame::logfileconsole("[INFO]___: Create Citie: " + m_name + " Success");
+	App::logfileconsole("[INFO]___: Create Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -345,7 +348,7 @@ City::~City()
 
 
 
-	MainGame::logfileconsole("[INFO]___: Destroy Citie: " + m_name + " Success");
+	App::logfileconsole("[INFO]___: Destroy Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -533,7 +536,7 @@ void City::computeEmotion()
 	{
 		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
 		{
-			MainGame::logfileconsole(msg);
+			App::logfileconsole(msg);
 			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG_MODE
 			throw(msg);
@@ -541,7 +544,7 @@ void City::computeEmotion()
 		}
 		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
 		{
-			MainGame::logfileconsole(msg);
+			App::logfileconsole(msg);
 			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG_MODE
 			throw(msg);

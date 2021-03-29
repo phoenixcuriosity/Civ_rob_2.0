@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Config>
+
+	<Map>
+		<TileSize>64</TileSize>
+		<MapSizeX>2048</MapSizeX>
+		<MapSizeY>2048</MapSizeY>
+	</Map>
+
+	<FilePaths>
+		<Readme>bin/readme.txt</Readme>
+		<Texts>bin/texts.xml</Texts>
+		<MainMap>bin/mainMap.xml</MainMap>
+
+		<Buildings>bin/buildings.txt</Buildings>
+		<CitiesNames>bin/citiesNames.txt</CitiesNames>
+		<Units>bin/units.xml</Units>
+		<SpecNames>bin/specNames.txt</SpecNames>
+
+		<SaveInfo>save/saveInfo.txt</SaveInfo>
+		<SaveMaps>saveMaps.txt</SaveMaps>
+		<SavePlayers>savePlayers.xml</SavePlayers>
+
+		<ColorShadingVert>shaders/ColorShading.vert</ColorShadingVert>
+		<ColorShadingFrag>shaders/ColorShading.frag</ColorShadingFrag>
+
+		<ImagesPath>bin/image/</ImagesPath>
+		<GUIPath>GUI</GUIPath>
+	</FilePaths>
+</Config>

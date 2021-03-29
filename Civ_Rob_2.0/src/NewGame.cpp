@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.0
+	last modification on this file on version:0.23.4.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,83 +24,75 @@
 
 #include "NewGame.h"
 
-#include "MainGame.h"
+#include "GamePlaySrceen.h"
+#include "NewGameScreen.h"
 #include "Player.h"
+#include "App.h"
+#include "SaveReload.h"
+
+
+
+void WidgetLabel::draw(RealEngine2D::SpriteBatch& sb, RealEngine2D::SpriteFont& sf, RealEngine2D::Window* w) {
+	if (!widget->isVisible()) return;
+	glm::vec2 pos;
+	pos.x = widget->getInnerRectClipper().getPosition().d_x + widget->getInnerRectClipper().getWidth() / 2.0f;
+	pos.y = w->GETscreenHeight() - widget->getInnerRectClipper().getPosition().d_y;
+
+	sf.draw(sb, text.c_str(), pos, glm::vec2(0.24f), 0.0f, color, RealEngine2D::Justification::MIDDLE);
+}
 
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
-void NewGame::newGame(MainGame& mainGame)
+
+void NewGame::newGame(GamePlayScreen& mainGame)
 {
-	MainGame::logfileconsole("[INFO]___: Newgame Start");
-	mainGame.GETvar().statescreen = State_Type::STATEscreenNewgame;
+	App::logfileconsole("[INFO]___: Newgame Start");
 
-	//mainGame.GETsaveReload().createSave(mainGame.GETfile());
+	mainGame.getSaveReload()->createSave(*mainGame.getFile());
 
-	//SDL_RenderClear(sysinfo.screen.renderer);
+	float X_POS = 0.01f;
+	float Y_POS = 0.20f;
+	const float DIMS_PIXELS = 20.0f;
+	const float PADDING = 0.035f;
+	const float TEXT_SCALE = 0.6f;
+	const int GROUP_ID = 1;
+	mainGame.GETscreen().m_vectPlayerRadioButton.clear();
+	mainGame.GETscreen().m_widgetLabels.clear();
+	mainGame.GETscreen().m_vectPlayerRadioButton.resize(mainGame.getUserInputNewGame()->vectPlayerName.size());
+	mainGame.GETscreen().m_widgetLabels.resize(mainGame.getUserInputNewGame()->vectPlayerName.size());
+	for (size_t i(0); i < mainGame.GETscreen().m_vectPlayerRadioButton.size(); i++)
+	{
+		
+		mainGame.GETscreen().m_vectPlayerRadioButton[i] 
+			= static_cast<CEGUI::RadioButton*>
+			(mainGame.GETscreen().m_gui.createWidget(
+				"TaharezLook/RadioButton",
+				glm::vec4(X_POS, Y_POS += PADDING, 0.0f, 0.0f),
+				glm::vec4(0.0f, 0.0f, DIMS_PIXELS, DIMS_PIXELS),
+				mainGame.getUserInputNewGame()->vectPlayerName[i]));
 
-	/* *********************************************************
-	 *						Nb player ?						   *
-	 ********************************************************* */
+		mainGame.GETscreen().m_vectPlayerRadioButton[i]->setSelected(false);
 
-	 /* ---------------------------------------------------------------------- */
-	 /* Première demande au joueur : 										  */
-	 /* Le nombre de joueurs ?												  */
-	 /* ---------------------------------------------------------------------- */
+		mainGame.GETscreen().m_vectPlayerRadioButton[i]->subscribeEvent
+		(CEGUI::RadioButton::EventMouseClick,
+			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, &mainGame));
+		mainGame.GETscreen().m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
 
+		mainGame.GETscreen().m_widgetLabels[i] = WidgetLabel(
+			mainGame.GETscreen().m_vectPlayerRadioButton[i],
+			mainGame.getUserInputNewGame()->vectPlayerName[i],
+			TEXT_SCALE);
 
-	/* ---------------------------------------------------------------------- */
-	/* Le joueur doit rentrer une valeur entre 1 et 9, par défaut 1 		  */
-	/* ---------------------------------------------------------------------- */
-
-
-	/* *********************************************************
-	 *					Name of player ?					   *
-	 ********************************************************* */
-
-
-
-	 /* ---------------------------------------------------------------------- */
-	 /* Deuxième demande au joueur : 										  */
-	 /* Le nom des joueurs													  */
-	 /* ---------------------------------------------------------------------- */
-
-
-
-	mainGame.GETPlayers().addPlayer("Robin");
-	mainGame.GETPlayers().addPlayer("Thibaut");
-
-
-	 /* *********************************************************
-	  *					Map Generation						   *
-	  ********************************************************* */
-
-	//mainGame.GETmainMap().generateMap();
+	}
 
 	newGameSettlerSpawn(mainGame.GETPlayers(), mainGame.GETmainMap());
 
-	/* *********************************************************
-	 *							Save						   *
-	 ********************************************************* */
-
-	//SaveReload::save(mainGame);
-
-	/* *********************************************************
-	 *					 Button Creation					   *
-	 ********************************************************* */
-
-	 /* ---------------------------------------------------------------------- */
-	 /* Création des boutons pour séléctionner les joueurs			 		  */
-	 /* ---------------------------------------------------------------------- */
-
-	mainGame.GETvar().statescreen = State_Type::STATEmainMap;
-	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
-
-
+	SaveReload::save(mainGame);
 
 	/* ### Don't put code below here ### */
 
-	MainGame::logfileconsole("[INFO]___: Newgame End");
+	App::logfileconsole("[INFO]___: Newgame End");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -171,7 +163,7 @@ void NewGame::makeRandomPosTab
 		if (iteration >= MAX_RANDOM_POS_ITERATION)
 		{
 #ifdef _DEBUG
-			MainGame::exitError("[ERROR]___: makeRandomPosTab, Too many Iterations");
+			App::exitError("[ERROR]___: makeRandomPosTab, Too many Iterations");
 #endif // DEBUG_MODE
 			/*
 			TODO : remove existing settlers and players
@@ -208,10 +200,10 @@ void NewGame::makeRandomPos
 	unsigned int tileSize
 )
 {
-	int x((rand() % ((unsigned int)(matriceMap.size() * tileSize) - (unsigned int)(toolBarSize * tileSize))) + (toolBarSize * tileSize));
-	int y((rand() % (matriceMap[0].size() * tileSize)));
-	RandomPOS.x = (int)ceil(x / tileSize) * tileSize;
-	RandomPOS.y = (int)ceil(y / tileSize) * tileSize;
+	unsigned int x((rand() % ((unsigned int)(matriceMap.size() * tileSize) - (unsigned int)(toolBarSize * tileSize))) + (toolBarSize * tileSize));
+	unsigned int y((rand() % (matriceMap[0].size() * tileSize)));
+	RandomPOS.x = (unsigned int)ceil(x / tileSize) * tileSize;
+	RandomPOS.y = (unsigned int)ceil(y / tileSize) * tileSize;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -233,9 +225,9 @@ bool NewGame::conditionspace
 	unsigned int tileSize
 )
 {
-	int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
+	unsigned int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
 
-	for (unsigned int i(0); i < tabRandom.size(); i++)
+	for (size_t i(0); i < tabRandom.size(); i++)
 	{
 		if (
 			(RandomPOS.x >= (tabRandom[i].x - spaceBetweenSettler)) /* West */

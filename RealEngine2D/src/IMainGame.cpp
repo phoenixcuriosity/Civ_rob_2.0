@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.0
+	last modification on this file on version:0.23.4.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -197,23 +197,21 @@ bool IMainGame::init()
 {
 	if (initSDLOpenGL() != 0) return false;
 
-
+	onInit();
 
 	if (!initSystem()) return false;
 
-	onInit();
 	addScreens();
 
 	m_currentScreen = m_screenList->getCurrent();
 	m_currentScreen->onEntry();
 	m_currentScreen->setRunning();
-
 	return true;
 }
 
 bool IMainGame::initSystem()
 {
-	m_window.create("Default", 1280, 720, 0);
+	m_window.create("Default", m_window.GETscreenWidth(), m_window.GETscreenHeight(), 0);
 	return true;
 }
 

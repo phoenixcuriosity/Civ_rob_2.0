@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.6
+	last modification on this file on version:0.23.4.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -34,7 +34,7 @@
 #include "Player.h"
 #include <tinyxml2/tinyxml2.h>
 
-class MainGame;
+class GamePlayScreen;
 struct File;
 
  /* *********************************************************
@@ -78,7 +78,7 @@ public:
 	 /* ---------------------------------------------------------------------------------------------------------- */
 	static void save
 	(
-		MainGame& mainGame
+		GamePlayScreen& mainGame
 	);
 
 private:
@@ -92,7 +92,7 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void saveMaps
 	(
-		MainGame& mainGame
+		GamePlayScreen& mainGame
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
@@ -105,7 +105,7 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void savePlayer
 	(
-		MainGame& mainGame
+		GamePlayScreen& mainGame
 	);
 
 public:
@@ -119,7 +119,7 @@ public:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void reload
 	(
-		MainGame& mainGame
+		GamePlayScreen& mainGame
 	);
 
 private:
@@ -133,7 +133,7 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void loadMaps
 	(
-		MainGame& mainGame
+		GamePlayScreen& mainGame
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
@@ -146,7 +146,7 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void loadPlayer
 	(
-		MainGame& mainGame
+		GamePlayScreen& mainGame
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
@@ -178,7 +178,7 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void loadUnitXML
 	(
-		MainGame& mainGame,
+		GamePlayScreen& mainGame,
 		tinyxml2::XMLNode* nUnit
 	);
 
@@ -194,7 +194,7 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static void loadCityXML
 	(
-		MainGame& mainGame,
+		GamePlayScreen& mainGame,
 		tinyxml2::XMLNode* nCity
 	);
 

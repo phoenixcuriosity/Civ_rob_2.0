@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.0
+	last modification on this file on version:0.23.4.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,7 +27,7 @@
 
 #include "LIB.h"
 
-class MainGame;
+class GamePlayScreen;
 
 
 class NextTurn
@@ -39,7 +39,7 @@ public:
 
 public:
 	
-	void nextTurn(MainGame& mainGame);
+	void nextTurn(GamePlayScreen& mainGame);
 
 public:
 

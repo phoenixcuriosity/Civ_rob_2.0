@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.4
+	last modification on this file on version:0.23.4.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,7 +28,8 @@
 
 #include "Citizen.h"
 
-#include "MainGame.h"
+#include "City.h"
+#include "App.h"
 
  /* *********************************************************
   *					START Citizen::STATIC				   *
@@ -130,7 +131,7 @@ Citizen::Citizen()
 	m_religion(Religion_Type::catholic),
 	m_place(false)
 {
-	MainGame::logfileconsole("[INFO]___: Create Citizen Success");
+	App::logfileconsole("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -154,7 +155,7 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	MainGame::logfileconsole("[INFO]___: Create Citizen Success");
+	App::logfileconsole("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -177,7 +178,7 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	MainGame::logfileconsole("[INFO]___: Create Citizen Success");
+	App::logfileconsole("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -189,7 +190,7 @@ Citizen::Citizen
 /* ----------------------------------------------------------------------------------- */
 Citizen::~Citizen()
 {
-	MainGame::logfileconsole("[INFO]___: Kill Citizen Success");
+	App::logfileconsole("[INFO]___: Kill Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */

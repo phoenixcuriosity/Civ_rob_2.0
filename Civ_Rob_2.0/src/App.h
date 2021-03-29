@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.2
+	last modification on this file on version:0.23.4.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,11 +25,43 @@
 #ifndef App_H
 #define App_H
 
-#include <memory>
+#include "LIB.h"
+
+#include <fstream> // logger
 
 #include <RealEngine2D/src/IMainGame.h>
 
 #include "GamePlaySrceen.h"
+#include "MainMenuScreen.h"
+#include "ReloadMenuScreen.h"
+#include "NewGameScreen.h"
+
+
+const std::string configFilePath = "bin/filePath.xml";
+
+struct File
+{
+	std::string log = "bin/log/log.txt";
+
+	std::string readme = EMPTY_STRING;
+	std::string texts = EMPTY_STRING;
+	std::string mainMap = EMPTY_STRING;
+	std::string buildings = EMPTY_STRING;
+	std::string citiesNames = EMPTY_STRING;
+	std::string units = EMPTY_STRING;
+	std::string specNames = EMPTY_STRING;
+
+	std::string saveInfo = EMPTY_STRING;
+
+	std::string saveMaps = EMPTY_STRING;
+	std::string savePlayers = EMPTY_STRING;
+
+	std::string colorShadingVert = EMPTY_STRING;
+	std::string colorShadingFrag = EMPTY_STRING;
+
+	std::string imagesPath = EMPTY_STRING;
+	std::string GUIPath = EMPTY_STRING;
+};
 
 class App : public RealEngine2D::IMainGame
 {
@@ -41,8 +73,88 @@ public:
 	virtual void onExit() override;
 	virtual void addScreens() override;
 
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : initFile																	   */
+	/* ROLE : Initialisation des fichiers : log											   */
+	/* INPUT : struct File& : nom des fichiers											   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	void initFile();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : initMain																	   */
+	/* ROLE : Chargement des informations de la configuration du jeu					   */
+	/* INPUT : struct Sysinfo& : structure globale du programme							   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	void initMain();
+
+
+	void destroy();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : exitError																	   */
+	/* ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée	   */
+	/* INPUT : const std::string msg : message de l'erreur								   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void exitError
+	(
+		const std::string& msg
+	);
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : deleteAll																	   */
+	/* ROLE : Destruction des allocations dynamique du programme						   */
+	/* ROLE : Destruction de la fenetre et du Renderer de la SDL						   */
+	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
+	/* RETURNED VALUE    : void															   */
+	/* ------------------------------------------------------------------------------------*/
+	/* ----------------------------------------------------------------------------------- */
+	static void deleteAll
+	(
+		
+	);
+
+
+public:
+
+	/* *********************************************************
+	 *						Logger							   *
+	 ********************************************************* */
+
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : logfileconsole															   */
+	/* ROLE : Transmission du message sur la console et dans le fichier log.txt			   */
+	/* INPUT : const std::string msg : message											   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	/* ----------------------------------------------------------------------------------- */
+	static void logfileconsole
+	(
+		const std::string& msg
+	);
+
 private:
+	MainMenuScreen* m_mainMenuScreen = nullptr;
+	NewGameScreen* m_newGameScreen = nullptr;
+	ReloadMenuScreen* m_reloadMenuScreen = nullptr;
 	GamePlayScreen* m_gamePlayScreen = nullptr;
+
+	File m_file;
+
+	SaveReload m_saveReload;
+
+	std::ofstream m_logger;
 };
 
 

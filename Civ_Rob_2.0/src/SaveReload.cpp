@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.12
+	last modification on this file on version:0.23.4.0
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,9 +24,10 @@
 
 #include "SaveReload.h"
 
-#include "MainGame.h"
+#include "GamePlaySrceen.h"
 #include "MainMap.h"
 #include "XmlConvertValue.h"
+#include "App.h"
 
 #include <direct.h>
 
@@ -73,7 +74,7 @@ void SaveReload::init(const std::string& filePath)
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::save
 (
-	MainGame& mainGame
+	GamePlayScreen& mainGame
 )
 {
 	saveMaps(mainGame);
@@ -90,10 +91,10 @@ void SaveReload::save
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::saveMaps
 (
-	MainGame& mainGame
+	GamePlayScreen& mainGame
 )
 {
-	std::ofstream saveMaps(mainGame.GETfile().saveMaps);
+	std::ofstream saveMaps(mainGame.getFile()->saveMaps);
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -116,7 +117,7 @@ void SaveReload::saveMaps
 		}
 	}
 	else
-		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.GETfile().saveMaps);
+		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.getFile()->saveMaps);
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -129,7 +130,7 @@ void SaveReload::saveMaps
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::savePlayer
 (
-	MainGame& mainGame
+	GamePlayScreen& mainGame
 )
 {
 	tinyxml2::XMLDocument xmlDoc;
@@ -369,7 +370,7 @@ void SaveReload::savePlayer
 		}
 		pRoot->InsertEndChild(playerElement);
 	}
-	xmlDoc.SaveFile(mainGame.GETfile().savePlayers.c_str());
+	xmlDoc.SaveFile(mainGame.getFile()->savePlayers.c_str());
 }
 
 
@@ -383,10 +384,10 @@ void SaveReload::savePlayer
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::reload
 (
-	MainGame& mainGame
+	GamePlayScreen& mainGame
 )
 {
-	MainGame::logfileconsole("[INFO]___: Reload Start");
+	App::logfileconsole("[INFO]___: Reload Start");
 
 	loadMaps(mainGame);
 	loadPlayer(mainGame);
@@ -398,7 +399,7 @@ void SaveReload::reload
 
 	//SDL_RenderPresent(sysinfo.screen.renderer);
 
-	MainGame::logfileconsole("[INFO]___: Reload End");
+	App::logfileconsole("[INFO]___: Reload End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -411,12 +412,12 @@ void SaveReload::reload
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadMaps
 (
-	MainGame& mainGame
+	GamePlayScreen& mainGame
 )
 {
 	std::string input(EMPTY_STRING);
 
-	std::ifstream saveMaps(mainGame.GETfile().saveMaps);
+	std::ifstream saveMaps(mainGame.getFile()->saveMaps);
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -460,9 +461,9 @@ void SaveReload::loadMaps
 		}
 	}
 	else
-		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.GETfile().saveMaps);
+		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.getFile()->saveMaps);
 
-	MainGame::logfileconsole("[INFO]___: Save End");
+	App::logfileconsole("[INFO]___: Save End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -475,20 +476,20 @@ void SaveReload::loadMaps
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadPlayer
 (
-	MainGame& mainGame
+	GamePlayScreen& mainGame
 )
 {
 	std::string errCheck(EMPTY_STRING);
 	tinyxml2::XMLDocument xmlDoc;
 
-	if (xmlDoc.LoadFile(mainGame.GETfile().savePlayers.c_str()) == tinyxml2::XML_SUCCESS)
+	if (xmlDoc.LoadFile(mainGame.getFile()->savePlayers.c_str()) == tinyxml2::XML_SUCCESS)
 	{
 		tinyxml2::XMLNode* pRoot = xmlDoc.FirstChild();
-		if (nullptr == pRoot) MainGame::exitError("[ERROR]___: loadPlayer : pRoot == nullptr");
+		if (nullptr == pRoot) App::exitError("[ERROR]___: loadPlayer : pRoot == nullptr");
 
 		tinyxml2::XMLNode* nPlayer = pRoot->FirstChild();
 		errCheck = nPlayer->Value();
-		if (errCheck.compare("Player") != IDENTICAL_STRINGS) MainGame::exitError("[ERROR]___: loadPlayer : nPlayer != Player");
+		if (errCheck.compare("Player") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nPlayer != Player");
 
 		while (nullptr != nPlayer)
 		{
@@ -497,9 +498,9 @@ void SaveReload::loadPlayer
 			tinyxml2::XMLNode* nTabUnit = nGoldStats->NextSibling();
 			tinyxml2::XMLNode* nTabCity = nTabUnit->NextSibling();
 
-			if (nullptr == nName) MainGame::exitError("[ERROR]___: loadPlayer : nName == nullptr");
+			if (nullptr == nName) App::exitError("[ERROR]___: loadPlayer : nName == nullptr");
 			errCheck = nName->Value();
-			if (errCheck.compare("Name") != IDENTICAL_STRINGS) MainGame::exitError("[ERROR]___: loadPlayer : nName != Name");
+			if (errCheck.compare("Name") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nName != Name");
 
 			mainGame.GETPlayers().GETvectPlayer().push_back(new Player(nName->FirstChild()->Value()));
 			mainGame.GETPlayers().SETselectedPlayer((int)mainGame.GETPlayers().GETvectPlayer().size() - 1);
@@ -520,13 +521,13 @@ void SaveReload::loadPlayer
 					nTabUnit = nullptr;
 					goto L20;
 				}
-				if (errCheck.compare("TabUnit") != IDENTICAL_STRINGS) MainGame::exitError("[ERROR]___: loadPlayer : nTabUnit != TabUnit");
+				if (errCheck.compare("TabUnit") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nTabUnit != TabUnit");
 
 				tinyxml2::XMLNode* nUnit = nTabUnit->FirstChild();
 				if (nullptr != nUnit)
 				{
 					errCheck = nUnit->Value();
-					if (errCheck.compare("Unit") != IDENTICAL_STRINGS) MainGame::exitError("[ERROR]___: loadPlayer : nUnit != Unit");
+					if (errCheck.compare("Unit") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nUnit != Unit");
 				}
 
 				loadUnitXML(mainGame, nUnit);
@@ -538,13 +539,13 @@ void SaveReload::loadPlayer
 
 
 				errCheck = nTabCity->Value();
-				if (errCheck.compare("TabCity") != IDENTICAL_STRINGS) MainGame::exitError("[ERROR]___: loadPlayer : nTabCity != TabCity");
+				if (errCheck.compare("TabCity") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nTabCity != TabCity");
 
 				tinyxml2::XMLNode* nCity = nTabCity->FirstChild();
 				if (nullptr != nCity)
 				{
 					errCheck = nCity->Value();
-					if (errCheck.compare("City") != IDENTICAL_STRINGS) MainGame::exitError("[ERROR]___: loadPlayer : nCity != City");
+					if (errCheck.compare("City") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nCity != City");
 				}
 
 				loadCityXML(mainGame, nCity);
@@ -556,7 +557,7 @@ void SaveReload::loadPlayer
 	}
 	else
 	{
-		MainGame::exitError("[ERROR]___: loadPlayer : xmlDoc.LoadFile() != tinyxml2::XML_SUCCESS");
+		App::exitError("[ERROR]___: loadPlayer : xmlDoc.LoadFile() != tinyxml2::XML_SUCCESS");
 	}
 }
 
@@ -580,39 +581,39 @@ void SaveReload::loadGoldStatsXML
 	tinyxml2::XMLNode* inputNode;
 
 	inputNode = nGoldStats->FirstChild();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->gold == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->gold == nullptr");
 	goldStats.gold = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->GoldBalance == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->GoldBalance == nullptr");
 	goldStats.goldBalance = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->Income == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->Income == nullptr");
 	goldStats.income = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->Cost == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->Cost == nullptr");
 	goldStats.cost = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->TaxIncome == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->TaxIncome == nullptr");
 	goldStats.taxIncome = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->CommerceIncome == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->CommerceIncome == nullptr");
 	goldStats.commerceIncome = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->GoldConversionSurplus == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->GoldConversionSurplus == nullptr");
 	goldStats.goldConversionSurplus = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->ArmiesCost == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->ArmiesCost == nullptr");
 	goldStats.armiesCost = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadGoldStatsXML : goldStats->BuildingsCost == nullptr");
+	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->BuildingsCost == nullptr");
 	goldStats.buildingsCost = std::stod(inputNode->FirstChild()->Value());
 }
 
@@ -628,7 +629,7 @@ void SaveReload::loadGoldStatsXML
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadUnitXML
 (
-	MainGame& mainGame,
+	GamePlayScreen& mainGame,
 	tinyxml2::XMLNode* nUnit
 )
 {
@@ -643,43 +644,43 @@ void SaveReload::loadUnitXML
 		Unit* blankUnit = blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)];
 
 		inputNode = nUnit->FirstChild();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->Name == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->Name == nullptr");
 		blankUnit->SETname(inputNode->FirstChild()->Value());
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->x == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->x == nullptr");
 		blankUnit->SETx(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->y == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->y == nullptr");
 		blankUnit->SETy(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->movement_type == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->movement_type == nullptr");
 		blankUnit->SETmovementType(XmlConvertValue::convertUintToUnit_Movement_Type((unsigned int)std::stoul(inputNode->FirstChild()->Value())));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->life == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->life == nullptr");
 		blankUnit->SETlife(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->atq == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->atq == nullptr");
 		blankUnit->SETatq(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->def == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->def == nullptr");
 		blankUnit->SETdef(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->movement == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->movement == nullptr");
 		blankUnit->SETmovement(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->level == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->level == nullptr");
 		blankUnit->SETlevel(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadPlayer : Unit->maintenance == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->maintenance == nullptr");
 		blankUnit->SETmaintenance(std::stoul(inputNode->FirstChild()->Value()));
 
 		blankUnitTemp =
@@ -708,7 +709,7 @@ void SaveReload::loadUnitXML
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadCityXML
 (
-	MainGame& mainGame,
+	GamePlayScreen& mainGame,
 	tinyxml2::XMLNode* nCity
 )
 {
@@ -734,19 +735,19 @@ void SaveReload::loadCityXML
 	while (nullptr != nCity)
 	{
 		inputNode = nCity->FirstChild();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->Name == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Name == nullptr");
 		blankCity.name = inputNode->FirstChild()->Value();
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->x == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->x == nullptr");
 		blankCity.x = std::stoul(inputNode->FirstChild()->Value());
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->y == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->y == nullptr");
 		blankCity.y = std::stoul(inputNode->FirstChild()->Value());
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->InfluenceLevel == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->InfluenceLevel == nullptr");
 		influenceLevel = std::stoul(inputNode->FirstChild()->Value());
 
 		middletileX = MainMap::convertPosXToIndex(blankCity.x);
@@ -754,7 +755,7 @@ void SaveReload::loadCityXML
 
 		City::fillCitieTiles
 		(
-			mainGame.GETscreen(),
+			*mainGame.getwindow(),
 			middletileX,
 			middletileY,
 			mainGame.GETPlayers().GETselectedPlayer(),
@@ -770,39 +771,39 @@ void SaveReload::loadCityXML
 		ptrCity->SETinfluenceLevel(influenceLevel);
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->NbPop == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->NbPop == nullptr");
 		ptrCity->SETnbpop(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->Atq == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Atq == nullptr");
 		ptrCity->SETatq(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->Def == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Def == nullptr");
 		ptrCity->SETdef(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->Emotion == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Emotion == nullptr");
 		ptrCity->SETemotion(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->FoodStock == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodStock == nullptr");
 		ptrCity->SETfoodStock(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->FoodBalance == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodBalance == nullptr");
 		ptrCity->SETfoodBalance(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->FoodSurplusPreviousTurn == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodSurplusPreviousTurn == nullptr");
 		ptrCity->SETfoodSurplusPreviousTurn(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->GoldBalance == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->GoldBalance == nullptr");
 		ptrCity->SETgoldBalance(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) MainGame::exitError("[ERROR]___: loadCityXML : City->ConversionToApply == nullptr");
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->ConversionToApply == nullptr");
 		conversionSurplus_Type type = XmlConvertValue::convert2ConversionToApply(std::stoi(inputNode->FirstChild()->Value()));
 		ptrCity->SETconversionToApply(type);
 
@@ -816,15 +817,15 @@ void SaveReload::loadCityXML
 			while (nullptr != nBuildQueueElement)
 			{
 				tinyxml2::XMLNode* nBuildQueueElementName = nBuildQueueElement->FirstChild();
-				if (nullptr == nBuildQueueElementName) MainGame::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Name == nullptr");
+				if (nullptr == nBuildQueueElementName) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Name == nullptr");
 				blankBluid.name = nBuildQueueElementName->FirstChild()->Value();
 
 				tinyxml2::XMLNode* nBuildQueueElementType = nBuildQueueElementName->NextSibling();
-				if (nullptr == nBuildQueueElementType) MainGame::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Type == nullptr");
+				if (nullptr == nBuildQueueElementType) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Type == nullptr");
 				blankBluid.type = XmlConvertValue::convert2build_Type(std::stoi(nBuildQueueElementType->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nBuildQueueElementRemainingWork = nBuildQueueElementType->NextSibling();
-				if (nullptr == nBuildQueueElementRemainingWork) MainGame::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->RemainingWork == nullptr");
+				if (nullptr == nBuildQueueElementRemainingWork) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->RemainingWork == nullptr");
 				blankBluid.remainingWork = std::stod(nBuildQueueElementRemainingWork->FirstChild()->Value());
 
 
@@ -850,31 +851,31 @@ void SaveReload::loadCityXML
 				ptrCitizen = ptrCity->GETcitizens()[ptrCity->GETcitizens().size() - 1];
 
 				tinyxml2::XMLNode* nTabCitizenElementtileOccupied = nTabCitizenElement->FirstChild();
-				if (nullptr == nTabCitizenElementtileOccupied) MainGame::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->tileOccupied == nullptr");
+				if (nullptr == nTabCitizenElementtileOccupied) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->tileOccupied == nullptr");
 				ptrCitizen->SETtileOccupied(std::stoi(nTabCitizenElementtileOccupied->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementHappiness = nTabCitizenElementtileOccupied->NextSibling();
-				if (nullptr == nTabCitizenElementHappiness) MainGame::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Happiness == nullptr");
+				if (nullptr == nTabCitizenElementHappiness) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Happiness == nullptr");
 				ptrCitizen->SEThappiness(XmlConvertValue::convert2Emotion_Type(std::stoi(nTabCitizenElementHappiness->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementFood = nTabCitizenElementHappiness->NextSibling();
-				if (nullptr == nTabCitizenElementFood) MainGame::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Food == nullptr");
+				if (nullptr == nTabCitizenElementFood) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Food == nullptr");
 				ptrCitizen->SETfood(std::stoi(nTabCitizenElementFood->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementWork = nTabCitizenElementFood->NextSibling();
-				if (nullptr == nTabCitizenElementWork) MainGame::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Work == nullptr");
+				if (nullptr == nTabCitizenElementWork) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Work == nullptr");
 				ptrCitizen->SETwork(std::stoi(nTabCitizenElementWork->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementGold = nTabCitizenElementWork->NextSibling();
-				if (nullptr == nTabCitizenElementGold) MainGame::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Gold == nullptr");
+				if (nullptr == nTabCitizenElementGold) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Gold == nullptr");
 				ptrCitizen->SETgold(std::stoi(nTabCitizenElementGold->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementReligion_Type = nTabCitizenElementGold->NextSibling();
-				if (nullptr == nTabCitizenElementReligion_Type) MainGame::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Religion_Type == nullptr");
+				if (nullptr == nTabCitizenElementReligion_Type) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Religion_Type == nullptr");
 				ptrCitizen->SETreligion(XmlConvertValue::convert2Religion_Type(std::stoi(nTabCitizenElementReligion_Type->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementplace = nTabCitizenElementReligion_Type->NextSibling();
-				if (nullptr == nTabCitizenElementplace) MainGame::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->place == nullptr");
+				if (nullptr == nTabCitizenElementplace) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->place == nullptr");
 				ptrCitizen->SETplace(std::stoi(nTabCitizenElementplace->FirstChild()->Value()));
 
 				nTabCitizenElement = nTabCitizenElement->NextSibling();
@@ -896,7 +897,7 @@ void SaveReload::loadCityXML
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::createSave(File& files)
 {
-	MainGame::logfileconsole("[INFO]___: createSave Start");
+	App::logfileconsole("[INFO]___: createSave Start");
 	std::string destroy;
 
 	for (unsigned int i(0); i < m_tabSave.size(); i++)
@@ -931,13 +932,13 @@ L10:
 			saveInfo << std::endl << m_tabSave[i];
 	}
 	else
-		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + files.saveInfo);
+		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + files.saveInfo);
 
 	std::string save = "save/" + std::to_string(m_currentSave);
 
 	if (_mkdir(save.c_str()) != 0)
 	{
-		MainGame::logfileconsole("[ERROR]___: mkdir failed ");
+		App::logfileconsole("[ERROR]___: mkdir failed ");
 	}
 		
 
@@ -945,7 +946,7 @@ L10:
 	files.saveMaps = "save/" + std::to_string(m_currentSave) + "/" + files.saveMaps;
 	files.savePlayers = "save/" + std::to_string(m_currentSave) + "/" + files.savePlayers;
 
-	MainGame::logfileconsole("[INFO]___: createSave End");
+	App::logfileconsole("[INFO]___: createSave End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -958,7 +959,7 @@ L10:
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::removeSave(const std::string& filePath)
 {
-	MainGame::logfileconsole("[INFO]___: removeSave Start");
+	App::logfileconsole("[INFO]___: removeSave Start");
 	std::string file(EMPTY_STRING);
 	bool condition(false);
 
@@ -984,21 +985,21 @@ void SaveReload::removeSave(const std::string& filePath)
 
 			file = "save/" + std::to_string(m_currentSave) + "/saveMaps.txt";
 			if (remove(file.c_str()) != 0)
-				MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+				App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+				App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(m_currentSave) + "/savePlayers.xml";
 			if (remove(file.c_str()) != 0)
-				MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+				App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+				App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(m_currentSave);
 			if (_rmdir(file.c_str()) != 0)
-				MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
+				App::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 			else
-				MainGame::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
+				App::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 
 			if (m_tabSave.size() == 1)
 				m_tabSave.clear();
@@ -1018,7 +1019,7 @@ void SaveReload::removeSave(const std::string& filePath)
 					saveInfo << std::endl << m_tabSave[i];
 			}
 			else
-				MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
+				App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 		}
 		else
 		{
@@ -1026,9 +1027,9 @@ void SaveReload::removeSave(const std::string& filePath)
 		}
 	}
 	else
-		MainGame::logfileconsole("[ERROR]___: currentSave = 0");
+		App::logfileconsole("[ERROR]___: currentSave = 0");
 
-	MainGame::logfileconsole("[INFO]___: removeSave End");
+	App::logfileconsole("[INFO]___: removeSave End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -1041,7 +1042,7 @@ void SaveReload::removeSave(const std::string& filePath)
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::clearSave(const std::string& filePath)
 {
-	MainGame::logfileconsole("[INFO]___: clearSave Start");
+	App::logfileconsole("[INFO]___: clearSave Start");
 
 	for (unsigned int j(0); j < m_tabSave.size(); j++)
 	{
@@ -1053,21 +1054,21 @@ void SaveReload::clearSave(const std::string& filePath)
 	{
 		file = "save/" + std::to_string(m_tabSave[i]) + "/saveMaps.txt";
 		if (remove(file.c_str()) != 0)
-			MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+			App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+			App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(m_tabSave[i]) + "/savePlayers.xml";
 		if (remove(file.c_str()) != 0)
-			MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+			App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			MainGame::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+			App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(m_tabSave[i]);
 		if (_rmdir(file.c_str()) != 0)
-			MainGame::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
+			App::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
 		else
-			MainGame::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
+			App::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
 	}
 
 	std::ofstream saveInfo(filePath);
@@ -1078,12 +1079,12 @@ void SaveReload::clearSave(const std::string& filePath)
 		saveInfo << std::endl << "SaveUse=";
 	}
 	else
-		MainGame::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
+		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 
 	m_currentSave = NO_CURRENT_SAVE_SELECTED;
 	m_tabSave.clear();
 
-	MainGame::logfileconsole("[INFO]___: clearSave End");
+	App::logfileconsole("[INFO]___: clearSave End");
 }
 
 

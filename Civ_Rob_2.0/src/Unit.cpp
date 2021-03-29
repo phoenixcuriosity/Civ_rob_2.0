@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.18
+	last modification on this file on version:0.23.4.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,7 +28,7 @@
 
 #include "Unit.h"
 
-#include "MainGame.h"
+#include "App.h"
 
 
  /* *********************************************************
@@ -96,7 +96,7 @@ bool Unit::searchUnitTile
 				selPlayer->SETselectedUnit(i);
 
 				selPlayer->GETtabUnit()[i]->SETshow(true);
-				MainGame::logfileconsole("[INFO]___: Unit select to move n:" + std::to_string(i));
+				App::logfileconsole("[INFO]___: Unit select to move n:" + std::to_string(i));
 				*select = Select_Type::selectmove;
 				return true;
 			}
@@ -420,7 +420,7 @@ m_maxlife(100), m_maxatq(10), m_maxdef(5), m_maxmovement(1), m_maxlevel(100),
 m_life(100), m_atq(10), m_def(5), m_movement(1), m_level(1), m_maintenance(1),
 m_alive(true), m_blit(ZERO_BLIT), m_show(true), m_showStats(false)
 {
-	MainGame::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
+	App::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -456,7 +456,7 @@ Unit::Unit
 	m_maintenance(maintenance),
 	m_alive(true), m_blit(ZERO_BLIT), m_show(true), m_showStats(false)
 {
-	MainGame::logfileconsole("[INFO]___: Create Unit:  Success");
+	App::logfileconsole("[INFO]___: Create Unit:  Success");
 }
 
 /* ----------------------------------------------------------------------------------- */

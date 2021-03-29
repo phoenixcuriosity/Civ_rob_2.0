@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.1
+	last modification on this file on version:0.23.4.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -52,18 +52,18 @@ void InputManager::update()
 
 void InputManager::pressKey
 (
-	unsigned int keyID
+	SDL_Keycode keyID
 )
 {
 	m_keyMap[keyID] = true;
 }
 
-void InputManager::releaseKey(unsigned int keyID)
+void InputManager::releaseKey(SDL_Keycode keyID)
 {
 	m_keyMap[keyID] = false;
 }
 
-bool InputManager::isKeyDown(unsigned int keyID)
+bool InputManager::isKeyDown(SDL_Keycode keyID)
 {
 	auto it = m_keyMap.find(keyID);
 	if (it != m_keyMap.end())
@@ -73,7 +73,7 @@ bool InputManager::isKeyDown(unsigned int keyID)
 	return false;
 }
 
-bool InputManager::isKeyPressed(unsigned int keyID)
+bool InputManager::isKeyPressed(SDL_Keycode keyID)
 {
 	if (isKeyDown(keyID) && !wasKeyDown(keyID))
 	{
@@ -93,7 +93,7 @@ void InputManager::setMouseCoords
 }
 
 
-bool InputManager::wasKeyDown(unsigned int keyID)
+bool InputManager::wasKeyDown(SDL_Keycode keyID)
 {
 	auto it = m_previousKeyMap.find(keyID);
 	if (it != m_previousKeyMap.end())

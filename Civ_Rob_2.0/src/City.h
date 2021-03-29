@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.17
+	last modification on this file on version:0.23.4.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,8 +37,10 @@
 #include <vector>
 #include <queue>
 
+#include <RealEngine2D/src/Window.h>
+
 /* Redef : include in .cpp */
-class MainGame;
+class GamePlayScreen;
 class Citizen;
 class Players;
 class Player;
@@ -178,7 +180,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static void createCity
 	(
-		MainGame& mainGame,
+		GamePlayScreen& mainGame,
 		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
@@ -198,7 +200,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static void fillCitieTiles
 	(
-		const Screen& screen,
+		const RealEngine2D::Window& window,
 		unsigned int middletileX,
 		unsigned int middletileY,
 		unsigned int selectplayer,

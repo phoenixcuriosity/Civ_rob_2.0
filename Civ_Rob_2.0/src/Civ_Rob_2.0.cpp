@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.17
+	last modification on this file on version:0.23.4.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,24 +26,22 @@
  *						Includes						   *
  ********************************************************* */
 
-#include "MainGame.h"
-
 
 #include <fstream>
 #include <iostream>
 #include <filesystem>
 
-//#include "App.h"
+#include "LIB.h"
+
+#include "App.h"
 
  /* *********************************************************
   *						MAIN							   *
   ********************************************************* */
 
-int main(int argc, char* argv[])
+int main(int /* argc */, char* /* argv */[])
 {
-	MainGame mainGame;
-	mainGame.GETvar().argc = argc;
-	mainGame.GETvar().argv = argv;
+	
 
 	srand((unsigned int)time(NULL));
 	/*
@@ -53,12 +51,10 @@ int main(int argc, char* argv[])
 
 		*/
 	
-	mainGame.runGameLoop();
+	
 
-	mainGame.destroy();
-
-	//App app;
-	//app.run();
+	App app;
+	app.run();
 
 	return EXIT_SUCCESS;
 }

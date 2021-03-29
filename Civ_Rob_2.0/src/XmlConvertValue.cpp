@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.1
+	last modification on this file on version:0.23.4.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,7 +28,7 @@
 
 #include "XmlConvertValue.h"
 
-#include "MainGame.h"
+#include "App.h"
 
  /* *********************************************************
   *						 Classes						   *
@@ -146,7 +146,7 @@ Unit_Movement_Type XmlConvertValue::convertUintToUnit_Movement_Type
 	case 3:
 		return Unit_Movement_Type::deepwater;
 	default:
-		MainGame::exitError("[ERROR]___: convertUintToUnit_Movement_Type : case default");
+		App::exitError("[ERROR]___: convertUintToUnit_Movement_Type : case default");
 		return Unit_Movement_Type::ground;
 	}
 }
@@ -210,7 +210,7 @@ conversionSurplus_Type XmlConvertValue::convert2ConversionToApply
 	case 6:
 		return conversionSurplus_Type::GoldToWork;
 	default:
-		MainGame::exitError("[ERROR]___: convert2ConversionToApply : default");
+		App::exitError("[ERROR]___: convert2ConversionToApply : default");
 		return conversionSurplus_Type::No_Conversion;
 	}
 }
@@ -236,7 +236,7 @@ build_Type XmlConvertValue::convert2build_Type
 	case 1:
 		return build_Type::unit;
 	default:
-		MainGame::exitError("[ERROR]___: convert2ConversionToApply : default");
+		App::exitError("[ERROR]___: convert2ConversionToApply : default");
 		return build_Type::building;
 	}
 }
@@ -268,7 +268,7 @@ Emotion_Type XmlConvertValue::convert2Emotion_Type
 	case 2:
 		return Emotion_Type::ecstatic;
 	default:
-		MainGame::exitError("[ERROR]___: convert2Emotion_Type : default");
+		App::exitError("[ERROR]___: convert2Emotion_Type : default");
 		return Emotion_Type::neutre;
 	}
 }
@@ -336,7 +336,7 @@ Religion_Type XmlConvertValue::convert2Religion_Type
 	case 22:
 		return Religion_Type::zoroastrian;
 	default:
-		MainGame::exitError("[ERROR]___: convert2Religion_Type : default");
+		App::exitError("[ERROR]___: convert2Religion_Type : default");
 		return Religion_Type::catholic;
 	}
 }

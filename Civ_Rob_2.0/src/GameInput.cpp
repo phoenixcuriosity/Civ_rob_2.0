@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.24
+	last modification on this file on version:0.23.4.0
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,7 +28,7 @@
 
 #include "GameInput.h"
 
-#include "MainGame.h"
+#include "GamePlaySrceen.h"
 
 
  /* *********************************************************
@@ -52,44 +52,29 @@
 /* ---------------------------------------------------------------------------------------------------------- */
 void GameInput::inputSDL
 (
-	MainGame& mainGame,
+	GamePlayScreen& mainGame,
 	SDL_Event& ev
 )
 {
 	switch (ev.type)
 	{
 
-		/* ---------------------------------------------------------------------- */
-		/* Permet de quitter le jeu												  */
-		/* ---------------------------------------------------------------------- */
-	case SDL_QUIT:
-		mainGame.GETvar().continuer = 0;
-		break; 
-		
-
-		/* ---------------------------------------------------------------------- */
-		/* Test sur le type d'�v�nement touche enfonc�							  */
-		/* ---------------------------------------------------------------------- */
 	case SDL_KEYDOWN:
-		mainGame.GETscreen().openGLScreen.inputManager
-			.pressKey(ev.key.keysym.sym);
+		mainGame.getInputManager()->pressKey(ev.key.keysym.sym);
 			
 		break;
 	case SDL_KEYUP:
-		mainGame.GETscreen().openGLScreen.inputManager
-			.releaseKey(ev.key.keysym.sym);
+		mainGame.getInputManager()->releaseKey(ev.key.keysym.sym);
 		break;
 		/* ---------------------------------------------------------------------- */
 		/* test sur le type d'�v�nement click souris (enfonc�)					  */
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEBUTTONDOWN:
-		mainGame.GETscreen().openGLScreen.inputManager
-			.pressKey(ev.button.button);
+		mainGame.getInputManager()->pressKey(ev.button.button);
 		break;
 	case SDL_MOUSEBUTTONUP:
-		mainGame.GETscreen().openGLScreen.inputManager
-			.releaseKey(ev.button.button);
+		mainGame.getInputManager()->releaseKey(ev.button.button);
 		break;
 
 		/* ---------------------------------------------------------------------- */
@@ -105,127 +90,13 @@ void GameInput::inputSDL
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEMOTION:
-		mainGame.GETscreen().openGLScreen.inputManager
-			.setMouseCoords(ev.motion.x, ev.motion.y);
+		mainGame.getInputManager()->setMouseCoords(ev.motion.x, ev.motion.y);
 		break;
 
 	default:
 		/* N/A */
 		break;
 	}
-
-	if (mainGame.GETscreen().openGLScreen.inputManager.isKeyDown(SDLK_ESCAPE))
-	{
-		keySDLK_ESCAPE(mainGame);
-	}
-
-
-}
-
-/* *********************************************************
- *		START KeyboardMouse::STATIC::UNE TOUCHE			   *
- ********************************************************* */
-
-
-
-void GameInput::keySDLK_ESCAPE(MainGame& mainGame)
-{
-	mainGame.GETvar().continuer = 0;
-}
-
- /* *********************************************************
-  *			START KeyboardMouse::STATIC::SOURIS		       *
-  ********************************************************* */
-
-
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* NAME : mouse																						    	  */
-  /* ROLE : Dispatch entre clique droit ou clique gauche													      */
-  /* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-  /* INPUT : SDL_Event : l'�venement du clique			    												  */
-  /* RETURNED VALUE    : void																					  */
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::mouse
-(
-	MainGame& mainGame
-)
-{
-	/*
-
-		Handle Mouse Event
-		BUTTON_LEFT
-		BUTTON_RIGHT
-
-	*/
-
-	
-}
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : cliqueGauche																				    	  */
-/* ROLE : Recherche de la zone ou le clique � lieu sur chaque case de STATE								      */
-/* ROLE : En fonction de la zone touch�e une action peut avoir lieu (boutons)							      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme											  */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::cliqueGauche
-(
-	MainGame& mainGame
-)
-{
-	
-}
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : cliqueDroit																				    	  */
-/* ROLE : Recherche de la zone ou le clique � lieu														      */
-/* ROLE : En fonction de la zone touch�e une action peut avoir lieu (boutons)							      */
-/* INPUT : struct Sysinfo& : structure globale du programme													  */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::cliqueDroit
-(
-	MainGame& mainGame
-)
-{
-	/*
-	if (NO_PLAYER_SELECTED < mainGame.GETvar().s_player.selectplayer)
-	{
-		switch (mainGame.GETvar().statescreen)
-		{
-		case State_Type::STATEmainMap:
-			switch (mainGame.GETvar().select)
-			{
-			case Select_Type::selectcreate:
-
-				int selectunit(NO_UNIT_SELECTED);
-				for (unsigned int p(0); (p < mainGame.GETvar().s_player.tabUnit_Template.size()) && (NO_UNIT_SELECTED == selectunit); p++)
-				{
-					if (mainGame.GETvar().s_player.unitNameToCreate.compare(mainGame.GETvar().s_player.tabUnit_Template[p].name) == 0)
-					{
-						selectunit = p;
-					}
-				}
-				mainGame.GETvectPlayer()[mainGame.GETvar().s_player.selectplayer]->addUnit
-				(mainGame.GETvar().s_player.unitNameToCreate,
-					mainGame.GETgameInput().GETmouse_xNormalized(), mainGame.GETgameInput().GETmouse_yNormalized(),
-					mainGame.GETvar().s_player.tabUnit_Template[selectunit].type,
-					mainGame.GETvar().s_player.tabUnit_Template[selectunit].life, mainGame.GETvar().s_player.tabUnit_Template[selectunit].atq,
-					mainGame.GETvar().s_player.tabUnit_Template[selectunit].def, mainGame.GETvar().s_player.tabUnit_Template[selectunit].movement,
-					mainGame.GETvar().s_player.tabUnit_Template[selectunit].level, mainGame.GETvar().s_player.tabUnit_Template[selectunit].maintenance
-				);
-				break;
-			}
-			break;
-		}
-	}
-	*/
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -239,7 +110,7 @@ void GameInput::cliqueDroit
 /* ---------------------------------------------------------------------------------------------------------- */
 void GameInput::wheel
 (
-	MainGame& mainGame,
+	GamePlayScreen& mainGame,
 	SDL_Event& ev
 )
 {
@@ -276,15 +147,15 @@ void GameInput::wheel
 	*/
 	if (MOUSE_SCROLL_UP == ev.wheel.y)
 	{
-		mainGame.GETscreen().openGLScreen.camera
-			.SETscale(mainGame.GETscreen().openGLScreen.camera.GETscale()
-						+ MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().openGLScreen.camera.GETscale());
+		mainGame.GETscreen().camera
+			.SETscale(mainGame.GETscreen().camera.GETscale()
+						+ MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().camera.GETscale());
 	}
 	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
-		mainGame.GETscreen().openGLScreen.camera
-			.SETscale(mainGame.GETscreen().openGLScreen.camera.GETscale() 
-				- MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().openGLScreen.camera.GETscale());
+		mainGame.GETscreen().camera
+			.SETscale(mainGame.GETscreen().camera.GETscale() 
+				- MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().camera.GETscale());
 	}
 }
 

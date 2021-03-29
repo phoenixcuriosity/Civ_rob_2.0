@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.0
+	last modification on this file on version:0.23.4.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -71,11 +71,11 @@ public:
 
 	void swap();
 
-	int GETscreenWidth() { return m_screenWidth; };
-	int GETscreenHeight() { return m_screenHeight; };
+	int GETscreenWidth()const { return m_screenWidth; };
+	int GETscreenHeight()const { return m_screenHeight; };
 
-	int SETscreenWidth(int screenWidth) { m_screenWidth = screenWidth; };
-	int SETscreenHeight(int screenHeight) { m_screenHeight = screenHeight; };
+	void SETscreenWidth(int screenWidth) { m_screenWidth = screenWidth; };
+	void SETscreenHeight(int screenHeight) { m_screenHeight = screenHeight; };
 
 
 public:
@@ -88,10 +88,7 @@ public:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getHorizontal
-	(
-		unsigned int tileSize
-	);
+	static Uint16 getHorizontal();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -101,10 +98,7 @@ public:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getVertical
-	(
-		unsigned int tileSize
-	);
+	static Uint16 getVertical();
 
 private:
 

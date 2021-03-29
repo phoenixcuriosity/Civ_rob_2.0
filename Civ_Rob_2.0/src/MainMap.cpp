@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.20
+	last modification on this file on version:0.23.4.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,7 +30,7 @@
 
 #include <RealEngine2D/src/ResourceManager.h>
 
-#include "MainGame.h"
+#include "App.h"
 
  /* *********************************************************
   *					  Static Var						   *
@@ -53,8 +53,8 @@ void MainMap::setStaticPtrTileSize()
 
 
 MainMap::MainMap()
-:m_needToUpdateDraw(true), m_mapSizePixX(0), m_mapSizePixY(0),
-m_tileSize(0), m_toolBarSize(0)
+	:m_mapSizePixX(0), m_mapSizePixY(0),
+	m_tileSize(0), m_toolBarSize(0), m_needToUpdateDraw(true)
 {
 	setStaticPtrTileSize();
 }
@@ -98,7 +98,7 @@ void MainMap::initTile()
 /* ----------------------------------------------------------------------------------- */
 void MainMap::generateMap()
 {
-	MainGame::logfileconsole("[INFO]___: Groundgen Start");
+	App::logfileconsole("[INFO]___: Groundgen Start");
 
 	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
 	{
@@ -115,11 +115,11 @@ void MainMap::generateMap()
 			 *			bord de la map (MAP_BORDER_ZERO)			   *
 			 ********************************************************* */
 
-			if  (
-						(i == MAP_BORDER_ZERO)
-					||	(i == (m_mapSizePixX / m_tileSize) - (MAP_BORDER_ZERO + 1))
-					||	(j == MAP_BORDER_ZERO)
-					||	(j == (m_mapSizePixY / m_tileSize) - (MAP_BORDER_ZERO + 1))
+			if (
+				(i == MAP_BORDER_ZERO)
+				|| (i == (m_mapSizePixX / m_tileSize) - (MAP_BORDER_ZERO + 1))
+				|| (j == MAP_BORDER_ZERO)
+				|| (j == (m_mapSizePixY / m_tileSize) - (MAP_BORDER_ZERO + 1))
 				)
 			{
 				tileAffectation
@@ -153,7 +153,7 @@ void MainMap::generateMap()
 			}
 		}
 	}
-	MainGame::logfileconsole("[INFO]___: Groundgen End");
+	App::logfileconsole("[INFO]___: Groundgen End");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -680,6 +680,18 @@ void MainMap::drawMap
 					case Ground_Type::deepwater:
 						id = idDeepWater;
 						break;
+					case Ground_Type::dirt:
+						App::exitError("[Error]___: drawMap : Ground_Type::dirt");
+						break;
+					case Ground_Type::sand:
+						App::exitError("[Error]___: drawMap : Ground_Type::sand");
+						break;
+					case Ground_Type::error:
+						App::exitError("[Error]___: drawMap : Ground_Type::error");
+						break;
+					default:
+						App::exitError("[Error]___: drawMap : default");
+						break;
 					}
 
 					m_spriteBatch.draw
@@ -749,6 +761,6 @@ void MainMap::renderMap()
 }
 
 
- /*
- *	End Of File : GamePlay.cpp
- */
+/*
+*	End Of File : GamePlay.cpp
+*/

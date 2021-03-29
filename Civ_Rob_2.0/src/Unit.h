@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.16
+	last modification on this file on version:0.23.4.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -502,8 +502,8 @@ public:
 	 ********************************************************* */
 
 	inline std::string GETname()				const { return m_name; };
-	inline int GETx()							const { return m_x; };
-	inline int GETy()							const { return m_y; };
+	inline unsigned int GETx()							const { return m_x; };
+	inline unsigned int GETy()							const { return m_y; };
 	inline Unit_Movement_Type GETmovementType() const { return m_movementType; };
 	inline int GETmaxlife()						const { return m_maxlife; };
 	inline int GETmaxatq()						const { return m_maxatq; };
@@ -523,8 +523,8 @@ public:
 
 
 	inline void SETname(const std::string& name) { m_name = name; };
-	inline void SETx(int x) { m_x = x; };
-	inline void SETy(int y) { m_y = y; };
+	inline void SETx(unsigned int x) { m_x = x; };
+	inline void SETy(unsigned int y) { m_y = y; };
 	inline void SETmovementType(Unit_Movement_Type movementType) { m_movementType = movementType; };
 	inline void SETmaxlife(int life) { m_maxlife = life; };
 	inline void SETmaxatq(int atq) { m_maxatq = atq; };
@@ -547,8 +547,8 @@ private:
 	 *					Unit::ATTRIBUTS					       *
 	 ********************************************************* */
 	std::string m_name;
-	int m_x;
-	int m_y;
+	unsigned int m_x;
+	unsigned int m_y;
 	Unit_Movement_Type m_movementType;
 
 	int m_maxlife;

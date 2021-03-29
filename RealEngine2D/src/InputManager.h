@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.0
+	last modification on this file on version:0.23.4.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,12 +41,12 @@ public:
 
 	void update();
 
-	void pressKey(unsigned int keyID);
-	void releaseKey(unsigned int keyID);
+	void pressKey(SDL_Keycode keyID);
+	void releaseKey(SDL_Keycode keyID);
 
-	bool isKeyDown(unsigned int keyID);
+	bool isKeyDown(SDL_Keycode keyID);
 
-	bool isKeyPressed(unsigned int keyID);
+	bool isKeyPressed(SDL_Keycode keyID);
 
 	void setMouseCoords
 	(
@@ -60,11 +60,11 @@ public:
 
 private:
 
-	bool wasKeyDown(unsigned int keyID);
+	bool wasKeyDown(SDL_Keycode keyID);
 
 private:
-	std::unordered_map<unsigned int, bool> m_keyMap;
-	std::unordered_map<unsigned int, bool> m_previousKeyMap;
+	std::unordered_map<SDL_Keycode, bool> m_keyMap;
+	std::unordered_map<SDL_Keycode, bool> m_previousKeyMap;
 	glm::i32vec2 m_mouseCoords;
 
 	unsigned int* m_tileSize = nullptr;

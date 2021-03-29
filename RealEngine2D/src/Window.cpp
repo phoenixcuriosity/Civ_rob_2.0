@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.1
+	last modification on this file on version:0.23.4.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -126,18 +126,12 @@ void  Window::swap()
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Uint16 Window::getHorizontal
-(
-	unsigned int tileSize
-)
+Uint16 Window::getHorizontal()
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.right % (Uint16)tileSize)) == 0)
-		return (Uint16)desktop.right;
-	return (Uint16)desktop.right + ((Uint16)tileSize - complete);
+	return (Uint16)desktop.right;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -148,18 +142,12 @@ Uint16 Window::getHorizontal
 /* RETURNED VALUE    : void															   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Uint16 Window::getVertical
-(
-	unsigned int tileSize
-)
+Uint16 Window::getVertical()
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
-	Uint16 complete = 0;
-	if ((complete = ((Uint16)desktop.bottom % (Uint16)tileSize)) == 0)
-		return (Uint16)desktop.bottom;
-	return (Uint16)desktop.bottom + ((Uint16)tileSize - complete);
+	return (Uint16)desktop.bottom;
 }
 
 
