@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.0
+	last modification on this file on version:0.23.5.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,7 +32,7 @@
 
 #include <vector>
 
-#include <RealEngine2D\src\Sprite.h>
+#include <RealEngine2D/src/WidgetLabel.h>
 #include <RealEngine2D\src\GLSLProgram.h>
 #include <RealEngine2D\src\GameEngine.h>
 #include <RealEngine2D\src\Window.h>
@@ -46,6 +46,8 @@
 
 struct File;
 class SaveReload;
+
+const unsigned int MAX_SAVE_BUTTON_VISISBLE = 10;
 
 class ReloadMenuScreen : public RealEngine2D::IGameScreen
 {
@@ -69,6 +71,9 @@ public:
 
 private:
 
+	void initOpenGLScreen();
+	void initShaders();
+	void initHUD();
 
 
 public:
@@ -81,6 +86,7 @@ public:
 
 private:
 
+	bool onOneSaveCliked(const CEGUI::EventArgs& e);
 	bool onClearSavesCliked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
@@ -91,7 +97,14 @@ public:
 private:
 	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
 
+	RealEngine2D::GLSLProgram m_gLSLProgram;
+	RealEngine2D::Camera2D m_cameraHUD;
+
 	RealEngine2D::GUI m_gui;
+	std::vector<CEGUI::RadioButton*> m_vectSavesRadioButton;
+	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
+	RealEngine2D::SpriteFont* m_spriteFont;
+	RealEngine2D::SpriteBatch m_spriteBatchHUDDynamic;
 
 	File* m_file = nullptr;
 	SaveReload* m_SaveReload = nullptr;

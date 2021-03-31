@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.3
+	last modification on this file on version:0.23.5.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,7 @@
 
 #include <vector>
 
-#include <RealEngine2D\src\Sprite.h>
+#include <RealEngine2D/src/WidgetLabel.h>
 #include <RealEngine2D\src\GLSLProgram.h>
 #include <RealEngine2D\src\GameEngine.h>
 #include <RealEngine2D\src\Window.h>
@@ -55,9 +55,6 @@ struct UserInputNewGame;
 
 struct Screen
 {
-
-	float fps = 0.0;
-
 	RealEngine2D::GLSLProgram gLSLProgram;
 
 	RealEngine2D::Camera2D camera;
@@ -70,9 +67,8 @@ struct Screen
 	RealEngine2D::AudioEngine audioEngine;
 
 	RealEngine2D::GUI m_gui;
-	/*std::vector<CEGUI::PushButton*> m_vectPlayerButton;*/
 	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
-	std::vector<WidgetLabel> m_widgetLabels;
+	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
 };
 struct Var
 {

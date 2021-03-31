@@ -12,13 +12,16 @@
     <ClInclude Include="src\RealEngineError.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\ScreenList.h" />
-    <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\SpriteBatch.h" />
     <ClInclude Include="src\SpriteFont.h" />
     <ClInclude Include="src\TextureCache.h" />
     <ClInclude Include="src\Timing.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\GUI.h" />
+    <ClInclude Include="src\ColorRGBA8.h" />
+    <ClInclude Include="src\UV.h" />
+    <ClInclude Include="src\Vertex.h" />
+    <ClInclude Include="src\WidgetLabel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -31,12 +34,12 @@
     <ClCompile Include="src\RealEngineError.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\ScreenList.cpp" />
-    <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\SpriteBatch.cpp" />
     <ClCompile Include="src\SpriteFont.cpp" />
     <ClCompile Include="src\TextureCache.cpp" />
     <ClCompile Include="src\Timing.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\GUI.cpp" />
+    <ClCompile Include="src\WidgetLabel.cpp" />
   </ItemGroup>
 </Project>

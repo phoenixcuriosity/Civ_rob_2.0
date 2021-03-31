@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.0
+	last modification on this file on version:0.23.5.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,13 +25,17 @@
 #ifndef GUI_H
 #define GUI_H
 
+
+#include <glm/glm.hpp>
+#include <SDL\glew.h>
+#include <SDL/SDL.h>
+
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/OpenGL/GL3Renderer.h>
 
-#include <glm/glm.hpp>
-#include <SDL/SDL.h>
 
 #include "InputManager.h"
+
 
 namespace RealEngine2D
 {

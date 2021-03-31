@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.0
+	last modification on this file on version:0.23.5.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,7 @@
 
 #include "App.h"
 #include "SaveReload.h"
+#include <string>
 
 ReloadMenuScreen::ReloadMenuScreen
 (
@@ -62,13 +63,62 @@ void ReloadMenuScreen::build()
 void ReloadMenuScreen::destroy()
 {
 	m_gui.destroy();
+
+	m_widgetLabels.clear();
+
+	if (nullptr != m_spriteFont)
+		delete m_spriteFont;
 }
 
 void ReloadMenuScreen::onEntry()
 {
+	initOpenGLScreen();
+	initShaders();
+	initHUD();
+}
+
+
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initOpenGLScreen															   */
+/* ROLE : Init m_screen.openGLScreen and m_mainMap									   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void ReloadMenuScreen::initOpenGLScreen()
+{
+	m_cameraHUD.init(m_window->GETscreenWidth(), m_window->GETscreenHeight());
+	m_cameraHUD.SETposition(glm::vec2(m_window->GETscreenWidth() / 2, m_window->GETscreenHeight() / 2));
+
+	m_spriteBatchHUDDynamic.init();
+	m_spriteFont = new RealEngine2D::SpriteFont("times.ttf", 64);
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initShaders																   */
+/* ROLE : Init shaders for OpenGL													   */
+/* ROLE : 2 files : colorShadingVert and colorShadingFrag							   */
+/* ROLE : 3 parameters : vertexPosition	, vertexColor , vertexUV					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void ReloadMenuScreen::initShaders()
+{
+	m_gLSLProgram.compileShaders(m_file->colorShadingVert, m_file->colorShadingFrag);
+	m_gLSLProgram.addAttribut("vertexPosition");
+	m_gLSLProgram.addAttribut("vertexColor");
+	m_gLSLProgram.addAttribut("vertexUV");
+	m_gLSLProgram.linkShaders();
+}
+
+void ReloadMenuScreen::initHUD()
+{
 	m_gui.init(m_file->GUIPath);
 
 	m_gui.loadScheme("AlfiskoSkin.scheme");
+	m_gui.loadScheme("TaharezLook.scheme");
 
 	m_gui.setFont("DejaVuSans-10");
 
@@ -102,6 +152,50 @@ void ReloadMenuScreen::onEntry()
 	);
 
 
+	float X_POS = 0.1f;
+	float Y_POS = 0.20f;
+	const float DIMS_PIXELS = 20.0f;
+	const float PADDING = 0.035f;
+	const float TEXT_SCALE = 0.6f;
+	const int GROUP_ID = 2;
+
+	m_vectSavesRadioButton.clear();
+	m_widgetLabels.clear();
+	m_vectSavesRadioButton.resize(m_SaveReload->GETtabSave().size());
+	m_widgetLabels.resize(m_vectSavesRadioButton.size());
+	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
+	{
+		m_vectSavesRadioButton[i]
+			= static_cast<CEGUI::RadioButton*>
+			(m_gui.createWidget(
+				"TaharezLook/RadioButton",
+				glm::vec4(X_POS, Y_POS += PADDING, 0.0f, 0.0f),
+				glm::vec4(0.0f, 0.0f, DIMS_PIXELS, DIMS_PIXELS),
+				"Save " + std::to_string(m_SaveReload->GETtabSave()[i])));
+
+		m_vectSavesRadioButton[i]->setSelected(false);
+
+		m_vectSavesRadioButton[i]->subscribeEvent
+		(CEGUI::RadioButton::EventMouseClick,
+			CEGUI::Event::Subscriber(&ReloadMenuScreen::onOneSaveCliked, this));
+
+		m_vectSavesRadioButton[i]->setGroupID(GROUP_ID);
+
+		if (MAX_SAVE_BUTTON_VISISBLE > i)
+		{
+			m_vectSavesRadioButton[i]->setVisible(true);
+		}
+		else
+		{
+			m_vectSavesRadioButton[i]->setVisible(false);
+		}
+
+		m_widgetLabels[i] = RealEngine2D::WidgetLabel(
+			m_vectSavesRadioButton[i],
+			"Save " + std::to_string(m_SaveReload->GETtabSave()[i]),
+			TEXT_SCALE);
+
+	}
 
 
 
@@ -113,19 +207,54 @@ void ReloadMenuScreen::onEntry()
 }
 
 
-
 //----------------------------------------------------------GameLoop----------------------------------------------------------------//
 
 
 
 void ReloadMenuScreen::draw()
 {
+	m_cameraHUD.update();
+
+
 	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	/* Back */
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	m_gLSLProgram.use();
+	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
+	glActiveTexture(GL_TEXTURE0);
+
+	GLint textureLocation = m_gLSLProgram.getUnitformLocation("mySampler");
+	glUniform1i(textureLocation, 0);
+
+	/* camera */
+	GLint pLocation = m_gLSLProgram.getUnitformLocation("P");
+	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
+
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	m_spriteBatchHUDDynamic.begin();
+	
+	unsigned int butDrawn(0);
+	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
+	{
+		if (m_vectSavesRadioButton[i]->isVisible())
+		{
+			butDrawn++;
+			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *m_spriteFont, m_window);
+		}
+	}
+
+	m_spriteBatchHUDDynamic.end();
+
+	m_spriteBatchHUDDynamic.renderBatch();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	m_gLSLProgram.unuse();
 
 	m_gui.draw();
 }
@@ -146,6 +275,19 @@ void ReloadMenuScreen::update()
 void ReloadMenuScreen::onExit()
 {
 
+}
+
+bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
+{
+	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
+	{
+		if (m_vectSavesRadioButton[i]->isPushed())
+		{
+			m_SaveReload->SETcurrentSave((int)i);
+			return true;
+		}
+	}
+	return true;
 }
 
 bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)

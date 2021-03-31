@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.1
+	last modification on this file on version:0.23.5.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,25 +31,10 @@
 #include <RealEngine2D/src/SpriteBatch.h>
 #include <RealEngine2D/src/SpriteFont.h>
 #include <RealEngine2D/src/Window.h>
-#include <RealEngine2D/src/Sprite.h>
+#include <RealEngine2D\src\Vertex.h>
 
 #include <vector>
 #include <CEGUI/CEGUI.h>
-
-
-class WidgetLabel
-{
-public:
-	WidgetLabel() {};
-	WidgetLabel(CEGUI::Window* w, const std::string& text, float scale) :
-		widget(w), text(text), scale(scale){};
-	void draw(RealEngine2D::SpriteBatch& sb, RealEngine2D::SpriteFont& sf, RealEngine2D::Window* w);
-
-	CEGUI::Window* widget = nullptr;
-	std::string text = "";
-	RealEngine2D::ColorRGBA8 color = RealEngine2D::COLOR_WHITE;
-	float scale = 0.7f;
-};
 
 class GamePlayScreen;
 class Players;

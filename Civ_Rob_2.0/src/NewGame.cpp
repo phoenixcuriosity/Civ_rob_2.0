@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.1
+	last modification on this file on version:0.23.5.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,17 +29,8 @@
 #include "Player.h"
 #include "App.h"
 #include "SaveReload.h"
+#include <RealEngine2D/src/GUI.h>
 
-
-
-void WidgetLabel::draw(RealEngine2D::SpriteBatch& sb, RealEngine2D::SpriteFont& sf, RealEngine2D::Window* w) {
-	if (!widget->isVisible()) return;
-	glm::vec2 pos;
-	pos.x = widget->getInnerRectClipper().getPosition().d_x + widget->getInnerRectClipper().getWidth() / 2.0f;
-	pos.y = w->GETscreenHeight() - widget->getInnerRectClipper().getPosition().d_y;
-
-	sf.draw(sb, text.c_str(), pos, glm::vec2(0.24f), 0.0f, color, RealEngine2D::Justification::MIDDLE);
-}
 
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
@@ -79,7 +70,7 @@ void NewGame::newGame(GamePlayScreen& mainGame)
 			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, &mainGame));
 		mainGame.GETscreen().m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
 
-		mainGame.GETscreen().m_widgetLabels[i] = WidgetLabel(
+		mainGame.GETscreen().m_widgetLabels[i] = RealEngine2D::WidgetLabel(
 			mainGame.GETscreen().m_vectPlayerRadioButton[i],
 			mainGame.getUserInputNewGame()->vectPlayerName[i],
 			TEXT_SCALE);
