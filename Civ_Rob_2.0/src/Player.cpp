@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.14
+	last modification on this file on version:0.23.6.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,7 @@
 
 #include "Utility.h"
 #include "App.h"
+#include "City.h"
 
 #include <RealEngine2D/src/ResourceManager.h>
 

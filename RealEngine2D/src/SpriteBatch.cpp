@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.0
+	last modification on this file on version:0.23.6.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,6 +26,49 @@
 
 namespace RealEngine2D
 {
+
+
+Glyph::Glyph
+(
+	const glm::vec4& destRec,
+	const  glm::vec4& uvRect,
+	GLuint Texture,
+	float Depth,
+	const  ColorRGBA8& color
+)
+: texture(Texture), depth(Depth)
+{
+	topLeft.color = color;
+	topLeft.setPoint(destRec.x, destRec.y + destRec.w);
+	topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
+
+	BottomLeft.color = color;
+	BottomLeft.setPoint(destRec.x, destRec.y);
+	BottomLeft.setUV(uvRect.x, uvRect.y);
+
+	BottomRight.color = color;
+	BottomRight.setPoint(destRec.x + destRec.z, destRec.y);
+	BottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
+
+	topRight.color = color;
+	topRight.setPoint(destRec.x + destRec.z, destRec.y + destRec.w);
+	topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+}
+
+
+RenderBatch::RenderBatch
+(
+	GLuint offset,
+	GLuint numVertices,
+	GLuint texture
+)
+	:_offset(offset), _numVertices(numVertices), _texture(texture)
+{
+}
+
+
+
+
 	
 SpriteBatch::SpriteBatch()
 : m_vbo(0), m_vao(0), m_sortType(GlyphSortType::NONE)
@@ -54,9 +97,11 @@ void SpriteBatch::begin
 void SpriteBatch::end()
 {
 	m_glyphsPtr.resize(m_glyphs.size());
-	for (unsigned int i(0); i < m_glyphs.size(); i++)
+	
+	auto itGptr(m_glyphsPtr.begin());
+	for (auto itG(m_glyphs.begin()); itG != m_glyphs.end(); itG++, itGptr++)
 	{
-		m_glyphsPtr[i] = &m_glyphs[i];
+		*itGptr = (&(*itG));
 	}
 
 	sortGlyphs();
@@ -92,8 +137,7 @@ void SpriteBatch::createRenderBatches()
 {
 	if (m_glyphs.empty()) return;
 
-	std::vector<Vertex> vertices;
-	vertices.resize(m_glyphs.size() * 6);
+	std::vector<Vertex> vertices(m_glyphs.size() * 6);
 
 	int cv(0);
 	int offset(0);
@@ -106,23 +150,25 @@ void SpriteBatch::createRenderBatches()
 	vertices[cv++] = m_glyphsPtr[0]->topLeft;
 	offset += 6;
 
-	for (unsigned int cg(1); cg < m_glyphs.size(); cg++)
+	
+
+	for (auto it(m_glyphsPtr.cbegin() + 1); it != m_glyphsPtr.cend(); it++)
 	{
-		if (m_glyphsPtr[cg]->texture != m_glyphsPtr[cg - 1]->texture)
+		if ((*it)->texture != (*(it-1))->texture)
 		{
-			m_renderBatches.emplace_back(offset, 6, m_glyphsPtr[cg]->texture);
+			m_renderBatches.emplace_back(offset, 6, (*it)->texture);
 		}
 		else
 		{
 			m_renderBatches.back()._numVertices += 6;
 		}
-		
-		vertices[cv++] = m_glyphsPtr[cg]->topLeft;
-		vertices[cv++] = m_glyphsPtr[cg]->BottomLeft;
-		vertices[cv++] = m_glyphsPtr[cg]->BottomRight;
-		vertices[cv++] = m_glyphsPtr[cg]->BottomRight;
-		vertices[cv++] = m_glyphsPtr[cg]->topRight;
-		vertices[cv++] = m_glyphsPtr[cg]->topLeft;
+
+		vertices[cv++] = (*it)->topLeft;
+		vertices[cv++] = (*it)->BottomLeft;
+		vertices[cv++] = (*it)->BottomRight;
+		vertices[cv++] = (*it)->BottomRight;
+		vertices[cv++] = (*it)->topRight;
+		vertices[cv++] = (*it)->topLeft;
 		offset += 6;
 	}
 

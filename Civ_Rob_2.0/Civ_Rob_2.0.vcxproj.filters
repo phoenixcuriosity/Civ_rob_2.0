@@ -48,7 +48,6 @@
     <ClInclude Include="src\GamePlaySrceen.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="src\MainMenuScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
@@ -60,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="src\NewGameScreen.h">
       <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>icon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

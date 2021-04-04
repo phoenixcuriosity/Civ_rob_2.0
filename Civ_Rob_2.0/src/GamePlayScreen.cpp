@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.5.0
-	file version : 1.4
+	last modification on this file on version:0.23.6.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -23,21 +23,20 @@
 */
 
 #include "GamePlaySrceen.h"
-#include <RealEngine2D/src/IMainGame.h>
 
-#include <iostream>
+#include <tinyxml2/tinyxml2.h>
 
 #include "MainMap.h"
+#include "NewGame.h"
+
 #include "Utility.h"
 #include "XmlConvertValue.h"
-#include "NewGame.h"
-#include <tinyxml2/tinyxml2.h>
+
 #include "App.h"
-
-
-#include <RealEngine2D\src\ResourceManager.h>
-
 #include "ScreenIndices.h"
+
+
+
 
 
 GamePlayScreen::GamePlayScreen
@@ -48,11 +47,22 @@ GamePlayScreen::GamePlayScreen
 	RealEngine2D::InputManager* inputManager,
 	UserInputNewGame* userInputNewGame
 )
-: m_file(file), m_SaveReload(SaveReload), m_window(window), m_inputManager(inputManager),
-  m_userInputNewGame(userInputNewGame)
+: 
+m_screen(),
+m_var(),
+m_mainMap(),
+m_nextTurn(),
+m_players(),
+m_gameInput(),
+m_file(file),
+m_SaveReload(SaveReload),
+m_window(window),
+m_inputManager(inputManager),
+m_userInputNewGame(userInputNewGame)
 {
 	m_screenIndex = GAMEPLAY_SCREEN_INDEX;
 }
+
 GamePlayScreen::~GamePlayScreen()
 {
 
@@ -77,8 +87,7 @@ void GamePlayScreen::destroy()
 
 	m_screen.m_widgetLabels.clear();
 
-	if(nullptr != m_screen.spriteFont)
-		delete m_screen.spriteFont;
+	m_screen.spriteFont.reset();
 }
 
 void GamePlayScreen::onEntry()
@@ -204,13 +213,14 @@ void GamePlayScreen::computeSize()
 void GamePlayScreen::initOpenGLScreen()
 {
 	m_screen.camera.init(m_window->GETscreenWidth(), m_window->GETscreenHeight());
+	m_screen.camera.SETposition(glm::vec2(m_window->GETscreenWidth() / 2, m_window->GETscreenHeight() / 2));
 	m_screen.cameraHUD.init(m_window->GETscreenWidth(), m_window->GETscreenHeight());
 	m_screen.cameraHUD.SETposition(glm::vec2(m_window->GETscreenWidth() / 2, m_window->GETscreenHeight() / 2));
 
 	m_mainMap.GETspriteBatch().init();
 	m_screen.spriteBatchHUDDynamic.init();
 	m_screen.spriteBatchHUDStatic.init();
-	m_screen.spriteFont = new RealEngine2D::SpriteFont("times.ttf", 64);
+	m_screen.spriteFont = std::make_unique<RealEngine2D::SpriteFont>("times.ttf", 64);
 
 	m_screen.audioEngine.init();
 

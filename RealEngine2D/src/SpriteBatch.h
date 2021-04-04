@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.5.0
-	file version : 1.1
+	last modification on this file on version:0.23.6.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,7 +47,6 @@ enum class GlyphSortType
 class Glyph
 {
 public:
-	Glyph() {};
 	Glyph
 	(
 		const glm::vec4& destRec,
@@ -55,25 +54,7 @@ public:
 		GLuint Texture,
 		float Depth,
 		const  ColorRGBA8& color
-	)
-		:texture(Texture), depth(Depth)
-	{
-		topLeft.color = color;
-		topLeft.setPoint(destRec.x, destRec.y + destRec.w);
-		topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
-
-		BottomLeft.color = color;
-		BottomLeft.setPoint(destRec.x, destRec.y);
-		BottomLeft.setUV(uvRect.x, uvRect.y);
-
-		BottomRight.color = color;
-		BottomRight.setPoint(destRec.x + destRec.z, destRec.y);
-		BottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
-
-		topRight.color = color;
-		topRight.setPoint(destRec.x + destRec.z, destRec.y + destRec.w);
-		topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-	}
+	);
 
 	GLuint texture;
 	float depth;
@@ -92,15 +73,11 @@ public:
 		GLuint offset,
 		GLuint numVertices,
 		GLuint texture
-	)
-		:_offset(offset), _numVertices(numVertices), _texture(texture)
-	{
-	};
+	);
 
 	GLuint _offset;
 	GLuint _numVertices;
 	GLuint _texture;
-private:
 
 };
 

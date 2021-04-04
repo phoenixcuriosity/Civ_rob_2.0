@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.21
+	last modification on this file on version:0.23.6.0
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -126,9 +126,7 @@ void MainMap::generateMap()
 				(
 					m_matriceMap[i][j],
 					Ground_Type::deepwater,
-					(std::string)"deepwater.bmp",
 					GroundSpec_Type::nothing,
-					GROUNDSPEC_NOTHING,
 					0,
 					0,
 					0
@@ -153,6 +151,7 @@ void MainMap::generateMap()
 			}
 		}
 	}
+
 	App::logfileconsole("[INFO]___: Groundgen End");
 }
 
@@ -214,9 +213,7 @@ void MainMap::mapBorders
 		tileAffectation
 		(tile,
 			Ground_Type::water,
-			(std::string)"water.bmp",
 			GroundSpec_Type::fish,
-			(std::string)"fish.bmp",
 			3,
 			2,
 			1);
@@ -225,9 +222,7 @@ void MainMap::mapBorders
 		tileAffectation
 		(tile,
 			Ground_Type::water,
-			(std::string)"water.bmp",
 			GroundSpec_Type::petroleum,
-			(std::string)"petroleum.bmp",
 			1,
 			3,
 			4);
@@ -241,9 +236,7 @@ void MainMap::mapBorders
 		tileAffectation
 		(tile,
 			Ground_Type::water,
-			(std::string)"water.bmp",
 			GroundSpec_Type::nothing,
-			GROUNDSPEC_NOTHING,
 			1,
 			1,
 			1);
@@ -280,38 +273,30 @@ void MainMap::mapIntern
 	if (randomground < 92)
 	{
 		maps[i][j].tile_ground = Ground_Type::grass;
-		maps[i][j].tile_stringground = "grass.bmp";
 		randomspecgrass =
 			rand() % MAP_GEN_RANDOM_RANGE_SPEC_GRASS + MAP_GEN_RANDOM_OFFSET_SPEC_GRASS;
 		switch (randomspecgrass)
 		{
 		case 1:
 			maps[i][j].tile_spec = GroundSpec_Type::coal;
-			maps[i][j].tile_stringspec = "coal.png";
 			break;
 		case 2:
 			maps[i][j].tile_spec = GroundSpec_Type::copper;
-			maps[i][j].tile_stringspec = "copper.png";
 			break;
 		case 3:
 			maps[i][j].tile_spec = GroundSpec_Type::iron;
-			maps[i][j].tile_stringspec = "iron.png";
 			break;
 		case 4:
 			maps[i][j].tile_spec = GroundSpec_Type::tree;
-			maps[i][j].tile_stringspec = "tree1.bmp";
 			break;
 		case 5:
 			maps[i][j].tile_spec = GroundSpec_Type::stone;
-			maps[i][j].tile_stringspec = "stone.png";
 			break;
 		case 6:
 			maps[i][j].tile_spec = GroundSpec_Type::uranium;
-			maps[i][j].tile_stringspec = "uranium.png";
 			break;
 		case 7:
 			maps[i][j].tile_spec = GroundSpec_Type::horse;
-			maps[i][j].tile_stringspec = "horse.bmp";
 			break;
 		default:
 			/* N/A */
@@ -320,7 +305,6 @@ void MainMap::mapIntern
 		if (randomspecgrass > 7 && randomspecgrass <= 32)
 		{ // plus de chance d'avoir des arbres
 			maps[i][j].tile_spec = GroundSpec_Type::tree;
-			maps[i][j].tile_stringspec = "tree1.bmp";
 			maps[i][j].food = 1;
 			maps[i][j].work = 2;
 			maps[i][j].gold = 1;
@@ -328,7 +312,6 @@ void MainMap::mapIntern
 		else if (randomspecgrass > 32)
 		{
 			maps[i][j].tile_spec = GroundSpec_Type::nothing;
-			maps[i][j].tile_stringspec = GROUNDSPEC_NOTHING;
 			maps[i][j].food = 2;
 			maps[i][j].work = 1;
 			maps[i][j].gold = 1;
@@ -363,9 +346,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i][j],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::fish,
-					(std::string)"fish.bmp",
 					3,
 					2,
 					1);
@@ -374,9 +355,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i][j],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::petroleum,
-					(std::string)"petroleum.bmp",
 					1,
 					3,
 					4);
@@ -389,9 +368,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i][j],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::nothing,
-					GROUNDSPEC_NOTHING,
 					1,
 					1,
 					1);
@@ -413,9 +390,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i - 1][j],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::fish,
-					(std::string)"fish.bmp",
 					3,
 					2,
 					1);
@@ -424,9 +399,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i - 1][j],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::petroleum,
-					(std::string)"petroleum.bmp",
 					1,
 					3,
 					4);
@@ -439,9 +412,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i - 1][j],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::nothing,
-					GROUNDSPEC_NOTHING,
 					1,
 					1,
 					1);
@@ -463,9 +434,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i - 1][j - 1],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::fish,
-					(std::string)"fish.bmp",
 					3,
 					2,
 					1);
@@ -474,9 +443,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i - 1][j - 1],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::petroleum,
-					(std::string)"petroleum.bmp",
 					1,
 					3,
 					4);
@@ -489,9 +456,7 @@ void MainMap::mapIntern
 				tileAffectation
 				(maps[i - 1][j - 1],
 					Ground_Type::water,
-					(std::string)"water.bmp",
 					GroundSpec_Type::nothing,
-					GROUNDSPEC_NOTHING,
 					1,
 					1,
 					1);
@@ -518,18 +483,14 @@ void MainMap::tileAffectation
 (
 	Tile& tile,
 	Ground_Type tile_ground,
-	std::string tile_stringground,
 	GroundSpec_Type tile_spec,
-	std::string tile_stringspec,
 	int food,
 	int work,
 	int gold
 )
 {
 	tile.tile_ground = tile_ground;
-	tile.tile_stringground = tile_stringground;
 	tile.tile_spec = tile_spec;
-	tile.tile_stringspec = tile_stringspec;
 	tile.food = food;
 	tile.work = work;
 	tile.gold = gold;

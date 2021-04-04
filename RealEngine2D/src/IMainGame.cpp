@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.1
+	last modification on this file on version:0.23.6.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,14 +37,19 @@ namespace RealEngine2D
 {
 
 IMainGame::IMainGame()
+:
+m_screenList(new ScreenList(this)),
+m_currentScreen(nullptr),
+m_isRunning(false),
+m_fps(0.0f),
+m_window(),
+m_inputManager()
 {
-	m_screenList = new ScreenList(this);
 }
 
 IMainGame::~IMainGame()
 {
-	if (nullptr != m_screenList)
-		delete m_screenList;
+	delete m_screenList;
 }
 
 

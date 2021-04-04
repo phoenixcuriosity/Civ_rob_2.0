@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.13
+	last modification on this file on version:0.23.6.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -105,9 +105,7 @@ void SaveReload::saveMaps
 				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].indexY << std::endl;
 				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].tile_x << std::endl;
 				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].tile_y << std::endl;
-				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].tile_stringground << std::endl;
 				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].tile_ground << std::endl;
-				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].tile_stringspec << std::endl;
 				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].tile_spec << std::endl;
 				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].appartenance << std::endl;
 				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].food << std::endl;
@@ -392,7 +390,6 @@ void SaveReload::reload
 	loadMaps(mainGame);
 	loadPlayer(mainGame);
 
-	mainGame.GETvar().statescreen = State_Type::STATEmainMap;
 	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
 	mainGame.GETPlayers().SETselectedPlayer(NO_PLAYER_SELECTED);
 
@@ -436,12 +433,8 @@ void SaveReload::loadMaps
 				saveMaps >> input;
 				mainGame.GETmainMap().GETmatriceMap()[i][j].tile_y = std::stoul(input);
 
-				saveMaps >> mainGame.GETmainMap().GETmatriceMap()[i][j].tile_stringground;
-
 				saveMaps >> input;
 				mainGame.GETmainMap().GETmatriceMap()[i][j].tile_ground = (Ground_Type)std::stoul(input);
-
-				saveMaps >> mainGame.GETmainMap().GETmatriceMap()[i][j].tile_stringspec;
 
 				saveMaps >> input;
 				mainGame.GETmainMap().GETmatriceMap()[i][j].tile_spec = (GroundSpec_Type)std::stoul(input);
@@ -847,8 +840,8 @@ void SaveReload::loadCityXML
 
 			while (nullptr != nTabCitizenElement)
 			{
-				ptrCity->GETcitizens().push_back(new Citizen);
-				ptrCitizen = ptrCity->GETcitizens()[ptrCity->GETcitizens().size() - 1];
+				ptrCity->GETcitizens().push_back(std::make_unique<Citizen>());
+				ptrCitizen = ptrCity->GETcitizens().back().get();
 
 				tinyxml2::XMLNode* nTabCitizenElementtileOccupied = nTabCitizenElement->FirstChild();
 				if (nullptr == nTabCitizenElementtileOccupied) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->tileOccupied == nullptr");

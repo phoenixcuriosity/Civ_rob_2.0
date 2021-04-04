@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.1
+	last modification on this file on version:0.23.6.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,14 +31,14 @@
 
 #include "LIB.h"
 
+#include <RealEngine2D/src/Camera2D.h>
+#include <RealEngine2D/src/SpriteBatch.h>
+
 #include <vector>
 
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/Camera2D.h>
-
- /* *********************************************************
-  *						Constantes						   *
-  ********************************************************* */
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
 
   /* MAP -> Max size - Min size of the map for sea borders */
 const unsigned int MAP_BORDER_MAX = 4;
@@ -125,14 +125,8 @@ struct Tile
 	// index en Y de la case : en pixel
 	unsigned int tile_y = 0;
 
-	// nom du type de sol
-	std::string tile_stringground = EMPTY_STRING;
-
 	// type de sol -> enum Ground_Type : unsigned int { noGround, grass, water, deepwater, dirt, sand};
 	Ground_Type tile_ground = Ground_Type::error;
-
-	// nom du type de sp�cification de la case
-	std::string tile_stringspec = EMPTY_STRING;
 
 	/*
 		type de sp�cification
@@ -356,9 +350,7 @@ private:
 	(
 		Tile& tile,
 		Ground_Type tile_ground,
-		std::string tile_stringground,
 		GroundSpec_Type tile_spec,
-		std::string tile_stringspec,
 		int food,
 		int work,
 		int gold

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.0
+	last modification on this file on version:0.23.6.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -63,10 +63,12 @@ protected:
 	bool initSystem();
 
 protected:
-	ScreenList* m_screenList = nullptr;
-	IGameScreen* m_currentScreen = nullptr;
-	bool m_isRunning = false;
-	float m_fps = 0.0f;
+	ScreenList* m_screenList;
+	IGameScreen* m_currentScreen;
+
+	bool m_isRunning;
+	float m_fps;
+
 	Window m_window;
 	InputManager m_inputManager;
 };

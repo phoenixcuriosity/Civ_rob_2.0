@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.1
+	last modification on this file on version:0.23.6.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,23 +35,18 @@ TextureCache::~TextureCache()
 {
 	for (auto& n : m_textureMap)
 	{
-		if (nullptr != n.second)
-		{
-			delete n.second;
-			n.second = nullptr;
-		}		
+		n.second.reset();
 	}
 }
 
-GLTexture* TextureCache::getTexture(const std::string& name)
+std::unique_ptr<GLTexture>& TextureCache::getTexture(const std::string& name)
 {
 	auto it =  m_textureMap.find(name);
 
 	if (it == m_textureMap.end())
 	{
-		GLTexture* newTexture = new GLTexture(name);
-		m_textureMap.insert({ name, newTexture });
-		return newTexture;
+		m_textureMap.insert({ name, std::make_unique<GLTexture>(name) });
+		return m_textureMap[name];
 	}
 	return it->second;
 }

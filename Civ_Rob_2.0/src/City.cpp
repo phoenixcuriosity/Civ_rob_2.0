@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.30
+	last modification on this file on version:0.23.6.0
+	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -329,7 +329,11 @@ City::City
 	m_foodSurplusPreviousTurn(CITY_ZERO_FOOD), m_workBalance(0), m_workSurplusPreviousTurn(0), m_goldBalance(0.0),
 	m_conversionToApply(conversionSurplus_Type::No_Conversion)
 {
-	m_citizens.push_back(new Citizen(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)]));
+	m_citizens.push_back
+	(
+		std::make_unique<Citizen>
+		(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)])
+	);
 
 	App::logfileconsole("[INFO]___: Create Citie: " + m_name + " Success");
 }
@@ -360,12 +364,9 @@ City::~City()
 /* ----------------------------------------------------------------------------------- */
 void City::resetTabCitizen()
 {
-	for (const auto& n : m_citizens)
+	for (auto& n : m_citizens)
 	{
-		if (nullptr != n)
-		{
-			delete n;
-		}
+		n.reset();
 	}
 	m_citizens.resize(0);
 }
@@ -400,14 +401,7 @@ void City::foodNextTurn
 			/* TODO gestion prioritaire de suppression de Citizen					  */
 			/* ---------------------------------------------------------------------- */
 			m_nbpop--;
-			if (nullptr != m_citizens[m_citizens.size() - 1])
-			{
-				delete m_citizens[m_citizens.size() - 1];
-			}
-			else
-			{
-				/* TODO Throw error */
-			}
+			m_citizens.back().reset();
 			m_citizens.pop_back();
 			m_foodStock = foodLimitPerLevelMinusOne;
 		}
@@ -416,7 +410,7 @@ void City::foodNextTurn
 	{
 		m_nbpop++;
 
-		m_citizens.push_back(new Citizen(m_tile, m_citizens));
+		m_citizens.push_back(std::make_unique<Citizen>(m_tile, m_citizens));
 		m_foodStock -= foodLimitPerLevelCurrent;
 	}
 	else

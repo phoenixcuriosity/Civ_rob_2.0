@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.3
+	last modification on this file on version:0.23.6.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,22 +32,24 @@
 
 static std::ofstream* ptrlogger;
 
-
 App::App()
+:
+m_mainMenuScreen(nullptr),
+m_newGameScreen(nullptr),
+m_reloadMenuScreen(nullptr),
+m_gamePlayScreen(nullptr),
+m_file(),
+m_saveReload()
 {
 
 }
 
 App::~App()
 {
-	if(nullptr != m_mainMenuScreen)
-		delete m_mainMenuScreen;
-	if (nullptr != m_newGameScreen)
-		delete m_newGameScreen;
-	if (nullptr != m_reloadMenuScreen)
-		delete m_reloadMenuScreen;
-	if (nullptr != m_gamePlayScreen)
-		delete m_gamePlayScreen;
+	delete m_mainMenuScreen;
+	delete m_newGameScreen;
+	delete m_reloadMenuScreen;
+	delete m_gamePlayScreen;
 	deleteAll();
 }
 
@@ -76,7 +78,7 @@ void App::addScreens()
 {
 	m_mainMenuScreen = new MainMenuScreen(&m_file, &m_window, &m_inputManager);
 	m_newGameScreen = new NewGameScreen(&m_file, &m_window, &m_inputManager);
-	m_reloadMenuScreen = new ReloadMenuScreen(&m_file, &m_saveReload, &m_window, &m_inputManager);
+	m_reloadMenuScreen = new  ReloadMenuScreen(&m_file, &m_saveReload, &m_window, &m_inputManager);
 	m_gamePlayScreen = new GamePlayScreen(&m_file, &m_saveReload, &m_window, &m_inputManager, m_newGameScreen->getUserInputNewGame());
 
 	m_screenList->addScreen(m_mainMenuScreen);

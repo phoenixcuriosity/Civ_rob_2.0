@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.5.0
-	file version : 1.4
+	last modification on this file on version:0.23.6.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,33 +25,24 @@
 #ifndef GamePlayScreen_H
 #define GamePlayScreen_H
 
-#include <RealEngine2D/src/IGameScreen.h>
-
 #include "LIB.h"
 
-#include <vector>
-
+#include <RealEngine2D/src/IGameScreen.h>
+#include <RealEngine2D/src/GLSLProgram.h>
+#include <RealEngine2D/src/Camera2D.h>
 #include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
+#include <RealEngine2D/src/SpriteBatch.h>
 #include <RealEngine2D/src/AudioEngine.h>
 #include <RealEngine2D/src/GUI.h>
+#include <RealEngine2D/src/Window.h>
 
-#include "Player.h"
 #include "GameInput.h"
-#include "MainMap.h"
-#include "SaveReload.h"
 #include "NextTurn.h"
-#include "NewGame.h"
+#include "MainMap.h"
+#include "Player.h"
 
-struct File;
-struct UserInputNewGame;
+#include <vector>
+#include <memory>
 
 struct Screen
 {
@@ -60,7 +51,7 @@ struct Screen
 	RealEngine2D::Camera2D camera;
 	RealEngine2D::Camera2D cameraHUD;
 
-	RealEngine2D::SpriteFont* spriteFont;
+	std::unique_ptr<RealEngine2D::SpriteFont> spriteFont;
 	RealEngine2D::SpriteBatch spriteBatchHUDDynamic;
 	RealEngine2D::SpriteBatch spriteBatchHUDStatic;
 
@@ -284,7 +275,6 @@ public:
 	inline RealEngine2D::InputManager* getInputManager() { return m_inputManager; };
 	inline UserInputNewGame* getUserInputNewGame() { return m_userInputNewGame; };
 
-	inline void SETscreen(Screen& screen) { m_screen = screen; };
 	inline void SETvar(Var& var) { m_var = var; };
 	inline void SETmainMap(MainMap& mainMap) { m_mainMap = mainMap; };
 	inline void SETPlayers(Players& players) { m_players = players; };
@@ -305,11 +295,11 @@ private:
 
 	GameInput m_gameInput;
 
-	File* m_file = nullptr;
-	SaveReload* m_SaveReload = nullptr;
-	RealEngine2D::Window* m_window = nullptr;
-	RealEngine2D::InputManager* m_inputManager = nullptr;
-	UserInputNewGame* m_userInputNewGame = nullptr;
+	File* m_file;
+	SaveReload* m_SaveReload;
+	RealEngine2D::Window* m_window;
+	RealEngine2D::InputManager* m_inputManager;
+	UserInputNewGame* m_userInputNewGame;
 };
 
 

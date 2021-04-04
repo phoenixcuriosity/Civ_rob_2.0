@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.0
+	last modification on this file on version:0.23.6.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,6 +27,7 @@
 
 #include "GLTexture.h"
 #include <map>
+#include <memory>
 
 namespace RealEngine2D
 {
@@ -38,10 +39,10 @@ namespace RealEngine2D
 
 	public:
 
-		GLTexture* getTexture(const std::string& name);
+		std::unique_ptr<GLTexture>& getTexture(const std::string& name);
 
 	private:
-		std::map<std::string, GLTexture*> m_textureMap;
+		std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
 	};
 }
 #endif // !TextureCache_H

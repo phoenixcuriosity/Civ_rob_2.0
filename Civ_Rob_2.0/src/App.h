@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.3
+	last modification on this file on version:0.23.6.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,7 @@
 #include "LIB.h"
 
 #include <fstream> // logger
+#include <memory>
 
 #include <RealEngine2D/src/IMainGame.h>
 
@@ -36,6 +37,7 @@
 #include "ReloadMenuScreen.h"
 #include "NewGameScreen.h"
 
+#include "SaveReload.h"
 
 const std::string configFilePath = "bin/filePath.xml";
 
@@ -145,10 +147,10 @@ public:
 	);
 
 private:
-	MainMenuScreen* m_mainMenuScreen = nullptr;
-	NewGameScreen* m_newGameScreen = nullptr;
-	ReloadMenuScreen* m_reloadMenuScreen = nullptr;
-	GamePlayScreen* m_gamePlayScreen = nullptr;
+	MainMenuScreen* m_mainMenuScreen;
+	NewGameScreen* m_newGameScreen;
+	ReloadMenuScreen* m_reloadMenuScreen;
+	GamePlayScreen* m_gamePlayScreen;
 
 	File m_file;
 

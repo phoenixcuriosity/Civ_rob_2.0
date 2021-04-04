@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.14
+	last modification on this file on version:0.23.6.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -59,6 +59,23 @@ enum class Select_Type
 	selectmove,				/* Selection to move a Unit */
 	selectmoveCitizen		/* ### Not use as of 0.20.0.3 ### */
 };
+
+
+
+struct Screen;
+struct Var;
+struct File;
+struct UserInputNewGame;
+
+class MainMap;
+class NextTurn;
+class Players;
+class GameInput;
+class SaveReload;
+class Unit;
+class City;
+
+class GamePlayScreen;
 
 #endif
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.18
+	last modification on this file on version:0.23.6.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 
 #include "MainMap.h"
 #include "Unit.h"
+#include "Citizen.h"
 
 #include <vector>
 #include <queue>
@@ -41,7 +42,6 @@
 
 /* Redef : include in .cpp */
 class GamePlayScreen;
-class Citizen;
 class Players;
 class Player;
 class GameInput;
@@ -593,7 +593,7 @@ public:
 	inline virtual unsigned int GETx()const { return m_x; };
 	inline virtual unsigned int GETy()const { return m_y; };
 	inline virtual VectMap& GETtile() { return m_tile; };
-	inline virtual std::vector<Citizen*>& GETcitizens() { return m_citizens; };
+	inline virtual VectCitizen& GETcitizens() { return m_citizens; };
 	inline virtual unsigned int GETinfluenceLevel()const { return m_influenceLevel; };
 	inline virtual unsigned int GETnbpop()const { return m_nbpop; };
 	inline virtual unsigned int GETatq()const { return m_atq; };
@@ -612,7 +612,7 @@ public:
 	inline virtual void SETx(unsigned int x) { m_x = x; };
 	inline virtual void SETy(unsigned int y) { m_y = y; };
 	inline virtual void SETtile(VectMap& tile) { m_tile = tile; };
-	inline virtual void SETcitizens(std::vector<Citizen*>& citizens) { m_citizens = citizens; };
+	//inline virtual void SETcitizens(VectCitizen& citizens) { m_citizens = citizens; };
 	inline virtual void SETinfluenceLevel(unsigned int influenceLevel) { m_influenceLevel = influenceLevel; };
 	inline virtual void SETnbpop(unsigned int nbpop) { m_nbpop = nbpop; };
 	inline virtual void SETatq(unsigned int atq) { m_atq = atq; };
@@ -636,7 +636,7 @@ private:
 	unsigned int m_x;
 	unsigned int m_y;
 	VectMap m_tile;
-	std::vector<Citizen*> m_citizens;
+	VectCitizen m_citizens;
 	unsigned int m_influenceLevel;
 	unsigned int m_nbpop;
 	unsigned int m_atq;
