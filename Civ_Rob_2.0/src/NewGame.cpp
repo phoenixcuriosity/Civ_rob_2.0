@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.3
+	last modification on this file on version:0.23.7.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -23,12 +23,12 @@
 */
 
 #include "NewGame.h"
+#include "GamePlayScreen.h"
 
-#include "GamePlaySrceen.h"
-#include "NewGameScreen.h"
 #include "Player.h"
 #include "App.h"
 #include "SaveReload.h"
+
 #include <RealEngine2D/src/GUI.h>
 
 
@@ -36,11 +36,11 @@
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
 
-void NewGame::newGame(GamePlayScreen& mainGame)
+void GamePlayScreen::newGame()
 {
 	App::logfileconsole("[INFO]___: Newgame Start");
-
-	mainGame.getSaveReload()->createSave(*mainGame.getFile());
+	
+	m_SaveReload->createSave(*m_file);
 
 	float X_POS = 0.01f;
 	float Y_POS = 0.20f;
@@ -48,39 +48,41 @@ void NewGame::newGame(GamePlayScreen& mainGame)
 	const float PADDING = 0.035f;
 	const float TEXT_SCALE = 0.6f;
 	const int GROUP_ID = 1;
-	mainGame.GETscreen().m_vectPlayerRadioButton.clear();
-	mainGame.GETscreen().m_widgetLabels.clear();
-	mainGame.GETscreen().m_vectPlayerRadioButton.resize(mainGame.getUserInputNewGame()->vectPlayerName.size());
-	mainGame.GETscreen().m_widgetLabels.resize(mainGame.getUserInputNewGame()->vectPlayerName.size());
-	for (size_t i(0); i < mainGame.GETscreen().m_vectPlayerRadioButton.size(); i++)
+
+	m_screen.m_vectPlayerRadioButton.clear();
+	m_screen.m_widgetLabels.clear();
+	m_screen.m_vectPlayerRadioButton.resize(m_userInputNewGame->vectPlayerName.size());
+	m_screen.m_widgetLabels.resize(m_userInputNewGame->vectPlayerName.size());
+
+	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
-		mainGame.GETPlayers().addPlayer(mainGame.getUserInputNewGame()->vectPlayerName[i]);
+		m_players.addPlayer(m_userInputNewGame->vectPlayerName[i]);
 		
-		mainGame.GETscreen().m_vectPlayerRadioButton[i] 
+		m_screen.m_vectPlayerRadioButton[i]
 			= static_cast<CEGUI::RadioButton*>
-			(mainGame.GETscreen().m_gui.createWidget(
+			(m_screen.m_gui.createWidget(
 				"TaharezLook/RadioButton",
 				glm::vec4(X_POS, Y_POS += PADDING, 0.0f, 0.0f),
 				glm::vec4(0.0f, 0.0f, DIMS_PIXELS, DIMS_PIXELS),
-				mainGame.getUserInputNewGame()->vectPlayerName[i]));
+				m_userInputNewGame->vectPlayerName[i]));
 
-		mainGame.GETscreen().m_vectPlayerRadioButton[i]->setSelected(false);
+		m_screen.m_vectPlayerRadioButton[i]->setSelected(false);
 
-		mainGame.GETscreen().m_vectPlayerRadioButton[i]->subscribeEvent
+		m_screen.m_vectPlayerRadioButton[i]->subscribeEvent
 		(CEGUI::RadioButton::EventMouseClick,
-			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, &mainGame));
-		mainGame.GETscreen().m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
+			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, this));
+		m_screen.m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
 
-		mainGame.GETscreen().m_widgetLabels[i] = RealEngine2D::WidgetLabel(
-			mainGame.GETscreen().m_vectPlayerRadioButton[i],
-			mainGame.getUserInputNewGame()->vectPlayerName[i],
+		m_screen.m_widgetLabels[i] = RealEngine2D::WidgetLabel(
+			m_screen.m_vectPlayerRadioButton[i],
+			m_userInputNewGame->vectPlayerName[i],
 			TEXT_SCALE);
 
 	}
 
-	newGameSettlerSpawn(mainGame.GETPlayers(), mainGame.GETmainMap());
+	newGameSettlerSpawn(m_players, m_mainMap);
 
-	SaveReload::save(mainGame);
+	SaveReload::save(*this);
 
 	/* ### Don't put code below here ### */
 
@@ -98,7 +100,7 @@ void NewGame::newGame(GamePlayScreen& mainGame)
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------------------- */
-void NewGame::newGameSettlerSpawn
+void GamePlayScreen::newGameSettlerSpawn
 (
 	Players& players,
 	const MainMap& mainMap
@@ -140,7 +142,7 @@ void NewGame::newGameSettlerSpawn
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------------------- */
-void NewGame::makeRandomPosTab
+void GamePlayScreen::makeRandomPosTab
 (
 	const MainMap& mainMap,
 	std::vector<randomPos>& tabRandom
@@ -184,7 +186,7 @@ void NewGame::makeRandomPosTab
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------------------- */
-void NewGame::makeRandomPos
+void GamePlayScreen::makeRandomPos
 (
 	randomPos& RandomPOS,
 	const MatriceMap& matriceMap,
@@ -210,7 +212,7 @@ void NewGame::makeRandomPos
 /* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
 /* ------------------------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------------------- */
-bool NewGame::conditionspace
+bool GamePlayScreen::conditionspace
 (
 	const randomPos& RandomPOS,
 	const std::vector<randomPos>& tabRandom,
@@ -247,7 +249,7 @@ bool NewGame::conditionspace
 /* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
 /* ------------------------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------------------- */
-bool NewGame::conditionground
+bool GamePlayScreen::conditionground
 (
 	const MatriceMap& matriceMap,
 	const randomPos& RandomPOS

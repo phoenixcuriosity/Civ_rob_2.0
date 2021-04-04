@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.5
+	last modification on this file on version:0.23.7.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,22 +22,16 @@
 
 */
 
-#include "GamePlaySrceen.h"
+#include "GamePlayScreen.h"
 
 #include <tinyxml2/tinyxml2.h>
 
 #include "MainMap.h"
-#include "NewGame.h"
 
 #include "Utility.h"
-#include "XmlConvertValue.h"
 
 #include "App.h"
 #include "ScreenIndices.h"
-
-
-
-
 
 GamePlayScreen::GamePlayScreen
 (
@@ -53,7 +47,6 @@ m_var(),
 m_mainMap(),
 m_nextTurn(),
 m_players(),
-m_gameInput(),
 m_file(file),
 m_SaveReload(SaveReload),
 m_window(window),
@@ -117,7 +110,7 @@ void GamePlayScreen::onEntry()
 
 	RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
-	NewGame::newGame(*this);
+	newGame();
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -356,7 +349,7 @@ void GamePlayScreen::loadUnitAndSpec()
 	while (nullptr != node)
 	{
 		currentUnit.name = node->FirstChildElement(s_Name)->GetText();
-		currentUnit.type = XmlConvertValue::xmlGiveMovementType(node->FirstChildElement(s_MovementType)->GetText());
+		currentUnit.type = xmlGiveMovementType(node->FirstChildElement(s_MovementType)->GetText());
 		node->FirstChildElement(s_Life)->QueryIntText((int*)&currentUnit.life);
 		node->FirstChildElement(s_Atq)->QueryIntText((int*)&currentUnit.atq);
 		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
@@ -554,7 +547,7 @@ void GamePlayScreen::update()
 	while (SDL_PollEvent(&ev))
 	{
 		m_game->onSDLEvent(ev);
-		GameInput::inputSDL(*this, ev);
+		inputSDL(ev);
 		m_screen.m_gui.onSDLEvent(ev, *m_inputManager);
 	}
 }

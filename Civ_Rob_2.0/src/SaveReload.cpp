@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.14
+	last modification on this file on version:0.23.7.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,9 +24,8 @@
 
 #include "SaveReload.h"
 
-#include "GamePlaySrceen.h"
+#include "GamePlayScreen.h"
 #include "MainMap.h"
-#include "XmlConvertValue.h"
 #include "App.h"
 
 #include <direct.h>
@@ -650,7 +649,7 @@ void SaveReload::loadUnitXML
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->movement_type == nullptr");
-		blankUnit->SETmovementType(XmlConvertValue::convertUintToUnit_Movement_Type((unsigned int)std::stoul(inputNode->FirstChild()->Value())));
+		blankUnit->SETmovementType(GamePlayScreen::convertUintToUnit_Movement_Type((unsigned int)std::stoul(inputNode->FirstChild()->Value())));
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->life == nullptr");
@@ -797,7 +796,7 @@ void SaveReload::loadCityXML
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->ConversionToApply == nullptr");
-		conversionSurplus_Type type = XmlConvertValue::convert2ConversionToApply(std::stoi(inputNode->FirstChild()->Value()));
+		conversionSurplus_Type type = GamePlayScreen::convert2ConversionToApply(std::stoi(inputNode->FirstChild()->Value()));
 		ptrCity->SETconversionToApply(type);
 
 
@@ -815,7 +814,7 @@ void SaveReload::loadCityXML
 
 				tinyxml2::XMLNode* nBuildQueueElementType = nBuildQueueElementName->NextSibling();
 				if (nullptr == nBuildQueueElementType) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Type == nullptr");
-				blankBluid.type = XmlConvertValue::convert2build_Type(std::stoi(nBuildQueueElementType->FirstChild()->Value()));
+				blankBluid.type = GamePlayScreen::convert2build_Type(std::stoi(nBuildQueueElementType->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nBuildQueueElementRemainingWork = nBuildQueueElementType->NextSibling();
 				if (nullptr == nBuildQueueElementRemainingWork) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->RemainingWork == nullptr");
@@ -849,7 +848,7 @@ void SaveReload::loadCityXML
 
 				tinyxml2::XMLNode* nTabCitizenElementHappiness = nTabCitizenElementtileOccupied->NextSibling();
 				if (nullptr == nTabCitizenElementHappiness) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Happiness == nullptr");
-				ptrCitizen->SEThappiness(XmlConvertValue::convert2Emotion_Type(std::stoi(nTabCitizenElementHappiness->FirstChild()->Value())));
+				ptrCitizen->SEThappiness(GamePlayScreen::convert2Emotion_Type(std::stoi(nTabCitizenElementHappiness->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementFood = nTabCitizenElementHappiness->NextSibling();
 				if (nullptr == nTabCitizenElementFood) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Food == nullptr");
@@ -865,7 +864,7 @@ void SaveReload::loadCityXML
 
 				tinyxml2::XMLNode* nTabCitizenElementReligion_Type = nTabCitizenElementGold->NextSibling();
 				if (nullptr == nTabCitizenElementReligion_Type) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Religion_Type == nullptr");
-				ptrCitizen->SETreligion(XmlConvertValue::convert2Religion_Type(std::stoi(nTabCitizenElementReligion_Type->FirstChild()->Value())));
+				ptrCitizen->SETreligion(GamePlayScreen::convert2Religion_Type(std::stoi(nTabCitizenElementReligion_Type->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementplace = nTabCitizenElementReligion_Type->NextSibling();
 				if (nullptr == nTabCitizenElementplace) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->place == nullptr");

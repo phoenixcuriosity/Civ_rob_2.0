@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.25
+	last modification on this file on version:0.23.7.0
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,8 +27,7 @@
  ********************************************************* */
 
 #include "GameInput.h"
-
-#include "GamePlaySrceen.h"
+#include "GamePlayScreen.h"
 
 
  /* *********************************************************
@@ -50,9 +49,8 @@
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::inputSDL
+void GamePlayScreen::inputSDL
 (
-	GamePlayScreen& mainGame,
 	SDL_Event& ev
 )
 {
@@ -60,21 +58,21 @@ void GameInput::inputSDL
 	{
 
 	case SDL_KEYDOWN:
-		mainGame.getInputManager()->pressKey(ev.key.keysym.sym);
+		m_inputManager->pressKey(ev.key.keysym.sym);
 			
 		break;
 	case SDL_KEYUP:
-		mainGame.getInputManager()->releaseKey(ev.key.keysym.sym);
+		m_inputManager->releaseKey(ev.key.keysym.sym);
 		break;
 		/* ---------------------------------------------------------------------- */
 		/* test sur le type d'�v�nement click souris (enfonc�)					  */
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEBUTTONDOWN:
-		mainGame.getInputManager()->pressKey(ev.button.button);
+		m_inputManager->pressKey(ev.button.button);
 		break;
 	case SDL_MOUSEBUTTONUP:
-		mainGame.getInputManager()->releaseKey(ev.button.button);
+		m_inputManager->releaseKey(ev.button.button);
 		break;
 
 		/* ---------------------------------------------------------------------- */
@@ -82,7 +80,7 @@ void GameInput::inputSDL
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEWHEEL:
-		wheel(mainGame, ev);
+		wheel(ev);
 		break;
 
 		/* ---------------------------------------------------------------------- */
@@ -90,7 +88,7 @@ void GameInput::inputSDL
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEMOTION:
-		mainGame.getInputManager()->setMouseCoords(ev.motion.x, ev.motion.y);
+		m_inputManager->setMouseCoords(ev.motion.x, ev.motion.y);
 		break;
 
 	default:
@@ -108,9 +106,8 @@ void GameInput::inputSDL
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void GameInput::wheel
+void GamePlayScreen::wheel
 (
-	GamePlayScreen& mainGame,
 	SDL_Event& ev
 )
 {
@@ -147,15 +144,15 @@ void GameInput::wheel
 	*/
 	if (MOUSE_SCROLL_UP == ev.wheel.y)
 	{
-		mainGame.GETscreen().camera
-			.SETscale(mainGame.GETscreen().camera.GETscale()
-						+ MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().camera.GETscale());
+		m_screen.camera
+			.SETscale(m_screen.camera.GETscale()
+						+ MOUSE_SCROLL_SPEED_PERC * m_screen.camera.GETscale());
 	}
 	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
-		mainGame.GETscreen().camera
-			.SETscale(mainGame.GETscreen().camera.GETscale() 
-				- MOUSE_SCROLL_SPEED_PERC * mainGame.GETscreen().camera.GETscale());
+		m_screen.camera
+			.SETscale(m_screen.camera.GETscale()
+				- MOUSE_SCROLL_SPEED_PERC * m_screen.camera.GETscale());
 	}
 }
 

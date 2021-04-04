@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.19
+	last modification on this file on version:0.23.7.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -415,10 +415,27 @@ bool Unit::irrigate
   /* INPUT : void																		   */
   /* ----------------------------------------------------------------------------------- */
   /* ----------------------------------------------------------------------------------- */
-Unit::Unit() : m_name(EMPTY_STRING), m_x(0), m_y(0), m_movementType(Unit_Movement_Type::ground),
-m_maxlife(100), m_maxatq(10), m_maxdef(5), m_maxmovement(1), m_maxlevel(100),
-m_life(100), m_atq(10), m_def(5), m_movement(1), m_level(1), m_maintenance(1),
-m_alive(true), m_blit(ZERO_BLIT), m_show(true), m_showStats(false)
+Unit::Unit()
+: 
+m_name(EMPTY_STRING), 
+m_x(0),
+m_y(0),
+m_movementType(Unit_Movement_Type::ground),
+m_maxlife(100),
+m_maxatq(10),
+m_maxdef(5),
+m_maxmovement(1),
+m_maxlevel(100),
+m_life(100), 
+m_atq(10),
+m_def(5),
+m_movement(1),
+m_level(1),
+m_alive(true),
+m_maintenance(1.0),
+m_blit(ZERO_BLIT),
+m_show(true),
+m_showStats(false)
 {
 	App::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
@@ -450,11 +467,26 @@ Unit::Unit
 	unsigned int level,
 	double maintenance
 )
-	: m_name(name), m_x(x), m_y(y), m_movementType(movementType),
-	m_maxlife(life), m_maxatq(atq), m_maxdef(def), m_maxmovement(move), m_maxlevel(level),
-	m_life(life), m_atq(atq), m_def(def), m_movement(move), m_level(level),
-	m_maintenance(maintenance),
-	m_alive(true), m_blit(ZERO_BLIT), m_show(true), m_showStats(false)
+:
+m_name(name),
+m_x(x),
+m_y(y),
+m_movementType(movementType),
+m_maxlife(life),
+m_maxatq(atq),
+m_maxdef(def),
+m_maxmovement(move),
+m_maxlevel(level),
+m_life(life),
+m_atq(atq),
+m_def(def), 
+m_movement(move),
+m_level(level),
+m_alive(true),
+m_maintenance(maintenance),
+m_blit(ZERO_BLIT),
+m_show(true),
+m_showStats(false)
 {
 	App::logfileconsole("[INFO]___: Create Unit:  Success");
 }

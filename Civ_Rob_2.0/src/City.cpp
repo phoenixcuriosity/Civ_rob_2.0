@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.31
+	last modification on this file on version:0.23.7.0
+	file version : 1.32
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,6 @@
 #include "Utility.h"
 #include "Citizen.h"
 
-#include "GamePlaySrceen.h"
 #include "App.h"
 #include <RealEngine2D/src/Window.h>
 
@@ -322,12 +321,27 @@ City::City
 	unsigned int y,
 	VectMap& tiles
 )
-	: m_image("citie.png"),
-	m_name(name), m_x(x), m_y(y), m_tile(tiles),
-	m_influenceLevel(MIN_INFLUENCE_LEVEL), m_nbpop(MIN_POP), m_atq(0), m_def(0), m_emotion((unsigned int)MEAN_EMOTION), m_nbstructurebuild(0),
-	m_foodStock(CITY_ZERO_FOOD), m_foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)].food),
-	m_foodSurplusPreviousTurn(CITY_ZERO_FOOD), m_workBalance(0), m_workSurplusPreviousTurn(0), m_goldBalance(0.0),
-	m_conversionToApply(conversionSurplus_Type::No_Conversion)
+	: 
+	m_image("citie.png"),
+	m_name(name),
+	m_x(x),
+	m_y(y),
+	m_tile(tiles),
+	m_citizens(),
+	m_influenceLevel(MIN_INFLUENCE_LEVEL),
+	m_nbpop(MIN_POP),
+	m_atq(0),
+	m_def(0),
+	m_emotion((unsigned int)MEAN_EMOTION),
+	m_nbstructurebuild(0),
+	m_foodStock(CITY_ZERO_FOOD),
+	m_foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)].food),
+	m_foodSurplusPreviousTurn(CITY_ZERO_FOOD),
+	m_workBalance(0),
+	m_workSurplusPreviousTurn(0),
+	m_goldBalance(0.0),
+	m_conversionToApply(conversionSurplus_Type::No_Conversion),
+	m_buildQueue()
 {
 	m_citizens.push_back
 	(
@@ -348,9 +362,6 @@ City::City
 City::~City()
 {
 	resetTabCitizen();
-
-
-
 
 	App::logfileconsole("[INFO]___: Destroy Citie: " + m_name + " Success");
 }

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.15
+	last modification on this file on version:0.23.7.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -48,7 +48,10 @@
 /* ----------------------------------------------------------------------------------- */
 Player::Player() :
 	m_name("NoName"),
-	m_selectedUnit(NO_UNIT_SELECTED), m_selectedCity(NO_CITY_SELECTED),
+	m_tabUnit(),
+	m_tabCity(),
+	m_selectedUnit(NO_UNIT_SELECTED),
+	m_selectedCity(NO_CITY_SELECTED),
 	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
@@ -338,11 +341,16 @@ void Player::addGoldToGoldConversionSurplus
 
 
 
-
-
-
 Players::Players()
-:m_selectedPlayer(NO_PLAYER_SELECTED), m_citiesNameMaxToCreate(0)
+:
+m_selectedPlayer(NO_PLAYER_SELECTED),
+m_citiesNameMaxToCreate(0),
+m_vectCityName(),
+m_vectUnitTemplate(),
+m_vectID(),
+m_vectPlayer(),
+m_spriteBatchUnit(),
+m_needToUpdateDrawUnit(true)
 {
 
 }

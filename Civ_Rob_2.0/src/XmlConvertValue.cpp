@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.2
+	last modification on this file on version:0.23.7.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,7 +26,7 @@
  *						Includes						   *
  ********************************************************* */
 
-#include "XmlConvertValue.h"
+#include "GamePlayScreen.h"
 
 #include "App.h"
 
@@ -43,7 +43,7 @@
   /* RETURNED VALUE    : State_Type																			  */
   /* ---------------------------------------------------------------------------------------------------------- */
   /* ---------------------------------------------------------------------------------------------------------- */
-State_Type XmlConvertValue::xmlGiveStateType
+State_Type GamePlayScreen::xmlGiveStateType
 (
 	std::string type
 )
@@ -90,7 +90,7 @@ State_Type XmlConvertValue::xmlGiveStateType
 /* RETURNED VALUE    : Select_Type																			  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Select_Type XmlConvertValue::xmlGiveSelectType
+Select_Type GamePlayScreen::xmlGiveSelectType
 (
 	std::string type
 )
@@ -130,7 +130,7 @@ Select_Type XmlConvertValue::xmlGiveSelectType
 /* RETURNED VALUE    : Unit_Movement_Type																	  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Unit_Movement_Type XmlConvertValue::convertUintToUnit_Movement_Type
+Unit_Movement_Type GamePlayScreen::convertUintToUnit_Movement_Type
 (
 	unsigned int toConvert
 )
@@ -152,7 +152,7 @@ Unit_Movement_Type XmlConvertValue::convertUintToUnit_Movement_Type
 }
 
 
-Unit_Movement_Type XmlConvertValue::xmlGiveMovementType
+Unit_Movement_Type GamePlayScreen::xmlGiveMovementType
 (
 	std::string type
 )
@@ -188,7 +188,7 @@ Unit_Movement_Type XmlConvertValue::xmlGiveMovementType
 /* RETURNED VALUE    : conversionSurplus_Type																  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-conversionSurplus_Type XmlConvertValue::convert2ConversionToApply
+conversionSurplus_Type GamePlayScreen::convert2ConversionToApply
 (
 	int toConvert
 )
@@ -224,7 +224,7 @@ conversionSurplus_Type XmlConvertValue::convert2ConversionToApply
 /* RETURNED VALUE    : build_Type																			  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-build_Type XmlConvertValue::convert2build_Type
+build_Type GamePlayScreen::convert2build_Type
 (
 	int toConvert
 )
@@ -250,7 +250,7 @@ build_Type XmlConvertValue::convert2build_Type
 /* RETURNED VALUE    : Emotion_Type																			  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Emotion_Type XmlConvertValue::convert2Emotion_Type
+Emotion_Type GamePlayScreen::convert2Emotion_Type
 (
 	int toConvert
 )
@@ -282,7 +282,7 @@ Emotion_Type XmlConvertValue::convert2Emotion_Type
 /* RETURNED VALUE    : Religion_Type																		  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Religion_Type XmlConvertValue::convert2Religion_Type
+Religion_Type GamePlayScreen::convert2Religion_Type
 (
 	int toConvert
 )

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.12
+	last modification on this file on version:0.23.7.0
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -289,7 +289,7 @@ private:
 };
 
 typedef std::vector<Player*> VectPlayer;
-
+typedef std::vector<GLuint> VectID;
 
 class Players
 {
@@ -339,13 +339,13 @@ private:
 
 	// tableau des statistiques par défauts des unités
 	VectUnitTemplate m_vectUnitTemplate;
-	std::vector<GLuint> m_vectID;
+	VectID m_vectID;
 
 	VectPlayer m_vectPlayer;
 
 	/* Dedicated spriteBatch for all Unit */
 	RealEngine2D::SpriteBatch m_spriteBatchUnit;
-	bool m_needToUpdateDrawUnit = true;
+	bool m_needToUpdateDrawUnit;
 };
 
 

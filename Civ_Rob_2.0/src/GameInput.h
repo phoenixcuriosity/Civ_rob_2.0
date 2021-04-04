@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.2
+	last modification on this file on version:0.23.7.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,8 +30,6 @@
  ********************************************************* */
 
 #include "LIB.h"
-
-#include <SDL/SDL_events.h>
 
 class GamePlayScreen;
 
@@ -75,55 +73,6 @@ enum class CinState_Type : unsigned int
 
  /* N/A */
 
- /* *********************************************************
-  *						 Classes						   *
-  ********************************************************* */
-
-class GameInput
-{
-public:
-	/* *********************************************************
-	 *					KeyboardMouse STATIC				   *
-	 ********************************************************* */
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : run_SDL																					    	  */
-	/* ROLE : Recherche infini des �venements d'entr� de type SDL_event : souris, clavier					      */
-	/* ROLE : Si aucun �venements n'est trouv� alors le programme continue									      */
-	/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void inputSDL
-	(
-		GamePlayScreen& mainGame,
-		SDL_Event& ev
-	);
-	
-
-
-public:
-	/* *********************************************************
-	 *			KeyboardMouse::STATIC::SOURIS				   *
-	 ********************************************************* */
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : wheel																						    	  */
-	/* ROLE : Recherche l'incr�mentation ou d�cr�mentation du contexte										      */
-	/* INPUT : struct Sysinfo& : structure globale du programme												      */
-	/* INPUT : int& wheel : l'�venement de scroll de la souris													  */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void wheel
-	(
-		GamePlayScreen& mainGame,
-		SDL_Event& ev
-	);
-
-};
 
 #endif /* GameInput_H */
 
