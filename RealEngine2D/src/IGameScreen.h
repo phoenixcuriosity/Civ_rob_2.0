@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.0
+	last modification on this file on version:0.23.8.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -45,7 +45,13 @@ enum class ScreenState
 class IGameScreen
 {
 public:
-	IGameScreen() {};
+	IGameScreen():
+	m_game(nullptr),
+	m_screenIndex(INIT_SCREEN_INDEX),
+	m_currentState(ScreenState::NONE)
+	{};
+
+
 	virtual ~IGameScreen() {};
 
 	virtual int getNextScreenIndex()const = 0;
@@ -69,9 +75,9 @@ public:
 	void setParentGame(IMainGame* game) { m_game = game; }
 
 protected:
-	IMainGame* m_game = nullptr;
-	int m_screenIndex = INIT_SCREEN_INDEX;
-	ScreenState m_currentState = ScreenState::NONE;
+	IMainGame* m_game;
+	int m_screenIndex;
+	ScreenState m_currentState;
 };
 
 }

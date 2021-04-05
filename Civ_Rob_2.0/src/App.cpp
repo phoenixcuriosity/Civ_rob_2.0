@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.4
+	last modification on this file on version:0.23.8.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -34,6 +34,7 @@ static std::ofstream* ptrlogger;
 
 App::App()
 :
+RealEngine2D::IMainGame(),
 m_mainMenuScreen(nullptr),
 m_newGameScreen(nullptr),
 m_reloadMenuScreen(nullptr),
@@ -46,10 +47,10 @@ m_saveReload()
 
 App::~App()
 {
-	delete m_mainMenuScreen;
-	delete m_newGameScreen;
-	delete m_reloadMenuScreen;
-	delete m_gamePlayScreen;
+	m_mainMenuScreen.reset();
+	m_newGameScreen.reset();
+	m_reloadMenuScreen.reset();
+	m_gamePlayScreen.reset();
 	deleteAll();
 }
 
@@ -76,10 +77,10 @@ void App::onExit()
 
 void App::addScreens()
 {
-	m_mainMenuScreen = new MainMenuScreen(&m_file, &m_window, &m_inputManager);
-	m_newGameScreen = new NewGameScreen(&m_file, &m_window, &m_inputManager);
-	m_reloadMenuScreen = new  ReloadMenuScreen(&m_file, &m_saveReload, &m_window, &m_inputManager);
-	m_gamePlayScreen = new GamePlayScreen(&m_file, &m_saveReload, &m_window, &m_inputManager, m_newGameScreen->getUserInputNewGame());
+	m_mainMenuScreen = std::make_shared<MainMenuScreen>(&m_file, &m_window, &m_inputManager);
+	m_newGameScreen = std::make_shared<NewGameScreen>(&m_file, &m_window, &m_inputManager);
+	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>(&m_file, &m_saveReload, &m_window, &m_inputManager);
+	m_gamePlayScreen = std::make_shared<GamePlayScreen>(&m_file, &m_saveReload, &m_window, &m_inputManager, m_newGameScreen->getUserInputNewGame());
 
 	m_screenList->addScreen(m_mainMenuScreen);
 	m_screenList->addScreen(m_newGameScreen);

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.2
+	last modification on this file on version:0.23.8.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,23 +40,25 @@ ScreenList::~ScreenList()
 	destroy();
 }
 
-IGameScreen* ScreenList::moveNext()
+std::shared_ptr<IGameScreen> ScreenList::moveNext()
 {
-	IGameScreen* currentScreen = getCurrent();
+	std::shared_ptr<IGameScreen> currentScreen = getCurrent();
 	if (currentScreen->getNextScreenIndex() != INIT_SCREEN_INDEX)
 	{
 		m_currentScreenIndex = currentScreen->getNextScreenIndex();
 	}
+	currentScreen.reset();
 	return getCurrent();
 }
 
-IGameScreen* ScreenList::movePrevious()
+std::shared_ptr<IGameScreen> ScreenList::movePrevious()
 {
-	IGameScreen* currentScreen = getCurrent();
+	std::shared_ptr<IGameScreen> currentScreen = getCurrent();
 	if (currentScreen->getPreviousScreenIndex() != INIT_SCREEN_INDEX)
 	{
 		m_currentScreenIndex = currentScreen->getPreviousScreenIndex();
 	}
+	currentScreen.reset();
 	return getCurrent();
 }
 
@@ -64,7 +66,7 @@ void ScreenList::setScreen(int nextScreen)
 {
 	m_currentScreenIndex = nextScreen;
 }
-void ScreenList::addScreen(IGameScreen* newScreen)
+void ScreenList::addScreen(std::shared_ptr<IGameScreen> newScreen)
 {
 	newScreen->setScreenIndex((int)m_screens.size());
 	m_screens.push_back(newScreen);
@@ -74,15 +76,17 @@ void ScreenList::addScreen(IGameScreen* newScreen)
 
 void ScreenList::destroy()
 {
-	for (size_t i(0); i < m_screens.size(); i++)
+	for (auto s : m_screens)
 	{
-		m_screens[i]->destroy();
+		s->destroy();
+		s.reset();
 	}
 	m_screens.resize(0);
+	m_screens.clear();
 	m_currentScreenIndex = INIT_SCREEN_INDEX;
 }
 
-IGameScreen* ScreenList::getCurrent()
+std::shared_ptr<IGameScreen> ScreenList::getCurrent()
 {
 	if (INIT_SCREEN_INDEX == m_currentScreenIndex) return nullptr;
 	return m_screens[m_currentScreenIndex];

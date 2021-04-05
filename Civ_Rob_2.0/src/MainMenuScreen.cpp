@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.0
+	last modification on this file on version:0.23.8.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,7 +33,13 @@ MainMenuScreen::MainMenuScreen
 	RealEngine2D::Window* window,
 	RealEngine2D::InputManager* inputManager
 )
-	: m_file(file), m_window(window), m_inputManager(inputManager)
+: 
+RealEngine2D::IGameScreen(),
+m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
+m_gui(),
+m_file(file),
+m_window(window),
+m_inputManager(inputManager)
 {
 	m_screenIndex = MAINMENU_SCREEN_INDEX;
 }

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.2
+	last modification on this file on version:0.23.8.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -103,7 +103,7 @@ private:
 	RealEngine2D::GUI m_gui;
 	std::vector<CEGUI::RadioButton*> m_vectSavesRadioButton;
 	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
-	RealEngine2D::SpriteFont* m_spriteFont;
+	std::unique_ptr<RealEngine2D::SpriteFont> m_spriteFont;
 	RealEngine2D::SpriteBatch m_spriteBatchHUDDynamic;
 
 	File* m_file = nullptr;
