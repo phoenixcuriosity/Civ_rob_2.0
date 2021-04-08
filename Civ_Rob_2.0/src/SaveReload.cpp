@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.15
+	last modification on this file on version:0.23.9.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -747,7 +747,7 @@ void SaveReload::loadCityXML
 
 		City::fillCitieTiles
 		(
-			*mainGame.getwindow(),
+			mainGame.getParentWindow(),
 			middletileX,
 			middletileY,
 			mainGame.GETPlayers().GETselectedPlayer(),

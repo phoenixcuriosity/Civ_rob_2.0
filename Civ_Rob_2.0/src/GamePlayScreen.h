@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.7
+	last modification on this file on version:0.23.9.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,7 @@
 #include "LIB.h"
 
 #include <RealEngine2D/src/IGameScreen.h>
+#include <RealEngine2D/src/IMainGame.h>
 #include <RealEngine2D/src/GLSLProgram.h>
 #include <RealEngine2D/src/Camera2D.h>
 #include <RealEngine2D/src/WidgetLabel.h>
@@ -133,8 +134,6 @@ public:
 	(
 		File* file,
 		SaveReload* SaveReload,
-		RealEngine2D::Window* window,
-		RealEngine2D::InputManager* inputManager,
 		UserInputNewGame* userInputNewGame
 	);
 
@@ -503,14 +502,13 @@ public:
 	inline const Players& GETPlayers()const { return m_players; };
 	inline File* getFile() { return m_file; };
 	inline SaveReload* getSaveReload() { return m_SaveReload; };
-	inline const RealEngine2D::Window* getwindow() { return m_window; };
-	inline RealEngine2D::InputManager* getInputManager() { return m_inputManager; };
 	inline UserInputNewGame* getUserInputNewGame() { return m_userInputNewGame; };
 
 	inline void SETvar(Var& var) { m_var = var; };
 	inline void SETmainMap(MainMap& mainMap) { m_mainMap = mainMap; };
 	inline void SETPlayers(Players& players) { m_players = players; };
 
+	inline RealEngine2D::Window& getParentWindow() { return m_game->getWindow(); }
 
 private:
 
@@ -526,8 +524,6 @@ private:
 
 	File* m_file;
 	SaveReload* m_SaveReload;
-	RealEngine2D::Window* m_window;
-	RealEngine2D::InputManager* m_inputManager;
 	UserInputNewGame* m_userInputNewGame;
 };
 

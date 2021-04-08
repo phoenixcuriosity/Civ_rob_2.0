@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.7
+	last modification on this file on version:0.23.9.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,8 +37,6 @@ GamePlayScreen::GamePlayScreen
 (
 	File* file,
 	SaveReload* SaveReload,
-	RealEngine2D::Window* window,
-	RealEngine2D::InputManager* inputManager,
 	UserInputNewGame* userInputNewGame
 )
 : 
@@ -50,8 +48,6 @@ m_nextTurn(),
 m_players(),
 m_file(file),
 m_SaveReload(SaveReload),
-m_window(window),
-m_inputManager(inputManager),
 m_userInputNewGame(userInputNewGame)
 {
 	m_screenIndex = GAMEPLAY_SCREEN_INDEX;
@@ -193,7 +189,7 @@ void GamePlayScreen::initStructsNULL()
 /* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::computeSize()
 {
-	m_mainMap.SETtoolBarSize((unsigned int)Utility::protectedDiv((m_window->GETscreenWidth() / 10), m_mainMap.GETtileSize()));
+	m_mainMap.SETtoolBarSize((unsigned int)Utility::protectedDiv((m_game->getWindow().GETscreenWidth() / 10), m_mainMap.GETtileSize()));
 }
 
 
@@ -206,10 +202,10 @@ void GamePlayScreen::computeSize()
 /* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::initOpenGLScreen()
 {
-	m_screen.camera.init(m_window->GETscreenWidth(), m_window->GETscreenHeight());
-	m_screen.camera.SETposition(glm::vec2(m_window->GETscreenWidth() / 2, m_window->GETscreenHeight() / 2));
-	m_screen.cameraHUD.init(m_window->GETscreenWidth(), m_window->GETscreenHeight());
-	m_screen.cameraHUD.SETposition(glm::vec2(m_window->GETscreenWidth() / 2, m_window->GETscreenHeight() / 2));
+	m_screen.camera.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+	m_screen.camera.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
+	m_screen.cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+	m_screen.cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
 
 	m_mainMap.GETspriteBatch().init();
 	m_screen.spriteBatchHUDDynamic.init();
@@ -218,7 +214,7 @@ void GamePlayScreen::initOpenGLScreen()
 
 	m_screen.audioEngine.init();
 
-	m_inputManager->init(m_mainMap.GETtileSizePtr());
+	m_game->getInputManager().init(m_mainMap.GETtileSizePtr());
 
 	m_screen.m_gui.init(m_file->GUIPath);
 }
@@ -373,10 +369,10 @@ void GamePlayScreen::loadUnitAndSpec()
 
 void GamePlayScreen::draw()
 {
-	if (m_inputManager->isKeyDown(SDLK_SPACE))
+	if (m_game->getInputManager().isKeyDown(SDLK_SPACE))
 	{
 		m_nextTurn.nextTurn(*this);
-		m_inputManager->releaseKey(SDLK_SPACE);
+		m_game->getInputManager().releaseKey(SDLK_SPACE);
 	}
 
 	moveCameraByDeltaTime();
@@ -410,7 +406,7 @@ void GamePlayScreen::moveCameraByDeltaTime()
 
 void GamePlayScreen::moveCamera(float deltaTime)
 {
-	if (m_inputManager->isKeyDown(SDLK_z))
+	if (m_game->getInputManager().isKeyDown(SDLK_z))
 	{
 		m_screen.camera
 			.SETposition
@@ -422,7 +418,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	if (m_inputManager->isKeyDown(SDLK_s))
+	if (m_game->getInputManager().isKeyDown(SDLK_s))
 	{
 		m_screen.camera
 			.SETposition
@@ -434,7 +430,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	if (m_inputManager->isKeyDown(SDLK_q))
+	if (m_game->getInputManager().isKeyDown(SDLK_q))
 	{
 		m_screen.camera
 			.SETposition
@@ -446,7 +442,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	if (m_inputManager->isKeyDown(SDLK_d))
+	if (m_game->getInputManager().isKeyDown(SDLK_d))
 	{
 		m_screen.camera
 			.SETposition
@@ -533,7 +529,7 @@ void GamePlayScreen::drawHUD()
 	);
 
 	for (auto& l : m_screen.m_widgetLabels) 
-		l.draw(m_screen.spriteBatchHUDDynamic, *m_screen.spriteFont, m_window);
+		l.draw(m_screen.spriteBatchHUDDynamic, *m_screen.spriteFont, m_game->getWindow());
 
 
 	m_screen.spriteBatchHUDDynamic.end();
@@ -549,7 +545,7 @@ void GamePlayScreen::update()
 	{
 		m_game->onSDLEvent(ev);
 		inputSDL(ev);
-		m_screen.m_gui.onSDLEvent(ev, *m_inputManager);
+		m_screen.m_gui.onSDLEvent(ev, m_game->getInputManager());
 	}
 }
 

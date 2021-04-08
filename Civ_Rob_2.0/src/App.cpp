@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.5
+	last modification on this file on version:0.23.9.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -77,10 +77,10 @@ void App::onExit()
 
 void App::addScreens()
 {
-	m_mainMenuScreen = std::make_shared<MainMenuScreen>(&m_file, &m_window, &m_inputManager);
-	m_newGameScreen = std::make_shared<NewGameScreen>(&m_file, &m_window, &m_inputManager);
-	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>(&m_file, &m_saveReload, &m_window, &m_inputManager);
-	m_gamePlayScreen = std::make_shared<GamePlayScreen>(&m_file, &m_saveReload, &m_window, &m_inputManager, m_newGameScreen->getUserInputNewGame());
+	m_mainMenuScreen = std::make_shared<MainMenuScreen>(&m_file);
+	m_newGameScreen = std::make_shared<NewGameScreen>(&m_file);
+	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>(&m_file, &m_saveReload);
+	m_gamePlayScreen = std::make_shared<GamePlayScreen>(&m_file, &m_saveReload, m_newGameScreen->getUserInputNewGame());
 
 	m_screenList->addScreen(m_mainMenuScreen);
 	m_screenList->addScreen(m_newGameScreen);

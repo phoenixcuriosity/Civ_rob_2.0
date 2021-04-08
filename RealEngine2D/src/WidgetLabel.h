@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.5.0
-	file version : 1.0
+	last modification on this file on version:0.23.9.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,7 +46,7 @@ public:
 	WidgetLabel() {};
 	WidgetLabel(CEGUI::Window* w, const std::string& text, float scale) :
 		widget(w), text(text), scale(scale) {};
-	void draw(SpriteBatch& sb, SpriteFont& sf, Window* w);
+	void draw(SpriteBatch& sb, SpriteFont& sf, Window& w);
 
 	CEGUI::Window* widget = nullptr;
 	std::string text = "";

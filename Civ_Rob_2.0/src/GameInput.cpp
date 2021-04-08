@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.26
+	last modification on this file on version:0.23.9.0
+	file version : 1.27
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,7 @@
 #include "GameInput.h"
 #include "GamePlayScreen.h"
 
+#include "App.h"
 
  /* *********************************************************
   *						 Classes						   *
@@ -58,21 +59,21 @@ void GamePlayScreen::inputSDL
 	{
 
 	case SDL_KEYDOWN:
-		m_inputManager->pressKey(ev.key.keysym.sym);
+		m_game->getInputManager().pressKey(ev.key.keysym.sym);
 			
 		break;
 	case SDL_KEYUP:
-		m_inputManager->releaseKey(ev.key.keysym.sym);
+		m_game->getInputManager().releaseKey(ev.key.keysym.sym);
 		break;
 		/* ---------------------------------------------------------------------- */
 		/* test sur le type d'�v�nement click souris (enfonc�)					  */
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEBUTTONDOWN:
-		m_inputManager->pressKey(ev.button.button);
+		m_game->getInputManager().pressKey(ev.button.button);
 		break;
 	case SDL_MOUSEBUTTONUP:
-		m_inputManager->releaseKey(ev.button.button);
+		m_game->getInputManager().releaseKey(ev.button.button);
 		break;
 
 		/* ---------------------------------------------------------------------- */
@@ -88,7 +89,7 @@ void GamePlayScreen::inputSDL
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEMOTION:
-		m_inputManager->setMouseCoords(ev.motion.x, ev.motion.y);
+		m_game->getInputManager().setMouseCoords(ev.motion.x, ev.motion.y);
 		break;
 
 	default:

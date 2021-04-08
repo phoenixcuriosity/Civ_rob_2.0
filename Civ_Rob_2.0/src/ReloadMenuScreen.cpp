@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.2
+	last modification on this file on version:0.23.9.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,9 +33,7 @@
 ReloadMenuScreen::ReloadMenuScreen
 (
 	File* file,
-	SaveReload* SaveReload,
-	RealEngine2D::Window* window,
-	RealEngine2D::InputManager* inputManager
+	SaveReload* SaveReload
 )
 :
 RealEngine2D::IGameScreen(),
@@ -48,9 +46,7 @@ m_widgetLabels(),
 m_spriteFont(nullptr),
 m_spriteBatchHUDDynamic(),
 m_file(file),
-m_SaveReload(SaveReload),
-m_window(window),
-m_inputManager(inputManager)
+m_SaveReload(SaveReload)
 {
 	m_screenIndex = MAINMENU_SCREEN_INDEX;
 }
@@ -100,8 +96,8 @@ void ReloadMenuScreen::onEntry()
 /* ----------------------------------------------------------------------------------- */
 void ReloadMenuScreen::initOpenGLScreen()
 {
-	m_cameraHUD.init(m_window->GETscreenWidth(), m_window->GETscreenHeight());
-	m_cameraHUD.SETposition(glm::vec2(m_window->GETscreenWidth() / 2, m_window->GETscreenHeight() / 2));
+	m_cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+	m_cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
 
 	m_spriteBatchHUDDynamic.init();
 	m_spriteFont = std::make_unique<RealEngine2D::SpriteFont>("times.ttf", 64);
@@ -256,7 +252,7 @@ void ReloadMenuScreen::draw()
 		if (m_vectSavesRadioButton[i]->isVisible())
 		{
 			butDrawn++;
-			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *m_spriteFont, m_window);
+			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *m_spriteFont, m_game->getWindow());
 		}
 	}
 
@@ -278,7 +274,7 @@ void ReloadMenuScreen::update()
 	while (SDL_PollEvent(&ev))
 	{
 		m_game->onSDLEvent(ev);
-		m_gui.onSDLEvent(ev, *m_inputManager);
+		m_gui.onSDLEvent(ev, m_game->getInputManager());
 	}
 }
 

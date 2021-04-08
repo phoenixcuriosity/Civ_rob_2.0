@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.1
+	last modification on this file on version:0.23.9.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,17 +29,13 @@
 
 MainMenuScreen::MainMenuScreen
 (
-	File* file,
-	RealEngine2D::Window* window,
-	RealEngine2D::InputManager* inputManager
+	File* file
 )
 : 
 RealEngine2D::IGameScreen(),
 m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
 m_gui(),
-m_file(file),
-m_window(window),
-m_inputManager(inputManager)
+m_file(file)
 {
 	m_screenIndex = MAINMENU_SCREEN_INDEX;
 }
@@ -150,8 +146,8 @@ void MainMenuScreen::update()
 	SDL_Event ev;
 	while (SDL_PollEvent(&ev))
 	{
+		m_gui.onSDLEvent(ev, m_game->getInputManager());
 		m_game->onSDLEvent(ev);
-		m_gui.onSDLEvent(ev, *m_inputManager);
 	}
 }
 

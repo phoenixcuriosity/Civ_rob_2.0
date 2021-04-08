@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.2
+	last modification on this file on version:0.23.9.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -49,8 +49,6 @@ public:
 	virtual void onExit() = 0;
 	virtual void addScreens() = 0;
 
-	const float getFPS()const { return m_fps; };
-
 	void onSDLEvent(SDL_Event& ev);
 	
 protected:
@@ -61,6 +59,13 @@ protected:
 
 	bool init();
 	bool initSystem();
+
+public:
+
+	float getFPS()const { return m_fps; };
+	bool getIsRunning()const { return m_isRunning; }
+	Window& getWindow() { return m_window; };
+	InputManager& getInputManager() { return m_inputManager; };
 
 protected:
 	std::unique_ptr<ScreenList> m_screenList;
