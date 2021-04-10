@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.16
+	last modification on this file on version:0.23.12.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -119,24 +119,15 @@ Player& Player::operator=
 /* ----------------------------------------------------------------------------------- */
 void Player::deletePlayer()
 {
-
-	unsigned int size((unsigned int)m_tabUnit.size());
-
-	for (unsigned int i(0); i < size; i++)
+	for (auto u : m_tabUnit)
 	{
-		delete m_tabUnit[i];
-
-		//MainGame::logfileconsole("[INFO]___: Kill Unit n:" + std::to_string(i) + " of Player: " + m_name + " Success");
+		u.reset();
 	}
 	m_tabUnit.clear();
-	
-	size = (unsigned int)m_tabCity.size();
 
-	for (unsigned int i(0); i < size; i++)
+	for (auto c : m_tabCity)
 	{
-		delete m_tabCity[i];
-
-		//MainGame::logfileconsole("[INFO]___: Kill Citie n:" + std::to_string(i) + " of Player: " + m_name + " Success");
+		c.reset();
 	}
 	m_tabCity.clear();
 		
@@ -152,7 +143,7 @@ void Player::deletePlayer()
 /* ----------------------------------------------------------------------------------- */
 void Player::addEmptyUnit()
 {
-	m_tabUnit.push_back(new Unit());
+	m_tabUnit.push_back(std::make_shared<Unit>());
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -177,7 +168,7 @@ void Player::addUnit
 	double maintenance
 )
 {
-	m_tabUnit.push_back(new Unit(name, x, y, movementType, life, atq, def, move, level, maintenance));
+	m_tabUnit.push_back(std::make_shared<Unit>(name, x, y, movementType, life, atq, def, move, level, maintenance));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -197,7 +188,7 @@ void Player::deleteUnit
 	{
 		if (nullptr != m_tabUnit[index])
 		{
-			delete m_tabUnit[index];
+			m_tabUnit[index].reset();
 			if (m_tabUnit.size() > 1 && index < m_tabUnit.size() - 1)
 			{
 				for (unsigned int i(index); i < (m_tabUnit.size() - 1); i++)
@@ -228,7 +219,7 @@ void Player::addCity
 	VectMap& tiles
 )
 {
-	m_tabCity.push_back(new City(name, x, y, tiles));
+	m_tabCity.push_back(std::make_shared<City>(name, x, y, tiles));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -249,7 +240,7 @@ void Player::deleteCity
 	{
 		if (nullptr != m_tabCity[index])
 		{
-			delete m_tabCity[index];
+			m_tabCity[index].reset();
 			if (m_tabCity.size() > 1 && index < m_tabCity.size() - 1)
 			{
 				for (unsigned int i(index); i < (m_tabCity.size() - 1); i++)
@@ -395,7 +386,7 @@ void Players::init(const std::string& filePath)
 
 void Players::addPlayer(const std::string& name)
 {
-	m_vectPlayer.push_back(new Player(name));
+	m_vectPlayer.push_back(std::make_shared<Player>(name));
 }
 
 void Players::removeIndexPlayer
@@ -405,10 +396,7 @@ void Players::removeIndexPlayer
 {
 	if (Utility::assertSize(m_vectPlayer.size(), index))
 	{
-		if (nullptr != m_vectPlayer[index])
-		{
-			delete m_vectPlayer[index];
-		}
+		m_vectPlayer[index].reset();
 	}
 	else
 	{
@@ -431,7 +419,7 @@ void Players::drawUnit
 		{
 			for (unsigned int j(0); j < m_vectPlayer[i]->GETtabUnit().size(); j++)
 			{
-				Unit* unit = m_vectPlayer[i]->GETtabUnit()[j];
+				std::shared_ptr<Unit>unit(m_vectPlayer[i]->GETtabUnit()[j]);
 				if	(
 						camera.isBoxInView
 						(
@@ -484,6 +472,7 @@ void Players::drawUnit
 					);
 
 				}
+				unit.reset();
 			}
 		}
 

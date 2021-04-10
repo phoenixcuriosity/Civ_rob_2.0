@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.13
+	last modification on this file on version:0.23.12.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,8 @@
 #include "LIB.h"
 
 #include "Unit.h"
+
+#include <memory>
 
 /* *********************************************************
  *						Constantes						   *
@@ -260,8 +262,8 @@ public:
 
 
 	inline virtual std::string GETname() const { return m_name; };
-	inline virtual std::vector<Unit*> GETtabUnit() const { return m_tabUnit; };
-	inline virtual std::vector<City*> GETtabCity() const { return m_tabCity; };
+	inline virtual std::vector<std::shared_ptr<Unit>> GETtabUnit() const { return m_tabUnit; };
+	inline virtual std::vector<std::shared_ptr<City>> GETtabCity() const { return m_tabCity; };
 	inline virtual int GETselectedUnit()const { return m_selectedUnit; };
 	inline virtual int GETselectedCity() { return m_selectedCity; };
 	inline virtual GoldStats& GETgoldStats() { return m_goldStats; };
@@ -280,15 +282,15 @@ private:
 
 
 	std::string m_name;
-	std::vector<Unit*> m_tabUnit;
-	std::vector<City*> m_tabCity;
+	std::vector<std::shared_ptr<Unit>> m_tabUnit;
+	std::vector<std::shared_ptr<City>> m_tabCity;
 	int m_selectedCity;
 	int m_selectedUnit;
 	GoldStats m_goldStats;
 	OnOffDisplay m_onOffDisplay;
 };
 
-typedef std::vector<Player*> VectPlayer;
+typedef std::vector< std::shared_ptr<Player>> VectPlayer;
 typedef std::vector<GLuint> VectID;
 
 class Players

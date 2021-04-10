@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.33
+	last modification on this file on version:0.23.12.0
+	file version : 1.34
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -56,9 +56,9 @@ void City::createCity
 	if (mainGame.GETPlayers().GETselectedPlayer() != NO_PLAYER_SELECTED)
 	{
 		unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayer());
-		Player* splayer(mainGame.GETPlayers().GETvectPlayer()[selectedPlayer]);
+		std::shared_ptr<Player> splayer(mainGame.GETPlayers().GETvectPlayer()[selectedPlayer]);
 		unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
-		Unit* sUnit(splayer->GETtabUnit()[selectedUnit]);
+		std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[selectedUnit]);
 
 		if (
 			sUnit->GETname().compare("settler")
@@ -130,6 +130,8 @@ void City::createCity
 		{
 			/* N/A */
 		}
+		splayer.reset();
+		sUnit.reset();
 	}
 }
 

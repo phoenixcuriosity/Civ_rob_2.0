@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.16
+	last modification on this file on version:0.23.12.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -494,7 +494,7 @@ void SaveReload::loadPlayer
 			errCheck = nName->Value();
 			if (errCheck.compare("Name") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nName != Name");
 
-			mainGame.GETPlayers().GETvectPlayer().push_back(new Player(nName->FirstChild()->Value()));
+			mainGame.GETPlayers().GETvectPlayer().push_back(std::make_shared<Player>(nName->FirstChild()->Value()));
 			mainGame.GETPlayers().SETselectedPlayer((int)mainGame.GETPlayers().GETvectPlayer().size() - 1);
 
 			loadGoldStatsXML
@@ -630,10 +630,10 @@ void SaveReload::loadUnitXML
 
 	while (nullptr != nUnit)
 	{
-		Player* blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayer()]);
+		std::shared_ptr<Player> blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayer()]);
 		blankPlayer->addEmptyUnit();
 
-		Unit* blankUnit = blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)];
+		std::shared_ptr<Unit> blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
 
 		inputNode = nUnit->FirstChild();
 		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->Name == nullptr");
@@ -686,6 +686,9 @@ void SaveReload::loadUnitXML
 		blankUnit->SETmaxlevel(blankUnitTemp.level);
 
 		nUnit = nUnit->NextSibling();
+
+		blankPlayer.reset();
+		blankUnit.reset();
 	}
 }
 
@@ -721,8 +724,8 @@ void SaveReload::loadCityXML
 	Citizen* ptrCitizen;
 
 
-	Player* ptrPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayer()]);
-	City* ptrCity;
+	std::shared_ptr<Player> ptrPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayer()]);
+	std::shared_ptr<City> ptrCity;
 
 	while (nullptr != nCity)
 	{

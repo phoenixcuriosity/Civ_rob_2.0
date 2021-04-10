@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.17
+	last modification on this file on version:0.23.12.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -244,8 +244,8 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	static bool checkUnitNextTile
 	(
-		const Unit* from,
-		const Unit* to,
+		const Unit& from,
+		const Unit& to,
 		int x,
 		int y
 	);
@@ -263,7 +263,7 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	static bool checkNextTile
 	(
-		const Unit* from,
+		const Unit& from,
 		const Tile& to,
 		int x,
 		int y
@@ -345,7 +345,7 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void attack
 	(
-		Unit*
+		Unit&
 	);
 
 	/* ----------------------------------------------------------------------------------- */

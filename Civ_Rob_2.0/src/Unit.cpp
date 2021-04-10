@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.20
+	last modification on this file on version:0.23.12.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -85,7 +85,7 @@ bool Unit::searchUnitTile
 {
 	if (NO_PLAYER_SELECTED < players.GETselectedPlayer())
 	{
-		Player* selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
+		std::shared_ptr<Player> selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
 
 		for (unsigned int i(0); i < selPlayer->GETtabUnit().size(); i++)
 		{
@@ -105,6 +105,7 @@ bool Unit::searchUnitTile
 
 			}
 		}
+		selPlayer.reset();
 	}
 	return false;
 }
@@ -134,7 +135,7 @@ void Unit::tryToMove
 {
 	if (players.GETselectedPlayer() != NO_PLAYER_SELECTED)
 	{
-		Player* selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
+		std::shared_ptr<Player> selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
 		int playerToAttack(NO_PLAYER_SELECTED), unitToAttack(NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
 		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
@@ -150,10 +151,10 @@ void Unit::tryToMove
 			break;
 		case Move_Type::attackMove:
 		{
-			Player* attackPlayer(players.GETvectPlayer()[playerToAttack]);
+			std::shared_ptr<Player> attackPlayer(players.GETvectPlayer()[playerToAttack]);
 
 			selPlayer->GETtabUnit()[selectunit]
-				->attack(attackPlayer->GETtabUnit()[unitToAttack]);
+				->attack(*attackPlayer->GETtabUnit()[unitToAttack]);
 
 			if (attackPlayer->GETtabUnit()[unitToAttack]->GETalive() == false)
 			{
@@ -206,8 +207,8 @@ Move_Type Unit::searchToMove
 	/*		  susceptible de mourrir par l'attaque											   */
 	/* --------------------------------------------------------------------------------------- */
 
-	Player* selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
-	Unit* unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
+	std::shared_ptr<Player> selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
+	std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 	bool nextTileValidToMove(false);
 	unsigned int xIndex(MainMap::convertPosXToIndex(unit->GETx() + x));
@@ -278,7 +279,7 @@ Move_Type Unit::searchToMove
 		{
 			for (unsigned int j = 0; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
 			{
-				condition = checkUnitNextTile(unit, players.GETvectPlayer()[i]->GETtabUnit()[j], x, y);
+				condition = checkUnitNextTile(*unit, *players.GETvectPlayer()[i]->GETtabUnit()[j], x, y);
 				if (true == condition)
 				{
 					if (players.GETselectedPlayer() == (int)i)
@@ -323,15 +324,15 @@ Move_Type Unit::searchToMove
 /* ----------------------------------------------------------------------------------- */
 bool Unit::checkUnitNextTile
 (
-	const Unit* from,
-	const Unit* to,
+	const Unit& from,
+	const Unit& to,
 	int x,
 	int y
 )
 {
-	if ((from->GETx() + x) == to->GETx())
+	if ((from.GETx() + x) == to.GETx())
 	{
-		if ((from->GETy() + y) == to->GETy())
+		if ((from.GETy() + y) == to.GETy())
 		{
 			return true;
 
@@ -360,15 +361,15 @@ bool Unit::checkUnitNextTile
 /* ----------------------------------------------------------------------------------- */
 bool Unit::checkNextTile
 (
-	const Unit* from,
+	const Unit& from,
 	const Tile& to,
 	int x,
 	int y
 )
 {
-	if ((from->GETx() + (unsigned __int64)x) == (to.tile_x))
+	if ((from.GETx() + (unsigned __int64)x) == (to.tile_x))
 	{
-		if ((from->GETy() + (unsigned __int64)y) == (to.tile_y))
+		if ((from.GETy() + (unsigned __int64)y) == (to.tile_y))
 		{
 			return true;
 		}
@@ -513,12 +514,12 @@ Unit::~Unit()
 /* ----------------------------------------------------------------------------------- */
 void Unit::attack
 (
-	Unit* cible
+	Unit& cible
 )
 {
 	if (m_movement > NO_MOVEMENT)
 	{
-		cible->defend(m_atq);
+		cible.defend(m_atq);
 	}
 }
 
