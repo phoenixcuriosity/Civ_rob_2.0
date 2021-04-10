@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.3
+	last modification on this file on version:0.23.11.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -78,11 +78,13 @@ void ReloadMenuScreen::destroy()
 	m_spriteFont.reset();
 }
 
-void ReloadMenuScreen::onEntry()
+bool ReloadMenuScreen::onEntry()
 {
 	initOpenGLScreen();
 	initShaders();
 	initHUD();
+
+	return true;
 }
 
 
@@ -282,7 +284,7 @@ void ReloadMenuScreen::update()
 
 void ReloadMenuScreen::onExit()
 {
-
+	destroy();
 }
 
 bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)

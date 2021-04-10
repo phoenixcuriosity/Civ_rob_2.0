@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.3
+	last modification on this file on version:0.23.11.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -112,7 +112,13 @@ void IMainGame::update()
 			if (m_currentScreen)
 			{
 				m_currentScreen->setRunning();
-				m_currentScreen->onEntry();
+
+				if (!m_currentScreen->onEntry())
+				{
+					/* if onEntry error ; return to previous Screen */
+					m_currentScreen->setPrevious();
+					update(); 
+				}
 			}
 			break;
 		case ScreenState::CHANGE_PREVIOUS:

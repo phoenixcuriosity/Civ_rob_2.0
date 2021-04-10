@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.4
+	last modification on this file on version:0.23.11.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -60,7 +60,7 @@ public:
 	virtual void build() override;
 	virtual void destroy() override;
 
-	virtual void onEntry() override;
+	virtual bool onEntry() override;
 
 private:
 

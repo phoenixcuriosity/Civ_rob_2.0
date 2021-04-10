@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.1
+	last modification on this file on version:0.23.11.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -60,7 +60,7 @@ public:
 	virtual void build() = 0;
 	virtual void destroy() = 0;
 
-	virtual void onEntry() = 0;
+	virtual bool onEntry() = 0;
 	virtual void onExit() = 0;
 	
 	virtual void update() = 0;
@@ -71,6 +71,7 @@ public:
 
 	void setScreenIndex(int screenIndex) { m_screenIndex = screenIndex; };
 	void setRunning() { m_currentState = ScreenState::RUNNING; };
+	void setPrevious() { m_currentState = ScreenState::CHANGE_PREVIOUS; };
 
 	void setParentGame(IMainGame* game) { m_game = game; }
 

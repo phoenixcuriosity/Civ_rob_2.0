@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.4
+	last modification on this file on version:0.23.11.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -157,7 +157,7 @@ void GamePlayScreen::makeRandomPosTab
 		if (iteration >= MAX_RANDOM_POS_ITERATION)
 		{
 #ifdef _DEBUG
-			App::exitError("[ERROR]___: makeRandomPosTab, Too many Iterations");
+			throw(MAX_RANDOM_POS_ITERATION);
 #endif // DEBUG_MODE
 			/*
 			TODO : remove existing settlers and players
@@ -166,7 +166,7 @@ void GamePlayScreen::makeRandomPosTab
 		}
 		iteration++;
 
-		makeRandomPos(RandomPOS, mainMap.GETmatriceMapConst(), mainMap.GETtoolBarSize(), mainMap.GETtileSize());
+		makeRandomPos(RandomPOS, mainMap.GETmatriceMapConst(), mainMap.GETtileSize());
 		if (conditionground(mainMap.GETmatriceMapConst(), RandomPOS))
 		{
 			continuer = !conditionspace(RandomPOS, tabRandom, mainMap.GETtileSize());
@@ -190,12 +190,14 @@ void GamePlayScreen::makeRandomPos
 (
 	randomPos& RandomPOS,
 	const MatriceMap& matriceMap,
-	unsigned int toolBarSize,
 	unsigned int tileSize
 )
 {
-	unsigned int x((rand() % ((unsigned int)(matriceMap.size() * tileSize) - (unsigned int)(toolBarSize * tileSize))) + (toolBarSize * tileSize));
-	unsigned int y((rand() % (matriceMap[0].size() * tileSize)));
+	const unsigned int SEA_BORDER_MAP(MAP_BORDER_MAX * tileSize);
+
+	unsigned int x((rand() % ((matriceMap.size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
+	unsigned int y((rand() % ((matriceMap[0].size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
+
 	RandomPOS.x = (unsigned int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (unsigned int)ceil(y / tileSize) * tileSize;
 }
@@ -219,24 +221,31 @@ bool GamePlayScreen::conditionspace
 	unsigned int tileSize
 )
 {
+	if (tabRandom.empty()) return true;
+
 	unsigned int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
 
+	bool condition(false);
 	for (size_t i(0); i < tabRandom.size(); i++)
 	{
 		if (
-			(RandomPOS.x >= (tabRandom[i].x - spaceBetweenSettler)) /* West */
-			&&
-			(RandomPOS.x <= (tabRandom[i].x + spaceBetweenSettler)) /* East */
-			&&
-			(RandomPOS.y >= (tabRandom[i].y - spaceBetweenSettler)) /* North */
-			&&
-			(RandomPOS.y <= (tabRandom[i].y + spaceBetweenSettler)) /* South */
+			((int)RandomPOS.x >= (int)((int)tabRandom[i].x + (int)spaceBetweenSettler)) /* West */
+			||
+			((int)RandomPOS.x <= (int)((int)tabRandom[i].x - (int)spaceBetweenSettler)) /* East */
+			||
+			((int)RandomPOS.y >= (int)((int)tabRandom[i].y + (int)spaceBetweenSettler)) /* North */
+			||
+			((int)RandomPOS.y <= (int)((int)tabRandom[i].y - (int)spaceBetweenSettler)) /* South */
 			)
+		{
+			condition = true;
+		}
+		else
 		{
 			return false;
 		}
 	}
-	return true;
+	return condition;
 }
 
 /* ----------------------------------------------------------------------------------- */

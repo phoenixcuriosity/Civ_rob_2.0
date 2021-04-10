@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.8
+	last modification on this file on version:0.23.11.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -80,7 +80,7 @@ void GamePlayScreen::destroy()
 	m_screen.spriteFont.reset();
 }
 
-void GamePlayScreen::onEntry()
+bool GamePlayScreen::onEntry()
 {
 	loadFile();
 
@@ -107,7 +107,15 @@ void GamePlayScreen::onEntry()
 
 	RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
-	newGame();
+	try 
+	{
+		newGame();
+	}
+	catch (...)
+	{
+		return false;
+	}
+	return true;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -250,7 +258,7 @@ void GamePlayScreen::initHUDText()
 
 	m_screen.spriteBatchHUDStatic.begin();
 
-	sprintf_s(buffer, "Civ_Rob_2.0 : version 0.23.4.0");
+	sprintf_s(buffer, "Civ_Rob_2.0 : version 0.23.10.0");
 	m_screen.spriteFont->draw
 	(
 		m_screen.spriteBatchHUDStatic,
@@ -553,7 +561,7 @@ void GamePlayScreen::update()
 
 void GamePlayScreen::onExit()
 {
-
+	destroy();
 }
 
 bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)

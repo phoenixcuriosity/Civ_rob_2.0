@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.27
+	last modification on this file on version:0.23.11.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,7 @@
 #include "GamePlayScreen.h"
 
 #include "App.h"
+#include <iostream>
 
  /* *********************************************************
   *						 Classes						   *
@@ -71,6 +72,7 @@ void GamePlayScreen::inputSDL
 
 	case SDL_MOUSEBUTTONDOWN:
 		m_game->getInputManager().pressKey(ev.button.button);
+		mouseClick();
 		break;
 	case SDL_MOUSEBUTTONUP:
 		m_game->getInputManager().releaseKey(ev.button.button);
@@ -154,6 +156,18 @@ void GamePlayScreen::wheel
 		m_screen.camera
 			.SETscale(m_screen.camera.GETscale()
 				- MOUSE_SCROLL_SPEED_PERC * m_screen.camera.GETscale());
+	}
+}
+
+
+void GamePlayScreen::mouseClick()
+{
+	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
+	{
+		std::cout << std::endl << m_game->getInputManager().GETmouseCoords().x;
+		std::cout << std::endl << MainMap::convertPosXToIndex(m_game->getInputManager().GETmouseCoordsTile().x);
+		std::cout << std::endl << m_game->getInputManager().GETmouseCoords().y;
+		std::cout << std::endl << MainMap::convertPosYToIndex(m_game->getInputManager().GETmouseCoordsTile().y);
 	}
 }
 
