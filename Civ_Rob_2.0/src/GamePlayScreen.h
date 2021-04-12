@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.11.0
-	file version : 1.9
+	last modification on this file on version:0.23.13.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,6 +24,11 @@
 
 #ifndef GamePlayScreen_H
 #define GamePlayScreen_H
+
+
+/* *********************************************************
+ *						Includes						   *
+ ********************************************************* */
 
 #include "LIB.h"
 
@@ -48,6 +53,18 @@
 #include <vector>
 #include <memory>
 
+/* *********************************************************
+ *						 Structs						   *
+ ********************************************************* */
+
+/* 
+	All RealEngine2D objects
+	- Shaders
+	- camera/cameraHUD
+	- Sprite/font
+	- audioEngine
+	- GUI
+*/
 struct Screen
 {
 	RealEngine2D::GLSLProgram gLSLProgram;
@@ -65,6 +82,7 @@ struct Screen
 	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
 	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
 };
+
 struct Var
 {
 
@@ -113,23 +131,27 @@ struct Var
 };
 
 
-
-
-
+/* *********************************************************
+ *					 Constantes							   *
+ ********************************************************* */
 
 const float MS_PER_SECOND(1000.0f);
 const float TARGET_FRAMETIME = MS_PER_SECOND / (float)RealEngine2D::SCREEN_REFRESH_RATE;
 const unsigned int MAX_PHYSICS_STEPS(6);
 const float MAX_DELTA_TIME(1.0f);
 
-
-
-
-
+/* *********************************************************
+ *						 Classe							   *
+ ********************************************************* */
 
 class GamePlayScreen : public RealEngine2D::IGameScreen
 {
 public:
+
+	/* *********************************************************
+	 *					Constructor/Destructor				   *
+	 ********************************************************* */
+
 	GamePlayScreen
 	(
 		File* file,
@@ -139,6 +161,13 @@ public:
 
 	~GamePlayScreen();
 
+
+public:
+
+	/* *********************************************************
+	 *					   Parent override					   *
+	 ********************************************************* */
+
 	virtual int getNextScreenIndex()const override;
 	virtual int getPreviousScreenIndex()const override;
 
@@ -147,29 +176,37 @@ public:
 
 	virtual bool onEntry() override;
 
+	virtual void onExit() override;
+
+	virtual void update() override;
+
+	virtual void draw() override;
+
 private:
 
-	/* ----------------------------------------------------------------------------------- */
+	/* *********************************************************
+	 *							File						   *
+	 ********************************************************* */
+
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : loadFile																	   */
-	/* ROLE : 										   */
+	/* ROLE :																			   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	void loadFile();
 
+	
+public:
+
 	/* *********************************************************
-	 *					XmlConvertValue						   *
+	 *					STATIC XmlConvertValue				   *
 	 ********************************************************* */
 
-public:
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : xmlGiveStateType																			    	  */
 	/* ROLE : Convert an std::string from XML document to State_Type from Texture class						      */
 	/* INPUT : std::string type																				      */
 	/* RETURNED VALUE    : State_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static State_Type xmlGiveStateType
 	(
@@ -177,12 +214,10 @@ public:
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : xmlGiveSelectType																			    	  */
 	/* ROLE : Convert an std::string from XML document to Select_Type from Texture class					      */
 	/* INPUT : std::string type																				      */
 	/* RETURNED VALUE    : Select_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static Select_Type xmlGiveSelectType
 	(
@@ -190,13 +225,11 @@ public:
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : convertUintToUnit_Movement_Type															    	  */
 	/* ROLE : Convert a unsigned integer from XML document to Unit_Movement_Type from Unit class			      */
 	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : unsigned int toConvert																				      */
+	/* INPUT : unsigned int toConvert																		      */
 	/* RETURNED VALUE    : Unit_Movement_Type																	  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static Unit_Movement_Type convertUintToUnit_Movement_Type
 	(
@@ -209,13 +242,11 @@ public:
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : convert2ConversionToApply																	    	  */
 	/* ROLE : Convert an integer from XML document to conversionSurplus_Type from City class				      */
 	/* ROLE : Exit if error : XML document is not properly formated											      */
 	/* INPUT : int toConvert																				      */
 	/* RETURNED VALUE    : conversionSurplus_Type																  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static conversionSurplus_Type convert2ConversionToApply
 	(
@@ -223,13 +254,11 @@ public:
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : convert2build_Type																		    	  */
 	/* ROLE : Convert an integer from XML document to build_Type from City class							      */
 	/* ROLE : Exit if error : XML document is not properly formated											      */
 	/* INPUT : int toConvert																				      */
 	/* RETURNED VALUE    : build_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static build_Type convert2build_Type
 	(
@@ -237,13 +266,11 @@ public:
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : convert2Emotion_Type																		    	  */
 	/* ROLE : Convert an integer from XML document to Emotion_Type from City class							      */
 	/* ROLE : Exit if error : XML document is not properly formated											      */
 	/* INPUT : int toConvert																				      */
 	/* RETURNED VALUE    : Emotion_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static Emotion_Type convert2Emotion_Type
 	(
@@ -251,13 +278,11 @@ public:
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : convert2Religion_Type																		    	  */
 	/* ROLE : Convert an integer from XML document to Religion_Type from City class							      */
 	/* ROLE : Exit if error : XML document is not properly formated											      */
 	/* INPUT : int toConvert																				      */
 	/* RETURNED VALUE    : Religion_Type																		  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	static Religion_Type convert2Religion_Type
 	(
@@ -267,21 +292,19 @@ public:
 
 private:
 
+	/* *********************************************************
+	 *							Init						   *
+	 ********************************************************* */
 
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initStructs																   */
 	/* ROLE : Initialisation des donn�es par d�faut des structures						   */
 	/* INPUT : struct Sysinfo& : structure globale du programme							   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	void initStructsNULL();
 
-
-
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeSize																   */
 	/* ROLE : Calcul des diff�rentes tailles de fenetre en fonction de tileSize			   */
@@ -289,33 +312,26 @@ private:
 	/* INPUT/OUTPUT : struct Sysinfo& : diff�rentes tailles de fenetre					   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	void computeSize();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initOpenGLScreen															   */
 	/* ROLE : Init m_screen.openGLScreen and m_mainMap									   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	void initOpenGLScreen();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initShaders																   */
 	/* ROLE : Init shaders for OpenGL													   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	void initShaders();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initHUDText																   */
 	/* ROLE : Init static Text in HUD													   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	void initHUDText();
 
@@ -328,13 +344,11 @@ public:
 	 ********************************************************* */
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : loadUnitAndSpec															   */
 	/* ROLE : Chargement des informations concernant les unit�s � partir d'un fichier	   */
 	/* INPUT : const std::string& : nom du fichier � ouvrir								   */
 	/* OUTPUT : std::vector<Unit_Template>& : Vecteur des Unit							   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	void loadUnitAndSpec();
 
@@ -347,7 +361,6 @@ private:
 	void newGame();
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : newGameSettlerSpawn														   */
 	/* ROLE : Création des position pour les settlers de chaque joueurs					   */
 	/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
@@ -356,7 +369,6 @@ private:
 	/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
 	/* RETURNED VALUE    : void															   */
 	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	void newGameSettlerSpawn
 	(
 		Players& players,
@@ -364,21 +376,18 @@ private:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : makeRandomPosTab															   */
 	/* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial			   */
 	/* INPUT : const Map& map : structure globale de la map								   */
 	/* INPUT/OUTPUT : std::vector<randomPos>& : vecteurs de positions					   */
 	/* RETURNED VALUE    : void															   */
 	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	void makeRandomPosTab
 	(
 		const MainMap& mainMap,
 		std::vector<randomPos>& tabRandom
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : makeRandomPos																   */
 	/* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran */
@@ -388,7 +397,6 @@ private:
 	/* INPUT : unsigned int tileSize													   */
 	/* RETURNED VALUE    : void															   */
 	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	void makeRandomPos
 	(
 		randomPos& RandomPOS,
@@ -396,7 +404,6 @@ private:
 		unsigned int tileSize
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : conditionspace															   */
 	/* ROLE : condition pour valider les coordonnées crées:								   */
@@ -407,7 +414,6 @@ private:
 	/* INPUT : unsigned int i : couple de positions courant								   */
 	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
 	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	bool conditionspace
 	(
 		const randomPos& RandomPOS,
@@ -416,7 +422,6 @@ private:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : conditionground															   */
 	/* ROLE : condition pour valider les coordonnées crées:								   */
 	/* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol			   */
@@ -424,7 +429,6 @@ private:
 	/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
 	/* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
 	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	bool conditionground
 	(
 		const MatriceMap& matriceMap,
@@ -434,6 +438,10 @@ private:
 
 private:
 
+	/* *********************************************************
+	 *						Draw/Camera						   *
+	 ********************************************************* */
+
 	void moveCameraByDeltaTime();
 
 	void moveCamera(float deltaTime);
@@ -442,16 +450,12 @@ private:
 
 	void drawHUD();
 
-public:
-
-	virtual void onExit() override;
-
-	virtual void update() override;
-	virtual void draw() override;
-
 private:
 
-	/* ---------------------------------------------------------------------------------------------------------- */
+	/* *********************************************************
+	 *					   Input Manager					   *
+	 ********************************************************* */
+
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : run_SDL																					    	  */
 	/* ROLE : Recherche infini des �venements d'entr� de type SDL_event : souris, clavier					      */
@@ -459,20 +463,17 @@ private:
 	/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
 	/* RETURNED VALUE    : void																					  */
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	void inputSDL
 	(
 		SDL_Event& ev
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : wheel																						    	  */
 	/* ROLE : Recherche l'incr�mentation ou d�cr�mentation du contexte										      */
 	/* INPUT : struct Sysinfo& : structure globale du programme												      */
 	/* INPUT : int& wheel : l'�venement de scroll de la souris													  */
 	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	void wheel
 	(
@@ -481,17 +482,26 @@ private:
 
 	void mouseClick();
 
+	unsigned int getMouseCoorNorm(unsigned char c);
+
 
 
 	bool onPlayerButtonClicked(const CEGUI::EventArgs& e);
 
 private:
 
+	/* *********************************************************
+	 *				   Screen Input Manager		    		   *
+	 ********************************************************* */
+
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
 
 public:
 
+	/* *********************************************************
+	 *						 GET/SET						   *
+	 ********************************************************* */
 
 	inline Screen& GETscreen() { return m_screen; };
 	inline const Screen& GETscreen()const { return m_screen; };
@@ -513,6 +523,18 @@ public:
 
 private:
 
+	/* *********************************************************
+	 *						 Attributs						   *
+	 ********************************************************* */
+
+	 /*
+		 All RealEngine2D objects
+		 - Shaders
+		 - camera/cameraHUD
+		 - Sprite/font
+		 - audioEngine
+		 - GUI
+	*/
 	Screen m_screen;
 
 	Var m_var;

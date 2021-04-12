@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.12.0
-	file version : 1.18
+	last modification on this file on version:0.23.13.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,6 +47,7 @@
 #include "MainMap.h"
 
 #include <vector>
+#include <memory>
 #include <glm/glm.hpp>
 
 class Players;
@@ -571,6 +572,7 @@ private:
 	bool m_showStats;
 };
 
+typedef std::vector<std::shared_ptr<Unit>> VectUnit;
 
 
 #endif /* Unit_H */

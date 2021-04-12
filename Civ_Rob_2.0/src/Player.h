@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.12.0
-	file version : 1.14
+	last modification on this file on version:0.23.13.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,7 @@
 #include "LIB.h"
 
 #include "Unit.h"
+#include "City.h"
 
 #include <memory>
 
@@ -262,8 +263,8 @@ public:
 
 
 	inline virtual std::string GETname() const { return m_name; };
-	inline virtual std::vector<std::shared_ptr<Unit>> GETtabUnit() const { return m_tabUnit; };
-	inline virtual std::vector<std::shared_ptr<City>> GETtabCity() const { return m_tabCity; };
+	inline virtual VectUnit GETtabUnit() const { return m_tabUnit; };
+	inline virtual VectCity GETtabCity() const { return m_tabCity; };
 	inline virtual int GETselectedUnit()const { return m_selectedUnit; };
 	inline virtual int GETselectedCity() { return m_selectedCity; };
 	inline virtual GoldStats& GETgoldStats() { return m_goldStats; };
@@ -282,8 +283,8 @@ private:
 
 
 	std::string m_name;
-	std::vector<std::shared_ptr<Unit>> m_tabUnit;
-	std::vector<std::shared_ptr<City>> m_tabCity;
+	VectUnit m_tabUnit;
+	VectCity m_tabCity;
 	int m_selectedCity;
 	int m_selectedUnit;
 	GoldStats m_goldStats;
@@ -316,10 +317,16 @@ public:
 
 	void addPlayer(const std::string& name);
 
+	void deleteAllPlayers();
+
 	void removeIndexPlayer
 	(
 		unsigned int index
 	);
+
+	void clickToSelectUnit(unsigned int x, unsigned int y);
+
+	void isAUnitSelected();
 
 	void drawUnit
 	(

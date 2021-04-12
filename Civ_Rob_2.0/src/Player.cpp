@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.12.0
-	file version : 1.17
+	last modification on this file on version:0.23.13.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -348,10 +348,7 @@ m_needToUpdateDrawUnit(true)
 
 Players::~Players()
 {
-	for (unsigned int i(0); i < m_vectPlayer.size(); i++)
-	{
-		removeIndexPlayer(i);
-	}
+	deleteAllPlayers();
 }
 
 void Players::init(const std::string& filePath)
@@ -389,6 +386,14 @@ void Players::addPlayer(const std::string& name)
 	m_vectPlayer.push_back(std::make_shared<Player>(name));
 }
 
+void Players::deleteAllPlayers()
+{
+	for (auto p : m_vectPlayer)
+	{
+		p.reset();
+	}
+}
+
 void Players::removeIndexPlayer
 (
 	unsigned int index
@@ -401,6 +406,49 @@ void Players::removeIndexPlayer
 	else
 	{
 		throw("[ERROR]__: removeIndexPlayer : assertSize");
+	}
+}
+
+void Players::clickToSelectUnit(unsigned int x, unsigned int y)
+{
+	if (m_selectedPlayer != NO_PLAYER_SELECTED)
+	{
+		std::shared_ptr<Player> p(m_vectPlayer[m_selectedPlayer]);
+		unsigned int i(0);
+		for (auto u : p->GETtabUnit())
+		{
+			if	(
+					u->GETx() == x
+					&&
+					u->GETy() == y
+				)
+			{
+				p->SETselectedUnit(i);
+				break;
+			}
+			i++;
+		}
+		p.reset();
+	}
+}
+
+
+void Players::isAUnitSelected()
+{
+	if (m_selectedPlayer != NO_PLAYER_SELECTED)
+	{
+		std::shared_ptr<Player> p(m_vectPlayer[m_selectedPlayer]);
+
+		if (p->GETselectedUnit() != NO_UNIT_SELECTED)
+		{
+			std::shared_ptr<Unit> u(p->GETtabUnit()[p->GETselectedUnit()]);
+			bool prevShow(u->GETshow());
+			u->cmpblit();
+			if (prevShow != u->GETshow())
+			{
+				m_needToUpdateDrawUnit = true;
+			}
+		}
 	}
 }
 
@@ -420,57 +468,61 @@ void Players::drawUnit
 			for (unsigned int j(0); j < m_vectPlayer[i]->GETtabUnit().size(); j++)
 			{
 				std::shared_ptr<Unit>unit(m_vectPlayer[i]->GETtabUnit()[j]);
-				if	(
+
+				if (unit->GETshow())
+				{
+					if (
 						camera.isBoxInView
 						(
 							{ unit->GETx(), unit->GETy() },
 							{ tileSize , tileSize },
 							mainMap.GETtoolBarSize() * tileSize
 						)
-					)
-				{
-					/* Unit Texture */
-					m_spriteBatchUnit.draw
-					(
-						glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
-						RealEngine2D::FULL_RECT,
-						m_vectID[Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate)],
-						0.0f,
-						RealEngine2D::COLOR_WHITE
-					);
+						)
+					{
+						/* Unit Texture */
+						m_spriteBatchUnit.draw
+						(
+							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
+							RealEngine2D::FULL_RECT,
+							m_vectID[Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate)],
+							0.0f,
+							RealEngine2D::COLOR_WHITE
+						);
 
-					/* Lifebar Texture */
-					m_spriteBatchUnit.draw
-					(
-						glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize /2, 3),
-						RealEngine2D::FULL_RECT,
-						m_vectID
-						[
-							m_vectUnitTemplate.size() - 1
-							+ 
+						/* Lifebar Texture */
+						m_spriteBatchUnit.draw
+						(
+							glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+							RealEngine2D::FULL_RECT,
+							m_vectID
+							[
+								m_vectUnitTemplate.size() - 1
+								+
 							(int)std::floor(Utility::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
-						],
-						0.0f,
-						RealEngine2D::COLOR_WHITE
-					);
+							],
+							0.0f,
+							RealEngine2D::COLOR_WHITE
+						);
 
-					/* Appartenance Texture */
-					m_spriteBatchUnit.draw
-					(
-						glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
-						RealEngine2D::FULL_RECT,
-						m_vectID
-						[
-							m_vectUnitTemplate.size()
-							+
+						/* Appartenance Texture */
+						m_spriteBatchUnit.draw
+						(
+							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
+							RealEngine2D::FULL_RECT,
+							m_vectID
+							[
+								m_vectUnitTemplate.size()
+								+
 							LIFE_BAR_NB_SUBDIVISION
 							+
 							i
-						],
-						0.0f,
-						RealEngine2D::COLOR_WHITE
-					);
+							],
+							0.0f,
+							RealEngine2D::COLOR_WHITE
+						);
 
+					}
 				}
 				unit.reset();
 			}

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.11.0
-	file version : 1.28
+	last modification on this file on version:0.23.13.0
+	file version : 1.29
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -100,6 +100,59 @@ void GamePlayScreen::inputSDL
 	}
 }
 
+
+void GamePlayScreen::moveCamera(float deltaTime)
+{
+	if (m_game->getInputManager().isKeyDown(SDLK_z))
+	{
+		m_screen.camera
+			.SETposition
+			(
+				m_screen.camera.GETposition()
+				+
+				glm::vec2(0.0f, KEY_SPEED_MOVE * deltaTime)
+			);
+		m_mainMap.SETneedToUpdateDraw(true);
+		m_players.SETneedToUpdateDrawUnit(true);
+	}
+	if (m_game->getInputManager().isKeyDown(SDLK_s))
+	{
+		m_screen.camera
+			.SETposition
+			(
+				m_screen.camera.GETposition()
+				+
+				glm::vec2(0.0f, -KEY_SPEED_MOVE * deltaTime)
+			);
+		m_mainMap.SETneedToUpdateDraw(true);
+		m_players.SETneedToUpdateDrawUnit(true);
+	}
+	if (m_game->getInputManager().isKeyDown(SDLK_q))
+	{
+		m_screen.camera
+			.SETposition
+			(
+				m_screen.camera.GETposition()
+				+
+				glm::vec2(-KEY_SPEED_MOVE * deltaTime, 0.0f)
+			);
+		m_mainMap.SETneedToUpdateDraw(true);
+		m_players.SETneedToUpdateDrawUnit(true);
+	}
+	if (m_game->getInputManager().isKeyDown(SDLK_d))
+	{
+		m_screen.camera
+			.SETposition
+			(
+				m_screen.camera.GETposition()
+				+
+				glm::vec2(KEY_SPEED_MOVE * deltaTime, 0.0f)
+			);
+		m_mainMap.SETneedToUpdateDraw(true);
+		m_players.SETneedToUpdateDrawUnit(true);
+	}
+}
+
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* NAME : wheel																						    	  */
@@ -164,10 +217,49 @@ void GamePlayScreen::mouseClick()
 {
 	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
 	{
+		/*
 		std::cout << std::endl << m_game->getInputManager().GETmouseCoords().x;
 		std::cout << std::endl << MainMap::convertPosXToIndex(m_game->getInputManager().GETmouseCoordsTile().x);
 		std::cout << std::endl << m_game->getInputManager().GETmouseCoords().y;
-		std::cout << std::endl << MainMap::convertPosYToIndex(m_game->getInputManager().GETmouseCoordsTile().y);
+		std::cout << std::endl << MainMap::convertPosYToIndex(m_game->getInputManager().GETmouseCoordsTile().y)
+		*/
+	}
+}
+
+unsigned int GamePlayScreen::getMouseCoorNorm(unsigned char c)
+{
+	if (c == 'X')
+	{
+		return
+		(
+			m_mainMap.GETtileSize()
+			*
+			MainMap::convertPosXToIndex
+			(
+				(double)m_game->getInputManager().GETmouseCoords().x
+				+ (double)m_screen.camera.GETposition().x
+				- (double)m_game->getWindow().GETscreenWidth() / 2
+			)
+		);
+	}
+	else
+	if (c == 'Y')
+	{
+		return 
+		(
+			m_mainMap.GETtileSize()
+			*
+			MainMap::convertPosYToIndex
+			(
+				-(double)m_game->getInputManager().GETmouseCoords().y
+				+ (double)m_screen.camera.GETposition().y
+				+ (double)m_game->getWindow().GETscreenHeight() / 2
+			)
+		);
+	}
+	else
+	{
+		throw("[ERROR]___: GamePlayScreen::getMouseCoorNorm");
 	}
 }
 

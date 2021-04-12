@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.11.0
-	file version : 1.9
+	last modification on this file on version:0.23.13.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -78,6 +78,8 @@ void GamePlayScreen::destroy()
 	m_screen.m_widgetLabels.clear();
 
 	m_screen.spriteFont.reset();
+
+	m_players.deleteAllPlayers();
 }
 
 bool GamePlayScreen::onEntry()
@@ -117,6 +119,44 @@ bool GamePlayScreen::onEntry()
 	}
 	return true;
 }
+
+void GamePlayScreen::update()
+{
+	SDL_Event ev;
+	while (SDL_PollEvent(&ev))
+	{
+		m_game->onSDLEvent(ev);
+		inputSDL(ev);
+		m_screen.m_gui.onSDLEvent(ev, m_game->getInputManager());
+	}
+}
+
+void GamePlayScreen::onExit()
+{
+	destroy();
+}
+
+void GamePlayScreen::draw()
+{
+	if (m_game->getInputManager().isKeyDown(SDLK_SPACE))
+	{
+		m_nextTurn.nextTurn(*this);
+		m_game->getInputManager().releaseKey(SDLK_SPACE);
+	}
+
+	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
+	{
+		m_players.clickToSelectUnit(getMouseCoorNorm('X'), getMouseCoorNorm('Y'));
+	}
+
+	moveCameraByDeltaTime();
+
+	m_screen.camera.update();
+	m_screen.cameraHUD.update();
+
+	drawGame();
+}
+
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -374,23 +414,6 @@ void GamePlayScreen::loadUnitAndSpec()
 //----------------------------------------------------------GameLoop----------------------------------------------------------------//
 
 
-
-void GamePlayScreen::draw()
-{
-	if (m_game->getInputManager().isKeyDown(SDLK_SPACE))
-	{
-		m_nextTurn.nextTurn(*this);
-		m_game->getInputManager().releaseKey(SDLK_SPACE);
-	}
-
-	moveCameraByDeltaTime();
-
-	m_screen.camera.update();
-	m_screen.cameraHUD.update();
-
-	drawGame();
-}
-
 void GamePlayScreen::moveCameraByDeltaTime()
 {
 	static Uint32 prevTicks(SDL_GetTicks());
@@ -412,57 +435,6 @@ void GamePlayScreen::moveCameraByDeltaTime()
 	}
 }
 
-void GamePlayScreen::moveCamera(float deltaTime)
-{
-	if (m_game->getInputManager().isKeyDown(SDLK_z))
-	{
-		m_screen.camera
-			.SETposition
-			(
-				m_screen.camera.GETposition()
-				+
-				glm::vec2(0.0f, KEY_SPEED_MOVE * deltaTime)
-			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-	}
-	if (m_game->getInputManager().isKeyDown(SDLK_s))
-	{
-		m_screen.camera
-			.SETposition
-			(
-				m_screen.camera.GETposition()
-				+
-				glm::vec2(0.0f, -KEY_SPEED_MOVE * deltaTime)
-			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-	}
-	if (m_game->getInputManager().isKeyDown(SDLK_q))
-	{
-		m_screen.camera
-			.SETposition
-			(
-				m_screen.camera.GETposition()
-				+
-				glm::vec2(-KEY_SPEED_MOVE * deltaTime, 0.0f)
-			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-	}
-	if (m_game->getInputManager().isKeyDown(SDLK_d))
-	{
-		m_screen.camera
-			.SETposition
-			(
-				m_screen.camera.GETposition()
-				+
-				glm::vec2(KEY_SPEED_MOVE * deltaTime, 0.0f)
-			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-	}
-}
 
 void GamePlayScreen::drawGame()
 {
@@ -487,10 +459,13 @@ void GamePlayScreen::drawGame()
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	m_mainMap.drawMap(m_screen.camera);
+
+	m_players.isAUnitSelected();
 	m_players.drawUnit(m_mainMap, m_screen.camera);
 
 	m_mainMap.renderMap();
 	m_players.renderUnit();
+
 
 	drawHUD();
 
@@ -546,29 +521,12 @@ void GamePlayScreen::drawHUD()
 	m_screen.spriteBatchHUDStatic.renderBatch();
 }
 
-void GamePlayScreen::update()
-{
-	SDL_Event ev;
-	while (SDL_PollEvent(&ev))
-	{
-		m_game->onSDLEvent(ev);
-		inputSDL(ev);
-		m_screen.m_gui.onSDLEvent(ev, m_game->getInputManager());
-	}
-}
-
-
-
-void GamePlayScreen::onExit()
-{
-	destroy();
-}
 
 bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 {
 	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
-		if (m_screen.m_vectPlayerRadioButton[i]->isPushed())
+		if (m_screen.m_vectPlayerRadioButton[i]->isSelected())
 		{
 			m_players.SETselectedPlayer((int)i);
 			return true;

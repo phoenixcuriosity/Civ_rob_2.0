@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.19
+	last modification on this file on version:0.23.13.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,6 +37,7 @@
 
 #include <vector>
 #include <queue>
+#include <memory>
 
 #include <RealEngine2D/src/Window.h>
 
@@ -50,9 +51,9 @@ struct Screen;
 struct Var;
 struct GoldStats;
 
- /* *********************************************************
-  *					 Constantes							   *
-  ********************************************************* */
+/* *********************************************************
+ *					 Constantes							   *
+ ********************************************************* */
 
   /* taille de la carte transpos�e dans la citiemap */
 const unsigned int INIT_SIZE_VIEW = 9;
@@ -657,6 +658,11 @@ private:
 
 	cityBuildQueue m_buildQueue;
 };
+
+
+typedef std::vector<std::shared_ptr<City>> VectCity;
+
+
 
 #endif /* City_H */
 

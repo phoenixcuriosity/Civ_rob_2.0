@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.22
+	last modification on this file on version:0.23.13.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -527,10 +527,10 @@ unsigned int MainMap::convertIndexToPosX
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosXToIndex
 (
-	unsigned int posX
+	double posX
 )
 {
-	return posX / *s_tileSize;
+	return (unsigned int)std::floor(posX / (double)*s_tileSize);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -561,10 +561,10 @@ unsigned int MainMap::convertIndexToPosY
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosYToIndex
 (
-	unsigned int posY
+	double posY
 )
 {
-	return posY / *s_tileSize;
+	return (unsigned int)std::floor(posY / (double)*s_tileSize);
 }
 
 /* ----------------------------------------------------------------------------------- */
