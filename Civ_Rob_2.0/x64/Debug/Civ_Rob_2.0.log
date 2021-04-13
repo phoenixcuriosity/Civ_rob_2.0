@@ -1,1 +1,4 @@
-﻿
+﻿  MainMap.cpp
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Civ_Rob_2.0\src\MainMap.cpp(644,46): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\Civ_Rob_2.0\src\MainMap.cpp(687,49): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Civ_Rob_2.0.vcxproj -> C:\Users\Robin\Documents\GitHub\Civ_rob_2.0\x64\Debug\Civ_Rob_2.0.exe

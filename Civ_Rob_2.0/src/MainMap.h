@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.3
+	last modification on this file on version:0.23.14.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 
 #include <RealEngine2D/src/Camera2D.h>
 #include <RealEngine2D/src/SpriteBatch.h>
+#include <RealEngine2D/src/Window.h>
 
 #include <vector>
 
@@ -256,9 +257,30 @@ public:
 
 	void generateMap();
 
+	void updateOffset
+	(
+		double x0,
+		double y0,
+		unsigned int windowWidth,
+		unsigned int windowHeight
+	);
+
+	void updateOffsetX
+	(
+		double x0,
+		unsigned int windowWidth
+	);
+
+	void updateOffsetY
+	(
+		double y0,
+		unsigned int windowHeight
+	);
+
 	void drawMap
 	(
-		RealEngine2D::Camera2D& camera
+		RealEngine2D::Camera2D& camera,
+		RealEngine2D::Window& window
 	);
 
 	void renderMap();
@@ -369,6 +391,12 @@ private:
 
 	/* Size of the toolBar in pixels */
 	unsigned int m_toolBarSize;
+
+	unsigned int m_offsetMapCameraXmin;
+	unsigned int m_offsetMapCameraXmax;
+
+	unsigned int m_offsetMapCameraYmin;
+	unsigned int m_offsetMapCameraYmax;
 
 	/* Matrice x,y of tiles */
 	MatriceMap m_matriceMap;

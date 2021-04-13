@@ -1,10 +1,21 @@
 
-2021-03-07 23:44:49      [INFO]___: [START] : initMain
-2021-03-07 23:44:49      [INFO]___: [END] : initMain
-2021-03-07 23:44:50      [INFO]___: Groundgen Start
-2021-03-07 23:44:50      [INFO]___: Groundgen End
-2021-03-07 23:45:15      [ERROR]___: [INFO]__: keySDLK_ESCAPE
-2021-03-07 23:45:15      [INFO]___: [START] *********_________ DeleteAll _________*********
-2021-03-07 23:45:15      [INFO]___: [END] : *********_________ DeleteAll _________*********
-2021-03-07 23:45:15      [INFO]___: SDL_Quit Success
-2021-03-07 23:45:15      [INFO]___:________PROGRAMME FINISH________
+2021-04-13 18:57:05      [INFO]___: [START] : initMain
+2021-04-13 18:57:05      [INFO]___: [END] : initMain
+2021-04-13 18:57:08      [INFO]___: [START] : initMain
+2021-04-13 18:57:08      [INFO]___: [END] : initMain
+2021-04-13 18:57:08      [INFO]___: Groundgen Start
+2021-04-13 18:57:08      [INFO]___: Groundgen End
+2021-04-13 18:57:08      [INFO]___: Newgame Start
+2021-04-13 18:57:08      [INFO]___: createSave Start
+2021-04-13 18:57:08      [INFO]___: createSave End
+2021-04-13 18:57:08      [INFO]___: Create Player Success
+2021-04-13 18:57:08      [INFO]___: Create Player Success
+2021-04-13 18:57:08      [INFO]___: Create Player Success
+2021-04-13 18:57:08      [INFO]___: Create Unit:  Success
+2021-04-13 18:57:08      [INFO]___: Create Unit:  Success
+2021-04-13 18:57:08      [INFO]___: Create Unit:  Success
+2021-04-13 18:57:08      [INFO]___: Newgame End
+2021-04-13 18:57:46      [INFO]___: [START] *********_________ DeleteAll _________*********
+2021-04-13 18:57:46      [INFO]___: [END] : *********_________ DeleteAll _________*********
+2021-04-13 18:57:46      [INFO]___: SDL_Quit Success
+2021-04-13 18:57:46      [INFO]___:________PROGRAMME FINISH________

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.23
+	last modification on this file on version:0.23.14.0
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -52,9 +52,18 @@ void MainMap::setStaticPtrTileSize()
 }
 
 
-MainMap::MainMap()
-	:m_mapSizePixX(0), m_mapSizePixY(0),
-	m_tileSize(0), m_toolBarSize(0), m_needToUpdateDraw(true)
+MainMap::MainMap():
+m_mapSizePixX(0),
+m_mapSizePixY(0),
+m_tileSize(0),
+m_toolBarSize(0),
+m_offsetMapCameraXmin(0),
+m_offsetMapCameraXmax(0),
+m_offsetMapCameraYmin(0),
+m_offsetMapCameraYmax(0),
+m_matriceMap(),
+m_needToUpdateDraw(true),
+m_spriteBatch()
 {
 	setStaticPtrTileSize();
 }
@@ -586,14 +595,118 @@ bool MainMap::assertRangeMapIndex
 	return indexToTest < size ? true : false;
 }
 
+void MainMap::updateOffset
+(
+	double x0,
+	double y0,
+	unsigned int windowWidth,
+	unsigned int windowHeight
+)
+{
+	updateOffsetX(x0, windowWidth);
+	updateOffsetY(y0, windowHeight);
+}
 
+
+void MainMap::updateOffsetX
+(
+	double x0,
+	unsigned int windowWidth
+)
+{
+	int buffer(0);
+
+	if (x0 < -(double)windowWidth || x0 >(double)m_mapSizePixX)
+	{
+		/* case 1 : camera is far left of the map // no need to draw map */
+		/* case 2 : camera is far right of the map // no need to draw map */
+
+		m_offsetMapCameraXmin = 0;
+		m_offsetMapCameraXmax = 0;
+		return;
+	}
+	else
+	if (x0 <= -((double)m_toolBarSize * m_tileSize) && x0 > -(double)windowWidth)
+	{
+		m_offsetMapCameraXmin = 0;
+		buffer = -(int)m_toolBarSize - (int)std::floor(x0 / (double)m_tileSize);
+	}
+	else
+	{
+		/* Positive LEFT offset HUD */
+		m_offsetMapCameraXmin = m_toolBarSize;
+		m_offsetMapCameraXmin += (unsigned int)std::floor(x0 / (double)m_tileSize);
+	}
+
+
+	if ((x0 + (double)windowWidth) > (double)m_mapSizePixX)
+	{
+		m_offsetMapCameraXmax = m_matriceMap.size();
+	}
+	else
+	{
+		m_offsetMapCameraXmax =
+			m_offsetMapCameraXmin
+			+ (unsigned int)std::floor((double)windowWidth / (double)m_tileSize) /* width of screen */
+			- buffer
+			+ 1  /* avoid seeing nothing before next tile */
+			- m_toolBarSize; /* Negative RIGHT offset HUD */
+	}
+
+}
+
+
+void MainMap::updateOffsetY
+(
+	double y0,
+	unsigned int windowHeight
+)
+{
+	int buffer(0);
+
+	if (y0 < -(double)windowHeight || y0 >(double)m_mapSizePixY)
+	{
+		/* case 1 : camera is far down of the map // no need to draw map */
+		/* case 2 : camera is far up of the map // no need to draw map */
+
+		m_offsetMapCameraYmin = 0;
+		m_offsetMapCameraYmax = 0;
+		return;
+	}
+	else
+	if (y0 >= -(double)windowHeight && y0 < 0.0)
+	{
+		m_offsetMapCameraYmin = 0;
+		buffer = -(int)std::floor((double)y0 / (double)m_tileSize);
+	}
+	else
+	{
+		m_offsetMapCameraYmin = (unsigned int)std::floor(y0 / (double)m_tileSize);
+	}
+
+
+	if ((y0 + (double)windowHeight) >= ((double)m_mapSizePixY - (double)m_tileSize))
+	{
+		m_offsetMapCameraYmax = m_matriceMap[0].size();
+	}
+	else
+	{
+		m_offsetMapCameraYmax = 
+			m_offsetMapCameraYmin 
+			+ (unsigned int)std::ceil((double)windowHeight / (double)m_tileSize)
+			- buffer
+			+ 1; /* avoid seeing nothing before next tile */
+	}
+
+}
 
 
 
 
 void MainMap::drawMap
 (
-	RealEngine2D::Camera2D& camera
+	RealEngine2D::Camera2D& camera,
+	RealEngine2D::Window& window
 )
 {
 	static GLuint idGrass(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
@@ -614,99 +727,97 @@ void MainMap::drawMap
 	{
 		GLuint id(0);
 
+		updateOffset
+		(
+			((double)camera.GETposition().x - (double)window.GETscreenWidth() / 2),
+			((double)camera.GETposition().y - (double)window.GETscreenHeight() / 2),
+			window.GETscreenWidth(),
+			window.GETscreenHeight()
+		);
+
 		/* Use this because map is static */
 		m_spriteBatch.begin();
 
-		for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
+		for (unsigned int i(m_offsetMapCameraXmin); i < m_offsetMapCameraXmax; i++)
 		{
-			for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
+			for (unsigned int j(m_offsetMapCameraYmin); j < m_offsetMapCameraYmax; j++)
 			{
-				if (
-					camera.isBoxInView
-					(
-						{ m_matriceMap[i][j].tile_x , m_matriceMap[i][j].tile_y },
-						{ m_tileSize , m_tileSize },
-						(m_toolBarSize - 1) * m_tileSize
-					)
-					)
+				switch (m_matriceMap[i][j].tile_ground)
 				{
-					switch (m_matriceMap[i][j].tile_ground)
-					{
-					case Ground_Type::grass:
-						id = idGrass;
-						break;
-					case Ground_Type::water:
-						id = idWater;
-						break;
-					case Ground_Type::deepwater:
-						id = idDeepWater;
-						break;
-					case Ground_Type::dirt:
-						App::exitError("[Error]___: drawMap : Ground_Type::dirt");
-						break;
-					case Ground_Type::sand:
-						App::exitError("[Error]___: drawMap : Ground_Type::sand");
-						break;
-					case Ground_Type::error:
-						App::exitError("[Error]___: drawMap : Ground_Type::error");
-						break;
-					default:
-						App::exitError("[Error]___: drawMap : default");
-						break;
-					}
-
-					m_spriteBatch.draw
-					(
-						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-						glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-						id,
-						0.0f,
-						RealEngine2D::COLOR_WHITE
-					);
-
-					switch (m_matriceMap[i][j].tile_spec)
-					{
-					case GroundSpec_Type::coal:
-						id = idCoal;
-						break;
-					case GroundSpec_Type::copper:
-						id = idCopper;
-						break;
-					case GroundSpec_Type::fish:
-						id = idFish;
-						break;
-					case GroundSpec_Type::horse:
-						id = idHorse;
-						break;
-					case GroundSpec_Type::iron:
-						id = idIron;
-						break;
-					case GroundSpec_Type::petroleum:
-						id = idPetroleum;
-						break;
-					case GroundSpec_Type::stone:
-						id = idStone;
-						break;
-					case GroundSpec_Type::tree:
-						id = idtree1;
-						break;
-					case GroundSpec_Type::uranium:
-						id = iduranium;
-						break;
-					case GroundSpec_Type::nothing:
-						/* N/A */
-						break;
-					}
-
-					m_spriteBatch.draw
-					(
-						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-						glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-						id,
-						0.0f,
-						RealEngine2D::COLOR_WHITE
-					);
+				case Ground_Type::grass:
+					id = idGrass;
+					break;
+				case Ground_Type::water:
+					id = idWater;
+					break;
+				case Ground_Type::deepwater:
+					id = idDeepWater;
+					break;
+				case Ground_Type::dirt:
+					App::exitError("[Error]___: drawMap : Ground_Type::dirt");
+					break;
+				case Ground_Type::sand:
+					App::exitError("[Error]___: drawMap : Ground_Type::sand");
+					break;
+				case Ground_Type::error:
+					App::exitError("[Error]___: drawMap : Ground_Type::error");
+					break;
+				default:
+					App::exitError("[Error]___: drawMap : default");
+					break;
 				}
+
+				m_spriteBatch.draw
+				(
+					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+					glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+					id,
+					0.0f,
+					RealEngine2D::COLOR_WHITE
+				);
+
+				switch (m_matriceMap[i][j].tile_spec)
+				{
+				case GroundSpec_Type::coal:
+					id = idCoal;
+					break;
+				case GroundSpec_Type::copper:
+					id = idCopper;
+					break;
+				case GroundSpec_Type::fish:
+					id = idFish;
+					break;
+				case GroundSpec_Type::horse:
+					id = idHorse;
+					break;
+				case GroundSpec_Type::iron:
+					id = idIron;
+					break;
+				case GroundSpec_Type::petroleum:
+					id = idPetroleum;
+					break;
+				case GroundSpec_Type::stone:
+					id = idStone;
+					break;
+				case GroundSpec_Type::tree:
+					id = idtree1;
+					break;
+				case GroundSpec_Type::uranium:
+					id = iduranium;
+					break;
+				case GroundSpec_Type::nothing:
+					/* N/A */
+					break;
+				}
+
+				m_spriteBatch.draw
+				(
+					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+					glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+					id,
+					0.0f,
+					RealEngine2D::COLOR_WHITE
+				);
 			}
 		}
 

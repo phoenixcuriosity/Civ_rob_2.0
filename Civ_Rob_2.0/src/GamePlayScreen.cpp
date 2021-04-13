@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.10
+	last modification on this file on version:0.23.14.0
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -106,6 +106,14 @@ bool GamePlayScreen::onEntry()
 	initUI();
 
 	m_mainMap.generateMap();
+
+	m_mainMap.updateOffset
+	(
+		((double)m_screen.camera.GETposition().x - (double)m_game->getWindow().GETscreenWidth() / 2),
+		((double)m_screen.camera.GETposition().y - (double)m_game->getWindow().GETscreenHeight() / 2),
+		m_game->getWindow().GETscreenWidth(), 
+		m_game->getWindow().GETscreenHeight()
+	);
 
 	RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
@@ -458,7 +466,7 @@ void GamePlayScreen::drawGame()
 
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
-	m_mainMap.drawMap(m_screen.camera);
+	m_mainMap.drawMap(m_screen.camera, m_game->getWindow());
 
 	m_players.isAUnitSelected();
 	m_players.drawUnit(m_mainMap, m_screen.camera);
