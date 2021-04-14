@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.2
+	last modification on this file on version:0.23.14.2
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,9 +27,15 @@
 using namespace RealEngine2D;
 
 Camera2D::Camera2D()
-: m_screenWidth(1280), m_screenHeight(720),
-m_needMatixUpdate(true), m_scale(1.0f), m_position(0.0f, 0.0f),
-m_orthoMatrix(1), m_cameraMatrix(1.0f)
+: 
+m_screenWidth(1280),
+m_screenHeight(720),
+m_needMatixUpdate(true),
+m_scale(1.0f),
+m_position(0.0f, 0.0f),
+m_orthoMatrix(1),
+m_cameraMatrix(1.0f),
+m_lockMove({false, false, false, false})
 {
 
 }

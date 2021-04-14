@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.0
-	file version : 1.24
+	last modification on this file on version:0.23.14.2
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -600,42 +600,45 @@ void MainMap::updateOffset
 	double x0,
 	double y0,
 	unsigned int windowWidth,
-	unsigned int windowHeight
+	unsigned int windowHeight,
+	RealEngine2D::Camera2D& camera
 )
 {
-	updateOffsetX(x0, windowWidth);
-	updateOffsetY(y0, windowHeight);
+	updateOffsetX(x0, windowWidth, camera);
+	updateOffsetY(y0, windowHeight, camera);
 }
 
 
 void MainMap::updateOffsetX
 (
 	double x0,
-	unsigned int windowWidth
+	unsigned int windowWidth,
+	RealEngine2D::Camera2D& camera
 )
 {
 	int buffer(0);
 
-	if (x0 < -(double)windowWidth || x0 >(double)m_mapSizePixX)
+	if (x0 <= -((double)m_toolBarSize * m_tileSize * camera.GETscale()))
 	{
-		/* case 1 : camera is far left of the map // no need to draw map */
-		/* case 2 : camera is far right of the map // no need to draw map */
-
 		m_offsetMapCameraXmin = 0;
-		m_offsetMapCameraXmax = 0;
-		return;
+		buffer = -(int)m_toolBarSize - (int)std::floor(x0 / ((double)m_tileSize * camera.GETscale()));
+		camera.lockMoveLEFT();
 	}
 	else
-	if (x0 <= -((double)m_toolBarSize * m_tileSize) && x0 > -(double)windowWidth)
+	if (x0 > ((double)m_mapSizePixX - (double)windowWidth))
 	{
-		m_offsetMapCameraXmin = 0;
-		buffer = -(int)m_toolBarSize - (int)std::floor(x0 / (double)m_tileSize);
+		m_offsetMapCameraXmin = m_toolBarSize;
+		m_offsetMapCameraXmin += (unsigned int)std::floor(x0 / (double)m_tileSize);
+		camera.lockMoveRIGHT();
+		return;
 	}
 	else
 	{
 		/* Positive LEFT offset HUD */
 		m_offsetMapCameraXmin = m_toolBarSize;
 		m_offsetMapCameraXmin += (unsigned int)std::floor(x0 / (double)m_tileSize);
+		camera.unlockMoveLEFT();
+		camera.unlockMoveRIGHT();
 	}
 
 
@@ -647,7 +650,7 @@ void MainMap::updateOffsetX
 	{
 		m_offsetMapCameraXmax =
 			m_offsetMapCameraXmin
-			+ (unsigned int)std::floor((double)windowWidth / (double)m_tileSize) /* width of screen */
+			+ (unsigned int)std::floor((double)windowWidth / ((double)m_tileSize * camera.GETscale())) /* width of screen */
 			- buffer
 			+ 1  /* avoid seeing nothing before next tile */
 			- m_toolBarSize; /* Negative RIGHT offset HUD */
@@ -659,33 +662,37 @@ void MainMap::updateOffsetX
 void MainMap::updateOffsetY
 (
 	double y0,
-	unsigned int windowHeight
+	unsigned int windowHeight,
+	RealEngine2D::Camera2D& camera
 )
 {
 	int buffer(0);
 
-	if (y0 < -(double)windowHeight || y0 >(double)m_mapSizePixY)
+	if (y0 > ((double)m_mapSizePixY - (double)windowHeight))
 	{
 		/* case 1 : camera is far down of the map // no need to draw map */
 		/* case 2 : camera is far up of the map // no need to draw map */
 
-		m_offsetMapCameraYmin = 0;
-		m_offsetMapCameraYmax = 0;
+		m_offsetMapCameraYmin = (unsigned int)std::floor(y0 / (double)m_tileSize);
+		camera.lockMoveUP();
 		return;
 	}
 	else
-	if (y0 >= -(double)windowHeight && y0 < 0.0)
+	if (y0 < 0.0)
 	{
 		m_offsetMapCameraYmin = 0;
-		buffer = -(int)std::floor((double)y0 / (double)m_tileSize);
+		buffer = -(int)std::floor((double)y0 / ((double)m_tileSize * camera.GETscale()));
+		camera.lockMoveDOWN();
 	}
 	else
 	{
 		m_offsetMapCameraYmin = (unsigned int)std::floor(y0 / (double)m_tileSize);
+		camera.unlockMoveUP();
+		camera.unlockMoveDOWN();
 	}
 
 
-	if ((y0 + (double)windowHeight) >= ((double)m_mapSizePixY - (double)m_tileSize))
+	if ((y0 + (double)windowHeight) >= ((double)m_mapSizePixY - ((double)m_tileSize * camera.GETscale())))
 	{
 		m_offsetMapCameraYmax = m_matriceMap[0].size();
 	}
@@ -693,7 +700,7 @@ void MainMap::updateOffsetY
 	{
 		m_offsetMapCameraYmax = 
 			m_offsetMapCameraYmin 
-			+ (unsigned int)std::ceil((double)windowHeight / (double)m_tileSize)
+			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_tileSize * camera.GETscale()))
 			- buffer
 			+ 1; /* avoid seeing nothing before next tile */
 	}
@@ -732,7 +739,8 @@ void MainMap::drawMap
 			((double)camera.GETposition().x - (double)window.GETscreenWidth() / 2),
 			((double)camera.GETposition().y - (double)window.GETscreenHeight() / 2),
 			window.GETscreenWidth(),
-			window.GETscreenHeight()
+			window.GETscreenHeight(),
+			camera
 		);
 
 		/* Use this because map is static */

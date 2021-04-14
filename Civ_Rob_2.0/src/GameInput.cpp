@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.29
+	last modification on this file on version:0.23.14.2
+	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -103,7 +103,7 @@ void GamePlayScreen::inputSDL
 
 void GamePlayScreen::moveCamera(float deltaTime)
 {
-	if (m_game->getInputManager().isKeyDown(SDLK_z))
+	if (m_game->getInputManager().isKeyDown(SDLK_z) && !m_screen.camera.isLockMoveUP())
 	{
 		m_screen.camera
 			.SETposition
@@ -115,7 +115,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_s))
+	if (m_game->getInputManager().isKeyDown(SDLK_s) && !m_screen.camera.isLockMoveDOWN())
 	{
 		m_screen.camera
 			.SETposition
@@ -127,7 +127,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_q))
+	if (m_game->getInputManager().isKeyDown(SDLK_q) && !m_screen.camera.isLockMoveLEFT())
 	{
 		m_screen.camera
 			.SETposition
@@ -139,7 +139,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_d))
+	if (m_game->getInputManager().isKeyDown(SDLK_d) && !m_screen.camera.isLockMoveRIGHT())
 	{
 		m_screen.camera
 			.SETposition
@@ -200,15 +200,15 @@ void GamePlayScreen::wheel
 	*/
 	if (MOUSE_SCROLL_UP == ev.wheel.y)
 	{
+		/* Zoom */
 		m_screen.camera
-			.SETscale(m_screen.camera.GETscale()
-						+ MOUSE_SCROLL_SPEED_PERC * m_screen.camera.GETscale());
+			.SETscale(m_screen.camera.GETscale() * 1.25f);
 	}
 	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
+		/* DeZoom */
 		m_screen.camera
-			.SETscale(m_screen.camera.GETscale()
-				- MOUSE_SCROLL_SPEED_PERC * m_screen.camera.GETscale());
+			.SETscale(m_screen.camera.GETscale() / 1.25f); 
 	}
 }
 

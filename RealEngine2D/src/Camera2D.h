@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.1
+	last modification on this file on version:0.23.14.2
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,15 @@
 
 namespace RealEngine2D
 {
+	struct LockMove
+	{
+		bool lockMoveUP;
+		bool lockMoveDOWN;
+		bool lockMoveLEFT;
+		bool lockMoveRIGHT;
+	};
+
+
 	class Camera2D
 	{
 	public:
@@ -48,6 +57,25 @@ namespace RealEngine2D
 			const glm::vec2& dim,
 			unsigned int toolBarSize
 		);
+
+	public:
+
+		bool isLockMoveUP() { return m_lockMove.lockMoveUP; }
+		bool isLockMoveDOWN() { return m_lockMove.lockMoveDOWN; }
+		bool isLockMoveLEFT() { return m_lockMove.lockMoveLEFT; }
+		bool isLockMoveRIGHT() { return m_lockMove.lockMoveRIGHT; }
+
+		void lockMoveUP() { m_lockMove.lockMoveUP = true; }
+		void lockMoveDOWN() { m_lockMove.lockMoveDOWN = true; }
+		void lockMoveLEFT() { m_lockMove.lockMoveLEFT = true; }
+		void lockMoveRIGHT() { m_lockMove.lockMoveRIGHT = true; }
+
+		void unlockMoveUP() { m_lockMove.lockMoveUP = false; }
+		void unlockMoveDOWN() { m_lockMove.lockMoveDOWN = false; }
+		void unlockMoveLEFT() { m_lockMove.lockMoveLEFT = false; }
+		void unlockMoveRIGHT() { m_lockMove.lockMoveRIGHT = false; }
+
+	public:
 
 		void SETposition(const glm::vec2& newPosition) { m_position = newPosition; m_needMatixUpdate = true; };
 		void SETscale(float scale) { m_scale = scale; m_needMatixUpdate = true;};
@@ -75,6 +103,8 @@ namespace RealEngine2D
 
 		glm::mat4 m_orthoMatrix;
 		glm::mat4 m_cameraMatrix;
+
+		LockMove m_lockMove;
 	};
 }
 

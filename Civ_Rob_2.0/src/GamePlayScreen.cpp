@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.0
-	file version : 1.11
+	last modification on this file on version:0.23.14.2
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -112,7 +112,8 @@ bool GamePlayScreen::onEntry()
 		((double)m_screen.camera.GETposition().x - (double)m_game->getWindow().GETscreenWidth() / 2),
 		((double)m_screen.camera.GETposition().y - (double)m_game->getWindow().GETscreenHeight() / 2),
 		m_game->getWindow().GETscreenWidth(), 
-		m_game->getWindow().GETscreenHeight()
+		m_game->getWindow().GETscreenHeight(),
+		m_screen.camera
 	);
 
 	RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
@@ -245,7 +246,15 @@ void GamePlayScreen::initStructsNULL()
 /* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::computeSize()
 {
-	m_mainMap.SETtoolBarSize((unsigned int)Utility::protectedDiv((m_game->getWindow().GETscreenWidth() / 10), m_mainMap.GETtileSize()));
+	m_mainMap.SETtoolBarSize
+	(
+		(unsigned int)std::ceil
+		(
+			(double)(m_game->getWindow().GETscreenWidth() / 8)
+			/
+			(double)m_mainMap.GETtileSize()
+		)
+	);
 }
 
 
