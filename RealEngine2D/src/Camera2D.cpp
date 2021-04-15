@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.2
-	file version : 1.3
+	last modification on this file on version:0.23.14.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,9 +32,13 @@ m_screenWidth(1280),
 m_screenHeight(720),
 m_needMatixUpdate(true),
 m_scale(1.0f),
+m_scaleRate(1.25f),
+m_maxScale(0.0f),
+m_minScale(0.0f),
 m_position(0.0f, 0.0f),
 m_orthoMatrix(1),
 m_cameraMatrix(1.0f),
+m_moveRate(2.0f),
 m_lockMove({false, false, false, false})
 {
 
@@ -113,4 +117,82 @@ bool Camera2D::isBoxInView
 		return true;
 	}
 	return false;
+}
+
+void Camera2D::setMinMaxScale
+(
+	unsigned int tileSize,
+	unsigned int mapSizePixX,
+	unsigned int mapSizePixY
+)
+{
+	if	(
+			(m_scale * m_screenWidth) > mapSizePixX
+			||
+			(m_scale * m_screenHeight) > mapSizePixY
+		)
+	{
+		throw("[Error]___: setMinMaxScale");
+	}
+
+	unsigned int i(0);
+	float buffer((float)std::max(m_screenWidth, m_screenHeight));
+	bool on(true);
+	while (on)
+	{
+		buffer *= m_scaleRate;
+		i++;
+
+		if (buffer >= (float)std::min(mapSizePixX, mapSizePixY))
+		{
+			on = false;
+			i--;
+		}
+		if (i > MAX_ITERATION_SCALE)
+		{
+			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
+		}
+	}
+
+	m_minScale = m_scale / std::pow(m_scaleRate , (float)i);
+
+	i = 0;
+	buffer = (float)std::min(m_screenWidth, m_screenHeight);
+	on = true;
+	while (on)
+	{
+		buffer /= m_scaleRate;
+		i++;
+
+		if (buffer <= ((float)tileSize * 8))
+		{
+			on = false;
+			i--;
+		}
+		if (i > MAX_ITERATION_SCALE)
+		{
+			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
+		}
+	}
+
+	m_maxScale = m_scale * std::pow(m_scaleRate, (float)i);
+
+}
+
+void Camera2D::zoom()
+{
+	if (m_scale < m_maxScale)
+	{
+		m_scale *= m_scaleRate;
+		m_needMatixUpdate = true;
+	}
+}
+
+void Camera2D::deZoom()
+{
+	if (m_scale > m_minScale)
+	{
+		m_scale /= m_scaleRate;
+		m_needMatixUpdate = true;
+	}
 }

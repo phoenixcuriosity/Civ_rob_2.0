@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.2
-	file version : 1.2
+	last modification on this file on version:0.23.14.3
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,82 +30,107 @@
 
 namespace RealEngine2D
 {
+
+const unsigned int MAX_ITERATION_SCALE = 10000;
+
+class Camera2D
+{
+public:
+	Camera2D();
+	~Camera2D();
+
+	void init(int screenWidth, int screenHeight);
+
+	void update();
+
+	glm::vec2 convertScreenToMap(glm::vec2 screenPos);
+
+	bool isBoxInView
+	(
+		const glm::vec2& position,
+		const glm::vec2& dim,
+		unsigned int toolBarSize
+	);
+
+public:
+
+	void setMinMaxScale
+	(
+		unsigned int tileSize,
+		unsigned int mapSizePixX,
+		unsigned int mapSizePixY
+	);
+
+	void zoom();
+	void deZoom();
+
+public:
+
+	bool isLockMoveUP() { return m_lockMove.lockMoveUP; }
+	bool isLockMoveDOWN() { return m_lockMove.lockMoveDOWN; }
+	bool isLockMoveLEFT() { return m_lockMove.lockMoveLEFT; }
+	bool isLockMoveRIGHT() { return m_lockMove.lockMoveRIGHT; }
+
+	void lockMoveUP() { m_lockMove.lockMoveUP = true; }
+	void lockMoveDOWN() { m_lockMove.lockMoveDOWN = true; }
+	void lockMoveLEFT() { m_lockMove.lockMoveLEFT = true; }
+	void lockMoveRIGHT() { m_lockMove.lockMoveRIGHT = true; }
+
+	void unlockMoveUP() { m_lockMove.lockMoveUP = false; }
+	void unlockMoveDOWN() { m_lockMove.lockMoveDOWN = false; }
+	void unlockMoveLEFT() { m_lockMove.lockMoveLEFT = false; }
+	void unlockMoveRIGHT() { m_lockMove.lockMoveRIGHT = false; }
+
+public:
+
+	void SETposition(const glm::vec2& newPosition) { m_position = newPosition; m_needMatixUpdate = true; };
+	void SETscale(float scale) { m_scale = scale; m_needMatixUpdate = true;};
+
+	glm::vec2& GETposition() { return m_position; };
+	glm::mat4& GETcameraMatrix() { return m_cameraMatrix; };
+	float GETscale() { return m_scale; };
+
+private:
+
+	/* Screen Width : default = 1280 */
+	int m_screenWidth;
+
+	/* Screen Width : default = 720 */
+	int m_screenHeight;
+
+	/* if position change : need to update */
+	bool m_needMatixUpdate;
+
+	/* Scale of the Camera : Zoom */
+	float m_scale;
+
+	/* Rate of zoom and deZoom, default : 1.25f */
+	float m_scaleRate;
+	
+	/* max camera Zoom */
+	float m_maxScale;
+
+	/* max camera DeZoom */
+	float m_minScale;
+
+	/* Center position of Camera */
+	glm::vec2 m_position;
+
+	glm::mat4 m_orthoMatrix;
+	glm::mat4 m_cameraMatrix;
+
+	/* move rate of camera, default : 2.0f */
+	float m_moveRate;
+
 	struct LockMove
 	{
 		bool lockMoveUP;
 		bool lockMoveDOWN;
 		bool lockMoveLEFT;
 		bool lockMoveRIGHT;
-	};
+	} m_lockMove;
+};
 
-
-	class Camera2D
-	{
-	public:
-		Camera2D();
-		~Camera2D();
-
-		void init(int screenWidth, int screenHeight);
-
-		void update();
-
-		glm::vec2 convertScreenToMap(glm::vec2 screenPos);
-
-		bool isBoxInView
-		(
-			const glm::vec2& position,
-			const glm::vec2& dim,
-			unsigned int toolBarSize
-		);
-
-	public:
-
-		bool isLockMoveUP() { return m_lockMove.lockMoveUP; }
-		bool isLockMoveDOWN() { return m_lockMove.lockMoveDOWN; }
-		bool isLockMoveLEFT() { return m_lockMove.lockMoveLEFT; }
-		bool isLockMoveRIGHT() { return m_lockMove.lockMoveRIGHT; }
-
-		void lockMoveUP() { m_lockMove.lockMoveUP = true; }
-		void lockMoveDOWN() { m_lockMove.lockMoveDOWN = true; }
-		void lockMoveLEFT() { m_lockMove.lockMoveLEFT = true; }
-		void lockMoveRIGHT() { m_lockMove.lockMoveRIGHT = true; }
-
-		void unlockMoveUP() { m_lockMove.lockMoveUP = false; }
-		void unlockMoveDOWN() { m_lockMove.lockMoveDOWN = false; }
-		void unlockMoveLEFT() { m_lockMove.lockMoveLEFT = false; }
-		void unlockMoveRIGHT() { m_lockMove.lockMoveRIGHT = false; }
-
-	public:
-
-		void SETposition(const glm::vec2& newPosition) { m_position = newPosition; m_needMatixUpdate = true; };
-		void SETscale(float scale) { m_scale = scale; m_needMatixUpdate = true;};
-
-		glm::vec2& GETposition() { return m_position; };
-		glm::mat4& GETcameraMatrix() { return m_cameraMatrix; };
-		float GETscale() { return m_scale; };
-
-	private:
-
-		/* Screen Width : default = 1280 */
-		int m_screenWidth = 1280;
-
-		/* Screen Width : default = 720 */
-		int m_screenHeight = 720;
-
-		/* if position change : need to update */
-		bool m_needMatixUpdate = true;
-
-		/* Scale of the Camera : Zoom */
-		float m_scale = 1.0f;
-
-		/* Center position of Camera */
-		glm::vec2 m_position;
-
-		glm::mat4 m_orthoMatrix;
-		glm::mat4 m_cameraMatrix;
-
-		LockMove m_lockMove;
-	};
 }
 
 #endif /* Camera2D_H */

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.3
+	last modification on this file on version:0.23.14.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,7 +51,6 @@ const int MOUSE_SCROLL_DOWN = - 1;
 
 
 const float KEY_SPEED_MOVE = 2.0f;
-const float MOUSE_SCROLL_SPEED_PERC = 0.25f;
 
 /* *********************************************************
  *						 Enum							   *

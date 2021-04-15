@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.2
-	file version : 1.12
+	last modification on this file on version:0.23.14.3
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -116,7 +116,9 @@ bool GamePlayScreen::onEntry()
 		m_screen.camera
 	);
 
-	RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
+	m_screen.camera.setMinMaxScale(m_mainMap.GETtileSize(), m_mainMap.GETmapSizePixX(), m_mainMap.GETmapSizePixY());
+
+	//RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
 	try 
 	{

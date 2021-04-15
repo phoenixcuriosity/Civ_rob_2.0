@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.2
-	file version : 1.30
+	last modification on this file on version:0.23.14.3
+	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -200,15 +200,11 @@ void GamePlayScreen::wheel
 	*/
 	if (MOUSE_SCROLL_UP == ev.wheel.y)
 	{
-		/* Zoom */
-		m_screen.camera
-			.SETscale(m_screen.camera.GETscale() * 1.25f);
+		m_screen.camera.zoom();
 	}
 	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
-		/* DeZoom */
-		m_screen.camera
-			.SETscale(m_screen.camera.GETscale() / 1.25f); 
+		m_screen.camera.deZoom();
 	}
 }
 
