@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.10
+	last modification on this file on version:0.23.14.4
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -401,7 +401,7 @@ private:
 	(
 		randomPos& RandomPOS,
 		const MatriceMap& matriceMap,
-		unsigned int tileSize
+		const unsigned int tileSize
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -418,7 +418,7 @@ private:
 	(
 		const randomPos& RandomPOS,
 		const std::vector<randomPos>& tabRandom,
-		unsigned int tileSize
+		const unsigned int tileSize
 	);
 
 	/* ----------------------------------------------------------------------------------- */

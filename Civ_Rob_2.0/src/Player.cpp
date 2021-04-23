@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.18
+	last modification on this file on version:0.23.14.4
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -67,7 +67,10 @@ Player::Player() :
 /* ----------------------------------------------------------------------------------- */
 Player::Player(const std::string& msg) :
 	m_name(msg),
-	m_selectedUnit(NO_UNIT_SELECTED), m_selectedCity(NO_CITY_SELECTED),
+	m_tabUnit(),
+	m_tabCity(),
+	m_selectedUnit(NO_UNIT_SELECTED),
+	m_selectedCity(NO_CITY_SELECTED),
 	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.3
-	file version : 1.13
+	last modification on this file on version:0.23.14.4
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -88,8 +88,6 @@ bool GamePlayScreen::onEntry()
 
 	initStructsNULL();
 
-	m_mainMap.initTile();
-
 	computeSize();
 
 	initOpenGLScreen();
@@ -105,27 +103,17 @@ bool GamePlayScreen::onEntry()
 
 	initUI();
 
-	m_mainMap.generateMap();
-
-	m_mainMap.updateOffset
-	(
-		((double)m_screen.camera.GETposition().x - (double)m_game->getWindow().GETscreenWidth() / 2),
-		((double)m_screen.camera.GETposition().y - (double)m_game->getWindow().GETscreenHeight() / 2),
-		m_game->getWindow().GETscreenWidth(), 
-		m_game->getWindow().GETscreenHeight(),
-		m_screen.camera
-	);
-
-	m_screen.camera.setMinMaxScale(m_mainMap.GETtileSize(), m_mainMap.GETmapSizePixX(), m_mainMap.GETmapSizePixY());
-
-	//RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
-
 	try 
 	{
+		m_mainMap.initMainMap(m_screen.camera);
+
+		//RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
+
 		newGame();
 	}
-	catch (...)
+	catch (const std::string& msg)
 	{
+		App::logfileconsole("[ERROR]___: GamePlayScreen::onEntry : " + msg);
 		return false;
 	}
 	return true;
@@ -363,13 +351,14 @@ void GamePlayScreen::initUI()
 		CEGUI::Event::Subscriber(&GamePlayScreen::onExitClicked, this)
 	);
 
-
+	/*
 	CEGUI::Combobox* testCobobox = static_cast<CEGUI::Combobox*>
 		(m_screen.m_gui.createWidget(
 			"TaharezLook/Combobox",
 			{ 0.2f, 0.2f, 0.1f, 0.05f },
 			{ 0,0,0,0 },
 			"TestCobobox"));
+	*/
 	
 	m_screen.m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
 	m_screen.m_gui.showMouseCursor();
@@ -519,6 +508,8 @@ void GamePlayScreen::drawHUD()
 		RealEngine2D::COLOR_WHITE
 	);
 
+	mouseClick();
+
 	sprintf_s(buffer, "Nb Turn %d", m_nextTurn.GETnbTurn());
 	m_screen.spriteFont->draw
 	(
@@ -529,6 +520,23 @@ void GamePlayScreen::drawHUD()
 		0.0f,
 		RealEngine2D::COLOR_BLUE
 	);
+
+#ifdef _DEBUG
+
+	sprintf_s(buffer, "Scale %lf", m_screen.camera.GETscale());
+	m_screen.spriteFont->draw
+	(
+		m_screen.spriteBatchHUDDynamic,
+		buffer,
+		glm::vec2(0.0f, 500.0f), // offset pos
+		glm::vec2(0.32f), // size
+		0.0f,
+		RealEngine2D::COLOR_RED
+	);
+
+#endif // _DEBUG
+
+	
 
 	for (auto& l : m_screen.m_widgetLabels) 
 		l.draw(m_screen.spriteBatchHUDDynamic, *m_screen.spriteFont, m_game->getWindow());
@@ -547,7 +555,28 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 	{
 		if (m_screen.m_vectPlayerRadioButton[i]->isSelected())
 		{
-			m_players.SETselectedPlayer((int)i);
+			if (i != m_players.GETselectedPlayer())
+			{
+
+				/* Reset if needed SHOW for the unit previously selected */
+				if (m_players.GETselectedPlayer() != NO_PLAYER_SELECTED)
+				{
+					std::shared_ptr<Player> p(m_players.GETvectPlayer()[m_players.GETselectedPlayer()]);
+					if (p->GETselectedUnit() != NO_UNIT_SELECTED)
+					{
+						std::shared_ptr<Unit> u(p->getSelectedUnit());
+
+						u->SETshow(true);
+						m_players.SETneedToUpdateDrawUnit(true);
+
+						p->SETselectedUnit(NO_UNIT_SELECTED);
+					}
+				}
+
+				/* Select player i */
+				m_players.SETselectedPlayer((int)i);
+			}
+			
 			return true;
 		}
 	}

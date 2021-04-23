@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.2
-	file version : 1.5
+	last modification on this file on version:0.23.14.4
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -68,6 +68,7 @@ const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER = 50;
 const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER = 1;
 
 const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
+const unsigned int MAX_ITERATION_SCALE = 10000;
 
 /* Minimum space beetween two or more settlers */
 const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
@@ -75,7 +76,14 @@ const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
 /* The tile is not own by a player */
 const int NO_APPARTENANCE = - 1;
 
-const std::string GROUNDSPEC_NOTHING = "void";
+/* Avoid seeing nothing before next tile */
+const unsigned int MAP_CAMERA_MIN_BORDER = 1;
+
+/* Define the index to look in the matrix for its size */
+const unsigned int MAP_CAMERA_INDEX_SIZE = 0;
+
+/* Define an ID which is unused */
+const GLuint UNUSED_ID = 0;
 
 /* *********************************************************
  *						 Enum							   *
@@ -199,7 +207,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosXToIndex
 	(
-		double posX
+		double posX,
+		double scale = 1.0
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -227,7 +236,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosYToIndex
 	(
-		double posY
+		double posY,
+		double scale = 1.0
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -251,11 +261,18 @@ public:
 	MainMap();
 	~MainMap();
 
+	void initMainMap(RealEngine2D::Camera2D& camera);
+
+private:
+
 	void initTile();
 
-public:
-
 	void generateMap();
+
+	void setMinMaxScale
+	(
+		RealEngine2D::Camera2D& camera
+	);
 
 	void updateOffset
 	(
@@ -279,6 +296,8 @@ public:
 		unsigned int windowHeight,
 		RealEngine2D::Camera2D& camera
 	);
+
+public:
 
 	void drawMap
 	(
@@ -409,6 +428,8 @@ private:
 
 	/* Dedicated spriteBatch for the map */
 	RealEngine2D::SpriteBatch m_spriteBatch;
+
+	static unsigned int* s_tileSize;
 };
 
 #endif /* GamePlay_H */

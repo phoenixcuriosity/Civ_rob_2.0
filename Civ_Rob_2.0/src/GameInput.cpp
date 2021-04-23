@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.3
-	file version : 1.31
+	last modification on this file on version:0.23.14.4
+	file version : 1.32
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -201,10 +201,14 @@ void GamePlayScreen::wheel
 	if (MOUSE_SCROLL_UP == ev.wheel.y)
 	{
 		m_screen.camera.zoom();
+		m_mainMap.SETneedToUpdateDraw(true);
+		m_players.SETneedToUpdateDrawUnit(true);
 	}
 	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
 		m_screen.camera.deZoom();
+		m_mainMap.SETneedToUpdateDraw(true);
+		m_players.SETneedToUpdateDrawUnit(true);
 	}
 }
 
@@ -213,12 +217,61 @@ void GamePlayScreen::mouseClick()
 {
 	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
 	{
-		/*
-		std::cout << std::endl << m_game->getInputManager().GETmouseCoords().x;
-		std::cout << std::endl << MainMap::convertPosXToIndex(m_game->getInputManager().GETmouseCoordsTile().x);
-		std::cout << std::endl << m_game->getInputManager().GETmouseCoords().y;
-		std::cout << std::endl << MainMap::convertPosYToIndex(m_game->getInputManager().GETmouseCoordsTile().y)
-		*/
+		char buffer[256];
+	
+		sprintf_s
+		(	buffer, "%d",
+			m_mainMap.GETtileSize()
+			*
+			MainMap::convertPosXToIndex
+			(
+				(double)m_game->getInputManager().GETmouseCoords().x
+				+ (double)m_screen.camera.GETposition().x
+				//- (double)m_screen.camera.getOffsetByZoomX()
+				- (double)m_game->getWindow().GETscreenWidth() / 2
+			)
+		);
+		m_screen.spriteFont->draw
+		(
+			m_screen.spriteBatchHUDDynamic,
+			buffer,
+			glm::vec2
+			(
+				(double)m_game->getInputManager().GETmouseCoords().x,
+				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y
+			), // offset pos
+			glm::vec2(0.32f), // size
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
+
+		sprintf_s
+		(
+			buffer, "%d", 
+				m_mainMap.GETtileSize()
+				*
+				MainMap::convertPosYToIndex
+				(
+					-(double)m_game->getInputManager().GETmouseCoords().y
+					+ (double)m_screen.camera.GETposition().y
+					//- (double)m_screen.camera.getOffsetByZoomY()
+					+ (double)m_game->getWindow().GETscreenHeight() / 2
+				)
+		);
+
+		m_screen.spriteFont->draw
+		(
+			m_screen.spriteBatchHUDDynamic,
+			buffer,
+			glm::vec2
+			(
+				(double)m_game->getInputManager().GETmouseCoords().x,
+				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y - 60
+			), // offset pos
+			glm::vec2(0.32f), // size
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
 	}
 }
 
@@ -228,13 +281,18 @@ unsigned int GamePlayScreen::getMouseCoorNorm(unsigned char c)
 	{
 		return
 		(
+			m_screen.camera.GETscale()
+			*
 			m_mainMap.GETtileSize()
 			*
 			MainMap::convertPosXToIndex
 			(
 				(double)m_game->getInputManager().GETmouseCoords().x
-				+ (double)m_screen.camera.GETposition().x
+				+ (double)m_screen.camera.GETposition().x 
+				//- (double)m_screen.camera.getOffsetByZoomX()
 				- (double)m_game->getWindow().GETscreenWidth() / 2
+				,
+				m_screen.camera.GETscale()
 			)
 		);
 	}
@@ -243,13 +301,18 @@ unsigned int GamePlayScreen::getMouseCoorNorm(unsigned char c)
 	{
 		return 
 		(
+			m_screen.camera.GETscale()
+			*
 			m_mainMap.GETtileSize()
 			*
 			MainMap::convertPosYToIndex
 			(
 				-(double)m_game->getInputManager().GETmouseCoords().y
 				+ (double)m_screen.camera.GETposition().y
+				//- (double)m_screen.camera.getOffsetByZoomY()
 				+ (double)m_game->getWindow().GETscreenHeight() / 2
+				,
+				m_screen.camera.GETscale()
 			)
 		);
 	}

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.12.0
-	file version : 1.34
+	last modification on this file on version:0.23.14.0
+	file version : 1.35
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -545,17 +545,17 @@ void City::computeEmotion()
 		{
 			App::logfileconsole(msg);
 			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
-#ifdef _DEBUG_MODE
+#ifdef _DEBUG
 			throw(msg);
-#endif // DEBUG_MODE
+#endif // _DEBUG
 		}
 		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
 		{
 			App::logfileconsole(msg);
 			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
-#ifdef _DEBUG_MODE
+#ifdef _DEBUG
 			throw(msg);
-#endif // DEBUG_MODE
+#endif // _DEBUG
 		}
 	}
 }
@@ -640,9 +640,9 @@ void City::computeWorkToBuild
 					else
 					{
 						/* N/A */
-#ifdef _DEBUG_MODE
+#ifdef _DEBUG
 						throw("[ERROR]___: computeWorkToBuild : m_buildQueue.front().type == else");
-#endif // DEBUG_MODE
+#endif // _DEBUG
 					}
 
 				workSurplus = -(m_buildQueue.buildQueue.front().remainingWork);

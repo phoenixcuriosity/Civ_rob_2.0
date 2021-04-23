@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.15
+	last modification on this file on version:0.23.14.4
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -272,6 +272,12 @@ public:
 	inline virtual OnOffDisplay& GETonOffDisplay() { return m_onOffDisplay; };
 	inline virtual OnOffDisplay GETonOffDisplayConst()const { return m_onOffDisplay; };
 
+	virtual std::shared_ptr<Unit> getSelectedUnit()
+	{
+		if(m_selectedUnit != NO_UNIT_SELECTED) return m_tabUnit[m_selectedUnit];
+		return nullptr;
+	}
+
 	inline virtual void SETname(const std::string& msg) { m_name = msg; };
 	inline virtual void SETselectedUnit(int selectedUnit) { m_selectedUnit = selectedUnit; };
 	inline virtual void SETselectedCity(int selectedCity) { m_selectedCity = selectedCity; };
@@ -285,8 +291,8 @@ private:
 	std::string m_name;
 	VectUnit m_tabUnit;
 	VectCity m_tabCity;
-	int m_selectedCity;
 	int m_selectedUnit;
+	int m_selectedCity;
 	GoldStats m_goldStats;
 	OnOffDisplay m_onOffDisplay;
 };

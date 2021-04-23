@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.2
-	file version : 1.25
+	last modification on this file on version:0.23.14.4
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,7 +36,7 @@
   *					  Static Var						   *
   ********************************************************* */
 
-static unsigned int* s_tileSize;
+unsigned int* MainMap::s_tileSize;
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -71,6 +71,25 @@ m_spriteBatch()
 MainMap::~MainMap()
 {
 
+}
+
+
+void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
+{
+	initTile();
+
+	generateMap();
+
+	updateOffset
+	(
+		((double)camera.GETposition().x - (double)camera.getScreenWidth() / 2.0),
+		((double)camera.GETposition().y - (double)camera.getScreenHeight() / 2.0),
+		(unsigned int)camera.getScreenWidth(),
+		(unsigned int)camera.getScreenHeight(),
+		camera
+	);
+
+	setMinMaxScale(camera);
 }
 
 
@@ -536,10 +555,11 @@ unsigned int MainMap::convertIndexToPosX
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosXToIndex
 (
-	double posX
+	double posX,
+	double scale
 )
 {
-	return (unsigned int)std::floor(posX / (double)*s_tileSize);
+	return (unsigned int)std::floor(posX / (double)(*s_tileSize * scale));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -570,10 +590,11 @@ unsigned int MainMap::convertIndexToPosY
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosYToIndex
 (
-	double posY
+	double posY,
+	double scale
 )
 {
-	return (unsigned int)std::floor(posY / (double)*s_tileSize);
+	return (unsigned int)std::floor(posY / (double)(*s_tileSize * scale));
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -594,6 +615,71 @@ bool MainMap::assertRangeMapIndex
 {
 	return indexToTest < size ? true : false;
 }
+
+
+
+
+void MainMap::setMinMaxScale
+(
+	RealEngine2D::Camera2D& camera
+)
+{
+	if	(
+			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenWidth()) > m_mapSizePixX
+			||
+			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenHeight()) > m_mapSizePixY
+		)
+	{
+		throw("[Error]___: setMinMaxScale");
+	}
+
+	unsigned int i(0);
+	float buffer((float)std::max(camera.getScreenWidth(), camera.getScreenHeight()));
+	bool on(true);
+	while (on)
+	{
+		buffer *= camera.GETscaleRate();
+		i++;
+
+		if (buffer >= (float)std::min(m_mapSizePixX, m_mapSizePixY))
+		{
+			on = false;
+			i--;
+		}
+		if (i > MAX_ITERATION_SCALE)
+		{
+			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
+		}
+	}
+
+	camera.SETminScale(camera.GETscale() / std::pow(camera.GETscaleRate(), (float)i));
+
+	i = 0;
+	buffer = (float)std::min(camera.getScreenWidth(), camera.getScreenHeight());
+	on = true;
+	while (on)
+	{
+		buffer /= camera.GETscaleRate();
+		i++;
+
+		if (buffer <= ((float)m_tileSize * 8))
+		{
+			on = false;
+			i--;
+		}
+		if (i > MAX_ITERATION_SCALE)
+		{
+			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
+		}
+	}
+
+	camera.SETmaxScale(camera.GETscale() * std::pow(camera.GETscaleRate(), (float)i));
+
+}
+
+
+
+
 
 void MainMap::updateOffset
 (
@@ -617,6 +703,12 @@ void MainMap::updateOffsetX
 )
 {
 	int buffer(0);
+
+	x0 -=
+		((double)
+			 ((double)(windowWidth - m_toolBarSize * m_tileSize) / (double)camera.GETscale())
+			- (double)(windowWidth - m_toolBarSize * m_tileSize)
+		) / 2.0;
 
 	if (x0 <= -((double)m_toolBarSize * m_tileSize * camera.GETscale()))
 	{
@@ -644,7 +736,7 @@ void MainMap::updateOffsetX
 
 	if ((x0 + (double)windowWidth) > (double)m_mapSizePixX)
 	{
-		m_offsetMapCameraXmax = m_matriceMap.size();
+		m_offsetMapCameraXmax = (unsigned int)m_matriceMap.size();
 	}
 	else
 	{
@@ -652,8 +744,18 @@ void MainMap::updateOffsetX
 			m_offsetMapCameraXmin
 			+ (unsigned int)std::floor((double)windowWidth / ((double)m_tileSize * camera.GETscale())) /* width of screen */
 			- buffer
-			+ 1  /* avoid seeing nothing before next tile */
+			+ MAP_CAMERA_MIN_BORDER  
 			- m_toolBarSize; /* Negative RIGHT offset HUD */
+
+		if (m_offsetMapCameraXmax >= (unsigned int)m_matriceMap.size() + MAP_CAMERA_MIN_BORDER)
+		{
+			camera.lockMoveRIGHT();
+		}
+
+		if (m_offsetMapCameraXmax >= (unsigned int)m_matriceMap.size())
+		{
+			m_offsetMapCameraXmax = (unsigned int)m_matriceMap.size();
+		}
 	}
 
 }
@@ -668,16 +770,8 @@ void MainMap::updateOffsetY
 {
 	int buffer(0);
 
-	if (y0 > ((double)m_mapSizePixY - (double)windowHeight))
-	{
-		/* case 1 : camera is far down of the map // no need to draw map */
-		/* case 2 : camera is far up of the map // no need to draw map */
+	y0 -= ((double)((float)windowHeight / camera.GETscale()) - (double)windowHeight) / 2.0;
 
-		m_offsetMapCameraYmin = (unsigned int)std::floor(y0 / (double)m_tileSize);
-		camera.lockMoveUP();
-		return;
-	}
-	else
 	if (y0 < 0.0)
 	{
 		m_offsetMapCameraYmin = 0;
@@ -694,7 +788,7 @@ void MainMap::updateOffsetY
 
 	if ((y0 + (double)windowHeight) >= ((double)m_mapSizePixY - ((double)m_tileSize * camera.GETscale())))
 	{
-		m_offsetMapCameraYmax = m_matriceMap[0].size();
+		m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size();
 	}
 	else
 	{
@@ -702,7 +796,17 @@ void MainMap::updateOffsetY
 			m_offsetMapCameraYmin 
 			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_tileSize * camera.GETscale()))
 			- buffer
-			+ 1; /* avoid seeing nothing before next tile */
+			+ MAP_CAMERA_MIN_BORDER;
+
+		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size() + MAP_CAMERA_MIN_BORDER)
+		{
+			camera.lockMoveUP();
+		}
+
+		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size())
+		{
+			m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size();
+		}
 	}
 
 }
@@ -732,14 +836,14 @@ void MainMap::drawMap
 
 	if (m_needToUpdateDraw)
 	{
-		GLuint id(0);
+		GLuint id(UNUSED_ID);
 
 		updateOffset
 		(
 			((double)camera.GETposition().x - (double)window.GETscreenWidth() / 2),
 			((double)camera.GETposition().y - (double)window.GETscreenHeight() / 2),
-			window.GETscreenWidth(),
-			window.GETscreenHeight(),
+			(unsigned int)window.GETscreenWidth(),
+			(unsigned int)window.GETscreenHeight(),
 			camera
 		);
 
@@ -762,23 +866,23 @@ void MainMap::drawMap
 					id = idDeepWater;
 					break;
 				case Ground_Type::dirt:
-					App::exitError("[Error]___: drawMap : Ground_Type::dirt");
+					throw("[Error]___: drawMap : Ground_Type::dirt");
 					break;
 				case Ground_Type::sand:
-					App::exitError("[Error]___: drawMap : Ground_Type::sand");
+					throw("[Error]___: drawMap : Ground_Type::sand");
 					break;
 				case Ground_Type::error:
-					App::exitError("[Error]___: drawMap : Ground_Type::error");
+					throw("[Error]___: drawMap : Ground_Type::error");
 					break;
 				default:
-					App::exitError("[Error]___: drawMap : default");
+					throw("[Error]___: drawMap : default");
 					break;
 				}
 
 				m_spriteBatch.draw
 				(
 					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-					glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+					RealEngine2D::FULL_RECT,
 					id,
 					0.0f,
 					RealEngine2D::COLOR_WHITE
@@ -814,18 +918,21 @@ void MainMap::drawMap
 					id = iduranium;
 					break;
 				case GroundSpec_Type::nothing:
-					/* N/A */
+					id = UNUSED_ID;
 					break;
 				}
 
-				m_spriteBatch.draw
-				(
-					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-					glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-					id,
-					0.0f,
-					RealEngine2D::COLOR_WHITE
-				);
+				if (UNUSED_ID != id)
+				{
+					m_spriteBatch.draw
+					(
+						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+						RealEngine2D::FULL_RECT,
+						id,
+						0.0f,
+						RealEngine2D::COLOR_WHITE
+					);
+				}
 			}
 		}
 

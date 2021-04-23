@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.3
-	file version : 1.3
+	last modification on this file on version:0.23.14.4
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,8 +31,6 @@
 namespace RealEngine2D
 {
 
-const unsigned int MAX_ITERATION_SCALE = 10000;
-
 class Camera2D
 {
 public:
@@ -53,13 +51,6 @@ public:
 	);
 
 public:
-
-	void setMinMaxScale
-	(
-		unsigned int tileSize,
-		unsigned int mapSizePixX,
-		unsigned int mapSizePixY
-	);
 
 	void zoom();
 	void deZoom();
@@ -85,10 +76,18 @@ public:
 
 	void SETposition(const glm::vec2& newPosition) { m_position = newPosition; m_needMatixUpdate = true; };
 	void SETscale(float scale) { m_scale = scale; m_needMatixUpdate = true;};
+	void SETmaxScale(float max) { m_maxScale = max; }
+	void SETminScale(float min) { m_minScale = min; }
 
 	glm::vec2& GETposition() { return m_position; };
 	glm::mat4& GETcameraMatrix() { return m_cameraMatrix; };
 	float GETscale() { return m_scale; };
+	float GETscaleRate() { return m_scaleRate; };
+	float getOffsetByZoomX() { return m_offsetByZoomX; }
+	float getOffsetByZoomY() { return m_offsetByZoomY; }
+
+	int getScreenWidth()const { return m_screenWidth; }
+	int getScreenHeight()const { return m_screenHeight; }
 
 private:
 
@@ -112,6 +111,11 @@ private:
 
 	/* max camera DeZoom */
 	float m_minScale;
+
+	int m_zoomLevel;
+
+	float m_offsetByZoomX;
+	float m_offsetByZoomY;
 
 	/* Center position of Camera */
 	glm::vec2 m_position;

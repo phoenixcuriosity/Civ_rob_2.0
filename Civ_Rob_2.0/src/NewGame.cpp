@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.11.0
-	file version : 1.5
+	last modification on this file on version:0.23.14.4
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -190,7 +190,7 @@ void GamePlayScreen::makeRandomPos
 (
 	randomPos& RandomPOS,
 	const MatriceMap& matriceMap,
-	unsigned int tileSize
+	const unsigned int tileSize
 )
 {
 	const unsigned int SEA_BORDER_MAP(MAP_BORDER_MAX * tileSize);
@@ -218,12 +218,12 @@ bool GamePlayScreen::conditionspace
 (
 	const randomPos& RandomPOS,
 	const std::vector<randomPos>& tabRandom,
-	unsigned int tileSize
+	const unsigned int tileSize
 )
 {
 	if (tabRandom.empty()) return true;
 
-	unsigned int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
+	const unsigned int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
 
 	bool condition(false);
 	for (size_t i(0); i < tabRandom.size(); i++)
