@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.4
+	last modification on this file on version:0.23.15.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -83,8 +83,6 @@ public:
 	glm::mat4& GETcameraMatrix() { return m_cameraMatrix; };
 	float GETscale() { return m_scale; };
 	float GETscaleRate() { return m_scaleRate; };
-	float getOffsetByZoomX() { return m_offsetByZoomX; }
-	float getOffsetByZoomY() { return m_offsetByZoomY; }
 
 	int getScreenWidth()const { return m_screenWidth; }
 	int getScreenHeight()const { return m_screenHeight; }
@@ -111,11 +109,6 @@ private:
 
 	/* max camera DeZoom */
 	float m_minScale;
-
-	int m_zoomLevel;
-
-	float m_offsetByZoomX;
-	float m_offsetByZoomY;
 
 	/* Center position of Camera */
 	glm::vec2 m_position;

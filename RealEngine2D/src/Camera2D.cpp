@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.5
+	last modification on this file on version:0.23.15.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,9 +35,6 @@ m_scale(1.0f),
 m_scaleRate(1.25f),
 m_maxScale(0.0f),
 m_minScale(0.0f),
-m_zoomLevel(0),
-m_offsetByZoomX(0.0f),
-m_offsetByZoomY(0.0f),
 m_position(0.0f, 0.0f),
 m_orthoMatrix(1),
 m_cameraMatrix(1.0f),
@@ -129,27 +126,8 @@ void Camera2D::zoom()
 		/* New Scale */
 		m_scale *= m_scaleRate;
 
-		/* Need to re-position camera to position - delta / 2 */
-		m_offsetByZoomX = (float)m_screenWidth / m_scale;
-		m_offsetByZoomX -= (float)m_screenWidth * std::pow(m_scaleRate, (float)(std::abs(m_zoomLevel)));
-		m_offsetByZoomX /= 2.0f;
-		m_position.x += m_offsetByZoomX;
-	
-
-		m_offsetByZoomY = ((float)m_screenHeight / m_scale);
-		m_offsetByZoomY -= ((float)m_screenHeight * std::pow(m_scaleRate, (float)(std::abs(m_zoomLevel))));
-		m_offsetByZoomY /= 2.0f;
-		m_position.y += m_offsetByZoomY;
-
 		/* Need to update matrix */
 		m_needMatixUpdate = true;
-
-		m_zoomLevel++;
-		if (m_scale == 1.0)
-		{
-			m_offsetByZoomX = 0.0f;
-			m_offsetByZoomY = 0.0f;
-		}
 	}
 }
 
@@ -160,25 +138,7 @@ void Camera2D::deZoom()
 		/* New Scale */
 		m_scale /= m_scaleRate;
 		
-		/* Need to re-position camera to position + delta / 2 */
-		m_offsetByZoomX = (float)m_screenWidth / m_scale;
-		m_offsetByZoomX -= (float)m_screenWidth * std::pow(m_scaleRate, (float)(std::abs(m_zoomLevel)));
-		m_offsetByZoomX /= 2.0f;
-		m_position.x += m_offsetByZoomX;
-
-		m_offsetByZoomY = ((float)m_screenHeight / m_scale);
-		m_offsetByZoomY -= ((float)m_screenHeight * std::pow(m_scaleRate, (float)(std::abs(m_zoomLevel))));
-		m_offsetByZoomY /= 2.0f;
-		m_position.y += m_offsetByZoomY;
-		
 		/* Need to update matrix */
 		m_needMatixUpdate = true;
-
-		m_zoomLevel--;
-		if (m_scale == 1.0)
-		{
-			m_offsetByZoomX = 0.0f;
-			m_offsetByZoomY = 0.0f;
-		}
 	}
 }

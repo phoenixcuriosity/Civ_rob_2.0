@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.5
+	last modification on this file on version:0.23.15.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -62,7 +62,7 @@ ReloadMenuScreen::~ReloadMenuScreen()
 
 int ReloadMenuScreen::getNextScreenIndex()const
 {
-	return INIT_SCREEN_INDEX;
+	return m_nextScreenIndexMenu;
 }
 int ReloadMenuScreen::getPreviousScreenIndex()const
 {
@@ -146,6 +146,20 @@ void ReloadMenuScreen::initHUD()
 		CEGUI::Event::Subscriber(&ReloadMenuScreen::onExitClicked, this)
 	);
 
+
+	CEGUI::PushButton* loadSelectedSave = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ 0.45f, 0.55f, 0.2f, 0.05f },
+			{ 0,0,0,0 },
+			"LoadSelectedSave"));
+
+	loadSelectedSave->setText("Load Selected Save");
+	loadSelectedSave->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&ReloadMenuScreen::onLoadSave, this)
+	);
 
 	CEGUI::PushButton* clearSavesButton = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
@@ -291,11 +305,27 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 {
 	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
 	{
-		if (m_vectSavesRadioButton[i]->isPushed())
-		{
-			m_SaveReload->SETcurrentSave((int)i);
+		if	(m_vectSavesRadioButton[i]->isSelected())
+		{	
+			std::string dummy(m_vectSavesRadioButton[i]->getName().c_str());
+			/* erase "Save ", keep after the space */
+			dummy.erase(0, 5);
+
+			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
+			m_file->saveMaps = "save/" + dummy + "/saveMaps.txt";
+			m_file->savePlayers = "save/" + dummy + "/savePlayers.xml";
 			return true;
 		}
+	}
+	return true;
+}
+
+bool ReloadMenuScreen::onLoadSave(const CEGUI::EventArgs& /* e */)
+{
+	if (m_SaveReload->GETcurrentSave() != NO_CURRENT_SAVE_SELECTED)
+	{
+		m_nextScreenIndexMenu = GAMEPLAY_SCREEN_INDEX;
+		m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
 	}
 	return true;
 }

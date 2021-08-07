@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.6
+	last modification on this file on version:0.23.15.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,13 +35,40 @@
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
-
+/* ----------------------------------------------------------------------------------- */
+/* NAME : newGame																	   */
+/* ROLE : Create a new save with new spaw settlers		 							   */
+/* ROLE : Players names are associate to radio button		 						   */
+/* ROLE : Save the new game set								 						   */
+/* INPUT : void																		   */
+/* RETURNED VALUE : void														       */
+/* ------------------------------------------------------------------------------------*/
 void GamePlayScreen::newGame()
 {
 	App::logfileconsole("[INFO]___: Newgame Start");
 	
 	m_SaveReload->createSave(*m_file);
 
+	makePlayersButtons();
+
+	newGameSettlerSpawn(m_players, m_mainMap);
+
+	SaveReload::save(*this);
+
+	/* ### Don't put code below here ### */
+
+	App::logfileconsole("[INFO]___: Newgame End");
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* NAME : makePlayersButtons														   */
+/* ROLE : Create for p, number of players, a radio button 							   */
+/* ROLE : Button will be arrange in vertical axis and by p order					   */
+/* INPUT : void																		   */
+/* RETURNED VALUE : void														       */
+/* ------------------------------------------------------------------------------------*/
+void GamePlayScreen::makePlayersButtons()
+{
 	float X_POS = 0.01f;
 	float Y_POS = 0.20f;
 	const float DIMS_PIXELS = 20.0f;
@@ -57,7 +84,7 @@ void GamePlayScreen::newGame()
 	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
 		m_players.addPlayer(m_userInputNewGame->vectPlayerName[i]);
-		
+
 		m_screen.m_vectPlayerRadioButton[i]
 			= static_cast<CEGUI::RadioButton*>
 			(m_screen.m_gui.createWidget(
@@ -79,27 +106,15 @@ void GamePlayScreen::newGame()
 			TEXT_SCALE);
 
 	}
-
-	newGameSettlerSpawn(m_players, m_mainMap);
-
-	SaveReload::save(*this);
-
-	/* ### Don't put code below here ### */
-
-	App::logfileconsole("[INFO]___: Newgame End");
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : newGameSettlerSpawn														   */
 /* ROLE : Création des position pour les settlers de chaque joueurs					   */
-/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
-/* INPUT : ...  par défauts des unités												   */
-/* INPUT : const struct Map& map : structure globale de la map						   */
-/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
+/* IN/OUT : Players& players			   */
+/* IN : const MainMap& mainMap												   */
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::newGameSettlerSpawn
 (
 	Players& players,
@@ -134,14 +149,16 @@ void GamePlayScreen::newGameSettlerSpawn
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : makeRandomPosTab															   */
-/* ROLE : Créér autant de vecteur de position (x,y) que de joueur initial			   */
-/* INPUT : const Map& map : structure globale de la map								   */
-/* INPUT/OUTPUT : std::vector<randomPos>& : vecteurs de positions					   */
+/* ROLE : WHILE new positions are not valid, create new ones						   */
+/* ROLE : --- create new positions with matriceMap & tileSize						   */
+/* ROLE : --- IF positions are valid - on ground THEN quit loop						   */
+/* ROLE : --- IF IN_DEBUG && iteration loop > MAX_RANDOM_POS_ITERATION THEN THROW	   */
+/* ROLE : Push new valid position to vector of new positions						   */
+/* IN : const Map& map : struct main map : map & tileSize							   */
+/* IN/OUT : std::vector<randomPos>& : New vector positions							   */
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::makeRandomPosTab
 (
 	const MainMap& mainMap,
@@ -176,16 +193,15 @@ void GamePlayScreen::makeRandomPosTab
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : makeRandomPos																   */
-/* ROLE : créér un vecteur de position (x,y) aléatoire respectant la taille de l'écran */
-/* OUTPUT : randomPos& RandomPOS : couple de positions								   */
-/* INPUT : const std::vector<std::vector<Tile>>& maps : Matrice maps				   */
-/* INPUT : unsigned int toolBarSize: taille de la barre d'outil						   */
-/* INPUT : unsigned int tileSize													   */
+/* ROLE : Create random positions between matriceMap								   */
+/* ROLE : pos === size - 2 * MAP_BORDER_MAX * tileSize								   */
+/* ROLE : Ceil value with tileSize													   */
+/* OUT : randomPos& RandomPOS :	New random positions								   */
+/* IN : const MatriceMap& matriceMap : matriceMap for size							   */
+/* IN : const unsigned int tileSize	: Globale tileSize								   */
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::makeRandomPos
 (
 	randomPos& RandomPOS,
@@ -203,17 +219,18 @@ void GamePlayScreen::makeRandomPos
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : conditionspace															   */
-/* ROLE : condition pour valider les coordonnées crées:								   */
-/* ROLE : etre en dehors d'un carré d'influence (ici tileSize * 8) d'une autre entitée */
-/* INPUT : const randomPos& RandomPOS : couple de positions							   */
-/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
-/* INPUT : unsigned int tileSize													   */
-/* INPUT : unsigned int i : couple de positions courant								   */
-/* RETURNED VALUE    : true -> condition de position validée / false -> non valide     */
+/* ROLE : IF empty tab return TRUE													   */
+/* ROLE : ELSE test every positions with new positions  							   */
+/* ROLE : --- IF new position is in a square of spaceBetweenSettler THEN return FALSE  */
+/* ROLE : --- ELSE new position is not in a square with every positions				   */
+/* ROLE : ---			of spaceBetweenSettler THEN return TRUE						   */
+/* INPUT : const randomPos& RandomPOS : Positions to test							   */
+/* INPUT : const std::vector<randomPos>& tabRandom : tab of positions				   */
+/* INPUT : unsigned int tileSize : Globale tileSize									   */
+/* RETURNED VALUE : TRUE -> New positions valid									       */
+/* RETURNED VALUE : FALSE -> New positions not valid						           */
 /* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 bool GamePlayScreen::conditionspace
 (
 	const randomPos& RandomPOS,
@@ -221,6 +238,7 @@ bool GamePlayScreen::conditionspace
 	const unsigned int tileSize
 )
 {
+	/* Return true : Empty tab */
 	if (tabRandom.empty()) return true;
 
 	const unsigned int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
@@ -249,15 +267,15 @@ bool GamePlayScreen::conditionspace
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : conditionground															   */
-/* ROLE : condition pour valider les coordonnées crées:								   */
-/* ROLE : - etre sur une tile possédant la caractéristique d'etre du sol			   */
-/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la map				   */
-/* INPUT : const std::vector<randomPos>& : vecteurs de positions					   */
-/* RETURNED VALUE    : true -> condition de position validée / false -> non valide	   */
+/* ROLE : Convert new positions to index											   */
+/* ROLE : IF Assert index to maticeMap size && tile index is ground THEN return TRUE   */
+/* ROLE : ELSE return FALSE															   */
+/* INPUT : const MatriceMap& matriceMap	: Map matrice								   */
+/* INPUT : const randomPos& RandomPOS :	New positions								   */
+/* RETURNED VALUE : TRUE -> New positions valid									       */
+/* RETURNED VALUE : FALSE -> New positions not valid						           */
 /* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 bool GamePlayScreen::conditionground
 (
 	const MatriceMap& matriceMap,
@@ -267,16 +285,16 @@ bool GamePlayScreen::conditionground
 	unsigned int x(MainMap::convertPosXToIndex(RandomPOS.x));
 	unsigned int y(MainMap::convertPosYToIndex(RandomPOS.y));
 
-	if (
-		MainMap::assertRangeMapIndex(x, matriceMap.size())
-		&&
-		MainMap::assertRangeMapIndex(y, matriceMap[x].size())
+	if	(
+			MainMap::assertRangeMapIndex(x, matriceMap.size())
+			&&
+			MainMap::assertRangeMapIndex(y, matriceMap[x].size())
 		)
 	{
-		if (
-			matriceMap[x][y].tile_ground
-			==
-			Ground_Type::grass
+		if	(
+				matriceMap[x][y].tile_ground
+				==
+				Ground_Type::grass
 			)
 		{
 			return true;

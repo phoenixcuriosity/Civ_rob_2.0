@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.11.0
-	file version : 1.5
+	last modification on this file on version:0.23.15.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -78,6 +78,7 @@ private:
 
 	bool onNewGameClicked(const CEGUI::EventArgs& e);
 	bool onReloadClicked(const CEGUI::EventArgs& e);
+	bool onOptionClicked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
 

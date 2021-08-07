@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.26
+	last modification on this file on version:0.23.15.0
+	file version : 1.27
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -555,11 +555,10 @@ unsigned int MainMap::convertIndexToPosX
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosXToIndex
 (
-	double posX,
-	double scale
+	double posX
 )
 {
-	return (unsigned int)std::floor(posX / (double)(*s_tileSize * scale));
+	return (unsigned int)std::floor(posX / (double)*s_tileSize);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -590,11 +589,10 @@ unsigned int MainMap::convertIndexToPosY
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosYToIndex
 (
-	double posY,
-	double scale
+	double posY
 )
 {
-	return (unsigned int)std::floor(posY / (double)(*s_tileSize * scale));
+	return (unsigned int)std::floor(posY / (double)*s_tileSize);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -704,12 +702,6 @@ void MainMap::updateOffsetX
 {
 	int buffer(0);
 
-	x0 -=
-		((double)
-			 ((double)(windowWidth - m_toolBarSize * m_tileSize) / (double)camera.GETscale())
-			- (double)(windowWidth - m_toolBarSize * m_tileSize)
-		) / 2.0;
-
 	if (x0 <= -((double)m_toolBarSize * m_tileSize * camera.GETscale()))
 	{
 		m_offsetMapCameraXmin = 0;
@@ -769,8 +761,6 @@ void MainMap::updateOffsetY
 )
 {
 	int buffer(0);
-
-	y0 -= ((double)((float)windowHeight / camera.GETscale()) - (double)windowHeight) / 2.0;
 
 	if (y0 < 0.0)
 	{

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.19
+	last modification on this file on version:0.23.15.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -474,13 +474,13 @@ void Players::drawUnit
 
 				if (unit->GETshow())
 				{
-					if (
-						camera.isBoxInView
-						(
-							{ unit->GETx(), unit->GETy() },
-							{ tileSize , tileSize },
-							mainMap.GETtoolBarSize() * tileSize
-						)
+					if	(
+							camera.isBoxInView
+							(
+								{ unit->GETx(), unit->GETy() },
+								{ tileSize , tileSize },
+								mainMap.GETtoolBarSize() * tileSize
+							)
 						)
 					{
 						/* Unit Texture */
@@ -502,7 +502,7 @@ void Players::drawUnit
 							[
 								m_vectUnitTemplate.size() - 1
 								+
-							(int)std::floor(Utility::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
+								(int)std::floor(Utility::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
 							],
 							0.0f,
 							RealEngine2D::COLOR_WHITE
@@ -517,9 +517,9 @@ void Players::drawUnit
 							[
 								m_vectUnitTemplate.size()
 								+
-							LIFE_BAR_NB_SUBDIVISION
-							+
-							i
+								LIFE_BAR_NB_SUBDIVISION
+								+
+								i
 							],
 							0.0f,
 							RealEngine2D::COLOR_WHITE

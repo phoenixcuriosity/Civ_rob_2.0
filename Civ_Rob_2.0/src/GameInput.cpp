@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.32
+	last modification on this file on version:0.23.15.0
+	file version : 1.33
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,8 @@
 
 #include "App.h"
 #include <iostream>
+
+#include "Utility.h"
 
  /* *********************************************************
   *						 Classes						   *
@@ -97,6 +99,14 @@ void GamePlayScreen::inputSDL
 	default:
 		/* N/A */
 		break;
+	}
+
+	if (m_game->getInputManager().isKeyDown(SDLK_b))
+	{
+		if (Utility::conditionTryToMove(m_var, m_players))
+		{
+			City::createCity(*this);
+		}
 	}
 }
 
@@ -227,7 +237,6 @@ void GamePlayScreen::mouseClick()
 			(
 				(double)m_game->getInputManager().GETmouseCoords().x
 				+ (double)m_screen.camera.GETposition().x
-				//- (double)m_screen.camera.getOffsetByZoomX()
 				- (double)m_game->getWindow().GETscreenWidth() / 2
 			)
 		);
@@ -254,7 +263,6 @@ void GamePlayScreen::mouseClick()
 				(
 					-(double)m_game->getInputManager().GETmouseCoords().y
 					+ (double)m_screen.camera.GETposition().y
-					//- (double)m_screen.camera.getOffsetByZoomY()
 					+ (double)m_game->getWindow().GETscreenHeight() / 2
 				)
 		);
@@ -281,18 +289,13 @@ unsigned int GamePlayScreen::getMouseCoorNorm(unsigned char c)
 	{
 		return
 		(
-			m_screen.camera.GETscale()
-			*
 			m_mainMap.GETtileSize()
 			*
 			MainMap::convertPosXToIndex
 			(
 				(double)m_game->getInputManager().GETmouseCoords().x
 				+ (double)m_screen.camera.GETposition().x 
-				//- (double)m_screen.camera.getOffsetByZoomX()
 				- (double)m_game->getWindow().GETscreenWidth() / 2
-				,
-				m_screen.camera.GETscale()
 			)
 		);
 	}
@@ -301,18 +304,13 @@ unsigned int GamePlayScreen::getMouseCoorNorm(unsigned char c)
 	{
 		return 
 		(
-			m_screen.camera.GETscale()
-			*
 			m_mainMap.GETtileSize()
 			*
 			MainMap::convertPosYToIndex
 			(
 				-(double)m_game->getInputManager().GETmouseCoords().y
 				+ (double)m_screen.camera.GETposition().y
-				//- (double)m_screen.camera.getOffsetByZoomY()
 				+ (double)m_game->getWindow().GETscreenHeight() / 2
-				,
-				m_screen.camera.GETscale()
 			)
 		);
 	}

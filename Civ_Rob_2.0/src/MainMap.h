@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.6
+	last modification on this file on version:0.23.15.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -207,8 +207,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosXToIndex
 	(
-		double posX,
-		double scale = 1.0
+		double posX
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -236,8 +235,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosYToIndex
 	(
-		double posY,
-		double scale = 1.0
+		double posY
 	);
 
 	/* ----------------------------------------------------------------------------------- */

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.14
+	last modification on this file on version:0.23.15.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -109,7 +109,15 @@ bool GamePlayScreen::onEntry()
 
 		//RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
-		newGame();
+		if (m_SaveReload->GETcurrentSave() != NO_CURRENT_SAVE_SELECTED)
+		{
+			m_SaveReload->reload(*this);
+		}
+		else
+		{
+			newGame();
+		}
+
 	}
 	catch (const std::string& msg)
 	{
@@ -337,6 +345,7 @@ void GamePlayScreen::initUI()
 
 	m_screen.m_gui.setFont("DejaVuSans-10");
 
+	/* MainMenuButton */
 	CEGUI::PushButton* mainMenuButton = static_cast<CEGUI::PushButton*>
 		(m_screen.m_gui.createWidget(
 			"AlfiskoSkin/Button",
@@ -350,15 +359,6 @@ void GamePlayScreen::initUI()
 		CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&GamePlayScreen::onExitClicked, this)
 	);
-
-	/*
-	CEGUI::Combobox* testCobobox = static_cast<CEGUI::Combobox*>
-		(m_screen.m_gui.createWidget(
-			"TaharezLook/Combobox",
-			{ 0.2f, 0.2f, 0.1f, 0.05f },
-			{ 0,0,0,0 },
-			"TestCobobox"));
-	*/
 	
 	m_screen.m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
 	m_screen.m_gui.showMouseCursor();

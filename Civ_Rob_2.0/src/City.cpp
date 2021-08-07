@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.0
-	file version : 1.35
+	last modification on this file on version:0.23.15.0
+	file version : 1.36
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -60,11 +60,7 @@ void City::createCity
 		unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
 		std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-		if (
-			sUnit->GETname().compare("settler")
-			==
-			IDENTICAL_STRINGS
-			)
+		if (sUnit->GETname().compare("settler") == IDENTICAL_STRINGS)
 		{
 			/* ---------------------------------------------------------------------- */
 			/* 1� : Recherche du nom de la nouvelle Citie 							  */
@@ -161,7 +157,6 @@ void City::fillCitieTiles
 )
 {
 	unsigned int k(0);
-
 	
 	for (int o(-(int)ceil(INIT_SIZE_VIEW / 2)); o <= (int)ceil(INIT_SIZE_VIEW / 2); o++)
 	{

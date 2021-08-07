@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.11.0
-	file version : 1.3
+	last modification on this file on version:0.23.15.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -71,11 +71,14 @@ bool MainMenuScreen::onEntry()
 
 	m_gui.setFont("DejaVuSans-10");
 
+	const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);
+	float yC(0.4f);
+
 	CEGUI::PushButton* newGame = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
 			"AlfiskoSkin/Button",
-			{ 0.45f, 0.4f, 0.1f, 0.05f },
-			{ 0,0,0,0 },
+			{ xC, yC, xL, yL },
+			RealEngine2D::NOT_BY_PERCENT,
 			"newGame"));
 
 	newGame->setText("New Game");
@@ -88,8 +91,8 @@ bool MainMenuScreen::onEntry()
 	CEGUI::PushButton* reloadButton = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
 			"AlfiskoSkin/Button",
-			{ 0.45f, 0.5f, 0.1f, 0.05f },
-			{ 0,0,0,0 },
+			{ xC, yC += yDelta, xL, yL },
+			RealEngine2D::NOT_BY_PERCENT,
 			"Reload"));
 
 	reloadButton->setText("Reload");
@@ -99,12 +102,25 @@ bool MainMenuScreen::onEntry()
 		CEGUI::Event::Subscriber(&MainMenuScreen::onReloadClicked, this)
 	);
 
+	CEGUI::PushButton* optionButton = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ xC, yC += yDelta, xL, yL },
+			RealEngine2D::NOT_BY_PERCENT,
+			"Option"));
+
+	optionButton->setText("Option");
+	optionButton->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&MainMenuScreen::onOptionClicked, this)
+	);
 
 	CEGUI::PushButton* quitGame = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
 			"AlfiskoSkin/Button",
-			{ 0.45f, 0.6f, 0.1f, 0.05f },
-			{ 0,0,0,0 },
+			{ xC, yC += yDelta, xL, yL },
+			RealEngine2D::NOT_BY_PERCENT,
 			"QuitGame"));
 
 	quitGame->setText("Quit Game");
@@ -171,6 +187,11 @@ bool MainMenuScreen::onReloadClicked(const CEGUI::EventArgs& /* e */)
 {
 	m_nextScreenIndexMenu = RELOAD_SCREEN_INDEX;
 	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+	return true;
+}
+
+bool MainMenuScreen::onOptionClicked(const CEGUI::EventArgs& /* e */)
+{
 	return true;
 }
 
