@@ -79,12 +79,16 @@ public:
 	static CEGUI::OpenGL3Renderer* getRenderer() { return m_renderer; };
 	const CEGUI::GUIContext* getContext() { return m_context; };
 
+	CEGUI::MouseButton SDLButtonToCEGUI(Uint8 sdlButton);
+
 private:
 	Uint32 m_lasTime = 0;
 
 	static CEGUI::OpenGL3Renderer* m_renderer;
 	CEGUI::GUIContext* m_context = nullptr;
 	CEGUI::Window* m_root = nullptr;
+
+	bool m_doubleClicked = false;
 };
 
 }
