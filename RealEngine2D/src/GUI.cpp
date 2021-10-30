@@ -40,7 +40,7 @@ GUI::GUI()
 m_lasTime(0),
 m_context(nullptr),
 m_root(nullptr),
-m_doubleClicked(false)
+m_doubleClicked(NO_CLICK)
 {
 
 }
@@ -248,13 +248,13 @@ CEGUI::MouseButton GUI::SDLButtonToCEGUI(Uint8 sdlButton)
 {
     switch (sdlButton)
     {
-    case SDL_BUTTON_LEFT: {m_doubleClicked = true;  return CEGUI::MouseButton::LeftButton; }
-    case SDL_BUTTON_RIGHT: {m_doubleClicked = false;  return CEGUI::MouseButton::RightButton; }
-    case SDL_BUTTON_MIDDLE: {m_doubleClicked = false;  return CEGUI::MouseButton::MiddleButton; }
-    case SDL_BUTTON_X1: {m_doubleClicked = false;  return CEGUI::MouseButton::X1Button; }
-    case SDL_BUTTON_X2: {m_doubleClicked = false;  return CEGUI::MouseButton::X2Button; }
+    case SDL_BUTTON_LEFT: {m_doubleClicked++;  return CEGUI::MouseButton::LeftButton; }
+    case SDL_BUTTON_RIGHT: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::RightButton; }
+    case SDL_BUTTON_MIDDLE: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::MiddleButton; }
+    case SDL_BUTTON_X1: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::X1Button; }
+    case SDL_BUTTON_X2: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::X2Button; }
     default:
-        m_doubleClicked = false;
+        m_doubleClicked = NO_CLICK;
         return CEGUI::MouseButton::NoButton;
         break;
     }
@@ -291,9 +291,9 @@ void GUI::onSDLEvent(SDL_Event& ev, InputManager& /* inputManager */)
 	case SDL_MOUSEBUTTONDOWN:
     {
         CEGUI::MouseButton cliked(SDLButtonToCEGUI(ev.button.button));
-        if (m_doubleClicked)
+        if (m_doubleClicked == TWO_CLICK)
         {
-            m_doubleClicked = false;
+            m_doubleClicked = NO_CLICK;
             m_context->injectMouseButtonDoubleClick(cliked);
         }
         else

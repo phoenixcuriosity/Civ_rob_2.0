@@ -36,6 +36,9 @@
 
 #include "InputManager.h"
 
+const Uint8 NO_CLICK = 0;
+const Uint8 ONE_CLICK = 1;
+const Uint8 TWO_CLICK = 2;
 
 namespace RealEngine2D
 {
@@ -88,7 +91,7 @@ private:
 	CEGUI::GUIContext* m_context = nullptr;
 	CEGUI::Window* m_root = nullptr;
 
-	bool m_doubleClicked = false;
+	Uint8 m_doubleClicked = NO_CLICK;
 };
 
 }
