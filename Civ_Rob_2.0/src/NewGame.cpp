@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.7
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -49,6 +49,8 @@ void GamePlayScreen::newGame()
 	
 	m_SaveReload->createSave(*m_file);
 
+	pushNewPlayer();
+
 	makePlayersButtons();
 
 	newGameSettlerSpawn(m_players, m_mainMap);
@@ -58,6 +60,21 @@ void GamePlayScreen::newGame()
 	/* ### Don't put code below here ### */
 
 	App::logfileconsole("[INFO]___: Newgame End");
+}
+
+/* ----------------------------------------------------------------------------------- */
+/* NAME : pushNewPlayer															   	   */
+/* ROLE : For every name in struct UserInputNewGame push new player in m_players	   */
+/* attribut in : UserInputNewGame* m_userInputNewGame								   */
+/* attribut out : m_players															   */
+/* RETURNED VALUE : void														       */
+/* ------------------------------------------------------------------------------------*/
+void GamePlayScreen::pushNewPlayer()
+{
+	for (auto& p : m_userInputNewGame->vectPlayerName)
+	{
+		m_players.addPlayer(p);
+	}
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -76,15 +93,16 @@ void GamePlayScreen::makePlayersButtons()
 	const float TEXT_SCALE = 0.6f;
 	const int GROUP_ID = 1;
 
+	/* Clear buffer */
 	m_screen.m_vectPlayerRadioButton.clear();
 	m_screen.m_widgetLabels.clear();
+
+	/* Resize buffer */
 	m_screen.m_vectPlayerRadioButton.resize(m_userInputNewGame->vectPlayerName.size());
 	m_screen.m_widgetLabels.resize(m_userInputNewGame->vectPlayerName.size());
 
 	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
-		m_players.addPlayer(m_userInputNewGame->vectPlayerName[i]);
-
 		m_screen.m_vectPlayerRadioButton[i]
 			= static_cast<CEGUI::RadioButton*>
 			(m_screen.m_gui.createWidget(

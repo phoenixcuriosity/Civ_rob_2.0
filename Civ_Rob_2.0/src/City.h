@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.20
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,6 +40,7 @@
 #include <memory>
 
 #include <RealEngine2D/src/Window.h>
+#include <RealEngine2D/src/GUI.h>
 
 /* Redef : include in .cpp */
 class GamePlayScreen;
@@ -101,6 +102,12 @@ const unsigned int CITY_IHM_SECOND_INDEX = 1;
 /* Define the minimum food in a City */
 const double CITY_ZERO_FOOD = 0.0;
 
+/* Define the minimum food in a City */
+const double CITY_ZERO = 0.0;
+
+
+
+
 /* *********************************************************
  *							 Enum						   *
  ********************************************************* */
@@ -147,17 +154,12 @@ struct build
 	double remainingWork;
 };
 
-/*
-	Define 2 arrays :
-	-> buildQueue : use for City process
-	-> cityMapBuildQueue : use for City IHM
-	Error if both are not with the same size
-*/
-struct cityBuildQueue
-{
-	std::deque<build> buildQueue;
 
-};
+typedef struct buildPushButton
+{
+	CEGUI::PushButton* button;
+	build build;
+}buildPushButton;
 
 /* *********************************************************
  *						 Classes						   *
@@ -169,7 +171,6 @@ public:
 	/* *********************************************************
 	 *					City::STATIC						   *
 	 ********************************************************* */
-
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -246,21 +247,6 @@ private:
 		unsigned int influenceLevel
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : searchCityTile															   */
-	/* ROLE : Recherche la case de la City et renvoie vers cityMap						   */
-	/* INPUT : const std::vector<Player*>& : Vecteur de joueurs							   */
-	/* INPUT/OUTPUT : Var& : Structure Var												   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void searchCityTile
-	(
-		Players& players,
-		const GameInput& gameInput,
-		Var& var
-	);
 
 public:
 	/* *********************************************************
@@ -317,6 +303,28 @@ public:
 		GoldStats& goldStats
 	);
 
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : searchCityTile															   */
+	/* ROLE : Recherche la case de la City et renvoie vers cityMap						   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool searchCityTile
+	(
+		unsigned int indexX,
+		unsigned int indexY
+	);
+
+private:
+
+	virtual double tileValue
+	(
+		const Tile& tile,
+		double coefFood = 1.0,
+		double coefWork = 1.0,
+		double coefGold = 1.0
+	) const;
+
+public:
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : testPos																	   */
@@ -449,7 +457,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void addBuildToQueue
 	(
-
+		const buildPushButton& buildToQueue
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -606,7 +614,7 @@ public:
 	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodSurplusPreviousTurn; };
 	inline virtual double GETgoldBalance()const { return m_goldBalance; };
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
-	inline virtual cityBuildQueue& GETbuildQueue() { return m_buildQueue; };
+	inline virtual std::deque<buildPushButton>& GETbuildQueue() { return m_buildQueue; };
 
 	inline virtual void SETimage(std::string image) { m_image = image; };
 	inline virtual void SETname(std::string name) { m_name = name; };
@@ -656,7 +664,7 @@ private:
 
 	conversionSurplus_Type m_conversionToApply;
 
-	cityBuildQueue m_buildQueue;
+	std::deque<buildPushButton> m_buildQueue;
 };
 
 

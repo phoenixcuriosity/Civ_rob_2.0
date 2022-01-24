@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.6
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,18 +46,15 @@ m_widgetLabels(),
 m_spriteFont(nullptr),
 m_spriteBatchHUDDynamic(),
 m_file(file),
-m_SaveReload(SaveReload)
+m_SaveReload(SaveReload),
+m_isInitialize(false)
 {
-	m_screenIndex = MAINMENU_SCREEN_INDEX;
+	build();
 }
 
 ReloadMenuScreen::~ReloadMenuScreen()
 {
-	m_gui.destroy();
-
-	m_widgetLabels.clear();
-
-	m_spriteFont.reset();
+	destroy();
 }
 
 int ReloadMenuScreen::getNextScreenIndex()const
@@ -71,20 +68,35 @@ int ReloadMenuScreen::getPreviousScreenIndex()const
 
 void ReloadMenuScreen::build()
 {
-
+	m_screenIndex = MAINMENU_SCREEN_INDEX;
 }
+
 void ReloadMenuScreen::destroy()
 {
 	m_gui.destroy();
+
+	m_widgetLabels.clear();
+
+	m_spriteFont.reset();
 }
 
 bool ReloadMenuScreen::onEntry()
 {
-	initOpenGLScreen();
-	initShaders();
-	initHUD();
+	if (!m_isInitialize)
+	{
+		initOpenGLScreen();
+		initShaders();
+		initHUD();
+
+		m_isInitialize = true;
+	}
 
 	return true;
+}
+
+void ReloadMenuScreen::onExit()
+{
+	/* Do nothing */
 }
 
 
@@ -286,7 +298,7 @@ void ReloadMenuScreen::draw()
 
 void ReloadMenuScreen::update()
 {
-	SDL_Event ev;
+	SDL_Event ev{};
 	while (SDL_PollEvent(&ev))
 	{
 		m_game->onSDLEvent(ev);
@@ -295,11 +307,6 @@ void ReloadMenuScreen::update()
 }
 
 
-
-void ReloadMenuScreen::onExit()
-{
-	destroy();
-}
 
 bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 {

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.6
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,10 +39,11 @@ m_mainMenuScreen(nullptr),
 m_newGameScreen(nullptr),
 m_reloadMenuScreen(nullptr),
 m_gamePlayScreen(nullptr),
+m_CityScreen(nullptr),
 m_file(),
 m_saveReload()
 {
-
+	/* Do nothing */
 }
 
 App::~App()
@@ -51,11 +52,13 @@ App::~App()
 	m_newGameScreen.reset();
 	m_reloadMenuScreen.reset();
 	m_gamePlayScreen.reset();
+	m_CityScreen.reset();
 	deleteAll();
 }
 
 void App::onInit()
 {
+	/* Set location of logging file */
 	m_file.log = "bin/log/log.txt";
 
 	initFile();
@@ -72,21 +75,26 @@ void App::onInit()
 
 void App::onExit()
 {
-
+	/* Do nothing */
 }
 
 void App::addScreens()
 {
+	/* Create shared Ptr */
 	m_mainMenuScreen = std::make_shared<MainMenuScreen>(&m_file);
 	m_newGameScreen = std::make_shared<NewGameScreen>(&m_file);
 	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>(&m_file, &m_saveReload);
 	m_gamePlayScreen = std::make_shared<GamePlayScreen>(&m_file, &m_saveReload, m_newGameScreen->getUserInputNewGame());
+	m_CityScreen = std::make_shared<CityScreen>(&m_file, &m_saveReload, &m_gamePlayScreen->GETPlayers());
 
+	/* Add Screen to listed Screen */
 	m_screenList->addScreen(m_mainMenuScreen);
 	m_screenList->addScreen(m_newGameScreen);
 	m_screenList->addScreen(m_reloadMenuScreen);
 	m_screenList->addScreen(m_gamePlayScreen);
+	m_screenList->addScreen(m_CityScreen);
 
+	/* Set default Screen */
 	m_screenList->setScreen(m_mainMenuScreen->GETscreenIndex());
 }
 
@@ -127,7 +135,7 @@ void App::initMain()
 {
 	logfileconsole("[INFO]___: [START] : initMain");
 
-	tinyxml2::XMLDocument config;
+	tinyxml2::XMLDocument config{};
 	config.LoadFile(configFilePath.c_str());
 
 	if (config.ErrorID() == 0)
@@ -255,9 +263,9 @@ void App::logfileconsole
 	const std::string& msg
 )
 {
-	time_t now(time(0));
-	struct tm  tstruct;
-	char  buf[80];
+	time_t now{ time(0) };
+	struct tm  tstruct{};
+	char  buf[80]{};
 	localtime_s(&tstruct, &now);
 	strftime(buf, sizeof(buf), "%F %X", &tstruct);
 

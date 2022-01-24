@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.19
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -42,8 +42,8 @@
 int main(int /* argc */, char* /* argv */[])
 {
 	srand((unsigned int)time(NULL));
-	
-	App app;
+
+	App app{};
 	app.run();
 
 	return EXIT_SUCCESS;

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.6
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,6 +36,7 @@
 #include "MainMenuScreen.h"
 #include "ReloadMenuScreen.h"
 #include "NewGameScreen.h"
+#include "CityScreen.h"
 
 #include "SaveReload.h"
 
@@ -151,6 +152,7 @@ private:
 	std::shared_ptr<NewGameScreen> m_newGameScreen;
 	std::shared_ptr<ReloadMenuScreen> m_reloadMenuScreen;
 	std::shared_ptr<GamePlayScreen> m_gamePlayScreen;
+	std::shared_ptr<CityScreen> m_CityScreen;
 
 	File m_file;
 

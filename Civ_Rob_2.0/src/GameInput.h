@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.3
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,23 +32,6 @@
 #include "LIB.h"
 
 class GamePlayScreen;
-
- /* *********************************************************
-  *						Constantes						   *
-  ********************************************************* */
-
-  /* SDL : Define the number of mouse click ONE */
-const int ONE_CLICK = 1;
-
-/* SDL : Define the number of mouse clicks TWO */
-const int TWO_CLICKS = 2;
-
-/* SDL : Define if the wheel scroll up */
-const int MOUSE_SCROLL_UP = 1;
-
-/* SDL : Define if the wheel scroll down */
-const int MOUSE_SCROLL_DOWN = - 1;
-
 
 const float KEY_SPEED_MOVE = 2.0f;
 

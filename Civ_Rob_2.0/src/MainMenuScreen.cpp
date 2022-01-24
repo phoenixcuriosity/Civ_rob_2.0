@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,14 +35,15 @@ MainMenuScreen::MainMenuScreen
 RealEngine2D::IGameScreen(),
 m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
 m_gui(),
-m_file(file)
+m_file(file),
+m_isInitialize(false)
 {
-	m_screenIndex = MAINMENU_SCREEN_INDEX;
+	build();
 }
 
 MainMenuScreen::~MainMenuScreen()
 {
-
+	destroy();
 }
 
 int MainMenuScreen::getNextScreenIndex()const
@@ -56,8 +57,9 @@ int MainMenuScreen::getPreviousScreenIndex()const
 
 void MainMenuScreen::build()
 {
-
+	m_screenIndex = MAINMENU_SCREEN_INDEX;
 }
+
 void MainMenuScreen::destroy()
 {
 	m_gui.destroy();
@@ -65,81 +67,91 @@ void MainMenuScreen::destroy()
 
 bool MainMenuScreen::onEntry()
 {
-	m_gui.init(m_file->GUIPath);
+	if (!m_isInitialize)
+	{
+		m_gui.init(m_file->GUIPath);
 
-	m_gui.loadScheme("AlfiskoSkin.scheme");
+		m_gui.loadScheme("AlfiskoSkin.scheme");
 
-	m_gui.setFont("DejaVuSans-10");
+		m_gui.setFont("DejaVuSans-10");
 
-	const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);
-	float yC(0.4f);
+		const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);
+		float yC(0.4f);
 
-	CEGUI::PushButton* newGame = static_cast<CEGUI::PushButton*>
-		(m_gui.createWidget(
-			"AlfiskoSkin/Button",
-			{ xC, yC, xL, yL },
-			RealEngine2D::NOT_BY_PERCENT,
-			"newGame"));
+		CEGUI::PushButton* newGame = static_cast<CEGUI::PushButton*>
+			(m_gui.createWidget(
+				"AlfiskoSkin/Button",
+				{ xC, yC, xL, yL },
+				RealEngine2D::NOT_BY_PERCENT,
+				"newGame"));
 
-	newGame->setText("New Game");
-	newGame->subscribeEvent
-	(
-		CEGUI::PushButton::EventClicked,
-		CEGUI::Event::Subscriber(&MainMenuScreen::onNewGameClicked, this)
-	);
+		newGame->setText("New Game");
+		newGame->subscribeEvent
+		(
+			CEGUI::PushButton::EventClicked,
+			CEGUI::Event::Subscriber(&MainMenuScreen::onNewGameClicked, this)
+		);
 
-	CEGUI::PushButton* reloadButton = static_cast<CEGUI::PushButton*>
-		(m_gui.createWidget(
-			"AlfiskoSkin/Button",
-			{ xC, yC += yDelta, xL, yL },
-			RealEngine2D::NOT_BY_PERCENT,
-			"Reload"));
+		CEGUI::PushButton* reloadButton = static_cast<CEGUI::PushButton*>
+			(m_gui.createWidget(
+				"AlfiskoSkin/Button",
+				{ xC, yC += yDelta, xL, yL },
+				RealEngine2D::NOT_BY_PERCENT,
+				"Reload"));
 
-	reloadButton->setText("Reload");
-	reloadButton->subscribeEvent
-	(
-		CEGUI::PushButton::EventClicked,
-		CEGUI::Event::Subscriber(&MainMenuScreen::onReloadClicked, this)
-	);
+		reloadButton->setText("Reload");
+		reloadButton->subscribeEvent
+		(
+			CEGUI::PushButton::EventClicked,
+			CEGUI::Event::Subscriber(&MainMenuScreen::onReloadClicked, this)
+		);
 
-	CEGUI::PushButton* optionButton = static_cast<CEGUI::PushButton*>
-		(m_gui.createWidget(
-			"AlfiskoSkin/Button",
-			{ xC, yC += yDelta, xL, yL },
-			RealEngine2D::NOT_BY_PERCENT,
-			"Option"));
+		CEGUI::PushButton* optionButton = static_cast<CEGUI::PushButton*>
+			(m_gui.createWidget(
+				"AlfiskoSkin/Button",
+				{ xC, yC += yDelta, xL, yL },
+				RealEngine2D::NOT_BY_PERCENT,
+				"Option"));
 
-	optionButton->setText("Option");
-	optionButton->subscribeEvent
-	(
-		CEGUI::PushButton::EventClicked,
-		CEGUI::Event::Subscriber(&MainMenuScreen::onOptionClicked, this)
-	);
+		optionButton->setText("Option");
+		optionButton->subscribeEvent
+		(
+			CEGUI::PushButton::EventClicked,
+			CEGUI::Event::Subscriber(&MainMenuScreen::onOptionClicked, this)
+		);
 
-	CEGUI::PushButton* quitGame = static_cast<CEGUI::PushButton*>
-		(m_gui.createWidget(
-			"AlfiskoSkin/Button",
-			{ xC, yC += yDelta, xL, yL },
-			RealEngine2D::NOT_BY_PERCENT,
-			"QuitGame"));
+		CEGUI::PushButton* quitGame = static_cast<CEGUI::PushButton*>
+			(m_gui.createWidget(
+				"AlfiskoSkin/Button",
+				{ xC, yC += yDelta, xL, yL },
+				RealEngine2D::NOT_BY_PERCENT,
+				"QuitGame"));
 
-	quitGame->setText("Quit Game");
-	quitGame->subscribeEvent
-	(
-		CEGUI::PushButton::EventClicked,
-		CEGUI::Event::Subscriber(&MainMenuScreen::onExitClicked, this)
-	);
+		quitGame->setText("Quit Game");
+		quitGame->subscribeEvent
+		(
+			CEGUI::PushButton::EventClicked,
+			CEGUI::Event::Subscriber(&MainMenuScreen::onExitClicked, this)
+		);
 
 
-	m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
-	m_gui.showMouseCursor();
+		m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
+		m_gui.showMouseCursor();
 
-	/* HIDE normal mouse cursor */
-	SDL_ShowCursor(0);
+		/* HIDE normal mouse cursor */
+		SDL_ShowCursor(0);
+
+		m_isInitialize = true;
+	}
+	
 
 	return true;
 }
 
+void MainMenuScreen::onExit()
+{
+	/* Do nothing */
+}
 
 
 //----------------------------------------------------------GameLoop----------------------------------------------------------------//
@@ -161,7 +173,7 @@ void MainMenuScreen::draw()
 
 void MainMenuScreen::update()
 {
-	SDL_Event ev;
+	SDL_Event ev{};
 	while (SDL_PollEvent(&ev))
 	{
 		m_gui.onSDLEvent(ev, m_game->getInputManager());
@@ -169,12 +181,6 @@ void MainMenuScreen::update()
 	}
 }
 
-
-
-void MainMenuScreen::onExit()
-{
-	destroy();
-}
 
 bool MainMenuScreen::onNewGameClicked(const CEGUI::EventArgs& /* e */)
 {

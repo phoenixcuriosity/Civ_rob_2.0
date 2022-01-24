@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.15
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,8 +26,6 @@
 
 #include <tinyxml2/tinyxml2.h>
 
-#include "MainMap.h"
-
 #include "Utility.h"
 
 #include "App.h"
@@ -48,19 +46,20 @@ m_nextTurn(),
 m_players(),
 m_file(file),
 m_SaveReload(SaveReload),
+m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
-	m_screenIndex = GAMEPLAY_SCREEN_INDEX;
+	build();
 }
 
 GamePlayScreen::~GamePlayScreen()
 {
-
+	destroy();
 }
 
 int GamePlayScreen::getNextScreenIndex()const
 {
-	return INIT_SCREEN_INDEX;
+	return m_screen.m_nextScreenIndexMenu;
 }
 int GamePlayScreen::getPreviousScreenIndex()const
 {
@@ -69,8 +68,9 @@ int GamePlayScreen::getPreviousScreenIndex()const
 
 void GamePlayScreen::build()
 {
-
+	m_screenIndex = GAMEPLAY_SCREEN_INDEX;
 }
+
 void GamePlayScreen::destroy()
 {
 	m_screen.m_gui.destroy();
@@ -84,85 +84,100 @@ void GamePlayScreen::destroy()
 
 bool GamePlayScreen::onEntry()
 {
-	loadFile();
-
-	initStructsNULL();
-
-	computeSize();
-
-	initOpenGLScreen();
-
-	initShaders();
-
-	initHUDText();
-
-	loadUnitAndSpec();
-
-	/* Need to be after loadUnitAndSpec */
-	m_players.init(m_file->imagesPath);
-
-	initUI();
-
-	try 
+	if (!m_isInitialize)
 	{
-		m_mainMap.initMainMap(m_screen.camera);
+		loadFile();
 
-		//RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
+		initStructsNULL();
 
-		if (m_SaveReload->GETcurrentSave() != NO_CURRENT_SAVE_SELECTED)
+		computeSize();
+
+		initOpenGLScreen();
+
+		initShaders();
+
+		initHUDText();
+
+		loadUnitAndSpec();
+
+		/* Need to be after loadUnitAndSpec */
+		m_players.init(m_file->imagesPath);
+
+		initUI();
+
+		try
 		{
-			m_SaveReload->reload(*this);
+			m_mainMap.initMainMap(m_screen.camera);
+
+			//RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
+
+			if (m_SaveReload->GETcurrentSave() != NO_CURRENT_SAVE_SELECTED)
+			{
+				m_SaveReload->reload(*this);
+			}
+			else
+			{
+				newGame();
+			}
+
 		}
-		else
+		catch (const std::string& msg)
 		{
-			newGame();
+			App::logfileconsole("[ERROR]___: GamePlayScreen::onEntry : " + msg);
+			return false;
 		}
 
-	}
-	catch (const std::string& msg)
-	{
-		App::logfileconsole("[ERROR]___: GamePlayScreen::onEntry : " + msg);
-		return false;
+		m_isInitialize = true;
 	}
 	return true;
 }
 
+void GamePlayScreen::onExit()
+{
+
+}
+
+
+/*--------------------------------------------------------------------START-CYCLE----------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------------------------- */
+/* NAME : update																	   */
+/* ROLE : Call each cycle 															   */
+/* ROLE : Update input from SDL and game / Update GUI input							   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::update()
 {
-	SDL_Event ev;
+	SDL_Event ev{};
+
+	/* Get Input */
 	while (SDL_PollEvent(&ev))
 	{
 		m_game->onSDLEvent(ev);
 		inputSDL(ev);
 		m_screen.m_gui.onSDLEvent(ev, m_game->getInputManager());
 	}
+
+	/* Process Input */
+	actionByKey();
+	moveCameraByDeltaTime();
 }
 
-void GamePlayScreen::onExit()
-{
-	destroy();
-}
-
+/* ----------------------------------------------------------------------------------- */
+/* NAME : draw																		   */
+/* ROLE : Call each cycle 															   */
+/* ROLE : Update picture from game and GUI 											   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::draw()
 {
-	if (m_game->getInputManager().isKeyDown(SDLK_SPACE))
-	{
-		m_nextTurn.nextTurn(*this);
-		m_game->getInputManager().releaseKey(SDLK_SPACE);
-	}
-
-	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
-	{
-		m_players.clickToSelectUnit(getMouseCoorNorm('X'), getMouseCoorNorm('Y'));
-	}
-
-	moveCameraByDeltaTime();
-
 	m_screen.camera.update();
 	m_screen.cameraHUD.update();
 
 	drawGame();
 }
+
+/*---------------------------------------------------------------------END-CYCLE---------------------------------------------------------------------------------*/
 
 
 /* ----------------------------------------------------------------------------------- */
@@ -176,20 +191,20 @@ void GamePlayScreen::loadFile()
 {
 	App::logfileconsole("[INFO]___: [START] : initMain");
 
-	tinyxml2::XMLDocument config;
+	tinyxml2::XMLDocument config{};
 	config.LoadFile(m_file->mainMap.c_str());
-	unsigned int tmp(0);
+	unsigned int tmp{ 0 };
 
 	if (config.ErrorID() == 0)
 	{
-		const char* root("Config");
+		const char* root{ "Config" };
 
 
 		const char
-			* s_Map("Map"),
-				* s_TileSize("TileSize"),
-				* s_MapSizeX("MapSizeX"),
-				* s_MapSizeY("MapSizeY");
+			* s_Map{ "Map" },
+				* s_TileSize{ "TileSize" },
+				* s_MapSizeX{ "MapSizeX" },
+				* s_MapSizeY{ "MapSizeY" };
 
 
 		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_TileSize)->QueryUnsignedText(&tmp);
@@ -273,7 +288,7 @@ void GamePlayScreen::initOpenGLScreen()
 	m_mainMap.GETspriteBatch().init();
 	m_screen.spriteBatchHUDDynamic.init();
 	m_screen.spriteBatchHUDStatic.init();
-	m_screen.spriteFont = std::make_unique<RealEngine2D::SpriteFont>("times.ttf", 64);
+	m_screen.spriteFont = std::make_unique<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
 
 	m_screen.audioEngine.init();
 
@@ -309,7 +324,7 @@ void GamePlayScreen::initShaders()
 /* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::initHUDText()
 {
-	char buffer[256];
+	char buffer[256]{};
 
 	m_screen.spriteBatchHUDStatic.begin();
 
@@ -380,7 +395,7 @@ void GamePlayScreen::initUI()
 /* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::loadUnitAndSpec()
 {
-	tinyxml2::XMLDocument texteFile;
+	tinyxml2::XMLDocument texteFile{};
 	texteFile.LoadFile(m_file->units.c_str());
 
 	const char* root("Root");
@@ -424,15 +439,15 @@ void GamePlayScreen::loadUnitAndSpec()
 
 void GamePlayScreen::moveCameraByDeltaTime()
 {
-	static Uint32 prevTicks(SDL_GetTicks());
-	Uint32 frameTime(0), newTicks(0);
-	float totalDeltaTime(0.0f), deltaTime(0.0f);
+	static Uint32 prevTicks{ SDL_GetTicks() };
+	Uint32 frameTime{ 0 }, newTicks{ 0 };
+	float totalDeltaTime{ 0.0f }, deltaTime{ 0.0f };
 
 	newTicks = SDL_GetTicks();
 	frameTime = newTicks - prevTicks;
 	prevTicks = newTicks;
 	totalDeltaTime = (float)frameTime / TARGET_FRAMETIME;
-	int i(0);
+	int i{ 0 };
 
 	while (totalDeltaTime > 0.0f && i < MAX_PHYSICS_STEPS)
 	{
@@ -460,27 +475,34 @@ void GamePlayScreen::drawGame()
 	GLint textureLocation = m_screen.gLSLProgram.getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
-	/* camera */
+	/* --- camera --- */
+	/* GL - get parameter P */
 	GLint pLocation = m_screen.gLSLProgram.getUnitformLocation("P");
+
+	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_screen.camera.GETcameraMatrix();
 
+	/*  */
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
+	/* --- Draw --- */
 	m_mainMap.drawMap(m_screen.camera, m_game->getWindow());
 
 	m_players.isAUnitSelected();
 	m_players.drawUnit(m_mainMap, m_screen.camera);
 
+	/* --- Render --- */
 	m_mainMap.renderMap();
 	m_players.renderUnit();
 
 
 	drawHUD();
 
+	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	m_screen.gLSLProgram.unuse();
 
+	/* --- Draw UI --- */
 	m_screen.m_gui.draw();
 }
 
@@ -508,7 +530,7 @@ void GamePlayScreen::drawHUD()
 		RealEngine2D::COLOR_WHITE
 	);
 
-	mouseClick();
+	//mouseClick();
 
 	sprintf_s(buffer, "Nb Turn %d", m_nextTurn.GETnbTurn());
 	m_screen.spriteFont->draw

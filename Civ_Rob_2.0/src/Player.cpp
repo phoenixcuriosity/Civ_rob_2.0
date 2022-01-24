@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.20
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -258,6 +258,19 @@ void Player::deleteCity
 	}
 }
 
+std::shared_ptr<City>* Player::searchCity
+(
+	unsigned int indexX,
+	unsigned int indexY
+)
+{
+	for (auto &c : m_tabCity)
+	{
+		if (c->searchCityTile(indexX, indexY)) return &c;
+	}
+	return nullptr;
+}
+
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : computeGold																   */
@@ -338,6 +351,7 @@ void Player::addGoldToGoldConversionSurplus
 Players::Players()
 :
 m_selectedPlayer(NO_PLAYER_SELECTED),
+m_selectedCity(),
 m_citiesNameMaxToCreate(0),
 m_vectCityName(),
 m_vectUnitTemplate(),
@@ -416,8 +430,8 @@ void Players::clickToSelectUnit(unsigned int x, unsigned int y)
 {
 	if (m_selectedPlayer != NO_PLAYER_SELECTED)
 	{
-		std::shared_ptr<Player> p(m_vectPlayer[m_selectedPlayer]);
-		unsigned int i(0);
+		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
+		unsigned int i{ 0 };
 		for (auto u : p->GETtabUnit())
 		{
 			if	(
@@ -440,12 +454,12 @@ void Players::isAUnitSelected()
 {
 	if (m_selectedPlayer != NO_PLAYER_SELECTED)
 	{
-		std::shared_ptr<Player> p(m_vectPlayer[m_selectedPlayer]);
+		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
 
 		if (p->GETselectedUnit() != NO_UNIT_SELECTED)
 		{
-			std::shared_ptr<Unit> u(p->GETtabUnit()[p->GETselectedUnit()]);
-			bool prevShow(u->GETshow());
+			std::shared_ptr<Unit> u{ p->GETtabUnit()[p->GETselectedUnit()] };
+			bool prevShow{ u->GETshow() };
 			u->cmpblit();
 			if (prevShow != u->GETshow())
 			{
@@ -464,7 +478,7 @@ void Players::drawUnit
 	if (m_needToUpdateDrawUnit)
 	{
 		m_spriteBatchUnit.begin();
-		unsigned int tileSize = mainMap.GETtileSize();
+		unsigned int tileSize{ mainMap.GETtileSize() };
 
 		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
 		{
@@ -540,6 +554,24 @@ void Players::drawUnit
 void Players::renderUnit()
 {
 	m_spriteBatchUnit.renderBatch();
+}
+
+
+std::shared_ptr<City>* Players::searchCity
+(
+	unsigned int indexX,
+	unsigned int indexY
+)
+{
+	std::shared_ptr<City>* c{ nullptr };
+	for (auto p : m_vectPlayer)
+	{
+		if ((c = p->searchCity(indexX, indexY)) != nullptr)
+		{
+			return c;
+		}
+	}
+	return c;
 }
 
  /*

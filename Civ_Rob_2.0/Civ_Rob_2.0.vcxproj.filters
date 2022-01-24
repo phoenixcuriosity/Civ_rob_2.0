@@ -46,6 +46,9 @@
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility.cpp" />
+    <ClCompile Include="src\CityScreen.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -96,6 +99,9 @@
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility.h" />
+    <ClInclude Include="src\CityScreen.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

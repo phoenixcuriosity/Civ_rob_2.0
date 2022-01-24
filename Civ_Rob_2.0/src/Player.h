@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.14.4
-	file version : 1.16
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -49,7 +49,25 @@ const unsigned int NB_MAX_PLAYER = 9;
  *						 Enum							   *
  ********************************************************* */
 
-  /* N/A */
+enum class MajorAge : Uint8
+{
+	Nomade,
+	Farming,
+	Stone,
+	Bronze,
+	Iron,
+	Antiquity,
+	Vikings,
+	Crusade,
+	Renaissance,
+	Colonization,
+	Enlightenment,
+	Industrial,
+	Modern,
+	Cyber,
+	Stellar,
+	Galactic
+};
 
 /* *********************************************************
  *						Structures						   *
@@ -219,6 +237,12 @@ public:
 		unsigned int
 	);
 
+	virtual std::shared_ptr<City>* searchCity
+	(
+		unsigned int indexX,
+		unsigned int indexY
+	);
+
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeGold																   */
@@ -316,6 +340,9 @@ public:
 	inline void SETselectedPlayer(int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
 	inline void SETcitiesNameMaxToCreate(unsigned int citiesNameMaxToCreate) { m_citiesNameMaxToCreate = citiesNameMaxToCreate; };
 	inline void SETneedToUpdateDrawUnit(bool need) { m_needToUpdateDrawUnit = need; };
+	inline void SetSelectedCity(std::shared_ptr<City>* selectedCity) { m_selectedCity = *selectedCity; };
+
+	inline bool isValidSelectedCity() { if (m_selectedCity != nullptr) return true; else return false; };
 
 public:
 
@@ -342,10 +369,19 @@ public:
 
 	void renderUnit();
 
+	virtual std::shared_ptr<City>* searchCity
+	(
+		unsigned int indexX,
+		unsigned int indexY
+	);
+
 private:
 
 	// index du joueur actuellement sélectionné
 	int m_selectedPlayer;
+
+	/* Ptr to the selected City */
+	std::shared_ptr<City> m_selectedCity;
 
 	// nombre de cité maximal différentes à créer 
 	unsigned int m_citiesNameMaxToCreate;

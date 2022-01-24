@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.11.0
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -106,6 +106,8 @@ private:
 	RealEngine2D::GUI m_gui;
 
 	File* m_file = nullptr;
+
+	bool m_isInitialize;
 };
 
 #endif // !NewGameScreen_H

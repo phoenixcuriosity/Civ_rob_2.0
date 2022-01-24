@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.6.0
-	file version : 1.15
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,8 +27,10 @@
 
 #define NOMINMAX // forbid to redifine std::max/min by Windows.h and Visual Studio
 
+/* Include for std::string */
 #include <string>
 
+/* Define an empty string */
 const std::string EMPTY_STRING = "";
 
 /* Define that the compared strings are identical */

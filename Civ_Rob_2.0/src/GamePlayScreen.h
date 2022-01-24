@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.12
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -81,6 +81,8 @@ struct Screen
 	RealEngine2D::GUI m_gui;
 	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
 	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
+
+	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
 };
 
 struct Var
@@ -128,6 +130,7 @@ struct Var
 			};
 		*/
 	CinState_Type cinState = CinState_Type::cinNothing;
+
 };
 
 
@@ -139,6 +142,9 @@ const float MS_PER_SECOND(1000.0f);
 const float TARGET_FRAMETIME = MS_PER_SECOND / (float)RealEngine2D::SCREEN_REFRESH_RATE;
 const unsigned int MAX_PHYSICS_STEPS(6);
 const float MAX_DELTA_TIME(1.0f);
+
+/* Define default font for GUI texts */
+const std::string fontGUI = "times.ttf";
 
 /* *********************************************************
  *						 Classe							   *
@@ -155,7 +161,7 @@ public:
 	GamePlayScreen
 	(
 		File* file,
-		SaveReload* SaveReload,
+		SaveReload* saveReload,
 		UserInputNewGame* userInputNewGame
 	);
 
@@ -178,8 +184,20 @@ public:
 
 	virtual void onExit() override;
 
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : update																	   */
+	/* ROLE : Call each cycle 															   */
+	/* ROLE : Update input from SDL and game / Update GUI input							   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void update() override;
 
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : draw																		   */
+	/* ROLE : Call each cycle 															   */
+	/* ROLE : Update picture from game and GUI 											   */
+	/* RETURNED VALUE    : void															   */
+	/* ----------------------------------------------------------------------------------- */
 	virtual void draw() override;
 
 private:
@@ -369,6 +387,15 @@ private:
 	void newGame();
 
 	/* ----------------------------------------------------------------------------------- */
+	/* NAME : pushNewPlayer															   	   */
+	/* ROLE : For every name in struct UserInputNewGame push new player in m_players	   */
+	/* attribut in : UserInputNewGame* m_userInputNewGame								   */
+	/* attribut out : m_players															   */
+	/* RETURNED VALUE : void														       */
+	/* ------------------------------------------------------------------------------------*/
+	void pushNewPlayer();
+
+	/* ----------------------------------------------------------------------------------- */
 	/* NAME : newGameSettlerSpawn														   */
 	/* ROLE : Création des position pour les settlers de chaque joueurs					   */
 	/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
@@ -497,6 +524,14 @@ private:
 	);
 
 	/* ---------------------------------------------------------------------------------------------------------- */
+	/* NAME : actionByKey																				    	  */
+	/* ROLE : Define action for each key press																      */
+	/* INPUT : SDL_Event& ev : Event from SDL input												    			  */
+	/* RETURNED VALUE    : void																					  */
+	/* ---------------------------------------------------------------------------------------------------------- */
+	void actionByKey();
+
+	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : wheel																						    	  */
 	/* ROLE : Recherche l'incr�mentation ou d�cr�mentation du contexte										      */
 	/* INPUT : struct Sysinfo& : structure globale du programme												      */
@@ -508,7 +543,10 @@ private:
 		SDL_Event& ev
 	);
 
-	void mouseClick();
+	void mouseClick
+	(
+		SDL_Event& ev
+	);
 
 	unsigned int getMouseCoorNorm(unsigned char c);
 
@@ -576,6 +614,8 @@ private:
 	File* m_file;
 	SaveReload* m_SaveReload;
 	UserInputNewGame* m_userInputNewGame;
+
+	bool m_isInitialize;
 };
 
 

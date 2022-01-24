@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.6
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -66,6 +66,7 @@ public:
 	virtual void destroy() override;
 
 	virtual bool onEntry() override;
+	virtual void onExit() override;
 
 private:
 
@@ -75,8 +76,6 @@ private:
 
 
 public:
-
-	virtual void onExit() override;
 
 	virtual void update() override;
 	virtual void draw() override;
@@ -107,6 +106,8 @@ private:
 
 	File* m_file;
 	SaveReload* m_SaveReload;
+
+	bool m_isInitialize;
 };
 
 

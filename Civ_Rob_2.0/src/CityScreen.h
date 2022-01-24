@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
 	last modification on this file on version:0.24.0.0
-	file version : 1.7
+	file version : 1.0
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,8 +22,8 @@
 
 */
 
-#ifndef MainMenuScreen_H
-#define MainMenuScreen_H
+#ifndef CityScreen_H
+#define CityScreen_H
 
 #include "LIB.h"
 
@@ -43,16 +43,20 @@
 #include <RealEngine2D/src/AudioEngine.h>
 #include <RealEngine2D/src/GUI.h>
 
+#include "City.h"
+
 struct File;
 
-class MainMenuScreen : public RealEngine2D::IGameScreen
+class CityScreen : public RealEngine2D::IGameScreen
 {
 public:
-	MainMenuScreen
+	CityScreen
 	(
-		File* file
+		File* file,
+		SaveReload* SaveReload,
+		Players* players
 	);
-	~MainMenuScreen();
+	~CityScreen();
 
 	virtual int getNextScreenIndex()const override;
 	virtual int getPreviousScreenIndex()const override;
@@ -69,16 +73,15 @@ private:
 
 public:
 
+
 	virtual void update() override;
 	virtual void draw() override;
 
 
 private:
 
-	bool onNewGameClicked(const CEGUI::EventArgs& e);
-	bool onReloadClicked(const CEGUI::EventArgs& e);
-	bool onOptionClicked(const CEGUI::EventArgs& e);
-	bool onExitClicked(const CEGUI::EventArgs& e);
+	bool onBuildQueueClicked(const CEGUI::EventArgs& e);
+	bool onReturnToMapClicked(const CEGUI::EventArgs& e);
 
 
 public:
@@ -88,13 +91,14 @@ private:
 	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
 
 	RealEngine2D::GUI m_gui;
+	std::deque<buildPushButton> m_buttonBuild;
+
+	Players* m_players;
 
 	File* m_file;
+	SaveReload* m_SaveReload;
 
 	bool m_isInitialize;
 };
 
-#endif // !MainMenuScreen_H
-
-
-
+#endif // !CityScreen_H

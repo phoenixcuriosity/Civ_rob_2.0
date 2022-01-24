@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.18
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.0.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -293,7 +293,7 @@ void SaveReload::savePlayer
 
 			for (
 				unsigned int indexBuild(0);
-				indexBuild < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue.size();
+				indexBuild < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().size();
 				indexBuild++
 				)
 			{
@@ -304,11 +304,11 @@ void SaveReload::savePlayer
 				tinyxml2::XMLElement* cityBuildInQueueRemainingWorkElement = xmlDoc.NewElement("RemainingWork");
 
 				cityBuildInQueueNameElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue[indexBuild].name.c_str());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].build.name.c_str());
 				cityBuildInQueueTypeElement
-					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue[indexBuild].type);
+					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].build.type);
 				cityBuildInQueueRemainingWorkElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().buildQueue[indexBuild].remainingWork);
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].build.remainingWork);
 
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueNameElement);
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueTypeElement);
@@ -497,6 +497,9 @@ void SaveReload::loadPlayer
 
 			mainGame.GETPlayers().GETvectPlayer().push_back(std::make_shared<Player>(nName->FirstChild()->Value()));
 			mainGame.GETPlayers().SETselectedPlayer((int)mainGame.GETPlayers().GETvectPlayer().size() - 1);
+
+			/* Set Player name in vectPlayerName */
+			mainGame.getUserInputNewGame()->vectPlayerName.push_back(nName->FirstChild()->Value());
 
 			loadGoldStatsXML
 			(
@@ -825,10 +828,13 @@ void SaveReload::loadCityXML
 				blankBluid.remainingWork = std::stod(nBuildQueueElementRemainingWork->FirstChild()->Value());
 
 
-				ptrCity->addBuildToQueue
+				/*ptrCity->addBuildToQueue
 				(
-
+					{
+						
+					}
 				);
+				*/
 
 				nBuildQueueElement = nBuildQueueElement->NextSibling();
 			}
