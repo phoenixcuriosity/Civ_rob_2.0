@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Civ_Rob_2.0.cpp" />
+    <ClCompile Include="src\SaveReload.cpp" />
+    <ClCompile Include="src\App.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GamePlayScreen.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainMenuScreen.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NewGameScreen.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReloadMenuScreen.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NewGame.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainMap.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NextTurn.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameInput.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\City.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Citizen.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Unit.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XmlConvertValue.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility.cpp" />
+    <ClCompile Include="src\CityScreen.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\LIB.h" />
+    <ClInclude Include="src\SaveReload.h" />
+    <ClInclude Include="src\App.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GamePlayScreen.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainMenuScreen.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScreenIndices.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ReloadMenuScreen.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NewGameScreen.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>icon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NewGame.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainMap.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NextTurn.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameInput.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\City.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Citizen.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Unit.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility.h" />
+    <ClInclude Include="src\CityScreen.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Screen">
+      <UniqueIdentifier>{7d987bf3-c227-427e-9368-d4a8953093c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="icon">
+      <UniqueIdentifier>{36faf521-77f7-45d9-846e-afd9a78219b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class GamePlayScreen">
+      <UniqueIdentifier>{7b07bf5d-6267-4613-b2d3-4f445eb7ecf7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Civ_Rob_2.0.rc">
+      <Filter>icon</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

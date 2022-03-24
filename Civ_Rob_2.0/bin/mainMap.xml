@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Config>
+	<Map>
+		<TileSize>64</TileSize>
+		<MapSizeX>2048</MapSizeX>
+		<MapSizeY>2048</MapSizeY>
+	</Map>
+</Config>
