@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2020 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.2.0
-	file version : 1.3
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.1.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,10 @@
  ********************************************************* */
 
 #include "LIB.h"
+
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 class Players;
 struct Var;
@@ -169,6 +173,16 @@ public:
 		size_t size,
 		unsigned int index
 	);
+
+
+	template <typename T>
+	static std::string to_string_with_precision(const T a_value, const int n = 6)
+	{
+		std::ostringstream out;
+		out.precision(n);
+		out << std::fixed << a_value;
+		return out.str();
+	}
 };
 
 

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.3
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.1.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,38 +41,34 @@ NextTurn::~NextTurn()
 
 void NextTurn::nextTurn(GamePlayScreen& mainGame)
 {
-	VectPlayer& vectPlayer = mainGame.GETPlayers().GETvectPlayer();
-
-	for (unsigned int i(0); i < vectPlayer.size(); i++)
+	unsigned int indexPlayer{ 0 };
+	for (auto& player : mainGame.GETPlayers().GETvectPlayer())
 	{
-		vectPlayer[i]->resetGoldStats();
-		for (unsigned int j(0); j < vectPlayer[i]->GETtabUnit().size(); j++)
+		player->resetGoldStats();
+		for (auto& unit : player->GETtabUnit())
 		{
-			vectPlayer[i]->GETtabUnit()[j]->RESETmovement();
-			vectPlayer[i]->GETtabUnit()[j]->heal(mainGame.GETmainMap().GETmatriceMap(), i);
+			unit->RESETmovement();
+			unit->heal(mainGame.GETmainMap().GETmatriceMap(), indexPlayer);
 		}
-		for (unsigned int j(0); j < vectPlayer[i]->GETtabCity().size(); j++)
+		for (auto& city : player->GETtabCity())
 		{
 			/* computeEmotion must be in first : Emotion use on other computations */
-			vectPlayer[i]->GETtabCity()[j]->computeEmotion();
+			city->computeEmotion();
 
-			/* Food */
-			vectPlayer[i]->GETtabCity()[j]->foodNextTurn(vectPlayer[i]->GETgoldStats());
-
-			/* Work */
-			vectPlayer[i]->GETtabCity()[j]->computeWork();
-			vectPlayer[i]->GETtabCity()[j]->computeWorkToBuild
+			city->foodNextTurn(player->GETgoldStats());
+			city->computeWork();
+			city->computeWorkToBuild
 			(
-				*vectPlayer[i],
+				*player,
 				mainGame.GETPlayers().GETvectUnitTemplate(),
 				mainGame.GETPlayers().GETneedToUpdateDrawUnitPtr()
 			);
-
-			/* Gold */
-			vectPlayer[i]->GETtabCity()[j]->computeGold();
-			vectPlayer[i]->GETtabCity()[j]->addCityGoldToTaxIncome(vectPlayer[i]->GETgoldStats());
+			city->computeGold();
+			city->addCityGoldToTaxIncome(player->GETgoldStats());
 		}
-		vectPlayer[i]->computeGold();
+		player->computeGold();
+
+		indexPlayer++;
 	}
 	m_nbTurn++;
 }

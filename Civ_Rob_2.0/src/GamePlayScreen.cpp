@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.16
+	last modification on this file on version:0.24.1.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -100,6 +100,8 @@ bool GamePlayScreen::onEntry()
 
 		loadUnitAndSpec();
 
+		loadCitiesNames();
+
 		/* Need to be after loadUnitAndSpec */
 		m_players.init(m_file->imagesPath);
 
@@ -155,6 +157,7 @@ void GamePlayScreen::update()
 	{
 		m_game->onSDLEvent(ev);
 		inputSDL(ev);
+		mouseClick(ev);
 		m_screen.m_gui.onSDLEvent(ev, m_game->getInputManager());
 	}
 
@@ -288,7 +291,7 @@ void GamePlayScreen::initOpenGLScreen()
 	m_mainMap.GETspriteBatch().init();
 	m_screen.spriteBatchHUDDynamic.init();
 	m_screen.spriteBatchHUDStatic.init();
-	m_screen.spriteFont = std::make_unique<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
+	m_screen.spriteFont = std::make_shared<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
 
 	m_screen.audioEngine.init();
 
@@ -433,6 +436,29 @@ void GamePlayScreen::loadUnitAndSpec()
 	}
 }
 
+void GamePlayScreen::loadCitiesNames()
+{
+	unsigned int nbcity{ 0 };
+	std::string city{EMPTY_STRING}, dummy{ EMPTY_STRING };
+	std::ifstream CITIENAME{ m_file->citiesNames };
+
+	if (CITIENAME)
+	{
+		CITIENAME >> dummy;
+
+		CITIENAME >> nbcity;
+		m_players.GETvectCityName().resize(nbcity);
+
+		for (auto& c : m_players.GETvectCityName())
+		{
+			CITIENAME >> c;
+		}
+	}
+	else
+	{
+		throw("Impossible d'ouvrir le fichier " + m_file->citiesNames);
+	}
+}
 
 //----------------------------------------------------------GameLoop----------------------------------------------------------------//
 
@@ -490,10 +516,12 @@ void GamePlayScreen::drawGame()
 
 	m_players.isAUnitSelected();
 	m_players.drawUnit(m_mainMap, m_screen.camera);
+	m_players.drawCity(m_mainMap, m_screen.camera, m_screen.spriteFont);
 
 	/* --- Render --- */
 	m_mainMap.renderMap();
 	m_players.renderUnit();
+	m_players.renderCity();
 
 
 	drawHUD();
@@ -530,7 +558,7 @@ void GamePlayScreen::drawHUD()
 		RealEngine2D::COLOR_WHITE
 	);
 
-	//mouseClick();
+
 
 	sprintf_s(buffer, "Nb Turn %d", m_nextTurn.GETnbTurn());
 	m_screen.spriteFont->draw
@@ -577,26 +605,23 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 	{
 		if (m_screen.m_vectPlayerRadioButton[i]->isSelected())
 		{
-			if (i != m_players.GETselectedPlayer())
+			if (i != m_players.GETselectedPlayerId())
 			{
-
 				/* Reset if needed SHOW for the unit previously selected */
-				if (m_players.GETselectedPlayer() != NO_PLAYER_SELECTED)
-				{
-					std::shared_ptr<Player> p(m_players.GETvectPlayer()[m_players.GETselectedPlayer()]);
-					if (p->GETselectedUnit() != NO_UNIT_SELECTED)
+				if (m_players.GETselectedPlayerId() != NO_PLAYER_SELECTED && m_players.GETselectedPlayerPtr() != nullptr)
+				{			
+					if (m_players.GETselectedPlayerPtr()->GETselectedUnit() != NO_UNIT_SELECTED)
 					{
-						std::shared_ptr<Unit> u(p->getSelectedUnit());
-
-						u->SETshow(true);
+						m_players.GETselectedPlayerPtr()->GETSelectedUnitPtr()->SETshow(true);
 						m_players.SETneedToUpdateDrawUnit(true);
 
-						p->SETselectedUnit(NO_UNIT_SELECTED);
+						m_players.GETselectedPlayerPtr()->SETselectedUnit(NO_UNIT_SELECTED);
 					}
 				}
 
 				/* Select player i */
-				m_players.SETselectedPlayer((int)i);
+				m_players.SETselectedPlayerId((int)i);
+				m_players.SETselectedPlayerPtr(m_players.GETvectPlayer()[i]);
 			}
 			
 			return true;
@@ -607,6 +632,8 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 
 bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
+	SaveReload::save(*this);
+
 	m_currentState = RealEngine2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
 }

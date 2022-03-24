@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.12.0
-	file version : 1.21
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.1.0
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -83,9 +83,9 @@ bool Unit::searchUnitTile
 	Select_Type* select
 )
 {
-	if (NO_PLAYER_SELECTED < players.GETselectedPlayer())
+	if (NO_PLAYER_SELECTED < players.GETselectedPlayerId())
 	{
-		std::shared_ptr<Player> selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
+		std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 
 		for (unsigned int i(0); i < selPlayer->GETtabUnit().size(); i++)
 		{
@@ -133,9 +133,9 @@ void Unit::tryToMove
 	int y
 )
 {
-	if (players.GETselectedPlayer() != NO_PLAYER_SELECTED)
+	if (players.GETselectedPlayerId() != NO_PLAYER_SELECTED)
 	{
-		std::shared_ptr<Player> selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
+		std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 		int playerToAttack(NO_PLAYER_SELECTED), unitToAttack(NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
 		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
@@ -207,7 +207,7 @@ Move_Type Unit::searchToMove
 	/*		  susceptible de mourrir par l'attaque											   */
 	/* --------------------------------------------------------------------------------------- */
 
-	std::shared_ptr<Player> selPlayer(players.GETvectPlayer()[players.GETselectedPlayer()]);
+	std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 	std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 	bool nextTileValidToMove(false);
@@ -282,7 +282,7 @@ Move_Type Unit::searchToMove
 				condition = checkUnitNextTile(*unit, *players.GETvectPlayer()[i]->GETtabUnit()[j], x, y);
 				if (true == condition)
 				{
-					if (players.GETselectedPlayer() == (int)i)
+					if (players.GETselectedPlayerId() == (int)i)
 					{
 						return Move_Type::cannotMove;
 					}

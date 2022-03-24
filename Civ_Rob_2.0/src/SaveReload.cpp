@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.19
+	last modification on this file on version:0.24.1.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -304,11 +304,11 @@ void SaveReload::savePlayer
 				tinyxml2::XMLElement* cityBuildInQueueRemainingWorkElement = xmlDoc.NewElement("RemainingWork");
 
 				cityBuildInQueueNameElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].build.name.c_str());
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.name.c_str());
 				cityBuildInQueueTypeElement
-					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].build.type);
+					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.type);
 				cityBuildInQueueRemainingWorkElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].build.remainingWork);
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.remainingWork);
 
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueNameElement);
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueTypeElement);
@@ -390,7 +390,7 @@ void SaveReload::reload
 	loadPlayer(mainGame);
 
 	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
-	mainGame.GETPlayers().SETselectedPlayer(NO_PLAYER_SELECTED);
+	mainGame.GETPlayers().SETselectedPlayerId(NO_PLAYER_SELECTED);
 
 	mainGame.makePlayersButtons();
 
@@ -496,7 +496,8 @@ void SaveReload::loadPlayer
 			if (errCheck.compare("Name") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nName != Name");
 
 			mainGame.GETPlayers().GETvectPlayer().push_back(std::make_shared<Player>(nName->FirstChild()->Value()));
-			mainGame.GETPlayers().SETselectedPlayer((int)mainGame.GETPlayers().GETvectPlayer().size() - 1);
+			mainGame.GETPlayers().SETselectedPlayerId((int)mainGame.GETPlayers().GETvectPlayer().size() - 1);
+			mainGame.GETPlayers().SETselectedPlayerPtr(mainGame.GETPlayers().GETvectPlayer()[(int)mainGame.GETPlayers().GETvectPlayer().size() - 1]);
 
 			/* Set Player name in vectPlayerName */
 			mainGame.getUserInputNewGame()->vectPlayerName.push_back(nName->FirstChild()->Value());
@@ -634,7 +635,7 @@ void SaveReload::loadUnitXML
 
 	while (nullptr != nUnit)
 	{
-		std::shared_ptr<Player> blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayer()]);
+		std::shared_ptr<Player> blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayerId()]);
 		blankPlayer->addEmptyUnit();
 
 		std::shared_ptr<Unit> blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
@@ -728,7 +729,7 @@ void SaveReload::loadCityXML
 	Citizen* ptrCitizen;
 
 
-	std::shared_ptr<Player> ptrPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayer()]);
+	std::shared_ptr<Player> ptrPlayer(mainGame.GETPlayers().GETselectedPlayerPtr());
 	std::shared_ptr<City> ptrCity;
 
 	while (nullptr != nCity)
@@ -757,7 +758,7 @@ void SaveReload::loadCityXML
 			mainGame.getParentWindow(),
 			middletileX,
 			middletileY,
-			mainGame.GETPlayers().GETselectedPlayer(),
+			mainGame.GETPlayers().GETselectedPlayerId(),
 			mainGame.GETmainMap(),
 			tabtile,
 			influenceLevel
@@ -828,13 +829,13 @@ void SaveReload::loadCityXML
 				blankBluid.remainingWork = std::stod(nBuildQueueElementRemainingWork->FirstChild()->Value());
 
 
-				/*ptrCity->addBuildToQueue
-				(
-					{
-						
-					}
-				);
-				*/
+				ptrCity->GETbuildQueue().push_back
+					(
+						{
+							nullptr, /* will be create when call CityScreen::entry */
+							blankBluid
+						}
+					);
 
 				nBuildQueueElement = nBuildQueueElement->NextSibling();
 			}

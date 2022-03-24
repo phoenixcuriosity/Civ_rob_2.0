@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.37
+	last modification on this file on version:0.24.1.0
+	file version : 1.38
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,12 +39,10 @@
   ********************************************************* */
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : createCity																   */
 /* ROLE : Cr�ation d'une City � partir d'un settler sur la carte					   */
 /* INPUT/OUTPUT : struct Sysinfo& : Global structure								   */
 /* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::createCity
 (
@@ -52,10 +50,10 @@ void City::createCity
 	unsigned int influenceLevel
 )
 {
-	if (mainGame.GETPlayers().GETselectedPlayer() != NO_PLAYER_SELECTED)
+	if (mainGame.GETPlayers().GETselectedPlayerId() != NO_PLAYER_SELECTED)
 	{
-		unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayer());
-		std::shared_ptr<Player> splayer(mainGame.GETPlayers().GETvectPlayer()[selectedPlayer]);
+		unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
+		std::shared_ptr<Player> splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
 		unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
 		std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[selectedUnit]);
 
@@ -120,6 +118,9 @@ void City::createCity
 
 			splayer->deleteUnit(selectedUnit);
 			splayer->SETselectedUnit(NO_UNIT_SELECTED);
+
+			mainGame.GETPlayers().SETneedToUpdateDrawUnit(true);
+			mainGame.GETPlayers().SETneedToUpdateDrawCity(true);
 		}
 		else
 		{
@@ -131,7 +132,6 @@ void City::createCity
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : fillCitieTiles															   */
 /* ROLE : Rempli le tableau de la Citie avec le point centrale la middletileXY		   */
 /* ROLE : et de largeur et hauteur totale INIT_SIZE_VIEW							   */
@@ -142,7 +142,6 @@ void City::createCity
 /* INPUT/OUTPUT : Map& map : structure de la Map									   */
 /* OUTPUT : std::vector<Tile>& tabtile : tableau � remplir de la Citie				   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::fillCitieTiles
 (
@@ -178,21 +177,19 @@ void City::fillCitieTiles
 			tabtile[k] = mainMap.GETmatriceMap()
 				[(unsigned int)((double)middletileX + o)]
 			[(unsigned int)((double)middletileY + p)];
-			tabtile[k].tile_x = (window.GETscreenWidth() / 2) - (-o * mainMap.GETtileSize());
-			tabtile[k].tile_y = (window.GETscreenHeight() / 2) - (-p * mainMap.GETtileSize());
+			tabtile[k].tile_x = (window.GETscreenWidth() / 2) - (-o * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
+			tabtile[k].tile_y = (window.GETscreenHeight() / 2) - (-p * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
 			k++;
 		}
 	}
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : initSizeInfluenceCondition												   */
 /* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
 /* INPUT : int o :	index en x														   */
 /* INPUT : int p :	index en y														   */
 /* RETURNED VALUE : bool : false -> invalid / true -> valid							   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 bool City::initSizeInfluenceCondition
 (
@@ -222,7 +219,6 @@ bool City::initSizeInfluenceCondition
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : cornerCheck																   */
 /* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
 /* IN : int o :	index en x															   */
@@ -230,7 +226,6 @@ bool City::initSizeInfluenceCondition
 /* IN : unsigned int influenceLevel : City influence level 							   */
 /* RETURNED VALUE : bool : false -> this tile is a corner							   */
 /* RETURNED VALUE : bool : true -> this tile is not a corner						   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 bool City::cornerCheck
 (
@@ -253,13 +248,11 @@ bool City::cornerCheck
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : searchCityTile															   */
 /* ROLE : Recherche la case de la City et renvoie vers cityMap						   */
 /* INPUT : const std::vector<Player*>& : Vecteur de joueurs							   */
 /* INPUT/OUTPUT : Var& : Structure Var												   */
 /* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 bool City::searchCityTile
 (
@@ -270,7 +263,7 @@ bool City::searchCityTile
 	if	(
 			MainMap::convertPosXToIndex(m_x) == indexX 
 			&&
-			MainMap::convertPosXToIndex(m_x) == indexY
+			MainMap::convertPosXToIndex(m_y) == indexY
 		)
 	{
 		return true;
@@ -293,16 +286,14 @@ bool City::searchCityTile
   ********************************************************* */
 
 
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
-  /* NAME : City																		   */
-  /* ROLE : Constructeur complet														   */
-  /* INPUT : const std::string &	: name de la Citie									   */
-  /* INPUT : unsigned int x : index en x												   */
-  /* INPUT : unsigned int y : index en y												   */
-  /* INPUT : Tile tile[] : tableau de tile de la Citie								   */
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : City																		   */
+/* ROLE : Constructeur complet														   */
+/* INPUT : const std::string &	: name de la Citie									   */
+/* INPUT : unsigned int x : index en x												   */
+/* INPUT : unsigned int y : index en y												   */
+/* INPUT : Tile tile[] : tableau de tile de la Citie								   */
+/* ----------------------------------------------------------------------------------- */
 City::City
 (
 	const std::string& name,
@@ -343,11 +334,9 @@ City::City
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : ~City																		   */
 /* ROLE : Destructeur																   */
 /* INPUT : void																		   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 City::~City()
 {
@@ -357,11 +346,9 @@ City::~City()
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : resetTabCitizen															   */
 /* ROLE : Remove all Citizens in the City											   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::resetTabCitizen()
 {
@@ -374,12 +361,10 @@ void City::resetTabCitizen()
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : foodNextTurn																   */
 /* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
 /* OUT : GoldStats& goldStats : Player gold stats									   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::foodNextTurn
 (
@@ -509,13 +494,11 @@ double City::tileValue
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : testPos																	   */
 /* ROLE : Retourne si la position est valide										   */
 /* INPUT : unsigned int x : position de la souris en x								   */
 /* INPUT : unsigned int y : position de la souris en y								   */
 /* RETURNED VALUE : bool : false : invalid / true : valid							   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 bool City::testPos
 (
@@ -535,13 +518,11 @@ bool City::testPos
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : computeEmotion															   */
 /* ROLE : Calcul sur une echelle de 0 � 100 le bonheur de la Citie					   */
 /* INPUT : void																		   */
 /* INTERNAL OUTPUT : m_emotion : bonheur de la Citie									   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::computeEmotion()
 {
@@ -586,12 +567,10 @@ void City::computeEmotion()
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : computeWork																   */
 /* ROLE : Calculate the work for the turn											   */
 /* INPUT : void																		   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::computeWork()
 {
@@ -615,7 +594,6 @@ void City::computeWork()
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : computeWorkToBuild														   */
 /* ROLE : Compute the remaining work to build a building or unit					   */
 /* ROLE : if the remaining work is zero then the building or unit is created		   */
@@ -625,7 +603,6 @@ void City::computeWork()
 /* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
 /* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::computeWorkToBuild
 (
@@ -647,20 +624,20 @@ void City::computeWorkToBuild
 		if (!m_buildQueue.empty())
 		{
 			/* Decrease by m_workBalance the amont of the remainingWork to build */
-			m_buildQueue.front().build.remainingWork -= m_workBalance;
+			m_buildQueue.front().buildQ.remainingWork -= m_workBalance;
 
 			double workSurplus(0.0);
-			while (m_buildQueue.front().build.remainingWork < 0.0)
+			while (m_buildQueue.front().buildQ.remainingWork < 0.0)
 			{
-				switch (m_buildQueue.front().build.type)
+				switch (m_buildQueue.front().buildQ.type)
 				{
 				case build_Type::unit:
 				{
-					unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.front().build.name, vectUnitTemplate));
+					unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.front().buildQ.name, vectUnitTemplate));
 
 					player.addUnit
 					(
-						m_buildQueue.front().build.name,
+						m_buildQueue.front().buildQ.name,
 						m_x,
 						m_y,
 						vectUnitTemplate[unitToBuild].type,
@@ -687,13 +664,13 @@ void City::computeWorkToBuild
 					break;
 				}
 
-				workSurplus = -m_buildQueue.front().build.remainingWork;
+				workSurplus = -m_buildQueue.front().buildQ.remainingWork;
 
 				removeBuildToQueueFront();
 
 				if (!m_buildQueue.empty())
 				{
-					m_buildQueue.front().build.remainingWork -= workSurplus;
+					m_buildQueue.front().buildQ.remainingWork -= workSurplus;
 				}
 				else
 				{
@@ -720,12 +697,10 @@ void City::computeWorkToBuild
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : computeGold																   */
 /* ROLE : Calculate the gold for the turn											   */
 /* INPUT : void																		   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::computeGold()
 {
@@ -743,12 +718,10 @@ void City::computeGold()
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : addCityGoldToTaxIncome													   */
 /* ROLE : Add m_goldBalance to a player taxIncome 									   */
 /* OUT : GoldStats& goldStats : struct of player gold								   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::addCityGoldToTaxIncome
 (
@@ -760,12 +733,10 @@ void City::addCityGoldToTaxIncome
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : convertWorkSurplusToFood													   */
 /* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
 /* INPUT : double workSurplus : work surplus to convert into food					   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::convertWorkSurplusToFood
 (
@@ -776,12 +747,10 @@ void City::convertWorkSurplusToFood
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : convertWorkSurplusToFood													   */
 /* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
 /* INPUT : double workSurplus : food surplus to convert into work					   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::convertFoodSurplusToWork
 (
@@ -792,13 +761,11 @@ void City::convertFoodSurplusToWork
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : convertFoodSurplusToGold													   */
 /* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
 /* INPUT : double workSurplus : food surplus to convert into work					   */
 /* OUT : GoldStats& goldStats : gold surplus conversion								   */
 /* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 void City::convertFoodSurplusToGold
 (
@@ -810,7 +777,6 @@ void City::convertFoodSurplusToGold
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : addBuildToQueue															   */
 /* ROLE : Push build to buildQueue													   */
 /* IN : build buildToQueue : build to push into buildQueue							   */
@@ -819,29 +785,30 @@ void City::convertFoodSurplusToGold
 /* INPUT : TTF_Font* font[] : array of SDL font										   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void City::addBuildToQueue
 (
-	const buildPushButton& buildToQueue
+	const buildGUI& buildToQueue
 )
 {
-	m_buildQueue.push_back({ buildToQueue });
+	m_buildQueue.push_back(buildToQueue);
 }
 
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : removeBuildToQueueFront													   */
 /* ROLE : Pop build to buildQueue													   */
 /* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void City::removeBuildToQueueFront()
 {
+	if (m_buildQueue.front().buildG != nullptr)
+	{
+		m_buildQueue.front().buildG->destroy();
+		m_buildQueue.front().buildG = nullptr;
+	}
 	m_buildQueue.pop_front();
 }
 
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : removeBuildToQueue														   */
 /* ROLE : remove build to buildQueue at index										   */
@@ -849,162 +816,21 @@ void City::removeBuildToQueueFront()
 /* IN : unsigned int index : index to remove										   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void City::removeBuildToQueue
 (
-	unsigned int index
+	size_t index
 )
 {
+	if (m_buildQueue[index].buildG != nullptr)
+	{
+		m_buildQueue[index].buildG->destroy();
+		m_buildQueue[index].buildG = nullptr;
+	}
 	m_buildQueue.erase(m_buildQueue.begin() + index);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : copyLoopBuildQueue														   */
-/* ROLE : copy index + 1 to index, start at index									   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* IN : unsigned int index : start of loop											   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void City::copyLoopBuildQueue
-(
-	unsigned int index
-)
-{
-	
 }
 
 /* *********************************************************
  *					END City::METHODS					   *
- ********************************************************* */
-
-
-
- /* *********************************************************
-  *				START City::METHODS::Affichage			   *
-  ********************************************************* */
-
-
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
-  /* NAME : afficher																	   */
-  /* ROLE : Affichage de la City (Texture et nom)										   */
-  /* INPUT : truct Sysinfo& : structure globale du programme							   */
-  /* RETURNED VALUE    : void															   */
-  /* ----------------------------------------------------------------------------------- */
-  /* ----------------------------------------------------------------------------------- */
-void City::afficher
-(
-
-)
-{
-
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : affichercitiemap															   */
-/* ROLE : Display City Tiles to the citieMap with Citizen							   */
-/* ROLE : Display the food stock of the city										   */
-/* ROLE : Display the build Queue													   */
-/* INPUT : truct Sysinfo& : structure globale du programme							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void City::afficherCityMap
-(
-
-)
-{
-	displayTexturesTextesButtons
-	(
-	
-	);
-
-	afficherCityTiles();
-
-	afficherCityFood();
-
-	afficherCityBuildToQueue();
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : afficher																	   */
-/* ROLE : Affichage de la City (Texture et nom)										   */
-/* IN : MapTexture& cityMapTextures : CityMap Textures								   */
-/* IN : MapTexture& unit : Unit Textures											   */
-/* IN : MapTexte& cityMapTextes : CityMap Textes									   */
-/* IN : MapButtonTexte& cityMapButtonTexte : CityMap Buttons						   */
-/* IN : Var& var : structure Var													   */
-/* IN : unsigned int screenWidth : screen size width in pixel 						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void City::displayTexturesTextesButtons
-(
-
-
-)
-{
-
-
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : afficherCitieTiles														   */
-/* ROLE : Display City Tiles to the citieMap with Citizen							   */
-/* INPUT : truct Sysinfo& : Global struct											   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void City::afficherCityTiles
-(
-
-)
-{
-
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : afficherCitieFood															   */
-/* ROLE : Display the food stock of the city										   */
-/* INPUT : unsigned int tileSize : Size of tile in the city							   */
-/* INPUT : MapTexture& citieMap : UnorderMap of City Texture 						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void City::afficherCityFood
-(
-	
-)
-{
-
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : afficherCitieBuildToQueue													   */
-/* ROLE : Display the build Queue													   */
-/* INPUT : MapTexte& citieMap : UnorderMap of City Texte							   */
-/* INPUT : DequeButtonTexte& : Deque of buttons use in build Queue					   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void City::afficherCityBuildToQueue
-(
-	
-)
-{
-
-}
-
-
-/* *********************************************************
- *				END City::METHODS::Affichage			   *
  ********************************************************* */
 
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.21
+	last modification on this file on version:0.24.1.0
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -154,12 +154,13 @@ struct build
 	double remainingWork;
 };
 
-
-typedef struct buildPushButton
+struct buildGUI
 {
-	CEGUI::PushButton* button;
-	build build;
-}buildPushButton;
+	CEGUI::PushButton* buildG = nullptr;
+	build buildQ;
+};
+
+typedef std::deque<buildGUI> dequeBuild;
 
 /* *********************************************************
  *						 Classes						   *
@@ -173,12 +174,10 @@ public:
 	 ********************************************************* */
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : createCity																   */
 	/* ROLE : Cr�ation d'une City � partir d'un settler sur la carte					   */
 	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static void createCity
 	(
@@ -186,7 +185,6 @@ public:
 		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : fillCitieTiles															   */
 	/* ROLE : Rempli le tableau de la Citie avec le point centrale la middletileXY		   */
@@ -198,7 +196,6 @@ public:
 	/* INPUT/OUTPUT : Map& map : structure de la Map									   */
 	/* OUTPUT : std::vector<Tile>& tabtile : tableau � remplir de la Citie				   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static void fillCitieTiles
 	(
@@ -214,13 +211,11 @@ public:
 private:
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initSizeInfluenceCondition												   */
 	/* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
 	/* INPUT : int o :	index en x														   */
 	/* INPUT : int p :	index en y														   */
 	/* RETURNED VALUE : bool : false -> invalid / true -> valid							   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static bool initSizeInfluenceCondition
 	(
@@ -230,7 +225,6 @@ private:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : cornerCheck																   */
 	/* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
 	/* IN : int o :	index en x															   */
@@ -238,7 +232,6 @@ private:
 	/* IN : unsigned int influenceLevel : City influence level 							   */
 	/* RETURNED VALUE : bool : false -> this tile is a corner							   */
 	/* RETURNED VALUE : bool : true -> this tile is not a corner						   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static bool cornerCheck
 	(
@@ -255,14 +248,12 @@ public:
 
 
 	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
 	 /* NAME : City																		   */
 	 /* ROLE : Constructeur complet														   */
 	 /* INPUT : const std::string &	: name de la Citie									   */
 	 /* INPUT : unsigned int x : index en x												   */
 	 /* INPUT : unsigned int y : index en y												   */
 	 /* INPUT : Tile tile[] : tableau de tile de la Citie								   */
-	 /* ----------------------------------------------------------------------------------- */
 	 /* ----------------------------------------------------------------------------------- */
 	City
 	(
@@ -273,30 +264,24 @@ public:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : ~City																		   */
 	/* ROLE : Destructeur																   */
 	/* INPUT : void																		   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual ~City();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : resetTabCitizen															   */
 	/* ROLE : Remove all Citizens in the City											   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void resetTabCitizen();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : foodNextTurn																   */
 	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
 	/* OUT : GoldStats& goldStats : Player gold stats									   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void foodNextTurn
 	(
@@ -326,13 +311,11 @@ private:
 
 public:
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : testPos																	   */
 	/* ROLE : Retourne si la position est valide										   */
 	/* INPUT : unsigned int x : position de la souris en x								   */
 	/* INPUT : unsigned int y : position de la souris en y								   */
 	/* RETURNED VALUE : bool : false : invalid / true : valid							   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool testPos
 	(
@@ -341,27 +324,22 @@ public:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeEmotion															   */
 	/* ROLE : Calcul sur une echelle de 0 � 100 le bonheur de la Citie					   */
 	/* INPUT : void																		   */
-	/* INTERNAL OUTPUT : m_emotion : bonheur de la Citie									   */
+	/* INTERNAL OUTPUT : m_emotion : bonheur de la Citie								   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void computeEmotion();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeWork																   */
 	/* ROLE : Calculate the work for the turn											   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void computeWork();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeWorkToBuild														   */
 	/* ROLE : Compute the remaining work to build a building or unit					   */
@@ -372,7 +350,6 @@ public:
 	/* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void computeWorkToBuild
 	(
 		Player& player,
@@ -381,22 +358,18 @@ public:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeGold																   */
 	/* ROLE : Calculate the gold for the turn											   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void computeGold();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : addCityGoldToTaxIncome													   */
 	/* ROLE : Add m_goldBalance to a player taxIncome 									   */
 	/* OUT : GoldStats& goldStats : struct of player gold								   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void addCityGoldToTaxIncome
 	(
@@ -404,12 +377,10 @@ public:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertWorkSurplusToFood													   */
 	/* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
 	/* INPUT : double workSurplus : work surplus to convert into food					   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void convertWorkSurplusToFood
 	(
@@ -417,12 +388,10 @@ public:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertWorkSurplusToFood													   */
 	/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
 	/* INPUT : double workSurplus : food surplus to convert into work					   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void convertFoodSurplusToWork
 	(
@@ -430,13 +399,11 @@ public:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertFoodSurplusToGold													   */
 	/* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
 	/* INPUT : double workSurplus : food surplus to convert into work					   */
 	/* OUT : GoldStats& goldStats : gold surplus conversion								   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	virtual void convertFoodSurplusToGold
 	(
@@ -444,7 +411,6 @@ public:
 		GoldStats& goldStats
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : addBuildToQueue															   */
 	/* ROLE : Push build to buildQueue													   */
@@ -454,23 +420,19 @@ public:
 	/* INPUT : TTF_Font* font[] : array of SDL font										   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void addBuildToQueue
 	(
-		const buildPushButton& buildToQueue
+		const buildGUI& buildToQueue
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : removeBuildToQueueFront													   */
 	/* ROLE : Pop build to buildQueue													   */
 	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void removeBuildToQueueFront();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : removeBuildToQueue														   */
 	/* ROLE : remove build to buildQueue at index										   */
@@ -478,119 +440,10 @@ public:
 	/* IN : unsigned int index : index to remove										   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void removeBuildToQueue
 	(
-		unsigned int index
+		size_t index
 	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : copyLoopBuildQueue														   */
-	/* ROLE : copy index + 1 to index, start at index									   */
-	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-	/* IN : unsigned int index : start of loop											   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void copyLoopBuildQueue
-	(
-		unsigned int index
-	);
-
-public:
-	/* *********************************************************
-	 *				City::METHODS::Affichage				   *
-	 ********************************************************* */
-
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : afficher																	   */
-	/* ROLE : Affichage de la City (Texture et nom)										   */
-	/* INPUT : truct Sysinfo& : structure globale du programme							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void afficher
-	(
-		
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : afficher																	   */
-	/* ROLE : Affichage de la City (Texture et nom)										   */
-	/* IN : MapTexture& cityMapTextures : CityMap Textures								   */
-	/* IN : MapTexture& unit : Unit Textures											   */
-	/* IN : MapTexte& cityMapTextes : CityMap Textes									   */
-	/* IN : MapButtonTexte& cityMapButtonTexte : CityMap Buttons						   */
-	/* IN : Var& var : structure Var													   */
-	/* IN : unsigned int screenWidth : screen size width in pixel 						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void displayTexturesTextesButtons
-	(
-
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : affichercitiemap															   */
-	/* ROLE : Display City Tiles to the citieMap with Citizen							   */
-	/* ROLE : Display the food stock of the city										   */
-	/* ROLE : Display the build Queue													   */
-	/* INPUT : truct Sysinfo& : structure globale du programme							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherCityMap
-	(
-
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : afficherCitieTiles														   */
-	/* ROLE : Display City Tiles to the citieMap with Citizen							   */
-	/* INPUT : truct Sysinfo& : Global struct											   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherCityTiles
-	(
-
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : afficherCitieFood															   */
-	/* ROLE : Display the food stock of the city										   */
-	/* INPUT : unsigned int tileSize : Size of tile in the city							   */
-	/* INPUT : MapTexture& citieMap : UnorderMap of City Texture 						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherCityFood
-	(
-
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : afficherCitieBuildToQueue													   */
-	/* ROLE : Display the build Queue													   */
-	/* INPUT : MapTexte& citieMap : UnorderMap of City Texte							   */
-	/* INPUT : DequeButtonTexte& : Deque of buttons use in build Queue					   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void afficherCityBuildToQueue
-	(
-
-	);
-
 
 public:
 	/* *********************************************************
@@ -614,7 +467,7 @@ public:
 	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodSurplusPreviousTurn; };
 	inline virtual double GETgoldBalance()const { return m_goldBalance; };
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
-	inline virtual std::deque<buildPushButton>& GETbuildQueue() { return m_buildQueue; };
+	inline virtual dequeBuild& GETbuildQueue() { return m_buildQueue; };
 
 	inline virtual void SETimage(std::string image) { m_image = image; };
 	inline virtual void SETname(std::string name) { m_name = name; };
@@ -664,7 +517,7 @@ private:
 
 	conversionSurplus_Type m_conversionToApply;
 
-	std::deque<buildPushButton> m_buildQueue;
+	dequeBuild m_buildQueue;
 };
 
 

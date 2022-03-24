@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.0
+	last modification on this file on version:0.24.1.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,6 +47,19 @@
 
 struct File;
 
+/* Define minimum size to cycle builds */
+const unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
+
+/*  */
+const unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
+
+const bool HIDE_BUTTON = false;
+
+const bool SHOW_BUTTON = true;
+
+const bool CYCLE_BUTTON_DIR_UP = false;
+const bool CYCLE_BUTTON_DIR_DOWN = true;
+
 class CityScreen : public RealEngine2D::IGameScreen
 {
 public:
@@ -54,7 +67,9 @@ public:
 	(
 		File* file,
 		SaveReload* SaveReload,
-		Players* players
+		Players* players,
+		unsigned int* tileSize,
+		Screen* screen
 	);
 	~CityScreen();
 
@@ -69,6 +84,10 @@ public:
 
 private:
 
+	virtual void resetInternalEntry();
+
+	virtual void createDynamicContext();
+
 
 
 public:
@@ -77,10 +96,18 @@ public:
 	virtual void update() override;
 	virtual void draw() override;
 
+private:
+
+	virtual void input(SDL_Event& ev);
+
+	virtual void updatePositionCycleButton(bool dir);
+
+	virtual void drawTextures();
 
 private:
 
 	bool onBuildQueueClicked(const CEGUI::EventArgs& e);
+	bool onBuildQueueToBuildClicked(const CEGUI::EventArgs& e);
 	bool onReturnToMapClicked(const CEGUI::EventArgs& e);
 
 
@@ -91,12 +118,22 @@ private:
 	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
 
 	RealEngine2D::GUI m_gui;
-	std::deque<buildPushButton> m_buttonBuild;
+	unsigned int m_indexCycleBuilds;
+
+	std::deque<buildGUI> m_buttonBuild;
+
+	/* Dedicated spriteBatch */
+	RealEngine2D::SpriteBatch m_spriteBatch;
+	bool m_needToUpdateDraw;
 
 	Players* m_players;
+	unsigned int* m_tileSize;
+	Screen* m_screen;
 
 	File* m_file;
 	SaveReload* m_SaveReload;
+
+	std::shared_ptr<City> m_selectedCity;
 
 	bool m_isInitialize;
 };

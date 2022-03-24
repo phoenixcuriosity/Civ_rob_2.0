@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.34
+	last modification on this file on version:0.24.1.0
+	file version : 1.35
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -131,6 +131,63 @@ void GamePlayScreen::actionByKey()
 		m_players.clickToSelectUnit(getMouseCoorNorm('X'), getMouseCoorNorm('Y'));
 	}
 #endif // _DEBUG
+
+	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
+	{
+		char buffer[256];
+
+		sprintf_s
+		(buffer, "%d",
+			m_mainMap.GETtileSize()
+			*
+			MainMap::convertPosXToIndex
+			(
+				(double)m_game->getInputManager().GETmouseCoords().x
+				+ (double)m_screen.camera.GETposition().x
+				- (double)m_game->getWindow().GETscreenWidth() / 2
+			)
+		);
+		m_screen.spriteFont->draw
+		(
+			m_screen.spriteBatchHUDDynamic,
+			buffer,
+			glm::vec2
+			(
+				(double)m_game->getInputManager().GETmouseCoords().x,
+				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y
+			), // offset pos
+			glm::vec2(0.32f), // size
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
+
+		sprintf_s
+		(
+			buffer, "%d",
+			m_mainMap.GETtileSize()
+			*
+			MainMap::convertPosYToIndex
+			(
+				-(double)m_game->getInputManager().GETmouseCoords().y
+				+ (double)m_screen.camera.GETposition().y
+				+ (double)m_game->getWindow().GETscreenHeight() / 2
+			)
+		);
+
+		m_screen.spriteFont->draw
+		(
+			m_screen.spriteBatchHUDDynamic,
+			buffer,
+			glm::vec2
+			(
+				(double)m_game->getInputManager().GETmouseCoords().x,
+				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y - 60
+			), // offset pos
+			glm::vec2(0.32f), // size
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
+	}
 }
 
 
@@ -147,6 +204,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
+		m_players.SETneedToUpdateDrawCity(true);
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_s) && !m_screen.camera.isLockMoveDOWN())
 	{
@@ -159,6 +217,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
+		m_players.SETneedToUpdateDrawCity(true);
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_q) && !m_screen.camera.isLockMoveLEFT())
 	{
@@ -171,6 +230,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
+		m_players.SETneedToUpdateDrawCity(true);
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_d) && !m_screen.camera.isLockMoveRIGHT())
 	{
@@ -183,6 +243,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
+		m_players.SETneedToUpdateDrawCity(true);
 	}
 }
 
@@ -251,85 +312,27 @@ void GamePlayScreen::mouseClick
 	SDL_Event& ev
 )
 {
-	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
-	{
-		char buffer[256];
 	
-		sprintf_s
-		(	buffer, "%d",
-			m_mainMap.GETtileSize()
-			*
-			MainMap::convertPosXToIndex
-			(
-				(double)m_game->getInputManager().GETmouseCoords().x
-				+ (double)m_screen.camera.GETposition().x
-				- (double)m_game->getWindow().GETscreenWidth() / 2
-			)
-		);
-		m_screen.spriteFont->draw
-		(
-			m_screen.spriteBatchHUDDynamic,
-			buffer,
-			glm::vec2
-			(
-				(double)m_game->getInputManager().GETmouseCoords().x,
-				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y
-			), // offset pos
-			glm::vec2(0.32f), // size
-			0.0f,
-			RealEngine2D::COLOR_WHITE
-		);
-
-		sprintf_s
-		(
-			buffer, "%d", 
-				m_mainMap.GETtileSize()
-				*
-				MainMap::convertPosYToIndex
-				(
-					-(double)m_game->getInputManager().GETmouseCoords().y
-					+ (double)m_screen.camera.GETposition().y
-					+ (double)m_game->getWindow().GETscreenHeight() / 2
-				)
-		);
-
-		m_screen.spriteFont->draw
-		(
-			m_screen.spriteBatchHUDDynamic,
-			buffer,
-			glm::vec2
-			(
-				(double)m_game->getInputManager().GETmouseCoords().x,
-				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y - 60
-			), // offset pos
-			glm::vec2(0.32f), // size
-			0.0f,
-			RealEngine2D::COLOR_WHITE
-		);
-	}
-	else if (ev.button.clicks == TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
+	if (ev.button.clicks == TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
 	{
-		m_players.SetSelectedCity
-		(
-			m_players.searchCity
-			(
-				MainMap::convertPosXToIndex
+		if	(
+				m_players.searchCity
 				(
-					(double)m_game->getInputManager().GETmouseCoords().x
-					+ (double)m_screen.camera.GETposition().x
-					- (double)m_game->getWindow().GETscreenWidth() / 2
-				)
-				,
-				MainMap::convertPosYToIndex
-				(
-					-(double)m_game->getInputManager().GETmouseCoords().y
-					+ (double)m_screen.camera.GETposition().y
-					+ (double)m_game->getWindow().GETscreenHeight() / 2
+					MainMap::convertPosXToIndex
+					(
+						(double)m_game->getInputManager().GETmouseCoords().x
+						+ (double)m_screen.camera.GETposition().x
+						- (double)m_game->getWindow().GETscreenWidth() / 2
+					)
+					,
+					MainMap::convertPosYToIndex
+					(
+						-(double)m_game->getInputManager().GETmouseCoords().y
+						+ (double)m_screen.camera.GETposition().y
+						+ (double)m_game->getWindow().GETscreenHeight() / 2
+					)
 				)
 			)
-		);
-
-		if (m_players.isValidSelectedCity())
 		{
 			m_screen.m_nextScreenIndexMenu = CITY_SCREEN_INDEX;
 			m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;

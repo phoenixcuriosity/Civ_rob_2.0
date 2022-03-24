@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.15.0
-	file version : 1.27
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.1.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -810,19 +810,19 @@ void MainMap::drawMap
 	RealEngine2D::Window& window
 )
 {
-	static GLuint idGrass(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
-	static GLuint idWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
-	static GLuint idDeepWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
+	const static GLuint idGrass(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
+	const static GLuint idWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
+	const static GLuint idDeepWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
 
-	static GLuint idCoal(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
-	static GLuint idCopper(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
-	static GLuint idFish(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
-	static GLuint idHorse(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
-	static GLuint idIron(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
-	static GLuint idPetroleum(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
-	static GLuint idStone(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
-	static GLuint idtree1(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
-	static GLuint iduranium(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
+	const static GLuint idCoal(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
+	const static GLuint idCopper(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
+	const static GLuint idFish(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
+	const static GLuint idHorse(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
+	const static GLuint idIron(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
+	const static GLuint idPetroleum(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
+	const static GLuint idStone(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
+	const static GLuint idtree1(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
+	const static GLuint iduranium(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
 
 	if (m_needToUpdateDraw)
 	{

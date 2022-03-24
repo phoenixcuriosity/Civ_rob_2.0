@@ -72,7 +72,7 @@ struct Screen
 	RealEngine2D::Camera2D camera;
 	RealEngine2D::Camera2D cameraHUD;
 
-	std::unique_ptr<RealEngine2D::SpriteFont> spriteFont = nullptr;
+	std::shared_ptr<RealEngine2D::SpriteFont> spriteFont = nullptr;
 	RealEngine2D::SpriteBatch spriteBatchHUDDynamic;
 	RealEngine2D::SpriteBatch spriteBatchHUDStatic;
 
@@ -369,6 +369,8 @@ public:
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	void loadUnitAndSpec();
+
+	void loadCitiesNames();
 
 private:
 

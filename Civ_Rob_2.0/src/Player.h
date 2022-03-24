@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.17
+	last modification on this file on version:0.24.1.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,6 +27,16 @@
 
 #include "LIB.h"
 
+#include <RealEngine2D/src/IGameScreen.h>
+#include <RealEngine2D/src/IMainGame.h>
+#include <RealEngine2D/src/GLSLProgram.h>
+#include <RealEngine2D/src/Camera2D.h>
+#include <RealEngine2D/src/WidgetLabel.h>
+#include <RealEngine2D/src/SpriteBatch.h>
+#include <RealEngine2D/src/AudioEngine.h>
+#include <RealEngine2D/src/GUI.h>
+#include <RealEngine2D/src/Window.h>
+
 #include "Unit.h"
 #include "City.h"
 
@@ -44,6 +54,9 @@
 
 const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
 const unsigned int NB_MAX_PLAYER = 9;
+const unsigned int VECT_SIZE_OFFSET_ID = 1;
+
+const unsigned int CITY_TYPE = 1;
 
 /* *********************************************************
  *						 Enum							   *
@@ -296,11 +309,7 @@ public:
 	inline virtual OnOffDisplay& GETonOffDisplay() { return m_onOffDisplay; };
 	inline virtual OnOffDisplay GETonOffDisplayConst()const { return m_onOffDisplay; };
 
-	virtual std::shared_ptr<Unit> getSelectedUnit()
-	{
-		if(m_selectedUnit != NO_UNIT_SELECTED) return m_tabUnit[m_selectedUnit];
-		return nullptr;
-	}
+	virtual std::shared_ptr<Unit>& GETSelectedUnitPtr(){return m_tabUnit[m_selectedUnit];}
 
 	inline virtual void SETname(const std::string& msg) { m_name = msg; };
 	inline virtual void SETselectedUnit(int selectedUnit) { m_selectedUnit = selectedUnit; };
@@ -330,17 +339,19 @@ public:
 	Players();
 	~Players();
 
-	inline int GETselectedPlayer()const { return m_selectedPlayer; };
-	inline unsigned int GETcitiesNameMaxToCreate()const { return m_citiesNameMaxToCreate; };
+	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
+	inline std::shared_ptr<Player>& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
 	inline VectCityName& GETvectCityName() { return m_vectCityName; };
 	inline VectUnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
+	inline std::shared_ptr<City>& GETSelectedCity() { return m_selectedCity; };
 
-	inline void SETselectedPlayer(int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
-	inline void SETcitiesNameMaxToCreate(unsigned int citiesNameMaxToCreate) { m_citiesNameMaxToCreate = citiesNameMaxToCreate; };
+	inline void SETselectedPlayerId(int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
+	inline void SETselectedPlayerPtr(std::shared_ptr<Player>& selectedPlayerPtr) { m_selectedPlayerPtr = selectedPlayerPtr; };
 	inline void SETneedToUpdateDrawUnit(bool need) { m_needToUpdateDrawUnit = need; };
-	inline void SetSelectedCity(std::shared_ptr<City>* selectedCity) { m_selectedCity = *selectedCity; };
+	inline void SETneedToUpdateDrawCity(bool need) { m_needToUpdateDrawCity = need; };
+	inline void SetSelectedCity(std::shared_ptr<City> selectedCity) { m_selectedCity = selectedCity; };
 
 	inline bool isValidSelectedCity() { if (m_selectedCity != nullptr) return true; else return false; };
 
@@ -369,7 +380,16 @@ public:
 
 	void renderUnit();
 
-	virtual std::shared_ptr<City>* searchCity
+	void drawCity
+	(
+		const MainMap& mainMap,
+		RealEngine2D::Camera2D& camera,
+		std::shared_ptr<RealEngine2D::SpriteFont>& font
+	);
+
+	void renderCity();
+
+	virtual bool searchCity
 	(
 		unsigned int indexX,
 		unsigned int indexY
@@ -379,24 +399,30 @@ private:
 
 	// index du joueur actuellement sélectionné
 	int m_selectedPlayer;
+	/* Ptr to the selected Player */
+	std::shared_ptr<Player> m_selectedPlayerPtr;
 
 	/* Ptr to the selected City */
 	std::shared_ptr<City> m_selectedCity;
-
-	// nombre de cité maximal différentes à créer 
-	unsigned int m_citiesNameMaxToCreate;
 
 	VectCityName m_vectCityName;
 
 	// tableau des statistiques par défauts des unités
 	VectUnitTemplate m_vectUnitTemplate;
-	VectID m_vectID;
+	VectID m_vectIDUnit;
+	VectUnitTemplate m_vectCityTemplate;
+	VectID m_vectIDCity;
 
 	VectPlayer m_vectPlayer;
 
 	/* Dedicated spriteBatch for all Unit */
 	RealEngine2D::SpriteBatch m_spriteBatchUnit;
 	bool m_needToUpdateDrawUnit;
+	/* Dedicated spriteBatch for all Cities */
+	RealEngine2D::SpriteBatch m_spriteBatchCity;
+	bool m_needToUpdateDrawCity;
+
+	RealEngine2D::SpriteBatch m_spriteBatchCityDynamic;
 };
 
 

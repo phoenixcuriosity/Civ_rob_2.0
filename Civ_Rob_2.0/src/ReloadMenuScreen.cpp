@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.7
+	last modification on this file on version:0.24.1.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -274,12 +274,10 @@ void ReloadMenuScreen::draw()
 
 	m_spriteBatchHUDDynamic.begin();
 	
-	unsigned int butDrawn(0);
 	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
 	{
 		if (m_vectSavesRadioButton[i]->isVisible())
 		{
-			butDrawn++;
 			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *m_spriteFont, m_game->getWindow());
 		}
 	}
@@ -339,7 +337,16 @@ bool ReloadMenuScreen::onLoadSave(const CEGUI::EventArgs& /* e */)
 
 bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 {
+	/* Remove saves from GUI */
+	for (auto& button : m_vectSavesRadioButton)
+	{
+		button->destroy();
+	}
+	m_vectSavesRadioButton.clear();
+	m_widgetLabels.clear();
+
 	m_SaveReload->clearSave(m_file->saveInfo);
+
 	return true;
 }
 
