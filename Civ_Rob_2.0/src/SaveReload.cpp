@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.20
+	last modification on this file on version:0.24.2.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -393,6 +393,7 @@ void SaveReload::reload
 	mainGame.GETPlayers().SETselectedPlayerId(NO_PLAYER_SELECTED);
 
 	mainGame.makePlayersButtons();
+	mainGame.GETmainMap().initMainMapTexture();
 
 	//SDL_RenderPresent(sysinfo.screen.renderer);
 

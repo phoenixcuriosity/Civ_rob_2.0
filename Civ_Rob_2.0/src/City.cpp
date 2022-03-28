@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.38
+	last modification on this file on version:0.24.2.0
+	file version : 1.39
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -177,8 +177,8 @@ void City::fillCitieTiles
 			tabtile[k] = mainMap.GETmatriceMap()
 				[(unsigned int)((double)middletileX + o)]
 			[(unsigned int)((double)middletileY + p)];
-			tabtile[k].tile_x = (window.GETscreenWidth() / 2) - (-o * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
-			tabtile[k].tile_y = (window.GETscreenHeight() / 2) - (-p * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
+			tabtile[k].tileXCityScreen = (window.GETscreenWidth() / 2) - (-o * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
+			tabtile[k].tileYCityScreen = (window.GETscreenHeight() / 2) - (-p * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
 			k++;
 		}
 	}

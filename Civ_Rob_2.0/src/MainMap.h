@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.8
+	last modification on this file on version:0.24.2.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -34,6 +34,13 @@
 #include <RealEngine2D/src/Camera2D.h>
 #include <RealEngine2D/src/SpriteBatch.h>
 #include <RealEngine2D/src/Window.h>
+
+#include <RealEngine2D/src/IGameScreen.h>
+#include <RealEngine2D/src/IMainGame.h>
+#include <RealEngine2D/src/GLSLProgram.h>
+#include <RealEngine2D/src/WidgetLabel.h>
+#include <RealEngine2D/src/AudioEngine.h>
+#include <RealEngine2D/src/GUI.h>
 
 #include <vector>
 
@@ -133,6 +140,12 @@ struct Tile
 
 	// index en Y de la case : en pixel
 	unsigned int tile_y = 0;
+
+	// index en X de la case : en pixel
+	unsigned int tileXCityScreen = 0;
+
+	// index en Y de la case : en pixel
+	unsigned int tileYCityScreen = 0;
 
 	// type de sol -> enum Ground_Type : unsigned int { noGround, grass, water, deepwater, dirt, sand};
 	Ground_Type tile_ground = Ground_Type::error;
@@ -260,6 +273,8 @@ public:
 	~MainMap();
 
 	void initMainMap(RealEngine2D::Camera2D& camera);
+
+	void initMainMapTexture();
 
 private:
 
@@ -431,6 +446,10 @@ private:
 
 	/* Dedicated spriteBatch for the map */
 	RealEngine2D::SpriteBatch m_spriteBatch;
+	/* Need seperate spriteBatch because of the Texture superposition */
+	RealEngine2D::SpriteBatch m_spriteBatchAppartenance;
+
+	std::vector<GLuint> s_vectID;
 
 	static unsigned int* s_tileSize;
 };

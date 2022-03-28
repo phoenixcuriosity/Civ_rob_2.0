@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.1
+	last modification on this file on version:0.24.2.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,6 +43,8 @@ const float CITY_IHM_BUILD_QUEUE_DIPSLAY_DELTA_Y{ 0.026f };
 
 const size_t OFFSET_INDEX_ERASE_BUTTON = 1;
 
+static unsigned int START_APPARTENANCE_INDEX = 0;
+
 /* ----------------------------------------------------------------------------------- */
 /* NAME : CityScreen																   */
 /* ROLE : CityScreen Constructor													   */
@@ -63,7 +65,9 @@ m_gui(),
 m_indexCycleBuilds(0),
 m_buttonBuild(),
 m_spriteBatch(),
+m_spriteBatchAppartenance(),
 m_needToUpdateDraw(true),
+s_vectID(),
 m_file(file),
 m_SaveReload(saveReload),
 m_players(players),
@@ -122,6 +126,27 @@ bool CityScreen::onEntry()
 		if (m_players->GETvectUnitTemplate().size() < (size_t)MIN_INDEX_CYCLE_BUILDS)
 		{
 			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
+		}
+
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
+
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
+		START_APPARTENANCE_INDEX = s_vectID.size();
+
+		for (unsigned int i(0); i < NB_MAX_PLAYER; i++)
+		{
+			s_vectID.push_back
+			(RealEngine2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
 		}
 
 		m_gui.init(m_file->GUIPath);
@@ -206,6 +231,7 @@ bool CityScreen::onEntry()
 		SDL_ShowCursor(0);
 
 		m_spriteBatch.init();
+		m_spriteBatchAppartenance.init();
 
 		m_isInitialize = true;
 	}
@@ -298,6 +324,7 @@ void CityScreen::draw()
 
 	/* --- Render --- */
 	m_spriteBatch.renderBatch();
+	m_spriteBatchAppartenance.renderBatch();
 
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -312,21 +339,10 @@ void CityScreen::drawTextures()
 	if (m_needToUpdateDraw)
 	{
 		GLuint id(UNUSED_ID);
-		const static GLuint idGrass(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
-		const static GLuint idWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
-		const static GLuint idDeepWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
-
-		const static GLuint idCoal(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
-		const static GLuint idCopper(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
-		const static GLuint idFish(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
-		const static GLuint idHorse(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
-		const static GLuint idIron(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
-		const static GLuint idPetroleum(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
-		const static GLuint idStone(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
-		const static GLuint idtree1(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
-		const static GLuint iduranium(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
+		
 
 		m_spriteBatch.begin();
+		m_spriteBatchAppartenance.begin();
 
 		size_t k{ 0 };
 		for (unsigned int i(0); i < INIT_SIZE_VIEW; i++)
@@ -336,13 +352,13 @@ void CityScreen::drawTextures()
 				switch (m_players->GETSelectedCity()->GETtile()[k].tile_ground)
 				{
 				case Ground_Type::grass:
-					id = idGrass;
+					id = s_vectID[0];
 					break;
 				case Ground_Type::water:
-					id = idWater;
+					id = s_vectID[1];
 					break;
 				case Ground_Type::deepwater:
-					id = idDeepWater;
+					id = s_vectID[2];
 					break;
 				case Ground_Type::dirt:
 					throw("[Error]___: drawMap : Ground_Type::dirt");
@@ -362,8 +378,8 @@ void CityScreen::drawTextures()
 				(
 					glm::vec4
 					(
-						m_players->GETSelectedCity()->GETtile()[k].tile_x,
-						m_players->GETSelectedCity()->GETtile()[k].tile_y,
+						m_players->GETSelectedCity()->GETtile()[k].tileXCityScreen,
+						m_players->GETSelectedCity()->GETtile()[k].tileYCityScreen,
 						*m_tileSize,
 						*m_tileSize
 					),
@@ -376,31 +392,31 @@ void CityScreen::drawTextures()
 				switch (m_players->GETSelectedCity()->GETtile()[k].tile_spec)
 				{
 				case GroundSpec_Type::coal:
-					id = idCoal;
+					id = s_vectID[3];
 					break;
 				case GroundSpec_Type::copper:
-					id = idCopper;
+					id = s_vectID[4];
 					break;
 				case GroundSpec_Type::fish:
-					id = idFish;
+					id = s_vectID[5];
 					break;
 				case GroundSpec_Type::horse:
-					id = idHorse;
+					id = s_vectID[6];
 					break;
 				case GroundSpec_Type::iron:
-					id = idIron;
+					id = s_vectID[7];
 					break;
 				case GroundSpec_Type::petroleum:
-					id = idPetroleum;
+					id = s_vectID[8];
 					break;
 				case GroundSpec_Type::stone:
-					id = idStone;
+					id = s_vectID[9];
 					break;
 				case GroundSpec_Type::tree:
-					id = idtree1;
+					id = s_vectID[10];
 					break;
 				case GroundSpec_Type::uranium:
-					id = iduranium;
+					id = s_vectID[11];
 					break;
 				case GroundSpec_Type::nothing:
 					id = UNUSED_ID;
@@ -413,8 +429,8 @@ void CityScreen::drawTextures()
 					(
 						glm::vec4
 						(
-							m_players->GETSelectedCity()->GETtile()[k].tile_x,
-							m_players->GETSelectedCity()->GETtile()[k].tile_y,
+							m_players->GETSelectedCity()->GETtile()[k].tileXCityScreen,
+							m_players->GETSelectedCity()->GETtile()[k].tileYCityScreen,
 							*m_tileSize,
 							*m_tileSize
 						),
@@ -425,11 +441,30 @@ void CityScreen::drawTextures()
 					);
 				}
 
+				if (m_players->GETSelectedCity()->GETtile()[k].appartenance != NO_APPARTENANCE)
+				{
+					m_spriteBatchAppartenance.draw
+					(
+						glm::vec4
+						(
+							m_players->GETSelectedCity()->GETtile()[k].tileXCityScreen,
+							m_players->GETSelectedCity()->GETtile()[k].tileYCityScreen,
+							*m_tileSize, 
+							*m_tileSize
+						),
+						RealEngine2D::FULL_RECT,
+						s_vectID[START_APPARTENANCE_INDEX + m_players->GETSelectedCity()->GETtile()[k].appartenance],
+						0.0f,
+						RealEngine2D::COLOR_WHITE_T25
+					);
+				}
+
 				k++;
 			}
 		}
 
 		m_spriteBatch.end();
+		m_spriteBatchAppartenance.end();
 
 		m_needToUpdateDraw = false;
 	}

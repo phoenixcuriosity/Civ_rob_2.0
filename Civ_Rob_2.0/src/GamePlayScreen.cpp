@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.17
+	last modification on this file on version:0.24.2.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -288,7 +288,6 @@ void GamePlayScreen::initOpenGLScreen()
 	m_screen.cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 	m_screen.cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
 
-	m_mainMap.GETspriteBatch().init();
 	m_screen.spriteBatchHUDDynamic.init();
 	m_screen.spriteBatchHUDStatic.init();
 	m_screen.spriteFont = std::make_shared<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);

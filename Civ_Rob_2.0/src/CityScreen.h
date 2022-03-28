@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.1
+	last modification on this file on version:0.24.2.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -124,7 +124,9 @@ private:
 
 	/* Dedicated spriteBatch */
 	RealEngine2D::SpriteBatch m_spriteBatch;
+	RealEngine2D::SpriteBatch m_spriteBatchAppartenance;
 	bool m_needToUpdateDraw;
+	std::vector<GLuint> s_vectID;
 
 	Players* m_players;
 	unsigned int* m_tileSize;

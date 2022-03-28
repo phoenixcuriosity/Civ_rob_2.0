@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.5.0
-	file version : 1.0
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.2.0
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -48,6 +48,8 @@ const ColorRGBA8 COLOR_GREEN(0, 255, 0, 255);
 const ColorRGBA8 COLOR_BLUE(0, 0, 255, 255);
 const ColorRGBA8 COLOR_BLACK(0, 0, 0, 255);
 
+const ColorRGBA8 COLOR_WHITE_T50(255, 255, 255, 128);
+const ColorRGBA8 COLOR_WHITE_T25(255, 255, 255, 64);
 
 }
 

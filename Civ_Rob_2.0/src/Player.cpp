@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.22
+	last modification on this file on version:0.24.2.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -610,7 +610,7 @@ void Players::drawCity
 						RealEngine2D::COLOR_WHITE
 					);
 
-		
+					/* City Name */
 					font->draw
 					(
 						m_spriteBatchCityDynamic,
@@ -620,7 +620,6 @@ void Players::drawCity
 						0.0f,
 						RealEngine2D::COLOR_WHITE
 					);
-					
 				}
 				city.reset();
 			}
