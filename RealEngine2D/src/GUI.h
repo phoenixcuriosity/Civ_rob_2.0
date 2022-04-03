@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.5.0
-	file version : 1.1
+	last modification on this file on version:0.24.3.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,9 +36,25 @@
 
 #include "InputManager.h"
 
-const Uint8 NO_CLICK = 0;
-const Uint8 ONE_CLICK = 1;
-const Uint8 TWO_CLICK = 2;
+/* *********************************************************
+ *						Constantes						   *
+ ********************************************************* */
+
+/* SDL : Define the number of mouse click ONE */
+const int ONE_CLICK = 1;
+
+/* SDL : Define the number of mouse clicks TWO */
+const int TWO_CLICKS = 2;
+
+/* SDL : Define if the wheel scroll up */
+const int MOUSE_SCROLL_UP = 1;
+
+/* SDL : Define if the wheel scroll down */
+const int MOUSE_SCROLL_DOWN = -1;
+
+/* *********************************************************
+ *						Classe							   *
+ ********************************************************* */
 
 namespace RealEngine2D
 {
@@ -90,8 +106,6 @@ private:
 	static CEGUI::OpenGL3Renderer* m_renderer;
 	CEGUI::GUIContext* m_context = nullptr;
 	CEGUI::Window* m_root = nullptr;
-
-	Uint8 m_doubleClicked = NO_CLICK;
 };
 
 }

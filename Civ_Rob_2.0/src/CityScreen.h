@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.2
+	last modification on this file on version:0.24.3.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -69,7 +69,8 @@ public:
 		SaveReload* SaveReload,
 		Players* players,
 		unsigned int* tileSize,
-		Screen* screen
+		RealEngine2D::GLSLProgram* gLSLProgram,
+		std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
 	);
 	~CityScreen();
 
@@ -130,7 +131,8 @@ private:
 
 	Players* m_players;
 	unsigned int* m_tileSize;
-	Screen* m_screen;
+	std::shared_ptr<RealEngine2D::SpriteFont> m_spriteFont;
+	RealEngine2D::GLSLProgram* m_gLSLProgram;
 
 	File* m_file;
 	SaveReload* m_SaveReload;

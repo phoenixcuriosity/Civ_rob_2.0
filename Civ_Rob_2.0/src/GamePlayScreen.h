@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.13
+	last modification on this file on version:0.24.3.0
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -67,12 +67,12 @@
 */
 struct Screen
 {
-	RealEngine2D::GLSLProgram gLSLProgram;
+	std::shared_ptr<RealEngine2D::SpriteFont> spriteFont = nullptr;
+	RealEngine2D::GLSLProgram* gLSLProgram;
 
 	RealEngine2D::Camera2D camera;
 	RealEngine2D::Camera2D cameraHUD;
 
-	std::shared_ptr<RealEngine2D::SpriteFont> spriteFont = nullptr;
 	RealEngine2D::SpriteBatch spriteBatchHUDDynamic;
 	RealEngine2D::SpriteBatch spriteBatchHUDStatic;
 
@@ -143,9 +143,6 @@ const float TARGET_FRAMETIME = MS_PER_SECOND / (float)RealEngine2D::SCREEN_REFRE
 const unsigned int MAX_PHYSICS_STEPS(6);
 const float MAX_DELTA_TIME(1.0f);
 
-/* Define default font for GUI texts */
-const std::string fontGUI = "times.ttf";
-
 /* *********************************************************
  *						 Classe							   *
  ********************************************************* */
@@ -162,7 +159,9 @@ public:
 	(
 		File* file,
 		SaveReload* saveReload,
-		UserInputNewGame* userInputNewGame
+		UserInputNewGame* userInputNewGame,
+		RealEngine2D::GLSLProgram* gLSLProgram,
+		std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
 	);
 
 	~GamePlayScreen();
@@ -338,13 +337,6 @@ private:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	void initOpenGLScreen();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : initShaders																   */
-	/* ROLE : Init shaders for OpenGL													   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void initShaders();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initHUDText																   */

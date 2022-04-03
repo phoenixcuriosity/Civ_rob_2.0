@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.2
+	last modification on this file on version:0.24.3.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -56,7 +56,8 @@ CityScreen::CityScreen
 	SaveReload* saveReload,
 	Players* players,
 	unsigned int* tileSize,
-	Screen* screen
+	RealEngine2D::GLSLProgram* gLSLProgram,
+	std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
 )
 :
 RealEngine2D::IGameScreen(),
@@ -72,7 +73,8 @@ m_file(file),
 m_SaveReload(saveReload),
 m_players(players),
 m_tileSize(tileSize),
-m_screen(screen),
+m_spriteFont(spriteFont),
+m_gLSLProgram(gLSLProgram),
 m_selectedCity(),
 m_isInitialize(false)
 {
@@ -312,11 +314,11 @@ void CityScreen::draw()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_screen->gLSLProgram.use();
+	m_gLSLProgram->use();
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = m_screen->gLSLProgram.getUnitformLocation("mySampler");
+	GLint textureLocation = m_gLSLProgram->getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* --- Draw --- */
@@ -328,7 +330,7 @@ void CityScreen::draw()
 
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
-	m_screen->gLSLProgram.unuse();
+	m_gLSLProgram->unuse();
 
 	/* Need to be done after GL display */
 	m_gui.draw();

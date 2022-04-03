@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.4
+	last modification on this file on version:0.24.3.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,8 +39,7 @@ GUI::GUI()
 :
 m_lasTime(0),
 m_context(nullptr),
-m_root(nullptr),
-m_doubleClicked(NO_CLICK)
+m_root(nullptr)
 {
 
 }
@@ -248,15 +247,12 @@ CEGUI::MouseButton GUI::SDLButtonToCEGUI(Uint8 sdlButton)
 {
     switch (sdlButton)
     {
-    case SDL_BUTTON_LEFT: {m_doubleClicked++;  return CEGUI::MouseButton::LeftButton; }
-    case SDL_BUTTON_RIGHT: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::RightButton; }
-    case SDL_BUTTON_MIDDLE: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::MiddleButton; }
-    case SDL_BUTTON_X1: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::X1Button; }
-    case SDL_BUTTON_X2: {m_doubleClicked = NO_CLICK;  return CEGUI::MouseButton::X2Button; }
-    default:
-        m_doubleClicked = NO_CLICK;
-        return CEGUI::MouseButton::NoButton;
-        break;
+    case SDL_BUTTON_LEFT: return CEGUI::MouseButton::LeftButton; 
+    case SDL_BUTTON_RIGHT: return CEGUI::MouseButton::RightButton; 
+    case SDL_BUTTON_MIDDLE: return CEGUI::MouseButton::MiddleButton; 
+    case SDL_BUTTON_X1: return CEGUI::MouseButton::X1Button; 
+    case SDL_BUTTON_X2: return CEGUI::MouseButton::X2Button; 
+    default: return CEGUI::MouseButton::NoButton;
     }
 }
 
@@ -290,23 +286,19 @@ void GUI::onSDLEvent(SDL_Event& ev, InputManager& /* inputManager */)
     }
 	case SDL_MOUSEBUTTONDOWN:
     {
-        CEGUI::MouseButton cliked(SDLButtonToCEGUI(ev.button.button));
-        if (m_doubleClicked == TWO_CLICK)
+        if (ev.button.clicks == TWO_CLICKS)
         {
-            m_doubleClicked = NO_CLICK;
-            m_context->injectMouseButtonDoubleClick(cliked);
+            m_context->injectMouseButtonDoubleClick(SDLButtonToCEGUI(ev.button.button));
         }
         else
         {
-            m_context->injectMouseButtonDown(cliked);
+            m_context->injectMouseButtonDown(SDLButtonToCEGUI(ev.button.button));
         }
-            
         break;
     }
 	case SDL_MOUSEBUTTONUP:
         m_context->injectMouseButtonUp(SDLButtonToCEGUI(ev.button.button));
-		break;
-
+        break;
 	default:
 		break;
 	}

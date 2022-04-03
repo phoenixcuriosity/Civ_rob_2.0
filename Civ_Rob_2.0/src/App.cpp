@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.8
+	last modification on this file on version:0.24.3.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -73,6 +73,27 @@ void App::onInit()
 	m_saveReload.init(m_file.saveInfo);
 }
 
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initShaders																   */
+/* ROLE : Init shaders for OpenGL													   */
+/* ROLE : 2 files : colorShadingVert and colorShadingFrag							   */
+/* ROLE : 3 parameters : vertexPosition	, vertexColor , vertexUV					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void App::InitShaders()
+{
+	m_gLSLProgram.compileShaders(m_file.colorShadingVert, m_file.colorShadingFrag);
+	m_gLSLProgram.addAttribut("vertexPosition");
+	m_gLSLProgram.addAttribut("vertexColor");
+	m_gLSLProgram.addAttribut("vertexUV");
+	m_gLSLProgram.linkShaders();
+	m_spriteFont = std::make_shared<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
+}
+
+
 void App::onExit()
 {
 	/* Do nothing */
@@ -82,15 +103,28 @@ void App::addScreens()
 {
 	/* Create shared Ptr */
 	m_mainMenuScreen = std::make_shared<MainMenuScreen>(&m_file);
+
 	m_newGameScreen = std::make_shared<NewGameScreen>(&m_file);
+
 	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>(&m_file, &m_saveReload);
-	m_gamePlayScreen = std::make_shared<GamePlayScreen>(&m_file, &m_saveReload, m_newGameScreen->getUserInputNewGame());
+
+	m_gamePlayScreen = std::make_shared<GamePlayScreen>
+		(
+			&m_file,
+			&m_saveReload,
+			m_newGameScreen->getUserInputNewGame(),
+			&m_gLSLProgram,
+			m_spriteFont
+		);
+
 	m_CityScreen = std::make_shared<CityScreen>
 		(
-			&m_file, &m_saveReload,
+			&m_file,
+			&m_saveReload,
 			&m_gamePlayScreen->GETPlayers(),
 			m_gamePlayScreen->GETmainMap().GETtileSizePtr(),
-			&m_gamePlayScreen->GETscreen()
+			&m_gLSLProgram,
+			m_spriteFont
 		);
 
 	/* Add Screen to listed Screen */

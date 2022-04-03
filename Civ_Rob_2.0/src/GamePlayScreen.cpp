@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.18
+	last modification on this file on version:0.24.3.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,7 +35,9 @@ GamePlayScreen::GamePlayScreen
 (
 	File* file,
 	SaveReload* SaveReload,
-	UserInputNewGame* userInputNewGame
+	UserInputNewGame* userInputNewGame,
+	RealEngine2D::GLSLProgram* gLSLProgram,
+	std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
 )
 : 
 RealEngine2D::IGameScreen(),
@@ -50,6 +52,8 @@ m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
 	build();
+	m_screen.gLSLProgram = gLSLProgram;
+	m_screen.spriteFont = spriteFont;
 }
 
 GamePlayScreen::~GamePlayScreen()
@@ -77,8 +81,6 @@ void GamePlayScreen::destroy()
 
 	m_screen.m_widgetLabels.clear();
 
-	m_screen.spriteFont.reset();
-
 	m_players.deleteAllPlayers();
 }
 
@@ -93,8 +95,6 @@ bool GamePlayScreen::onEntry()
 		computeSize();
 
 		initOpenGLScreen();
-
-		initShaders();
 
 		initHUDText();
 
@@ -290,31 +290,12 @@ void GamePlayScreen::initOpenGLScreen()
 
 	m_screen.spriteBatchHUDDynamic.init();
 	m_screen.spriteBatchHUDStatic.init();
-	m_screen.spriteFont = std::make_shared<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
 
 	m_screen.audioEngine.init();
 
 	m_game->getInputManager().init(m_mainMap.GETtileSizePtr());
 
 	m_screen.m_gui.init(m_file->GUIPath);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initShaders																   */
-/* ROLE : Init shaders for OpenGL													   */
-/* ROLE : 2 files : colorShadingVert and colorShadingFrag							   */
-/* ROLE : 3 parameters : vertexPosition	, vertexColor , vertexUV					   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void GamePlayScreen::initShaders()
-{
-	m_screen.gLSLProgram.compileShaders(m_file->colorShadingVert, m_file->colorShadingFrag);
-	m_screen.gLSLProgram.addAttribut("vertexPosition");
-	m_screen.gLSLProgram.addAttribut("vertexColor");
-	m_screen.gLSLProgram.addAttribut("vertexUV");
-	m_screen.gLSLProgram.linkShaders();
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -493,16 +474,16 @@ void GamePlayScreen::drawGame()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_screen.gLSLProgram.use();
+	m_screen.gLSLProgram->use();
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = m_screen.gLSLProgram.getUnitformLocation("mySampler");
+	GLint textureLocation = m_screen.gLSLProgram->getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* --- camera --- */
 	/* GL - get parameter P */
-	GLint pLocation = m_screen.gLSLProgram.getUnitformLocation("P");
+	GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
 
 	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_screen.camera.GETcameraMatrix();
@@ -527,7 +508,7 @@ void GamePlayScreen::drawGame()
 
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
-	m_screen.gLSLProgram.unuse();
+	m_screen.gLSLProgram->unuse();
 
 	/* --- Draw UI --- */
 	m_screen.m_gui.draw();
@@ -536,7 +517,7 @@ void GamePlayScreen::drawGame()
 void GamePlayScreen::drawHUD()
 {
 	/* camera HUD */
-	GLint pLocation = m_screen.gLSLProgram.getUnitformLocation("P");
+	GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
 	glm::mat4 cameraMatrix = m_screen.cameraHUD.GETcameraMatrix();
 
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
