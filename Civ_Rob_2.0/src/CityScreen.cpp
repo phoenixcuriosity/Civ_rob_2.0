@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.3
+	last modification on this file on version:0.24.4.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,9 +41,23 @@ const float CITY_IHM_BUILD_QUEUE_DIPSLAY_POS_Y{ 0.5f };
 const float CITY_IHM_BUILD_QUEUE_DIPSLAY_DELTA_X{ 0.1f };
 const float CITY_IHM_BUILD_QUEUE_DIPSLAY_DELTA_Y{ 0.026f };
 
+const unsigned int CITY_IHM_FOOD_DIPSLAY_POS_X{ 50 };
+const unsigned int CITY_IHM_FOOD_DIPSLAY_POS_Y{ 300 };
+const unsigned int CITY_IHM_FOOD_DIPSLAY_DELTA_X{ 32 };
+const unsigned int CITY_IHM_FOOD_DIPSLAY_DELTA_Y{ 32 };
+
+const unsigned int CITY_IHM_WORK_DIPSLAY_POS_X{ 50 };
+const unsigned int CITY_IHM_WORK_DIPSLAY_POS_Y{ 700 };
+const unsigned int CITY_IHM_WORK_DIPSLAY_DELTA_X{ 32 };
+const unsigned int CITY_IHM_WORK_DIPSLAY_DELTA_Y{ 32 };
+
+const unsigned int MODULO_TEN{ 10 };
+
 const size_t OFFSET_INDEX_ERASE_BUTTON = 1;
 
-static unsigned int START_APPARTENANCE_INDEX = 0;
+static size_t START_APPARTENANCE_INDEX = 0;
+static size_t START_EMOTION_INDEX = 0;
+static size_t START_ICON_INDEX = 0;
 
 /* ----------------------------------------------------------------------------------- */
 /* NAME : CityScreen																   */
@@ -151,6 +165,20 @@ bool CityScreen::onEntry()
 			(RealEngine2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
 		}
 
+		START_EMOTION_INDEX = s_vectID.size();
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/ecstatic.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/happy.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/neutral.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/sad.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/angry.png")->GETid());
+
+
+		START_ICON_INDEX = s_vectID.size();
+
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/city/food.png")->GETid());
+		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/city/Hammer.png")->GETid());
+
+	
 		m_gui.init(m_file->GUIPath);
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.setFont("DejaVuSans-10");
@@ -194,6 +222,7 @@ bool CityScreen::onEntry()
 					{
 						p.name,
 						build_Type::unit,
+						p.workToBuild,
 						p.workToBuild
 					}
 				}
@@ -237,6 +266,8 @@ bool CityScreen::onEntry()
 
 		m_isInitialize = true;
 	}
+
+	m_needToUpdateDraw = true;
 
 	resetInternalEntry();
 	
@@ -336,13 +367,240 @@ void CityScreen::draw()
 	m_gui.draw();
 }
 
+void CityScreen::drawTile(size_t kTile)
+{
+	GLuint id(UNUSED_ID);
+
+	switch (m_players->GETSelectedCity()->GETtile()[kTile].tile_ground)
+	{
+	case Ground_Type::grass:
+		id = s_vectID[0];
+		break;
+	case Ground_Type::water:
+		id = s_vectID[1];
+		break;
+	case Ground_Type::deepwater:
+		id = s_vectID[2];
+		break;
+	case Ground_Type::dirt:
+		throw("[Error]___: drawMap : Ground_Type::dirt");
+		break;
+	case Ground_Type::sand:
+		throw("[Error]___: drawMap : Ground_Type::sand");
+		break;
+	case Ground_Type::error:
+		throw("[Error]___: drawMap : Ground_Type::error");
+		break;
+	default:
+		throw("[Error]___: drawMap : default");
+		break;
+	}
+
+	callDraw(kTile, id);
+}
+void CityScreen::drawTileSpec(size_t kTile)
+{
+	GLuint id(UNUSED_ID);
+
+	switch (m_players->GETSelectedCity()->GETtile()[kTile].tile_spec)
+	{
+	case GroundSpec_Type::coal:
+		id = s_vectID[3];
+		break;
+	case GroundSpec_Type::copper:
+		id = s_vectID[4];
+		break;
+	case GroundSpec_Type::fish:
+		id = s_vectID[5];
+		break;
+	case GroundSpec_Type::horse:
+		id = s_vectID[6];
+		break;
+	case GroundSpec_Type::iron:
+		id = s_vectID[7];
+		break;
+	case GroundSpec_Type::petroleum:
+		id = s_vectID[8];
+		break;
+	case GroundSpec_Type::stone:
+		id = s_vectID[9];
+		break;
+	case GroundSpec_Type::tree:
+		id = s_vectID[10];
+		break;
+	case GroundSpec_Type::uranium:
+		id = s_vectID[11];
+		break;
+	case GroundSpec_Type::nothing:
+		id = UNUSED_ID;
+		break;
+	}
+
+	callDraw(kTile, id);
+}
+void CityScreen::drawTileApp(size_t kTile)
+{
+	if (m_players->GETSelectedCity()->GETtile()[kTile].appartenance != NO_APPARTENANCE)
+	{
+		m_spriteBatchAppartenance.draw
+		(
+			glm::vec4
+			(
+				m_players->GETSelectedCity()->GETtile()[kTile].tileXCityScreen,
+				m_players->GETSelectedCity()->GETtile()[kTile].tileYCityScreen,
+				*m_tileSize,
+				*m_tileSize
+			),
+			RealEngine2D::FULL_RECT,
+			s_vectID[START_APPARTENANCE_INDEX + m_players->GETSelectedCity()->GETtile()[kTile].appartenance],
+			0.0f,
+			RealEngine2D::COLOR_WHITE_T25
+		);
+	}
+}
+void CityScreen::drawFood()
+{
+	unsigned int foodL{ 0 };
+	unsigned int foodC{ 0 };
+	for (
+			unsigned int i{ 0 };
+			i < (unsigned int)std::floor(m_players->GETSelectedCity()->GETfoodStockPerc());
+			i++
+		)
+	{
+		m_spriteBatch.draw
+		(
+			glm::vec4
+			(
+				CITY_IHM_FOOD_DIPSLAY_POS_X + foodC * CITY_IHM_FOOD_DIPSLAY_DELTA_X,
+				CITY_IHM_FOOD_DIPSLAY_POS_Y - foodL * CITY_IHM_FOOD_DIPSLAY_DELTA_Y,
+				CITY_IHM_FOOD_DIPSLAY_DELTA_X,
+				CITY_IHM_FOOD_DIPSLAY_DELTA_Y
+			),
+			RealEngine2D::FULL_RECT,
+			s_vectID[START_ICON_INDEX],
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
+
+		foodC++;
+		if ((foodC % MODULO_TEN) == 0)
+		{
+			foodL++;
+			foodC = 0;
+		}
+	}
+}
+
+void CityScreen::callDraw(size_t kTile, GLuint id)
+{
+	if (UNUSED_ID != id)
+	{
+		m_spriteBatch.draw
+		(
+			glm::vec4
+			(
+				m_players->GETSelectedCity()->GETtile()[kTile].tileXCityScreen,
+				m_players->GETSelectedCity()->GETtile()[kTile].tileYCityScreen,
+				*m_tileSize,
+				*m_tileSize
+			),
+			RealEngine2D::FULL_RECT,
+			id,
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
+	}
+}
+
+void CityScreen::drawBuild()
+{
+	unsigned int workL{ 0 };
+	unsigned int workC{ 0 };
+	for (
+			unsigned int i{ 0 };
+			i < (unsigned int)std::floor(m_players->GETSelectedCity()->GETBuildPerc());
+			i++
+		)
+	{
+		m_spriteBatch.draw
+		(
+			glm::vec4
+			(
+				CITY_IHM_WORK_DIPSLAY_POS_X + workC * CITY_IHM_WORK_DIPSLAY_DELTA_X,
+				CITY_IHM_WORK_DIPSLAY_POS_Y - workL * CITY_IHM_WORK_DIPSLAY_DELTA_Y,
+				CITY_IHM_WORK_DIPSLAY_DELTA_X,
+				CITY_IHM_WORK_DIPSLAY_DELTA_Y
+			),
+			RealEngine2D::FULL_RECT,
+			s_vectID[START_ICON_INDEX + 1],
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
+
+		workC++;
+		if ((workC % MODULO_TEN) == 0)
+		{
+			workL++;
+			workC = 0;
+		}
+	}
+}
+
+void CityScreen::drawCitizen()
+{
+	if (m_players->GETSelectedCity()->GETcitizens().empty())
+	{
+		return;
+	}
+
+	GLuint id(UNUSED_ID);
+
+	for (const auto& citizen: m_players->GETSelectedCity()->GETcitizens())
+	{
+		switch (citizen->GEThappiness())
+		{
+		case Emotion_Type::ecstatic:
+			id = s_vectID[START_EMOTION_INDEX];
+			break;
+		case Emotion_Type::happy:
+			id = s_vectID[START_EMOTION_INDEX + 1];
+			break;
+		case Emotion_Type::neutral:
+			id = s_vectID[START_EMOTION_INDEX + 2];
+			break;
+		case Emotion_Type::sad:
+			id = s_vectID[START_EMOTION_INDEX + 3];
+			break;
+		case Emotion_Type::angry:
+			id = s_vectID[START_EMOTION_INDEX + 4];
+			break;
+		default:
+			id = s_vectID[START_EMOTION_INDEX + 2];
+			break;
+		}
+
+		m_spriteBatch.draw
+		(
+			glm::vec4
+			(
+				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileXCityScreen,
+				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileYCityScreen,
+				*m_tileSize,
+				*m_tileSize
+			),
+			RealEngine2D::FULL_RECT,
+			id,
+			0.0f,
+			RealEngine2D::COLOR_WHITE
+		);
+	}
+}
+
 void CityScreen::drawTextures()
 {
 	if (m_needToUpdateDraw)
 	{
-		GLuint id(UNUSED_ID);
-		
-
 		m_spriteBatch.begin();
 		m_spriteBatchAppartenance.begin();
 
@@ -351,119 +609,21 @@ void CityScreen::drawTextures()
 		{
 			for (unsigned int j(0); j < INIT_SIZE_VIEW; j++)
 			{
-				switch (m_players->GETSelectedCity()->GETtile()[k].tile_ground)
-				{
-				case Ground_Type::grass:
-					id = s_vectID[0];
-					break;
-				case Ground_Type::water:
-					id = s_vectID[1];
-					break;
-				case Ground_Type::deepwater:
-					id = s_vectID[2];
-					break;
-				case Ground_Type::dirt:
-					throw("[Error]___: drawMap : Ground_Type::dirt");
-					break;
-				case Ground_Type::sand:
-					throw("[Error]___: drawMap : Ground_Type::sand");
-					break;
-				case Ground_Type::error:
-					throw("[Error]___: drawMap : Ground_Type::error");
-					break;
-				default:
-					throw("[Error]___: drawMap : default");
-					break;
-				}
+				drawTile(k);
 
-				m_spriteBatch.draw
-				(
-					glm::vec4
-					(
-						m_players->GETSelectedCity()->GETtile()[k].tileXCityScreen,
-						m_players->GETSelectedCity()->GETtile()[k].tileYCityScreen,
-						*m_tileSize,
-						*m_tileSize
-					),
-					RealEngine2D::FULL_RECT,
-					id,
-					0.0f,
-					RealEngine2D::COLOR_WHITE
-				);
+				drawTileSpec(k);
 
-				switch (m_players->GETSelectedCity()->GETtile()[k].tile_spec)
-				{
-				case GroundSpec_Type::coal:
-					id = s_vectID[3];
-					break;
-				case GroundSpec_Type::copper:
-					id = s_vectID[4];
-					break;
-				case GroundSpec_Type::fish:
-					id = s_vectID[5];
-					break;
-				case GroundSpec_Type::horse:
-					id = s_vectID[6];
-					break;
-				case GroundSpec_Type::iron:
-					id = s_vectID[7];
-					break;
-				case GroundSpec_Type::petroleum:
-					id = s_vectID[8];
-					break;
-				case GroundSpec_Type::stone:
-					id = s_vectID[9];
-					break;
-				case GroundSpec_Type::tree:
-					id = s_vectID[10];
-					break;
-				case GroundSpec_Type::uranium:
-					id = s_vectID[11];
-					break;
-				case GroundSpec_Type::nothing:
-					id = UNUSED_ID;
-					break;
-				}
-
-				if (UNUSED_ID != id)
-				{
-					m_spriteBatch.draw
-					(
-						glm::vec4
-						(
-							m_players->GETSelectedCity()->GETtile()[k].tileXCityScreen,
-							m_players->GETSelectedCity()->GETtile()[k].tileYCityScreen,
-							*m_tileSize,
-							*m_tileSize
-						),
-						RealEngine2D::FULL_RECT,
-						id,
-						0.0f,
-						RealEngine2D::COLOR_WHITE
-					);
-				}
-
-				if (m_players->GETSelectedCity()->GETtile()[k].appartenance != NO_APPARTENANCE)
-				{
-					m_spriteBatchAppartenance.draw
-					(
-						glm::vec4
-						(
-							m_players->GETSelectedCity()->GETtile()[k].tileXCityScreen,
-							m_players->GETSelectedCity()->GETtile()[k].tileYCityScreen,
-							*m_tileSize, 
-							*m_tileSize
-						),
-						RealEngine2D::FULL_RECT,
-						s_vectID[START_APPARTENANCE_INDEX + m_players->GETSelectedCity()->GETtile()[k].appartenance],
-						0.0f,
-						RealEngine2D::COLOR_WHITE_T25
-					);
-				}
+				drawTileApp(k);
 
 				k++;
 			}
 		}
+
+		drawFood();
+
+		drawBuild();
+
+		drawCitizen();
 
 		m_spriteBatch.end();
 		m_spriteBatchAppartenance.end();
@@ -471,6 +631,7 @@ void CityScreen::drawTextures()
 		m_needToUpdateDraw = false;
 	}
 }
+
 
 
 void CityScreen::update()
@@ -582,6 +743,7 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 				CEGUI::Event::Subscriber(&CityScreen::onBuildQueueToBuildClicked, this)
 			);
 
+			m_needToUpdateDraw = true;
 			break;
 		}
 	}
@@ -608,6 +770,7 @@ bool CityScreen::onBuildQueueToBuildClicked(const CEGUI::EventArgs& /* e */)
 			/* --- Destroy build from City --- */
 			m_selectedCity->removeBuildToQueue(removeIndex);
 
+			m_needToUpdateDraw = true;
 			break;
 		}
 		removeIndex++;

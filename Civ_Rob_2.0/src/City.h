@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.22
+	last modification on this file on version:0.24.4.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -105,8 +105,11 @@ const double CITY_ZERO_FOOD = 0.0;
 /* Define the minimum food in a City */
 const double CITY_ZERO = 0.0;
 
+/* Define the minimum food to level up */
+const double MIN_FOOD_TO_LEVEL_UP = 1.0;
 
-
+/* Define Percent */
+const double ONE_HUNDRED_PERCENT = 100.0;
 
 /* *********************************************************
  *							 Enum						   *
@@ -151,6 +154,7 @@ struct build
 {
 	std::string name;
 	build_Type type;
+	double work;
 	double remainingWork;
 };
 
@@ -465,9 +469,32 @@ public:
 	inline virtual double GETfoodStock()const { return m_foodStock; };
 	inline virtual double GETfoodBalance()const { return m_foodBalance; };
 	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodSurplusPreviousTurn; };
+	inline virtual double GETfoodToLevelUp()const { return m_foodToLevelUp; };
 	inline virtual double GETgoldBalance()const { return m_goldBalance; };
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
 	inline virtual dequeBuild& GETbuildQueue() { return m_buildQueue; };
+
+	inline virtual double GETfoodStockPerc()const { return ((m_foodStock / m_foodToLevelUp) * ONE_HUNDRED_PERCENT); };
+	inline virtual double GETBuildPerc()const
+	{
+		if (m_buildQueue.empty() == VECT_NOT_EMPTY)
+		{
+			return 
+				(
+					(
+						(
+							m_buildQueue.front().buildQ.work
+							-
+							m_buildQueue.front().buildQ.remainingWork
+						)
+						/ 
+						m_buildQueue.front().buildQ.work
+					)
+					* ONE_HUNDRED_PERCENT
+				);
+		}
+		return 0.0;
+	};
 
 	inline virtual void SETimage(std::string image) { m_image = image; };
 	inline virtual void SETname(std::string name) { m_name = name; };
@@ -484,6 +511,7 @@ public:
 	inline virtual void SETfoodStock(double foodStock) { m_foodStock = foodStock; };
 	inline virtual void SETfoodBalance(double foodBalance) { m_foodBalance = foodBalance; };
 	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { m_foodSurplusPreviousTurn = foodSurplusPreviousTurn; };
+	inline virtual void SETfoodToLevelUp(double foodToLevelUp) { m_foodToLevelUp = foodToLevelUp; };
 	inline virtual void SETgoldBalance(double goldBalance) { m_goldBalance = goldBalance; };
 	inline virtual void SETconversionToApply(conversionSurplus_Type type) { m_conversionToApply = type; };
 
@@ -509,6 +537,7 @@ private:
 	double m_foodStock;
 	double m_foodBalance;
 	double m_foodSurplusPreviousTurn;
+	double m_foodToLevelUp;
 
 	double m_workBalance;
 	double m_workSurplusPreviousTurn;

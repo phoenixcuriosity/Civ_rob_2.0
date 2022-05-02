@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.29
+	last modification on this file on version:0.24.4.0
+	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -38,7 +38,7 @@
 
 unsigned int* MainMap::s_tileSize;
 
-static unsigned int START_APPARTENANCE_INDEX = 0;
+static size_t START_APPARTENANCE_INDEX = 0;
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.5
+	last modification on this file on version:0.24.4.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -123,7 +123,7 @@ unsigned int Citizen::placeCitizen
 Citizen::Citizen()
 	:
 	m_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
-	m_happiness(Emotion_Type::neutre),
+	m_happiness(Emotion_Type::neutral),
 	m_food(2),
 	m_work(1),
 	m_gold(1),
@@ -147,7 +147,7 @@ Citizen::Citizen
 )
 	:
 	m_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
-	m_happiness(Emotion_Type::neutre),
+	m_happiness(Emotion_Type::neutral),
 	m_food(tile.food),
 	m_work(tile.work),
 	m_gold(tile.gold),
@@ -173,7 +173,7 @@ Citizen::Citizen
 )
 	:
 	m_tileOccupied(placeCitizen(tile, citizens, m_food, m_work, m_gold)),
-	m_happiness(Emotion_Type::neutre),
+	m_happiness(Emotion_Type::neutral),
 	m_revolt(0),
 	m_religion(Religion_Type::catholic),
 	m_place(true)

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.16
+	last modification on this file on version:0.24.4.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -38,6 +38,9 @@ const std::string EMPTY_STRING = "";
 
 /* Define 0 for module use */
 #define MODULO_ZERO 0
+
+/* Define a non EMPTY vect/list/map */
+const bool VECT_NOT_EMPTY = false;
 
  // Define all State of the game, relate to screen
 enum class State_Type

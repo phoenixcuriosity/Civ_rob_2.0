@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.39
+	last modification on this file on version:0.24.4.0
+	file version : 1.40
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -317,6 +317,7 @@ City::City
 	m_foodStock(CITY_ZERO_FOOD),
 	m_foodBalance(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)].food),
 	m_foodSurplusPreviousTurn(CITY_ZERO_FOOD),
+	m_foodToLevelUp(MIN_FOOD_TO_LEVEL_UP),
 	m_workBalance(0),
 	m_workSurplusPreviousTurn(0),
 	m_goldBalance(0.0),
@@ -371,7 +372,7 @@ void City::foodNextTurn
 	GoldStats& goldStats
 )
 {
-	double foodLimitPerLevelCurrent(15 + ((double)m_nbpop - 1) * 6 + pow((m_nbpop - 1), 1.8));
+	m_foodToLevelUp = 15 + ((double)m_nbpop - 1) * 6 + pow((m_nbpop - 1), 1.8);
 	double foodLimitPerLevelMinusOne(15 + ((double)m_nbpop - 1 - 1) * 6 + pow((m_nbpop - 1 - 1), 1.8));
 
 	/* Update m_foodStock : add m_foodBalance */
@@ -412,16 +413,17 @@ void City::foodNextTurn
 
 
 			m_foodStock = foodLimitPerLevelMinusOne;
+			m_foodToLevelUp = foodLimitPerLevelMinusOne;
 		}
 	}
-	else if (m_foodStock >= foodLimitPerLevelCurrent)
+	else if (m_foodStock >= m_foodToLevelUp)
 	{
 		/* CASE Increasing : Need to add a Citizen */
 
 		m_nbpop++;
 
 		m_citizens.push_back(std::make_unique<Citizen>(m_tile, m_citizens));
-		m_foodStock -= foodLimitPerLevelCurrent;
+		m_foodStock -= m_foodToLevelUp;
 	}
 	else
 	{

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.3
+	last modification on this file on version:0.24.4.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -262,14 +262,14 @@ Emotion_Type GamePlayScreen::convert2Emotion_Type
 	case -1:
 		return Emotion_Type::sad;
 	case 0:
-		return Emotion_Type::neutre;
+		return Emotion_Type::neutral;
 	case 1:
 		return Emotion_Type::happy;
 	case 2:
 		return Emotion_Type::ecstatic;
 	default:
 		App::exitError("[ERROR]___: convert2Emotion_Type : default");
-		return Emotion_Type::neutre;
+		return Emotion_Type::neutral;
 	}
 }
 

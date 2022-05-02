@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.21
+	last modification on this file on version:0.24.4.0
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -257,6 +257,7 @@ void SaveReload::savePlayer
 			tinyxml2::XMLElement* cityFoodStockElement = xmlDoc.NewElement("FoodStock");
 			tinyxml2::XMLElement* cityFoodBalanceElement = xmlDoc.NewElement("FoodBalance");
 			tinyxml2::XMLElement* cityFoodSurplusPreviousTurnElement = xmlDoc.NewElement("FoodSurplusPreviousTurn");
+			tinyxml2::XMLElement* cityFoodToLevelUp = xmlDoc.NewElement("FoodToLevelUp");
 			tinyxml2::XMLElement* cityGoldBalanceElement = xmlDoc.NewElement("GoldBalance");
 			tinyxml2::XMLElement* cityConversionToApplyElement = xmlDoc.NewElement("ConversionToApply");
 
@@ -274,6 +275,7 @@ void SaveReload::savePlayer
 			cityFoodStockElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodStock());
 			cityFoodBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodBalance());
 			cityFoodSurplusPreviousTurnElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodSurplusPreviousTurn());
+			cityFoodToLevelUp->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodToLevelUp());
 			cityGoldBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETgoldBalance());
 			cityConversionToApplyElement->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETconversionToApply());
 
@@ -288,6 +290,7 @@ void SaveReload::savePlayer
 			cityElement->InsertEndChild(cityFoodStockElement);
 			cityElement->InsertEndChild(cityFoodBalanceElement);
 			cityElement->InsertEndChild(cityFoodSurplusPreviousTurnElement);
+			cityElement->InsertEndChild(cityFoodToLevelUp);
 			cityElement->InsertEndChild(cityGoldBalanceElement);
 			cityElement->InsertEndChild(cityConversionToApplyElement);
 
@@ -301,17 +304,21 @@ void SaveReload::savePlayer
 
 				tinyxml2::XMLElement* cityBuildInQueueNameElement = xmlDoc.NewElement("Name");
 				tinyxml2::XMLElement* cityBuildInQueueTypeElement = xmlDoc.NewElement("Type");
+				tinyxml2::XMLElement* cityBuildInQueueWorkElement = xmlDoc.NewElement("Work");
 				tinyxml2::XMLElement* cityBuildInQueueRemainingWorkElement = xmlDoc.NewElement("RemainingWork");
 
 				cityBuildInQueueNameElement
 					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.name.c_str());
 				cityBuildInQueueTypeElement
 					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.type);
+				cityBuildInQueueWorkElement
+					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.work);
 				cityBuildInQueueRemainingWorkElement
 					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.remainingWork);
 
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueNameElement);
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueTypeElement);
+				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueWorkElement);
 				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueRemainingWorkElement);
 
 				cityBuildQueueElement->InsertEndChild(cityBuildInQueueElement);
@@ -800,6 +807,10 @@ void SaveReload::loadCityXML
 		ptrCity->SETfoodSurplusPreviousTurn(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodToLevelUp == nullptr");
+		ptrCity->SETfoodToLevelUp(std::stod(inputNode->FirstChild()->Value()));
+
+		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->GoldBalance == nullptr");
 		ptrCity->SETgoldBalance(std::stod(inputNode->FirstChild()->Value()));
 
@@ -824,6 +835,10 @@ void SaveReload::loadCityXML
 				tinyxml2::XMLNode* nBuildQueueElementType = nBuildQueueElementName->NextSibling();
 				if (nullptr == nBuildQueueElementType) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Type == nullptr");
 				blankBluid.type = GamePlayScreen::convert2build_Type(std::stoi(nBuildQueueElementType->FirstChild()->Value()));
+
+				tinyxml2::XMLNode* nBuildQueueElementWork = nBuildQueueElementType->NextSibling();
+				if (nullptr == nBuildQueueElementWork) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Work == nullptr");
+				blankBluid.work = std::stod(nBuildQueueElementWork->FirstChild()->Value());
 
 				tinyxml2::XMLNode* nBuildQueueElementRemainingWork = nBuildQueueElementType->NextSibling();
 				if (nullptr == nBuildQueueElementRemainingWork) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->RemainingWork == nullptr");
