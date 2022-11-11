@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.4
+	last modification on this file on version:0.24.5.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,6 +51,8 @@ const unsigned int CITY_IHM_WORK_DIPSLAY_POS_Y{ 700 };
 const unsigned int CITY_IHM_WORK_DIPSLAY_DELTA_X{ 32 };
 const unsigned int CITY_IHM_WORK_DIPSLAY_DELTA_Y{ 32 };
 
+const unsigned int CITY_IHM_OFFSET_EMOTION{ 8 };
+
 const unsigned int MODULO_TEN{ 10 };
 
 const size_t OFFSET_INDEX_ERASE_BUTTON = 1;
@@ -66,11 +68,11 @@ static size_t START_ICON_INDEX = 0;
 /* ----------------------------------------------------------------------------------- */
 CityScreen::CityScreen
 (
-	File* file,
-	SaveReload* saveReload,
-	Players* players,
-	unsigned int* tileSize,
-	RealEngine2D::GLSLProgram* gLSLProgram,
+	File* const file,
+	SaveReload* const SaveReload,
+	Players* const players,
+	unsigned int* const tileSize,
+	RealEngine2D::GLSLProgram* const gLSLProgram,
 	std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
 )
 :
@@ -84,7 +86,7 @@ m_spriteBatchAppartenance(),
 m_needToUpdateDraw(true),
 s_vectID(),
 m_file(file),
-m_SaveReload(saveReload),
+m_SaveReload(SaveReload),
 m_players(players),
 m_tileSize(tileSize),
 m_spriteFont(spriteFont),
@@ -354,7 +356,7 @@ void CityScreen::draw()
 
 	/* --- Draw --- */
 	/* Nothing to draw every cycle */
-
+	
 	/* --- Render --- */
 	m_spriteBatch.renderBatch();
 	m_spriteBatchAppartenance.renderBatch();
@@ -367,7 +369,7 @@ void CityScreen::draw()
 	m_gui.draw();
 }
 
-void CityScreen::drawTile(size_t kTile)
+void CityScreen::drawTile(const size_t kTile)
 {
 	GLuint id(UNUSED_ID);
 
@@ -398,7 +400,7 @@ void CityScreen::drawTile(size_t kTile)
 
 	callDraw(kTile, id);
 }
-void CityScreen::drawTileSpec(size_t kTile)
+void CityScreen::drawTileSpec(const size_t kTile)
 {
 	GLuint id(UNUSED_ID);
 
@@ -438,7 +440,7 @@ void CityScreen::drawTileSpec(size_t kTile)
 
 	callDraw(kTile, id);
 }
-void CityScreen::drawTileApp(size_t kTile)
+void CityScreen::drawTileApp(const size_t kTile)
 {
 	if (m_players->GETSelectedCity()->GETtile()[kTile].appartenance != NO_APPARTENANCE)
 	{
@@ -492,7 +494,7 @@ void CityScreen::drawFood()
 	}
 }
 
-void CityScreen::callDraw(size_t kTile, GLuint id)
+void CityScreen::callDraw(const size_t kTile, const GLuint id)
 {
 	if (UNUSED_ID != id)
 	{
@@ -549,11 +551,6 @@ void CityScreen::drawBuild()
 
 void CityScreen::drawCitizen()
 {
-	if (m_players->GETSelectedCity()->GETcitizens().empty())
-	{
-		return;
-	}
-
 	GLuint id(UNUSED_ID);
 
 	for (const auto& citizen: m_players->GETSelectedCity()->GETcitizens())
@@ -584,10 +581,10 @@ void CityScreen::drawCitizen()
 		(
 			glm::vec4
 			(
-				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileXCityScreen,
-				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileYCityScreen,
-				*m_tileSize,
-				*m_tileSize
+				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileXCityScreen + CITY_IHM_OFFSET_EMOTION / 2,
+				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileYCityScreen + CITY_IHM_OFFSET_EMOTION / 2,
+				*m_tileSize - CITY_IHM_OFFSET_EMOTION,
+				*m_tileSize - CITY_IHM_OFFSET_EMOTION
 			),
 			RealEngine2D::FULL_RECT,
 			id,
@@ -595,6 +592,34 @@ void CityScreen::drawCitizen()
 			RealEngine2D::COLOR_WHITE
 		);
 	}
+}
+
+void CityScreen::drawCityName()
+{
+	/* City Name */
+	m_spriteFont->draw
+	(
+		m_spriteBatch,
+		m_players->GETSelectedCity()->GETname().c_str(),
+		glm::vec2(900.0f, 1020.0f), // offset pos
+		glm::vec2(0.64f), // size
+		0.0f,
+		RealEngine2D::COLOR_GOLD
+	);
+}
+
+void CityScreen::drawNbPop()
+{
+	/* City Nb POP */
+	m_spriteFont->draw
+	(
+		m_spriteBatch,
+		std::to_string(m_players->GETSelectedCity()->GETnbpop()).c_str(),
+		glm::vec2(900.0f, 920.0f), // offset pos
+		glm::vec2(0.48f), // size
+		0.0f,
+		RealEngine2D::COLOR_LIGHT_GREY
+	);
 }
 
 void CityScreen::drawTextures()
@@ -625,6 +650,10 @@ void CityScreen::drawTextures()
 
 		drawCitizen();
 
+		drawCityName();
+
+		drawNbPop();
+
 		m_spriteBatch.end();
 		m_spriteBatchAppartenance.end();
 
@@ -645,7 +674,7 @@ void CityScreen::update()
 	}
 }
 
-void CityScreen::input(SDL_Event& ev)
+void CityScreen::input(const SDL_Event& ev)
 {
 	if (MOUSE_SCROLL_UP == ev.wheel.y)
 	{
@@ -669,7 +698,7 @@ void CityScreen::input(SDL_Event& ev)
 	}
 }
 
-void CityScreen::updatePositionCycleButton(bool dir)
+void CityScreen::updatePositionCycleButton(const bool dir)
 {
 
 	CEGUI::UVector2 u{};

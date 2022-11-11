@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.6
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.5.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -54,7 +54,7 @@ unsigned int Citizen::placeCitizen
 	int& m_gold
 )
 {
-	unsigned int condition((unsigned int)citizens.size());
+	const unsigned int condition((unsigned int)citizens.size());
 	unsigned int checkcondition(0);
 	unsigned int place(0);
 	bool continuer(true);

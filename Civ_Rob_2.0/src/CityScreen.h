@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.4
+	last modification on this file on version:0.24.5.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -65,11 +65,11 @@ class CityScreen : public RealEngine2D::IGameScreen
 public:
 	CityScreen
 	(
-		File* file,
-		SaveReload* SaveReload,
-		Players* players,
-		unsigned int* tileSize,
-		RealEngine2D::GLSLProgram* gLSLProgram,
+		File* const file,
+		SaveReload* const SaveReload,
+		Players* const players,
+		unsigned int* const tileSize,
+		RealEngine2D::GLSLProgram* const gLSLProgram,
 		std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
 	);
 	~CityScreen();
@@ -99,17 +99,17 @@ public:
 
 private:
 
-	virtual void input(SDL_Event& ev);
+	virtual void input(const SDL_Event& ev);
 
-	virtual void updatePositionCycleButton(bool dir);
+	virtual void updatePositionCycleButton(const bool dir);
 
 	virtual void drawTextures();
 
-	void drawTile(size_t kTile);
+	void drawTile(const size_t kTile);
 
-	void drawTileSpec(size_t kTile);
+	void drawTileSpec(const size_t kTile);
 	
-	void drawTileApp(size_t kTile);
+	void drawTileApp(const size_t kTile);
 
 	void drawFood();
 
@@ -117,7 +117,11 @@ private:
 
 	void drawCitizen();
 
-	void callDraw(size_t kTile, GLuint id);
+	void drawCityName();
+
+	void drawNbPop();
+
+	void callDraw(const size_t kTile, const GLuint id);
 
 private:
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.14
+	last modification on this file on version:0.24.5.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -534,15 +534,15 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	void wheel
 	(
-		SDL_Event& ev
+		const SDL_Event& ev
 	);
 
 	void mouseClick
 	(
-		SDL_Event& ev
+		const SDL_Event& ev
 	);
 
-	unsigned int getMouseCoorNorm(unsigned char c);
+	unsigned int getMouseCoorNorm(const unsigned char c);
 
 
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.30
+	last modification on this file on version:0.24.5.0
+	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -134,8 +134,8 @@ void MainMap::initMainMapTexture()
 /* ----------------------------------------------------------------------------------- */
 void MainMap::initTile()
 {
-	Tile blankTile;
-	std::vector<Tile> blank;
+	const Tile blankTile;
+	const std::vector<Tile> blank;
 	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
 	{
 		m_matriceMap.push_back(blank);
@@ -227,8 +227,8 @@ void MainMap::generateMap()
 /* ----------------------------------------------------------------------------------- */
 bool MainMap::mapBordersConditions
 (
-	unsigned int i,
-	unsigned int j
+	const unsigned int i,
+	const unsigned int j
 )
 {
 	for (unsigned int index(MAP_BORDER_MIN); index < MAP_BORDER_MAX; index++)
@@ -318,8 +318,8 @@ void MainMap::mapBorders
 void MainMap::mapIntern
 (
 	MatriceMap& maps,
-	unsigned int i,
-	unsigned int j
+	const unsigned int i,
+	const unsigned int j
 )
 {
 	unsigned int	randomground(0),
@@ -541,11 +541,11 @@ void MainMap::mapIntern
 void MainMap::tileAffectation
 (
 	Tile& tile,
-	Ground_Type tile_ground,
-	GroundSpec_Type tile_spec,
-	int food,
-	int work,
-	int gold
+	const Ground_Type tile_ground,
+	const GroundSpec_Type tile_spec,
+	const int food,
+	const int work,
+	const int gold
 )
 {
 	tile.tile_ground = tile_ground;
@@ -568,7 +568,7 @@ void MainMap::tileAffectation
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertIndexToPosX
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	return *s_tileSize * index;
@@ -586,7 +586,7 @@ unsigned int MainMap::convertIndexToPosX
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosXToIndex
 (
-	double posX
+	const double posX
 )
 {
 	return (unsigned int)std::floor(posX / (double)*s_tileSize);
@@ -603,7 +603,7 @@ unsigned int MainMap::convertPosXToIndex
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertIndexToPosY
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	return *s_tileSize * index;
@@ -620,7 +620,7 @@ unsigned int MainMap::convertIndexToPosY
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosYToIndex
 (
-	double posY
+	const double posY
 )
 {
 	return (unsigned int)std::floor(posY / (double)*s_tileSize);
@@ -638,8 +638,8 @@ unsigned int MainMap::convertPosYToIndex
 /* ----------------------------------------------------------------------------------- */
 bool MainMap::assertRangeMapIndex
 (
-	unsigned int indexToTest,
-	size_t size
+	const unsigned int indexToTest,
+	const size_t size
 )
 {
 	return indexToTest < size ? true : false;
@@ -653,6 +653,7 @@ void MainMap::setMinMaxScale
 	RealEngine2D::Camera2D& camera
 )
 {
+	/* Min Scale, to avoid OOR */
 	if	(
 			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenWidth()) > m_mapSizePixX
 			||
@@ -712,10 +713,10 @@ void MainMap::setMinMaxScale
 
 void MainMap::updateOffset
 (
-	double x0,
-	double y0,
-	unsigned int windowWidth,
-	unsigned int windowHeight,
+	const double x0,
+	const double y0,
+	const unsigned int windowWidth,
+	const unsigned int windowHeight,
 	RealEngine2D::Camera2D& camera
 )
 {
@@ -726,8 +727,8 @@ void MainMap::updateOffset
 
 void MainMap::updateOffsetX
 (
-	double x0,
-	unsigned int windowWidth,
+	const double x0,
+	const unsigned int windowWidth,
 	RealEngine2D::Camera2D& camera
 )
 {
@@ -786,8 +787,8 @@ void MainMap::updateOffsetX
 
 void MainMap::updateOffsetY
 (
-	double y0,
-	unsigned int windowHeight,
+	const double y0,
+	const unsigned int windowHeight,
 	RealEngine2D::Camera2D& camera
 )
 {

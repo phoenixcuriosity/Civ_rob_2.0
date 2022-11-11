@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.22
+	last modification on this file on version:0.24.5.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -91,18 +91,12 @@ bool Unit::searchUnitTile
 		{
 			if (selPlayer->GETtabUnit()[i]->testPos(mouseCoorNorm.x, mouseCoorNorm.y))
 			{
-			
-
 				selPlayer->SETselectedUnit(i);
 
 				selPlayer->GETtabUnit()[i]->SETshow(true);
 				App::logfileconsole("[INFO]___: Unit select to move n:" + std::to_string(i));
 				*select = Select_Type::selectmove;
 				return true;
-			}
-			else
-			{
-
 			}
 		}
 		selPlayer.reset();
@@ -129,8 +123,9 @@ void Unit::tryToMove
 	const MatriceMap& maps,
 	Players& players,
 	Select_Type select,
-	int x,
-	int y
+	const int x,
+	const int y,
+	unsigned int recursiveIt
 )
 {
 	if (players.GETselectedPlayerId() != NO_PLAYER_SELECTED)
@@ -142,12 +137,14 @@ void Unit::tryToMove
 		{
 		case Move_Type::cannotMove:
 			/*
-			* N/A
+			* Nothing to do
 			*/
 			break;
 		case Move_Type::canMove:
 
 			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, x, y);
+			selPlayer->SETselectedUnit(selectunit);
+			players.SETneedToUpdateDrawUnit(NEED_TO_UPDATE_DRAW_UNIT);
 			break;
 		case Move_Type::attackMove:
 		{
@@ -156,11 +153,19 @@ void Unit::tryToMove
 			selPlayer->GETtabUnit()[selectunit]
 				->attack(*attackPlayer->GETtabUnit()[unitToAttack]);
 
-			if (attackPlayer->GETtabUnit()[unitToAttack]->GETalive() == false)
+			/* if the opposite Unit is destroy, try to move to its position */
+			if	(
+					(attackPlayer->GETtabUnit()[unitToAttack]->GETalive() == false)
+					&&
+					(recursiveIt <= 1) /* TODO replace by Unit attribut */
+				)
 			{
-				attackPlayer->deleteUnit(unitToAttack);
-				tryToMove(maps, players, select, x, y);
+				attackPlayer->deleteUnit(unitToAttack); 
+				recursiveIt++;
+				tryToMove(maps, players, select, x, y, recursiveIt);
 			}
+
+			/* Cannot move further for this turn */
 			selPlayer->GETtabUnit()[selectunit]->SETmovement(NO_MOVEMENT);
 			break;
 		}
@@ -189,10 +194,10 @@ Move_Type Unit::searchToMove
 (
 	const MatriceMap& maps,
 	Players& players,
-	int x,
-	int y,
-	int* playerToAttack,
-	int* unitToAttack
+	const int x,
+	const int y,
+	int* const playerToAttack,
+	int* const unitToAttack
 )
 {
 
@@ -211,8 +216,8 @@ Move_Type Unit::searchToMove
 	std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 	bool nextTileValidToMove(false);
-	unsigned int xIndex(MainMap::convertPosXToIndex(unit->GETx() + x));
-	unsigned int yIndex(MainMap::convertPosYToIndex(unit->GETy() + y));
+	const unsigned int xIndex(MainMap::convertPosXToIndex(unit->GETx() + x));
+	const unsigned int yIndex(MainMap::convertPosYToIndex(unit->GETy() + y));
 
 	if	(
 			unit->isGroundMovement_Type()
@@ -275,11 +280,11 @@ Move_Type Unit::searchToMove
 		/* Next Tile is a ground Tile 											  */
 		/* ---------------------------------------------------------------------- */
 
-		for (unsigned int i = 0; i < players.GETvectPlayer().size(); i++)
+		for (unsigned int i{0}; i < players.GETvectPlayer().size(); i++)
 		{
-			for (unsigned int j = 0; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
+			for (unsigned int j{0}; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
 			{
-				condition = checkUnitNextTile(*unit, *players.GETvectPlayer()[i]->GETtabUnit()[j], x, y);
+				condition = checkUnitNextTile(*unit, *(players.GETvectPlayer()[i]->GETtabUnit()[j]), x, y);
 				if (true == condition)
 				{
 					if (players.GETselectedPlayerId() == (int)i)
@@ -292,10 +297,6 @@ Move_Type Unit::searchToMove
 						*unitToAttack = (int)j;
 						return Move_Type::attackMove;
 					}
-				}
-				else
-				{
-					/* N/A */
 				}
 			}
 		}
@@ -326,8 +327,8 @@ bool Unit::checkUnitNextTile
 (
 	const Unit& from,
 	const Unit& to,
-	int x,
-	int y
+	const int x,
+	const int y
 )
 {
 	if ((from.GETx() + x) == to.GETx())
@@ -335,17 +336,9 @@ bool Unit::checkUnitNextTile
 		if ((from.GETy() + y) == to.GETy())
 		{
 			return true;
-
-		}
-		else
-		{
-			return false;
 		}
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -363,25 +356,18 @@ bool Unit::checkNextTile
 (
 	const Unit& from,
 	const Tile& to,
-	int x,
-	int y
+	const int x,
+	const int y
 )
 {
-	if ((from.GETx() + (unsigned __int64)x) == (to.tile_x))
+	if ((from.GETx() + x) == (to.tile_x))
 	{
-		if ((from.GETy() + (unsigned __int64)y) == (to.tile_y))
+		if ((from.GETy() + y) == (to.tile_y))
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -533,7 +519,7 @@ void Unit::attack
 /* ----------------------------------------------------------------------------------- */
 void Unit::defend
 (
-	int dmg
+	const int dmg
 )
 {
 	if (dmg > m_def)
@@ -566,8 +552,8 @@ void Unit::move
 (
 	Select_Type& select,
 	int& selectunit,
-	int x,
-	int y
+	const int x,
+	const int y
 )
 {
 	if (NO_MOVEMENT < m_movement)
@@ -598,11 +584,11 @@ void Unit::move
 void Unit::heal
 (
 	const MatriceMap& tiles,
-	unsigned int selectplayer
+	const unsigned int selectplayer
 )
 {
-	int i(MainMap::convertPosXToIndex(m_x));
-	int j(MainMap::convertPosYToIndex(m_y));
+	const int i(MainMap::convertPosXToIndex(m_x));
+	const int j(MainMap::convertPosYToIndex(m_y));
 
 	if (NO_APPARTENANCE == tiles[i][j].appartenance)
 	{
@@ -671,8 +657,8 @@ void Unit::RESETmovement()
 /* ----------------------------------------------------------------------------------- */
 bool Unit::testPos
 (
-	unsigned int mouse_x,
-	unsigned int mouse_y
+	const unsigned int mouse_x,
+	const unsigned int mouse_y
 )
 {
 	if (

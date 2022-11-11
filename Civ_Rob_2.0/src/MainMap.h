@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.9
+	last modification on this file on version:0.24.5.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -205,7 +205,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertIndexToPosX
 	(
-		unsigned int index
+		const unsigned int index
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -220,7 +220,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosXToIndex
 	(
-		double posX
+		const double posX
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -234,7 +234,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertIndexToPosY
 	(
-		unsigned int index
+		const unsigned int index
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -248,7 +248,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosYToIndex
 	(
-		double posY
+		const double posY
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -263,8 +263,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static bool assertRangeMapIndex
 	(
-		unsigned int indexToTest,
-		size_t size
+		const unsigned int indexToTest,
+		const size_t size
 	);
 
 public:
@@ -289,24 +289,24 @@ private:
 
 	void updateOffset
 	(
-		double x0,
-		double y0,
-		unsigned int windowWidth,
-		unsigned int windowHeight,
+		const double x0,
+		const double y0,
+		const unsigned int windowWidth,
+		const unsigned int windowHeight,
 		RealEngine2D::Camera2D& camera
 	);
 
 	void updateOffsetX
 	(
-		double x0,
-		unsigned int windowWidth,
+		const double x0,
+		const unsigned int windowWidth,
 		RealEngine2D::Camera2D& camera
 	);
 
 	void updateOffsetY
 	(
-		double y0,
-		unsigned int windowHeight,
+		const double y0,
+		const unsigned int windowHeight,
 		RealEngine2D::Camera2D& camera
 	);
 
@@ -353,8 +353,8 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	bool mapBordersConditions
 	(
-		unsigned int i,
-		unsigned int j
+		const unsigned int i,
+		const unsigned int j
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -388,8 +388,8 @@ private:
 	void mapIntern
 	(
 		MatriceMap& maps,
-		unsigned int i,
-		unsigned int j
+		const unsigned int i,
+		const unsigned int j
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -406,11 +406,11 @@ private:
 	void tileAffectation
 	(
 		Tile& tile,
-		Ground_Type tile_ground,
-		GroundSpec_Type tile_spec,
-		int food,
-		int work,
-		int gold
+		const Ground_Type tile_ground,
+		const GroundSpec_Type tile_spec,
+		const int food,
+		const int work,
+		const int gold
 	);
 
 

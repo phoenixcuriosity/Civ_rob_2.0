@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.19
+	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.5.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -65,6 +65,8 @@ const unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
 const unsigned int ZERO_LIFE = 0;
 
 const unsigned int ZERO_BLIT = 0;
+
+const unsigned int FIRST_TRY_TO_MOVE = 0;
 
 /*
 	use as 1/x
@@ -185,7 +187,7 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : tryToMove																	   */
+	/* NAME : tryToMove*																	   */
 	/* ROLE : Recherche � faire bouger l'unit� selon le contexte						   */
 	/* ROLE : Attention : contient un rappel r�cursif									   */
 	/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la MAP				   */
@@ -202,8 +204,9 @@ public:
 		const MatriceMap& maps,
 		Players& players,
 		Select_Type select,
-		int x,
-		int y
+		const int x,
+		const int y,
+		unsigned int recursiveIt = FIRST_TRY_TO_MOVE
 	);
 
 private:
@@ -226,10 +229,10 @@ private:
 	(
 		const MatriceMap& maps,
 		Players& players,
-		int x,
-		int y,
-		int* playerToAttack,
-		int* unitToAttack
+		const int x,
+		const int y,
+		int* const playerToAttack,
+		int* const unitToAttack
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -247,8 +250,8 @@ private:
 	(
 		const Unit& from,
 		const Unit& to,
-		int x,
-		int y
+		const int x,
+		const int y
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -266,8 +269,8 @@ private:
 	(
 		const Unit& from,
 		const Tile& to,
-		int x,
-		int y
+		const int x,
+		const int y
 	);
 
 public:
@@ -359,7 +362,7 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void defend
 	(
-		int dmg
+		const int dmg
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -378,8 +381,8 @@ private:
 	(
 		Select_Type& select,
 		int& selectunit,
-		int x,
-		int y
+		const int x,
+		const int y
 	);
 
 public:
@@ -396,7 +399,7 @@ public:
 	virtual void heal
 	(
 		const MatriceMap& tiles,
-		unsigned int selectplayer
+		const unsigned int selectplayer
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -432,8 +435,8 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool testPos
 	(
-		unsigned int mouse_x,
-		unsigned int mouse_y
+		const unsigned int mouse_x,
+		const unsigned int mouse_y
 	);
 
 	/* ----------------------------------------------------------------------------------- */

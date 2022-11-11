@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.18
+	last modification on this file on version:0.24.5.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -57,6 +57,8 @@ const unsigned int NB_MAX_PLAYER = 9;
 const unsigned int VECT_SIZE_OFFSET_ID = 1;
 
 const unsigned int CITY_TYPE = 1;
+
+const bool NEED_TO_UPDATE_DRAW_UNIT = true;
 
 /* *********************************************************
  *						 Enum							   *
@@ -217,7 +219,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void deleteUnit
 	(
-		unsigned int index
+		const unsigned int index
 	);
 	
 
@@ -232,8 +234,8 @@ public:
 	virtual void addCity
 	(
 		const std::string&,
-		unsigned int,
-		unsigned int,
+		const unsigned int,
+		const unsigned int,
 		VectMap& tiles
 	);
 
@@ -247,13 +249,13 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void deleteCity
 	(
-		unsigned int
+		const unsigned int index
 	);
 
 	virtual std::shared_ptr<City>* searchCity
 	(
-		unsigned int indexX,
-		unsigned int indexY
+		const unsigned int indexX,
+		const unsigned int indexY
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -289,7 +291,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void addGoldToGoldConversionSurplus
 	(
-		double goldToAdd
+		const double goldToAdd
 	);
 
 
@@ -312,8 +314,8 @@ public:
 	virtual std::shared_ptr<Unit>& GETSelectedUnitPtr(){return m_tabUnit[m_selectedUnit];}
 
 	inline virtual void SETname(const std::string& msg) { m_name = msg; };
-	inline virtual void SETselectedUnit(int selectedUnit) { m_selectedUnit = selectedUnit; };
-	inline virtual void SETselectedCity(int selectedCity) { m_selectedCity = selectedCity; };
+	inline virtual void SETselectedUnit(const int selectedUnit) { m_selectedUnit = selectedUnit; };
+	inline virtual void SETselectedCity(const int selectedCity) { m_selectedCity = selectedCity; };
 
 private:
 	/* *********************************************************
@@ -347,10 +349,10 @@ public:
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
 	inline std::shared_ptr<City>& GETSelectedCity() { return m_selectedCity; };
 
-	inline void SETselectedPlayerId(int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
+	inline void SETselectedPlayerId(const int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
 	inline void SETselectedPlayerPtr(std::shared_ptr<Player>& selectedPlayerPtr) { m_selectedPlayerPtr = selectedPlayerPtr; };
-	inline void SETneedToUpdateDrawUnit(bool need) { m_needToUpdateDrawUnit = need; };
-	inline void SETneedToUpdateDrawCity(bool need) { m_needToUpdateDrawCity = need; };
+	inline void SETneedToUpdateDrawUnit(const bool need) { m_needToUpdateDrawUnit = need; };
+	inline void SETneedToUpdateDrawCity(const bool need) { m_needToUpdateDrawCity = need; };
 	inline void SetSelectedCity(std::shared_ptr<City> selectedCity) { m_selectedCity = selectedCity; };
 
 	inline bool isValidSelectedCity() { if (m_selectedCity != nullptr) return true; else return false; };
@@ -365,10 +367,14 @@ public:
 
 	void removeIndexPlayer
 	(
-		unsigned int index
+		const unsigned int index
 	);
 
-	void clickToSelectUnit(unsigned int x, unsigned int y);
+	void clickToSelectUnit
+	(
+		const unsigned int x,
+		const unsigned int y
+	);
 
 	void isAUnitSelected();
 
@@ -391,8 +397,8 @@ public:
 
 	virtual bool searchCity
 	(
-		unsigned int indexX,
-		unsigned int indexY
+		const unsigned int indexX,
+		const unsigned int indexY
 	);
 
 private:

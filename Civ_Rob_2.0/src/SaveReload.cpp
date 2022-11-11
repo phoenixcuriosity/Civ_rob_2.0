@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.22
+	last modification on this file on version:0.24.5.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -38,18 +38,22 @@
 
 void SaveReload::init(const std::string& filePath)
 {
-	std::string destroy(EMPTY_STRING);
+	std::string destroy{ EMPTY_STRING };
+	std::ifstream loadInfo{ filePath };
+	unsigned int currentSave{ 0 };
+	size_t size{ 0 };
 
-	//chargement du nombre de sauvegardes
-	std::ifstream loadInfo(filePath);
-	unsigned int currentSave(0), size(0);
 	if (loadInfo)
 	{
 		loadInfo >> destroy;
+
 		loadInfo >> size;
+
 		m_tabSave.resize(size);
+
 		loadInfo >> destroy;
-		for (unsigned int i(0); i < m_tabSave.size(); i++)
+
+		for (size_t i{0}; i < m_tabSave.size(); i++)
 		{
 			loadInfo >> currentSave;
 			m_tabSave[i] = currentSave;
@@ -93,12 +97,12 @@ void SaveReload::saveMaps
 	GamePlayScreen& mainGame
 )
 {
-	std::ofstream saveMaps(mainGame.getFile()->saveMaps);
+	std::ofstream saveMaps{ mainGame.getFile()->saveMaps };
 	if (saveMaps)
 	{
-		for (unsigned int i = 0; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
+		for (size_t i{0}; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
 		{
-			for (unsigned int j = 0; j < mainGame.GETmainMap().GETmatriceMap()[i].size(); j++)
+			for (size_t j{0}; j < mainGame.GETmainMap().GETmatriceMap()[i].size(); j++)
 			{
 				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].indexX << std::endl;
 				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].indexY << std::endl;
@@ -131,7 +135,7 @@ void SaveReload::savePlayer
 )
 {
 	tinyxml2::XMLDocument xmlDoc;
-	tinyxml2::XMLNode* pRoot = xmlDoc.NewElement("SavePlayers");
+	tinyxml2::XMLNode* pRoot{ xmlDoc.NewElement("SavePlayers") };
 
 	xmlDoc.InsertFirstChild(pRoot);
 

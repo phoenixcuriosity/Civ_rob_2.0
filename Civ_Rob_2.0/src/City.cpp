@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.40
+	last modification on this file on version:0.24.5.0
+	file version : 1.41
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,7 +47,7 @@
 void City::createCity
 (
 	GamePlayScreen& mainGame,
-	unsigned int influenceLevel
+	const unsigned int influenceLevel
 )
 {
 	if (mainGame.GETPlayers().GETselectedPlayerId() != NO_PLAYER_SELECTED)
@@ -146,12 +146,12 @@ void City::createCity
 void City::fillCitieTiles
 (
 	const RealEngine2D::Window& window,
-	unsigned int middletileX,
-	unsigned int middletileY,
-	unsigned int selectplayer,
+	const unsigned int middletileX,
+	const unsigned int middletileY,
+	const unsigned int selectplayer,
 	MainMap& mainMap,
 	VectMap& tabtile,
-	unsigned int influenceLevel
+	const unsigned int influenceLevel
 )
 {
 	unsigned int k(0);
@@ -193,9 +193,9 @@ void City::fillCitieTiles
 /* ----------------------------------------------------------------------------------- */
 bool City::initSizeInfluenceCondition
 (
-	int o,
-	int p,
-	unsigned int influenceLevel
+	const int o,
+	const int p,
+	const unsigned int influenceLevel
 )
 {
 	if (
@@ -229,9 +229,9 @@ bool City::initSizeInfluenceCondition
 /* ----------------------------------------------------------------------------------- */
 bool City::cornerCheck
 (
-	int o,
-	int p,
-	unsigned int influenceLevel
+	const int o,
+	const int p,
+	const unsigned int influenceLevel
 )
 {
 	if (
@@ -256,8 +256,8 @@ bool City::cornerCheck
 /* ----------------------------------------------------------------------------------- */
 bool City::searchCityTile
 (
-	unsigned int indexX,
-	unsigned int indexY
+	const unsigned int indexX,
+	const unsigned int indexY
 )
 {
 	if	(
@@ -485,9 +485,9 @@ void City::foodNextTurn
 double City::tileValue
 (
 	const Tile& tile,
-	double coefFood,
-	double coefWork,
-	double coefGold
+	const double coefFood,
+	const double coefWork,
+	const double coefGold
 )const
 {
 	double sum{ 0.0 };
@@ -504,8 +504,8 @@ double City::tileValue
 /* ----------------------------------------------------------------------------------- */
 bool City::testPos
 (
-	unsigned int mouse_x,
-	unsigned int mouse_y
+	const unsigned int mouse_x,
+	const unsigned int mouse_y
 )
 {
 	if (
@@ -742,7 +742,7 @@ void City::addCityGoldToTaxIncome
 /* ----------------------------------------------------------------------------------- */
 void City::convertWorkSurplusToFood
 (
-	double workSurplus
+	const double workSurplus
 )
 {
 	m_foodSurplusPreviousTurn = workSurplus * MULTIPLIER_CONVERSION_WORK_TO_FOOD;
@@ -756,7 +756,7 @@ void City::convertWorkSurplusToFood
 /* ----------------------------------------------------------------------------------- */
 void City::convertFoodSurplusToWork
 (
-	double foodSurplus
+	const double foodSurplus
 )
 {
 	m_workSurplusPreviousTurn = foodSurplus * MULTIPLIER_CONVERSION_FOOD_TO_WORK;
@@ -771,7 +771,7 @@ void City::convertFoodSurplusToWork
 /* ----------------------------------------------------------------------------------- */
 void City::convertFoodSurplusToGold
 (
-	double foodSurplus,
+	const double foodSurplus,
 	GoldStats& goldStats
 )
 {
@@ -820,7 +820,7 @@ void City::removeBuildToQueueFront()
 /* ----------------------------------------------------------------------------------- */
 void City::removeBuildToQueue
 (
-	size_t index
+	const size_t index
 )
 {
 	if (m_buildQueue[index].buildG != nullptr)

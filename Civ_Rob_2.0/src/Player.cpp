@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.23
+	last modification on this file on version:0.24.5.0
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -184,7 +184,7 @@ void Player::addUnit
 /* ----------------------------------------------------------------------------------- */
 void Player::deleteUnit
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	if (Utility::assertSize(m_tabUnit.size(), index))
@@ -217,8 +217,8 @@ void Player::deleteUnit
 void Player::addCity
 (
 	const std::string& name,
-	unsigned int x,
-	unsigned int y,
+	const unsigned int x,
+	const unsigned int y,
 	VectMap& tiles
 )
 {
@@ -235,7 +235,7 @@ void Player::addCity
 /* ----------------------------------------------------------------------------------- */
 void Player::deleteCity
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 
@@ -260,8 +260,8 @@ void Player::deleteCity
 
 std::shared_ptr<City>* Player::searchCity
 (
-	unsigned int indexX,
-	unsigned int indexY
+	const unsigned int indexX,
+	const unsigned int indexY
 )
 {
 	for (auto &c : m_tabCity)
@@ -335,7 +335,7 @@ void Player::resetGoldStats()
 /* ----------------------------------------------------------------------------------- */
 void Player::addGoldToGoldConversionSurplus
 (
-	double goldToAdd
+	const double goldToAdd
 )
 {
 	m_goldStats.goldConversionSurplus += goldToAdd;
@@ -427,7 +427,7 @@ void Players::deleteAllPlayers()
 
 void Players::removeIndexPlayer
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	if (Utility::assertSize(m_vectPlayer.size(), index))
@@ -440,7 +440,11 @@ void Players::removeIndexPlayer
 	}
 }
 
-void Players::clickToSelectUnit(unsigned int x, unsigned int y)
+void Players::clickToSelectUnit
+(
+	const unsigned int x,
+	const unsigned int y
+)
 {
 	if (m_selectedPlayer != NO_PLAYER_SELECTED)
 	{
@@ -582,7 +586,7 @@ void Players::drawCity
 		m_spriteBatchCity.begin();
 		m_spriteBatchCityDynamic.begin();
 
-		unsigned int tileSize{ mainMap.GETtileSize() };
+		const unsigned int tileSize{ mainMap.GETtileSize() };
 
 		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
 		{
@@ -641,8 +645,8 @@ void Players::renderCity()
 
 bool Players::searchCity
 (
-	unsigned int indexX,
-	unsigned int indexY
+	const unsigned int indexX,
+	const unsigned int indexY
 )
 {
 	std::shared_ptr<City>* ptrCity{};

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.8
+	last modification on this file on version:0.24.5.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -143,11 +143,10 @@ void GamePlayScreen::newGameSettlerSpawn
 	/* association des vecteurs de position (x,y)							  */
 	/* avec les settlers de départ											  */
 	/* ---------------------------------------------------------------------- */
-	unsigned int selectunit(0);
-	selectunit = Unit::searchUnitByName("settler", players.GETvectUnitTemplate());
+	const size_t selectunit{ Unit::searchUnitByName("settler", players.GETvectUnitTemplate()) };
 
 	std::vector<randomPos> tabRandom;
-	for (unsigned int i(0); i < players.GETvectPlayer().size(); i++)
+	for (size_t i(0); i < players.GETvectPlayer().size(); i++)
 	{
 
 		makeRandomPosTab(mainMap, tabRandom);
@@ -229,8 +228,8 @@ void GamePlayScreen::makeRandomPos
 {
 	const unsigned int SEA_BORDER_MAP(MAP_BORDER_MAX * tileSize);
 
-	unsigned int x((rand() % ((matriceMap.size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
-	unsigned int y((rand() % ((matriceMap[0].size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
+	const unsigned int x((rand() % ((matriceMap.size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
+	const unsigned int y((rand() % ((matriceMap[0].size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
 
 	RandomPOS.x = (unsigned int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (unsigned int)ceil(y / tileSize) * tileSize;
@@ -300,8 +299,8 @@ bool GamePlayScreen::conditionground
 	const randomPos& RandomPOS
 )
 {
-	unsigned int x(MainMap::convertPosXToIndex(RandomPOS.x));
-	unsigned int y(MainMap::convertPosYToIndex(RandomPOS.y));
+	const unsigned int x(MainMap::convertPosXToIndex(RandomPOS.x));
+	const unsigned int y(MainMap::convertPosYToIndex(RandomPOS.y));
 
 	if	(
 			MainMap::assertRangeMapIndex(x, matriceMap.size())

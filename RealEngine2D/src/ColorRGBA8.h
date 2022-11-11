@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.1
+	last modification on this file on version:0.24.5.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,10 +43,17 @@ struct ColorRGBA8
 };
 
 const ColorRGBA8 COLOR_WHITE(255, 255, 255, 255);
+const ColorRGBA8 COLOR_BLACK(0, 0, 0, 255);
+
+const ColorRGBA8 COLOR_LIGHT_GREY(192, 192, 192, 255);
+const ColorRGBA8 COLOR_GREY(127, 127, 127, 255);
+const ColorRGBA8 COLOR_DARK_GREY(63, 63, 63, 255);
+
 const ColorRGBA8 COLOR_RED(255, 0, 0, 255);
 const ColorRGBA8 COLOR_GREEN(0, 255, 0, 255);
 const ColorRGBA8 COLOR_BLUE(0, 0, 255, 255);
-const ColorRGBA8 COLOR_BLACK(0, 0, 0, 255);
+
+const ColorRGBA8 COLOR_GOLD(205, 127, 50, 255);
 
 const ColorRGBA8 COLOR_WHITE_T50(255, 255, 255, 128);
 const ColorRGBA8 COLOR_WHITE_T25(255, 255, 255, 64);

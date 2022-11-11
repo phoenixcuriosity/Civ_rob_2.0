@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.2.0
-	file version : 1.36
+	last modification on this file on version:0.24.5.0
+	file version : 1.37
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -112,19 +112,140 @@ void GamePlayScreen::inputSDL
 /* ---------------------------------------------------------------------------------------------------------- */
 void GamePlayScreen::actionByKey()
 {
-	if (m_game->getInputManager().isKeyDown(SDLK_b))
-	{
-		if (Utility::checkPlayerUnitSelection(m_players))
-		{
-			City::createCity(*this);
-			m_mainMap.SETneedToUpdateDraw(true);
-		}
-	}
+	/* Next Turn */
 	if (m_game->getInputManager().isKeyDown(SDLK_SPACE))
 	{
 		m_nextTurn.nextTurn(*this);
 		m_game->getInputManager().releaseKey(SDLK_SPACE);
 	}
+
+
+	if (Utility::checkPlayerUnitSelection(m_players))
+	{
+		/* Found City */
+		if (m_game->getInputManager().isKeyDown(SDLK_b))
+		{
+			if (Utility::checkPlayerUnitSelection(m_players))
+			{
+				City::createCity(*this);
+				m_mainMap.SETneedToUpdateDraw(true);
+			}
+		}
+
+
+		/* Move Unit */
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_1))
+		{
+			/* ← + ↓ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				-((int)m_mainMap.GETtileSize()),
+				-(int)m_mainMap.GETtileSize()
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_2))
+		{
+			/* ↓ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				UNIT_NO_MOVEMENT,
+				-((int)m_mainMap.GETtileSize())
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_3))
+		{
+			/* → + ↓ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				(int)m_mainMap.GETtileSize(),
+				-((int)m_mainMap.GETtileSize())
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_4))
+		{
+			/* ← */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				-((int)m_mainMap.GETtileSize()),
+				UNIT_NO_MOVEMENT
+			);
+		}
+		/* NO SDLK_KP_5 : Useless */
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_6))
+		{
+			/* → */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				(int)m_mainMap.GETtileSize(),
+				UNIT_NO_MOVEMENT
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_7))
+		{
+			/* ← + ↑ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				-((int)m_mainMap.GETtileSize()),
+				(int)m_mainMap.GETtileSize()
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_8))
+		{
+			/* ↑ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				UNIT_NO_MOVEMENT,
+				(int)m_mainMap.GETtileSize()
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_9))
+		{
+			/* → + ↑ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				(int)m_mainMap.GETtileSize(),
+				(int)m_mainMap.GETtileSize()
+			);
+		}
+		else
+		{
+			/* Do nothing */
+		}
+	}
+	
+
+
 
 #ifdef _DEBUG
 	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
@@ -259,7 +380,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 /* ---------------------------------------------------------------------------------------------------------- */
 void GamePlayScreen::wheel
 (
-	SDL_Event& ev
+	const SDL_Event& ev
 )
 {
 	/*
@@ -310,7 +431,7 @@ void GamePlayScreen::wheel
 
 void GamePlayScreen::mouseClick
 (
-	SDL_Event& ev
+	const SDL_Event& ev
 )
 {
 	
@@ -349,7 +470,7 @@ void GamePlayScreen::mouseClick
 	}
 }
 
-unsigned int GamePlayScreen::getMouseCoorNorm(unsigned char c)
+unsigned int GamePlayScreen::getMouseCoorNorm(const unsigned char c)
 {
 	if (c == 'X')
 	{

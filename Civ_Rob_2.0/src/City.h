@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.23
+	last modification on this file on version:0.24.5.0
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -186,7 +186,7 @@ public:
 	static void createCity
 	(
 		GamePlayScreen& mainGame,
-		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -204,12 +204,12 @@ public:
 	static void fillCitieTiles
 	(
 		const RealEngine2D::Window& window,
-		unsigned int middletileX,
-		unsigned int middletileY,
-		unsigned int selectplayer,
+		const unsigned int middletileX,
+		const unsigned int middletileY,
+		const unsigned int selectplayer,
 		MainMap& mainMap,
 		VectMap& tabtile,
-		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
 private:
@@ -223,9 +223,9 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	static bool initSizeInfluenceCondition
 	(
-		int o,
-		int p,
-		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const int o,
+		const int p,
+		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -239,9 +239,9 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	static bool cornerCheck
 	(
-		int o,
-		int p,
-		unsigned int influenceLevel
+		const int o,
+		const int p,
+		const unsigned int influenceLevel
 	);
 
 
@@ -299,8 +299,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool searchCityTile
 	(
-		unsigned int indexX,
-		unsigned int indexY
+		const unsigned int indexX,
+		const unsigned int indexY
 	);
 
 private:
@@ -308,9 +308,9 @@ private:
 	virtual double tileValue
 	(
 		const Tile& tile,
-		double coefFood = 1.0,
-		double coefWork = 1.0,
-		double coefGold = 1.0
+		const double coefFood = 1.0,
+		const double coefWork = 1.0,
+		const double coefGold = 1.0
 	) const;
 
 public:
@@ -323,8 +323,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool testPos
 	(
-		unsigned int x,
-		unsigned int y
+		const unsigned int x,
+		const unsigned int y
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -388,7 +388,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void convertWorkSurplusToFood
 	(
-		double workSurplus
+		const double workSurplus
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -399,7 +399,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void convertFoodSurplusToWork
 	(
-		double foodSurplus
+		const double foodSurplus
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -411,7 +411,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void convertFoodSurplusToGold
 	(
-		double foodSurplus,
+		const double foodSurplus,
 		GoldStats& goldStats
 	);
 
@@ -446,7 +446,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void removeBuildToQueue
 	(
-		size_t index
+		const size_t index
 	);
 
 public:

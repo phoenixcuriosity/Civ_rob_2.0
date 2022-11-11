@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.19
+	last modification on this file on version:0.24.5.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -478,12 +478,12 @@ void GamePlayScreen::drawGame()
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = m_screen.gLSLProgram->getUnitformLocation("mySampler");
+	const GLint textureLocation = m_screen.gLSLProgram->getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* --- camera --- */
 	/* GL - get parameter P */
-	GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
+	const GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
 
 	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_screen.camera.GETcameraMatrix();
@@ -517,7 +517,7 @@ void GamePlayScreen::drawGame()
 void GamePlayScreen::drawHUD()
 {
 	/* camera HUD */
-	GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
+	const GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
 	glm::mat4 cameraMatrix = m_screen.cameraHUD.GETcameraMatrix();
 
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
