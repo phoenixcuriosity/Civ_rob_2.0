@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.31
+	last modification on this file on version:0.24.5.1
+	file version : 1.32
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -92,7 +92,15 @@ void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
 		camera
 	);
 
-	setMinMaxScale(camera);
+	try
+	{
+		setMinMaxScale(camera);
+	}
+	catch (const std::invalid_argument& msg)
+	{
+		App::exitError(msg.what());
+	}
+	
 
 	initMainMapTexture();
 }
@@ -660,7 +668,7 @@ void MainMap::setMinMaxScale
 			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenHeight()) > m_mapSizePixY
 		)
 	{
-		throw("[Error]___: setMinMaxScale");
+		throw std::invalid_argument("Width or Height is higher than mapSize");
 	}
 
 	unsigned int i(0);
