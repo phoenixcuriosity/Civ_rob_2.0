@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.1
-	file version : 1.32
+	last modification on this file on version:0.24.6.0
+	file version : 1.33
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,6 +39,8 @@
 unsigned int* MainMap::s_tileSize;
 
 static size_t START_APPARTENANCE_INDEX = 0;
+static size_t START_GROUND_SPEC_INDEX = 0;
+const uint8_t OFFSET_GROUND_TYPE = 1;
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -110,21 +112,24 @@ void MainMap::initMainMapTexture()
 	m_spriteBatch.init();
 	m_spriteBatchAppartenance.init();
 
+
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
+	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass_irr.png")->GETid());
 
+	START_GROUND_SPEC_INDEX = s_vectID.size();
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
+	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
-	START_APPARTENANCE_INDEX = s_vectID.size();
+	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
+	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
+	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
 
+	START_APPARTENANCE_INDEX = s_vectID.size();
 	for (unsigned int i(0); i < NB_MAX_PLAYER; i++)
 	{
 		s_vectID.push_back
@@ -874,13 +879,16 @@ void MainMap::drawMap
 				switch (m_matriceMap[i][j].tile_ground)
 				{
 				case Ground_Type::grass:
-					id = s_vectID[0];
+					id = s_vectID[(uint8_t)Ground_Type::grass - OFFSET_GROUND_TYPE];
 					break;
 				case Ground_Type::water:
-					id = s_vectID[1];
+					id = s_vectID[(uint8_t)Ground_Type::water - OFFSET_GROUND_TYPE];
 					break;
 				case Ground_Type::deepwater:
-					id = s_vectID[2];
+					id = s_vectID[(uint8_t)Ground_Type::deepwater - OFFSET_GROUND_TYPE];
+					break;
+				case Ground_Type::irragated:
+					id = s_vectID[(uint8_t)Ground_Type::irragated - OFFSET_GROUND_TYPE];
 					break;
 				case Ground_Type::dirt:
 					throw("[Error]___: drawMap : Ground_Type::dirt");
@@ -908,31 +916,31 @@ void MainMap::drawMap
 				switch (m_matriceMap[i][j].tile_spec)
 				{
 				case GroundSpec_Type::coal:
-					id = s_vectID[3];
+					id = s_vectID[START_GROUND_SPEC_INDEX];
 					break;
 				case GroundSpec_Type::copper:
-					id = s_vectID[4];
-					break;
-				case GroundSpec_Type::fish:
-					id = s_vectID[5];
-					break;
-				case GroundSpec_Type::horse:
-					id = s_vectID[6];
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::coal];
 					break;
 				case GroundSpec_Type::iron:
-					id = s_vectID[7];
-					break;
-				case GroundSpec_Type::petroleum:
-					id = s_vectID[8];
-					break;
-				case GroundSpec_Type::stone:
-					id = s_vectID[9];
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::copper];
 					break;
 				case GroundSpec_Type::tree:
-					id = s_vectID[10];
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::iron];
+					break;
+				case GroundSpec_Type::stone:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::tree];
 					break;
 				case GroundSpec_Type::uranium:
-					id = s_vectID[11];
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::stone];
+					break;
+				case GroundSpec_Type::horse:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::uranium];
+					break;
+				case GroundSpec_Type::fish:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::horse];
+					break;
+				case GroundSpec_Type::petroleum:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::fish];
 					break;
 				case GroundSpec_Type::nothing:
 					id = UNUSED_ID;

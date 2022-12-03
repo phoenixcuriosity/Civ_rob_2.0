@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.10
+	last modification on this file on version:0.24.6.0
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -103,6 +103,7 @@ enum class Ground_Type
 	grass,
 	water,
 	deepwater,
+	irragated,
 	dirt,			/* ### Not use as of 0.20.0.3 ### */
 	sand			/* ### Not use as of 0.20.0.3 ### */
 };

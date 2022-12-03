@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.9
+	last modification on this file on version:0.24.6.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -71,9 +71,11 @@ void GamePlayScreen::newGame()
 /* ------------------------------------------------------------------------------------*/
 void GamePlayScreen::pushNewPlayer()
 {
+	unsigned index{ 0 };
 	for (auto& p : m_userInputNewGame->vectPlayerName)
 	{
-		m_players.addPlayer(p);
+		m_players.addPlayer(p, (int)index);
+		index++;
 	}
 }
 
@@ -160,6 +162,7 @@ void GamePlayScreen::newGameSettlerSpawn
 			players.GETvectUnitTemplate()[selectunit].atq,
 			players.GETvectUnitTemplate()[selectunit].def,
 			players.GETvectUnitTemplate()[selectunit].movement,
+			players.GETvectUnitTemplate()[selectunit].numberOfAttack,
 			players.GETvectUnitTemplate()[selectunit].level,
 			MAINTENANCE_COST_1TH_SETTLER);
 	}

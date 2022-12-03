@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.5
+	last modification on this file on version:0.24.6.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -201,7 +201,7 @@ bool CityScreen::onEntry()
 		);
 		
 		unsigned int i{ 0 };
-		for (const auto p : m_players->GETvectUnitTemplate())
+		for (const auto& p : m_players->GETvectUnitTemplate())
 		{
 			m_buttonBuild.push_back
 			(

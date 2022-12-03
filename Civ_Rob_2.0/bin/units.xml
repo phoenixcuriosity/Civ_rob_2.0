@@ -9,6 +9,7 @@
 		<Atq>50</Atq>
 		<Def>30</Def>
 		<Mouvement>5</Mouvement>
+		<NumberOfAttack>2</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -20,6 +21,7 @@
 		<Atq>5</Atq>
 		<Def>3</Def>
 		<Mouvement>1</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>5</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -31,6 +33,7 @@
 		<Atq>50</Atq>
 		<Def>2</Def>
 		<Mouvement>10</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>75</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -42,6 +45,7 @@
 		<Atq>12</Atq>
 		<Def>5</Def>
 		<Mouvement>5</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>25</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -53,6 +57,7 @@
 		<Atq>0</Atq>
 		<Def>0</Def>
 		<Mouvement>1</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>10</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -64,6 +69,7 @@
 		<Atq>0</Atq>
 		<Def>0</Def>
 		<Mouvement>2</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -75,6 +81,7 @@
 		<Atq>0</Atq>
 		<Def>0</Def>
 		<Mouvement>3</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>200</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -86,6 +93,7 @@
 		<Atq>25</Atq>
 		<Def>10</Def>
 		<Mouvement>3</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -97,6 +105,7 @@
 		<Atq>100</Atq>
 		<Def>10</Def>
 		<Mouvement>100</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>200</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -108,6 +117,7 @@
 		<Atq>0</Atq>
 		<Def>2</Def>
 		<Mouvement>2</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>22</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -119,6 +129,7 @@
 		<Atq>0</Atq>
 		<Def>0</Def>
 		<Mouvement>100</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>100</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -130,6 +141,7 @@
 		<Atq>0</Atq>
 		<Def>0</Def>
 		<Mouvement>1</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>12</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -141,6 +153,7 @@
 		<Atq>2</Atq>
 		<Def>2</Def>
 		<Mouvement>1</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>10</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -152,6 +165,7 @@
 		<Atq>50</Atq>
 		<Def>50</Def>
 		<Mouvement>3</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>50</WorkToBuild>
 		<Maintenance>1</Maintenance>
@@ -163,6 +177,7 @@
 		<Atq>0</Atq>
 		<Def>10</Def>
 		<Mouvement>10</Mouvement>
+		<NumberOfAttack>1</NumberOfAttack>
 		<Level>1</Level>
 		<WorkToBuild>40</WorkToBuild>
 		<Maintenance>1</Maintenance>

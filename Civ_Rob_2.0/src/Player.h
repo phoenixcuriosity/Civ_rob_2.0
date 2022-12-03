@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.19
+	last modification on this file on version:0.24.6.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -142,7 +142,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	Player
 	(
-		const std::string&
+		const std::string& name,
+		const int id
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -204,6 +205,7 @@ public:
 		unsigned int atq,
 		unsigned int def,
 		unsigned int move,
+		unsigned int numberOfAttack,
 		unsigned int level,
 		double maintenance
 	);
@@ -302,6 +304,7 @@ public:
 
 
 	inline virtual std::string GETname() const { return m_name; };
+	inline virtual int GETid() const { return m_id; };
 	inline virtual VectUnit GETtabUnit() const { return m_tabUnit; };
 	inline virtual VectCity GETtabCity() const { return m_tabCity; };
 	inline virtual int GETselectedUnit()const { return m_selectedUnit; };
@@ -314,6 +317,7 @@ public:
 	virtual std::shared_ptr<Unit>& GETSelectedUnitPtr(){return m_tabUnit[m_selectedUnit];}
 
 	inline virtual void SETname(const std::string& msg) { m_name = msg; };
+	inline virtual void SETid(const int id) { m_id = id; };
 	inline virtual void SETselectedUnit(const int selectedUnit) { m_selectedUnit = selectedUnit; };
 	inline virtual void SETselectedCity(const int selectedCity) { m_selectedCity = selectedCity; };
 
@@ -324,6 +328,8 @@ private:
 
 
 	std::string m_name;
+	int m_id;
+
 	VectUnit m_tabUnit;
 	VectCity m_tabCity;
 	int m_selectedUnit;
@@ -361,7 +367,11 @@ public:
 
 	void init(const std::string& filePath);
 
-	void addPlayer(const std::string& name);
+	void addPlayer
+	(
+		const std::string& name,
+		const int id
+	);
 
 	void deleteAllPlayers();
 

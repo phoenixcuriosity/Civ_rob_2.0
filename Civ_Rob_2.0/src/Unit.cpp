@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.23
+	last modification on this file on version:0.24.6.0
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,7 +27,7 @@
  ********************************************************* */
 
 #include "Unit.h"
-
+#include "Player.h"
 #include "App.h"
 
 
@@ -124,8 +124,7 @@ void Unit::tryToMove
 	Players& players,
 	Select_Type select,
 	const int x,
-	const int y,
-	unsigned int recursiveIt
+	const int y
 )
 {
 	if (players.GETselectedPlayerId() != NO_PLAYER_SELECTED)
@@ -135,11 +134,6 @@ void Unit::tryToMove
 
 		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
 		{
-		case Move_Type::cannotMove:
-			/*
-			* Nothing to do
-			*/
-			break;
 		case Move_Type::canMove:
 
 			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, x, y);
@@ -148,29 +142,32 @@ void Unit::tryToMove
 			break;
 		case Move_Type::attackMove:
 		{
+			/* safe index playerToAttack / unitToAttack : filled by searchToMove */
 			std::shared_ptr<Player> attackPlayer(players.GETvectPlayer()[playerToAttack]);
+			std::shared_ptr<Unit> attackUnit{ selPlayer->GETtabUnit()[selectunit] };
+			std::shared_ptr<Unit> defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
 
-			selPlayer->GETtabUnit()[selectunit]
-				->attack(*attackPlayer->GETtabUnit()[unitToAttack]);
-
-			/* if the opposite Unit is destroy, try to move to its position */
-			if	(
-					(attackPlayer->GETtabUnit()[unitToAttack]->GETalive() == false)
-					&&
-					(recursiveIt <= 1) /* TODO replace by Unit attribut */
-				)
+			if	(attackUnit->isPossibleToAttack())
 			{
-				attackPlayer->deleteUnit(unitToAttack); 
-				recursiveIt++;
-				tryToMove(maps, players, select, x, y, recursiveIt);
-			}
+				attackUnit->attack(*(defenderUnit.get()));
 
+				/* if the opposite Unit is destroy, try to move to its position */
+				if (defenderUnit->GETalive() == DEAD_UNIT)
+				{
+					attackPlayer->deleteUnit(unitToAttack);
+					tryToMove(maps, players, select, x, y);
+				}
+			}
+			
 			/* Cannot move further for this turn */
-			selPlayer->GETtabUnit()[selectunit]->SETmovement(NO_MOVEMENT);
+			attackUnit->SETmovement(NO_MOVEMENT);
 			break;
 		}
+		case Move_Type::cannotMove:
 		default:
-			/* N/A */
+			/*
+			* Do nothing
+			*/
 			break;
 		}
 	}
@@ -370,20 +367,7 @@ bool Unit::checkNextTile
 	return false;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : irrigate																	   */
-/* ROLE : 	TODO																	   */
-/* RETURNED VALUE : bool															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-bool Unit::irrigate
-(
 
-)
-{
-	return false;
-}
 
 
 /* *********************************************************
@@ -412,17 +396,20 @@ m_maxlife(100),
 m_maxatq(10),
 m_maxdef(5),
 m_maxmovement(1),
+m_maxNumberOfAttack(1),
 m_maxlevel(100),
 m_life(100), 
 m_atq(10),
 m_def(5),
 m_movement(1),
+m_numberOfAttack(1),
 m_level(1),
 m_alive(true),
 m_maintenance(1.0),
 m_blit(ZERO_BLIT),
 m_show(true),
-m_showStats(false)
+m_showStats(false),
+m_owner(NO_OWNER)
 {
 	App::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
 }
@@ -451,8 +438,10 @@ Unit::Unit
 	unsigned int atq,
 	unsigned int def,
 	unsigned int move,
+	unsigned int numberOfAttack,
 	unsigned int level,
-	double maintenance
+	double maintenance,
+	Player* ptrToPlayer
 )
 :
 m_name(name),
@@ -463,17 +452,20 @@ m_maxlife(life),
 m_maxatq(atq),
 m_maxdef(def),
 m_maxmovement(move),
+m_maxNumberOfAttack(numberOfAttack),
 m_maxlevel(level),
 m_life(life),
 m_atq(atq),
 m_def(def), 
 m_movement(move),
+m_numberOfAttack(numberOfAttack),
 m_level(level),
 m_alive(true),
 m_maintenance(maintenance),
 m_blit(ZERO_BLIT),
 m_show(true),
-m_showStats(false)
+m_showStats(false),
+m_owner(ptrToPlayer)
 {
 	App::logfileconsole("[INFO]___: Create Unit:  Success");
 }
@@ -487,7 +479,7 @@ m_showStats(false)
 /* ----------------------------------------------------------------------------------- */
 Unit::~Unit()
 {
-	/* N/A */
+	m_owner = nullptr;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -503,6 +495,8 @@ void Unit::attack
 	Unit& cible
 )
 {
+	m_numberOfAttack--;
+
 	if (m_movement > NO_MOVEMENT)
 	{
 		cible.defend(m_atq);
@@ -646,6 +640,11 @@ void Unit::RESETmovement()
 	m_movement = m_maxmovement;
 }
 
+void Unit::RESETnumberOfAttack()
+{
+	m_numberOfAttack = m_maxNumberOfAttack;
+}
+
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : testPos																	   */
@@ -729,6 +728,52 @@ bool Unit::isWaterMovement_Type()
 bool Unit::isDeepWaterMovement_Type()
 {
 	return m_movementType == Unit_Movement_Type::deepwater ? true : false;
+}
+
+bool Unit::isPossibleToAttack()
+{
+	return m_numberOfAttack > ZERO_NUMBER_OF_ATTACK ? true : false;
+}
+
+bool Unit::isThisUnitType
+(
+	const std::string& nameToCompare
+)
+{
+	if (m_name.compare(nameToCompare) == IDENTICAL_STRINGS)
+	{
+		return true;
+	}
+	return false;
+}
+
+
+/* ----------------------------------------------------------------------------------- */
+/* NAME : irrigate																	   */
+/* ROLE : Modify GroundType 														   */
+/* RETURNED VALUE : bool															   */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::irrigate
+(
+	MatriceMap& map
+)
+{
+	Tile& tileToIrragate{ map[MainMap::convertPosXToIndex(m_x)][MainMap::convertPosXToIndex(m_y)] };
+
+	if	(
+			(NO_MOVEMENT < m_movement)
+			&&
+			(tileToIrragate.tile_spec == GroundSpec_Type::nothing)
+			&&
+			(tileToIrragate.appartenance == m_owner->GETid())
+		)
+	{
+		tileToIrragate.tile_ground = Ground_Type::irragated;
+		tileToIrragate.food = +FOOD_ADD_BY_IRRAGATION;
+		tileToIrragate.gold = +GOLD_ADD_BY_IRRAGATION;
+		return true;
+	}
+	return false;
 }
 
 /* *********************************************************

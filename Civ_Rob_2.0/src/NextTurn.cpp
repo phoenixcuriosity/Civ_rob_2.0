@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.4
+	last modification on this file on version:0.24.6.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -48,6 +48,7 @@ void NextTurn::nextTurn(GamePlayScreen& mainGame)
 		for (auto& unit : player->GETtabUnit())
 		{
 			unit->RESETmovement();
+			unit->RESETnumberOfAttack();
 			unit->heal(mainGame.GETmainMap().GETmatriceMap(), indexPlayer);
 		}
 		for (auto& city : player->GETtabCity())

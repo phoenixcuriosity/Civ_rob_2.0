@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.20
+	last modification on this file on version:0.24.6.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -390,6 +390,7 @@ void GamePlayScreen::loadUnitAndSpec()
 		* s_Atq("Atq"),
 		* s_Def("Def"),
 		* s_Mouvement("Mouvement"),
+		* s_NumberOfAttack("NumberOfAttack"),
 		* s_Level("Level"),
 		* s_WorkToBuild("WorkToBuild"),
 		* s_Maintenance("Maintenance");
@@ -405,7 +406,7 @@ void GamePlayScreen::loadUnitAndSpec()
 		node->FirstChildElement(s_Atq)->QueryIntText((int*)&currentUnit.atq);
 		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
 		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)&currentUnit.movement);
-		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
+		node->FirstChildElement(s_NumberOfAttack)->QueryIntText((int*)&currentUnit.numberOfAttack);
 		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
 		node->FirstChildElement(s_WorkToBuild)->QueryDoubleText((double*)&currentUnit.workToBuild);
 		node->FirstChildElement(s_Maintenance)->QueryDoubleText((double*)&currentUnit.maintenance);

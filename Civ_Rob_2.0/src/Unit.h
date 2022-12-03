@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.20
+	last modification on this file on version:0.24.6.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,6 +51,7 @@
 #include <glm/glm.hpp>
 
 class Players;
+class Player;
 class GameInput;
 
 
@@ -66,7 +67,11 @@ const unsigned int ZERO_LIFE = 0;
 
 const unsigned int ZERO_BLIT = 0;
 
-const unsigned int FIRST_TRY_TO_MOVE = 0;
+const unsigned int ZERO_NUMBER_OF_ATTACK = 0;
+
+const bool DEAD_UNIT = false;
+
+#define NO_OWNER nullptr
 
 /*
 	use as 1/x
@@ -92,6 +97,9 @@ const unsigned int COEF_DIV_LEVELUP = 4;
 	default = 2
 */
 const unsigned int BLIT_RATE = 2;
+
+const int FOOD_ADD_BY_IRRAGATION = 2;
+const int GOLD_ADD_BY_IRRAGATION = 1;
 
   /* *********************************************************
    *						 Enum							   *
@@ -132,6 +140,7 @@ struct Unit_Template
 	unsigned int atq = 0;
 	unsigned int def = 0;
 	unsigned int movement = 0;
+	unsigned int numberOfAttack = 0;
 	unsigned int level = 0;
 	unsigned int nbturnToBuild = 0;
 	double workToBuild = 0.0;
@@ -205,8 +214,7 @@ public:
 		Players& players,
 		Select_Type select,
 		const int x,
-		const int y,
-		unsigned int recursiveIt = FIRST_TRY_TO_MOVE
+		const int y
 	);
 
 private:
@@ -272,20 +280,7 @@ private:
 		const int x,
 		const int y
 	);
-
-public:
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : irrigate																	   */
-	/* ROLE : 	TODO																	   */
-	/* RETURNED VALUE : bool															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static bool irrigate
-	(
-
-	);
+	
 
 public:
 	/* *********************************************************
@@ -325,8 +320,10 @@ public:
 		unsigned int atq,
 		unsigned int def,
 		unsigned int move,
+		unsigned int numberOfAttack,
 		unsigned int level,
-		double maintenance
+		double maintenance,
+		Player* ptrToPlayer
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -422,6 +419,18 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void RESETmovement();
 
+	virtual void RESETnumberOfAttack();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : irrigate																	   */
+	/* ROLE : 	TODO																	   */
+	/* RETURNED VALUE : bool															   */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool irrigate
+	(
+		MatriceMap& map
+	);
+
 private:
 
 	/* ----------------------------------------------------------------------------------- */
@@ -483,6 +492,15 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool isDeepWaterMovement_Type();
 
+	virtual bool isPossibleToAttack();
+
+public:
+
+	virtual bool isThisUnitType
+	(
+		const std::string& nameToCompare
+	);
+
 public:
 	/* *********************************************************
 	 *				Unit::METHODS::AFFICHAGE				   *
@@ -505,25 +523,28 @@ public:
 	 *				Unit::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline std::string GETname()				const { return m_name; };
-	inline unsigned int GETx()							const { return m_x; };
-	inline unsigned int GETy()							const { return m_y; };
-	inline Unit_Movement_Type GETmovementType() const { return m_movementType; };
-	inline int GETmaxlife()						const { return m_maxlife; };
-	inline int GETmaxatq()						const { return m_maxatq; };
-	inline int GETmaxdef()						const { return m_maxdef; };
-	inline int GETmaxmovement()					const { return m_maxmovement; };
-	inline int GETmaxlevel()					const { return m_maxlevel; };
-	inline int GETlife()						const { return m_life; };
-	inline int GETatq()							const { return m_atq; };
-	inline int GETdef()							const { return m_def; };
-	inline int GETmovement()					const { return m_movement; };
-	inline int GETlevel()						const { return m_level; };
-	inline bool GETalive()						const { return m_alive; };
-	inline double GETmaintenance()				const { return m_maintenance; }
-	inline unsigned int GETblit()				const { return m_blit; };
-	inline bool GETshow()						const { return m_show; };
-	inline bool GETshowStats()					const { return m_showStats; };
+	inline std::string GETname()					const { return m_name; };
+	inline unsigned int GETx()						const { return m_x; };
+	inline unsigned int GETy()						const { return m_y; };
+	inline Unit_Movement_Type GETmovementType()		const { return m_movementType; };
+	inline int GETmaxlife()							const { return m_maxlife; };
+	inline int GETmaxatq()							const { return m_maxatq; };
+	inline int GETmaxdef()							const { return m_maxdef; };
+	inline int GETmaxmovement()						const { return m_maxmovement; };
+	inline int GETmaxNumberOfAttack()				const { return m_maxNumberOfAttack; };
+	inline int GETmaxlevel()						const { return m_maxlevel; };
+	inline int GETlife()							const { return m_life; };
+	inline int GETatq()								const { return m_atq; };
+	inline int GETdef()								const { return m_def; };
+	inline int GETmovement()						const { return m_movement; };
+	inline int GETnumberOfAttack()					const { return m_numberOfAttack; };
+	inline int GETlevel()							const { return m_level; };
+	inline bool GETalive()							const { return m_alive; };
+	inline double GETmaintenance()					const { return m_maintenance; }
+	inline unsigned int GETblit()					const { return m_blit; };
+	inline bool GETshow()							const { return m_show; };
+	inline bool GETshowStats()						const { return m_showStats; };
+	inline Player* GETowner()							  { return m_owner; };
 
 
 	inline void SETname(const std::string& name) { m_name = name; };
@@ -534,17 +555,20 @@ public:
 	inline void SETmaxatq(int atq) { m_maxatq = atq; };
 	inline void SETmaxdef(int def) { m_maxdef = def; };
 	inline void SETmaxmovement(int movement) { m_maxmovement = movement; };
+	inline void SETmaxNumberOfAttack(int maxNumberOfAttack) { m_maxNumberOfAttack = maxNumberOfAttack; };
 	inline void SETmaxlevel(int level) { m_maxlevel = level; };
 	inline void SETlife(int life) { m_life = life; };
 	inline void SETatq(int atq) { m_atq = atq; };
 	inline void SETdef(int def) { m_def = def; };
 	inline void SETmovement(int movement) { m_movement = movement; };
+	inline void SETnumberOfAttack(int numberOfAttack) { m_numberOfAttack = numberOfAttack; };
 	inline void SETlevel(int level) { m_level = level; };
 	inline void SETalive(bool alive) { m_alive = alive; };
 	inline void SETmaintenance(double maintenance) { m_maintenance = maintenance; }
 	inline void SETblit(unsigned int blit) { m_blit = blit; };
 	inline void SETshow(bool show) { m_show = show; };
 	inline void SETshowStats(bool showStats) { m_showStats = showStats; };
+	inline void SETowner(Player* owner) { m_owner = owner; };
 
 private:
 	/* *********************************************************
@@ -559,12 +583,14 @@ private:
 	int m_maxatq;
 	int m_maxdef;
 	int m_maxmovement;
+	int m_maxNumberOfAttack;
 	int m_maxlevel;
 
 	int m_life;
 	int m_atq;
 	int m_def;
 	int m_movement;
+	int m_numberOfAttack;
 	int m_level;
 	bool m_alive;
 
@@ -573,6 +599,8 @@ private:
 	unsigned int m_blit;
 	bool m_show;
 	bool m_showStats;
+
+	Player* m_owner;
 };
 
 typedef std::vector<std::shared_ptr<Unit>> VectUnit;

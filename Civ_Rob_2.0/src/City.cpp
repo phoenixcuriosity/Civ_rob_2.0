@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.41
+	last modification on this file on version:0.24.6.0
+	file version : 1.42
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -50,85 +50,61 @@ void City::createCity
 	const unsigned int influenceLevel
 )
 {
-	if (mainGame.GETPlayers().GETselectedPlayerId() != NO_PLAYER_SELECTED)
-	{
-		unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
-		std::shared_ptr<Player> splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
-		unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
-		std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[selectedUnit]);
+	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
+	std::shared_ptr<Player> splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
+	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
+	std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-		if (sUnit->GETname().compare("settler") == IDENTICAL_STRINGS)
-		{
-			/* ---------------------------------------------------------------------- */
-			/* 1� : Recherche du nom de la nouvelle Citie 							  */
-			/*    : Recherche dans le tableau global des noms de Citie				  */
-			/*  : En fonction du nombre de Citie d�j� cr�es et de MAX_CITY_PER_PLAYER */
-			/* ---------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------- */
+	/* 1� : Recherche du nom de la nouvelle Citie 							  */
+	/*    : Recherche dans le tableau global des noms de Citie				  */
+	/*  : En fonction du nombre de Citie d�j� cr�es et de MAX_CITY_PER_PLAYER */
+	/* ---------------------------------------------------------------------- */
 
-			std::string name(mainGame.GETPlayers().GETvectCityName()
-				[
-					(size_t)
-					(
-						((size_t)selectedPlayer * MAX_CITY_PER_PLAYER)
-						+
-						splayer->GETtabCity().size()
-						)
-				]);
-
-			/* ---------------------------------------------------------------------- */
-			/* 2� : Recherche du position de la nouvelle Citie = position settler 	  */
-			/* ---------------------------------------------------------------------- */
-
-			unsigned int x(sUnit->GETx());
-			unsigned int y(sUnit->GETy());
-
-			/* ---------------------------------------------------------------------- */
-			/* 3� : Recherche de la tile ou se trouve le settler 					  */
-			/* ---------------------------------------------------------------------- */
-
-			unsigned int middletileX(0), middletileY(0);
-			middletileX = MainMap::convertPosXToIndex(x);
-			middletileY = MainMap::convertPosYToIndex(y);
-
-			std::vector<Tile> tabtile;
-			tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
-
-			/* ---------------------------------------------------------------------- */
-			/* 4� : Remplisage tableau de tile Citie			 					  */
-			/* ---------------------------------------------------------------------- */
-
-			fillCitieTiles
+	const std::string name(mainGame.GETPlayers().GETvectCityName()
+		[
+			(size_t)
 			(
-				mainGame.getParentWindow(),
-				middletileX,
-				middletileY,
-				selectedPlayer,
-				mainGame.GETmainMap(),
-				tabtile,
-				influenceLevel
-			);
+				((size_t)selectedPlayer * MAX_CITY_PER_PLAYER)
+				+
+				splayer->GETtabCity().size()
+				)
+		]);
 
-			/* ---------------------------------------------------------------------- */
-			/* 5� : Cr�ation d'un ptr et passage au tableau de Citie du joueur		  */
-			/*    : Destruction ptr de l'Unit										  */
-			/*    : Aucune Unit n'est s�l�ctionn�e et aucune Unit � bouger	 		  */
-			/* ---------------------------------------------------------------------- */
+	std::vector<Tile> tabtile;
+	tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
 
-			splayer->addCity(name, x, y, tabtile);
+	/* ---------------------------------------------------------------------- */
+	/* 4� : Remplisage tableau de tile Citie			 					  */
+	/* ---------------------------------------------------------------------- */
 
-			splayer->deleteUnit(selectedUnit);
-			splayer->SETselectedUnit(NO_UNIT_SELECTED);
+	fillCitieTiles
+	(
+		mainGame.getParentWindow(),
+		MainMap::convertPosXToIndex(sUnit->GETx()),
+		MainMap::convertPosYToIndex(sUnit->GETy()),
+		selectedPlayer,
+		mainGame.GETmainMap(),
+		tabtile,
+		influenceLevel
+	);
 
-			mainGame.GETPlayers().SETneedToUpdateDrawUnit(true);
-			mainGame.GETPlayers().SETneedToUpdateDrawCity(true);
-		}
-		else
-		{
-			/* N/A */
-		}
-		splayer.reset();
-		sUnit.reset();
-	}
+	/* ---------------------------------------------------------------------- */
+	/* 5� : Cr�ation d'un ptr et passage au tableau de Citie du joueur		  */
+	/*    : Destruction ptr de l'Unit										  */
+	/*    : Aucune Unit n'est s�l�ctionn�e et aucune Unit � bouger	 		  */
+	/* ---------------------------------------------------------------------- */
+
+	splayer->addCity(name, sUnit->GETx(), sUnit->GETy(), tabtile);
+
+	splayer->deleteUnit(selectedUnit);
+	splayer->SETselectedUnit(NO_UNIT_SELECTED);
+
+	mainGame.GETPlayers().SETneedToUpdateDrawUnit(true);
+	mainGame.GETPlayers().SETneedToUpdateDrawCity(true);
+
+	splayer.reset();
+	sUnit.reset();
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -647,6 +623,7 @@ void City::computeWorkToBuild
 						vectUnitTemplate[unitToBuild].atq,
 						vectUnitTemplate[unitToBuild].def,
 						vectUnitTemplate[unitToBuild].movement,
+						vectUnitTemplate[unitToBuild].numberOfAttack,
 						vectUnitTemplate[unitToBuild].level,
 						vectUnitTemplate[unitToBuild].maintenance
 					);

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.37
+	last modification on this file on version:0.24.6.0
+	file version : 1.38
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -113,21 +113,37 @@ void GamePlayScreen::inputSDL
 void GamePlayScreen::actionByKey()
 {
 	/* Next Turn */
-	if (m_game->getInputManager().isKeyDown(SDLK_SPACE))
+	if (m_game->getInputManager().isKeyDown(KEY_NEXT_TURN))
 	{
 		m_nextTurn.nextTurn(*this);
-		m_game->getInputManager().releaseKey(SDLK_SPACE);
+		m_game->getInputManager().releaseKey(KEY_NEXT_TURN);
 	}
 
 
 	if (Utility::checkPlayerUnitSelection(m_players))
 	{
 		/* Found City */
-		if (m_game->getInputManager().isKeyDown(SDLK_b))
+		if (m_game->getInputManager().isKeyDown(KEY_TO_FOUND_CITY))
 		{
-			if (Utility::checkPlayerUnitSelection(m_players))
+			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
+			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+
+			if (sUnit->isThisUnitType("settler"))
 			{
 				City::createCity(*this);
+				m_mainMap.SETneedToUpdateDraw(true);
+			}
+		}
+
+		/* Irragate */
+		if (m_game->getInputManager().isKeyDown(KEY_TO_IRRIGATE))
+		{
+			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
+			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+
+			if	(sUnit->GETname().starts_with("ouvrier_tier_") == STRINGS_START_WITH)
+			{
+				sUnit->irrigate(m_mainMap.GETmatriceMap());
 				m_mainMap.SETneedToUpdateDraw(true);
 			}
 		}

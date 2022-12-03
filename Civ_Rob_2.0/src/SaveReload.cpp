@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.23
+	last modification on this file on version:0.24.6.0
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -169,6 +169,10 @@ void SaveReload::savePlayer
 		playerNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETname().c_str());
 		playerElement->InsertEndChild(playerNameElement);
 
+		tinyxml2::XMLElement* playerIDElement = xmlDoc.NewElement("ID");
+		playerIDElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETid());
+		playerElement->InsertEndChild(playerIDElement);
+
 		tinyxml2::XMLElement* GoldStatsElement = xmlDoc.NewElement("GoldStats");
 
 		tinyxml2::XMLElement* GoldStatsElementGold = xmlDoc.NewElement("Gold");
@@ -216,6 +220,7 @@ void SaveReload::savePlayer
 			tinyxml2::XMLElement* unitAtqElement = xmlDoc.NewElement("Atq");
 			tinyxml2::XMLElement* unitDefElement = xmlDoc.NewElement("Def");
 			tinyxml2::XMLElement* unitMovementElement = xmlDoc.NewElement("Movement");
+			tinyxml2::XMLElement* unitNumberOfAttackElement = xmlDoc.NewElement("NumberOfAttack");
 			tinyxml2::XMLElement* unitLevelElement = xmlDoc.NewElement("Level");
 			tinyxml2::XMLElement* unitMaintenanceElement = xmlDoc.NewElement("Maintenance");
 
@@ -227,6 +232,7 @@ void SaveReload::savePlayer
 			unitAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETatq());
 			unitDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETdef());
 			unitMovementElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmovement());
+			unitNumberOfAttackElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETnumberOfAttack());
 			unitLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETlevel());
 			unitMaintenanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmaintenance());
 
@@ -238,6 +244,7 @@ void SaveReload::savePlayer
 			unitElement->InsertEndChild(unitAtqElement);
 			unitElement->InsertEndChild(unitDefElement);
 			unitElement->InsertEndChild(unitMovementElement);
+			unitElement->InsertEndChild(unitNumberOfAttackElement);
 			unitElement->InsertEndChild(unitLevelElement);
 			unitElement->InsertEndChild(unitMaintenanceElement);
 
@@ -498,16 +505,24 @@ void SaveReload::loadPlayer
 
 		while (nullptr != nPlayer)
 		{
-			tinyxml2::XMLNode* nName = nPlayer->FirstChild();
-			tinyxml2::XMLNode* nGoldStats = nName->NextSibling();
-			tinyxml2::XMLNode* nTabUnit = nGoldStats->NextSibling();
-			tinyxml2::XMLNode* nTabCity = nTabUnit->NextSibling();
+			tinyxml2::XMLNode* nName		= nPlayer->FirstChild();
+			tinyxml2::XMLNode* nID			= nName->NextSibling();
+			tinyxml2::XMLNode* nGoldStats	= nID->NextSibling();
+			tinyxml2::XMLNode* nTabUnit		= nGoldStats->NextSibling();
+			tinyxml2::XMLNode* nTabCity		= nTabUnit->NextSibling();
 
 			if (nullptr == nName) App::exitError("[ERROR]___: loadPlayer : nName == nullptr");
 			errCheck = nName->Value();
 			if (errCheck.compare("Name") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nName != Name");
 
-			mainGame.GETPlayers().GETvectPlayer().push_back(std::make_shared<Player>(nName->FirstChild()->Value()));
+			mainGame.GETPlayers().GETvectPlayer().push_back
+				(
+					std::make_shared<Player>
+					(
+						nName->FirstChild()->Value(),
+						std::stoul(nID->FirstChild()->Value())
+					)
+				);
 			mainGame.GETPlayers().SETselectedPlayerId((int)mainGame.GETPlayers().GETvectPlayer().size() - 1);
 			mainGame.GETPlayers().SETselectedPlayerPtr(mainGame.GETPlayers().GETvectPlayer()[(int)mainGame.GETPlayers().GETvectPlayer().size() - 1]);
 
@@ -651,6 +666,7 @@ void SaveReload::loadUnitXML
 		blankPlayer->addEmptyUnit();
 
 		std::shared_ptr<Unit> blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
+		blankUnit->SETowner(blankPlayer.get());
 
 		inputNode = nUnit->FirstChild();
 		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->Name == nullptr");
@@ -685,6 +701,10 @@ void SaveReload::loadUnitXML
 		blankUnit->SETmovement(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
+		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->SETnumberOfAttack == nullptr");
+		blankUnit->SETnumberOfAttack(std::stoul(inputNode->FirstChild()->Value()));
+
+		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->level == nullptr");
 		blankUnit->SETlevel(std::stoul(inputNode->FirstChild()->Value()));
 
@@ -700,6 +720,7 @@ void SaveReload::loadUnitXML
 		blankUnit->SETmaxatq(blankUnitTemp.atq);
 		blankUnit->SETmaxdef(blankUnitTemp.def);
 		blankUnit->SETmaxmovement(blankUnitTemp.movement);
+		blankUnit->SETmaxNumberOfAttack(blankUnitTemp.numberOfAttack);
 		blankUnit->SETmaxlevel(blankUnitTemp.level);
 
 		nUnit = nUnit->NextSibling();

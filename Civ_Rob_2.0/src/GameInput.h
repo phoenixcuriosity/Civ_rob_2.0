@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.6
+	last modification on this file on version:0.24.6.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,11 +31,18 @@
 
 #include "LIB.h"
 
+/* include : SDL_KeyCode */
+#include <SDL/SDL.h>
+
 class GamePlayScreen;
 
 const float KEY_SPEED_MOVE = 2.0f;
 
 const int UNIT_NO_MOVEMENT = 0;
+
+const SDL_KeyCode KEY_TO_FOUND_CITY = SDLK_b;
+const SDL_KeyCode KEY_TO_IRRIGATE = SDLK_i;
+const SDL_KeyCode KEY_NEXT_TURN = SDLK_SPACE;
 
 /* *********************************************************
  *						 Enum							   *

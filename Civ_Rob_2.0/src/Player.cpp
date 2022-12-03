@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.24
+	last modification on this file on version:0.24.6.0
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -65,8 +65,14 @@ Player::Player() :
 /* INPUT : const std::string&														   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Player::Player(const std::string& msg) :
-	m_name(msg),
+Player::Player
+(
+	const std::string& name,
+	const int id
+) 
+:
+	m_name(name),
+	m_id(id),
 	m_tabUnit(),
 	m_tabCity(),
 	m_selectedUnit(NO_UNIT_SELECTED),
@@ -99,7 +105,7 @@ Player::~Player()
 Player& Player::operator=
 (
 	const Player& player
-	)
+)
 {
 	if (this != &player)
 	{
@@ -122,18 +128,17 @@ Player& Player::operator=
 /* ----------------------------------------------------------------------------------- */
 void Player::deletePlayer()
 {
-	for (auto u : m_tabUnit)
+	for (auto& u : m_tabUnit)
 	{
 		u.reset();
 	}
 	m_tabUnit.clear();
 
-	for (auto c : m_tabCity)
+	for (auto& c : m_tabCity)
 	{
 		c.reset();
 	}
 	m_tabCity.clear();
-		
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -167,11 +172,18 @@ void Player::addUnit
 	unsigned int atq,
 	unsigned int def,
 	unsigned int move,
+	unsigned int numberOfAttack,
 	unsigned int level,
 	double maintenance
 )
 {
-	m_tabUnit.push_back(std::make_shared<Unit>(name, x, y, movementType, life, atq, def, move, level, maintenance));
+	m_tabUnit.push_back
+	(
+		std::make_shared<Unit>
+		(
+			name, x, y, movementType, life, atq, def, move, numberOfAttack, level, maintenance, this
+		)
+	);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -412,14 +424,18 @@ void Players::init(const std::string& filePath)
 	m_spriteBatchCity.init();
 }
 
-void Players::addPlayer(const std::string& name)
+void Players::addPlayer
+(
+	const std::string& name,
+	const int id
+)
 {
-	m_vectPlayer.push_back(std::make_shared<Player>(name));
+	m_vectPlayer.push_back(std::make_shared<Player>(name, id));
 }
 
 void Players::deleteAllPlayers()
 {
-	for (auto p : m_vectPlayer)
+	for (auto& p : m_vectPlayer)
 	{
 		p.reset();
 	}
@@ -450,7 +466,7 @@ void Players::clickToSelectUnit
 	{
 		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
 		unsigned int i{ 0 };
-		for (auto u : p->GETtabUnit())
+		for (const auto& u : p->GETtabUnit())
 		{
 			if	(
 					u->GETx() == x
@@ -496,7 +512,7 @@ void Players::drawUnit
 	if (m_needToUpdateDrawUnit)
 	{
 		m_spriteBatchUnit.begin();
-		unsigned int tileSize{ mainMap.GETtileSize() };
+		const unsigned int tileSize{ mainMap.GETtileSize() };
 
 		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
 		{
@@ -650,7 +666,7 @@ bool Players::searchCity
 )
 {
 	std::shared_ptr<City>* ptrCity{};
-	for (auto p : m_vectPlayer)
+	for (auto& p : m_vectPlayer)
 	{
 		ptrCity = p->searchCity(indexX, indexY);
 		if (ptrCity != nullptr && *ptrCity != nullptr)
