@@ -22,6 +22,7 @@
     <ClInclude Include="src\UV.h" />
     <ClInclude Include="src\Vertex.h" />
     <ClInclude Include="src\WidgetLabel.h" />
+    <ClInclude Include="src\Files.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -41,5 +42,6 @@
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\WidgetLabel.cpp" />
+    <ClCompile Include="src\Files.cpp" />
   </ItemGroup>
 </Project>

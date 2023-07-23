@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.9
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,8 @@
 
 #include <tinyxml2/tinyxml2.h>
 
+#include <RealEngine2D/src/ResourceManager.h> 
+
 static std::ofstream* ptrlogger;
 
 App::App()
@@ -40,7 +42,6 @@ m_newGameScreen(nullptr),
 m_reloadMenuScreen(nullptr),
 m_gamePlayScreen(nullptr),
 m_CityScreen(nullptr),
-m_file(),
 m_saveReload()
 {
 	/* Do nothing */
@@ -59,7 +60,7 @@ App::~App()
 void App::onInit()
 {
 	/* Set location of logging file */
-	m_file.log = "bin/log/log.txt";
+	RealEngine2D::ResourceManager::initializeFilePath(e_Files::log, "bin/log/log.txt");
 
 	initFile();
 
@@ -69,8 +70,8 @@ void App::onInit()
 
 	m_window.SETscreenWidth(RealEngine2D::Window::getHorizontal());
 	m_window.SETscreenHeight(RealEngine2D::Window::getVertical());
-
-	m_saveReload.init(m_file.saveInfo);
+	
+	m_saveReload.init(RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 }
 
 
@@ -85,12 +86,16 @@ void App::onInit()
 /* ----------------------------------------------------------------------------------- */
 void App::InitShaders()
 {
-	m_gLSLProgram.compileShaders(m_file.colorShadingVert, m_file.colorShadingFrag);
-	m_gLSLProgram.addAttribut("vertexPosition");
-	m_gLSLProgram.addAttribut("vertexColor");
-	m_gLSLProgram.addAttribut("vertexUV");
-	m_gLSLProgram.linkShaders();
-	m_spriteFont = std::make_shared<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
+	RealEngine2D::ResourceManager::getGLSLProgram().compileShaders
+	(
+		RealEngine2D::ResourceManager::getFile(e_Files::colorShadingVert)->getPath(),
+		RealEngine2D::ResourceManager::getFile(e_Files::colorShadingFrag)->getPath()
+	);
+	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
+	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
+	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexUV");
+	RealEngine2D::ResourceManager::getGLSLProgram().linkShaders();
+	RealEngine2D::ResourceManager::getSpriteFont() = std::make_shared<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
 }
 
 
@@ -102,29 +107,26 @@ void App::onExit()
 void App::addScreens()
 {
 	/* Create shared Ptr */
-	m_mainMenuScreen = std::make_shared<MainMenuScreen>(&m_file);
+	m_mainMenuScreen = std::make_shared<MainMenuScreen>();
 
-	m_newGameScreen = std::make_shared<NewGameScreen>(&m_file);
+	m_newGameScreen = std::make_shared<NewGameScreen>();
 
-	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>(&m_file, &m_saveReload);
+	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>
+		(
+			& m_saveReload
+		);
 
 	m_gamePlayScreen = std::make_shared<GamePlayScreen>
 		(
-			&m_file,
 			&m_saveReload,
-			m_newGameScreen->getUserInputNewGame(),
-			&m_gLSLProgram,
-			m_spriteFont
+			m_newGameScreen->getUserInputNewGame()
 		);
 
 	m_CityScreen = std::make_shared<CityScreen>
 		(
-			&m_file,
 			&m_saveReload,
 			&m_gamePlayScreen->GETPlayers(),
-			m_gamePlayScreen->GETmainMap().GETtileSizePtr(),
-			&m_gLSLProgram,
-			m_spriteFont
+			m_gamePlayScreen->GETmainMap().GETtileSizePtr()
 		);
 
 	/* Add Screen to listed Screen */
@@ -152,7 +154,12 @@ void App::addScreens()
 /* ----------------------------------------------------------------------------------- */
 void App::initFile()
 {
-	m_logger.open(m_file.log, std::ofstream::out | std::ofstream::trunc);
+	m_logger.open
+	(
+		RealEngine2D::ResourceManager::getFile(e_Files::log)->getPath(),
+		std::ofstream::out | std::ofstream::trunc
+	);
+
 	if (!m_logger.is_open())
 	{
 		exit(EXIT_FAILURE);
@@ -200,20 +207,76 @@ void App::initMain()
 				* s_ImagesPath("ImagesPath"),
 				* s_GUIPath("GUIPath");
 
-		m_file.readme = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText();
-		m_file.texts = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
-		m_file.mainMap = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_MainMap)->GetText();
-		m_file.buildings = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText();
-		m_file.citiesNames = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText();
-		m_file.units = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText();
-		m_file.specNames = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText();
-		m_file.saveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
-		m_file.saveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
-		m_file.savePlayers = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
-		m_file.colorShadingVert = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingVert)->GetText();
-		m_file.colorShadingFrag = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingFrag)->GetText();
-		m_file.imagesPath = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ImagesPath)->GetText();
-		m_file.GUIPath = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_GUIPath)->GetText();
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::readme,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::texts,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::mainMap,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_MainMap)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::buildings,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::citiesNames,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::units,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::specNames,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::saveInfo,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::saveMaps,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::savePlayers,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::colorShadingVert,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingVert)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::colorShadingFrag,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingFrag)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::imagesPath,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ImagesPath)->GetText()
+		);
+		RealEngine2D::ResourceManager::initializeFilePath
+		(
+			e_Files::GUIPath,
+			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_GUIPath)->GetText()
+		);
 	}
 	else
 	{

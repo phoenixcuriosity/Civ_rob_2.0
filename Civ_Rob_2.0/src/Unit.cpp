@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.24
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -129,7 +129,7 @@ void Unit::tryToMove
 {
 	if (players.GETselectedPlayerId() != NO_PLAYER_SELECTED)
 	{
-		std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
+		const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 		int playerToAttack(NO_PLAYER_SELECTED), unitToAttack(NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
 		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
@@ -143,9 +143,9 @@ void Unit::tryToMove
 		case Move_Type::attackMove:
 		{
 			/* safe index playerToAttack / unitToAttack : filled by searchToMove */
-			std::shared_ptr<Player> attackPlayer(players.GETvectPlayer()[playerToAttack]);
-			std::shared_ptr<Unit> attackUnit{ selPlayer->GETtabUnit()[selectunit] };
-			std::shared_ptr<Unit> defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
+			const std::shared_ptr<Player> attackPlayer(players.GETvectPlayer()[playerToAttack]);
+			const std::shared_ptr<Unit> attackUnit{ selPlayer->GETtabUnit()[selectunit] };
+			const std::shared_ptr<Unit> defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
 
 			if	(attackUnit->isPossibleToAttack())
 			{
@@ -209,8 +209,8 @@ Move_Type Unit::searchToMove
 	/*		  susceptible de mourrir par l'attaque											   */
 	/* --------------------------------------------------------------------------------------- */
 
-	std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
-	std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
+	const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
+	const std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 	bool nextTileValidToMove(false);
 	const unsigned int xIndex(MainMap::convertPosXToIndex(unit->GETx() + x));

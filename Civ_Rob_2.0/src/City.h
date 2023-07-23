@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.24
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.6.0
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -152,10 +152,10 @@ enum class resizeUnitTexture_Type : unsigned int
  */
 struct build
 {
-	std::string name;
-	build_Type type;
-	double work;
-	double remainingWork;
+	std::string name = EMPTY_STRING;
+	build_Type type = build_Type::building;
+	double work = 0.0;
+	double remainingWork = 0.0;
 };
 
 struct buildGUI

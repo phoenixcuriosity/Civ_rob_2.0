@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.7
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -44,7 +44,6 @@
 #include <RealEngine2D/src/AudioEngine.h>
 #include <RealEngine2D/src/GUI.h>
 
-struct File;
 class SaveReload;
 
 const unsigned int MAX_SAVE_BUTTON_VISISBLE = 10;
@@ -54,7 +53,6 @@ class ReloadMenuScreen : public RealEngine2D::IGameScreen
 public:
 	ReloadMenuScreen
 	(
-		File* file,
 		SaveReload* SaveReload
 	);
 	~ReloadMenuScreen();
@@ -71,7 +69,6 @@ public:
 private:
 
 	void initOpenGLScreen();
-	void initShaders();
 	void initHUD();
 
 
@@ -95,16 +92,13 @@ public:
 private:
 	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
 
-	RealEngine2D::GLSLProgram m_gLSLProgram;
 	RealEngine2D::Camera2D m_cameraHUD;
 
 	RealEngine2D::GUI m_gui;
 	std::vector<CEGUI::RadioButton*> m_vectSavesRadioButton;
 	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
-	std::unique_ptr<RealEngine2D::SpriteFont> m_spriteFont;
 	RealEngine2D::SpriteBatch m_spriteBatchHUDDynamic;
 
-	File* m_file;
 	SaveReload* m_SaveReload;
 
 	bool m_isInitialize;

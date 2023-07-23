@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.7
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,15 +43,10 @@
 #include <RealEngine2D/src/AudioEngine.h>
 #include <RealEngine2D/src/GUI.h>
 
-struct File;
-
 class MainMenuScreen : public RealEngine2D::IGameScreen
 {
 public:
-	MainMenuScreen
-	(
-		File* file
-	);
+	MainMenuScreen();
 	~MainMenuScreen();
 
 	virtual int getNextScreenIndex()const override;
@@ -88,8 +83,6 @@ private:
 	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
 
 	RealEngine2D::GUI m_gui;
-
-	File* m_file;
 
 	bool m_isInitialize;
 };

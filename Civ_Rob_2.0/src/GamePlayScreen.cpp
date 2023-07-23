@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.21
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,13 +31,12 @@
 #include "App.h"
 #include "ScreenIndices.h"
 
+#include <RealEngine2D/src/ResourceManager.h> 
+
 GamePlayScreen::GamePlayScreen
 (
-	File* file,
 	SaveReload* SaveReload,
-	UserInputNewGame* userInputNewGame,
-	RealEngine2D::GLSLProgram* gLSLProgram,
-	std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
+	UserInputNewGame* userInputNewGame
 )
 : 
 RealEngine2D::IGameScreen(),
@@ -46,14 +45,11 @@ m_var(),
 m_mainMap(),
 m_nextTurn(),
 m_players(),
-m_file(file),
 m_SaveReload(SaveReload),
 m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
 	build();
-	m_screen.gLSLProgram = gLSLProgram;
-	m_screen.spriteFont = spriteFont;
 }
 
 GamePlayScreen::~GamePlayScreen()
@@ -103,7 +99,7 @@ bool GamePlayScreen::onEntry()
 		loadCitiesNames();
 
 		/* Need to be after loadUnitAndSpec */
-		m_players.init(m_file->imagesPath);
+		m_players.init(RealEngine2D::ResourceManager::getFile(e_Files::imagesPath)->getPath());
 
 		initUI();
 
@@ -195,7 +191,7 @@ void GamePlayScreen::loadFile()
 	App::logfileconsole("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
-	config.LoadFile(m_file->mainMap.c_str());
+	config.LoadFile(RealEngine2D::ResourceManager::getFile(e_Files::mainMap)->getPath().c_str());
 	unsigned int tmp{ 0 };
 
 	if (config.ErrorID() == 0)
@@ -295,7 +291,7 @@ void GamePlayScreen::initOpenGLScreen()
 
 	m_game->getInputManager().init(m_mainMap.GETtileSizePtr());
 
-	m_screen.m_gui.init(m_file->GUIPath);
+	m_screen.m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -312,7 +308,7 @@ void GamePlayScreen::initHUDText()
 	m_screen.spriteBatchHUDStatic.begin();
 
 	sprintf_s(buffer, "Civ_Rob_2.0 : version 0.23.10.0");
-	m_screen.spriteFont->draw
+	RealEngine2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_screen.spriteBatchHUDStatic,
 		buffer,
@@ -379,7 +375,8 @@ void GamePlayScreen::initUI()
 void GamePlayScreen::loadUnitAndSpec()
 {
 	tinyxml2::XMLDocument texteFile{};
-	texteFile.LoadFile(m_file->units.c_str());
+	
+	texteFile.LoadFile(RealEngine2D::ResourceManager::getFile(e_Files::units)->getPath().c_str());
 
 	const char* root("Root");
 
@@ -421,7 +418,8 @@ void GamePlayScreen::loadCitiesNames()
 {
 	unsigned int nbcity{ 0 };
 	std::string city{EMPTY_STRING}, dummy{ EMPTY_STRING };
-	std::ifstream CITIENAME{ m_file->citiesNames };
+	std::ifstream CITIENAME{ RealEngine2D::ResourceManager::getFile(e_Files::citiesNames)->getPath() };
+
 
 	if (CITIENAME)
 	{
@@ -437,7 +435,7 @@ void GamePlayScreen::loadCitiesNames()
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + m_file->citiesNames);
+		throw("Impossible d'ouvrir le fichier " + RealEngine2D::ResourceManager::getFile(e_Files::citiesNames)->getPath());
 	}
 }
 
@@ -475,16 +473,18 @@ void GamePlayScreen::drawGame()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_screen.gLSLProgram->use();
+	RealEngine2D::ResourceManager::getGLSLProgram().use();
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	const GLint textureLocation = m_screen.gLSLProgram->getUnitformLocation("mySampler");
+	const GLint textureLocation
+		= RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* --- camera --- */
 	/* GL - get parameter P */
-	const GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
+	const GLint pLocation
+		= RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
 
 	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_screen.camera.GETcameraMatrix();
@@ -497,7 +497,7 @@ void GamePlayScreen::drawGame()
 
 	m_players.isAUnitSelected();
 	m_players.drawUnit(m_mainMap, m_screen.camera);
-	m_players.drawCity(m_mainMap, m_screen.camera, m_screen.spriteFont);
+	m_players.drawCity(m_mainMap, m_screen.camera, RealEngine2D::ResourceManager::getSpriteFont());
 
 	/* --- Render --- */
 	m_mainMap.renderMap();
@@ -509,7 +509,7 @@ void GamePlayScreen::drawGame()
 
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
-	m_screen.gLSLProgram->unuse();
+	RealEngine2D::ResourceManager::getGLSLProgram().unuse();
 
 	/* --- Draw UI --- */
 	m_screen.m_gui.draw();
@@ -518,7 +518,8 @@ void GamePlayScreen::drawGame()
 void GamePlayScreen::drawHUD()
 {
 	/* camera HUD */
-	const GLint pLocation = m_screen.gLSLProgram->getUnitformLocation("P");
+	const GLint pLocation
+		= RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
 	glm::mat4 cameraMatrix = m_screen.cameraHUD.GETcameraMatrix();
 
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
@@ -529,7 +530,7 @@ void GamePlayScreen::drawHUD()
 	m_screen.spriteBatchHUDDynamic.begin();
 
 	sprintf_s(buffer, "FPS %f", m_game->getFPS());
-	m_screen.spriteFont->draw
+	RealEngine2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_screen.spriteBatchHUDDynamic,
 		buffer,
@@ -542,7 +543,7 @@ void GamePlayScreen::drawHUD()
 
 
 	sprintf_s(buffer, "Nb Turn %d", m_nextTurn.GETnbTurn());
-	m_screen.spriteFont->draw
+	RealEngine2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_screen.spriteBatchHUDDynamic,
 		buffer,
@@ -555,7 +556,7 @@ void GamePlayScreen::drawHUD()
 #ifdef _DEBUG
 
 	sprintf_s(buffer, "Scale %lf", m_screen.camera.GETscale());
-	m_screen.spriteFont->draw
+	RealEngine2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_screen.spriteBatchHUDDynamic,
 		buffer,
@@ -570,7 +571,7 @@ void GamePlayScreen::drawHUD()
 	
 
 	for (auto& l : m_screen.m_widgetLabels) 
-		l.draw(m_screen.spriteBatchHUDDynamic, *m_screen.spriteFont, m_game->getWindow());
+		l.draw(m_screen.spriteBatchHUDDynamic, *RealEngine2D::ResourceManager::getSpriteFont(), m_game->getWindow());
 
 
 	m_screen.spriteBatchHUDDynamic.end();

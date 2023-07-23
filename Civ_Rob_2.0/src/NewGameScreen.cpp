@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,10 +27,10 @@
 #include "ScreenIndices.h"
 
 #include "App.h"
+#include <RealEngine2D/src/ResourceManager.h> 
 
 NewGameScreen::NewGameScreen
 (
-	File* file
 )
 : 
 RealEngine2D::IGameScreen(),
@@ -38,7 +38,6 @@ m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
 m_userInputNewGame(),
 m_vectSlider(),
 m_gui(),
-m_file(file),
 m_isInitialize(false)
 {
 	build();
@@ -72,7 +71,7 @@ bool NewGameScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		m_gui.init(m_file->GUIPath);
+		m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.loadScheme("TaharezLook.scheme");

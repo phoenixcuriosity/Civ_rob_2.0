@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,15 +27,15 @@
 
 #include "App.h"
 
+#include <RealEngine2D/src/ResourceManager.h> 
+
 MainMenuScreen::MainMenuScreen
 (
-	File* file
 )
 : 
 RealEngine2D::IGameScreen(),
 m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
 m_gui(),
-m_file(file),
 m_isInitialize(false)
 {
 	build();
@@ -69,7 +69,7 @@ bool MainMenuScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		m_gui.init(m_file->GUIPath);
+		m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 

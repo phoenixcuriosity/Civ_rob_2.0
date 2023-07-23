@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.8
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -45,30 +45,6 @@ const std::string configFilePath = "bin/filePath.xml";
 /* Define default font for GUI texts */
 const std::string fontGUI = "times.ttf";
 
-struct File
-{
-	std::string log = "bin/log/log.txt";
-
-	std::string readme = EMPTY_STRING;
-	std::string texts = EMPTY_STRING;
-	std::string mainMap = EMPTY_STRING;
-	std::string buildings = EMPTY_STRING;
-	std::string citiesNames = EMPTY_STRING;
-	std::string units = EMPTY_STRING;
-	std::string specNames = EMPTY_STRING;
-
-	std::string saveInfo = EMPTY_STRING;
-
-	std::string saveMaps = EMPTY_STRING;
-	std::string savePlayers = EMPTY_STRING;
-
-	std::string colorShadingVert = EMPTY_STRING;
-	std::string colorShadingFrag = EMPTY_STRING;
-
-	std::string imagesPath = EMPTY_STRING;
-	std::string GUIPath = EMPTY_STRING;
-};
-
 class App : public RealEngine2D::IMainGame
 {
 public:
@@ -85,7 +61,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initFile																	   */
 	/* ROLE : Initialisation des fichiers : log											   */
-	/* INPUT : struct File& : nom des fichiers											   */
+	/* INPUT : struct Filestruct File& : nom des fichiers											   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -156,11 +132,6 @@ private:
 	std::shared_ptr<ReloadMenuScreen> m_reloadMenuScreen;
 	std::shared_ptr<GamePlayScreen> m_gamePlayScreen;
 	std::shared_ptr<CityScreen> m_CityScreen;
-
-	std::shared_ptr<RealEngine2D::SpriteFont> m_spriteFont = nullptr;
-	RealEngine2D::GLSLProgram m_gLSLProgram;
-
-	File m_file;
 
 	SaveReload m_saveReload;
 

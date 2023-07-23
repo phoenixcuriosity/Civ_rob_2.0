@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -47,7 +47,6 @@
 #define MAX_NUMBER_OF_PLAYER 9 
 #define INITIAL_NUMBER_OF_PLAYER 1 
 
-struct File;
 
 struct UserInputNewGame
 {
@@ -59,10 +58,7 @@ class NewGameScreen : public RealEngine2D::IGameScreen
 {
 public:
 
-	NewGameScreen
-	(
-		File* file
-	);
+	NewGameScreen();
 	~NewGameScreen();
 
 	virtual int getNextScreenIndex()const override;
@@ -104,8 +100,6 @@ private:
 
 	std::unordered_map<std::string, CEGUI::Slider*> m_vectSlider;
 	RealEngine2D::GUI m_gui;
-
-	File* m_file = nullptr;
 
 	bool m_isInitialize;
 };

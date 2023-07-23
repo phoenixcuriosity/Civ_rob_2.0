@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.8
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,22 +30,20 @@
 #include "SaveReload.h"
 #include <string>
 
+#include <RealEngine2D/src/ResourceManager.h> 
+
 ReloadMenuScreen::ReloadMenuScreen
 (
-	File* file,
 	SaveReload* SaveReload
 )
 :
 RealEngine2D::IGameScreen(),
 m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
-m_gLSLProgram(),
 m_cameraHUD(),
 m_gui(),
 m_vectSavesRadioButton(),
 m_widgetLabels(),
-m_spriteFont(nullptr),
 m_spriteBatchHUDDynamic(),
-m_file(file),
 m_SaveReload(SaveReload),
 m_isInitialize(false)
 {
@@ -76,8 +74,6 @@ void ReloadMenuScreen::destroy()
 	m_gui.destroy();
 
 	m_widgetLabels.clear();
-
-	m_spriteFont.reset();
 }
 
 bool ReloadMenuScreen::onEntry()
@@ -85,7 +81,6 @@ bool ReloadMenuScreen::onEntry()
 	if (!m_isInitialize)
 	{
 		initOpenGLScreen();
-		initShaders();
 		initHUD();
 
 		m_isInitialize = true;
@@ -114,30 +109,12 @@ void ReloadMenuScreen::initOpenGLScreen()
 	m_cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
 
 	m_spriteBatchHUDDynamic.init();
-	m_spriteFont = std::make_unique<RealEngine2D::SpriteFont>("times.ttf", 64);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initShaders																   */
-/* ROLE : Init shaders for OpenGL													   */
-/* ROLE : 2 files : colorShadingVert and colorShadingFrag							   */
-/* ROLE : 3 parameters : vertexPosition	, vertexColor , vertexUV					   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void ReloadMenuScreen::initShaders()
-{
-	m_gLSLProgram.compileShaders(m_file->colorShadingVert, m_file->colorShadingFrag);
-	m_gLSLProgram.addAttribut("vertexPosition");
-	m_gLSLProgram.addAttribut("vertexColor");
-	m_gLSLProgram.addAttribut("vertexUV");
-	m_gLSLProgram.linkShaders();
 }
 
 void ReloadMenuScreen::initHUD()
 {
-	m_gui.init(m_file->GUIPath);
+
+	m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 	m_gui.loadScheme("AlfiskoSkin.scheme");
 	m_gui.loadScheme("TaharezLook.scheme");
@@ -259,15 +236,17 @@ void ReloadMenuScreen::draw()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_gLSLProgram.use();
+	RealEngine2D::ResourceManager::getGLSLProgram().use();
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = m_gLSLProgram.getUnitformLocation("mySampler");
+	const GLint textureLocation =
+		RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* camera */
-	GLint pLocation = m_gLSLProgram.getUnitformLocation("P");
+	const GLint pLocation
+		= RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
 	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
 
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
@@ -278,7 +257,7 @@ void ReloadMenuScreen::draw()
 	{
 		if (m_vectSavesRadioButton[i]->isVisible())
 		{
-			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *m_spriteFont, m_game->getWindow());
+			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *RealEngine2D::ResourceManager::getSpriteFont(), m_game->getWindow());
 		}
 	}
 
@@ -288,7 +267,7 @@ void ReloadMenuScreen::draw()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	m_gLSLProgram.unuse();
+	RealEngine2D::ResourceManager::getGLSLProgram().unuse();
 
 	m_gui.draw();
 }
@@ -317,8 +296,8 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 			dummy.erase(0, 5);
 
 			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
-			m_file->saveMaps = "save/" + dummy + "/saveMaps.txt";
-			m_file->savePlayers = "save/" + dummy + "/savePlayers.xml";
+			RealEngine2D::ResourceManager::modifyFilePath(e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
+			RealEngine2D::ResourceManager::modifyFilePath(e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
 			return true;
 		}
 	}
@@ -344,8 +323,8 @@ bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 	}
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
-
-	m_SaveReload->clearSave(m_file->saveInfo);
+	
+	m_SaveReload->clearSave(RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 
 	return true;
 }

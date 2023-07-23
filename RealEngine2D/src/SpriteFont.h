@@ -30,13 +30,15 @@ Modified By: Benjamin Arnold
 #include <vector>
 
 
-namespace RealEngine2D {
+namespace RealEngine2D
+{
 
     struct ColorRGBA8;
     class GLTexture;
     class SpriteBatch;
 
-    struct CharGlyph {
+    struct CharGlyph 
+    {
     public:
         char character;
         glm::vec4 uvRect;
@@ -47,16 +49,19 @@ namespace RealEngine2D {
 #define LAST_PRINTABLE_CHAR ((char)126)
 
     /// For text justification
-    enum class Justification {
+    enum class Justification 
+    {
         LEFT, MIDDLE, RIGHT
     };
 
-    class SpriteFont {
+    class SpriteFont
+    {
     public:
         SpriteFont() {};
         SpriteFont(const char* font, int size, char cs, char ce);
         SpriteFont(const char* font, int size) :
-            SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR) {
+            SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR) 
+        {
         }
 
         void init(const char* font, int size);
@@ -65,7 +70,8 @@ namespace RealEngine2D {
         /// Destroys the font resources
         void dispose();
 
-        int getFontHeight() const {
+        int getFontHeight() const 
+        {
             return _fontHeight;
         }
 

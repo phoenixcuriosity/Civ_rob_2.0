@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.15
+	last modification on this file on version:0.24.7.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -67,9 +67,6 @@
 */
 struct Screen
 {
-	std::shared_ptr<RealEngine2D::SpriteFont> spriteFont = nullptr;
-	RealEngine2D::GLSLProgram* gLSLProgram;
-
 	RealEngine2D::Camera2D camera;
 	RealEngine2D::Camera2D cameraHUD;
 
@@ -157,11 +154,8 @@ public:
 
 	GamePlayScreen
 	(
-		File* file,
 		SaveReload* saveReload,
-		UserInputNewGame* userInputNewGame,
-		RealEngine2D::GLSLProgram* gLSLProgram,
-		std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
+		UserInputNewGame* userInputNewGame
 	);
 
 	~GamePlayScreen();
@@ -571,7 +565,6 @@ public:
 	inline const MainMap& GETmainMap()const { return m_mainMap; };
 	inline Players& GETPlayers() { return m_players; };
 	inline const Players& GETPlayers()const { return m_players; };
-	inline File* getFile() { return m_file; };
 	inline SaveReload* getSaveReload() { return m_SaveReload; };
 	inline UserInputNewGame* getUserInputNewGame() { return m_userInputNewGame; };
 
@@ -605,7 +598,6 @@ private:
 
 	Players m_players;
 
-	File* m_file;
 	SaveReload* m_SaveReload;
 	UserInputNewGame* m_userInputNewGame;
 

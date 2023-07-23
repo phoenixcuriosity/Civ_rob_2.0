@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.33
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.34
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -149,10 +149,13 @@ void MainMap::initTile()
 {
 	const Tile blankTile;
 	const std::vector<Tile> blank;
-	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
+	const unsigned int endI{ m_mapSizePixX / m_tileSize };
+	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
+
+	for (unsigned int i(0); i < endI; i++)
 	{
 		m_matriceMap.push_back(blank);
-		for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
+		for (unsigned int j(0); j < endJ; j++)
 		{
 			m_matriceMap[i].push_back(blankTile);
 		}
@@ -172,9 +175,12 @@ void MainMap::generateMap()
 {
 	App::logfileconsole("[INFO]___: Groundgen Start");
 
-	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
+	const unsigned int endI{ m_mapSizePixX / m_tileSize };
+	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
+
+	for (unsigned int i(0); i < endI; i++)
 	{
-		for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
+		for (unsigned int j(0); j < endJ; j++)
 		{
 
 			m_matriceMap[i][j].indexX = i;
@@ -244,16 +250,18 @@ bool MainMap::mapBordersConditions
 	const unsigned int j
 )
 {
+	const unsigned int cmpX{ m_mapSizePixX / m_tileSize };
+	const unsigned int cmpY{ m_mapSizePixY / m_tileSize };
 	for (unsigned int index(MAP_BORDER_MIN); index < MAP_BORDER_MAX; index++)
 	{
 		if (
 			(i == index)
 			||
-			(i == (m_mapSizePixX / m_tileSize) - (index + 1))
+			(i == cmpX - (index + 1))
 			||
 			(j == index)
 			||
-			(j == (m_mapSizePixY / m_tileSize) - (index + 1))
+			(j == cmpY - (index + 1))
 			)
 		{
 			return true;

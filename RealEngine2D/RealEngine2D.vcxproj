@@ -158,6 +158,7 @@
     <ClInclude Include="src\AudioEngine.h" />
     <ClInclude Include="src\Camera2D.h" />
     <ClInclude Include="src\ColorRGBA8.h" />
+    <ClInclude Include="src\Files.h" />
     <ClInclude Include="src\GameEngine.h" />
     <ClInclude Include="src\GLSLProgram.h" />
     <ClInclude Include="src\GLTexture.h" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
     <ClCompile Include="src\Camera2D.cpp" />
+    <ClCompile Include="src\Files.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\GLSLProgram.cpp" />
     <ClCompile Include="src\GLTexture.cpp" />

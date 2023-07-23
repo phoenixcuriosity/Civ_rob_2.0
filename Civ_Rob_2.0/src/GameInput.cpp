@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.38
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.39
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,6 +35,7 @@
 #include <iostream>
 
 #include "Utility.h"
+#include <RealEngine2D/src/ResourceManager.h> 
 
  /* *********************************************************
   *						 Classes						   *
@@ -285,7 +286,7 @@ void GamePlayScreen::actionByKey()
 				- (double)m_game->getWindow().GETscreenWidth() / 2
 			)
 		);
-		m_screen.spriteFont->draw
+		RealEngine2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_screen.spriteBatchHUDDynamic,
 			buffer,
@@ -312,7 +313,7 @@ void GamePlayScreen::actionByKey()
 			)
 		);
 
-		m_screen.spriteFont->draw
+		RealEngine2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_screen.spriteBatchHUDDynamic,
 			buffer,

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.10
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,8 +31,6 @@
 
 #include <RealEngine2D/src/GUI.h>
 
-
-
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
 /* ----------------------------------------------------------------------------------- */
@@ -47,7 +45,7 @@ void GamePlayScreen::newGame()
 {
 	App::logfileconsole("[INFO]___: Newgame Start");
 	
-	m_SaveReload->createSave(*m_file);
+	m_SaveReload->createSave();
 
 	pushNewPlayer();
 

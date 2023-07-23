@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.6
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,27 +29,27 @@
 
 #include "Utility.h"
 
-#include <RealEngine2D/src/ResourceManager.h>
+#include <RealEngine2D/src/ResourceManager.h> 
 
-const float CITY_IHM_BUILD_LIST_DIPSLAY_POS_X{ 0.75f };
-const float CITY_IHM_BUILD_LIST_DIPSLAY_POS_Y{ 0.1f };
-const float CITY_IHM_BUILD_LIST_DIPSLAY_DELTA_X{ 0.2f };
-const float CITY_IHM_BUILD_LIST_DIPSLAY_DELTA_Y{ 0.026f };
+#define CITY_IHM_BUILD_LIST_DIPSLAY_POS_X 0.75f
+#define CITY_IHM_BUILD_LIST_DIPSLAY_POS_Y 0.1f 
+#define CITY_IHM_BUILD_LIST_DIPSLAY_DELTA_X 0.2f
+#define CITY_IHM_BUILD_LIST_DIPSLAY_DELTA_Y 0.026f 
 
-const float CITY_IHM_BUILD_QUEUE_DIPSLAY_POS_X{ 0.8f };
-const float CITY_IHM_BUILD_QUEUE_DIPSLAY_POS_Y{ 0.5f };
-const float CITY_IHM_BUILD_QUEUE_DIPSLAY_DELTA_X{ 0.1f };
-const float CITY_IHM_BUILD_QUEUE_DIPSLAY_DELTA_Y{ 0.026f };
+#define CITY_IHM_BUILD_QUEUE_DIPSLAY_POS_X 0.8f
+#define CITY_IHM_BUILD_QUEUE_DIPSLAY_POS_Y 0.5f 
+#define CITY_IHM_BUILD_QUEUE_DIPSLAY_DELTA_X 0.1f
+#define CITY_IHM_BUILD_QUEUE_DIPSLAY_DELTA_Y 0.026f
 
-const unsigned int CITY_IHM_FOOD_DIPSLAY_POS_X{ 50 };
-const unsigned int CITY_IHM_FOOD_DIPSLAY_POS_Y{ 300 };
-const unsigned int CITY_IHM_FOOD_DIPSLAY_DELTA_X{ 32 };
-const unsigned int CITY_IHM_FOOD_DIPSLAY_DELTA_Y{ 32 };
+#define CITY_IHM_FOOD_DIPSLAY_POS_X 50
+#define CITY_IHM_FOOD_DIPSLAY_POS_Y 300
+#define CITY_IHM_FOOD_DIPSLAY_DELTA_X 32
+#define CITY_IHM_FOOD_DIPSLAY_DELTA_Y 32
 
-const unsigned int CITY_IHM_WORK_DIPSLAY_POS_X{ 50 };
-const unsigned int CITY_IHM_WORK_DIPSLAY_POS_Y{ 700 };
-const unsigned int CITY_IHM_WORK_DIPSLAY_DELTA_X{ 32 };
-const unsigned int CITY_IHM_WORK_DIPSLAY_DELTA_Y{ 32 };
+#define CITY_IHM_WORK_DIPSLAY_POS_X 50
+#define CITY_IHM_WORK_DIPSLAY_POS_Y 700
+#define CITY_IHM_WORK_DIPSLAY_DELTA_X 32
+#define CITY_IHM_WORK_DIPSLAY_DELTA_Y 32
 
 const unsigned int CITY_IHM_OFFSET_EMOTION{ 8 };
 
@@ -68,12 +68,9 @@ static size_t START_ICON_INDEX = 0;
 /* ----------------------------------------------------------------------------------- */
 CityScreen::CityScreen
 (
-	File* const file,
 	SaveReload* const SaveReload,
 	Players* const players,
-	unsigned int* const tileSize,
-	RealEngine2D::GLSLProgram* const gLSLProgram,
-	std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
+	unsigned int* const tileSize
 )
 :
 RealEngine2D::IGameScreen(),
@@ -85,12 +82,9 @@ m_spriteBatch(),
 m_spriteBatchAppartenance(),
 m_needToUpdateDraw(true),
 s_vectID(),
-m_file(file),
 m_SaveReload(SaveReload),
 m_players(players),
 m_tileSize(tileSize),
-m_spriteFont(spriteFont),
-m_gLSLProgram(gLSLProgram),
 m_selectedCity(),
 m_isInitialize(false)
 {
@@ -146,42 +140,51 @@ bool CityScreen::onEntry()
 			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
 		}
 
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
+		const std::string CITY_IMAGE_PATH{RealEngine2D::ResourceManager::getFile(e_Files::imagesPath)->getPath()};
+		const std::string DIR_GROUND {"ground/"};
+		const std::string DIR_SPEC {"spec/"};
+		const std::string DIR_CA {"couleur d'apartenance/"};
+		const std::string DIR_CITIZEN {"citizen/"};
+		const std::string DIR_CITY {"city/"};
 
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
+		using RealEngine2D::ResourceManager;
+
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-grass" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-water" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-deepwater" + EXTENSION_PNG)->GETid());
+
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "coal" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "copper" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "fish" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "horse" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "iron" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "petroleum" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "stone" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "tree1" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "uranium" + EXTENSION_PNG)->GETid());
 		START_APPARTENANCE_INDEX = s_vectID.size();
 
 		for (unsigned int i(0); i < NB_MAX_PLAYER; i++)
 		{
 			s_vectID.push_back
-			(RealEngine2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
+			(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CA + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
 		}
 
 		START_EMOTION_INDEX = s_vectID.size();
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/ecstatic.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/happy.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/neutral.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/sad.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/citizen/angry.png")->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "ecstatic" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "happy" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "neutral" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "sad" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "angry" + EXTENSION_PNG)->GETid());
 
 
 		START_ICON_INDEX = s_vectID.size();
 
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/city/food.png")->GETid());
-		s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/city/Hammer.png")->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "food" + EXTENSION_PNG)->GETid());
+		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "Hammer" + EXTENSION_PNG)->GETid());
 
-	
-		m_gui.init(m_file->GUIPath);
+		
+		m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.setFont("DejaVuSans-10");
 
@@ -347,11 +350,11 @@ void CityScreen::draw()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_gLSLProgram->use();
+	RealEngine2D::ResourceManager::getGLSLProgram().use();
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = m_gLSLProgram->getUnitformLocation("mySampler");
+	GLint textureLocation = RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* --- Draw --- */
@@ -363,7 +366,7 @@ void CityScreen::draw()
 
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
-	m_gLSLProgram->unuse();
+	RealEngine2D::ResourceManager::getGLSLProgram().unuse();
 
 	/* Need to be done after GL display */
 	m_gui.draw();
@@ -597,7 +600,7 @@ void CityScreen::drawCitizen()
 void CityScreen::drawCityName()
 {
 	/* City Name */
-	m_spriteFont->draw
+	RealEngine2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_spriteBatch,
 		m_players->GETSelectedCity()->GETname().c_str(),
@@ -611,7 +614,7 @@ void CityScreen::drawCityName()
 void CityScreen::drawNbPop()
 {
 	/* City Nb POP */
-	m_spriteFont->draw
+	RealEngine2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_spriteBatch,
 		std::to_string(m_players->GETSelectedCity()->GETnbpop()).c_str(),
@@ -709,13 +712,13 @@ void CityScreen::updatePositionCycleButton(const bool dir)
 		m_buttonBuild[m_indexCycleBuilds].buildG->enable();
 		m_buttonBuild[m_indexCycleBuilds].buildG->setVisible(SHOW_BUTTON);
 
-		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + 1].buildG->disable();
-		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + 1].buildG->setVisible(HIDE_BUTTON);
+		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + MIN_INDEX_CYCLE_BUILDS].buildG->disable();
+		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + MIN_INDEX_CYCLE_BUILDS].buildG->setVisible(HIDE_BUTTON);
 	}
 	else
 	{
-		m_buttonBuild[m_indexCycleBuilds - 1].buildG->disable();
-		m_buttonBuild[m_indexCycleBuilds - 1].buildG->setVisible(HIDE_BUTTON);
+		m_buttonBuild[m_indexCycleBuilds - MIN_INDEX_CYCLE_BUILDS].buildG->disable();
+		m_buttonBuild[m_indexCycleBuilds - MIN_INDEX_CYCLE_BUILDS].buildG->setVisible(HIDE_BUTTON);
 
 		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->enable();
 		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->setVisible(SHOW_BUTTON);

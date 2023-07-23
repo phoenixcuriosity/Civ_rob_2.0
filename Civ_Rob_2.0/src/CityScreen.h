@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -45,7 +45,6 @@
 
 #include "City.h"
 
-struct File;
 
 /* Define minimum size to cycle builds */
 const unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
@@ -65,12 +64,9 @@ class CityScreen : public RealEngine2D::IGameScreen
 public:
 	CityScreen
 	(
-		File* const file,
 		SaveReload* const SaveReload,
 		Players* const players,
-		unsigned int* const tileSize,
-		RealEngine2D::GLSLProgram* const gLSLProgram,
-		std::shared_ptr<RealEngine2D::SpriteFont>& spriteFont
+		unsigned int* const tileSize
 	);
 	~CityScreen();
 
@@ -149,10 +145,7 @@ private:
 
 	Players* m_players;
 	unsigned int* m_tileSize;
-	std::shared_ptr<RealEngine2D::SpriteFont> m_spriteFont;
-	RealEngine2D::GLSLProgram* m_gLSLProgram;
 
-	File* m_file;
 	SaveReload* m_SaveReload;
 
 	std::shared_ptr<City> m_selectedCity;

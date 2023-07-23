@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.24
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.24.7.0
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,8 @@
 #include "App.h"
 
 #include <direct.h>
+
+#include <RealEngine2D/src/ResourceManager.h> 
 
 /* *********************************************************
  *				START SaveReload::STATIC				   *
@@ -97,7 +99,8 @@ void SaveReload::saveMaps
 	GamePlayScreen& mainGame
 )
 {
-	std::ofstream saveMaps{ mainGame.getFile()->saveMaps };
+	
+	std::ofstream saveMaps{ RealEngine2D::ResourceManager::getFile(e_Files::saveMaps)->getPath() };
 	if (saveMaps)
 	{
 		for (size_t i{0}; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -118,7 +121,12 @@ void SaveReload::saveMaps
 		}
 	}
 	else
-		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.getFile()->saveMaps);
+		App::logfileconsole
+		(
+			"[ERROR]___: Impossible d'ouvrir le fichier "
+			+ 
+			RealEngine2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+		);
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -385,7 +393,8 @@ void SaveReload::savePlayer
 		}
 		pRoot->InsertEndChild(playerElement);
 	}
-	xmlDoc.SaveFile(mainGame.getFile()->savePlayers.c_str());
+	
+	xmlDoc.SaveFile(RealEngine2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str());
 }
 
 
@@ -433,7 +442,7 @@ void SaveReload::loadMaps
 {
 	std::string input(EMPTY_STRING);
 
-	std::ifstream saveMaps(mainGame.getFile()->saveMaps);
+	std::ifstream saveMaps(RealEngine2D::ResourceManager::getFile(e_Files::saveMaps)->getPath());
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -473,7 +482,12 @@ void SaveReload::loadMaps
 		}
 	}
 	else
-		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + mainGame.getFile()->saveMaps);
+		App::logfileconsole
+		(
+			"[ERROR]___: Impossible d'ouvrir le fichier "
+			+
+			RealEngine2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+		);
 
 	App::logfileconsole("[INFO]___: Save End");
 }
@@ -493,8 +507,8 @@ void SaveReload::loadPlayer
 {
 	std::string errCheck(EMPTY_STRING);
 	tinyxml2::XMLDocument xmlDoc;
-
-	if (xmlDoc.LoadFile(mainGame.getFile()->savePlayers.c_str()) == tinyxml2::XML_SUCCESS)
+	
+	if (xmlDoc.LoadFile(RealEngine2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
 	{
 		tinyxml2::XMLNode* pRoot = xmlDoc.FirstChild();
 		if (nullptr == pRoot) App::exitError("[ERROR]___: loadPlayer : pRoot == nullptr");
@@ -939,7 +953,7 @@ void SaveReload::loadCityXML
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void SaveReload::createSave(File& files)
+void SaveReload::createSave()
 {
 	App::logfileconsole("[INFO]___: createSave Start");
 	std::string destroy;
@@ -966,7 +980,7 @@ L10:
 	}
 
 
-	std::ofstream saveInfo(files.saveInfo);
+	std::ofstream saveInfo(RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 	if (saveInfo)
 	{
 		saveInfo << "NbSave=";
@@ -976,7 +990,7 @@ L10:
 			saveInfo << std::endl << m_tabSave[i];
 	}
 	else
-		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + files.saveInfo);
+		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 
 	std::string save = "save/" + std::to_string(m_currentSave);
 
@@ -984,11 +998,19 @@ L10:
 	{
 		App::logfileconsole("[ERROR]___: mkdir failed ");
 	}
-		
-
-
-	files.saveMaps = "save/" + std::to_string(m_currentSave) + "/" + files.saveMaps;
-	files.savePlayers = "save/" + std::to_string(m_currentSave) + "/" + files.savePlayers;
+	
+	RealEngine2D::ResourceManager::modifyFilePath
+	(
+		e_Files::saveMaps,
+		"save/" + std::to_string(m_currentSave) + "/" +
+		RealEngine2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+	);
+	RealEngine2D::ResourceManager::modifyFilePath
+	(
+		e_Files::savePlayers,
+		"save/" + std::to_string(m_currentSave) + "/" +
+		RealEngine2D::ResourceManager::getFile(e_Files::savePlayers)->getPath()
+	);
 
 	App::logfileconsole("[INFO]___: createSave End");
 }
