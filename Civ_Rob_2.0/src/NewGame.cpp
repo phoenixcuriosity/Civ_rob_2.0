@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.11
+	last modification on this file on version:0.25.0.0
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,7 @@
 #include "SaveReload.h"
 
 #include <RealEngine2D/src/GUI.h>
+#include <RealEngine2D/src/ErrorLog.h> 
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
@@ -43,7 +44,7 @@
 /* ------------------------------------------------------------------------------------*/
 void GamePlayScreen::newGame()
 {
-	App::logfileconsole("[INFO]___: Newgame Start");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Newgame Start");
 	
 	m_SaveReload->createSave();
 
@@ -57,7 +58,7 @@ void GamePlayScreen::newGame()
 
 	/* ### Don't put code below here ### */
 
-	App::logfileconsole("[INFO]___: Newgame End");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Newgame End");
 }
 
 /* ----------------------------------------------------------------------------------- */

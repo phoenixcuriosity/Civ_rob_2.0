@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.34
+	last modification on this file on version:0.25.0.0
+	file version : 1.35
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,7 @@
 #include "MainMap.h"
 
 #include <RealEngine2D/src/ResourceManager.h>
+#include <RealEngine2D/src/ErrorLog.h> 
 
 #include "App.h"
 
@@ -100,7 +101,7 @@ void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
 	}
 	catch (const std::invalid_argument& msg)
 	{
-		App::exitError(msg.what());
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: initMainMap : " + std::string(msg.what()));
 	}
 	
 
@@ -173,7 +174,7 @@ void MainMap::initTile()
 /* ----------------------------------------------------------------------------------- */
 void MainMap::generateMap()
 {
-	App::logfileconsole("[INFO]___: Groundgen Start");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Groundgen Start");
 
 	const unsigned int endI{ m_mapSizePixX / m_tileSize };
 	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
@@ -230,7 +231,7 @@ void MainMap::generateMap()
 		}
 	}
 
-	App::logfileconsole("[INFO]___: Groundgen End");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Groundgen End");
 }
 
 /* ----------------------------------------------------------------------------------- */

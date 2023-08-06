@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.25
+	last modification on this file on version:0.25.0.0
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,7 @@
 #include "Player.h"
 #include "App.h"
 
+#include <RealEngine2D/src/ErrorLog.h> 
 
  /* *********************************************************
   *						 Classes						   *
@@ -94,7 +95,7 @@ bool Unit::searchUnitTile
 				selPlayer->SETselectedUnit(i);
 
 				selPlayer->GETtabUnit()[i]->SETshow(true);
-				App::logfileconsole("[INFO]___: Unit select to move n:" + std::to_string(i));
+				RealEngine2D::ErrorLog::logEvent("[INFO]___: Unit select to move n:" + std::to_string(i));
 				*select = Select_Type::selectmove;
 				return true;
 			}
@@ -411,7 +412,7 @@ m_show(true),
 m_showStats(false),
 m_owner(NO_OWNER)
 {
-	App::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Unit Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -467,7 +468,7 @@ m_show(true),
 m_showStats(false),
 m_owner(ptrToPlayer)
 {
-	App::logfileconsole("[INFO]___: Create Unit:  Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Unit:  Success");
 }
 
 /* ----------------------------------------------------------------------------------- */

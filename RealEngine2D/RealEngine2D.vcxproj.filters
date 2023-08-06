@@ -23,6 +23,8 @@
     <ClInclude Include="src\Vertex.h" />
     <ClInclude Include="src\WidgetLabel.h" />
     <ClInclude Include="src\Files.h" />
+    <ClInclude Include="src\ErrorLog.h" />
+    <ClInclude Include="src\ExitFromError.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -43,5 +45,8 @@
     <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\WidgetLabel.cpp" />
     <ClCompile Include="src\Files.cpp" />
+    <ClCompile Include="src\ColorRGBA8.cpp" />
+    <ClCompile Include="src\ErrorLog.cpp" />
+    <ClCompile Include="src\ExitFromError.cpp" />
   </ItemGroup>
 </Project>

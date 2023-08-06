@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.42
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.0.0
+	file version : 1.43
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 
 #include "App.h"
 #include <RealEngine2D/src/Window.h>
+#include <RealEngine2D/src/ErrorLog.h> 
 
  /* *********************************************************
   *					START City::STATIC					   *
@@ -307,7 +308,7 @@ City::City
 		(tiles[(unsigned int)ceil((INIT_SIZE_VIEW * INIT_SIZE_VIEW) / 2)])
 	);
 
-	App::logfileconsole("[INFO]___: Create Citie: " + m_name + " Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -319,7 +320,7 @@ City::~City()
 {
 	resetTabCitizen();
 
-	App::logfileconsole("[INFO]___: Destroy Citie: " + m_name + " Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Destroy Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -349,7 +350,7 @@ void City::foodNextTurn
 )
 {
 	m_foodToLevelUp = 15 + ((double)m_nbpop - 1) * 6 + pow((m_nbpop - 1), 1.8);
-	double foodLimitPerLevelMinusOne(15 + ((double)m_nbpop - 1 - 1) * 6 + pow((m_nbpop - 1 - 1), 1.8));
+	const double foodLimitPerLevelMinusOne(15 + ((double)m_nbpop - 1 - 1) * 6 + pow((m_nbpop - 1 - 1), 1.8));
 
 	/* Update m_foodStock : add m_foodBalance */
 	m_foodStock += m_foodBalance;
@@ -409,8 +410,8 @@ void City::foodNextTurn
 		/* N/A */
 	}
 
-	double emotionOnFoodModifier((double)m_emotion / SCALE_RANGE_MEAN_EMOTION);
-	double consumptionFoodCity(2.0 * ((double)m_nbpop - 1.0));
+	const double emotionOnFoodModifier((double)m_emotion / SCALE_RANGE_MEAN_EMOTION);
+	const double consumptionFoodCity(2.0 * ((double)m_nbpop - 1.0));
 	double sommeFoodCitizen(CITY_ZERO_FOOD);
 
 	for (auto& c : m_citizens)
@@ -527,7 +528,7 @@ void City::computeEmotion()
 	{
 		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
 		{
-			App::logfileconsole(msg);
+			RealEngine2D::ErrorLog::logEvent(msg);
 			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG
 			throw(msg);
@@ -535,7 +536,7 @@ void City::computeEmotion()
 		}
 		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
 		{
-			App::logfileconsole(msg);
+			RealEngine2D::ErrorLog::logEvent(msg);
 			m_emotion = (unsigned int)SCALE_RANGE_MEAN_EMOTION;
 #ifdef _DEBUG
 			throw(msg);

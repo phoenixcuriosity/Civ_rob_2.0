@@ -4,6 +4,6 @@
 	<Map>
 		<TileSize>64</TileSize>
 		<MapSizeX>2240</MapSizeX>
-		<MapSizeY>2048</MapSizeY>
+		<MapSizeY>2240</MapSizeY>
 	</Map>
 </Config>

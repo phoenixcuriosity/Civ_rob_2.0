@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.2
+	last modification on this file on version:0.25.0.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,6 +37,7 @@ namespace RealEngine2D
 	/* STATIC CLASS */
 	class ResourceManager
 	{
+
 	public:
 		static std::unique_ptr<GLTexture>& getTexture(const std::string& name);
 
@@ -55,11 +56,31 @@ namespace RealEngine2D
 		static std::shared_ptr<RealEngine2D::SpriteFont>& getSpriteFont();
 		static GLSLProgram& getGLSLProgram();
 
+		static bool getTextFromFile
+		(
+			const e_Files name,
+			MapTexts& mapTexts
+		);
+		
+		static void initializeRGBA8Map();
+		static ColorRGBA8& getRGBA8Color
+		(
+			/* IN */
+			const std::string& colorName
+		);
+
+		static Justification getJustification
+		(
+			/* in */
+			const std::string& justificationN
+		);
+
 	private:
 		static TextureCache m_textureCache;
 		static Files m_files;
 		static std::shared_ptr<RealEngine2D::SpriteFont> m_spriteFont;
 		static GLSLProgram m_gLSLProgram;
+		static ColorRGBA8C m_colorsRGBA8;
 	};
 }
 

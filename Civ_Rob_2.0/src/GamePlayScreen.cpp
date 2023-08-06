@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.22
+	last modification on this file on version:0.25.0.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,6 +32,7 @@
 #include "ScreenIndices.h"
 
 #include <RealEngine2D/src/ResourceManager.h> 
+#include <RealEngine2D/src/ErrorLog.h> 
 
 GamePlayScreen::GamePlayScreen
 (
@@ -121,7 +122,7 @@ bool GamePlayScreen::onEntry()
 		}
 		catch (const std::string& msg)
 		{
-			App::logfileconsole("[ERROR]___: GamePlayScreen::onEntry : " + msg);
+			RealEngine2D::ErrorLog::logEvent("[ERROR]___: GamePlayScreen::onEntry : " + msg);
 			return false;
 		}
 
@@ -188,7 +189,7 @@ void GamePlayScreen::draw()
 /* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::loadFile()
 {
-	App::logfileconsole("[INFO]___: [START] : initMain");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
 	config.LoadFile(RealEngine2D::ResourceManager::getFile(e_Files::mainMap)->getPath().c_str());
@@ -218,7 +219,7 @@ void GamePlayScreen::loadFile()
 		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
 	}
 
-	App::logfileconsole("[INFO]___: [END] : initMain");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
 }
 
 

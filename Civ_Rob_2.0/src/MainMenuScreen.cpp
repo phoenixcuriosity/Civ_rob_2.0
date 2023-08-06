@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.6
+	last modification on this file on version:0.25.0.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,8 @@
 #include "App.h"
 
 #include <RealEngine2D/src/ResourceManager.h> 
+#include <RealEngine2D/src/ErrorLog.h> 
+
 
 MainMenuScreen::MainMenuScreen
 (
@@ -35,10 +37,12 @@ MainMenuScreen::MainMenuScreen
 : 
 RealEngine2D::IGameScreen(),
 m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
+m_spriteBatchHUDStatic(),
 m_gui(),
 m_isInitialize(false)
 {
 	build();
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: build MainMenuScreen");
 }
 
 MainMenuScreen::~MainMenuScreen()
@@ -69,11 +73,21 @@ bool MainMenuScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
+		RealEngine2D::ErrorLog::logEvent("[INFO]___: Init MainMenuScreen");
+
+		m_cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+		m_cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
+
+
+		m_spriteBatchHUDStatic.init();
+
 		m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 
 		m_gui.setFont("DejaVuSans-10");
+
+
 
 		const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);
 		float yC(0.4f);
@@ -141,12 +155,47 @@ bool MainMenuScreen::onEntry()
 		/* HIDE normal mouse cursor */
 		SDL_ShowCursor(0);
 
+		initHUD();
+
 		m_isInitialize = true;
 	}
 	
 
 	return true;
 }
+
+void MainMenuScreen::initHUD()
+{
+
+	MapTexts mapTexts;
+
+	m_spriteBatchHUDStatic.begin();
+
+	RealEngine2D::ResourceManager::getTextFromFile
+	(
+		e_Files::texts,
+		mapTexts
+	);
+
+	for (const auto text: mapTexts)
+	{
+		RealEngine2D::ResourceManager::getSpriteFont()->draw
+		(
+			m_spriteBatchHUDStatic,
+			text.second.text.c_str(),
+			glm::vec2(text.second.x, text.second.y), // offset pos
+			glm::vec2(text.second.size), // size
+			text.second.alpha,
+			text.second.color,
+			text.second.justification
+		);
+	}
+
+	
+	
+	m_spriteBatchHUDStatic.end();
+}
+
 
 void MainMenuScreen::onExit()
 {
@@ -160,12 +209,39 @@ void MainMenuScreen::onExit()
 
 void MainMenuScreen::draw()
 {
+	m_cameraHUD.update();
+
 	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	/* Back */
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	RealEngine2D::ResourceManager::getGLSLProgram().use();
+
+	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
+	glActiveTexture(GL_TEXTURE0);
+
+	GLint textureLocation = RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
+	glUniform1i(textureLocation, 0);
+
+	/* --- camera --- */
+	/* GL - get parameter P */
+	const GLint pLocation
+		= RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
+
+	/* Copy camera matrix */
+	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
+
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	m_spriteBatchHUDStatic.renderBatch();
+
+	/* --- GL unbind --- */
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	RealEngine2D::ResourceManager::getGLSLProgram().unuse();
 
 	m_gui.draw();
 }

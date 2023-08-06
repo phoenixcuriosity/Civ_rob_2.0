@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.4.0
-	file version : 1.4
+	last modification on this file on version:0.25.0.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,7 @@
 #include "GamePlayScreen.h"
 
 #include "App.h"
+#include <RealEngine2D/src/ErrorLog.h> 
 
  /* *********************************************************
   *						 Classes						   *
@@ -146,7 +147,7 @@ Unit_Movement_Type GamePlayScreen::convertUintToUnit_Movement_Type
 	case 3:
 		return Unit_Movement_Type::deepwater;
 	default:
-		App::exitError("[ERROR]___: convertUintToUnit_Movement_Type : case default");
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convertUintToUnit_Movement_Type : case default");
 		return Unit_Movement_Type::ground;
 	}
 }
@@ -210,7 +211,7 @@ conversionSurplus_Type GamePlayScreen::convert2ConversionToApply
 	case 6:
 		return conversionSurplus_Type::GoldToWork;
 	default:
-		App::exitError("[ERROR]___: convert2ConversionToApply : default");
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2ConversionToApply : default");
 		return conversionSurplus_Type::No_Conversion;
 	}
 }
@@ -236,7 +237,7 @@ build_Type GamePlayScreen::convert2build_Type
 	case 1:
 		return build_Type::unit;
 	default:
-		App::exitError("[ERROR]___: convert2ConversionToApply : default");
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2build_Type : default");
 		return build_Type::building;
 	}
 }
@@ -268,7 +269,7 @@ Emotion_Type GamePlayScreen::convert2Emotion_Type
 	case 2:
 		return Emotion_Type::ecstatic;
 	default:
-		App::exitError("[ERROR]___: convert2Emotion_Type : default");
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2Emotion_Type : default");
 		return Emotion_Type::neutral;
 	}
 }
@@ -336,7 +337,7 @@ Religion_Type GamePlayScreen::convert2Religion_Type
 	case 22:
 		return Religion_Type::zoroastrian;
 	default:
-		App::exitError("[ERROR]___: convert2Religion_Type : default");
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2Religion_Type : default");
 		return Religion_Type::catholic;
 	}
 }

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.9
+	last modification on this file on version:0.25.0.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,7 +27,6 @@
 
 #include "LIB.h"
 
-#include <fstream> // logger
 #include <memory>
 
 #include <RealEngine2D/src/IMainGame.h>
@@ -56,17 +55,6 @@ public:
 	virtual void onExit() override;
 	virtual void addScreens() override;
 
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : initFile																	   */
-	/* ROLE : Initialisation des fichiers : log											   */
-	/* INPUT : struct Filestruct File& : nom des fichiers											   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	void initFile();
-
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initMain																	   */
@@ -79,52 +67,6 @@ public:
 
 	void destroy();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : exitError																	   */
-	/* ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée	   */
-	/* INPUT : const std::string msg : message de l'erreur								   */
-	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	static void exitError
-	(
-		const std::string& msg
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : deleteAll																	   */
-	/* ROLE : Destruction des allocations dynamique du programme						   */
-	/* ROLE : Destruction de la fenetre et du Renderer de la SDL						   */
-	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
-	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
-	static void deleteAll
-	(
-		
-	);
-
-
-public:
-
-	/* *********************************************************
-	 *						Logger							   *
-	 ********************************************************* */
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : logfileconsole															   */
-	/* ROLE : Transmission du message sur la console et dans le fichier log.txt			   */
-	/* INPUT : const std::string msg : message											   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static void logfileconsole
-	(
-		const std::string& msg
-	);
 
 private:
 	std::shared_ptr<MainMenuScreen> m_mainMenuScreen;
@@ -134,8 +76,6 @@ private:
 	std::shared_ptr<CityScreen> m_CityScreen;
 
 	SaveReload m_saveReload;
-
-	std::ofstream m_logger;
 };
 
 

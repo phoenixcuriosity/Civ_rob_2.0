@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.1
+	last modification on this file on version:0.25.0.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,6 +28,8 @@
 
 #include <map>
 #include <string>
+#include "ColorRGBA8.h"
+#include "SpriteFont.h"
 
 
 enum class e_Files
@@ -56,6 +58,19 @@ enum class e_Files
 	GUIPath				= 101
 };
 
+struct Text
+{
+	std::string text;
+	float x;
+	float y;
+	float size;
+	float alpha;
+	RealEngine2D::ColorRGBA8 color;
+	RealEngine2D::Justification justification;
+};
+
+
+typedef std::map<std::string, Text> MapTexts;
 
 class File
 {

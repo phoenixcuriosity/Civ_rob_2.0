@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.5.0
-	file version : 1.7
+	last modification on this file on version:0.25.0.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,6 +30,8 @@
 
 #include "City.h"
 #include "App.h"
+
+#include "../../RealEngine2D/src/ErrorLog.h"
 
  /* *********************************************************
   *					START Citizen::STATIC				   *
@@ -131,7 +133,7 @@ Citizen::Citizen()
 	m_religion(Religion_Type::catholic),
 	m_place(false)
 {
-	App::logfileconsole("[INFO]___: Create Citizen Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -155,7 +157,7 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	App::logfileconsole("[INFO]___: Create Citizen Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -178,7 +180,7 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	App::logfileconsole("[INFO]___: Create Citizen Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -190,7 +192,7 @@ Citizen::Citizen
 /* ----------------------------------------------------------------------------------- */
 Citizen::~Citizen()
 {
-	App::logfileconsole("[INFO]___: Kill Citizen Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Kill Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */

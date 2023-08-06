@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.10
+	last modification on this file on version:0.25.0.0
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,13 +26,13 @@
 
 #include <RealEngine2D/src/ScreenList.h>
 
-#include <iostream>
 
 #include <tinyxml2/tinyxml2.h>
 
 #include <RealEngine2D/src/ResourceManager.h> 
+#include <RealEngine2D/src/ErrorLog.h> 
+#include <RealEngine2D/src/ExitFromError.h> 
 
-static std::ofstream* ptrlogger;
 
 App::App()
 :
@@ -44,7 +44,7 @@ m_gamePlayScreen(nullptr),
 m_CityScreen(nullptr),
 m_saveReload()
 {
-	/* Do nothing */
+	RealEngine2D::ResourceManager::initializeRGBA8Map();
 }
 
 App::~App()
@@ -54,17 +54,14 @@ App::~App()
 	m_reloadMenuScreen.reset();
 	m_gamePlayScreen.reset();
 	m_CityScreen.reset();
-	deleteAll();
+	RealEngine2D::ExitFromError::deleteAll();
 }
 
 void App::onInit()
 {
 	/* Set location of logging file */
 	RealEngine2D::ResourceManager::initializeFilePath(e_Files::log, "bin/log/log.txt");
-
-	initFile();
-
-	ptrlogger = &m_logger;
+	RealEngine2D::ErrorLog::initializeLog();
 
 	initMain();
 
@@ -140,36 +137,6 @@ void App::addScreens()
 	m_screenList->setScreen(m_mainMenuScreen->GETscreenIndex());
 }
 
-
-
-
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initFile																	   */
-/* ROLE : Initialisation des fichiers : log											   */
-/* INPUT : struct File& : nom des fichiers											   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::initFile()
-{
-	m_logger.open
-	(
-		RealEngine2D::ResourceManager::getFile(e_Files::log)->getPath(),
-		std::ofstream::out | std::ofstream::trunc
-	);
-
-	if (!m_logger.is_open())
-	{
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		/* N/A */
-	}
-}
-
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : initMain																	   */
@@ -180,7 +147,7 @@ void App::initFile()
 /* ----------------------------------------------------------------------------------- */
 void App::initMain()
 {
-	logfileconsole("[INFO]___: [START] : initMain");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
 	config.LoadFile(configFilePath.c_str());
@@ -283,7 +250,7 @@ void App::initMain()
 		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
 	}
 
-	logfileconsole("[INFO]___: [END] : initMain");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
 }
 
 
@@ -291,89 +258,5 @@ void App::initMain()
 
 void App::destroy()
 {
-	deleteAll();
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : exitError																	   */
-/* ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée	   */
-/* INPUT : const std::string msg : message de l'erreur								   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
-void App::exitError
-(
-	const std::string& msg
-)
-{
-	logfileconsole("[ERROR]___: " + msg);
-	deleteAll();
-	logfileconsole("[ERROR]___: Last msg before exitError : " + msg);
-	ptrlogger->close();
-	exit(EXIT_FAILURE);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : deleteAll																	   */
-/* ROLE : Destruction des allocations dynamique du programme						   */
-/* ROLE : Destruction de la fenetre et du Renderer de la SDL						   */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
-void App::deleteAll()
-{
-	logfileconsole("[INFO]___: [START] *********_________ DeleteAll _________*********");
-
-
-
-
-	/* *********************************************************
-	 *				 START delete SDL						   *
-	 ********************************************************* */
-
-
-	SDL_Quit();
-
-	/* *********************************************************
-	 *				 END delete SDL							   *
-	 ********************************************************* */
-
-	 /* ### Don't put code below here ### */
-
-	logfileconsole("[INFO]___: [END] : *********_________ DeleteAll _________*********");
-
-	logfileconsole("[INFO]___: SDL_Quit Success");
-	logfileconsole("[INFO]___:________PROGRAMME FINISH________");
-	ptrlogger->close();
-}
-
-//----------------------------------------------------------Logger----------------------------------------------------------------//
-
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : logfileconsole															   */
-/* ROLE : Transmission du message sur la console et dans le fichier log.txt			   */
-/* INPUT : const std::string msg : message											   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::logfileconsole
-(
-	const std::string& msg
-)
-{
-	time_t now{ time(0) };
-	struct tm  tstruct{};
-	char  buf[80]{};
-	localtime_s(&tstruct, &now);
-	strftime(buf, sizeof(buf), "%F %X", &tstruct);
-
-#ifdef _DEBUG
-	std::cout << std::endl << buf << "      " << msg;
-#endif // DEBUG_MODE
-	*ptrlogger << std::endl << buf << "      " << msg;
+	RealEngine2D::ExitFromError::deleteAll();
 }

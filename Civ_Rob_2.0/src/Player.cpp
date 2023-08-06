@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.25
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.0.0
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 #include "City.h"
 
 #include <RealEngine2D/src/ResourceManager.h>
+#include <RealEngine2D/src/ErrorLog.h> 
 
  /* *********************************************************
   *				START Player::METHODS					   *
@@ -55,7 +56,7 @@ Player::Player() :
 	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	App::logfileconsole("[INFO]___: Create Player Par Defaut Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Player Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -80,7 +81,7 @@ Player::Player
 	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	App::logfileconsole("[INFO]___: Create Player Success");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Player Success");
 }
 
 /* ----------------------------------------------------------------------------------- */

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.25
+	last modification on this file on version:0.25.0.0
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,8 @@
 #include <direct.h>
 
 #include <RealEngine2D/src/ResourceManager.h> 
+#include <RealEngine2D/src/ErrorLog.h> 
+#include <RealEngine2D/src/ExitFromError.h> 
 
 /* *********************************************************
  *				START SaveReload::STATIC				   *
@@ -121,7 +123,7 @@ void SaveReload::saveMaps
 		}
 	}
 	else
-		App::logfileconsole
+		RealEngine2D::ErrorLog::logEvent
 		(
 			"[ERROR]___: Impossible d'ouvrir le fichier "
 			+ 
@@ -411,7 +413,7 @@ void SaveReload::reload
 	GamePlayScreen& mainGame
 )
 {
-	App::logfileconsole("[INFO]___: Reload Start");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Reload Start");
 
 	loadMaps(mainGame);
 	loadPlayer(mainGame);
@@ -424,7 +426,7 @@ void SaveReload::reload
 
 	//SDL_RenderPresent(sysinfo.screen.renderer);
 
-	App::logfileconsole("[INFO]___: Reload End");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Reload End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -482,14 +484,14 @@ void SaveReload::loadMaps
 		}
 	}
 	else
-		App::logfileconsole
+		RealEngine2D::ErrorLog::logEvent
 		(
 			"[ERROR]___: Impossible d'ouvrir le fichier "
 			+
 			RealEngine2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
 		);
 
-	App::logfileconsole("[INFO]___: Save End");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: Save End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -511,11 +513,11 @@ void SaveReload::loadPlayer
 	if (xmlDoc.LoadFile(RealEngine2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
 	{
 		tinyxml2::XMLNode* pRoot = xmlDoc.FirstChild();
-		if (nullptr == pRoot) App::exitError("[ERROR]___: loadPlayer : pRoot == nullptr");
+		if (nullptr == pRoot) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : pRoot == nullptr");
 
 		tinyxml2::XMLNode* nPlayer = pRoot->FirstChild();
 		errCheck = nPlayer->Value();
-		if (errCheck.compare("Player") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nPlayer != Player");
+		if (errCheck.compare("Player") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nPlayer != Player");
 
 		while (nullptr != nPlayer)
 		{
@@ -525,9 +527,9 @@ void SaveReload::loadPlayer
 			tinyxml2::XMLNode* nTabUnit		= nGoldStats->NextSibling();
 			tinyxml2::XMLNode* nTabCity		= nTabUnit->NextSibling();
 
-			if (nullptr == nName) App::exitError("[ERROR]___: loadPlayer : nName == nullptr");
+			if (nullptr == nName) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nName == nullptr");
 			errCheck = nName->Value();
-			if (errCheck.compare("Name") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nName != Name");
+			if (errCheck.compare("Name") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nName != Name");
 
 			mainGame.GETPlayers().GETvectPlayer().push_back
 				(
@@ -559,13 +561,13 @@ void SaveReload::loadPlayer
 					nTabUnit = nullptr;
 					goto L20;
 				}
-				if (errCheck.compare("TabUnit") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nTabUnit != TabUnit");
+				if (errCheck.compare("TabUnit") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nTabUnit != TabUnit");
 
 				tinyxml2::XMLNode* nUnit = nTabUnit->FirstChild();
 				if (nullptr != nUnit)
 				{
 					errCheck = nUnit->Value();
-					if (errCheck.compare("Unit") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nUnit != Unit");
+					if (errCheck.compare("Unit") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nUnit != Unit");
 				}
 
 				loadUnitXML(mainGame, nUnit);
@@ -577,13 +579,13 @@ void SaveReload::loadPlayer
 
 
 				errCheck = nTabCity->Value();
-				if (errCheck.compare("TabCity") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nTabCity != TabCity");
+				if (errCheck.compare("TabCity") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nTabCity != TabCity");
 
 				tinyxml2::XMLNode* nCity = nTabCity->FirstChild();
 				if (nullptr != nCity)
 				{
 					errCheck = nCity->Value();
-					if (errCheck.compare("City") != IDENTICAL_STRINGS) App::exitError("[ERROR]___: loadPlayer : nCity != City");
+					if (errCheck.compare("City") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nCity != City");
 				}
 
 				loadCityXML(mainGame, nCity);
@@ -595,7 +597,7 @@ void SaveReload::loadPlayer
 	}
 	else
 	{
-		App::exitError("[ERROR]___: loadPlayer : xmlDoc.LoadFile() != tinyxml2::XML_SUCCESS");
+		RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : xmlDoc.LoadFile() != tinyxml2::XML_SUCCESS");
 	}
 }
 
@@ -619,39 +621,39 @@ void SaveReload::loadGoldStatsXML
 	tinyxml2::XMLNode* inputNode;
 
 	inputNode = nGoldStats->FirstChild();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->gold == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->gold == nullptr");
 	goldStats.gold = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->GoldBalance == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->GoldBalance == nullptr");
 	goldStats.goldBalance = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->Income == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->Income == nullptr");
 	goldStats.income = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->Cost == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->Cost == nullptr");
 	goldStats.cost = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->TaxIncome == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->TaxIncome == nullptr");
 	goldStats.taxIncome = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->CommerceIncome == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->CommerceIncome == nullptr");
 	goldStats.commerceIncome = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->GoldConversionSurplus == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->GoldConversionSurplus == nullptr");
 	goldStats.goldConversionSurplus = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->ArmiesCost == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->ArmiesCost == nullptr");
 	goldStats.armiesCost = std::stod(inputNode->FirstChild()->Value());
 
 	inputNode = inputNode->NextSibling();
-	if (nullptr == inputNode) App::exitError("[ERROR]___: loadGoldStatsXML : goldStats->BuildingsCost == nullptr");
+	if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadGoldStatsXML : goldStats->BuildingsCost == nullptr");
 	goldStats.buildingsCost = std::stod(inputNode->FirstChild()->Value());
 }
 
@@ -683,47 +685,47 @@ void SaveReload::loadUnitXML
 		blankUnit->SETowner(blankPlayer.get());
 
 		inputNode = nUnit->FirstChild();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->Name == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->Name == nullptr");
 		blankUnit->SETname(inputNode->FirstChild()->Value());
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->x == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->x == nullptr");
 		blankUnit->SETx(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->y == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->y == nullptr");
 		blankUnit->SETy(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->movement_type == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->movement_type == nullptr");
 		blankUnit->SETmovementType(GamePlayScreen::convertUintToUnit_Movement_Type((unsigned int)std::stoul(inputNode->FirstChild()->Value())));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->life == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->life == nullptr");
 		blankUnit->SETlife(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->atq == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->atq == nullptr");
 		blankUnit->SETatq(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->def == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->def == nullptr");
 		blankUnit->SETdef(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->movement == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->movement == nullptr");
 		blankUnit->SETmovement(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->SETnumberOfAttack == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->SETnumberOfAttack == nullptr");
 		blankUnit->SETnumberOfAttack(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->level == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->level == nullptr");
 		blankUnit->SETlevel(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadPlayer : Unit->maintenance == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->maintenance == nullptr");
 		blankUnit->SETmaintenance(std::stoul(inputNode->FirstChild()->Value()));
 
 		blankUnitTemp =
@@ -782,19 +784,19 @@ void SaveReload::loadCityXML
 	while (nullptr != nCity)
 	{
 		inputNode = nCity->FirstChild();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Name == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->Name == nullptr");
 		blankCity.name = inputNode->FirstChild()->Value();
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->x == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->x == nullptr");
 		blankCity.x = std::stoul(inputNode->FirstChild()->Value());
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->y == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->y == nullptr");
 		blankCity.y = std::stoul(inputNode->FirstChild()->Value());
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->InfluenceLevel == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->InfluenceLevel == nullptr");
 		influenceLevel = std::stoul(inputNode->FirstChild()->Value());
 
 		middletileX = MainMap::convertPosXToIndex(blankCity.x);
@@ -818,43 +820,43 @@ void SaveReload::loadCityXML
 		ptrCity->SETinfluenceLevel(influenceLevel);
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->NbPop == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->NbPop == nullptr");
 		ptrCity->SETnbpop(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Atq == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->Atq == nullptr");
 		ptrCity->SETatq(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Def == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->Def == nullptr");
 		ptrCity->SETdef(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->Emotion == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->Emotion == nullptr");
 		ptrCity->SETemotion(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodStock == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->FoodStock == nullptr");
 		ptrCity->SETfoodStock(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodBalance == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->FoodBalance == nullptr");
 		ptrCity->SETfoodBalance(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodSurplusPreviousTurn == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->FoodSurplusPreviousTurn == nullptr");
 		ptrCity->SETfoodSurplusPreviousTurn(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->FoodToLevelUp == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->FoodToLevelUp == nullptr");
 		ptrCity->SETfoodToLevelUp(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->GoldBalance == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->GoldBalance == nullptr");
 		ptrCity->SETgoldBalance(std::stod(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) App::exitError("[ERROR]___: loadCityXML : City->ConversionToApply == nullptr");
+		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->ConversionToApply == nullptr");
 		conversionSurplus_Type type = GamePlayScreen::convert2ConversionToApply(std::stoi(inputNode->FirstChild()->Value()));
 		ptrCity->SETconversionToApply(type);
 
@@ -868,19 +870,19 @@ void SaveReload::loadCityXML
 			while (nullptr != nBuildQueueElement)
 			{
 				tinyxml2::XMLNode* nBuildQueueElementName = nBuildQueueElement->FirstChild();
-				if (nullptr == nBuildQueueElementName) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Name == nullptr");
+				if (nullptr == nBuildQueueElementName) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->Name == nullptr");
 				blankBluid.name = nBuildQueueElementName->FirstChild()->Value();
 
 				tinyxml2::XMLNode* nBuildQueueElementType = nBuildQueueElementName->NextSibling();
-				if (nullptr == nBuildQueueElementType) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Type == nullptr");
+				if (nullptr == nBuildQueueElementType) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->Type == nullptr");
 				blankBluid.type = GamePlayScreen::convert2build_Type(std::stoi(nBuildQueueElementType->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nBuildQueueElementWork = nBuildQueueElementType->NextSibling();
-				if (nullptr == nBuildQueueElementWork) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->Work == nullptr");
+				if (nullptr == nBuildQueueElementWork) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->Work == nullptr");
 				blankBluid.work = std::stod(nBuildQueueElementWork->FirstChild()->Value());
 
 				tinyxml2::XMLNode* nBuildQueueElementRemainingWork = nBuildQueueElementType->NextSibling();
-				if (nullptr == nBuildQueueElementRemainingWork) App::exitError("[ERROR]___: loadCityXML : City->nBuildQueue->RemainingWork == nullptr");
+				if (nullptr == nBuildQueueElementRemainingWork) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->RemainingWork == nullptr");
 				blankBluid.remainingWork = std::stod(nBuildQueueElementRemainingWork->FirstChild()->Value());
 
 
@@ -909,31 +911,31 @@ void SaveReload::loadCityXML
 				ptrCitizen = ptrCity->GETcitizens().back().get();
 
 				tinyxml2::XMLNode* nTabCitizenElementtileOccupied = nTabCitizenElement->FirstChild();
-				if (nullptr == nTabCitizenElementtileOccupied) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->tileOccupied == nullptr");
+				if (nullptr == nTabCitizenElementtileOccupied) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->tileOccupied == nullptr");
 				ptrCitizen->SETtileOccupied(std::stoi(nTabCitizenElementtileOccupied->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementHappiness = nTabCitizenElementtileOccupied->NextSibling();
-				if (nullptr == nTabCitizenElementHappiness) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Happiness == nullptr");
+				if (nullptr == nTabCitizenElementHappiness) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Happiness == nullptr");
 				ptrCitizen->SEThappiness(GamePlayScreen::convert2Emotion_Type(std::stoi(nTabCitizenElementHappiness->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementFood = nTabCitizenElementHappiness->NextSibling();
-				if (nullptr == nTabCitizenElementFood) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Food == nullptr");
+				if (nullptr == nTabCitizenElementFood) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Food == nullptr");
 				ptrCitizen->SETfood(std::stoi(nTabCitizenElementFood->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementWork = nTabCitizenElementFood->NextSibling();
-				if (nullptr == nTabCitizenElementWork) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Work == nullptr");
+				if (nullptr == nTabCitizenElementWork) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Work == nullptr");
 				ptrCitizen->SETwork(std::stoi(nTabCitizenElementWork->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementGold = nTabCitizenElementWork->NextSibling();
-				if (nullptr == nTabCitizenElementGold) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Gold == nullptr");
+				if (nullptr == nTabCitizenElementGold) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Gold == nullptr");
 				ptrCitizen->SETgold(std::stoi(nTabCitizenElementGold->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nTabCitizenElementReligion_Type = nTabCitizenElementGold->NextSibling();
-				if (nullptr == nTabCitizenElementReligion_Type) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->Religion_Type == nullptr");
+				if (nullptr == nTabCitizenElementReligion_Type) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Religion_Type == nullptr");
 				ptrCitizen->SETreligion(GamePlayScreen::convert2Religion_Type(std::stoi(nTabCitizenElementReligion_Type->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementplace = nTabCitizenElementReligion_Type->NextSibling();
-				if (nullptr == nTabCitizenElementplace) App::exitError("[ERROR]___: loadCityXML : City->nTabCitizen->place == nullptr");
+				if (nullptr == nTabCitizenElementplace) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->place == nullptr");
 				ptrCitizen->SETplace(std::stoi(nTabCitizenElementplace->FirstChild()->Value()));
 
 				nTabCitizenElement = nTabCitizenElement->NextSibling();
@@ -955,7 +957,7 @@ void SaveReload::loadCityXML
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::createSave()
 {
-	App::logfileconsole("[INFO]___: createSave Start");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: createSave Start");
 	std::string destroy;
 
 	for (unsigned int i(0); i < m_tabSave.size(); i++)
@@ -990,13 +992,13 @@ L10:
 			saveInfo << std::endl << m_tabSave[i];
 	}
 	else
-		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 
 	std::string save = "save/" + std::to_string(m_currentSave);
 
 	if (_mkdir(save.c_str()) != 0)
 	{
-		App::logfileconsole("[ERROR]___: mkdir failed ");
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: mkdir failed ");
 	}
 	
 	RealEngine2D::ResourceManager::modifyFilePath
@@ -1012,7 +1014,7 @@ L10:
 		RealEngine2D::ResourceManager::getFile(e_Files::savePlayers)->getPath()
 	);
 
-	App::logfileconsole("[INFO]___: createSave End");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: createSave End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -1025,7 +1027,7 @@ L10:
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::removeSave(const std::string& filePath)
 {
-	App::logfileconsole("[INFO]___: removeSave Start");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: removeSave Start");
 	std::string file(EMPTY_STRING);
 	bool condition(false);
 
@@ -1051,21 +1053,21 @@ void SaveReload::removeSave(const std::string& filePath)
 
 			file = "save/" + std::to_string(m_currentSave) + "/saveMaps.txt";
 			if (remove(file.c_str()) != 0)
-				App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+				RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+				RealEngine2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(m_currentSave) + "/savePlayers.xml";
 			if (remove(file.c_str()) != 0)
-				App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+				RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
 			else
-				App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+				RealEngine2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
 
 			file = "save/" + std::to_string(m_currentSave);
 			if (_rmdir(file.c_str()) != 0)
-				App::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
+				RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le dossier " + file);
 			else
-				App::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
+				RealEngine2D::ErrorLog::logEvent("[INFO]___: directory : " + file + " successfully remove");
 
 			if (m_tabSave.size() == 1)
 				m_tabSave.clear();
@@ -1085,7 +1087,7 @@ void SaveReload::removeSave(const std::string& filePath)
 					saveInfo << std::endl << m_tabSave[i];
 			}
 			else
-				App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
+				RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 		}
 		else
 		{
@@ -1093,9 +1095,9 @@ void SaveReload::removeSave(const std::string& filePath)
 		}
 	}
 	else
-		App::logfileconsole("[ERROR]___: currentSave = 0");
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: currentSave = 0");
 
-	App::logfileconsole("[INFO]___: removeSave End");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: removeSave End");
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -1108,7 +1110,7 @@ void SaveReload::removeSave(const std::string& filePath)
 /* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::clearSave(const std::string& filePath)
 {
-	App::logfileconsole("[INFO]___: clearSave Start");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: clearSave Start");
 
 	for (unsigned int j(0); j < m_tabSave.size(); j++)
 	{
@@ -1120,21 +1122,21 @@ void SaveReload::clearSave(const std::string& filePath)
 	{
 		file = "save/" + std::to_string(m_tabSave[i]) + "/saveMaps.txt";
 		if (remove(file.c_str()) != 0)
-			App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+			RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+			RealEngine2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(m_tabSave[i]) + "/savePlayers.xml";
 		if (remove(file.c_str()) != 0)
-			App::logfileconsole("[ERROR]___: Impossible d'effacer le fichier " + file);
+			RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
 		else
-			App::logfileconsole("[INFO]___: file : " + file + " successfully remove");
+			RealEngine2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
 
 		file = "save/" + std::to_string(m_tabSave[i]);
 		if (_rmdir(file.c_str()) != 0)
-			App::logfileconsole("[ERROR]___: Impossible d'effacer le dossier " + file);
+			RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le dossier " + file);
 		else
-			App::logfileconsole("[INFO]___: directory : " + file + " successfully remove");
+			RealEngine2D::ErrorLog::logEvent("[INFO]___: directory : " + file + " successfully remove");
 	}
 
 	std::ofstream saveInfo(filePath);
@@ -1145,12 +1147,12 @@ void SaveReload::clearSave(const std::string& filePath)
 		saveInfo << std::endl << "SaveUse=";
 	}
 	else
-		App::logfileconsole("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
+		RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 
 	m_currentSave = NO_CURRENT_SAVE_SELECTED;
 	m_tabSave.clear();
 
-	App::logfileconsole("[INFO]___: clearSave End");
+	RealEngine2D::ErrorLog::logEvent("[INFO]___: clearSave End");
 }
 
 
