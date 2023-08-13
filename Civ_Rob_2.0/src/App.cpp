@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.11
+	last modification on this file on version:0.25.1.0
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,6 +32,17 @@
 #include <RealEngine2D/src/ResourceManager.h> 
 #include <RealEngine2D/src/ErrorLog.h> 
 #include <RealEngine2D/src/ExitFromError.h> 
+
+
+namespace AppH
+{
+	const std::string configFilePath = "bin/filePath.xml";
+
+	const int FONT_GUI_SIZE = 64;
+
+	/* Define default font for GUI texts */
+	const std::string fontGUI = "times.ttf";
+}
 
 
 App::App()
@@ -92,7 +103,7 @@ void App::InitShaders()
 	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
 	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexUV");
 	RealEngine2D::ResourceManager::getGLSLProgram().linkShaders();
-	RealEngine2D::ResourceManager::getSpriteFont() = std::make_shared<RealEngine2D::SpriteFont>(fontGUI.c_str(), 64);
+	RealEngine2D::ResourceManager::getSpriteFont() = std::make_shared<RealEngine2D::SpriteFont>(AppH::fontGUI.c_str(), AppH::FONT_GUI_SIZE);
 }
 
 
@@ -150,7 +161,7 @@ void App::initMain()
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
-	config.LoadFile(configFilePath.c_str());
+	config.LoadFile(AppH::configFilePath.c_str());
 
 	if (config.ErrorID() == 0)
 	{
@@ -247,7 +258,7 @@ void App::initMain()
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
+		throw("Impossible d'ouvrir le fichier " + (std::string)AppH::configFilePath);
 	}
 
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");

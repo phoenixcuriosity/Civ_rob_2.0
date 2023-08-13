@@ -102,6 +102,10 @@
     <ClInclude Include="src\CityScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
+    <ClInclude Include="src\T_City.h" />
+    <ClInclude Include="src\T_CityScreen.h" />
+    <ClInclude Include="src\T_GamePlayScreen.h" />
+    <ClInclude Include="src\T_Unit.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.19
+	last modification on this file on version:0.25.1.0
+	file version : 1.20
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -45,6 +45,22 @@ const std::string EMPTY_STRING = "";
 /* Define a non EMPTY vect/list/map */
 const bool VECT_NOT_EMPTY = false;
 
+namespace SELECTION
+{
+	const int NO_PLAYER_SELECTED = -1;
+
+	const int NO_UNIT_SELECTED = -1;
+
+	const int NO_CITY_SELECTED = -1;
+
+	/* The tile is not own by a player */
+	const int NO_APPARTENANCE = -1;
+
+	const auto NO_OWNER = nullptr;
+
+	const int NO_CURRENT_SAVE_SELECTED = -1;
+}
+
  // Define all State of the game, relate to screen
 enum class State_Type
 {
@@ -72,6 +88,7 @@ enum class Select_Type
 
 struct Screen;
 struct Var;
+struct GoldStats;
 struct UserInputNewGame;
 
 class MainMap;
@@ -83,6 +100,10 @@ class Unit;
 class City;
 
 class GamePlayScreen;
+class Players;
+class Player;
+
+class GameInput;
 
 #endif
 

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.12
+	last modification on this file on version:0.25.1.0
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,18 @@
 #include <RealEngine2D/src/ErrorLog.h> 
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
+
+namespace NGC
+{
+	/* Minimum space beetween two or more settlers */
+	const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
+
+	const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
+
+	/* The first settler to spawn in the map for each Player does not cost maintenance */
+	const double MAINTENANCE_COST_1TH_SETTLER = 0.0;
+}
+
 
 /* ----------------------------------------------------------------------------------- */
 /* NAME : newGame																	   */
@@ -163,7 +175,7 @@ void GamePlayScreen::newGameSettlerSpawn
 			players.GETvectUnitTemplate()[selectunit].movement,
 			players.GETvectUnitTemplate()[selectunit].numberOfAttack,
 			players.GETvectUnitTemplate()[selectunit].level,
-			MAINTENANCE_COST_1TH_SETTLER);
+			NGC::MAINTENANCE_COST_1TH_SETTLER);
 	}
 }
 
@@ -190,10 +202,10 @@ void GamePlayScreen::makeRandomPosTab
 
 	while (continuer)
 	{
-		if (iteration >= MAX_RANDOM_POS_ITERATION)
+		if (iteration >= NGC::MAX_RANDOM_POS_ITERATION)
 		{
 #ifdef _DEBUG
-			throw(MAX_RANDOM_POS_ITERATION);
+			throw(NGC::MAX_RANDOM_POS_ITERATION);
 #endif // DEBUG_MODE
 			/*
 			TODO : remove existing settlers and players
@@ -228,7 +240,7 @@ void GamePlayScreen::makeRandomPos
 	const unsigned int tileSize
 )
 {
-	const unsigned int SEA_BORDER_MAP(MAP_BORDER_MAX * tileSize);
+	const unsigned int SEA_BORDER_MAP(MAPH::MAP_BORDER_MAX * tileSize);
 
 	const unsigned int x((rand() % ((matriceMap.size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
 	const unsigned int y((rand() % ((matriceMap[0].size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
@@ -260,7 +272,7 @@ bool GamePlayScreen::conditionspace
 	/* Return true : Empty tab */
 	if (tabRandom.empty()) return true;
 
-	const unsigned int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
+	const unsigned int spaceBetweenSettler(tileSize * NGC::MIN_SPACE_BETWEEN_SETTLER);
 
 	bool condition(false);
 	for (size_t i(0); i < tabRandom.size(); i++)

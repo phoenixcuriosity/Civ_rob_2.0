@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -286,7 +286,7 @@ void GUI::onSDLEvent(SDL_Event& ev, InputManager& /* inputManager */)
     }
 	case SDL_MOUSEBUTTONDOWN:
     {
-        if (ev.button.clicks == TWO_CLICKS)
+        if (ev.button.clicks == GUI_MOUSE::TWO_CLICKS)
         {
             m_context->injectMouseButtonDoubleClick(SDLButtonToCEGUI(ev.button.button));
         }

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.23
+	last modification on this file on version:0.25.1.0
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,16 @@
 
 #include <RealEngine2D/src/ResourceManager.h> 
 #include <RealEngine2D/src/ErrorLog.h> 
+
+
+namespace DELTA_TIME
+{
+	const float MS_PER_SECOND(1000.0f);
+	const float TARGET_FRAMETIME = MS_PER_SECOND / (float)RealEngine2D::SCREEN_REFRESH_RATE;
+	const unsigned int MAX_PHYSICS_STEPS(6);
+	const float MAX_DELTA_TIME(1.0f);
+}
+
 
 GamePlayScreen::GamePlayScreen
 (
@@ -64,12 +74,12 @@ int GamePlayScreen::getNextScreenIndex()const
 }
 int GamePlayScreen::getPreviousScreenIndex()const
 {
-	return MAINMENU_SCREEN_INDEX;
+	return SCREEN_INDEX::MAINMENU;
 }
 
 void GamePlayScreen::build()
 {
-	m_screenIndex = GAMEPLAY_SCREEN_INDEX;
+	m_screenIndex = SCREEN_INDEX::GAMEPLAY;
 }
 
 void GamePlayScreen::destroy()
@@ -110,7 +120,7 @@ bool GamePlayScreen::onEntry()
 
 			//RealEngine2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
-			if (m_SaveReload->GETcurrentSave() != NO_CURRENT_SAVE_SELECTED)
+			if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
 			{
 				m_SaveReload->reload(*this);
 			}
@@ -216,7 +226,7 @@ void GamePlayScreen::loadFile()
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
+		throw("Impossible d'ouvrir le fichier " + RealEngine2D::ResourceManager::getFile(e_Files::mainMap)->getPath());
 	}
 
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
@@ -452,12 +462,12 @@ void GamePlayScreen::moveCameraByDeltaTime()
 	newTicks = SDL_GetTicks();
 	frameTime = newTicks - prevTicks;
 	prevTicks = newTicks;
-	totalDeltaTime = (float)frameTime / TARGET_FRAMETIME;
+	totalDeltaTime = (float)frameTime / DELTA_TIME::TARGET_FRAMETIME;
 	int i{ 0 };
 
-	while (totalDeltaTime > 0.0f && i < MAX_PHYSICS_STEPS)
+	while (totalDeltaTime > 0.0f && i < DELTA_TIME::MAX_PHYSICS_STEPS)
 	{
-		deltaTime = std::min(totalDeltaTime, MAX_DELTA_TIME);
+		deltaTime = std::min(totalDeltaTime, DELTA_TIME::MAX_DELTA_TIME);
 		moveCamera(deltaTime);
 		totalDeltaTime -= deltaTime;
 		i++;
@@ -591,14 +601,14 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 			if (i != m_players.GETselectedPlayerId())
 			{
 				/* Reset if needed SHOW for the unit previously selected */
-				if (m_players.GETselectedPlayerId() != NO_PLAYER_SELECTED && m_players.GETselectedPlayerPtr() != nullptr)
+				if (m_players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED && m_players.GETselectedPlayerPtr() != nullptr)
 				{			
-					if (m_players.GETselectedPlayerPtr()->GETselectedUnit() != NO_UNIT_SELECTED)
+					if (m_players.GETselectedPlayerPtr()->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 					{
 						m_players.GETselectedPlayerPtr()->GETSelectedUnitPtr()->SETshow(true);
 						m_players.SETneedToUpdateDrawUnit(true);
 
-						m_players.GETselectedPlayerPtr()->SETselectedUnit(NO_UNIT_SELECTED);
+						m_players.GETselectedPlayerPtr()->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);
 					}
 				}
 

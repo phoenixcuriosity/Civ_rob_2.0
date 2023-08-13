@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.6
+	last modification on this file on version:0.25.1.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,37 +27,14 @@
 
 #include "LIB.h"
 
+#include <deque>
+
 #include <RealEngine2D/src/IGameScreen.h>
-
-#include <vector>
-
-#include <RealEngine2D\src\Vertex.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
-#include <RealEngine2D/src/AudioEngine.h>
 #include <RealEngine2D/src/GUI.h>
+#include <RealEngine2D/src/SpriteBatch.h>
 
-#include "City.h"
+#include "T_CityScreen.h"
 
-
-/* Define minimum size to cycle builds */
-const unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
-
-/*  */
-const unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
-
-const bool HIDE_BUTTON = false;
-
-const bool SHOW_BUTTON = true;
-
-const bool CYCLE_BUTTON_DIR_UP = false;
-const bool CYCLE_BUTTON_DIR_DOWN = true;
 
 class CityScreen : public RealEngine2D::IGameScreen
 {
@@ -130,7 +107,7 @@ public:
 
 
 private:
-	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
+	int m_nextScreenIndexMenu;
 
 	RealEngine2D::GUI m_gui;
 	unsigned int m_indexCycleBuilds;

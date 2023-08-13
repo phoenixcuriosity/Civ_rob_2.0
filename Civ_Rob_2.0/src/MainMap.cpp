@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.35
+	last modification on this file on version:0.25.1.0
+	file version : 1.36
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,6 +32,56 @@
 #include <RealEngine2D/src/ErrorLog.h> 
 
 #include "App.h"
+
+namespace MAP_GEN
+{
+	/* MAP -> Max size - Min size of the map for sea borders */
+	const unsigned int BORDER_MIN = 1;
+
+	/* MAP -> value deep_water */
+	const unsigned int BORDER_ZERO = 0;
+
+	/* MAP_GEN_RANDOM */
+	namespace RANDOM
+	{
+		namespace RANGE
+		{
+			const unsigned int GROUND = 100;
+			const unsigned int SPEC_GRASS = 100;
+			const unsigned int SPEC_WATER = 20;
+			const unsigned int SPEC_WATER1 = 10;
+			const unsigned int SPEC_WATER2 = 10;
+			const unsigned int SPEC_WATER_BORDER = 50;
+		}
+
+		namespace OFFSET
+		{
+			const unsigned int GROUND = 1;
+			const unsigned int SPEC_GRASS = 1;
+			const unsigned int SPEC_WATER = 1;
+			const unsigned int SPEC_WATER1 = 1;
+			const unsigned int SPEC_WATER2 = 1;
+			const unsigned int SPEC_WATER_BORDER = 1;
+		}
+	}
+
+	const unsigned int MAX_ITERATION_SCALE = 10000;
+}
+
+namespace MAPCamera
+{
+	/* Avoid seeing nothing before next tile */
+	const unsigned int MIN_BORDER = 1;
+
+	/* Define the index to look in the matrix for its size */
+	const unsigned int INDEX_SIZE = 0;
+}
+
+namespace MAPGUI
+{
+	/* Define an ID which is unused */
+	const GLuint UNUSED_ID = 0;
+}
 
  /* *********************************************************
   *					  Static Var						   *
@@ -131,7 +181,7 @@ void MainMap::initMainMapTexture()
 	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
 
 	START_APPARTENANCE_INDEX = s_vectID.size();
-	for (unsigned int i(0); i < NB_MAX_PLAYER; i++)
+	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
 	{
 		s_vectID.push_back
 			(RealEngine2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
@@ -195,10 +245,10 @@ void MainMap::generateMap()
 			 ********************************************************* */
 
 			if (
-				(i == MAP_BORDER_ZERO)
-				|| (i == (m_mapSizePixX / m_tileSize) - (MAP_BORDER_ZERO + 1))
-				|| (j == MAP_BORDER_ZERO)
-				|| (j == (m_mapSizePixY / m_tileSize) - (MAP_BORDER_ZERO + 1))
+				(i == MAP_GEN::BORDER_ZERO)
+				|| (i == (m_mapSizePixX / m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
+				|| (j == MAP_GEN::BORDER_ZERO)
+				|| (j == (m_mapSizePixY / m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
 				)
 			{
 				tileAffectation
@@ -253,7 +303,7 @@ bool MainMap::mapBordersConditions
 {
 	const unsigned int cmpX{ m_mapSizePixX / m_tileSize };
 	const unsigned int cmpY{ m_mapSizePixY / m_tileSize };
-	for (unsigned int index(MAP_BORDER_MIN); index < MAP_BORDER_MAX; index++)
+	for (unsigned int index(MAP_GEN::BORDER_MIN); index < MAPH::MAP_BORDER_MAX; index++)
 	{
 		if (
 			(i == index)
@@ -287,7 +337,7 @@ void MainMap::mapBorders
 )
 {
 	unsigned int randomspecwaterborder
-	((rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER) + MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER);
+	((rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER_BORDER) + MAP_GEN::RANDOM::OFFSET::SPEC_WATER_BORDER);
 	switch (randomspecwaterborder)
 	{
 	case 1:
@@ -350,12 +400,12 @@ void MainMap::mapIntern
 		randomspecwater1(0),
 		randomspecwater2(0);
 
-	randomground = rand() % MAP_GEN_RANDOM_RANGE_GROUND + MAP_GEN_RANDOM_OFFSET_GROUND;
+	randomground = rand() % MAP_GEN::RANDOM::RANGE::GROUND + MAP_GEN::RANDOM::OFFSET::GROUND;
 	if (randomground < 92)
 	{
 		maps[i][j].tile_ground = Ground_Type::grass;
 		randomspecgrass =
-			rand() % MAP_GEN_RANDOM_RANGE_SPEC_GRASS + MAP_GEN_RANDOM_OFFSET_SPEC_GRASS;
+			rand() % MAP_GEN::RANDOM::RANGE::SPEC_GRASS + MAP_GEN::RANDOM::OFFSET::SPEC_GRASS;
 		switch (randomspecgrass)
 		{
 		case 1:
@@ -420,7 +470,7 @@ void MainMap::mapIntern
 		if (i > 2 && j > 2)
 		{
 			randomspecwater =
-				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER + MAP_GEN_RANDOM_OFFSET_SPEC_WATER;
+				rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER + MAP_GEN::RANDOM::OFFSET::SPEC_WATER;
 			switch (randomspecwater)
 			{
 			case 1:
@@ -464,7 +514,7 @@ void MainMap::mapIntern
 		if (Ground_Type::deepwater != maps[i - 1][j].tile_ground)
 		{
 			randomspecwater1 =
-				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER1 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER1;
+				rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER1 + MAP_GEN::RANDOM::OFFSET::SPEC_WATER1;
 			switch (randomspecwater1)
 			{
 			case 1:
@@ -508,7 +558,7 @@ void MainMap::mapIntern
 		if (Ground_Type::deepwater != maps[i - 1][j - 1].tile_ground)
 		{
 			randomspecwater2 =
-				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER2 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER2;
+				rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER2 + MAP_GEN::RANDOM::OFFSET::SPEC_WATER2;
 			switch (randomspecwater2)
 			{
 			case 1:
@@ -698,7 +748,7 @@ void MainMap::setMinMaxScale
 			on = false;
 			i--;
 		}
-		if (i > MAX_ITERATION_SCALE)
+		if (i > MAP_GEN::MAX_ITERATION_SCALE)
 		{
 			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
 		}
@@ -719,7 +769,7 @@ void MainMap::setMinMaxScale
 			on = false;
 			i--;
 		}
-		if (i > MAX_ITERATION_SCALE)
+		if (i > MAP_GEN::MAX_ITERATION_SCALE)
 		{
 			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
 		}
@@ -790,10 +840,10 @@ void MainMap::updateOffsetX
 			m_offsetMapCameraXmin
 			+ (unsigned int)std::floor((double)windowWidth / ((double)m_tileSize * camera.GETscale())) /* width of screen */
 			- buffer
-			+ MAP_CAMERA_MIN_BORDER  
+			+ MAPCamera::MIN_BORDER
 			- m_toolBarSize; /* Negative RIGHT offset HUD */
 
-		if (m_offsetMapCameraXmax >= (unsigned int)m_matriceMap.size() + MAP_CAMERA_MIN_BORDER)
+		if (m_offsetMapCameraXmax >= (unsigned int)m_matriceMap.size() + MAPCamera::MIN_BORDER)
 		{
 			camera.lockMoveRIGHT();
 		}
@@ -832,7 +882,7 @@ void MainMap::updateOffsetY
 
 	if ((y0 + (double)windowHeight) >= ((double)m_mapSizePixY - ((double)m_tileSize * camera.GETscale())))
 	{
-		m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size();
+		m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size();
 	}
 	else
 	{
@@ -840,16 +890,16 @@ void MainMap::updateOffsetY
 			m_offsetMapCameraYmin 
 			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_tileSize * camera.GETscale()))
 			- buffer
-			+ MAP_CAMERA_MIN_BORDER;
+			+ MAPCamera::MIN_BORDER;
 
-		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size() + MAP_CAMERA_MIN_BORDER)
+		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size() + MAPCamera::MIN_BORDER)
 		{
 			camera.lockMoveUP();
 		}
 
-		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size())
+		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size())
 		{
-			m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size();
+			m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size();
 		}
 	}
 
@@ -866,7 +916,7 @@ void MainMap::drawMap
 {
 	if (m_needToUpdateDraw)
 	{
-		GLuint id(UNUSED_ID);
+		GLuint id(MAPGUI::UNUSED_ID);
 
 		updateOffset
 		(
@@ -952,11 +1002,11 @@ void MainMap::drawMap
 					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::fish];
 					break;
 				case GroundSpec_Type::nothing:
-					id = UNUSED_ID;
+					id = MAPGUI::UNUSED_ID;
 					break;
 				}
 
-				if (UNUSED_ID != id)
+				if (MAPGUI::UNUSED_ID != id)
 				{
 					m_spriteBatch.draw
 					(
@@ -968,7 +1018,7 @@ void MainMap::drawMap
 					);
 				}
 
-				if (m_matriceMap[i][j].appartenance != NO_APPARTENANCE)
+				if (m_matriceMap[i][j].appartenance != SELECTION::NO_APPARTENANCE)
 				{
 					m_spriteBatchAppartenance.draw
 					(

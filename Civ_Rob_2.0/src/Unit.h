@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.21
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -44,9 +44,11 @@
 
 #include "LIB.h"
 
+#include "T_Unit.h"
+
 #include "MainMap.h"
 
-#include <vector>
+
 #include <memory>
 #include <glm/glm.hpp>
 
@@ -59,95 +61,12 @@ class GameInput;
   *						Constantes						   *
   ********************************************************* */
 
-const unsigned int NO_MOVEMENT = 0;
 
-const unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
-
-const unsigned int ZERO_LIFE = 0;
-
-const unsigned int ZERO_BLIT = 0;
-
-const unsigned int ZERO_NUMBER_OF_ATTACK = 0;
-
-const bool DEAD_UNIT = false;
-
-#define NO_OWNER nullptr
-
-/*
-	use as 1/x
-	default : x = 20
-*/
-const unsigned int COEF_DIV_HEAL_NO_APPARTENANCE = 20;
-
-/*
-	use as 1/x
-	default : x = 5
-*/
-const unsigned int COEF_DIV_HEAL_APPARTENANCE = 5;
-
-/*
-	use as 1/x
-	default : x = 4
-*/
-const unsigned int COEF_DIV_LEVELUP = 4;
-
-/*
-	use as 1/x
-	Use for screen_refresh_rate/BLIT_RATE
-	default = 2
-*/
-const unsigned int BLIT_RATE = 2;
-
-const int FOOD_ADD_BY_IRRAGATION = 2;
-const int GOLD_ADD_BY_IRRAGATION = 1;
 
   /* *********************************************************
    *						 Enum							   *
    ********************************************************* */
 
-   /* Define movement for the Unit in case of tryToMove */
-enum class Move_Type
-{
-	cannotMove,		/* The Unit cannot move to the next Tile */
-	canMove,		/* The Unit can move to the next Tile */
-	attackMove		/* The Unit can move to the next Tile and attack the other Unit standing on the this Tile */
-};
-
-/* Define movement type of the Unit */
-enum class Unit_Movement_Type
-{
-	ground,			/* The Unit can move on ground (dirt,grass,...) */
-	air,			/* The Unit can move on ground (dirt,grass,...) or on water */
-	water,			/* The Unit can move on water */
-	deepwater		/* The Unit can move on deepwater or on water */
-};
-
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
-
-struct Unit_Template
-{
-
-	// nom de l'unit� -> /bin/UNITNAME.txt
-	std::string name;
-
-	/*
-		statistiques concernant l'unit� -> /bin/UNIT.txt
-	*/
-	Unit_Movement_Type type = Unit_Movement_Type::ground;
-	unsigned int life = 0;
-	unsigned int atq = 0;
-	unsigned int def = 0;
-	unsigned int movement = 0;
-	unsigned int numberOfAttack = 0;
-	unsigned int level = 0;
-	unsigned int nbturnToBuild = 0;
-	double workToBuild = 0.0;
-	double maintenance = 0.0;
-};
-
-typedef std::vector<Unit_Template> VectUnitTemplate;
 
 /* *********************************************************
  *						 Classes						   *

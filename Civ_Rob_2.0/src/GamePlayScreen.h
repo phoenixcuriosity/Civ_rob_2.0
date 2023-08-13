@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.16
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,23 +32,19 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
+#include "T_GamePlayScreen.h"
+#include "T_Unit.h"
+#include "T_City.h"
+#include "T_CityScreen.h"
+
 #include <RealEngine2D/src/IMainGame.h>
-#include <RealEngine2D/src/GLSLProgram.h>
-#include <RealEngine2D/src/Camera2D.h>
-#include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
-#include <RealEngine2D/src/Window.h>
 
 #include "NewGame.h"
-#include "GameInput.h"
+#include "Unit.h"
+#include "City.h"
+#include "Player.h"
 
 #include "NextTurn.h"
-#include "MainMap.h"
-#include "Player.h"
-#include "City.h"
 
 #include <vector>
 #include <memory>
@@ -57,88 +53,13 @@
  *						 Structs						   *
  ********************************************************* */
 
-/* 
-	All RealEngine2D objects
-	- Shaders
-	- camera/cameraHUD
-	- Sprite/font
-	- audioEngine
-	- GUI
-*/
-struct Screen
-{
-	RealEngine2D::Camera2D camera;
-	RealEngine2D::Camera2D cameraHUD;
-
-	RealEngine2D::SpriteBatch spriteBatchHUDDynamic;
-	RealEngine2D::SpriteBatch spriteBatchHUDStatic;
-
-	RealEngine2D::AudioEngine audioEngine;
-
-	RealEngine2D::GUI m_gui;
-	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
-	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
-
-	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
-};
-
-struct Var
-{
-
-	std::string tempPlayerName = EMPTY_STRING;
-
-	/*
-		état de la sélection du joueur
-		enum Select_Type : unsigned int
-		{
-			selectnothing,
-			selectcreate,
-			selectinspect,
-			selectmove,
-			selectmoveCitizen
-		};
-	*/
-	Select_Type select = Select_Type::selectnothing;
-
-	/*
-		état de l'écran du joueur
-		enum State_Type : unsigned int
-		{
-			STATEnothing,
-			STATEtitleScreen,
-			STATEscreennewgame,
-			STATEreload,
-			STATEmainmap,
-			STATEscience,
-			STATEcitiemap
-		};
-	*/
-	State_Type statescreen = State_Type::error;
-
-	/*
-			état de l'entrée clavier
-			enum CinState_Type : unsigned int
-			{
-				cinNothing,
-				cinTitleScreen,
-				cinScreenNewGameNbPlayer,
-				cinScreenNewGameNamePlayer,
-				cinMainMap,
-			};
-		*/
-	CinState_Type cinState = CinState_Type::cinNothing;
-
-};
-
+ /* N/A */
 
 /* *********************************************************
  *					 Constantes							   *
  ********************************************************* */
 
-const float MS_PER_SECOND(1000.0f);
-const float TARGET_FRAMETIME = MS_PER_SECOND / (float)RealEngine2D::SCREEN_REFRESH_RATE;
-const unsigned int MAX_PHYSICS_STEPS(6);
-const float MAX_DELTA_TIME(1.0f);
+/* N/A */
 
 /* *********************************************************
  *						 Classe							   *

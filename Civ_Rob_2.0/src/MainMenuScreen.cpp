@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.7
+	last modification on this file on version:0.25.1.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,7 +36,7 @@ MainMenuScreen::MainMenuScreen
 )
 : 
 RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
+m_nextScreenIndexMenu(RealEngine2D::SCREEN_INDEX::INIT),
 m_spriteBatchHUDStatic(),
 m_gui(),
 m_isInitialize(false)
@@ -56,12 +56,12 @@ int MainMenuScreen::getNextScreenIndex()const
 }
 int MainMenuScreen::getPreviousScreenIndex()const
 {
-	return INIT_SCREEN_INDEX;
+	return RealEngine2D::SCREEN_INDEX::INIT;
 }
 
 void MainMenuScreen::build()
 {
-	m_screenIndex = MAINMENU_SCREEN_INDEX;
+	m_screenIndex = SCREEN_INDEX::MAINMENU;
 }
 
 void MainMenuScreen::destroy()
@@ -260,14 +260,14 @@ void MainMenuScreen::update()
 
 bool MainMenuScreen::onNewGameClicked(const CEGUI::EventArgs& /* e */)
 {
-	m_nextScreenIndexMenu = NEWGAME_SCREEN_INDEX;
+	m_nextScreenIndexMenu = SCREEN_INDEX::NEWGAME;
 	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
 	return true;
 }
 
 bool MainMenuScreen::onReloadClicked(const CEGUI::EventArgs& /* e */)
 {
-	m_nextScreenIndexMenu = RELOAD_SCREEN_INDEX;
+	m_nextScreenIndexMenu = SCREEN_INDEX::RELOAD;
 	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
 	return true;
 }

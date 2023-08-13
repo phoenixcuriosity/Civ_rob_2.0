@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.9
+	last modification on this file on version:0.25.1.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,13 +32,18 @@
 
 #include <RealEngine2D/src/ResourceManager.h> 
 
+namespace IHM_SAVE_BUTTON
+{
+	const unsigned int MAX_VISISBLE = 10;
+}
+
 ReloadMenuScreen::ReloadMenuScreen
 (
 	SaveReload* SaveReload
 )
 :
 RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
+m_nextScreenIndexMenu(RealEngine2D::SCREEN_INDEX::INIT),
 m_cameraHUD(),
 m_gui(),
 m_vectSavesRadioButton(),
@@ -61,12 +66,12 @@ int ReloadMenuScreen::getNextScreenIndex()const
 }
 int ReloadMenuScreen::getPreviousScreenIndex()const
 {
-	return MAINMENU_SCREEN_INDEX;
+	return SCREEN_INDEX::MAINMENU;
 }
 
 void ReloadMenuScreen::build()
 {
-	m_screenIndex = MAINMENU_SCREEN_INDEX;
+	m_screenIndex = SCREEN_INDEX::MAINMENU;
 }
 
 void ReloadMenuScreen::destroy()
@@ -194,7 +199,7 @@ void ReloadMenuScreen::initHUD()
 
 		m_vectSavesRadioButton[i]->setGroupID(GROUP_ID);
 
-		if (MAX_SAVE_BUTTON_VISISBLE > i)
+		if (IHM_SAVE_BUTTON::MAX_VISISBLE > i)
 		{
 			m_vectSavesRadioButton[i]->setVisible(true);
 		}
@@ -306,9 +311,9 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 
 bool ReloadMenuScreen::onLoadSave(const CEGUI::EventArgs& /* e */)
 {
-	if (m_SaveReload->GETcurrentSave() != NO_CURRENT_SAVE_SELECTED)
+	if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
 	{
-		m_nextScreenIndexMenu = GAMEPLAY_SCREEN_INDEX;
+		m_nextScreenIndexMenu = SCREEN_INDEX::GAMEPLAY;
 		m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
 	}
 	return true;

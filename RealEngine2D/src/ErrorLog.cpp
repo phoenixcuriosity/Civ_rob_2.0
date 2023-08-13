@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.1
+	last modification on this file on version:0.25.1.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,7 @@ using namespace RealEngine2D;
 std::ofstream ErrorLog::m_log;
 std::string ErrorLog::m_lastEvent;
 bool ErrorLog::m_isInitialize;
-char ErrorLog::m_buffer[MAX_CHAR_BUFFER_LOGEVENT];
+char ErrorLog::m_buffer[BUFFER_LOGEVENT::MAX_CHAR];
 
 void ErrorLog::initializeLog()
 {
@@ -72,15 +72,24 @@ void ErrorLog::logEvent
 	const std::string& msg
 )
 {
-	time_t now{ time(0) };
-	struct tm  tstruct {};
-	localtime_s(&tstruct, &now);
-	strftime(m_buffer, sizeof(m_buffer), "%F %X", &tstruct);
+	if (true == m_isInitialize)
+	{
+		time_t now{ time(0) };
+		struct tm  tstruct {};
+		localtime_s(&tstruct, &now);
+		strftime(m_buffer, sizeof(m_buffer), "%F %X", &tstruct);
 
-	m_lastEvent = m_buffer + (std::string)"      " + msg;
+		m_lastEvent = m_buffer + (std::string)"      " + msg;
 
 #ifdef _DEBUG
-	std::cout << std::endl << m_lastEvent;
+		std::cout << std::endl << m_lastEvent;
 #endif // DEBUG_MODE
-	m_log << std::endl << m_lastEvent;
+		m_log << std::endl << m_lastEvent;
+	}
+	else
+	{
+#ifdef _DEBUG
+		std::cout << std::endl << "[ERROR]___: Cannot open log file, cannot log event";
+#endif // DEBUG_MODE
+	}
 }

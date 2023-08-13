@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.20
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,19 +46,15 @@
  *						Constantes						   *
  ********************************************************* */
 
-#define INITIAL_GOLD 100.0
 
-#define NO_PLAYER_SELECTED -1
-#define NO_UNIT_SELECTED -1
-#define NO_CITY_SELECTED -1
+namespace PlayerH
+{
+	const unsigned int NB_MAX_PLAYER = 9;
 
-const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
-const unsigned int NB_MAX_PLAYER = 9;
-const unsigned int VECT_SIZE_OFFSET_ID = 1;
-
-const unsigned int CITY_TYPE = 1;
-
-const bool NEED_TO_UPDATE_DRAW_UNIT = true;
+	const double INITIAL_GOLD = 100.0;
+	
+	const bool NEED_TO_UPDATE_DRAW_UNIT = true;
+}
 
 /* *********************************************************
  *						 Enum							   *

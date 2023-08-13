@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.11
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -48,49 +48,12 @@
  *						Constantes						   *
  ********************************************************* */
 
-  /* MAP -> Max size - Min size of the map for sea borders */
-const unsigned int MAP_BORDER_MAX = 4;
-const unsigned int MAP_BORDER_MIN = 1;
+namespace MAPH
+{
+	const unsigned int MAP_BORDER_MAX = 4;
+}
 
-/* MAP -> value deep_water */
-const unsigned int MAP_BORDER_ZERO = 0;
 
-/* MAP_GEN_RANDOM */
-const unsigned int MAP_GEN_RANDOM_RANGE_GROUND = 100;
-const unsigned int MAP_GEN_RANDOM_OFFSET_GROUND = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_GRASS = 100;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_GRASS = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER = 20;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER1 = 10;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER1 = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER2 = 10;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER2 = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER = 50;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER = 1;
-
-const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
-const unsigned int MAX_ITERATION_SCALE = 10000;
-
-/* Minimum space beetween two or more settlers */
-const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
-
-/* The tile is not own by a player */
-const int NO_APPARTENANCE = - 1;
-
-/* Avoid seeing nothing before next tile */
-const unsigned int MAP_CAMERA_MIN_BORDER = 1;
-
-/* Define the index to look in the matrix for its size */
-const unsigned int MAP_CAMERA_INDEX_SIZE = 0;
-
-/* Define an ID which is unused */
-const GLuint UNUSED_ID = 0;
 
 /* *********************************************************
  *						 Enum							   *
@@ -158,7 +121,7 @@ struct Tile
 	GroundSpec_Type tile_spec = GroundSpec_Type::nothing;
 
 	// index d'appartenance d'un case � un joueur : appartenance neutre = -1
-	int appartenance = NO_APPARTENANCE;
+	int appartenance = SELECTION::NO_APPARTENANCE;
 
 	// indice de nourriture de la case
 	int food = -1;

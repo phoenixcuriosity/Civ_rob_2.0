@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.26
+	last modification on this file on version:0.25.1.0
+	file version : 1.27
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,6 +35,16 @@
 #include <RealEngine2D/src/ResourceManager.h>
 #include <RealEngine2D/src/ErrorLog.h> 
 
+
+namespace
+{
+	const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
+
+	const unsigned int VECT_SIZE_OFFSET_ID = 1;
+
+	const unsigned int CITY_TYPE = 1;
+}
+
  /* *********************************************************
   *				START Player::METHODS					   *
   ********************************************************* */
@@ -51,9 +61,9 @@ Player::Player() :
 	m_name("NoName"),
 	m_tabUnit(),
 	m_tabCity(),
-	m_selectedUnit(NO_UNIT_SELECTED),
-	m_selectedCity(NO_CITY_SELECTED),
-	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
+	m_selectedCity(SELECTION::NO_CITY_SELECTED),
+	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Player Par Defaut Success");
@@ -76,9 +86,9 @@ Player::Player
 	m_id(id),
 	m_tabUnit(),
 	m_tabCity(),
-	m_selectedUnit(NO_UNIT_SELECTED),
-	m_selectedCity(NO_CITY_SELECTED),
-	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
+	m_selectedCity(SELECTION::NO_CITY_SELECTED),
+	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Player Success");
@@ -363,7 +373,7 @@ void Player::addGoldToGoldConversionSurplus
 
 Players::Players()
 :
-m_selectedPlayer(NO_PLAYER_SELECTED),
+m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
 m_vectCityName(),
@@ -389,7 +399,7 @@ void Players::init(const std::string& filePath)
 {
 	/*---UNIT---*/
 
-	m_vectIDUnit.resize(m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + NB_MAX_PLAYER);
+	m_vectIDUnit.resize(m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + PlayerH::NB_MAX_PLAYER);
 
 	/* Unit Texture */
 	for (unsigned int i(0); i < m_vectUnitTemplate.size(); i++)
@@ -408,7 +418,7 @@ void Players::init(const std::string& filePath)
 		= RealEngine2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
 
 	/* Appartenance Texture */
-	for (unsigned int i(0); i < NB_MAX_PLAYER; i++)
+	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
 	{
 		m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + i]
 			= RealEngine2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
@@ -463,7 +473,7 @@ void Players::clickToSelectUnit
 	const unsigned int y
 )
 {
-	if (m_selectedPlayer != NO_PLAYER_SELECTED)
+	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
 	{
 		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
 		unsigned int i{ 0 };
@@ -487,11 +497,11 @@ void Players::clickToSelectUnit
 
 void Players::isAUnitSelected()
 {
-	if (m_selectedPlayer != NO_PLAYER_SELECTED)
+	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
 	{
 		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
 
-		if (p->GETselectedUnit() != NO_UNIT_SELECTED)
+		if (p->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 		{
 			std::shared_ptr<Unit> u{ p->GETtabUnit()[p->GETselectedUnit()] };
 			bool prevShow{ u->GETshow() };

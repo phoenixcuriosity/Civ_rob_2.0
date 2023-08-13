@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.2
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,76 +37,75 @@
 #include "InputManager.h"
 
 /* *********************************************************
- *						Constantes						   *
- ********************************************************* */
-
-/* SDL : Define the number of mouse click ONE */
-const int ONE_CLICK = 1;
-
-/* SDL : Define the number of mouse clicks TWO */
-const int TWO_CLICKS = 2;
-
-/* SDL : Define if the wheel scroll up */
-const int MOUSE_SCROLL_UP = 1;
-
-/* SDL : Define if the wheel scroll down */
-const int MOUSE_SCROLL_DOWN = -1;
-
-/* *********************************************************
  *						Classe							   *
  ********************************************************* */
 
 namespace RealEngine2D
 {
 
-class GUI
-{
-public:
-	GUI();
-	~GUI();
+	namespace GUI_MOUSE
+	{
+		/* SDL : Define the number of mouse click ONE */
+		const int ONE_CLICK = 1;
 
-	void init(const std::string& filePath);
-	void destroy();
+		/* SDL : Define the number of mouse clicks TWO */
+		const int TWO_CLICKS = 2;
 
-	void draw();
-	void update();
+		/* SDL : Define if the wheel scroll up */
+		const int MOUSE_SCROLL_UP = 1;
 
-	void setMouseCursor(const std::string& imageFile);
-	void showMouseCursor();
-	void hideMouseCursor();
+		/* SDL : Define if the wheel scroll down */
+		const int MOUSE_SCROLL_DOWN = -1;
+	}
 
-	void onSDLEvent(SDL_Event& ev, InputManager& inputManager);
+	class GUI
+	{
+	public:
+		GUI();
+		~GUI();
 
-	void loadScheme(const std::string& shemeFile);
-	void setFont(const std::string& fontFile);
+		void init(const std::string& filePath);
+		void destroy();
 
-	CEGUI::Window* createWidget
-	(
-		const std::string& type,
-		const glm::vec4& destRectPerc,
-		const glm::vec4& destRectPix,
-		const std::string& name = ""
-	);
+		void draw();
+		void update();
 
-	static void setWidgetDestRect
-	(
-		CEGUI::Window* window,
-		const glm::vec4& destRectPerc,
-		const glm::vec4& destRectPix
-	);
+		void setMouseCursor(const std::string& imageFile);
+		void showMouseCursor();
+		void hideMouseCursor();
 
-	static CEGUI::OpenGL3Renderer* getRenderer() { return m_renderer; };
-	const CEGUI::GUIContext* getContext() { return m_context; };
+		void onSDLEvent(SDL_Event& ev, InputManager& inputManager);
 
-	CEGUI::MouseButton SDLButtonToCEGUI(Uint8 sdlButton);
+		void loadScheme(const std::string& shemeFile);
+		void setFont(const std::string& fontFile);
 
-private:
-	Uint32 m_lasTime = 0;
+		CEGUI::Window* createWidget
+		(
+			const std::string& type,
+			const glm::vec4& destRectPerc,
+			const glm::vec4& destRectPix,
+			const std::string& name = ""
+		);
 
-	static CEGUI::OpenGL3Renderer* m_renderer;
-	CEGUI::GUIContext* m_context = nullptr;
-	CEGUI::Window* m_root = nullptr;
-};
+		static void setWidgetDestRect
+		(
+			CEGUI::Window* window,
+			const glm::vec4& destRectPerc,
+			const glm::vec4& destRectPix
+		);
+
+		static CEGUI::OpenGL3Renderer* getRenderer() { return m_renderer; };
+		const CEGUI::GUIContext* getContext() { return m_context; };
+
+		CEGUI::MouseButton SDLButtonToCEGUI(Uint8 sdlButton);
+
+	private:
+		Uint32 m_lasTime = 0;
+
+		static CEGUI::OpenGL3Renderer* m_renderer;
+		CEGUI::GUIContext* m_context = nullptr;
+		CEGUI::Window* m_root = nullptr;
+	};
 
 }
 

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.8.0
-	file version : 1.3
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,7 @@ namespace RealEngine2D
 {
 
 ScreenList::ScreenList(IMainGame* game):
-m_game(game), m_currentScreenIndex(INIT_SCREEN_INDEX)
+m_game(game), m_currentScreenIndex(RealEngine2D::SCREEN_INDEX::INIT)
 {
 }
 
@@ -43,7 +43,7 @@ ScreenList::~ScreenList()
 std::shared_ptr<IGameScreen> ScreenList::moveNext()
 {
 	std::shared_ptr<IGameScreen> currentScreen = getCurrent();
-	if (currentScreen->getNextScreenIndex() != INIT_SCREEN_INDEX)
+	if (currentScreen->getNextScreenIndex() != RealEngine2D::SCREEN_INDEX::INIT)
 	{
 		m_currentScreenIndex = currentScreen->getNextScreenIndex();
 	}
@@ -54,7 +54,7 @@ std::shared_ptr<IGameScreen> ScreenList::moveNext()
 std::shared_ptr<IGameScreen> ScreenList::movePrevious()
 {
 	std::shared_ptr<IGameScreen> currentScreen = getCurrent();
-	if (currentScreen->getPreviousScreenIndex() != INIT_SCREEN_INDEX)
+	if (currentScreen->getPreviousScreenIndex() != RealEngine2D::SCREEN_INDEX::INIT)
 	{
 		m_currentScreenIndex = currentScreen->getPreviousScreenIndex();
 	}
@@ -83,12 +83,12 @@ void ScreenList::destroy()
 	}
 	m_screens.resize(0);
 	m_screens.clear();
-	m_currentScreenIndex = INIT_SCREEN_INDEX;
+	m_currentScreenIndex = RealEngine2D::SCREEN_INDEX::INIT;
 }
 
 std::shared_ptr<IGameScreen> ScreenList::getCurrent()
 {
-	if (INIT_SCREEN_INDEX == m_currentScreenIndex) return nullptr;
+	if (RealEngine2D::SCREEN_INDEX::INIT == m_currentScreenIndex) return nullptr;
 	return m_screens[m_currentScreenIndex];
 }
 

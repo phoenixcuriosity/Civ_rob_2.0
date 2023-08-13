@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.26
+	last modification on this file on version:0.25.1.0
+	file version : 1.27
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,49 @@
 #include "App.h"
 
 #include <RealEngine2D/src/ErrorLog.h> 
+
+namespace UNITC
+{
+	const unsigned int NO_MOVEMENT = 0;
+
+	const unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
+
+	const unsigned int ZERO_LIFE = 0;
+
+	const unsigned int ZERO_BLIT = 0;
+
+	const unsigned int ZERO_NUMBER_OF_ATTACK = 0;
+
+	const bool DEAD_UNIT = false;
+
+	/*
+		use as 1/x
+		default : x = 20
+	*/
+	const unsigned int COEF_DIV_HEAL_NO_APPARTENANCE = 20;
+
+	/*
+		use as 1/x
+		default : x = 5
+	*/
+	const unsigned int COEF_DIV_HEAL_APPARTENANCE = 5;
+
+	/*
+		use as 1/x
+		default : x = 4
+	*/
+	const unsigned int COEF_DIV_LEVELUP = 4;
+
+	/*
+		use as 1/x
+		Use for screen_refresh_rate/BLIT_RATE
+		default = 2
+	*/
+	const unsigned int BLIT_RATE = 2;
+
+	const int FOOD_ADD_BY_IRRAGATION = 2;
+	const int GOLD_ADD_BY_IRRAGATION = 1;
+}
 
  /* *********************************************************
   *						 Classes						   *
@@ -84,7 +127,7 @@ bool Unit::searchUnitTile
 	Select_Type* select
 )
 {
-	if (NO_PLAYER_SELECTED < players.GETselectedPlayerId())
+	if (SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId())
 	{
 		std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 
@@ -128,10 +171,10 @@ void Unit::tryToMove
 	const int y
 )
 {
-	if (players.GETselectedPlayerId() != NO_PLAYER_SELECTED)
+	if (players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED)
 	{
 		const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
-		int playerToAttack(NO_PLAYER_SELECTED), unitToAttack(NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
+		int playerToAttack(SELECTION::NO_PLAYER_SELECTED), unitToAttack(SELECTION::NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
 		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
 		{
@@ -139,7 +182,7 @@ void Unit::tryToMove
 
 			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, x, y);
 			selPlayer->SETselectedUnit(selectunit);
-			players.SETneedToUpdateDrawUnit(NEED_TO_UPDATE_DRAW_UNIT);
+			players.SETneedToUpdateDrawUnit(PlayerH::NEED_TO_UPDATE_DRAW_UNIT);
 			break;
 		case Move_Type::attackMove:
 		{
@@ -153,7 +196,7 @@ void Unit::tryToMove
 				attackUnit->attack(*(defenderUnit.get()));
 
 				/* if the opposite Unit is destroy, try to move to its position */
-				if (defenderUnit->GETalive() == DEAD_UNIT)
+				if (defenderUnit->GETalive() == UNITC::DEAD_UNIT)
 				{
 					attackPlayer->deleteUnit(unitToAttack);
 					tryToMove(maps, players, select, x, y);
@@ -161,7 +204,7 @@ void Unit::tryToMove
 			}
 			
 			/* Cannot move further for this turn */
-			attackUnit->SETmovement(NO_MOVEMENT);
+			attackUnit->SETmovement(UNITC::NO_MOVEMENT);
 			break;
 		}
 		case Move_Type::cannotMove:
@@ -407,10 +450,10 @@ m_numberOfAttack(1),
 m_level(1),
 m_alive(true),
 m_maintenance(1.0),
-m_blit(ZERO_BLIT),
+m_blit(UNITC::ZERO_BLIT),
 m_show(true),
 m_showStats(false),
-m_owner(NO_OWNER)
+m_owner(SELECTION::NO_OWNER)
 {
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Unit Par Defaut Success");
 }
@@ -463,7 +506,7 @@ m_numberOfAttack(numberOfAttack),
 m_level(level),
 m_alive(true),
 m_maintenance(maintenance),
-m_blit(ZERO_BLIT),
+m_blit(UNITC::ZERO_BLIT),
 m_show(true),
 m_showStats(false),
 m_owner(ptrToPlayer)
@@ -498,7 +541,7 @@ void Unit::attack
 {
 	m_numberOfAttack--;
 
-	if (m_movement > NO_MOVEMENT)
+	if (m_movement > UNITC::NO_MOVEMENT)
 	{
 		cible.defend(m_atq);
 	}
@@ -519,9 +562,9 @@ void Unit::defend
 {
 	if (dmg > m_def)
 	{
-		if ((m_life - (dmg - m_def)) <= ENOUGH_DAMAGE_TO_KILL)
+		if ((m_life - (dmg - m_def)) <= UNITC::ENOUGH_DAMAGE_TO_KILL)
 		{
-			m_life = ZERO_LIFE;
+			m_life = UNITC::ZERO_LIFE;
 			m_alive = false;
 		}
 		else
@@ -551,18 +594,18 @@ void Unit::move
 	const int y
 )
 {
-	if (NO_MOVEMENT < m_movement)
+	if (UNITC::NO_MOVEMENT < m_movement)
 	{
 		m_x += x;
 		m_y += y;
 		m_movement--;
 	}
 
-	if (NO_MOVEMENT == m_movement)
+	if (UNITC::NO_MOVEMENT == m_movement)
 	{
 		select = Select_Type::selectnothing;
-		selectunit = NO_UNIT_SELECTED;
-		m_blit = ZERO_BLIT;
+		selectunit = SELECTION::NO_UNIT_SELECTED;
+		m_blit = UNITC::ZERO_BLIT;
 		m_show = true;
 	}
 }
@@ -585,9 +628,9 @@ void Unit::heal
 	const int i(MainMap::convertPosXToIndex(m_x));
 	const int j(MainMap::convertPosYToIndex(m_y));
 
-	if (NO_APPARTENANCE == tiles[i][j].appartenance)
+	if (SELECTION::NO_APPARTENANCE == tiles[i][j].appartenance)
 	{
-		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_NO_APPARTENANCE);
+		m_life += (unsigned int)ceil(m_maxlife / UNITC::COEF_DIV_HEAL_NO_APPARTENANCE);
 		if (m_life > m_maxlife)
 		{
 			m_life = m_maxlife;
@@ -596,7 +639,7 @@ void Unit::heal
 	}
 	else if (tiles[i][j].appartenance == (int)selectplayer)
 	{
-		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_APPARTENANCE);
+		m_life += (unsigned int)ceil(m_maxlife / UNITC::COEF_DIV_HEAL_APPARTENANCE);
 		if (m_life > m_maxlife)
 		{
 			m_life = m_maxlife;
@@ -621,7 +664,7 @@ void Unit::levelup()
 {
 	m_level++;
 
-	m_maxlife += (int)ceil(m_maxlife / COEF_DIV_LEVELUP);
+	m_maxlife += (int)ceil(m_maxlife / UNITC::COEF_DIV_LEVELUP);
 	m_life = m_maxlife;
 
 	/* Todo */
@@ -733,7 +776,7 @@ bool Unit::isDeepWaterMovement_Type()
 
 bool Unit::isPossibleToAttack()
 {
-	return m_numberOfAttack > ZERO_NUMBER_OF_ATTACK ? true : false;
+	return m_numberOfAttack > UNITC::ZERO_NUMBER_OF_ATTACK ? true : false;
 }
 
 bool Unit::isThisUnitType
@@ -762,7 +805,7 @@ bool Unit::irrigate
 	Tile& tileToIrragate{ map[MainMap::convertPosXToIndex(m_x)][MainMap::convertPosXToIndex(m_y)] };
 
 	if	(
-			(NO_MOVEMENT < m_movement)
+			(UNITC::NO_MOVEMENT < m_movement)
 			&&
 			(tileToIrragate.tile_spec == GroundSpec_Type::nothing)
 			&&
@@ -770,8 +813,8 @@ bool Unit::irrigate
 		)
 	{
 		tileToIrragate.tile_ground = Ground_Type::irragated;
-		tileToIrragate.food = +FOOD_ADD_BY_IRRAGATION;
-		tileToIrragate.gold = +GOLD_ADD_BY_IRRAGATION;
+		tileToIrragate.food = +UNITC::FOOD_ADD_BY_IRRAGATION;
+		tileToIrragate.gold = +UNITC::GOLD_ADD_BY_IRRAGATION;
 		return true;
 	}
 	return false;
@@ -801,7 +844,7 @@ void Unit::cmpblit()
 	/* ---------------------------------------------------------------------- */
 	/* 50% off 50% on , environ 1s le cycle									  */
 	/* ---------------------------------------------------------------------- */
-	if ((++m_blit %= (RealEngine2D::SCREEN_REFRESH_RATE / BLIT_RATE)) == MODULO_ZERO)
+	if ((++m_blit %= (RealEngine2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO_ZERO)
 	{
 		m_show = !m_show;
 	}

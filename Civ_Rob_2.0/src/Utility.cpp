@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.7
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,9 +51,9 @@ bool Utility::checkPlayerUnitSelection
 )
 {
 	if	(
-			NO_PLAYER_SELECTED < players.GETselectedPlayerId()
+			SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId()
 			&&
-			NO_UNIT_SELECTED < players.GETselectedPlayerPtr()->GETselectedUnit()
+			SELECTION::NO_UNIT_SELECTED < players.GETselectedPlayerPtr()->GETselectedUnit()
 		)
 	{
 		return true;
@@ -78,10 +78,10 @@ bool Utility::checkPlayerCitieSelection
 	Players& players
 )
 {
-	if (
-		NO_PLAYER_SELECTED < players.GETselectedPlayerId()
-		&&
-		NO_CITY_SELECTED < players.GETselectedPlayerPtr()->GETselectedCity()
+	if	(
+			SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId()
+			&&
+			SELECTION::NO_CITY_SELECTED < players.GETselectedPlayerPtr()->GETselectedCity()
 		)
 	{
 		return true;

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.6
+	last modification on this file on version:0.25.1.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,9 +43,6 @@
 #include <RealEngine2D/src/AudioEngine.h>
 #include <RealEngine2D/src/GUI.h>
 
-
-#define MAX_NUMBER_OF_PLAYER 9 
-#define INITIAL_NUMBER_OF_PLAYER 1 
 
 
 struct UserInputNewGame
@@ -94,7 +91,7 @@ public:
 	UserInputNewGame* getUserInputNewGame() { return &m_userInputNewGame; };
 
 private:
-	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
+	int m_nextScreenIndexMenu;
 
 	UserInputNewGame m_userInputNewGame;
 

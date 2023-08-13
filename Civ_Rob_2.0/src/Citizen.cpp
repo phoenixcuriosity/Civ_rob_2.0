@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.8
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -68,7 +68,7 @@ unsigned int Citizen::placeCitizen
 	}
 
 
-	for (unsigned int i(0); (i < INIT_SIZE_VIEW * INIT_SIZE_VIEW) && (true == continuer); i++)
+	for (unsigned int i(0); (i < CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW) && (true == continuer); i++)
 	{
 		if (tile[i].appartenance == tile[citizens[0]->GETtileOccupied()].appartenance)
 		{
@@ -124,7 +124,7 @@ unsigned int Citizen::placeCitizen
 /* ----------------------------------------------------------------------------------- */
 Citizen::Citizen()
 	:
-	m_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
+	m_tileOccupied((unsigned int)ceil((CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW) / 2)),
 	m_happiness(Emotion_Type::neutral),
 	m_food(2),
 	m_work(1),
@@ -148,7 +148,7 @@ Citizen::Citizen
 	Tile tile
 )
 	:
-	m_tileOccupied((unsigned int)ceil((INIT_SIZE_VIEW* INIT_SIZE_VIEW) / 2)),
+	m_tileOccupied((unsigned int)ceil((CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW) / 2)),
 	m_happiness(Emotion_Type::neutral),
 	m_food(tile.food),
 	m_work(tile.work),

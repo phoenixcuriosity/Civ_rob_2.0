@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.10
+	last modification on this file on version:0.25.1.0
+	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,10 +39,6 @@
 
 #include "SaveReload.h"
 
-const std::string configFilePath = "bin/filePath.xml";
-
-/* Define default font for GUI texts */
-const std::string fontGUI = "times.ttf";
 
 class App : public RealEngine2D::IMainGame
 {

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.39
+	last modification on this file on version:0.25.1.0
+	file version : 1.40
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,6 +40,18 @@
  /* *********************************************************
   *						 Classes						   *
   ********************************************************* */
+
+namespace GInput
+{
+	const float KEY_SPEED_MOVE = 2.0f;
+
+	const int UNIT_NO_MOVEMENT = 0;
+
+	const SDL_KeyCode KEY_TO_FOUND_CITY = SDLK_b;
+	const SDL_KeyCode KEY_TO_IRRIGATE = SDLK_i;
+	const SDL_KeyCode KEY_NEXT_TURN = SDLK_SPACE;
+}
+
 
   /* *********************************************************
    *					KeyboardMouse STATIC				   *
@@ -114,17 +126,17 @@ void GamePlayScreen::inputSDL
 void GamePlayScreen::actionByKey()
 {
 	/* Next Turn */
-	if (m_game->getInputManager().isKeyDown(KEY_NEXT_TURN))
+	if (m_game->getInputManager().isKeyDown(GInput::KEY_NEXT_TURN))
 	{
 		m_nextTurn.nextTurn(*this);
-		m_game->getInputManager().releaseKey(KEY_NEXT_TURN);
+		m_game->getInputManager().releaseKey(GInput::KEY_NEXT_TURN);
 	}
 
 
 	if (Utility::checkPlayerUnitSelection(m_players))
 	{
 		/* Found City */
-		if (m_game->getInputManager().isKeyDown(KEY_TO_FOUND_CITY))
+		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
 		{
 			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
 			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
@@ -137,7 +149,7 @@ void GamePlayScreen::actionByKey()
 		}
 
 		/* Irragate */
-		if (m_game->getInputManager().isKeyDown(KEY_TO_IRRIGATE))
+		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_IRRIGATE))
 		{
 			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
 			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
@@ -172,7 +184,7 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				UNIT_NO_MOVEMENT,
+				GInput::UNIT_NO_MOVEMENT,
 				-((int)m_mainMap.GETtileSize())
 			);
 		}
@@ -199,7 +211,7 @@ void GamePlayScreen::actionByKey()
 				m_players,
 				Select_Type::selectmove,
 				-((int)m_mainMap.GETtileSize()),
-				UNIT_NO_MOVEMENT
+				GInput::UNIT_NO_MOVEMENT
 			);
 		}
 		/* NO SDLK_KP_5 : Useless */
@@ -213,7 +225,7 @@ void GamePlayScreen::actionByKey()
 				m_players,
 				Select_Type::selectmove,
 				(int)m_mainMap.GETtileSize(),
-				UNIT_NO_MOVEMENT
+				GInput::UNIT_NO_MOVEMENT
 			);
 		}
 		else
@@ -238,7 +250,7 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				UNIT_NO_MOVEMENT,
+				GInput::UNIT_NO_MOVEMENT,
 				(int)m_mainMap.GETtileSize()
 			);
 		}
@@ -339,7 +351,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(0.0f, KEY_SPEED_MOVE * deltaTime)
+				glm::vec2(0.0f, GInput::KEY_SPEED_MOVE * deltaTime)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
@@ -352,7 +364,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(0.0f, -KEY_SPEED_MOVE * deltaTime)
+				glm::vec2(0.0f, -GInput::KEY_SPEED_MOVE * deltaTime)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
@@ -365,7 +377,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(-KEY_SPEED_MOVE * deltaTime, 0.0f)
+				glm::vec2(-GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
@@ -378,7 +390,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(KEY_SPEED_MOVE * deltaTime, 0.0f)
+				glm::vec2(GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
@@ -431,13 +443,13 @@ void GamePlayScreen::wheel
 		}
 	}
 	*/
-	if (MOUSE_SCROLL_UP == ev.wheel.y)
+	if (RealEngine2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
 	{
 		m_screen.camera.zoom();
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
+	else if (RealEngine2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
 		m_screen.camera.deZoom();
 		m_mainMap.SETneedToUpdateDraw(true);
@@ -452,7 +464,7 @@ void GamePlayScreen::mouseClick
 )
 {
 	
-	if (ev.button.clicks == TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
+	if (ev.button.clicks == RealEngine2D::GUI_MOUSE::TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
 	{
 		if	(
 				m_players.searchCity
@@ -473,7 +485,7 @@ void GamePlayScreen::mouseClick
 				)
 			)
 		{
-			m_screen.m_nextScreenIndexMenu = CITY_SCREEN_INDEX;
+			m_screen.m_nextScreenIndexMenu = SCREEN_INDEX::CITY;
 			m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
 		}
 		else

@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,11 @@ namespace RealEngine2D
 {
 
 /* Define initial screen index -> Default Screen */
-#define INIT_SCREEN_INDEX -1
+namespace SCREEN_INDEX
+{
+	const int INIT = -1;
+}
+
 
 class IMainGame;
 
@@ -53,7 +57,7 @@ class IGameScreen
 public:
 	IGameScreen():
 	m_game(nullptr),
-	m_screenIndex(INIT_SCREEN_INDEX),
+	m_screenIndex(SCREEN_INDEX::INIT),
 	m_currentState(ScreenState::NONE)
 	{};
 

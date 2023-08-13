@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.6.0
-	file version : 1.25
+	last modification on this file on version:0.25.1.0
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,6 +31,9 @@
 
 #include "LIB.h"
 
+#include "T_City.h"
+#include "T_CityScreen.h"
+
 #include "MainMap.h"
 #include "Unit.h"
 #include "Citizen.h"
@@ -42,129 +45,10 @@
 #include <RealEngine2D/src/Window.h>
 #include <RealEngine2D/src/GUI.h>
 
-/* Redef : include in .cpp */
-class GamePlayScreen;
-class Players;
-class Player;
-class GameInput;
-
-struct Screen;
-struct Var;
-struct GoldStats;
-
-/* *********************************************************
- *					 Constantes							   *
- ********************************************************* */
-
-  /* taille de la carte transpos�e dans la citiemap */
-const unsigned int INIT_SIZE_VIEW = 9;
-
-/* Population maximale dans une Citie */
-const unsigned int MAX_POP = 50;
-
-/* Minimal population in City */
-const unsigned int MIN_POP = 1;
-
-/* Minimal influence level in City */
-const unsigned int MIN_INFLUENCE_LEVEL = 1;
-
-/* Todo : g�n�ralisation : compter nb Citie par player dans CITIENAME.txt */
-
-/* Nombre de noms de Citie dans CITIENAME.txt */
-const unsigned int MAX_CITY_PER_PLAYER = 5;
-
-/* Define the maximum range of emotion */
-const double SCALE_RANGE_MAX_EMOTION = 100.0;
-
-/* Define the minimum range of emotion */
-const double SCALE_RANGE_MIN_EMOTION = 0.0;
-
-/* Define the mean emotion */
-const double MEAN_EMOTION = ((SCALE_RANGE_MAX_EMOTION + SCALE_RANGE_MIN_EMOTION) / 2.0);
-
-/* Define the mean value of emotion range */
-const double SCALE_RANGE_MEAN_EMOTION = ((abs(SCALE_RANGE_MAX_EMOTION) + abs(SCALE_RANGE_MIN_EMOTION)) / 2.0);
-
-/* Define the multiplier coefficient to convert work to food */
-const double MULTIPLIER_CONVERSION_WORK_TO_FOOD = 10.0;
-
-/* Define the multiplier coefficient to convert food to work */
-const double MULTIPLIER_CONVERSION_FOOD_TO_WORK = (1.0 / MULTIPLIER_CONVERSION_WORK_TO_FOOD);
-
-/* Define the multiplier coefficient to convert work to gold */
-const double MULTIPLIER_CONVERSION_WORK_TO_GOLD = (10.0 * MULTIPLIER_CONVERSION_WORK_TO_FOOD);
-
-/* Define the multiplier coefficient to convert food to gold */
-const double MULTIPLIER_CONVERSION_FOOD_TO_GOLD = (MULTIPLIER_CONVERSION_WORK_TO_GOLD / MULTIPLIER_CONVERSION_FOOD_TO_WORK);
-
-const unsigned int CITY_IHM_SECOND_INDEX = 1;
-
-/* Define the minimum food in a City */
-const double CITY_ZERO_FOOD = 0.0;
-
-/* Define the minimum food in a City */
-const double CITY_ZERO = 0.0;
-
-/* Define the minimum food to level up */
-const double MIN_FOOD_TO_LEVEL_UP = 1.0;
-
-/* Define Percent */
-const double ONE_HUNDRED_PERCENT = 100.0;
-
-/* *********************************************************
- *							 Enum						   *
- ********************************************************* */
-
- /* Define the types of builds that a city can create */
-enum class build_Type : unsigned int
-{
-	building,	/* ### Not implemented as of 0.20.3.1 ### */
-	unit
-};
-
-/* Define types of conversion that a city can apply to the ressources */
-enum class conversionSurplus_Type : unsigned int
-{
-	No_Conversion,
-	FoodToWork, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_WORK */
-	FoodToGold, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_GOLD */
-	WorkToFood, /* Apply MULTIPLIER_CONVERSION_WORK_TO_FOOD */
-	WorkToGold, /* Apply MULTIPLIER_CONVERSION_WORK_TO_GOLD */
-	GoldToFood, /* ### Not implemented as of 0.20.3.1 ### */
-	GoldToWork  /* ### Not implemented as of 0.20.3.1 ### */
-};
-
-/* Define a type to resize Units Texture between city and mainmap */
-enum class resizeUnitTexture_Type : unsigned int
-{
-	mainmap,
-	city
-};
-
-
 /* *********************************************************
  *						 Structs						   *
  ********************************************************* */
 
- /*
-	 Define a building in a City
-	 Use for building Queue
- */
-struct build
-{
-	std::string name = EMPTY_STRING;
-	build_Type type = build_Type::building;
-	double work = 0.0;
-	double remainingWork = 0.0;
-};
-
-struct buildGUI
-{
-	CEGUI::PushButton* buildG = nullptr;
-	build buildQ;
-};
-
-typedef std::deque<buildGUI> dequeBuild;
 
 /* *********************************************************
  *						 Classes						   *
@@ -186,7 +70,7 @@ public:
 	static void createCity
 	(
 		GamePlayScreen& mainGame,
-		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CityH::MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -209,7 +93,7 @@ public:
 		const unsigned int selectplayer,
 		MainMap& mainMap,
 		VectMap& tabtile,
-		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CityH::MIN_INFLUENCE_LEVEL
 	);
 
 private:
@@ -225,7 +109,7 @@ private:
 	(
 		const int o,
 		const int p,
-		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CityH::MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -474,7 +358,7 @@ public:
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
 	inline virtual dequeBuild& GETbuildQueue() { return m_buildQueue; };
 
-	inline virtual double GETfoodStockPerc()const { return ((m_foodStock / m_foodToLevelUp) * ONE_HUNDRED_PERCENT); };
+	inline virtual double GETfoodStockPerc()const { return ((m_foodStock / m_foodToLevelUp) * CityH::ONE_HUNDRED_PERCENT); };
 	inline virtual double GETBuildPerc()const
 	{
 		if (m_buildQueue.empty() == VECT_NOT_EMPTY)
@@ -490,7 +374,7 @@ public:
 						/ 
 						m_buildQueue.front().buildQ.work
 					)
-					* ONE_HUNDRED_PERCENT
+					* CityH::ONE_HUNDRED_PERCENT
 				);
 		}
 		return 0.0;

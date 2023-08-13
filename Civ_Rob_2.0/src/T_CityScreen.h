@@ -3,7 +3,7 @@
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
 	last modification on this file on version:0.25.1.0
-	file version : 1.2
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,42 +22,44 @@
 
 */
 
-#ifndef ErrorLog_H
-#define ErrorLog_H
+#ifndef T_CITYSCREEN_H
+#define T_CITYSCREEN_H
 
-#include <iostream>
-#include <fstream>
+#include "LIB.h"
 
-namespace RealEngine2D
+#include <deque>
+
+#include "../../Dependencies/CEGUI/widgets/PushButton.h"
+
+/* Define the types of builds that a city can create */
+enum class build_Type : unsigned int
 {
-	namespace BUFFER_LOGEVENT
-	{
-		const unsigned int MAX_CHAR = 80;
-	}
+	building,	/* ### Not implemented as of 0.20.3.1 ### */
+	unit
+};
 
-	class ErrorLog
-	{
-	public:
+/*
+	Define a building in a City
+	Use for building Queue
+*/
+struct build
+{
+	std::string name = EMPTY_STRING;
+	build_Type type = build_Type::building;
+	double work = 0.0;
+	double remainingWork = 0.0;
+};
 
-		static void initializeLog();
+struct buildGUI
+{
+	CEGUI::PushButton* buildG = nullptr;
+	build buildQ;
+};
 
-		static void closeLog();
+typedef std::deque<buildGUI> dequeBuild;
 
-		static void logEvent
-		(
-			const std::string& evt
-		);
+#endif
 
-	private:
-
-		static std::ofstream m_log;
-		static char m_buffer[BUFFER_LOGEVENT::MAX_CHAR];
-		static std::string m_lastEvent;
-		static bool m_isInitialize;
-	};
-
-}
-
-
-#endif // !ErrorLog_H
-
+/*
+*	End Of File : T_CITYSCREEN_H.h
+*/

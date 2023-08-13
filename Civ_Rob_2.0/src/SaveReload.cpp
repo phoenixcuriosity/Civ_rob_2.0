@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.26
+	last modification on this file on version:0.25.1.0
+	file version : 1.27
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,8 +37,6 @@
 /* *********************************************************
  *				START SaveReload::STATIC				   *
  ********************************************************* */
-
-
 
 void SaveReload::init(const std::string& filePath)
 {
@@ -419,7 +417,7 @@ void SaveReload::reload
 	loadPlayer(mainGame);
 
 	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
-	mainGame.GETPlayers().SETselectedPlayerId(NO_PLAYER_SELECTED);
+	mainGame.GETPlayers().SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
 
 	mainGame.makePlayersButtons();
 	mainGame.GETmainMap().initMainMapTexture();
@@ -762,9 +760,9 @@ void SaveReload::loadCityXML
 	tinyxml2::XMLNode* nCity
 )
 {
-	unsigned int middletileX(0), middletileY(0), influenceLevel(MIN_INFLUENCE_LEVEL);
+	unsigned int middletileX(0), middletileY(0), influenceLevel(CityH::MIN_INFLUENCE_LEVEL);
 	std::vector<Tile> tabtile;
-	tabtile.resize(INIT_SIZE_VIEW * INIT_SIZE_VIEW);
+	tabtile.resize(CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW);
 
 	tinyxml2::XMLNode* inputNode;
 	struct BlankCity
@@ -1031,7 +1029,7 @@ void SaveReload::removeSave(const std::string& filePath)
 	std::string file(EMPTY_STRING);
 	bool condition(false);
 
-	if (m_currentSave != NO_CURRENT_SAVE_SELECTED)
+	if (m_currentSave != SELECTION::NO_CURRENT_SAVE_SELECTED)
 	{
 
 		for (unsigned int i(0); i < m_tabSave.size(); i++)
@@ -1074,7 +1072,7 @@ void SaveReload::removeSave(const std::string& filePath)
 			else
 				m_tabSave.erase(m_tabSave.begin() + m_currentSave - 1);
 
-			m_currentSave = NO_CURRENT_SAVE_SELECTED;
+			m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
 
 
 			std::ofstream saveInfo(filePath);
@@ -1149,7 +1147,7 @@ void SaveReload::clearSave(const std::string& filePath)
 	else
 		RealEngine2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 
-	m_currentSave = NO_CURRENT_SAVE_SELECTED;
+	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
 	m_tabSave.clear();
 
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: clearSave End");
@@ -1175,7 +1173,7 @@ void SaveReload::clearSave(const std::string& filePath)
   /* INPUT : void																							      */
   /* ---------------------------------------------------------------------------------------------------------- */
   /* ---------------------------------------------------------------------------------------------------------- */
-SaveReload::SaveReload() : m_currentSave(NO_CURRENT_SAVE_SELECTED)
+SaveReload::SaveReload() : m_currentSave(SELECTION::NO_CURRENT_SAVE_SELECTED)
 {
 }
 
