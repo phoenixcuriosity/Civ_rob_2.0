@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.26
+	last modification on this file on version:0.25.2.0
+	file version : 1.27
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -70,7 +70,7 @@ public:
 	static void createCity
 	(
 		GamePlayScreen& mainGame,
-		const unsigned int influenceLevel = CityH::MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -93,7 +93,7 @@ public:
 		const unsigned int selectplayer,
 		MainMap& mainMap,
 		VectMap& tabtile,
-		const unsigned int influenceLevel = CityH::MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
 private:
@@ -109,7 +109,7 @@ private:
 	(
 		const int o,
 		const int p,
-		const unsigned int influenceLevel = CityH::MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -358,10 +358,10 @@ public:
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
 	inline virtual dequeBuild& GETbuildQueue() { return m_buildQueue; };
 
-	inline virtual double GETfoodStockPerc()const { return ((m_foodStock / m_foodToLevelUp) * CityH::ONE_HUNDRED_PERCENT); };
+	inline virtual double GETfoodStockPerc()const { return ((m_foodStock / m_foodToLevelUp) * PERCENTAGE::ONE_HUNDRED); };
 	inline virtual double GETBuildPerc()const
 	{
-		if (m_buildQueue.empty() == VECT_NOT_EMPTY)
+		if (m_buildQueue.empty() == CONTAINERS::NOT_EMPTY)
 		{
 			return 
 				(
@@ -374,7 +374,7 @@ public:
 						/ 
 						m_buildQueue.front().buildQ.work
 					)
-					* CityH::ONE_HUNDRED_PERCENT
+					* PERCENTAGE::ONE_HUNDRED
 				);
 		}
 		return 0.0;

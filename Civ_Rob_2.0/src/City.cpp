@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.44
+	last modification on this file on version:0.25.2.0
+	file version : 1.45
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,54 +35,79 @@
 #include <RealEngine2D/src/Window.h>
 #include <RealEngine2D/src/ErrorLog.h> 
 
+namespace POP
+{
+	/* Population maximale dans une Citie */
+	const unsigned int MAX = 50;
+
+	/* Minimal population in City */
+	const unsigned int MIN = 1;
+}
+
+namespace EMOTION_RANGE
+{
+	/* Define the maximum range of emotion */
+	const double MAX = 100.0;
+
+	/* Define the minimum range of emotion */
+	const double MIN = 0.0;
+
+	/* Define the mean emotion */
+	const double MEAN = ((MAX + MIN) / 2.0);
+
+	/* Define the mean value of emotion range */
+	const double SCALE_MEAN = ((abs(MAX) + abs(MIN)) / 2.0);
+}
+
+namespace MULTIPLIER
+{
+	namespace CONVERSION
+	{
+		/* Define the multiplier coefficient to convert work to food */
+		const double WORK_TO_FOOD = 10.0;
+
+		/* Define the multiplier coefficient to convert food to work */
+		const double FOOD_TO_WORK = (1.0 / WORK_TO_FOOD);
+
+		/* Define the multiplier coefficient to convert work to gold */
+		const double WORK_TO_GOLD = (10.0 * WORK_TO_FOOD);
+
+		/* Define the multiplier coefficient to convert food to gold */
+		const double FOOD_TO_GOLD = (WORK_TO_GOLD / FOOD_TO_WORK);
+	}
+}
+
+namespace RESOURCES
+{
+	namespace FOOD
+	{
+		/* Define the minimum food in a City */
+		const double ZERO = 0.0;
+
+		/* Define the minimum food to level up */
+		const double MIN_TO_LEVEL_UP = 1.0;
+	}
+
+	namespace WORK
+	{
+		const double ZERO = 0.0;
+	}
+
+	namespace GOLD
+	{
+		const double ZERO = 0.0;
+	}
+}
+
 
 namespace CityC
 {
-	/* Population maximale dans une Citie */
-	const unsigned int MAX_POP = 50;
-
-	/* Minimal population in City */
-	const unsigned int MIN_POP = 1;
-
 	/* Todo : g�n�ralisation : compter nb Citie par player dans CITIENAME.txt */
 
 	/* Nombre de noms de Citie dans CITIENAME.txt */
 	const unsigned int MAX_CITY_PER_PLAYER = 5;
 
-	/* Define the maximum range of emotion */
-	const double SCALE_RANGE_MAX_EMOTION = 100.0;
-
-	/* Define the minimum range of emotion */
-	const double SCALE_RANGE_MIN_EMOTION = 0.0;
-
-	/* Define the mean emotion */
-	const double MEAN_EMOTION = ((SCALE_RANGE_MAX_EMOTION + SCALE_RANGE_MIN_EMOTION) / 2.0);
-
-	/* Define the mean value of emotion range */
-	const double SCALE_RANGE_MEAN_EMOTION = ((abs(SCALE_RANGE_MAX_EMOTION) + abs(SCALE_RANGE_MIN_EMOTION)) / 2.0);
-
-	/* Define the multiplier coefficient to convert work to food */
-	const double MULTIPLIER_CONVERSION_WORK_TO_FOOD = 10.0;
-
-	/* Define the multiplier coefficient to convert food to work */
-	const double MULTIPLIER_CONVERSION_FOOD_TO_WORK = (1.0 / MULTIPLIER_CONVERSION_WORK_TO_FOOD);
-
-	/* Define the multiplier coefficient to convert work to gold */
-	const double MULTIPLIER_CONVERSION_WORK_TO_GOLD = (10.0 * MULTIPLIER_CONVERSION_WORK_TO_FOOD);
-
-	/* Define the multiplier coefficient to convert food to gold */
-	const double MULTIPLIER_CONVERSION_FOOD_TO_GOLD = (MULTIPLIER_CONVERSION_WORK_TO_GOLD / MULTIPLIER_CONVERSION_FOOD_TO_WORK);
-
 	const unsigned int CITY_IHM_SECOND_INDEX = 1;
-
-	/* Define the minimum food in a City */
-	const double CITY_ZERO_FOOD = 0.0;
-
-	/* Define the minimum food in a City */
-	const double CITY_ZERO = 0.0;
-
-	/* Define the minimum food to level up */
-	const double MIN_FOOD_TO_LEVEL_UP = 1.0;
 }
 
  /* *********************************************************
@@ -123,7 +148,7 @@ void City::createCity
 		]);
 
 	std::vector<Tile> tabtile;
-	tabtile.resize(CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW);
+	tabtile.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 
 	/* ---------------------------------------------------------------------- */
 	/* 4� : Remplisage tableau de tile Citie			 					  */
@@ -183,9 +208,9 @@ void City::fillCitieTiles
 {
 	unsigned int k(0);
 	
-	for (int o(-(int)ceil(CityH::INIT_SIZE_VIEW / 2)); o <= (int)ceil(CityH::INIT_SIZE_VIEW / 2); o++)
+	for (int o(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); o <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); o++)
 	{
-		for (int p(-(int)ceil(CityH::INIT_SIZE_VIEW / 2)); p <= (int)ceil(CityH::INIT_SIZE_VIEW / 2); p++)
+		for (int p(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); p <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); p++)
 		{
 			if (initSizeInfluenceCondition(o, p, influenceLevel))
 			{
@@ -226,13 +251,13 @@ bool City::initSizeInfluenceCondition
 )
 {
 	if (
-		o >= (int16_t)(-(int16_t)CityH::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
+		o >= (int16_t)(-(int16_t)CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
 		&&
-		o <= (int16_t)(CityH::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
+		o <= (int16_t)(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
 		&&
-		p >= (int16_t)(-(int16_t)CityH::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
+		p >= (int16_t)(-(int16_t)CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
 		&&
-		p <= (int16_t)(CityH::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
+		p <= (int16_t)(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
 		&&
 		cornerCheck(o, p, influenceLevel)
 		)
@@ -261,12 +286,12 @@ bool City::cornerCheck
 	const unsigned int influenceLevel
 )
 {
-	if (
-		CityH::MIN_INFLUENCE_LEVEL < influenceLevel
-		&&
-		std::abs(o) == std::abs(p)
-		&&
-		(CityH::MIN_INFLUENCE_LEVEL * influenceLevel) == (unsigned int)std::abs(o)
+	if	(
+			(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL < influenceLevel)
+			&&
+			(std::abs(o) == std::abs(p))
+			&&
+			(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * influenceLevel) == (unsigned int)std::abs(o)
 		)
 	{
 		return false;
@@ -335,16 +360,16 @@ City::City
 	m_y(y),
 	m_tile(tiles),
 	m_citizens(),
-	m_influenceLevel(CityH::MIN_INFLUENCE_LEVEL),
-	m_nbpop(CityC::MIN_POP),
+	m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
+	m_nbpop(POP::MIN),
 	m_atq(0),
 	m_def(0),
-	m_emotion((unsigned int)CityC::MEAN_EMOTION),
+	m_emotion((unsigned int)EMOTION_RANGE::MEAN),
 	m_nbstructurebuild(0),
-	m_foodStock(CityC::CITY_ZERO_FOOD),
-	m_foodBalance(tiles[(unsigned int)ceil((CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW) / 2)].food),
-	m_foodSurplusPreviousTurn(CityC::CITY_ZERO_FOOD),
-	m_foodToLevelUp(CityC::MIN_FOOD_TO_LEVEL_UP),
+	m_foodStock(RESOURCES::FOOD::ZERO),
+	m_foodBalance(tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)].food),
+	m_foodSurplusPreviousTurn(RESOURCES::FOOD::ZERO),
+	m_foodToLevelUp(RESOURCES::FOOD::MIN_TO_LEVEL_UP),
 	m_workBalance(0),
 	m_workSurplusPreviousTurn(0),
 	m_goldBalance(0.0),
@@ -355,7 +380,7 @@ City::City
 	m_citizens.push_back
 	(
 		std::make_unique<Citizen>
-		(tiles[(unsigned int)ceil((CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW) / 2)])
+		(tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)])
 	);
 
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
@@ -406,14 +431,14 @@ void City::foodNextTurn
 	m_foodStock += m_foodBalance;
 
 	/* Processing m_foodStock */
-	if (CityC::CITY_ZERO_FOOD > m_foodStock)
+	if (RESOURCES::FOOD::ZERO > m_foodStock)
 	{
 		/* CASE Decreasing : Need to delete a Citizen */
 
-		if (m_citizens.size() == CityC::MIN_POP)
+		if (m_citizens.size() == POP::MIN)
 		{
 			/* 1 POP */
-			m_foodStock = CityC::CITY_ZERO_FOOD;
+			m_foodStock = RESOURCES::FOOD::ZERO;
 		}
 		else
 		{
@@ -460,9 +485,9 @@ void City::foodNextTurn
 		/* N/A */
 	}
 
-	const double emotionOnFoodModifier((double)m_emotion / CityC::SCALE_RANGE_MEAN_EMOTION);
+	const double emotionOnFoodModifier((double)m_emotion / EMOTION_RANGE::SCALE_MEAN);
 	const double consumptionFoodCity(2.0 * ((double)m_nbpop - 1.0));
-	double sommeFoodCitizen(CityC::CITY_ZERO_FOOD);
+	double sommeFoodCitizen(RESOURCES::FOOD::ZERO);
 
 	for (auto& c : m_citizens)
 	{
@@ -473,9 +498,9 @@ void City::foodNextTurn
 	sommeFoodCitizen *= emotionOnFoodModifier;
 
 	m_foodBalance = m_foodSurplusPreviousTurn + sommeFoodCitizen - consumptionFoodCity;
-	m_foodSurplusPreviousTurn = CityC::CITY_ZERO_FOOD;
+	m_foodSurplusPreviousTurn = RESOURCES::FOOD::ZERO;
 
-	if (m_foodBalance > CityC::CITY_ZERO_FOOD)
+	if (m_foodBalance > RESOURCES::FOOD::ZERO)
 	{
 		switch (m_conversionToApply)
 		{
@@ -569,25 +594,25 @@ void City::computeEmotion()
 			result,
 			(double)Emotion_Type::angry,
 			(double)Emotion_Type::ecstatic,
-			CityC::SCALE_RANGE_MIN_EMOTION,
-			CityC::SCALE_RANGE_MAX_EMOTION,
+			EMOTION_RANGE::MIN,
+			EMOTION_RANGE::MAX,
 			(int)m_citizens.size()
 		);
 	}
 	catch (std::string const& msg)
 	{
-		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == IDENTICAL_STRINGS)
+		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == STRINGS::IDENTICAL)
 		{
 			RealEngine2D::ErrorLog::logEvent(msg);
-			m_emotion = (unsigned int)CityC::SCALE_RANGE_MEAN_EMOTION;
+			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
 #ifdef _DEBUG
 			throw(msg);
 #endif // _DEBUG
 		}
-		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == IDENTICAL_STRINGS)
+		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == STRINGS::IDENTICAL)
 		{
 			RealEngine2D::ErrorLog::logEvent(msg);
-			m_emotion = (unsigned int)CityC::SCALE_RANGE_MEAN_EMOTION;
+			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
 #ifdef _DEBUG
 			throw(msg);
 #endif // _DEBUG
@@ -604,7 +629,7 @@ void City::computeEmotion()
 void City::computeWork()
 {
 	/* Reset m_workBalance to CITY_ZERO */
-	m_workBalance = CityC::CITY_ZERO;
+	m_workBalance = RESOURCES::WORK::ZERO;
 
 	/* Sum work from citizen */
 	for (const auto& c : m_citizens)
@@ -613,13 +638,13 @@ void City::computeWork()
 	}
 
 	/* Applying Emotion multiplier */
-	m_workBalance *= ((double)m_emotion / CityC::SCALE_RANGE_MEAN_EMOTION);
+	m_workBalance *= ((double)m_emotion / EMOTION_RANGE::SCALE_MEAN);
 
 	/* Applying the work which was converted from food in the previous turn */
 	m_workBalance += m_workSurplusPreviousTurn;
 
 	/* Reset m_workSurplusPreviousTurn to CITY_ZERO */
-	m_workSurplusPreviousTurn = CityC::CITY_ZERO;
+	m_workSurplusPreviousTurn = RESOURCES::WORK::ZERO;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -720,7 +745,7 @@ void City::computeWorkToBuild
 	case conversionSurplus_Type::WorkToGold:
 
 		/* CASE : work conversion to gold */
-		player.addGoldToGoldConversionSurplus(m_workBalance * CityC::MULTIPLIER_CONVERSION_WORK_TO_GOLD);
+		player.addGoldToGoldConversionSurplus(m_workBalance * MULTIPLIER::CONVERSION::WORK_TO_GOLD);
 
 		break;
 	}
@@ -735,7 +760,7 @@ void City::computeWorkToBuild
 void City::computeGold()
 {
 	/* Reset m_goldBalance to CITY_ZERO */
-	m_goldBalance = CityC::CITY_ZERO;
+	m_goldBalance = RESOURCES::GOLD::ZERO;
 
 	/* Sum gold from citizen */
 	for (auto& c : m_citizens)
@@ -744,7 +769,7 @@ void City::computeGold()
 	}
 	
 	/* Applying Emotion multiplier */
-	m_goldBalance *= ((double)m_emotion / CityC::SCALE_RANGE_MEAN_EMOTION);
+	m_goldBalance *= ((double)m_emotion / EMOTION_RANGE::SCALE_MEAN);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -773,7 +798,7 @@ void City::convertWorkSurplusToFood
 	const double workSurplus
 )
 {
-	m_foodSurplusPreviousTurn = workSurplus * CityC::MULTIPLIER_CONVERSION_WORK_TO_FOOD;
+	m_foodSurplusPreviousTurn = workSurplus * MULTIPLIER::CONVERSION::WORK_TO_FOOD;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -787,7 +812,7 @@ void City::convertFoodSurplusToWork
 	const double foodSurplus
 )
 {
-	m_workSurplusPreviousTurn = foodSurplus * CityC::MULTIPLIER_CONVERSION_FOOD_TO_WORK;
+	m_workSurplusPreviousTurn = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_WORK;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -803,7 +828,7 @@ void City::convertFoodSurplusToGold
 	GoldStats& goldStats
 )
 {
-	goldStats.goldConversionSurplus = foodSurplus * CityC::MULTIPLIER_CONVERSION_FOOD_TO_GOLD;
+	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_GOLD;
 }
 
 /* ----------------------------------------------------------------------------------- */

@@ -1,9 +1,9 @@
-/*
+﻿/*
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
 	last modification on this file on version:0.25.2.0
-	file version : 1.2
+	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,44 +22,58 @@
 
 */
 
-#ifndef T_CITYSCREEN_H
-#define T_CITYSCREEN_H
+#ifndef T_Citizen_H
+#define T_Citizen_H
 
 #include "LIB.h"
 
-#include <deque>
+#include <vector>
+#include <memory>
 
-#include "../../Dependencies/CEGUI/widgets/PushButton.h"
-
-/* Define the types of builds that a city can create */
-enum class build_Type : unsigned int
+enum class Religion_Type
 {
-	building,	/* ### Not implemented as of 0.20.3.1 ### */
-	unit
+	catholic,
+	protestant,
+	reformed,
+	anglican,
+	orthodox,
+	coptic,
+	sunni,
+	shiite,
+	ibadi,
+	buddhism,
+	vajrayana,
+	mahayana,
+	confucianism,
+	shinto,
+	hinduism,
+	sikhism,
+	animism,
+	shamanism,
+	totemism,
+	inti,
+	nahuatl,
+	jewish,
+	zoroastrian
 };
 
-/*
-	Define a building in a City
-	Use for building Queue
-*/
-struct build
+enum class Emotion_Type
 {
-	std::string name = STRINGS::EMPTY;
-	build_Type type = build_Type::building;
-	double work = 0.0;
-	double remainingWork = 0.0;
+	ecstatic = 2,
+	happy = 1,
+	neutral = 0,
+	sad = -1,
+	angry = -2
 };
 
-struct buildGUI
-{
-	CEGUI::PushButton* buildG = nullptr;
-	build buildQ;
-};
+/* *********************************************************
+ *						 Classes						   *
+ ********************************************************* */
 
-typedef std::deque<buildGUI> dequeBuild;
+class Citizen;
+typedef std::vector<std::unique_ptr<Citizen>> VectCitizen;
 
-#endif
 
-/*
-*	End Of File : T_CITYSCREEN_H.h
-*/
+#endif // !T_Citizen_H
+
+

@@ -102,10 +102,27 @@
     <ClInclude Include="src\CityScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\T_City.h" />
-    <ClInclude Include="src\T_CityScreen.h" />
-    <ClInclude Include="src\T_GamePlayScreen.h" />
-    <ClInclude Include="src\T_Unit.h" />
+    <ClInclude Include="src\XmlConvertValue.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_Unit.h">
+      <Filter>T_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_City.h">
+      <Filter>T_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_CityScreen.h">
+      <Filter>T_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_GamePlayScreen.h">
+      <Filter>T_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_Citizen.h">
+      <Filter>T_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_MainMap.h">
+      <Filter>T_struct</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">
@@ -116,6 +133,9 @@
     </Filter>
     <Filter Include="Class GamePlayScreen">
       <UniqueIdentifier>{7b07bf5d-6267-4613-b2d3-4f445eb7ecf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="T_struct">
+      <UniqueIdentifier>{5aad5700-2fee-471a-9d86-585b9b5aee0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

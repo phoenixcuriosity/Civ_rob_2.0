@@ -127,6 +127,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <DisableSpecificWarnings>4275;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -191,12 +192,15 @@
     <ClInclude Include="src\ReloadMenuScreen.h" />
     <ClInclude Include="src\SaveReload.h" />
     <ClInclude Include="src\ScreenIndices.h" />
+    <ClInclude Include="src\T_Citizen.h" />
     <ClInclude Include="src\T_City.h" />
     <ClInclude Include="src\T_CityScreen.h" />
     <ClInclude Include="src\T_GamePlayScreen.h" />
+    <ClInclude Include="src\T_MainMap.h" />
     <ClInclude Include="src\T_Unit.h" />
     <ClInclude Include="src\Unit.h" />
     <ClInclude Include="src\Utility.h" />
+    <ClInclude Include="src\XmlConvertValue.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Civ_Rob_2.0.rc" />

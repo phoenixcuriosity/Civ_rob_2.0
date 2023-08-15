@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.27
+	last modification on this file on version:0.25.2.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -100,7 +100,7 @@ unsigned int Unit::searchUnitByName
 {
 	for (unsigned int p(0); p < tabUnit_Template.size(); p++)
 	{
-		if (tabUnit_Template[p].name.compare(name) == IDENTICAL_STRINGS)
+		if (tabUnit_Template[p].name.compare(name) == STRINGS::IDENTICAL)
 		{
 			return p;
 		}
@@ -432,7 +432,7 @@ bool Unit::checkNextTile
   /* ----------------------------------------------------------------------------------- */
 Unit::Unit()
 : 
-m_name(EMPTY_STRING), 
+m_name(STRINGS::EMPTY),
 m_x(0),
 m_y(0),
 m_movementType(Unit_Movement_Type::ground),
@@ -784,7 +784,7 @@ bool Unit::isThisUnitType
 	const std::string& nameToCompare
 )
 {
-	if (m_name.compare(nameToCompare) == IDENTICAL_STRINGS)
+	if (m_name.compare(nameToCompare) == STRINGS::IDENTICAL)
 	{
 		return true;
 	}
@@ -844,7 +844,7 @@ void Unit::cmpblit()
 	/* ---------------------------------------------------------------------- */
 	/* 50% off 50% on , environ 1s le cycle									  */
 	/* ---------------------------------------------------------------------- */
-	if ((++m_blit %= (RealEngine2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO_ZERO)
+	if ((++m_blit %= (RealEngine2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO::ZERO)
 	{
 		m_show = !m_show;
 	}

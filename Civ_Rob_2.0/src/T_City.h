@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.1
+	last modification on this file on version:0.25.2.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,16 +30,15 @@
  *					 Constantes							   *
  ********************************************************* */
 
-namespace CityH
+namespace CITY_INFLUENCE
 {
 	/* taille de la carte transpos�e dans la citiemap */
 	const unsigned int INIT_SIZE_VIEW = 9;
 
+	const unsigned int INIT_AREA_VIEW = INIT_SIZE_VIEW * INIT_SIZE_VIEW;
+
 	/* Minimal influence level in City */
 	const unsigned int MIN_INFLUENCE_LEVEL = 1;
-
-	/* Define Percent */
-	const double ONE_HUNDRED_PERCENT = 100.0;
 }
 
 /* *********************************************************

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.40
+	last modification on this file on version:0.25.2.0
+	file version : 1.41
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -154,7 +154,7 @@ void GamePlayScreen::actionByKey()
 			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
 			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
 
-			if	(sUnit->GETname().starts_with("ouvrier_tier_") == STRINGS_START_WITH)
+			if	(sUnit->GETname().starts_with("ouvrier_tier_") == STRINGS::START_WITH)
 			{
 				sUnit->irrigate(m_mainMap.GETmatriceMap());
 				m_mainMap.SETneedToUpdateDraw(true);

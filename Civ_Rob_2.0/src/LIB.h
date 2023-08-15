@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.20
+	last modification on this file on version:0.25.2.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,20 +30,35 @@
 /* Include for std::string */
 #include <string>
 
-/* Define an empty string */
-const std::string EMPTY_STRING = "";
+namespace STRINGS
+{
+	/* Define an empty string */
+	const std::string EMPTY = "";
 
-/* Define that the compared strings are identical */
-#define IDENTICAL_STRINGS 0
+	/* Define that the compared strings are identical */
+	const int IDENTICAL = 0;
 
-/* Define that the compared strings are identical */
-#define STRINGS_START_WITH true
+	/* Define that the compared strings are identical */
+	const bool START_WITH = true;
+}
 
-/* Define 0 for module use */
-#define MODULO_ZERO 0
+namespace MODULO
+{
+	/* Define 0 for module use */
+	const unsigned int ZERO = 0;
+}
 
-/* Define a non EMPTY vect/list/map */
-const bool VECT_NOT_EMPTY = false;
+namespace PERCENTAGE
+{
+	/* Define Percent */
+	const double ONE_HUNDRED = 100.0;
+}
+
+namespace CONTAINERS
+{
+	/* Define a non EMPTY vect/list/map */
+	const bool NOT_EMPTY = false;
+}
 
 namespace SELECTION
 {
@@ -98,6 +113,7 @@ class GameInput;
 class SaveReload;
 class Unit;
 class City;
+class Citizen;
 
 class GamePlayScreen;
 class Players;

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.24
+	last modification on this file on version:0.25.2.0
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,8 @@
 
 #include <RealEngine2D/src/ResourceManager.h> 
 #include <RealEngine2D/src/ErrorLog.h> 
+#include "XmlConvertValue.h"
+
 
 
 namespace DELTA_TIME
@@ -250,7 +252,7 @@ void GamePlayScreen::initStructsNULL()
 	 *					   sysinfo.var						   *
 	 ********************************************************* */
 
-	m_var.tempPlayerName = EMPTY_STRING;
+	m_var.tempPlayerName = STRINGS::EMPTY;
 	m_var.select = Select_Type::selectnothing;
 	m_var.statescreen = State_Type::error;
 	m_var.cinState = CinState_Type::cinNothing;
@@ -409,7 +411,7 @@ void GamePlayScreen::loadUnitAndSpec()
 	while (nullptr != node)
 	{
 		currentUnit.name = node->FirstChildElement(s_Name)->GetText();
-		currentUnit.type = xmlGiveMovementType(node->FirstChildElement(s_MovementType)->GetText());
+		currentUnit.type = XmlConvertValue::xmlGiveMovementType(node->FirstChildElement(s_MovementType)->GetText());
 		node->FirstChildElement(s_Life)->QueryIntText((int*)&currentUnit.life);
 		node->FirstChildElement(s_Atq)->QueryIntText((int*)&currentUnit.atq);
 		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
@@ -428,7 +430,7 @@ void GamePlayScreen::loadUnitAndSpec()
 void GamePlayScreen::loadCitiesNames()
 {
 	unsigned int nbcity{ 0 };
-	std::string city{EMPTY_STRING}, dummy{ EMPTY_STRING };
+	std::string city{ STRINGS::EMPTY}, dummy{ STRINGS::EMPTY };
 	std::ifstream CITIENAME{ RealEngine2D::ResourceManager::getFile(e_Files::citiesNames)->getPath() };
 
 
@@ -633,3 +635,72 @@ bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 
 
 
+Screen& GamePlayScreen::GETscreen()
+{
+	return m_screen;
+};
+
+const Screen& GamePlayScreen::GETscreen()const
+{
+	return m_screen;
+};
+
+Var& GamePlayScreen::GETvar()
+{ 
+	return m_var;
+};
+
+const Var& GamePlayScreen::GETvar()const
+{
+	return m_var; 
+};
+
+MainMap& GamePlayScreen::GETmainMap()
+{
+	return m_mainMap;
+};
+
+const MainMap& GamePlayScreen::GETmainMap()const
+{ 
+	return m_mainMap; 
+};
+
+Players& GamePlayScreen::GETPlayers()
+{ 
+	return m_players;
+};
+
+const Players& GamePlayScreen::GETPlayers()const
+{
+	return m_players; 
+};
+
+SaveReload* GamePlayScreen::getSaveReload()
+{ 
+	return m_SaveReload; 
+};
+
+UserInputNewGame* GamePlayScreen::getUserInputNewGame()
+{ 
+	return m_userInputNewGame;
+};
+
+void GamePlayScreen::SETvar(Var& var)
+{ 
+	m_var = var; 
+};
+
+void GamePlayScreen::SETmainMap(MainMap& mainMap)
+{
+	m_mainMap = mainMap; 
+};
+
+void GamePlayScreen::SETPlayers(Players& players)
+{ 
+	m_players = players;
+};
+
+RealEngine2D::Window& GamePlayScreen::getParentWindow()
+{
+	return m_game->getWindow();
+}

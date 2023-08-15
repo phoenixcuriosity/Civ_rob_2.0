@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.27
+	last modification on this file on version:0.25.2.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,7 +24,6 @@
 
 #include "SaveReload.h"
 
-#include "GamePlayScreen.h"
 #include "MainMap.h"
 #include "App.h"
 
@@ -34,13 +33,15 @@
 #include <RealEngine2D/src/ErrorLog.h> 
 #include <RealEngine2D/src/ExitFromError.h> 
 
+#include "XmlConvertValue.h"
+
 /* *********************************************************
  *				START SaveReload::STATIC				   *
  ********************************************************* */
 
 void SaveReload::init(const std::string& filePath)
 {
-	std::string destroy{ EMPTY_STRING };
+	std::string destroy{ STRINGS::EMPTY };
 	std::ifstream loadInfo{ filePath };
 	unsigned int currentSave{ 0 };
 	size_t size{ 0 };
@@ -440,7 +441,7 @@ void SaveReload::loadMaps
 	GamePlayScreen& mainGame
 )
 {
-	std::string input(EMPTY_STRING);
+	std::string input(STRINGS::EMPTY);
 
 	std::ifstream saveMaps(RealEngine2D::ResourceManager::getFile(e_Files::saveMaps)->getPath());
 	if (saveMaps)
@@ -505,7 +506,7 @@ void SaveReload::loadPlayer
 	GamePlayScreen& mainGame
 )
 {
-	std::string errCheck(EMPTY_STRING);
+	std::string errCheck(STRINGS::EMPTY);
 	tinyxml2::XMLDocument xmlDoc;
 	
 	if (xmlDoc.LoadFile(RealEngine2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
@@ -515,7 +516,7 @@ void SaveReload::loadPlayer
 
 		tinyxml2::XMLNode* nPlayer = pRoot->FirstChild();
 		errCheck = nPlayer->Value();
-		if (errCheck.compare("Player") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nPlayer != Player");
+		if (errCheck.compare("Player") != STRINGS::IDENTICAL) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nPlayer != Player");
 
 		while (nullptr != nPlayer)
 		{
@@ -527,7 +528,7 @@ void SaveReload::loadPlayer
 
 			if (nullptr == nName) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nName == nullptr");
 			errCheck = nName->Value();
-			if (errCheck.compare("Name") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nName != Name");
+			if (errCheck.compare("Name") != STRINGS::IDENTICAL) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nName != Name");
 
 			mainGame.GETPlayers().GETvectPlayer().push_back
 				(
@@ -553,19 +554,19 @@ void SaveReload::loadPlayer
 			if (nullptr != nTabUnit)
 			{
 				errCheck = nTabUnit->Value();
-				if (errCheck.compare("TabUnit") != IDENTICAL_STRINGS)
+				if (errCheck.compare("TabUnit") != STRINGS::IDENTICAL)
 				{
 					nTabCity = nTabUnit;
 					nTabUnit = nullptr;
 					goto L20;
 				}
-				if (errCheck.compare("TabUnit") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nTabUnit != TabUnit");
+				if (errCheck.compare("TabUnit") != STRINGS::IDENTICAL) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nTabUnit != TabUnit");
 
 				tinyxml2::XMLNode* nUnit = nTabUnit->FirstChild();
 				if (nullptr != nUnit)
 				{
 					errCheck = nUnit->Value();
-					if (errCheck.compare("Unit") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nUnit != Unit");
+					if (errCheck.compare("Unit") != STRINGS::IDENTICAL) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nUnit != Unit");
 				}
 
 				loadUnitXML(mainGame, nUnit);
@@ -577,13 +578,13 @@ void SaveReload::loadPlayer
 
 
 				errCheck = nTabCity->Value();
-				if (errCheck.compare("TabCity") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nTabCity != TabCity");
+				if (errCheck.compare("TabCity") != STRINGS::IDENTICAL) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nTabCity != TabCity");
 
 				tinyxml2::XMLNode* nCity = nTabCity->FirstChild();
 				if (nullptr != nCity)
 				{
 					errCheck = nCity->Value();
-					if (errCheck.compare("City") != IDENTICAL_STRINGS) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nCity != City");
+					if (errCheck.compare("City") != STRINGS::IDENTICAL) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : nCity != City");
 				}
 
 				loadCityXML(mainGame, nCity);
@@ -696,7 +697,7 @@ void SaveReload::loadUnitXML
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->movement_type == nullptr");
-		blankUnit->SETmovementType(GamePlayScreen::convertUintToUnit_Movement_Type((unsigned int)std::stoul(inputNode->FirstChild()->Value())));
+		blankUnit->SETmovementType(XmlConvertValue::convertUintToUnit_Movement_Type((unsigned int)std::stoul(inputNode->FirstChild()->Value())));
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : Unit->life == nullptr");
@@ -760,16 +761,16 @@ void SaveReload::loadCityXML
 	tinyxml2::XMLNode* nCity
 )
 {
-	unsigned int middletileX(0), middletileY(0), influenceLevel(CityH::MIN_INFLUENCE_LEVEL);
+	unsigned int middletileX(0), middletileY(0), influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL);
 	std::vector<Tile> tabtile;
-	tabtile.resize(CityH::INIT_SIZE_VIEW * CityH::INIT_SIZE_VIEW);
+	tabtile.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 
 	tinyxml2::XMLNode* inputNode;
 	struct BlankCity
 	{
 		unsigned int x = 0;
 		unsigned int y = 0;
-		std::string name = EMPTY_STRING;
+		std::string name = STRINGS::EMPTY;
 	};
 	BlankCity blankCity;
 	build blankBluid;
@@ -855,7 +856,7 @@ void SaveReload::loadCityXML
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->ConversionToApply == nullptr");
-		conversionSurplus_Type type = GamePlayScreen::convert2ConversionToApply(std::stoi(inputNode->FirstChild()->Value()));
+		conversionSurplus_Type type = XmlConvertValue::convert2ConversionToApply(std::stoi(inputNode->FirstChild()->Value()));
 		ptrCity->SETconversionToApply(type);
 
 
@@ -873,7 +874,7 @@ void SaveReload::loadCityXML
 
 				tinyxml2::XMLNode* nBuildQueueElementType = nBuildQueueElementName->NextSibling();
 				if (nullptr == nBuildQueueElementType) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->Type == nullptr");
-				blankBluid.type = GamePlayScreen::convert2build_Type(std::stoi(nBuildQueueElementType->FirstChild()->Value()));
+				blankBluid.type = XmlConvertValue::convert2build_Type(std::stoi(nBuildQueueElementType->FirstChild()->Value()));
 
 				tinyxml2::XMLNode* nBuildQueueElementWork = nBuildQueueElementType->NextSibling();
 				if (nullptr == nBuildQueueElementWork) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->Work == nullptr");
@@ -914,7 +915,7 @@ void SaveReload::loadCityXML
 
 				tinyxml2::XMLNode* nTabCitizenElementHappiness = nTabCitizenElementtileOccupied->NextSibling();
 				if (nullptr == nTabCitizenElementHappiness) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Happiness == nullptr");
-				ptrCitizen->SEThappiness(GamePlayScreen::convert2Emotion_Type(std::stoi(nTabCitizenElementHappiness->FirstChild()->Value())));
+				ptrCitizen->SEThappiness(XmlConvertValue::convert2Emotion_Type(std::stoi(nTabCitizenElementHappiness->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementFood = nTabCitizenElementHappiness->NextSibling();
 				if (nullptr == nTabCitizenElementFood) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Food == nullptr");
@@ -930,7 +931,7 @@ void SaveReload::loadCityXML
 
 				tinyxml2::XMLNode* nTabCitizenElementReligion_Type = nTabCitizenElementGold->NextSibling();
 				if (nullptr == nTabCitizenElementReligion_Type) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->Religion_Type == nullptr");
-				ptrCitizen->SETreligion(GamePlayScreen::convert2Religion_Type(std::stoi(nTabCitizenElementReligion_Type->FirstChild()->Value())));
+				ptrCitizen->SETreligion(XmlConvertValue::convert2Religion_Type(std::stoi(nTabCitizenElementReligion_Type->FirstChild()->Value())));
 
 				tinyxml2::XMLNode* nTabCitizenElementplace = nTabCitizenElementReligion_Type->NextSibling();
 				if (nullptr == nTabCitizenElementplace) RealEngine2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->place == nullptr");
@@ -1026,7 +1027,7 @@ L10:
 void SaveReload::removeSave(const std::string& filePath)
 {
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: removeSave Start");
-	std::string file(EMPTY_STRING);
+	std::string file(STRINGS::EMPTY);
 	bool condition(false);
 
 	if (m_currentSave != SELECTION::NO_CURRENT_SAVE_SELECTED)
@@ -1115,7 +1116,7 @@ void SaveReload::clearSave(const std::string& filePath)
 		/* TODO for buuton save */
 	}
 
-	std::string file(EMPTY_STRING);
+	std::string file(STRINGS::EMPTY);
 	for (unsigned int i(0); i < m_tabSave.size(); i++)
 	{
 		file = "save/" + std::to_string(m_tabSave[i]) + "/saveMaps.txt";

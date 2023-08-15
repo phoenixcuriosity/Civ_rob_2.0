@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.17
+	last modification on this file on version:0.25.2.0
+	file version : 1.18
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,17 +36,15 @@
 #include "T_Unit.h"
 #include "T_City.h"
 #include "T_CityScreen.h"
+#include "T_MainMap.h"
 
 #include <RealEngine2D/src/IMainGame.h>
 
 #include "NewGame.h"
-#include "Unit.h"
-#include "City.h"
+#include "MainMap.h"
 #include "Player.h"
-
 #include "NextTurn.h"
 
-#include <vector>
 #include <memory>
 
 /* *********************************************************
@@ -127,99 +125,6 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	void loadFile();
 
-	
-public:
-
-	/* *********************************************************
-	 *					STATIC XmlConvertValue				   *
-	 ********************************************************* */
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : xmlGiveStateType																			    	  */
-	/* ROLE : Convert an std::string from XML document to State_Type from Texture class						      */
-	/* INPUT : std::string type																				      */
-	/* RETURNED VALUE    : State_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static State_Type xmlGiveStateType
-	(
-		std::string type
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : xmlGiveSelectType																			    	  */
-	/* ROLE : Convert an std::string from XML document to Select_Type from Texture class					      */
-	/* INPUT : std::string type																				      */
-	/* RETURNED VALUE    : Select_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Select_Type xmlGiveSelectType
-	(
-		std::string type
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convertUintToUnit_Movement_Type															    	  */
-	/* ROLE : Convert a unsigned integer from XML document to Unit_Movement_Type from Unit class			      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : unsigned int toConvert																		      */
-	/* RETURNED VALUE    : Unit_Movement_Type																	  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Unit_Movement_Type convertUintToUnit_Movement_Type
-	(
-		unsigned int toConvert
-	);
-
-	static Unit_Movement_Type xmlGiveMovementType
-	(
-		std::string type
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2ConversionToApply																	    	  */
-	/* ROLE : Convert an integer from XML document to conversionSurplus_Type from City class				      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : conversionSurplus_Type																  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static conversionSurplus_Type convert2ConversionToApply
-	(
-		int toConvert
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2build_Type																		    	  */
-	/* ROLE : Convert an integer from XML document to build_Type from City class							      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : build_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static build_Type convert2build_Type
-	(
-		int toConvert
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2Emotion_Type																		    	  */
-	/* ROLE : Convert an integer from XML document to Emotion_Type from City class							      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : Emotion_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Emotion_Type convert2Emotion_Type
-	(
-		int toConvert
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2Religion_Type																		    	  */
-	/* ROLE : Convert an integer from XML document to Religion_Type from City class							      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : Religion_Type																		  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Religion_Type convert2Religion_Type
-	(
-		int toConvert
-	);
 
 
 private:
@@ -478,22 +383,22 @@ public:
 	 *						 GET/SET						   *
 	 ********************************************************* */
 
-	inline Screen& GETscreen() { return m_screen; };
-	inline const Screen& GETscreen()const { return m_screen; };
-	inline Var& GETvar() { return m_var; };
-	inline const Var& GETvar()const { return m_var; };
-	inline MainMap& GETmainMap() { return m_mainMap; };
-	inline const MainMap& GETmainMap()const { return m_mainMap; };
-	inline Players& GETPlayers() { return m_players; };
-	inline const Players& GETPlayers()const { return m_players; };
-	inline SaveReload* getSaveReload() { return m_SaveReload; };
-	inline UserInputNewGame* getUserInputNewGame() { return m_userInputNewGame; };
+	Screen& GETscreen();
+	const Screen& GETscreen()const;
+	Var& GETvar();
+	const Var& GETvar()const;
+	MainMap& GETmainMap();
+	const MainMap& GETmainMap()const;
+	Players& GETPlayers();
+	const Players& GETPlayers()const;
+	SaveReload* getSaveReload();
+	UserInputNewGame* getUserInputNewGame();
 
-	inline void SETvar(Var& var) { m_var = var; };
-	inline void SETmainMap(MainMap& mainMap) { m_mainMap = mainMap; };
-	inline void SETPlayers(Players& players) { m_players = players; };
+	void SETvar(Var& var);
+	void SETmainMap(MainMap& mainMap);
+	void SETPlayers(Players& players);
 
-	inline RealEngine2D::Window& getParentWindow() { return m_game->getWindow(); }
+	RealEngine2D::Window& getParentWindow();
 
 private:
 
