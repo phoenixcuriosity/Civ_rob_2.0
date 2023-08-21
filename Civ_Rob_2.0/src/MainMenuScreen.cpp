@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.8
+	last modification on this file on version:0.25.3.0
+	file version : 1.9
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -166,24 +166,27 @@ bool MainMenuScreen::onEntry()
 
 void MainMenuScreen::initHUD()
 {
-
-	MapTexts mapTexts;
-
 	m_spriteBatchHUDStatic.begin();
 
+
+	MapTexts mapTexts;
 	RealEngine2D::ResourceManager::getTextFromFile
 	(
 		e_Files::texts,
 		mapTexts
 	);
 
-	for (const auto text: mapTexts)
+	for (const auto& text: mapTexts)
 	{
 		RealEngine2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_spriteBatchHUDStatic,
 			text.second.text.c_str(),
-			glm::vec2(text.second.x, text.second.y), // offset pos
+			glm::vec2
+			(
+				m_game->getWindow().getWidthPositionScaleToWindow(text.second.x),
+				m_game->getWindow().getHeightPositionScaleToWindow(text.second.y)
+			), // offset pos
 			glm::vec2(text.second.size), // size
 			text.second.alpha,
 			text.second.color,

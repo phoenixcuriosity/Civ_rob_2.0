@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.27
+	last modification on this file on version:0.25.3.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 #include "City.h"
 
 #include <RealEngine2D/src/ResourceManager.h>
+#include <RealEngine2D/src/ValueToScale.h>
 #include <RealEngine2D/src/ErrorLog.h> 
 
 
@@ -561,7 +562,7 @@ void Players::drawUnit
 							[
 								m_vectUnitTemplate.size() - VECT_SIZE_OFFSET_ID
 								+
-								(int)std::floor(Utility::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
+								(int)std::floor(RealEngine2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
 							],
 							0.0f,
 							RealEngine2D::COLOR_WHITE

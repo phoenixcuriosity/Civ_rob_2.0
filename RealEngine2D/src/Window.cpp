@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.2
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.3.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,6 +26,30 @@
 
 #include <SDL\glew.h>
 #include "RealEngineError.h"
+#include "ValueToScale.h"
+
+namespace WINDOW_SCALE
+{
+	namespace PERCENT
+	{
+		const double MIN = 0.0;
+		const double MAX = 100.0;
+	}
+
+	namespace SCREEN
+	{
+		namespace WIDTH
+		{
+			const double MIN = 0.0;
+		}
+
+		namespace HEIGHT
+		{
+			const double MIN = 0.0;
+		}
+	}
+}
+
 
 namespace RealEngine2D 
 {
@@ -114,17 +138,48 @@ void  Window::swap()
 	SDL_GL_SwapWindow(m_sdlWindow);
 }
 
+double Window::getWidthPositionScaleToWindow
+(
+	/* IN */
+	const double position2Scale
+)
+{
+	return ValueToScale::computeValueToScale
+	(
+		position2Scale,
+		WINDOW_SCALE::PERCENT::MIN,
+		WINDOW_SCALE::PERCENT::MAX,
+		WINDOW_SCALE::SCREEN::WIDTH::MIN,
+		m_screenWidth
+	);
+}
+
+double Window::getHeightPositionScaleToWindow
+(
+	/* IN */
+	const double position2Scale
+)
+{
+	return ValueToScale::computeValueToScale
+	(
+		position2Scale,
+		WINDOW_SCALE::PERCENT::MIN,
+		WINDOW_SCALE::PERCENT::MAX,
+		WINDOW_SCALE::SCREEN::HEIGHT::MIN,
+		m_screenHeight
+	);
+}
+
+
 
 
 //----------------------------------------------------------Screen width/height----------------------------------------------------------------//
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : getHorizontal																   */
 /* ROLE : Calcul de la longueur en pixels de la fenetre								   */
 /* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
 /* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 Uint16 Window::getHorizontal()
 {
@@ -135,12 +190,10 @@ Uint16 Window::getHorizontal()
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 /* NAME : getVertical																   */
 /* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
 /* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
 /* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 Uint16 Window::getVertical()
 {

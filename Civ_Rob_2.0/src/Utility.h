@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.3.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,30 +37,6 @@
 
 class Players;
 struct Var;
-
- /* *********************************************************
-  *					 Constantes							   *
-  ********************************************************* */
-
-  /* Define the lowest value to perform a division */
-#define PRECISION_DIV 1e-12
-
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
-
- /* N/A */
-
- /* *********************************************************
-  *							 Enum						   *
-  ********************************************************* */
-
-  /* N/A */
-
-  /* *********************************************************
-   *						 Classes						   *
-   ********************************************************* */
-
 
 class Utility
 {
@@ -111,61 +87,6 @@ public:
 	(
 		const Var var,
 		Players& players
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : protectedDiv																				    	  */
-	/* ROLE : Check if the denominator is 0.0 then throw error, else do the division.						      */
-	/* IN : double num : The numerator																		      */
-	/* IN : double den : The denominator																	      */
-	/* RETURNED VALUE : double -> result from division															  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static double protectedDiv
-	(
-		double num,
-		double den
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : checkMinMaxValidityRange																	    	  */
-	/* ROLE : Check if the min value is strictly lower than max value										      */
-	/* IN : double min : The minimum value																	      */
-	/* IN : double max : The maximum value																	      */
-	/* RETURNED VALUE : bool : false -> min is greater than or equal to max										  */
-	/* RETURNED VALUE : bool : true -> min strictly lower than max value										  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static bool checkMinMaxValidityRange
-	(
-		double min,
-		double max
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : computeValueToScale																		    	  */
-	/* ROLE : Scale a value from an initial range to a target range											      */
-	/* ROLE : Error management : Throw error if checkMinMaxValidityRange return false						      */
-	/* IN : double value : The value to scale																      */
-	/* IN : double minValue : The minimum value	of the initial range										      */
-	/* IN : double maxValue : The maximum value	of the initial range										      */
-	/* IN : double minScale : The minimum value	of the target range											      */
-	/* IN : double maxScale : The maximum value	of the target range											      */
-	/* IN : int divToScaleSize : A factor to scale the initial value, default value is 1					      */
-	/* RETURNED VALUE : double : result the value in the target range											  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static double computeValueToScale
-	(
-		double value,
-		double minValue,
-		double maxValue,
-		double minScale,
-		double maxScale,
-		int divToScaleSize = 1
 	);
 
 	static bool assertSize

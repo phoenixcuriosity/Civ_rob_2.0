@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.4.0
-	file version : 1.1
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.3.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -38,7 +38,6 @@ enum WindowFlags
 	FULLSCREEN = 0x2,
 	BORDERLESS = 0x4
 };
-
 
 // Donne la fréquence de rafraichissement de l'écran en Hz
 inline unsigned int getRefreshRate()
@@ -77,26 +76,34 @@ public:
 	void SETscreenWidth(int screenWidth) { m_screenWidth = screenWidth; };
 	void SETscreenHeight(int screenHeight) { m_screenHeight = screenHeight; };
 
+	double getWidthPositionScaleToWindow
+	(
+		/* IN */
+		const double position2Scale
+	);
+
+	double getHeightPositionScaleToWindow
+	(
+		/* IN */
+		const double position2Scale
+	);
+
 
 public:
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : getHorizontal																   */
 	/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
 	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static Uint16 getHorizontal();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : getVertical																   */
 	/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
 	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
 	static Uint16 getVertical();
 

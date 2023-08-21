@@ -25,6 +25,7 @@
     <ClInclude Include="src\Files.h" />
     <ClInclude Include="src\ErrorLog.h" />
     <ClInclude Include="src\ExitFromError.h" />
+    <ClInclude Include="src\ValueToScale.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -48,5 +49,6 @@
     <ClCompile Include="src\ColorRGBA8.cpp" />
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />
+    <ClCompile Include="src\ValueToScale.cpp" />
   </ItemGroup>
 </Project>

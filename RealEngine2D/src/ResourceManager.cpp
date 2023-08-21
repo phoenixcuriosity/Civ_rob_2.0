@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.4
+	last modification on this file on version:0.25.3.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -115,8 +115,8 @@ bool ResourceManager::getTextFromFile
 			try
 			{
 				blankText.text = nText->FirstChild()->Value();
-				blankText.x = std::stof(nX->FirstChild()->Value());
-				blankText.y = std::stof(nY->FirstChild()->Value());
+				blankText.x = std::stod(nX->FirstChild()->Value());
+				blankText.y = std::stod(nY->FirstChild()->Value());
 				blankText.size = std::stof(nSize->FirstChild()->Value());
 				blankText.alpha = std::stof(nAlpha->FirstChild()->Value());
 				blankText.color = getRGBA8Color(nColor->FirstChild()->Value());
