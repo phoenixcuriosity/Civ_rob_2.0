@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.1
+	last modification on this file on version:0.25.3.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -51,12 +51,13 @@ namespace RealEngine2D
 		/* ---------------------------------------------------------------------------------------------------------- */
 		static double computeValueToScale
 		(
-			double value,
-			double minValue,
-			double maxValue,
-			double minScale,
-			double maxScale,
-			int divToScaleSize = 1
+			/* IN */
+			const double value,
+			const double minValue,
+			const double maxValue,
+			const double minScale,
+			const double maxScale,
+			const int divToScaleSize = 1
 		);
 
 	private:
@@ -69,8 +70,9 @@ namespace RealEngine2D
 		/* ---------------------------------------------------------------------------------------------------------- */
 		static double protectedDiv
 		(
-			double num,
-			double den
+			/* IN */
+			const double num,
+			const double den
 		);
 
 	public:
@@ -84,8 +86,9 @@ namespace RealEngine2D
 		/* ---------------------------------------------------------------------------------------------------------- */
 		static bool checkMinMaxValidityRange
 		(
-			double min,
-			double max
+			/* IN */
+			const double min,
+			const double max
 		);
 	};
 }

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.1
+	last modification on this file on version:0.25.3.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -40,19 +40,20 @@ using namespace RealEngine2D;
 /* ---------------------------------------------------------------------------------------------------------- */
 double ValueToScale::computeValueToScale
 (
-	double value,
-	double minValue,
-	double maxValue,
-	double minScale,
-	double maxScale,
-	int divToScaleSize
+	/* IN */
+	const double value,
+	const double minValue,
+	const double maxValue,
+	const double minScale,
+	const double maxScale,
+	const int divToScaleSize
 )
 {
 	if (checkMinMaxValidityRange(minValue, maxValue) && checkMinMaxValidityRange(minScale, maxScale))
 	{
-		double result(value);
-		double rangeValue(maxValue - minValue);
-		double rangeScale(maxScale - minScale);
+		double result{ value };
+		const double rangeValue{ maxValue - minValue };
+		const double rangeScale{ maxScale - minScale };
 
 		result = protectedDiv(result, divToScaleSize);
 
@@ -82,9 +83,10 @@ double ValueToScale::computeValueToScale
 /* RETURNED VALUE : double -> result from division															  */
 /* ---------------------------------------------------------------------------------------------------------- */
 double ValueToScale::protectedDiv
-(
-	double num,
-	double den
+( 
+	/* IN */
+	const double num,
+	const double den
 )
 {
 	if (den > VALUE_PRECISION::DIV)
@@ -111,8 +113,9 @@ double ValueToScale::protectedDiv
 /* ---------------------------------------------------------------------------------------------------------- */
 bool ValueToScale::checkMinMaxValidityRange
 (
-	double min,
-	double max
+	/* IN */
+	const double min,
+	const double max
 )
 {
 	if (min < max)

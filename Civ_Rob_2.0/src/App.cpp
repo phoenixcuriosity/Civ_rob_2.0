@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.12
+	last modification on this file on version:0.25.3.1
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -38,7 +38,7 @@ namespace AppH
 {
 	const std::string configFilePath = "bin/filePath.xml";
 
-	const int FONT_GUI_SIZE = 64;
+	const int FONT_GUI_SIZE = 32;
 
 	/* Define default font for GUI texts */
 	const std::string fontGUI = "times.ttf";
