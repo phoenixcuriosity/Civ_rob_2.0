@@ -4,6 +4,7 @@
 
 #include <SDL/SDL.h>
 #include <iostream>
+#include "Window.h"
 
 
 int closestPow2(int i)
@@ -314,6 +315,16 @@ void SpriteFont::draw
             tp.x += m_glyphs[gi].size.x * scaling.x;
         }
     }
+}
+
+
+float SpriteFont::getScaleFontToScreen
+(
+    /* IN */
+    const float size
+)
+{
+    return (size * (FONT::GUI::RESOLUTION::VERTICAL / Window::getVertical()));
 }
 
 }

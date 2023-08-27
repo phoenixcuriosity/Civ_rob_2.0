@@ -17,6 +17,7 @@ OF THIS SOFTWARE.
 November 28 2014
 Original Author: Cristian Zaloj
 Modified By: Benjamin Arnold
+Modified By: Robin Sauter
 */
 
 #pragma once
@@ -28,10 +29,29 @@ Modified By: Benjamin Arnold
 #include <glm/glm.hpp>
 #include <map>
 #include <vector>
-
+#include <string>
 
 namespace RealEngine2D
 {
+
+    namespace FONT
+    {
+        namespace GUI
+        {
+            const std::string NAME = "times.ttf";
+
+            namespace SIZE
+            {
+                const int DEFAULT = 32;
+            }
+
+            namespace RESOLUTION
+            {
+                const int HORIZONTAL = 3840;
+                const int VERTICAL = 2160;
+            }
+        }
+    }
 
     struct ColorRGBA8;
     class GLTexture;
@@ -75,12 +95,23 @@ namespace RealEngine2D
             return _fontHeight;
         }
 
+
+
         /// Measures the dimensions of the text
         glm::vec2 measure(const char* s);
 
         /// Draws using a spritebatch
         void draw(SpriteBatch& batch, const char* s, glm::vec2 position, glm::vec2 scaling,
             float depth, ColorRGBA8 tint, Justification just = Justification::LEFT);
+
+    public:
+
+        static float getScaleFontToScreen
+        (
+            /* IN */
+            const float size
+        );
+
     private:
         static std::vector<int>* createRows(glm::ivec4* rects, int rectsLength, int r, int padding, int& w);
 

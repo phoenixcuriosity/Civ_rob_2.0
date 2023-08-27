@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.9
+	last modification on this file on version:0.25.4.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,6 +29,7 @@
 
 #include <RealEngine2D/src/ResourceManager.h> 
 #include <RealEngine2D/src/ErrorLog.h> 
+#include <RealEngine2D/src/SpriteFont.h> 
 
 
 MainMenuScreen::MainMenuScreen
@@ -187,7 +188,7 @@ void MainMenuScreen::initHUD()
 				m_game->getWindow().getWidthPositionScaleToWindow(text.second.x),
 				m_game->getWindow().getHeightPositionScaleToWindow(text.second.y)
 			), // offset pos
-			glm::vec2(text.second.size), // size
+			glm::vec2(RealEngine2D::SpriteFont::getScaleFontToScreen(text.second.size)), // size
 			text.second.alpha,
 			text.second.color,
 			text.second.justification
