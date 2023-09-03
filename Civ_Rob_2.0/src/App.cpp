@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.4.0
-	file version : 1.14
+	last modification on this file on version:0.25.5.0
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 #include <RealEngine2D/src/ErrorLog.h> 
 #include <RealEngine2D/src/ExitFromError.h> 
 #include <RealEngine2D/src/SpriteFont.h> 
+#include <RealEngine2D/src/tinyXml2.h> 
 
 
 namespace AppH
@@ -162,96 +163,25 @@ void App::initMain()
 
 	if (config.ErrorID() == 0)
 	{
-		const char* root("Config");
+		tinyxml2::XMLElement* node = RealEngine2D::tinyXml2::getFirstElement(config);
 
+		for (e_Files it_e_files : tab_e_Files)
+		{
+			if (nullptr != node)
+			{
+				RealEngine2D::ResourceManager::initializeFilePath
+				(
+					it_e_files,
+					node->GetText()
+				);
 
-		const char
-			* s_FilePaths("FilePaths"),
-				* s_Readme("Readme"),
-				* s_Texte("Texts"),
-				* s_MainMap("MainMap"),
-				* s_Building("Buildings"),
-				* s_CitieName("CitiesNames"),
-				* s_Unit("Units"),
-				* s_SpecName("SpecNames"),
-				* s_SaveInfo("SaveInfo"),
-				* s_SaveMaps("SaveMaps"),
-				* s_SavePlayer("SavePlayers"),
-				* s_ColorShadingVert("ColorShadingVert"),
-				* s_ColorShadingFrag("ColorShadingFrag"),
-				* s_ImagesPath("ImagesPath"),
-				* s_GUIPath("GUIPath");
-
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::readme,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::texts,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::mainMap,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_MainMap)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::buildings,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::citiesNames,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::units,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::specNames,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::saveInfo,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::saveMaps,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::savePlayers,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::colorShadingVert,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingVert)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::colorShadingFrag,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingFrag)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::imagesPath,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ImagesPath)->GetText()
-		);
-		RealEngine2D::ResourceManager::initializeFilePath
-		(
-			e_Files::GUIPath,
-			config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_GUIPath)->GetText()
-		);
+				node = node->NextSiblingElement();
+			}
+			else
+			{
+				throw("Missing path for a file " + (std::string)AppH::configFilePath);
+			}
+		}
 	}
 	else
 	{

@@ -175,6 +175,7 @@
     <ClInclude Include="src\SpriteFont.h" />
     <ClInclude Include="src\TextureCache.h" />
     <ClInclude Include="src\Timing.h" />
+    <ClInclude Include="src\tinyXml2.h" />
     <ClInclude Include="src\UV.h" />
     <ClInclude Include="src\ValueToScale.h" />
     <ClInclude Include="src\Vertex.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="src\SpriteFont.cpp" />
     <ClCompile Include="src\TextureCache.cpp" />
     <ClCompile Include="src\Timing.cpp" />
+    <ClCompile Include="src\tinyXml2.cpp" />
     <ClCompile Include="src\ValueToScale.cpp" />
     <ClCompile Include="src\WidgetLabel.cpp" />
     <ClCompile Include="src\Window.cpp" />

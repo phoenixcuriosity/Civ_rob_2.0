@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.3
+	last modification on this file on version:0.25.5.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,7 +39,7 @@ enum class e_Files
 	log					= 1, 
 
 	readme				= 10,
-	texts				= 11,
+
 	mainMap				= 12,
 	buildings			= 13,
 	citiesNames			= 14,
@@ -55,7 +55,35 @@ enum class e_Files
 	colorShadingFrag	= 51,
 
 	imagesPath			= 100,
-	GUIPath				= 101
+	GUIPath				= 101,
+
+	texts_MainMenu		= 200,
+	texts_NewGame		= 201,
+	texts_GamePlay		= 202,
+	texts_City			= 203,
+	texts_Reload		= 204
+};
+
+const e_Files tab_e_Files[]=
+{
+	e_Files::readme,
+	e_Files::mainMap,
+	e_Files::buildings,
+	e_Files::citiesNames,
+	e_Files::units,
+	e_Files::specNames,
+	e_Files::saveInfo,
+	e_Files::saveMaps,
+	e_Files::savePlayers,
+	e_Files::colorShadingVert,
+	e_Files::colorShadingFrag,
+	e_Files::imagesPath,
+	e_Files::GUIPath,
+	e_Files::texts_MainMenu,
+	e_Files::texts_NewGame,
+	e_Files::texts_GamePlay,
+	e_Files::texts_City,
+	e_Files::texts_Reload
 };
 
 struct Text

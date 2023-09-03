@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.7.0
-	file version : 1.1
+	last modification on this file on version:0.25.5.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -73,7 +73,7 @@ bool Files::initializePath
 	const std::string& path
 )
 {
-	auto it = m_map_FileConf.find(name);
+	const auto it = m_map_FileConf.find(name);
 
 	if  (
 			it == m_map_FileConf.end()
@@ -93,7 +93,7 @@ bool Files::modifyPath
 	const std::string& path
 )
 {
-	auto it = m_map_FileConf.find(name);
+	const auto it = m_map_FileConf.find(name);
 
 	if	(it == m_map_FileConf.end())
 	{
@@ -105,7 +105,7 @@ bool Files::modifyPath
 
 File* Files::getFile(const e_Files name)
 {
-	auto it = m_map_FileConf.find(name);
+	const auto it = m_map_FileConf.find(name);
 
 	if	(
 			it == m_map_FileConf.end()

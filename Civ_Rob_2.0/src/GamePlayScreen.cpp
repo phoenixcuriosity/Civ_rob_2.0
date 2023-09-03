@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.25
+	last modification on this file on version:0.25.5.0
+	file version : 1.26
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -326,7 +326,7 @@ void GamePlayScreen::initHUDText()
 		m_screen.spriteBatchHUDStatic,
 		buffer,
 		glm::vec2(0.0f, 2.0f), // offset pos
-		glm::vec2(0.32f), // size
+		glm::vec2(RealEngine2D::SpriteFont::getScaleFontToScreen(0.32f)), // size
 		0.0f,
 		RealEngine2D::COLOR_WHITE
 	);
@@ -539,6 +539,7 @@ void GamePlayScreen::drawHUD()
 
 	char buffer[256];
 
+	static const float FONT_SIZE_G = RealEngine2D::SpriteFont::getScaleFontToScreen(0.32f);
 
 	m_screen.spriteBatchHUDDynamic.begin();
 
@@ -548,7 +549,7 @@ void GamePlayScreen::drawHUD()
 		m_screen.spriteBatchHUDDynamic,
 		buffer,
 		glm::vec2(0.0f, 32.0f), // offset pos
-		glm::vec2(0.32f), // size
+		glm::vec2(FONT_SIZE_G), // size
 		0.0f,
 		RealEngine2D::COLOR_WHITE
 	);
@@ -561,7 +562,7 @@ void GamePlayScreen::drawHUD()
 		m_screen.spriteBatchHUDDynamic,
 		buffer,
 		glm::vec2(0.0f, 64.0f), // offset pos
-		glm::vec2(0.32f), // size
+		glm::vec2(FONT_SIZE_G), // size
 		0.0f,
 		RealEngine2D::COLOR_BLUE
 	);
@@ -574,7 +575,7 @@ void GamePlayScreen::drawHUD()
 		m_screen.spriteBatchHUDDynamic,
 		buffer,
 		glm::vec2(0.0f, 500.0f), // offset pos
-		glm::vec2(0.32f), // size
+		glm::vec2(FONT_SIZE_G), // size
 		0.0f,
 		RealEngine2D::COLOR_RED
 	);

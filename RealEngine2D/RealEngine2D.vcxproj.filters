@@ -26,6 +26,7 @@
     <ClInclude Include="src\ErrorLog.h" />
     <ClInclude Include="src\ExitFromError.h" />
     <ClInclude Include="src\ValueToScale.h" />
+    <ClInclude Include="src\tinyXml2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -50,5 +51,6 @@
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />
     <ClCompile Include="src\ValueToScale.cpp" />
+    <ClCompile Include="src\tinyXml2.cpp" />
   </ItemGroup>
 </Project>
