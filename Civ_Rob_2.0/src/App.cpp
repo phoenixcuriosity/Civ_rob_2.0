@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.5.0
-	file version : 1.15
+	last modification on this file on version:0.25.6.0
+	file version : 1.16
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,9 +36,13 @@
 #include <RealEngine2D/src/tinyXml2.h> 
 
 
-namespace AppH
+namespace FILE_APP
 {
-	const std::string configFilePath = "bin/filePath.xml";
+	namespace PATH
+	{
+		const std::string CONFIG = "bin/filePath.xml";
+		const std::string LOG = "bin/filePath.xml";
+	}
 }
 
 App::App()
@@ -67,7 +71,7 @@ App::~App()
 void App::onInit()
 {
 	/* Set location of logging file */
-	RealEngine2D::ResourceManager::initializeFilePath(e_Files::log, "bin/log/log.txt");
+	RealEngine2D::ResourceManager::initializeFilePath(e_Files::log, FILE_APP::PATH::LOG);
 	RealEngine2D::ErrorLog::initializeLog();
 
 	initMain();
@@ -159,7 +163,7 @@ void App::initMain()
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
-	config.LoadFile(AppH::configFilePath.c_str());
+	config.LoadFile(FILE_APP::PATH::CONFIG.c_str());
 
 	if (config.ErrorID() == 0)
 	{
@@ -179,13 +183,13 @@ void App::initMain()
 			}
 			else
 			{
-				throw("Missing path for a file " + (std::string)AppH::configFilePath);
+				throw("Missing path for a file " + FILE_APP::PATH::CONFIG);
 			}
 		}
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + (std::string)AppH::configFilePath);
+		throw("Impossible d'ouvrir le fichier " + FILE_APP::PATH::CONFIG);
 	}
 
 	RealEngine2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
