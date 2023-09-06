@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.6.0
-	file version : 1.16
+	last modification on this file on version:0.25.6.3
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -41,7 +41,7 @@ namespace FILE_APP
 	namespace PATH
 	{
 		const std::string CONFIG = "bin/filePath.xml";
-		const std::string LOG = "bin/filePath.xml";
+		const std::string LOG = "bin/log/log.txt";
 	}
 }
 
