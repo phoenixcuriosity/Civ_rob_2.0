@@ -1,6 +1,7 @@
 #include "SpriteFont.h"
 
 #include "SpriteBatch.h"
+#include "ValueToScale.h"
 
 #include <SDL/SDL.h>
 #include <iostream>
@@ -324,7 +325,15 @@ float SpriteFont::getScaleFontToScreen
     const float size
 )
 {
-    return (size * (FONT::GUI::RESOLUTION::VERTICAL / Window::getVertical()));
+    return
+        (
+            size *
+            ValueToScale::protectedDiv
+                (
+                    FONT::GUI::RESOLUTION::VERTICAL,
+                    Window::getVertical()
+                )
+        );
 }
 
 }

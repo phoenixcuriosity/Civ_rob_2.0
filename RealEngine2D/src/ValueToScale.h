@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.1
-	file version : 1.2
+	last modification on this file on version:0.25.6.1
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -60,7 +60,9 @@ namespace RealEngine2D
 			const int divToScaleSize = 1
 		);
 
-	private:
+	public:
+
+
 		/* ---------------------------------------------------------------------------------------------------------- */
 		/* NAME : protectedDiv																				    	  */
 		/* ROLE : Check if the denominator is 0.0 then throw error, else do the division.						      */
@@ -75,7 +77,7 @@ namespace RealEngine2D
 			const double den
 		);
 
-	public:
+
 		/* ---------------------------------------------------------------------------------------------------------- */
 		/* NAME : checkMinMaxValidityRange																	    	  */
 		/* ROLE : Check if the min value is strictly lower than max value										      */
