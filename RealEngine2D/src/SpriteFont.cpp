@@ -326,14 +326,17 @@ float SpriteFont::getScaleFontToScreen
 )
 {
     return
+    (
+        size *
+        float
         (
-            size *
             ValueToScale::protectedDiv
-                (
-                    FONT::GUI::RESOLUTION::VERTICAL,
-                    Window::getVertical()
-                )
-        );
+            (
+                double(FONT::GUI::RESOLUTION::VERTICAL),
+                double(Window::getVertical())
+            )
+        )
+    );
 }
 
 }
