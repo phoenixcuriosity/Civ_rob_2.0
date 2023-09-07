@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.41
+	last modification on this file on version:0.25.7.0
+	file version : 1.42
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -171,8 +171,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				-((int)m_mainMap.GETtileSize()),
-				-(int)m_mainMap.GETtileSize()
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::SouthWest)
 			);
 		}
 		else
@@ -184,8 +184,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				GInput::UNIT_NO_MOVEMENT,
-				-((int)m_mainMap.GETtileSize())
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::South)
 			);
 		}
 		else
@@ -197,8 +197,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				(int)m_mainMap.GETtileSize(),
-				-((int)m_mainMap.GETtileSize())
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::SouthEst)
 			);
 		}
 		else
@@ -210,8 +210,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				-((int)m_mainMap.GETtileSize()),
-				GInput::UNIT_NO_MOVEMENT
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::West)
 			);
 		}
 		/* NO SDLK_KP_5 : Useless */
@@ -224,8 +224,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				(int)m_mainMap.GETtileSize(),
-				GInput::UNIT_NO_MOVEMENT
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::Est)
 			);
 		}
 		else
@@ -237,8 +237,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				-((int)m_mainMap.GETtileSize()),
-				(int)m_mainMap.GETtileSize()
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::NorthWest)
 			);
 		}
 		else
@@ -250,8 +250,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				GInput::UNIT_NO_MOVEMENT,
-				(int)m_mainMap.GETtileSize()
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::North)
 			);
 		}
 		else
@@ -263,8 +263,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				(int)m_mainMap.GETtileSize(),
-				(int)m_mainMap.GETtileSize()
+				RealEngine2D::ResourceManager::getCardinalDirection
+					(RealEngine2D::CardinalDirections::NorthEst)
 			);
 		}
 		else
@@ -341,8 +341,10 @@ void GamePlayScreen::actionByKey()
 	}
 }
 
-
-void GamePlayScreen::moveCamera(float deltaTime)
+void GamePlayScreen::moveCamera
+(
+	const float deltaTime
+)
 {
 	if (m_game->getInputManager().isKeyDown(SDLK_z) && !m_screen.camera.isLockMoveUP())
 	{
@@ -353,9 +355,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 				+
 				glm::vec2(0.0f, GInput::KEY_SPEED_MOVE * deltaTime)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_s) && !m_screen.camera.isLockMoveDOWN())
 	{
@@ -366,9 +366,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 				+
 				glm::vec2(0.0f, -GInput::KEY_SPEED_MOVE * deltaTime)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_q) && !m_screen.camera.isLockMoveLEFT())
 	{
@@ -379,9 +377,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 				+
 				glm::vec2(-GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_d) && !m_screen.camera.isLockMoveRIGHT())
 	{
@@ -392,10 +388,15 @@ void GamePlayScreen::moveCamera(float deltaTime)
 				+
 				glm::vec2(GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
+}
+
+void GamePlayScreen::updateDrawCameraMove()
+{
+	m_mainMap.SETneedToUpdateDraw(true);
+	m_players.SETneedToUpdateDrawUnit(true);
+	m_players.SETneedToUpdateDrawCity(true);
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */

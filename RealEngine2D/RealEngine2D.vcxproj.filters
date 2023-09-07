@@ -27,6 +27,7 @@
     <ClInclude Include="src\ExitFromError.h" />
     <ClInclude Include="src\ValueToScale.h" />
     <ClInclude Include="src\tinyXml2.h" />
+    <ClInclude Include="src\CardinalDirection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -52,5 +53,6 @@
     <ClCompile Include="src\ExitFromError.cpp" />
     <ClCompile Include="src\ValueToScale.cpp" />
     <ClCompile Include="src\tinyXml2.cpp" />
+    <ClCompile Include="src\CardinalDirection.cpp" />
   </ItemGroup>
 </Project>

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.3
+	last modification on this file on version:0.25.7.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,11 +29,15 @@
 #include "Files.h"
 #include "SpriteFont.h"
 #include "GLSLProgram.h"
+#include "CardinalDirection.h"
 
 #define EXTENSION_PNG ".png"
 
 namespace RealEngine2D
 {
+	typedef std::map<CardinalDirections, CardinalDirection> CardinalDirectionMapping;
+
+
 	/* STATIC CLASS */
 	class ResourceManager
 	{
@@ -75,12 +79,25 @@ namespace RealEngine2D
 			const std::string& justificationN
 		);
 
+		static void InitializeCardinalDirectionMapping
+		(
+			/* IN */
+			const unsigned int tileSize
+		);
+
+		static CardinalDirection& getCardinalDirection
+		(
+			/* IN */
+			const CardinalDirections cardinalDirections
+		);
+
 	private:
 		static TextureCache m_textureCache;
 		static Files m_files;
 		static std::shared_ptr<RealEngine2D::SpriteFont> m_spriteFont;
 		static GLSLProgram m_gLSLProgram;
 		static ColorRGBA8C m_colorsRGBA8;
+		static CardinalDirectionMapping m_cardinalDirectionMapping;
 	};
 }
 

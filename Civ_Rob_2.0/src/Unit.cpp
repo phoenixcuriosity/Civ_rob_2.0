@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.28
+	last modification on this file on version:0.25.7.0
+	file version : 1.29
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -167,8 +167,7 @@ void Unit::tryToMove
 	const MatriceMap& maps,
 	Players& players,
 	Select_Type select,
-	const int x,
-	const int y
+	const RealEngine2D::CardinalDirection& cardinalDirection
 )
 {
 	if (players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED)
@@ -176,11 +175,11 @@ void Unit::tryToMove
 		const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 		int playerToAttack(SELECTION::NO_PLAYER_SELECTED), unitToAttack(SELECTION::NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
-		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
+		switch (searchToMove(maps, players, cardinalDirection, &playerToAttack, &unitToAttack))
 		{
 		case Move_Type::canMove:
 
-			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, x, y);
+			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, cardinalDirection);
 			selPlayer->SETselectedUnit(selectunit);
 			players.SETneedToUpdateDrawUnit(PlayerH::NEED_TO_UPDATE_DRAW_UNIT);
 			break;
@@ -199,7 +198,7 @@ void Unit::tryToMove
 				if (defenderUnit->GETalive() == UNITC::DEAD_UNIT)
 				{
 					attackPlayer->deleteUnit(unitToAttack);
-					tryToMove(maps, players, select, x, y);
+					tryToMove(maps, players, select, cardinalDirection);
 				}
 			}
 			
@@ -235,8 +234,7 @@ Move_Type Unit::searchToMove
 (
 	const MatriceMap& maps,
 	Players& players,
-	const int x,
-	const int y,
+	const RealEngine2D::CardinalDirection& cardinalDirection,
 	int* const playerToAttack,
 	int* const unitToAttack
 )
@@ -256,9 +254,12 @@ Move_Type Unit::searchToMove
 	const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 	const std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
+
 	bool nextTileValidToMove(false);
-	const unsigned int xIndex(MainMap::convertPosXToIndex(unit->GETx() + x));
-	const unsigned int yIndex(MainMap::convertPosYToIndex(unit->GETy() + y));
+	const unsigned int xIndex
+	(MainMap::convertPosXToIndex(unit->GETx() + cardinalDirection.GETpixelValueEW()));
+	const unsigned int yIndex
+	(MainMap::convertPosYToIndex(unit->GETy() + cardinalDirection.GETpixelValueNS()));
 
 	if	(
 			unit->isGroundMovement_Type()
@@ -325,7 +326,13 @@ Move_Type Unit::searchToMove
 		{
 			for (unsigned int j{0}; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
 			{
-				condition = checkUnitNextTile(*unit, *(players.GETvectPlayer()[i]->GETtabUnit()[j]), x, y);
+				condition = checkUnitNextTile
+					(
+						*unit,
+						*(players.GETvectPlayer()[i]->GETtabUnit()[j]),
+						cardinalDirection.GETpixelValueEW(),
+						cardinalDirection.GETpixelValueNS()
+					);
 				if (true == condition)
 				{
 					if (players.GETselectedPlayerId() == (int)i)
@@ -590,14 +597,13 @@ void Unit::move
 (
 	Select_Type& select,
 	int& selectunit,
-	const int x,
-	const int y
+	const RealEngine2D::CardinalDirection& cardinalDirection
 )
 {
 	if (UNITC::NO_MOVEMENT < m_movement)
 	{
-		m_x += x;
-		m_y += y;
+		m_x += cardinalDirection.GETpixelValueEW();
+		m_y += cardinalDirection.GETpixelValueNS();
 		m_movement--;
 	}
 

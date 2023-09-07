@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="src\AudioEngine.h" />
     <ClInclude Include="src\Camera2D.h" />
+    <ClInclude Include="src\CardinalDirection.h" />
     <ClInclude Include="src\ColorRGBA8.h" />
     <ClInclude Include="src\ErrorLog.h" />
     <ClInclude Include="src\ExitFromError.h" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
     <ClCompile Include="src\Camera2D.cpp" />
+    <ClCompile Include="src\CardinalDirection.cpp" />
     <ClCompile Include="src\ColorRGBA8.cpp" />
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />

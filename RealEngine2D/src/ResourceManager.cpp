@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.5
+	last modification on this file on version:0.25.7.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,6 +36,7 @@ Files ResourceManager::m_files;
 std::shared_ptr<SpriteFont> ResourceManager::m_spriteFont;
 GLSLProgram ResourceManager::m_gLSLProgram;
 ColorRGBA8C ResourceManager::m_colorsRGBA8;
+CardinalDirectionMapping ResourceManager::m_cardinalDirectionMapping;
 
 std::unique_ptr<GLTexture>& ResourceManager::getTexture(const std::string& name)
 {
@@ -179,4 +180,119 @@ Justification ResourceManager::getJustification
 	{
 		return Justification::LEFT;
 	}
+}
+
+
+void ResourceManager::InitializeCardinalDirectionMapping
+(
+	/* IN */
+	const unsigned int tileSize
+)
+{
+	;
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::North,
+			{
+				NorthSouth::north,
+				EstWest::neutral,
+				int(tileSize),
+				CARDINAL::PIXEL::DEFAULT
+			}
+		}
+	);
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::NorthEst,
+			{
+				NorthSouth::north,
+				EstWest::est,
+				int(tileSize),
+				int(tileSize)
+			}
+		}
+	);
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::Est,
+			{
+				NorthSouth::neutral,
+				EstWest::est,
+				CARDINAL::PIXEL::DEFAULT,
+				int(tileSize)
+			}
+		}
+	);
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::SouthEst,
+			{
+				NorthSouth::south,
+				EstWest::est,
+				-int(tileSize),
+				int(tileSize)
+			}
+		}
+	);
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::South,
+			{
+				NorthSouth::south,
+				EstWest::neutral,
+				-int(tileSize),
+				CARDINAL::PIXEL::DEFAULT
+			}
+		}
+	);
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::SouthWest,
+			{
+				NorthSouth::south,
+				EstWest::west,
+				-int(tileSize),
+				-int(tileSize)
+			}
+		}
+	);
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::West,
+			{
+				NorthSouth::neutral,
+				EstWest::west,
+				CARDINAL::PIXEL::DEFAULT,
+				-int(tileSize)
+			}
+		}
+	);
+	m_cardinalDirectionMapping.insert
+	(
+		{
+			CardinalDirections::NorthWest,
+			{
+				NorthSouth::north,
+				EstWest::west,
+				int(tileSize),
+				-int(tileSize)
+			}
+		}
+	);
+}
+
+CardinalDirection& ResourceManager::getCardinalDirection
+(
+	/* IN */
+	const CardinalDirections cardinalDirections
+)
+{
+	return m_cardinalDirectionMapping[cardinalDirections];
 }

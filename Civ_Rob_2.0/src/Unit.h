@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.22
+	last modification on this file on version:0.25.7.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -55,6 +55,8 @@
 class Players;
 class Player;
 class GameInput;
+
+#include <RealEngine2D/src/CardinalDirection.h> 
 
 
  /* *********************************************************
@@ -132,8 +134,7 @@ public:
 		const MatriceMap& maps,
 		Players& players,
 		Select_Type select,
-		const int x,
-		const int y
+		const RealEngine2D::CardinalDirection& cardinalDirection
 	);
 
 private:
@@ -156,8 +157,7 @@ private:
 	(
 		const MatriceMap& maps,
 		Players& players,
-		const int x,
-		const int y,
+		const RealEngine2D::CardinalDirection& cardinalDirection,
 		int* const playerToAttack,
 		int* const unitToAttack
 	);
@@ -297,8 +297,7 @@ private:
 	(
 		Select_Type& select,
 		int& selectunit,
-		const int x,
-		const int y
+		const RealEngine2D::CardinalDirection& cardinalDirection
 	);
 
 public:
