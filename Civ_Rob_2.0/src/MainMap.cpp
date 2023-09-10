@@ -28,8 +28,8 @@
 
 #include "MainMap.h"
 
-#include <RealEngine2D/src/ResourceManager.h>
-#include <RealEngine2D/src/ErrorLog.h> 
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h> 
 
 #include "App.h"
 
@@ -130,7 +130,7 @@ MainMap::~MainMap()
 }
 
 
-void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
+void MainMap::initMainMap(R2D::Camera2D& camera)
 {
 	initTile();
 
@@ -151,7 +151,7 @@ void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
 	}
 	catch (const std::invalid_argument& msg)
 	{
-		RealEngine2D::ErrorLog::logEvent("[ERROR]___: initMainMap : " + std::string(msg.what()));
+		R2D::ErrorLog::logEvent("[ERROR]___: initMainMap : " + std::string(msg.what()));
 	}
 	
 
@@ -164,27 +164,27 @@ void MainMap::initMainMapTexture()
 	m_spriteBatchAppartenance.init();
 
 
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass_irr.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-grass_irr.png")->GETid());
 
 	START_GROUND_SPEC_INDEX = s_vectID.size();
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
-	s_vectID.push_back(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
 
 	START_APPARTENANCE_INDEX = s_vectID.size();
 	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
 	{
 		s_vectID.push_back
-			(RealEngine2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
+			(R2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
 	}
 }
 
@@ -224,7 +224,7 @@ void MainMap::initTile()
 /* ----------------------------------------------------------------------------------- */
 void MainMap::generateMap()
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Groundgen Start");
+	R2D::ErrorLog::logEvent("[INFO]___: Groundgen Start");
 
 	const unsigned int endI{ m_mapSizePixX / m_tileSize };
 	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
@@ -281,7 +281,7 @@ void MainMap::generateMap()
 		}
 	}
 
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Groundgen End");
+	R2D::ErrorLog::logEvent("[INFO]___: Groundgen End");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -722,7 +722,7 @@ bool MainMap::assertRangeMapIndex
 
 void MainMap::setMinMaxScale
 (
-	RealEngine2D::Camera2D& camera
+	R2D::Camera2D& camera
 )
 {
 	/* Min Scale, to avoid OOR */
@@ -789,7 +789,7 @@ void MainMap::updateOffset
 	const double y0,
 	const unsigned int windowWidth,
 	const unsigned int windowHeight,
-	RealEngine2D::Camera2D& camera
+	R2D::Camera2D& camera
 )
 {
 	updateOffsetX(x0, windowWidth, camera);
@@ -801,7 +801,7 @@ void MainMap::updateOffsetX
 (
 	const double x0,
 	const unsigned int windowWidth,
-	RealEngine2D::Camera2D& camera
+	R2D::Camera2D& camera
 )
 {
 	int buffer(0);
@@ -861,7 +861,7 @@ void MainMap::updateOffsetY
 (
 	const double y0,
 	const unsigned int windowHeight,
-	RealEngine2D::Camera2D& camera
+	R2D::Camera2D& camera
 )
 {
 	int buffer(0);
@@ -910,8 +910,8 @@ void MainMap::updateOffsetY
 
 void MainMap::drawMap
 (
-	RealEngine2D::Camera2D& camera,
-	RealEngine2D::Window& window
+	R2D::Camera2D& camera,
+	R2D::Window& window
 )
 {
 	if (m_needToUpdateDraw)
@@ -966,10 +966,10 @@ void MainMap::drawMap
 				m_spriteBatch.draw
 				(
 					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-					RealEngine2D::FULL_RECT,
+					R2D::FULL_RECT,
 					id,
 					0.0f,
-					RealEngine2D::COLOR_WHITE
+					R2D::COLOR_WHITE
 				);
 
 				switch (m_matriceMap[i][j].tile_spec)
@@ -1011,10 +1011,10 @@ void MainMap::drawMap
 					m_spriteBatch.draw
 					(
 						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-						RealEngine2D::FULL_RECT,
+						R2D::FULL_RECT,
 						id,
 						0.0f,
-						RealEngine2D::COLOR_WHITE
+						R2D::COLOR_WHITE
 					);
 				}
 
@@ -1023,10 +1023,10 @@ void MainMap::drawMap
 					m_spriteBatchAppartenance.draw
 					(
 						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-						RealEngine2D::FULL_RECT,
+						R2D::FULL_RECT,
 						s_vectID[START_APPARTENANCE_INDEX + m_matriceMap[i][j].appartenance],
 						0.0f,
-						RealEngine2D::COLOR_WHITE_T25
+						R2D::COLOR_WHITE_T25
 					);
 				}
 			}

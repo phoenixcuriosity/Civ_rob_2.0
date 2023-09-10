@@ -42,8 +42,8 @@
 #include <queue>
 #include <memory>
 
-#include <RealEngine2D/src/Window.h>
-#include <RealEngine2D/src/GUI.h>
+#include <R2D/src/Window.h>
+#include <R2D/src/GUI.h>
 
 /* *********************************************************
  *						 Structs						   *
@@ -87,7 +87,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static void fillCitieTiles
 	(
-		const RealEngine2D::Window& window,
+		const R2D::Window& window,
 		const unsigned int middletileX,
 		const unsigned int middletileY,
 		const unsigned int selectplayer,

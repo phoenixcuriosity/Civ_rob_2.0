@@ -30,7 +30,7 @@
 #include "SaveReload.h"
 #include <string>
 
-#include <RealEngine2D/src/ResourceManager.h> 
+#include <R2D/src/ResourceManager.h> 
 
 namespace IHM_SAVE_BUTTON
 {
@@ -42,8 +42,8 @@ ReloadMenuScreen::ReloadMenuScreen
 	SaveReload* SaveReload
 )
 :
-RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(RealEngine2D::SCREEN_INDEX::INIT),
+R2D::IGameScreen(),
+m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_cameraHUD(),
 m_gui(),
 m_vectSavesRadioButton(),
@@ -119,7 +119,7 @@ void ReloadMenuScreen::initOpenGLScreen()
 void ReloadMenuScreen::initHUD()
 {
 
-	m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+	m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 	m_gui.loadScheme("AlfiskoSkin.scheme");
 	m_gui.loadScheme("TaharezLook.scheme");
@@ -208,7 +208,7 @@ void ReloadMenuScreen::initHUD()
 			m_vectSavesRadioButton[i]->setVisible(false);
 		}
 
-		m_widgetLabels[i] = RealEngine2D::WidgetLabel(
+		m_widgetLabels[i] = R2D::WidgetLabel(
 			m_vectSavesRadioButton[i],
 			"Save " + std::to_string(m_SaveReload->GETtabSave()[i]),
 			TEXT_SCALE);
@@ -241,17 +241,17 @@ void ReloadMenuScreen::draw()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	RealEngine2D::ResourceManager::getGLSLProgram().use();
+	R2D::ResourceManager::getGLSLProgram().use();
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
 	const GLint textureLocation =
-		RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
+		R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* camera */
 	const GLint pLocation
-		= RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
+		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
 	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
 
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
@@ -262,7 +262,7 @@ void ReloadMenuScreen::draw()
 	{
 		if (m_vectSavesRadioButton[i]->isVisible())
 		{
-			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *RealEngine2D::ResourceManager::getSpriteFont(), m_game->getWindow());
+			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *R2D::ResourceManager::getSpriteFont(), m_game->getWindow());
 		}
 	}
 
@@ -272,7 +272,7 @@ void ReloadMenuScreen::draw()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	RealEngine2D::ResourceManager::getGLSLProgram().unuse();
+	R2D::ResourceManager::getGLSLProgram().unuse();
 
 	m_gui.draw();
 }
@@ -301,8 +301,8 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 			dummy.erase(0, 5);
 
 			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
-			RealEngine2D::ResourceManager::modifyFilePath(e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
-			RealEngine2D::ResourceManager::modifyFilePath(e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
+			R2D::ResourceManager::modifyFilePath(e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
+			R2D::ResourceManager::modifyFilePath(e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
 			return true;
 		}
 	}
@@ -314,7 +314,7 @@ bool ReloadMenuScreen::onLoadSave(const CEGUI::EventArgs& /* e */)
 	if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
 	{
 		m_nextScreenIndexMenu = SCREEN_INDEX::GAMEPLAY;
-		m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+		m_currentState = R2D::ScreenState::CHANGE_NEXT;
 	}
 	return true;
 }
@@ -329,13 +329,13 @@ bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
 	
-	m_SaveReload->clearSave(RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+	m_SaveReload->clearSave(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 
 	return true;
 }
 
 bool ReloadMenuScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
-	m_currentState = RealEngine2D::ScreenState::CHANGE_PREVIOUS;
+	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
 }

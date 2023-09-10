@@ -29,7 +29,7 @@
 
 #include <memory>
 
-#include <RealEngine2D/src/IMainGame.h>
+#include <R2D/src/IMainGame.h>
 
 #include "GamePlayScreen.h"
 #include "MainMenuScreen.h"
@@ -40,7 +40,7 @@
 #include "SaveReload.h"
 
 
-class App : public RealEngine2D::IMainGame
+class App : public R2D::IMainGame
 {
 public:
 	App();

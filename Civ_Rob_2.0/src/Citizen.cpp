@@ -31,7 +31,7 @@
 #include "City.h"
 #include "App.h"
 
-#include "../../RealEngine2D/src/ErrorLog.h"
+#include "../../R2D/src/ErrorLog.h"
 
  /* *********************************************************
   *					START Citizen::STATIC				   *
@@ -133,7 +133,7 @@ Citizen::Citizen()
 	m_religion(Religion_Type::catholic),
 	m_place(false)
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -157,7 +157,7 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -180,7 +180,7 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -192,7 +192,7 @@ Citizen::Citizen
 /* ----------------------------------------------------------------------------------- */
 Citizen::~Citizen()
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Kill Citizen Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Kill Citizen Success");
 }
 
 /* ----------------------------------------------------------------------------------- */

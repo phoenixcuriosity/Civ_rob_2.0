@@ -28,7 +28,7 @@
 
 #include "XmlConvertValue.h"
 
-#include <RealEngine2D/src/ErrorLog.h> 
+#include <R2D/src/ErrorLog.h> 
 
  /* *********************************************************
   *						 Classes						   *
@@ -146,7 +146,7 @@ Unit_Movement_Type XmlConvertValue::convertUintToUnit_Movement_Type
 	case 3:
 		return Unit_Movement_Type::deepwater;
 	default:
-		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convertUintToUnit_Movement_Type : case default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convertUintToUnit_Movement_Type : case default");
 		return Unit_Movement_Type::ground;
 	}
 }
@@ -210,7 +210,7 @@ conversionSurplus_Type XmlConvertValue::convert2ConversionToApply
 	case 6:
 		return conversionSurplus_Type::GoldToWork;
 	default:
-		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2ConversionToApply : default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2ConversionToApply : default");
 		return conversionSurplus_Type::No_Conversion;
 	}
 }
@@ -236,7 +236,7 @@ build_Type XmlConvertValue::convert2build_Type
 	case 1:
 		return build_Type::unit;
 	default:
-		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2build_Type : default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2build_Type : default");
 		return build_Type::building;
 	}
 }
@@ -268,7 +268,7 @@ Emotion_Type XmlConvertValue::convert2Emotion_Type
 	case 2:
 		return Emotion_Type::ecstatic;
 	default:
-		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2Emotion_Type : default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2Emotion_Type : default");
 		return Emotion_Type::neutral;
 	}
 }
@@ -336,7 +336,7 @@ Religion_Type XmlConvertValue::convert2Religion_Type
 	case 22:
 		return Religion_Type::zoroastrian;
 	default:
-		RealEngine2D::ErrorLog::logEvent("[ERROR]___: convert2Religion_Type : default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2Religion_Type : default");
 		return Religion_Type::catholic;
 	}
 }

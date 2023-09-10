@@ -49,6 +49,9 @@
     <ClCompile Include="src\CityScreen.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
+    <ClCompile Include="src\MainMapGen.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -122,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="src\T_MainMap.h">
       <Filter>T_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainMapGen.h">
+      <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

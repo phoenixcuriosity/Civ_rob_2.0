@@ -30,7 +30,7 @@
 
 #include "Utility.h"
 
-#include <RealEngine2D/src/ResourceManager.h>
+#include <R2D/src/ResourceManager.h>
 
 
 
@@ -116,8 +116,8 @@ CityScreen::CityScreen
 	unsigned int* const tileSize
 )
 :
-RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(RealEngine2D::SCREEN_INDEX::INIT),
+R2D::IGameScreen(),
+m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_gui(),
 m_indexCycleBuilds(0),
 m_buttonBuild(),
@@ -158,7 +158,7 @@ void CityScreen::destroy()
 /* ----------------------------------------------------------------------------------- */
 int CityScreen::getNextScreenIndex()const
 {
-	return RealEngine2D::SCREEN_INDEX::INIT;
+	return R2D::SCREEN_INDEX::INIT;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -183,14 +183,14 @@ bool CityScreen::onEntry()
 			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
 		}
 
-		const std::string CITY_IMAGE_PATH{RealEngine2D::ResourceManager::getFile(e_Files::imagesPath)->getPath()};
+		const std::string CITY_IMAGE_PATH{R2D::ResourceManager::getFile(e_Files::imagesPath)->getPath()};
 		const std::string DIR_GROUND {"ground/"};
 		const std::string DIR_SPEC {"spec/"};
 		const std::string DIR_CA {"couleur d'apartenance/"};
 		const std::string DIR_CITIZEN {"citizen/"};
 		const std::string DIR_CITY {"city/"};
 
-		using RealEngine2D::ResourceManager;
+		using R2D::ResourceManager;
 
 		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-grass" + EXTENSION_PNG)->GETid());
 		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-water" + EXTENSION_PNG)->GETid());
@@ -227,7 +227,7 @@ bool CityScreen::onEntry()
 		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "Hammer" + EXTENSION_PNG)->GETid());
 
 		
-		m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.setFont("DejaVuSans-10");
 
@@ -236,7 +236,7 @@ bool CityScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ 0.0f, 0.0f, 0.1f, 0.05f },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"ReturnToMap"));
 
 		returnToMap->setText("Return To Map");
@@ -263,7 +263,7 @@ bool CityScreen::onEntry()
 								CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_X,
 								CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_Y
 							},
-							RealEngine2D::NOT_BY_PERCENT,
+							R2D::NOT_BY_PERCENT,
 							p.name
 						)
 					),
@@ -363,7 +363,7 @@ void CityScreen::createDynamicContext()
 							CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_X,
 							CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y
 						},
-						RealEngine2D::NOT_BY_PERCENT,
+						R2D::NOT_BY_PERCENT,
 						button.buildQ.name + std::to_string(rand())
 					)
 					);
@@ -393,11 +393,11 @@ void CityScreen::draw()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	RealEngine2D::ResourceManager::getGLSLProgram().use();
+	R2D::ResourceManager::getGLSLProgram().use();
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
+	GLint textureLocation = R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* --- Draw --- */
@@ -409,7 +409,7 @@ void CityScreen::draw()
 
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
-	RealEngine2D::ResourceManager::getGLSLProgram().unuse();
+	R2D::ResourceManager::getGLSLProgram().unuse();
 
 	/* Need to be done after GL display */
 	m_gui.draw();
@@ -499,10 +499,10 @@ void CityScreen::drawTileApp(const size_t kTile)
 				*m_tileSize,
 				*m_tileSize
 			),
-			RealEngine2D::FULL_RECT,
+			R2D::FULL_RECT,
 			s_vectID[START_APPARTENANCE_INDEX + m_players->GETSelectedCity()->GETtile()[kTile].appartenance],
 			0.0f,
-			RealEngine2D::COLOR_WHITE_T25
+			R2D::COLOR_WHITE_T25
 		);
 	}
 }
@@ -525,10 +525,10 @@ void CityScreen::drawFood()
 				CITY_IHM::DIPSLAY::FOOD::DELTA_X,
 				CITY_IHM::DIPSLAY::FOOD::DELTA_Y
 			),
-			RealEngine2D::FULL_RECT,
+			R2D::FULL_RECT,
 			s_vectID[START_ICON_INDEX],
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 
 		foodC++;
@@ -553,10 +553,10 @@ void CityScreen::callDraw(const size_t kTile, const GLuint id)
 				*m_tileSize,
 				*m_tileSize
 			),
-			RealEngine2D::FULL_RECT,
+			R2D::FULL_RECT,
 			id,
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 	}
 }
@@ -580,10 +580,10 @@ void CityScreen::drawBuild()
 				CITY_IHM::DIPSLAY::WORK::DELTA_X,
 				CITY_IHM::DIPSLAY::WORK::DELTA_Y
 			),
-			RealEngine2D::FULL_RECT,
+			R2D::FULL_RECT,
 			s_vectID[START_ICON_INDEX + 1],
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 
 		workC++;
@@ -632,10 +632,10 @@ void CityScreen::drawCitizen()
 				*m_tileSize - CITY_IHM::OFFSET_EMOTION,
 				*m_tileSize - CITY_IHM::OFFSET_EMOTION
 			),
-			RealEngine2D::FULL_RECT,
+			R2D::FULL_RECT,
 			id,
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 	}
 }
@@ -643,28 +643,28 @@ void CityScreen::drawCitizen()
 void CityScreen::drawCityName()
 {
 	/* City Name */
-	RealEngine2D::ResourceManager::getSpriteFont()->draw
+	R2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_spriteBatch,
 		m_players->GETSelectedCity()->GETname().c_str(),
 		glm::vec2(900.0f, 1020.0f), // offset pos
 		glm::vec2(0.64f), // size
 		0.0f,
-		RealEngine2D::COLOR_GOLD
+		R2D::COLOR_GOLD
 	);
 }
 
 void CityScreen::drawNbPop()
 {
 	/* City Nb POP */
-	RealEngine2D::ResourceManager::getSpriteFont()->draw
+	R2D::ResourceManager::getSpriteFont()->draw
 	(
 		m_spriteBatch,
 		std::to_string(m_players->GETSelectedCity()->GETnbpop()).c_str(),
 		glm::vec2(900.0f, 920.0f), // offset pos
 		glm::vec2(0.48f), // size
 		0.0f,
-		RealEngine2D::COLOR_LIGHT_GREY
+		R2D::COLOR_LIGHT_GREY
 	);
 }
 
@@ -722,7 +722,7 @@ void CityScreen::update()
 
 void CityScreen::input(const SDL_Event& ev)
 {
-	if (RealEngine2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
+	if (R2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
 	{
 		if (m_indexCycleBuilds >= CitySC::MIN_INDEX_CYCLE_BUILDS)
 		{
@@ -730,7 +730,7 @@ void CityScreen::input(const SDL_Event& ev)
 			updatePositionCycleButton(CitySC::CYCLE_BUTTON_DIR_UP);
 		}
 	}
-	else if (RealEngine2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
+	else if (R2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
 		if (m_indexCycleBuilds < (m_buttonBuild.size() - CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE - CitySC::MIN_INDEX_CYCLE_BUILDS))
 		{
@@ -804,7 +804,7 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 								CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_X,
 								CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y
 							},
-							RealEngine2D::NOT_BY_PERCENT,
+							R2D::NOT_BY_PERCENT,
 							button.buildQ.name + std::to_string(rand())
 						)
 					),
@@ -856,6 +856,6 @@ bool CityScreen::onBuildQueueToBuildClicked(const CEGUI::EventArgs& /* e */)
 bool CityScreen::onReturnToMapClicked(const CEGUI::EventArgs& /* e */)
 {
 	m_nextScreenIndexMenu = SCREEN_INDEX::GAMEPLAY;
-	m_currentState = RealEngine2D::ScreenState::CHANGE_PREVIOUS;
+	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
 }

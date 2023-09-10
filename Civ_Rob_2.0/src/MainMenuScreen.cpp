@@ -27,23 +27,23 @@
 
 #include "App.h"
 
-#include <RealEngine2D/src/ResourceManager.h> 
-#include <RealEngine2D/src/ErrorLog.h> 
-#include <RealEngine2D/src/SpriteFont.h> 
+#include <R2D/src/ResourceManager.h> 
+#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/SpriteFont.h> 
 
 
 MainMenuScreen::MainMenuScreen
 (
 )
 : 
-RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(RealEngine2D::SCREEN_INDEX::INIT),
+R2D::IGameScreen(),
+m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_spriteBatchHUDStatic(),
 m_gui(),
 m_isInitialize(false)
 {
 	build();
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: build MainMenuScreen");
+	R2D::ErrorLog::logEvent("[INFO]___: build MainMenuScreen");
 }
 
 MainMenuScreen::~MainMenuScreen()
@@ -57,7 +57,7 @@ int MainMenuScreen::getNextScreenIndex()const
 }
 int MainMenuScreen::getPreviousScreenIndex()const
 {
-	return RealEngine2D::SCREEN_INDEX::INIT;
+	return R2D::SCREEN_INDEX::INIT;
 }
 
 void MainMenuScreen::build()
@@ -74,7 +74,7 @@ bool MainMenuScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		RealEngine2D::ErrorLog::logEvent("[INFO]___: Init MainMenuScreen");
+		R2D::ErrorLog::logEvent("[INFO]___: Init MainMenuScreen");
 
 		m_cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 		m_cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
@@ -82,7 +82,7 @@ bool MainMenuScreen::onEntry()
 
 		m_spriteBatchHUDStatic.init();
 
-		m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 
@@ -97,7 +97,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"newGame"));
 
 		newGame->setText("New Game");
@@ -111,7 +111,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC += yDelta, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"Reload"));
 
 		reloadButton->setText("Reload");
@@ -125,7 +125,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC += yDelta, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"Option"));
 
 		optionButton->setText("Option");
@@ -139,7 +139,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC += yDelta, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"QuitGame"));
 
 		quitGame->setText("Quit Game");
@@ -171,7 +171,7 @@ void MainMenuScreen::initHUD()
 
 
 	MapTexts mapTexts;
-	RealEngine2D::ResourceManager::getTextFromFile
+	R2D::ResourceManager::getTextFromFile
 	(
 		e_Files::texts_MainMenu,
 		mapTexts
@@ -179,7 +179,7 @@ void MainMenuScreen::initHUD()
 
 	for (const auto& text: mapTexts)
 	{
-		RealEngine2D::ResourceManager::getSpriteFont()->draw
+		R2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_spriteBatchHUDStatic,
 			text.second.text.c_str(),
@@ -188,7 +188,7 @@ void MainMenuScreen::initHUD()
 				m_game->getWindow().getWidthPositionScaleToWindow(text.second.x),
 				m_game->getWindow().getHeightPositionScaleToWindow(text.second.y)
 			), // offset pos
-			glm::vec2(RealEngine2D::SpriteFont::getScaleFontToScreen(text.second.size)), // size
+			glm::vec2(R2D::SpriteFont::getScaleFontToScreen(text.second.size)), // size
 			text.second.alpha,
 			text.second.color,
 			text.second.justification
@@ -222,18 +222,18 @@ void MainMenuScreen::draw()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	RealEngine2D::ResourceManager::getGLSLProgram().use();
+	R2D::ResourceManager::getGLSLProgram().use();
 
 	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
+	GLint textureLocation = R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
 	/* --- camera --- */
 	/* GL - get parameter P */
 	const GLint pLocation
-		= RealEngine2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
+		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
 
 	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
@@ -245,7 +245,7 @@ void MainMenuScreen::draw()
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	RealEngine2D::ResourceManager::getGLSLProgram().unuse();
+	R2D::ResourceManager::getGLSLProgram().unuse();
 
 	m_gui.draw();
 }
@@ -265,14 +265,14 @@ void MainMenuScreen::update()
 bool MainMenuScreen::onNewGameClicked(const CEGUI::EventArgs& /* e */)
 {
 	m_nextScreenIndexMenu = SCREEN_INDEX::NEWGAME;
-	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+	m_currentState = R2D::ScreenState::CHANGE_NEXT;
 	return true;
 }
 
 bool MainMenuScreen::onReloadClicked(const CEGUI::EventArgs& /* e */)
 {
 	m_nextScreenIndexMenu = SCREEN_INDEX::RELOAD;
-	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+	m_currentState = R2D::ScreenState::CHANGE_NEXT;
 	return true;
 }
 
@@ -283,6 +283,6 @@ bool MainMenuScreen::onOptionClicked(const CEGUI::EventArgs& /* e */)
 
 bool MainMenuScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
-	m_currentState = RealEngine2D::ScreenState::EXIT_APPLICATION;
+	m_currentState = R2D::ScreenState::EXIT_APPLICATION;
 	return true;
 }

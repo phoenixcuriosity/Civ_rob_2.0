@@ -28,26 +28,26 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
+#include <R2D/src/IGameScreen.h>
 
 #include <vector>
 
-#include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
+#include <R2D/src/WidgetLabel.h>
+#include <R2D\src\GLSLProgram.h>
+#include <R2D\src\GameEngine.h>
+#include <R2D\src\Window.h>
+#include <R2D\src\Camera2D.h>
+#include <R2D\src\SpriteBatch.h>
+#include <R2D\src\InputManager.h>
+#include <R2D\src\Timing.h>
+#include <R2D\src\SpriteFont.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
 
 class SaveReload;
 
 
-class ReloadMenuScreen : public RealEngine2D::IGameScreen
+class ReloadMenuScreen : public R2D::IGameScreen
 {
 public:
 	ReloadMenuScreen
@@ -91,12 +91,12 @@ public:
 private:
 	int m_nextScreenIndexMenu;
 
-	RealEngine2D::Camera2D m_cameraHUD;
+	R2D::Camera2D m_cameraHUD;
 
-	RealEngine2D::GUI m_gui;
+	R2D::GUI m_gui;
 	std::vector<CEGUI::RadioButton*> m_vectSavesRadioButton;
-	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
-	RealEngine2D::SpriteBatch m_spriteBatchHUDDynamic;
+	std::vector<R2D::WidgetLabel> m_widgetLabels;
+	R2D::SpriteBatch m_spriteBatchHUDDynamic;
 
 	SaveReload* m_SaveReload;
 

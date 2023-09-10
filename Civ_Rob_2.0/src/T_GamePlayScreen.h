@@ -30,19 +30,19 @@
 
 #include "GameInput.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
-#include <RealEngine2D/src/Camera2D.h>
-#include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D/src/GUI.h>
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/AudioEngine.h>
+#include <R2D/src/IGameScreen.h>
+#include <R2D/src/Camera2D.h>
+#include <R2D/src/WidgetLabel.h>
+#include <R2D/src/GUI.h>
+#include <R2D/src/SpriteBatch.h>
+#include <R2D/src/AudioEngine.h>
 
 /* *********************************************************
  *						 Structs						   *
  ********************************************************* */
 
 /* 
-	All RealEngine2D objects
+	All R2D objects
 	- Shaders
 	- camera/cameraHUD
 	- Sprite/font
@@ -51,19 +51,19 @@
 */
 struct Screen
 {
-	RealEngine2D::Camera2D camera;
-	RealEngine2D::Camera2D cameraHUD;
+	R2D::Camera2D camera;
+	R2D::Camera2D cameraHUD;
 
-	RealEngine2D::SpriteBatch spriteBatchHUDDynamic;
-	RealEngine2D::SpriteBatch spriteBatchHUDStatic;
+	R2D::SpriteBatch spriteBatchHUDDynamic;
+	R2D::SpriteBatch spriteBatchHUDStatic;
 
-	RealEngine2D::AudioEngine audioEngine;
+	R2D::AudioEngine audioEngine;
 
-	RealEngine2D::GUI m_gui;
+	R2D::GUI m_gui;
 	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
-	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
+	std::vector<R2D::WidgetLabel> m_widgetLabels;
 
-	int m_nextScreenIndexMenu = RealEngine2D::SCREEN_INDEX::INIT;
+	int m_nextScreenIndexMenu = R2D::SCREEN_INDEX::INIT;
 };
 
 struct Var

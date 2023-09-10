@@ -31,16 +31,16 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/Camera2D.h>
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/Window.h>
+#include <R2D/src/Camera2D.h>
+#include <R2D/src/SpriteBatch.h>
+#include <R2D/src/Window.h>
 
-#include <RealEngine2D/src/IGameScreen.h>
-#include <RealEngine2D/src/IMainGame.h>
-#include <RealEngine2D/src/GLSLProgram.h>
-#include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
+#include <R2D/src/IGameScreen.h>
+#include <R2D/src/IMainGame.h>
+#include <R2D/src/GLSLProgram.h>
+#include <R2D/src/WidgetLabel.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
 
 #include "T_MainMap.h"
 
@@ -145,7 +145,7 @@ public:
 	MainMap();
 	~MainMap();
 
-	void initMainMap(RealEngine2D::Camera2D& camera);
+	void initMainMap(R2D::Camera2D& camera);
 
 	void initMainMapTexture();
 
@@ -157,7 +157,7 @@ private:
 
 	void setMinMaxScale
 	(
-		RealEngine2D::Camera2D& camera
+		R2D::Camera2D& camera
 	);
 
 	void updateOffset
@@ -166,29 +166,29 @@ private:
 		const double y0,
 		const unsigned int windowWidth,
 		const unsigned int windowHeight,
-		RealEngine2D::Camera2D& camera
+		R2D::Camera2D& camera
 	);
 
 	void updateOffsetX
 	(
 		const double x0,
 		const unsigned int windowWidth,
-		RealEngine2D::Camera2D& camera
+		R2D::Camera2D& camera
 	);
 
 	void updateOffsetY
 	(
 		const double y0,
 		const unsigned int windowHeight,
-		RealEngine2D::Camera2D& camera
+		R2D::Camera2D& camera
 	);
 
 public:
 
 	void drawMap
 	(
-		RealEngine2D::Camera2D& camera,
-		RealEngine2D::Window& window
+		R2D::Camera2D& camera,
+		R2D::Window& window
 	);
 
 	void renderMap();
@@ -202,7 +202,7 @@ public:
 	inline unsigned int GETtoolBarSize()const { return m_toolBarSize; };
 	inline MatriceMap& GETmatriceMap() { return m_matriceMap; };
 	inline const MatriceMap& GETmatriceMapConst()const { return m_matriceMap; };
-	RealEngine2D::SpriteBatch& GETspriteBatch() { return m_spriteBatch; };
+	R2D::SpriteBatch& GETspriteBatch() { return m_spriteBatch; };
 
 	inline void SETmapSizePixX(unsigned int mapSizePixX){  m_mapSizePixX = mapSizePixX; };
 	inline void SETmapSizePixY(unsigned int mapSizePixY) {  m_mapSizePixY = mapSizePixY; };
@@ -318,9 +318,9 @@ private:
 	bool m_needToUpdateDraw;
 
 	/* Dedicated spriteBatch for the map */
-	RealEngine2D::SpriteBatch m_spriteBatch;
+	R2D::SpriteBatch m_spriteBatch;
 	/* Need seperate spriteBatch because of the Texture superposition */
-	RealEngine2D::SpriteBatch m_spriteBatchAppartenance;
+	R2D::SpriteBatch m_spriteBatchAppartenance;
 
 	std::vector<GLuint> s_vectID;
 

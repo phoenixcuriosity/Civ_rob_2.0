@@ -27,21 +27,21 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
+#include <R2D/src/IGameScreen.h>
 
 #include <vector>
 
-#include <RealEngine2D\src\Vertex.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
+#include <R2D\src\Vertex.h>
+#include <R2D\src\GLSLProgram.h>
+#include <R2D\src\GameEngine.h>
+#include <R2D\src\Window.h>
+#include <R2D\src\Camera2D.h>
+#include <R2D\src\SpriteBatch.h>
+#include <R2D\src\InputManager.h>
+#include <R2D\src\Timing.h>
+#include <R2D\src\SpriteFont.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
 
 
 
@@ -51,7 +51,7 @@ struct UserInputNewGame
 
 };
 
-class NewGameScreen : public RealEngine2D::IGameScreen
+class NewGameScreen : public R2D::IGameScreen
 {
 public:
 
@@ -96,7 +96,7 @@ private:
 	UserInputNewGame m_userInputNewGame;
 
 	std::unordered_map<std::string, CEGUI::Slider*> m_vectSlider;
-	RealEngine2D::GUI m_gui;
+	R2D::GUI m_gui;
 
 	bool m_isInitialize;
 };

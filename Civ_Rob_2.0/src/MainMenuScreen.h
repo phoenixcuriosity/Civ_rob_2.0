@@ -27,23 +27,23 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
+#include <R2D/src/IGameScreen.h>
 
 #include <vector>
 
-#include <RealEngine2D\src\Vertex.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
+#include <R2D\src\Vertex.h>
+#include <R2D\src\GLSLProgram.h>
+#include <R2D\src\GameEngine.h>
+#include <R2D\src\Window.h>
+#include <R2D\src\Camera2D.h>
+#include <R2D\src\SpriteBatch.h>
+#include <R2D\src\InputManager.h>
+#include <R2D\src\Timing.h>
+#include <R2D\src\SpriteFont.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
 
-class MainMenuScreen : public RealEngine2D::IGameScreen
+class MainMenuScreen : public R2D::IGameScreen
 {
 public:
 	MainMenuScreen();
@@ -82,9 +82,9 @@ public:
 private:
 	int m_nextScreenIndexMenu;
 
-	RealEngine2D::Camera2D m_cameraHUD;
-	RealEngine2D::SpriteBatch m_spriteBatchHUDStatic;
-	RealEngine2D::GUI m_gui;
+	R2D::Camera2D m_cameraHUD;
+	R2D::SpriteBatch m_spriteBatchHUDStatic;
+	R2D::GUI m_gui;
 
 	bool m_isInitialize;
 };

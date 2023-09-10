@@ -30,7 +30,7 @@
 #include "Player.h"
 #include "App.h"
 
-#include <RealEngine2D/src/ErrorLog.h> 
+#include <R2D/src/ErrorLog.h> 
 
 namespace UNITC
 {
@@ -138,7 +138,7 @@ bool Unit::searchUnitTile
 				selPlayer->SETselectedUnit(i);
 
 				selPlayer->GETtabUnit()[i]->SETshow(true);
-				RealEngine2D::ErrorLog::logEvent("[INFO]___: Unit select to move n:" + std::to_string(i));
+				R2D::ErrorLog::logEvent("[INFO]___: Unit select to move n:" + std::to_string(i));
 				*select = Select_Type::selectmove;
 				return true;
 			}
@@ -167,7 +167,7 @@ void Unit::tryToMove
 	const MatriceMap& maps,
 	Players& players,
 	Select_Type select,
-	const RealEngine2D::CardinalDirection& cardinalDirection
+	const R2D::CardinalDirection& cardinalDirection
 )
 {
 	if (players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED)
@@ -234,7 +234,7 @@ Move_Type Unit::searchToMove
 (
 	const MatriceMap& maps,
 	Players& players,
-	const RealEngine2D::CardinalDirection& cardinalDirection,
+	const R2D::CardinalDirection& cardinalDirection,
 	int* const playerToAttack,
 	int* const unitToAttack
 )
@@ -462,7 +462,7 @@ m_show(true),
 m_showStats(false),
 m_owner(SELECTION::NO_OWNER)
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Unit Par Defaut Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Unit Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -518,7 +518,7 @@ m_show(true),
 m_showStats(false),
 m_owner(ptrToPlayer)
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Unit:  Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Unit:  Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -597,7 +597,7 @@ void Unit::move
 (
 	Select_Type& select,
 	int& selectunit,
-	const RealEngine2D::CardinalDirection& cardinalDirection
+	const R2D::CardinalDirection& cardinalDirection
 )
 {
 	if (UNITC::NO_MOVEMENT < m_movement)
@@ -850,7 +850,7 @@ void Unit::cmpblit()
 	/* ---------------------------------------------------------------------- */
 	/* 50% off 50% on , environ 1s le cycle									  */
 	/* ---------------------------------------------------------------------- */
-	if ((++m_blit %= (RealEngine2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO::ZERO)
+	if ((++m_blit %= (R2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO::ZERO)
 	{
 		m_show = !m_show;
 	}

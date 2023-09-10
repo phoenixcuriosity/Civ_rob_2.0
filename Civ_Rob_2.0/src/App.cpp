@@ -24,16 +24,16 @@
 
 #include "App.h"
 
-#include <RealEngine2D/src/ScreenList.h>
+#include <R2D/src/ScreenList.h>
 
 
 #include <tinyxml2/tinyxml2.h>
 
-#include <RealEngine2D/src/ResourceManager.h> 
-#include <RealEngine2D/src/ErrorLog.h> 
-#include <RealEngine2D/src/ExitFromError.h> 
-#include <RealEngine2D/src/SpriteFont.h> 
-#include <RealEngine2D/src/tinyXml2.h> 
+#include <R2D/src/ResourceManager.h> 
+#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/ExitFromError.h> 
+#include <R2D/src/SpriteFont.h> 
+#include <R2D/src/tinyXml2.h> 
 
 
 namespace FILE_APP
@@ -47,7 +47,7 @@ namespace FILE_APP
 
 App::App()
 :
-RealEngine2D::IMainGame(),
+R2D::IMainGame(),
 m_mainMenuScreen(nullptr),
 m_newGameScreen(nullptr),
 m_reloadMenuScreen(nullptr),
@@ -55,7 +55,7 @@ m_gamePlayScreen(nullptr),
 m_CityScreen(nullptr),
 m_saveReload()
 {
-	RealEngine2D::ResourceManager::initializeRGBA8Map();
+	R2D::ResourceManager::initializeRGBA8Map();
 }
 
 App::~App()
@@ -65,21 +65,21 @@ App::~App()
 	m_reloadMenuScreen.reset();
 	m_gamePlayScreen.reset();
 	m_CityScreen.reset();
-	RealEngine2D::ExitFromError::deleteAll();
+	R2D::ExitFromError::deleteAll();
 }
 
 void App::onInit()
 {
 	/* Set location of logging file */
-	RealEngine2D::ResourceManager::initializeFilePath(e_Files::log, FILE_APP::PATH::LOG);
-	RealEngine2D::ErrorLog::initializeLog();
+	R2D::ResourceManager::initializeFilePath(e_Files::log, FILE_APP::PATH::LOG);
+	R2D::ErrorLog::initializeLog();
 
 	initMain();
 
-	m_window.SETscreenWidth(RealEngine2D::Window::getHorizontal());
-	m_window.SETscreenHeight(RealEngine2D::Window::getVertical());
+	m_window.SETscreenWidth(R2D::Window::getHorizontal());
+	m_window.SETscreenHeight(R2D::Window::getVertical());
 	
-	m_saveReload.init(RealEngine2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+	m_saveReload.init(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 }
 
 
@@ -94,18 +94,18 @@ void App::onInit()
 /* ----------------------------------------------------------------------------------- */
 void App::InitShaders()
 {
-	RealEngine2D::ResourceManager::getGLSLProgram().compileShaders
+	R2D::ResourceManager::getGLSLProgram().compileShaders
 	(
-		RealEngine2D::ResourceManager::getFile(e_Files::colorShadingVert)->getPath(),
-		RealEngine2D::ResourceManager::getFile(e_Files::colorShadingFrag)->getPath()
+		R2D::ResourceManager::getFile(e_Files::colorShadingVert)->getPath(),
+		R2D::ResourceManager::getFile(e_Files::colorShadingFrag)->getPath()
 	);
-	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
-	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
-	RealEngine2D::ResourceManager::getGLSLProgram().addAttribut("vertexUV");
-	RealEngine2D::ResourceManager::getGLSLProgram().linkShaders();
-	RealEngine2D::ResourceManager::getSpriteFont()
-		= std::make_shared<RealEngine2D::SpriteFont>
-		(RealEngine2D::FONT::GUI::NAME.c_str(), RealEngine2D::FONT::GUI::SIZE::DEFAULT);
+	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
+	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
+	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexUV");
+	R2D::ResourceManager::getGLSLProgram().linkShaders();
+	R2D::ResourceManager::getSpriteFont()
+		= std::make_shared<R2D::SpriteFont>
+		(R2D::FONT::GUI::NAME.c_str(), R2D::FONT::GUI::SIZE::DEFAULT);
 }
 
 
@@ -160,20 +160,20 @@ void App::addScreens()
 /* ----------------------------------------------------------------------------------- */
 void App::initMain()
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
+	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
 	config.LoadFile(FILE_APP::PATH::CONFIG.c_str());
 
 	if (config.ErrorID() == 0)
 	{
-		tinyxml2::XMLElement* node = RealEngine2D::tinyXml2::getFirstElement(config);
+		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
 
 		for (e_Files it_e_files : tab_e_Files)
 		{
 			if (nullptr != node)
 			{
-				RealEngine2D::ResourceManager::initializeFilePath
+				R2D::ResourceManager::initializeFilePath
 				(
 					it_e_files,
 					node->GetText()
@@ -192,7 +192,7 @@ void App::initMain()
 		throw("Impossible d'ouvrir le fichier " + FILE_APP::PATH::CONFIG);
 	}
 
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
+	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
 }
 
 
@@ -200,5 +200,5 @@ void App::initMain()
 
 void App::destroy()
 {
-	RealEngine2D::ExitFromError::deleteAll();
+	R2D::ExitFromError::deleteAll();
 }

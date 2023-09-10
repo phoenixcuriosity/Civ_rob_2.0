@@ -27,7 +27,7 @@
 #include "ScreenIndices.h"
 
 #include "App.h"
-#include <RealEngine2D/src/ResourceManager.h> 
+#include <R2D/src/ResourceManager.h> 
 
 namespace NUMBER_OF_PLAYER
 {
@@ -39,8 +39,8 @@ NewGameScreen::NewGameScreen
 (
 )
 : 
-RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(RealEngine2D::SCREEN_INDEX::INIT),
+R2D::IGameScreen(),
+m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_userInputNewGame(),
 m_vectSlider(),
 m_gui(),
@@ -77,7 +77,7 @@ bool NewGameScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		m_gui.init(RealEngine2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.loadScheme("TaharezLook.scheme");
@@ -190,7 +190,7 @@ bool NewGameScreen::onDefaultSetupClicked(const CEGUI::EventArgs& /* e */)
 	/* TODO : default configuration */
 
 	/* Enable to change to next ScreenState */
-	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+	m_currentState = R2D::ScreenState::CHANGE_NEXT;
 	return true;
 }
 
@@ -207,7 +207,7 @@ bool NewGameScreen::onSliderPlayer(const CEGUI::EventArgs& /* e */)
 bool NewGameScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
 	/* Enable to change to previous ScreenState */
-	m_currentState = RealEngine2D::ScreenState::CHANGE_PREVIOUS;
+	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
 }
 

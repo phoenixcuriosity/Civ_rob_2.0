@@ -56,7 +56,7 @@ class Players;
 class Player;
 class GameInput;
 
-#include <RealEngine2D/src/CardinalDirection.h> 
+#include <R2D/src/CardinalDirection.h> 
 
 
  /* *********************************************************
@@ -134,7 +134,7 @@ public:
 		const MatriceMap& maps,
 		Players& players,
 		Select_Type select,
-		const RealEngine2D::CardinalDirection& cardinalDirection
+		const R2D::CardinalDirection& cardinalDirection
 	);
 
 private:
@@ -157,7 +157,7 @@ private:
 	(
 		const MatriceMap& maps,
 		Players& players,
-		const RealEngine2D::CardinalDirection& cardinalDirection,
+		const R2D::CardinalDirection& cardinalDirection,
 		int* const playerToAttack,
 		int* const unitToAttack
 	);
@@ -297,7 +297,7 @@ private:
 	(
 		Select_Type& select,
 		int& selectunit,
-		const RealEngine2D::CardinalDirection& cardinalDirection
+		const R2D::CardinalDirection& cardinalDirection
 	);
 
 public:

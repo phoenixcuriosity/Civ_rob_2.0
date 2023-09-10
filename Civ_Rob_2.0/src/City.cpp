@@ -32,9 +32,9 @@
 #include "Citizen.h"
 
 #include "App.h"
-#include <RealEngine2D/src/Window.h>
-#include <RealEngine2D/src/ValueToScale.h>
-#include <RealEngine2D/src/ErrorLog.h> 
+#include <R2D/src/Window.h>
+#include <R2D/src/ValueToScale.h>
+#include <R2D/src/ErrorLog.h> 
 
 namespace POP
 {
@@ -198,7 +198,7 @@ void City::createCity
 /* ----------------------------------------------------------------------------------- */
 void City::fillCitieTiles
 (
-	const RealEngine2D::Window& window,
+	const R2D::Window& window,
 	const unsigned int middletileX,
 	const unsigned int middletileY,
 	const unsigned int selectplayer,
@@ -384,7 +384,7 @@ City::City
 		(tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)])
 	);
 
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -396,7 +396,7 @@ City::~City()
 {
 	resetTabCitizen();
 
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Destroy Citie: " + m_name + " Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Destroy Citie: " + m_name + " Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -590,7 +590,7 @@ void City::computeEmotion()
 	
 	try
 	{
-		m_emotion = (unsigned int)RealEngine2D::ValueToScale::computeValueToScale
+		m_emotion = (unsigned int)R2D::ValueToScale::computeValueToScale
 		(
 			result,
 			(double)Emotion_Type::angry,
@@ -604,7 +604,7 @@ void City::computeEmotion()
 	{
 		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == STRINGS::IDENTICAL)
 		{
-			RealEngine2D::ErrorLog::logEvent(msg);
+			R2D::ErrorLog::logEvent(msg);
 			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
 #ifdef _DEBUG
 			throw(msg);
@@ -612,7 +612,7 @@ void City::computeEmotion()
 		}
 		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == STRINGS::IDENTICAL)
 		{
-			RealEngine2D::ErrorLog::logEvent(msg);
+			R2D::ErrorLog::logEvent(msg);
 			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
 #ifdef _DEBUG
 			throw(msg);

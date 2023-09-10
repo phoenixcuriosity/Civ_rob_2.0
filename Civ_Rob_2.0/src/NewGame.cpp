@@ -29,8 +29,8 @@
 #include "App.h"
 #include "SaveReload.h"
 
-#include <RealEngine2D/src/GUI.h>
-#include <RealEngine2D/src/ErrorLog.h> 
+#include <R2D/src/GUI.h>
+#include <R2D/src/ErrorLog.h> 
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
@@ -56,7 +56,7 @@ namespace NGC
 /* ------------------------------------------------------------------------------------*/
 void GamePlayScreen::newGame()
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Newgame Start");
+	R2D::ErrorLog::logEvent("[INFO]___: Newgame Start");
 	
 	m_SaveReload->createSave();
 
@@ -70,7 +70,7 @@ void GamePlayScreen::newGame()
 
 	/* ### Don't put code below here ### */
 
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Newgame End");
+	R2D::ErrorLog::logEvent("[INFO]___: Newgame End");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -131,7 +131,7 @@ void GamePlayScreen::makePlayersButtons()
 			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, this));
 		m_screen.m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
 
-		m_screen.m_widgetLabels[i] = RealEngine2D::WidgetLabel(
+		m_screen.m_widgetLabels[i] = R2D::WidgetLabel(
 			m_screen.m_vectPlayerRadioButton[i],
 			m_userInputNewGame->vectPlayerName[i],
 			TEXT_SCALE);

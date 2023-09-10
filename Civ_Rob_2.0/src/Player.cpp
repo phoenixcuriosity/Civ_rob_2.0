@@ -32,9 +32,9 @@
 #include "App.h"
 #include "City.h"
 
-#include <RealEngine2D/src/ResourceManager.h>
-#include <RealEngine2D/src/ValueToScale.h>
-#include <RealEngine2D/src/ErrorLog.h> 
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ValueToScale.h>
+#include <R2D/src/ErrorLog.h> 
 
 
 namespace
@@ -67,7 +67,7 @@ Player::Player() :
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Player Par Defaut Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Player Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -92,7 +92,7 @@ Player::Player
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	RealEngine2D::ErrorLog::logEvent("[INFO]___: Create Player Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Player Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -405,24 +405,24 @@ void Players::init(const std::string& filePath)
 	/* Unit Texture */
 	for (unsigned int i(0); i < m_vectUnitTemplate.size(); i++)
 	{
-		m_vectIDUnit[i] = RealEngine2D::ResourceManager::getTexture(filePath + "units/" + m_vectUnitTemplate[i].name + EXTENSION_PNG)->GETid();
+		m_vectIDUnit[i] = R2D::ResourceManager::getTexture(filePath + "units/" + m_vectUnitTemplate[i].name + EXTENSION_PNG)->GETid();
 	}
 
 	/* Lifebar Texture */
 	for (unsigned int i(0); i < LIFE_BAR_NB_SUBDIVISION - 1; i++)
 	{
 		m_vectIDUnit[m_vectUnitTemplate.size() + i]
-			= RealEngine2D::ResourceManager::getTexture(filePath + "barre de vie/" + "0." + std::to_string(i) + "life" + EXTENSION_PNG)->GETid();
+			= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "0." + std::to_string(i) + "life" + EXTENSION_PNG)->GETid();
 	}
 
 	m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION - 1]
-		= RealEngine2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
+		= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
 
 	/* Appartenance Texture */
 	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
 	{
 		m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + i]
-			= RealEngine2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
+			= R2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
 	}
 
 	m_spriteBatchUnit.init();
@@ -431,7 +431,7 @@ void Players::init(const std::string& filePath)
 
 	m_vectIDCity.resize(CITY_TYPE);
 
-	m_vectIDCity[0] = RealEngine2D::ResourceManager::getTexture(filePath + "city/city" + EXTENSION_PNG)->GETid();
+	m_vectIDCity[0] = R2D::ResourceManager::getTexture(filePath + "city/city" + EXTENSION_PNG)->GETid();
 
 	m_spriteBatchCity.init();
 }
@@ -518,7 +518,7 @@ void Players::isAUnitSelected()
 void Players::drawUnit
 (
 	const MainMap& mainMap,
-	RealEngine2D::Camera2D& camera
+	R2D::Camera2D& camera
 )
 {
 	if (m_needToUpdateDrawUnit)
@@ -547,32 +547,32 @@ void Players::drawUnit
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
-							RealEngine2D::FULL_RECT,
+							R2D::FULL_RECT,
 							m_vectIDUnit[Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate)],
 							0.0f,
-							RealEngine2D::COLOR_WHITE
+							R2D::COLOR_WHITE
 						);
 
 						/* Lifebar Texture */
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
-							RealEngine2D::FULL_RECT,
+							R2D::FULL_RECT,
 							m_vectIDUnit
 							[
 								m_vectUnitTemplate.size() - VECT_SIZE_OFFSET_ID
 								+
-								(int)std::floor(RealEngine2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
+								(int)std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
 							],
 							0.0f,
-							RealEngine2D::COLOR_WHITE
+							R2D::COLOR_WHITE
 						);
 
 						/* Appartenance Texture */
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
-							RealEngine2D::FULL_RECT,
+							R2D::FULL_RECT,
 							m_vectIDUnit
 							[
 								m_vectUnitTemplate.size()
@@ -582,7 +582,7 @@ void Players::drawUnit
 								i
 							],
 							0.0f,
-							RealEngine2D::COLOR_WHITE
+							R2D::COLOR_WHITE
 						);
 
 					}
@@ -605,8 +605,8 @@ void Players::renderUnit()
 void Players::drawCity
 (
 	const MainMap& mainMap,
-	RealEngine2D::Camera2D& camera,
-	std::shared_ptr<RealEngine2D::SpriteFont>& font
+	R2D::Camera2D& camera,
+	std::shared_ptr<R2D::SpriteFont>& font
 )
 {
 	if (m_needToUpdateDrawCity)
@@ -636,10 +636,10 @@ void Players::drawCity
 					m_spriteBatchCity.draw
 					(
 						glm::vec4(city->GETx(), city->GETy(), tileSize, tileSize),
-						RealEngine2D::FULL_RECT,
+						R2D::FULL_RECT,
 						m_vectIDCity[0],
 						0.0f,
-						RealEngine2D::COLOR_WHITE
+						R2D::COLOR_WHITE
 					);
 
 					/* City Name */
@@ -650,7 +650,7 @@ void Players::drawCity
 						glm::vec2(500.0f, 500.0f), // offset pos
 						glm::vec2(0.32f), // size
 						0.0f,
-						RealEngine2D::COLOR_WHITE
+						R2D::COLOR_WHITE
 					);
 				}
 				city.reset();

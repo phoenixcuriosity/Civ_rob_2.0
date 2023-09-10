@@ -29,14 +29,14 @@
 
 #include <deque>
 
-#include <RealEngine2D/src/IGameScreen.h>
-#include <RealEngine2D/src/GUI.h>
-#include <RealEngine2D/src/SpriteBatch.h>
+#include <R2D/src/IGameScreen.h>
+#include <R2D/src/GUI.h>
+#include <R2D/src/SpriteBatch.h>
 
 #include "T_CityScreen.h"
 
 
-class CityScreen : public RealEngine2D::IGameScreen
+class CityScreen : public R2D::IGameScreen
 {
 public:
 	CityScreen
@@ -109,14 +109,14 @@ public:
 private:
 	int m_nextScreenIndexMenu;
 
-	RealEngine2D::GUI m_gui;
+	R2D::GUI m_gui;
 	unsigned int m_indexCycleBuilds;
 
 	std::deque<buildGUI> m_buttonBuild;
 
 	/* Dedicated spriteBatch */
-	RealEngine2D::SpriteBatch m_spriteBatch;
-	RealEngine2D::SpriteBatch m_spriteBatchAppartenance;
+	R2D::SpriteBatch m_spriteBatch;
+	R2D::SpriteBatch m_spriteBatchAppartenance;
 	bool m_needToUpdateDraw;
 	std::vector<GLuint> s_vectID;
 

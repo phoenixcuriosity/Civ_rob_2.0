@@ -27,15 +27,15 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
-#include <RealEngine2D/src/IMainGame.h>
-#include <RealEngine2D/src/GLSLProgram.h>
-#include <RealEngine2D/src/Camera2D.h>
-#include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
-#include <RealEngine2D/src/Window.h>
+#include <R2D/src/IGameScreen.h>
+#include <R2D/src/IMainGame.h>
+#include <R2D/src/GLSLProgram.h>
+#include <R2D/src/Camera2D.h>
+#include <R2D/src/WidgetLabel.h>
+#include <R2D/src/SpriteBatch.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
+#include <R2D/src/Window.h>
 
 #include "Unit.h"
 #include "City.h"
@@ -387,7 +387,7 @@ public:
 	void drawUnit
 	(
 		const MainMap& mainMap,
-		RealEngine2D::Camera2D& camera
+		R2D::Camera2D& camera
 	);
 
 	void renderUnit();
@@ -395,8 +395,8 @@ public:
 	void drawCity
 	(
 		const MainMap& mainMap,
-		RealEngine2D::Camera2D& camera,
-		std::shared_ptr<RealEngine2D::SpriteFont>& font
+		R2D::Camera2D& camera,
+		std::shared_ptr<R2D::SpriteFont>& font
 	);
 
 	void renderCity();
@@ -428,13 +428,13 @@ private:
 	VectPlayer m_vectPlayer;
 
 	/* Dedicated spriteBatch for all Unit */
-	RealEngine2D::SpriteBatch m_spriteBatchUnit;
+	R2D::SpriteBatch m_spriteBatchUnit;
 	bool m_needToUpdateDrawUnit;
 	/* Dedicated spriteBatch for all Cities */
-	RealEngine2D::SpriteBatch m_spriteBatchCity;
+	R2D::SpriteBatch m_spriteBatchCity;
 	bool m_needToUpdateDrawCity;
 
-	RealEngine2D::SpriteBatch m_spriteBatchCityDynamic;
+	R2D::SpriteBatch m_spriteBatchCityDynamic;
 };
 
 

@@ -35,7 +35,7 @@
 #include <iostream>
 
 #include "Utility.h"
-#include <RealEngine2D/src/ResourceManager.h> 
+#include <R2D/src/ResourceManager.h> 
 
  /* *********************************************************
   *						 Classes						   *
@@ -171,8 +171,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::SouthWest)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::SouthWest)
 			);
 		}
 		else
@@ -184,8 +184,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::South)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::South)
 			);
 		}
 		else
@@ -197,8 +197,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::SouthEst)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::SouthEst)
 			);
 		}
 		else
@@ -210,8 +210,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::West)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::West)
 			);
 		}
 		/* NO SDLK_KP_5 : Useless */
@@ -224,8 +224,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::Est)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::Est)
 			);
 		}
 		else
@@ -237,8 +237,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::NorthWest)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::NorthWest)
 			);
 		}
 		else
@@ -250,8 +250,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::North)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::North)
 			);
 		}
 		else
@@ -263,8 +263,8 @@ void GamePlayScreen::actionByKey()
 				m_mainMap.GETmatriceMap(),
 				m_players,
 				Select_Type::selectmove,
-				RealEngine2D::ResourceManager::getCardinalDirection
-					(RealEngine2D::CardinalDirections::NorthEst)
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::NorthEst)
 			);
 		}
 		else
@@ -298,7 +298,7 @@ void GamePlayScreen::actionByKey()
 				- (double)m_game->getWindow().GETscreenWidth() / 2
 			)
 		);
-		RealEngine2D::ResourceManager::getSpriteFont()->draw
+		R2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_screen.spriteBatchHUDDynamic,
 			buffer,
@@ -309,7 +309,7 @@ void GamePlayScreen::actionByKey()
 			), // offset pos
 			glm::vec2(0.32f), // size
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 
 		sprintf_s
@@ -325,7 +325,7 @@ void GamePlayScreen::actionByKey()
 			)
 		);
 
-		RealEngine2D::ResourceManager::getSpriteFont()->draw
+		R2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_screen.spriteBatchHUDDynamic,
 			buffer,
@@ -336,7 +336,7 @@ void GamePlayScreen::actionByKey()
 			), // offset pos
 			glm::vec2(0.32f), // size
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 	}
 }
@@ -444,13 +444,13 @@ void GamePlayScreen::wheel
 		}
 	}
 	*/
-	if (RealEngine2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
+	if (R2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
 	{
 		m_screen.camera.zoom();
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	else if (RealEngine2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
+	else if (R2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
 		m_screen.camera.deZoom();
 		m_mainMap.SETneedToUpdateDraw(true);
@@ -465,7 +465,7 @@ void GamePlayScreen::mouseClick
 )
 {
 	
-	if (ev.button.clicks == RealEngine2D::GUI_MOUSE::TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
+	if (ev.button.clicks == R2D::GUI_MOUSE::TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
 	{
 		if	(
 				m_players.searchCity
@@ -487,7 +487,7 @@ void GamePlayScreen::mouseClick
 			)
 		{
 			m_screen.m_nextScreenIndexMenu = SCREEN_INDEX::CITY;
-			m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+			m_currentState = R2D::ScreenState::CHANGE_NEXT;
 		}
 		else
 		{

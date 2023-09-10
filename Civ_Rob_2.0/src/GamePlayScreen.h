@@ -38,7 +38,7 @@
 #include "T_CityScreen.h"
 #include "T_MainMap.h"
 
-#include <RealEngine2D/src/IMainGame.h>
+#include <R2D/src/IMainGame.h>
 
 #include "NewGame.h"
 #include "MainMap.h"
@@ -63,7 +63,7 @@
  *						 Classe							   *
  ********************************************************* */
 
-class GamePlayScreen : public RealEngine2D::IGameScreen
+class GamePlayScreen : public R2D::IGameScreen
 {
 public:
 
@@ -403,7 +403,7 @@ public:
 	void SETmainMap(MainMap& mainMap);
 	void SETPlayers(Players& players);
 
-	RealEngine2D::Window& getParentWindow();
+	R2D::Window& getParentWindow();
 
 private:
 
@@ -412,7 +412,7 @@ private:
 	 ********************************************************* */
 
 	 /*
-		 All RealEngine2D objects
+		 All R2D objects
 		 - Shaders
 		 - camera/cameraHUD
 		 - Sprite/font
