@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.7.0
-	file version : 1.27
+	last modification on this file on version:0.25.8.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/tinyXml2.h> 
 #include "XmlConvertValue.h"
 
 
@@ -212,22 +213,27 @@ void GamePlayScreen::loadFile()
 
 	if (config.ErrorID() == 0)
 	{
-		const char* root{ "Config" };
+		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
 
+		if (nullptr != node)
+		{
+			node->QueryUnsignedText(&tmp);
+			m_mainMap.SETtileSize(tmp);
+		}
+		node = node->NextSiblingElement();
 
-		const char
-			* s_Map{ "Map" },
-				* s_TileSize{ "TileSize" },
-				* s_MapSizeX{ "MapSizeX" },
-				* s_MapSizeY{ "MapSizeY" };
+		if (nullptr != node)
+		{
+			node->QueryUnsignedText(&tmp);
+			m_mainMap.SETmapSizePixX(tmp);
+		}
+		node = node->NextSiblingElement();
 
-
-		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_TileSize)->QueryUnsignedText(&tmp);
-		m_mainMap.SETtileSize(tmp);
-		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSizeX)->QueryUnsignedText(&tmp);
-		m_mainMap.SETmapSizePixX(tmp);
-		config.FirstChildElement(root)->FirstChildElement(s_Map)->FirstChildElement(s_MapSizeY)->QueryUnsignedText(&tmp);
-		m_mainMap.SETmapSizePixY(tmp);
+		if (nullptr != node)
+		{
+			node->QueryUnsignedText(&tmp);
+			m_mainMap.SETmapSizePixY(tmp);
+		}
 	}
 	else
 	{
