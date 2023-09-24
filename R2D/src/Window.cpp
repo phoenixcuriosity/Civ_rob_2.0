@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.3
+	last modification on this file on version:0.25.9.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -142,7 +142,7 @@ double Window::getWidthPositionScaleToWindow
 (
 	/* IN */
 	const double position2Scale
-)
+)const
 {
 	return ValueToScale::computeValueToScale
 	(
@@ -158,7 +158,7 @@ double Window::getHeightPositionScaleToWindow
 (
 	/* IN */
 	const double position2Scale
-)
+)const
 {
 	return ValueToScale::computeValueToScale
 	(

@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.7.0
-	file version : 1.6
+	last modification on this file on version:0.25.9.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,6 +25,8 @@
 #include "ResourceManager.h"
 #include "..\..\Dependencies\tinyxml2\tinyxml2.h"
 #include "ErrorLog.h"
+#include "SpriteBatch.h"
+#include "Window.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -78,13 +80,18 @@ GLSLProgram& ResourceManager::getGLSLProgram()
 
 bool ResourceManager::getTextFromFile
 (
+	/* IN */
 	const e_Files name,
+	/* OUT */
 	MapTexts& mapTexts
 )
 {
 	std::string errCheck("");
 	tinyxml2::XMLDocument xmlDoc;
 	Text blankText;
+
+	/* Clear previous Texts */
+	mapTexts.clear();
 
 	if (xmlDoc.LoadFile(R2D::ResourceManager::getFile(name)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
 	{
@@ -141,6 +148,34 @@ bool ResourceManager::getTextFromFile
 		}
 	}
 	return true;
+}
+
+void ResourceManager::displayTextFromFile
+(
+	/* IN */
+	const MapTexts& mapTexts,
+	const Window& window,
+	/* INOUT */
+	SpriteBatch& spriteBatchHUDStatic
+)
+{
+	for (const auto& text : mapTexts)
+	{
+		R2D::ResourceManager::getSpriteFont()->draw
+		(
+			spriteBatchHUDStatic,
+			text.second.text.c_str(),
+			glm::vec2
+			(
+				window.getWidthPositionScaleToWindow(text.second.x),
+				window.getHeightPositionScaleToWindow(text.second.y)
+			), // offset pos
+			glm::vec2(R2D::SpriteFont::getScaleFontToScreen(text.second.size)), // size
+			text.second.alpha,
+			text.second.color,
+			text.second.justification
+		);
+	}
 }
 
 void ResourceManager::initializeRGBA8Map()

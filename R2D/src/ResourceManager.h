@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.7.0
-	file version : 1.4
+	last modification on this file on version:0.25.9.0
+	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,6 +37,8 @@ namespace R2D
 {
 	typedef std::map<CardinalDirections, CardinalDirection> CardinalDirectionMapping;
 
+	class Window;
+	class SpriteBatch;
 
 	/* STATIC CLASS */
 	class ResourceManager
@@ -62,8 +64,19 @@ namespace R2D
 
 		static bool getTextFromFile
 		(
+			/* IN */
 			const e_Files name,
+			/* OUT */
 			MapTexts& mapTexts
+		);
+
+		static void displayTextFromFile
+		(
+			/* IN */
+			const MapTexts& mapTexts,
+			const Window& window,
+			/* INOUT */
+			SpriteBatch& spriteBatchHUDStatic
 		);
 		
 		static void initializeRGBA8Map();
