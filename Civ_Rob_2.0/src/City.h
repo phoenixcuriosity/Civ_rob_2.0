@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.27
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.10.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -37,6 +37,7 @@
 #include "MainMap.h"
 #include "Unit.h"
 #include "Citizen.h"
+#include "FoodManager.h"
 
 #include <vector>
 #include <queue>
@@ -340,25 +341,26 @@ public:
 
 	inline virtual std::string GETimage()const { return m_image; };
 	inline virtual std::string GETname()const { return m_name; };
+	inline virtual size_t GETnbpop()const { return m_citizens.size(); };
 	inline virtual unsigned int GETx()const { return m_x; };
 	inline virtual unsigned int GETy()const { return m_y; };
 	inline virtual VectMap& GETtile() { return m_tile; };
 	inline virtual VectCitizen& GETcitizens() { return m_citizens; };
 	inline virtual unsigned int GETinfluenceLevel()const { return m_influenceLevel; };
-	inline virtual unsigned int GETnbpop()const { return m_nbpop; };
 	inline virtual unsigned int GETatq()const { return m_atq; };
 	inline virtual unsigned int GETdef()const { return m_def; };
 	inline virtual unsigned int GETemotion()const { return m_emotion; };
 	inline virtual unsigned int GETnbstructurebuild()const { return m_nbstructurebuild; };
-	inline virtual double GETfoodStock()const { return m_foodStock; };
-	inline virtual double GETfoodBalance()const { return m_foodBalance; };
-	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodSurplusPreviousTurn; };
-	inline virtual double GETfoodToLevelUp()const { return m_foodToLevelUp; };
+	inline virtual double GETfoodStock()const { return m_foodManager.getFoodStock(); };
+	inline virtual double GETfoodBalance()const { return m_foodManager.getFoodBalanceForConversion(); };
+	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodManager.getFoodSurplusPreviousTurn(); };
+	inline virtual double GETfoodToLevelUp()const { return m_foodManager.getFoodToLevelUp(); };
+	inline virtual FoodManager& GETFoodManager() { return m_foodManager; };
 	inline virtual double GETgoldBalance()const { return m_goldBalance; };
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
 	inline virtual dequeBuild& GETbuildQueue() { return m_buildQueue; };
 
-	inline virtual double GETfoodStockPerc()const { return ((m_foodStock / m_foodToLevelUp) * PERCENTAGE::ONE_HUNDRED); };
+
 	inline virtual double GETBuildPerc()const
 	{
 		if (m_buildQueue.empty() == CONTAINERS::NOT_EMPTY)
@@ -387,15 +389,14 @@ public:
 	inline virtual void SETtile(VectMap& tile) { m_tile = tile; };
 	//inline virtual void SETcitizens(VectCitizen& citizens) { m_citizens = citizens; };
 	inline virtual void SETinfluenceLevel(unsigned int influenceLevel) { m_influenceLevel = influenceLevel; };
-	inline virtual void SETnbpop(unsigned int nbpop) { m_nbpop = nbpop; };
 	inline virtual void SETatq(unsigned int atq) { m_atq = atq; };
 	inline virtual void SETdef(unsigned int def) { m_def = def; };
 	inline virtual void SETemotion(unsigned int emotion) { m_emotion = emotion; };
 	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild) { m_nbstructurebuild = nbstructurebuild; };
-	inline virtual void SETfoodStock(double foodStock) { m_foodStock = foodStock; };
-	inline virtual void SETfoodBalance(double foodBalance) { m_foodBalance = foodBalance; };
-	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { m_foodSurplusPreviousTurn = foodSurplusPreviousTurn; };
-	inline virtual void SETfoodToLevelUp(double foodToLevelUp) { m_foodToLevelUp = foodToLevelUp; };
+	inline virtual void SETfoodStock(double foodStock) { m_foodManager.setFoodStock(foodStock); };
+	inline virtual void SETfoodBalance(double foodBalance) { m_foodManager.setFoodBalance(foodBalance); };
+	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { m_foodManager.setFoodSurplusPreviousTurn(foodSurplusPreviousTurn); };
+	inline virtual void SETfoodToLevelUp(double foodToLevelUp) { m_foodManager.setFoodToLevelUp(foodToLevelUp); };
 	inline virtual void SETgoldBalance(double goldBalance) { m_goldBalance = goldBalance; };
 	inline virtual void SETconversionToApply(conversionSurplus_Type type) { m_conversionToApply = type; };
 
@@ -412,16 +413,12 @@ private:
 	VectMap m_tile;
 	VectCitizen m_citizens;
 	unsigned int m_influenceLevel;
-	unsigned int m_nbpop;
 	unsigned int m_atq;
 	unsigned int m_def;
 	unsigned int m_emotion;
 	unsigned int m_nbstructurebuild;
 
-	double m_foodStock;
-	double m_foodBalance;
-	double m_foodSurplusPreviousTurn;
-	double m_foodToLevelUp;
+	FoodManager m_foodManager;
 
 	double m_workBalance;
 	double m_workSurplusPreviousTurn;

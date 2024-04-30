@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.28
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.10.0
+	file version : 1.29
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -144,6 +144,7 @@ void SaveReload::savePlayer
 )
 {
 	tinyxml2::XMLDocument xmlDoc;
+	xmlDoc.Clear();
 	tinyxml2::XMLNode* pRoot{ xmlDoc.NewElement("SavePlayers") };
 
 	xmlDoc.InsertFirstChild(pRoot);
@@ -270,7 +271,6 @@ void SaveReload::savePlayer
 			tinyxml2::XMLElement* cityXElement = xmlDoc.NewElement("X");
 			tinyxml2::XMLElement* cityYElement = xmlDoc.NewElement("Y");
 			tinyxml2::XMLElement* cityInfluenceLevelElement = xmlDoc.NewElement("InfluenceLevel");
-			tinyxml2::XMLElement* cityNbPopElement = xmlDoc.NewElement("NbPop");
 			tinyxml2::XMLElement* cityAtqElement = xmlDoc.NewElement("Atq");
 			tinyxml2::XMLElement* cityDefElement = xmlDoc.NewElement("Def");
 			tinyxml2::XMLElement* cityEmotionElement = xmlDoc.NewElement("Emotion");
@@ -288,7 +288,6 @@ void SaveReload::savePlayer
 			cityXElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETx());
 			cityYElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETy());
 			cityInfluenceLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETinfluenceLevel());
-			cityNbPopElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETnbpop());
 			cityAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETatq());
 			cityDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETdef());
 			cityEmotionElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETemotion());
@@ -303,7 +302,6 @@ void SaveReload::savePlayer
 			cityElement->InsertEndChild(cityXElement);
 			cityElement->InsertEndChild(cityYElement);
 			cityElement->InsertEndChild(cityInfluenceLevelElement);
-			cityElement->InsertEndChild(cityNbPopElement);
 			cityElement->InsertEndChild(cityAtqElement);
 			cityElement->InsertEndChild(cityDefElement);
 			cityElement->InsertEndChild(cityEmotionElement);
@@ -817,10 +815,6 @@ void SaveReload::loadCityXML
 		ptrCity = ptrPlayer->GETtabCity()[(unsigned int)ptrPlayer->GETtabCity().size() - 1];
 
 		ptrCity->SETinfluenceLevel(influenceLevel);
-
-		inputNode = inputNode->NextSibling();
-		if (nullptr == inputNode) R2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->NbPop == nullptr");
-		ptrCity->SETnbpop(std::stoul(inputNode->FirstChild()->Value()));
 
 		inputNode = inputNode->NextSibling();
 		if (nullptr == inputNode) R2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->Atq == nullptr");

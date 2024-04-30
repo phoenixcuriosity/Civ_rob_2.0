@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.46
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.10.0
+	file version : 1.47
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -362,15 +362,11 @@ City::City
 	m_tile(tiles),
 	m_citizens(),
 	m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
-	m_nbpop(POP::MIN),
 	m_atq(0),
 	m_def(0),
 	m_emotion((unsigned int)EMOTION_RANGE::MEAN),
 	m_nbstructurebuild(0),
-	m_foodStock(RESOURCES::FOOD::ZERO),
-	m_foodBalance(tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)].food),
-	m_foodSurplusPreviousTurn(RESOURCES::FOOD::ZERO),
-	m_foodToLevelUp(RESOURCES::FOOD::MIN_TO_LEVEL_UP),
+	m_foodManager(m_citizens, m_emotion),
 	m_workBalance(0),
 	m_workSurplusPreviousTurn(0),
 	m_goldBalance(0.0),
@@ -425,29 +421,13 @@ void City::foodNextTurn
 	GoldStats& goldStats
 )
 {
-	m_foodToLevelUp = 15 + ((double)m_nbpop - 1) * 6 + pow((m_nbpop - 1), 1.8);
-	const double foodLimitPerLevelMinusOne(15 + ((double)m_nbpop - 1 - 1) * 6 + pow((m_nbpop - 1 - 1), 1.8));
-
-	/* Update m_foodStock : add m_foodBalance */
-	m_foodStock += m_foodBalance;
-
-	/* Processing m_foodStock */
-	if (RESOURCES::FOOD::ZERO > m_foodStock)
+	switch (m_foodManager.updateGetFoodStatus())
 	{
-		/* CASE Decreasing : Need to delete a Citizen */
+	case FoodManagerType::famine:
 
-		if (m_citizens.size() == POP::MIN)
+		if (m_citizens.size() > POP::MIN)
 		{
-			/* 1 POP */
-			m_foodStock = RESOURCES::FOOD::ZERO;
-		}
-		else
-		{
-			/* 2 or more POP */
-
-			/* Priority check Citizen delete */
-
-			double minValueTile{ 999.9 }, curV{0.0};
+			double minValueTile{ 999.9 }, curV{ 0.0 };
 			int selectedCitizen{ -1 };
 			for (size_t c(0); c < m_citizens.size(); c++)
 			{
@@ -462,76 +442,55 @@ void City::foodNextTurn
 
 			m_citizens[selectedCitizen].reset();
 			m_citizens.erase(m_citizens.begin() + selectedCitizen);
-			m_nbpop--;
 
-
-			m_foodStock = foodLimitPerLevelMinusOne;
-			m_foodToLevelUp = foodLimitPerLevelMinusOne;
+			m_foodManager.updateFoodStockFromReducePop();
 		}
-	}
-	else if (m_foodStock >= m_foodToLevelUp)
-	{
-		/* CASE Increasing : Need to add a Citizen */
+		else
+		{
+			m_foodManager.emptyFoodStock();
+		}
 
-		m_nbpop++;
+		break;
+	case FoodManagerType::surplus:
 
 		m_citizens.push_back(std::make_unique<Citizen>(m_tile, m_citizens));
-		m_foodStock -= m_foodToLevelUp;
+
+		m_foodManager.updateFoodStockFromIncreasePop();
+
+		break;
+	case FoodManagerType::neutral:
+		/* Do Nothing */
+		break;
 	}
-	else
+
+	switch (m_conversionToApply)
 	{
-		/* ---------------------------------------------------------------------- */
-		/* Entre 0 et foodLimitPerLevelCurrent									  */
-		/* ---------------------------------------------------------------------- */
+	case conversionSurplus_Type::No_Conversion:
 		/* N/A */
-	}
-
-	const double emotionOnFoodModifier((double)m_emotion / EMOTION_RANGE::SCALE_MEAN);
-	const double consumptionFoodCity(2.0 * ((double)m_nbpop - 1.0));
-	double sommeFoodCitizen(RESOURCES::FOOD::ZERO);
-
-	for (auto& c : m_citizens)
-	{
-		sommeFoodCitizen += c->GETfood();
-	}
-
-	/* Applying Emotion multiplier */
-	sommeFoodCitizen *= emotionOnFoodModifier;
-
-	m_foodBalance = m_foodSurplusPreviousTurn + sommeFoodCitizen - consumptionFoodCity;
-	m_foodSurplusPreviousTurn = RESOURCES::FOOD::ZERO;
-
-	if (m_foodBalance > RESOURCES::FOOD::ZERO)
-	{
-		switch (m_conversionToApply)
-		{
-		case conversionSurplus_Type::No_Conversion:
-			/* N/A */
-			break;
-		case conversionSurplus_Type::FoodToWork:
-			convertFoodSurplusToWork(m_foodBalance);
-			m_foodBalance = 0.0;
-			break;
-		case conversionSurplus_Type::FoodToGold:
-			convertFoodSurplusToGold(m_foodBalance, goldStats);
-			m_foodBalance = 0.0;
-			break;
-		case conversionSurplus_Type::WorkToFood:
-			/* N/A */
-			break;
-		case conversionSurplus_Type::WorkToGold:
-			/* N/A */
-			break;
-		case conversionSurplus_Type::GoldToFood:
-			/* N/A */
-			break;
-		case conversionSurplus_Type::GoldToWork:
-			/* N/A */
-			break;
-		default:
-			/* N/A */
-			break;
-		}
+		break;
+	case conversionSurplus_Type::FoodToWork:
+		convertFoodSurplusToWork(m_foodManager.getFoodBalanceForConversion());
+		m_foodManager.ResetFoodBalanceFromConversion();
+		break;
+	case conversionSurplus_Type::FoodToGold:
+		convertFoodSurplusToGold(m_foodManager.getFoodBalanceForConversion(), goldStats);
+		m_foodManager.ResetFoodBalanceFromConversion();
+		break;
+	case conversionSurplus_Type::WorkToFood:
+		/* N/A */
+		break;
+	case conversionSurplus_Type::WorkToGold:
+		/* N/A */
+		break;
+	case conversionSurplus_Type::GoldToFood:
+		/* N/A */
+		break;
+	case conversionSurplus_Type::GoldToWork:
+		/* N/A */
+		break;
+	default:
+		/* N/A */
+		break;
 	}
 }
 
@@ -799,7 +758,7 @@ void City::convertWorkSurplusToFood
 	const double workSurplus
 )
 {
-	m_foodSurplusPreviousTurn = workSurplus * MULTIPLIER::CONVERSION::WORK_TO_FOOD;
+	m_foodManager.setFoodSurplusPreviousTurn(workSurplus * MULTIPLIER::CONVERSION::WORK_TO_FOOD);
 }
 
 /* ----------------------------------------------------------------------------------- */

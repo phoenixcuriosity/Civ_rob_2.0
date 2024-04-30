@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.9
+	last modification on this file on version:0.25.10.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -512,7 +512,7 @@ void CityScreen::drawFood()
 	unsigned int foodC{ 0 };
 	for (
 			unsigned int i{ 0 };
-			i < (unsigned int)std::floor(m_players->GETSelectedCity()->GETfoodStockPerc());
+			i < (unsigned int)std::floor(m_players->GETSelectedCity()->GETFoodManager().GETfoodStockPerc());
 			i++
 		)
 	{
@@ -648,7 +648,7 @@ void CityScreen::drawCityName()
 		m_spriteBatch,
 		m_players->GETSelectedCity()->GETname().c_str(),
 		glm::vec2(900.0f, 1020.0f), // offset pos
-		glm::vec2(0.64f), // size
+		glm::vec2(3.2f), // size
 		0.0f,
 		R2D::COLOR_GOLD
 	);
@@ -662,7 +662,7 @@ void CityScreen::drawNbPop()
 		m_spriteBatch,
 		std::to_string(m_players->GETSelectedCity()->GETnbpop()).c_str(),
 		glm::vec2(900.0f, 920.0f), // offset pos
-		glm::vec2(0.48f), // size
+		glm::vec2(1.28f), // size
 		0.0f,
 		R2D::COLOR_LIGHT_GREY
 	);

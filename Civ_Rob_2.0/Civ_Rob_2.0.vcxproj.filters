@@ -52,6 +52,9 @@
     <ClCompile Include="src\MainMapGen.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
+    <ClCompile Include="src\FoodManager.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -127,6 +130,9 @@
       <Filter>T_struct</Filter>
     </ClInclude>
     <ClInclude Include="src\MainMapGen.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FoodManager.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
   </ItemGroup>
