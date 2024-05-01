@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.22
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.7.0
+	file version : 1.29
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,9 +27,53 @@
  ********************************************************* */
 
 #include "Unit.h"
-
+#include "Player.h"
 #include "App.h"
 
+#include <R2D/src/ErrorLog.h> 
+
+namespace UNITC
+{
+	const unsigned int NO_MOVEMENT = 0;
+
+	const unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
+
+	const unsigned int ZERO_LIFE = 0;
+
+	const unsigned int ZERO_BLIT = 0;
+
+	const unsigned int ZERO_NUMBER_OF_ATTACK = 0;
+
+	const bool DEAD_UNIT = false;
+
+	/*
+		use as 1/x
+		default : x = 20
+	*/
+	const unsigned int COEF_DIV_HEAL_NO_APPARTENANCE = 20;
+
+	/*
+		use as 1/x
+		default : x = 5
+	*/
+	const unsigned int COEF_DIV_HEAL_APPARTENANCE = 5;
+
+	/*
+		use as 1/x
+		default : x = 4
+	*/
+	const unsigned int COEF_DIV_LEVELUP = 4;
+
+	/*
+		use as 1/x
+		Use for screen_refresh_rate/BLIT_RATE
+		default = 2
+	*/
+	const unsigned int BLIT_RATE = 2;
+
+	const int FOOD_ADD_BY_IRRAGATION = 2;
+	const int GOLD_ADD_BY_IRRAGATION = 1;
+}
 
  /* *********************************************************
   *						 Classes						   *
@@ -56,7 +100,7 @@ unsigned int Unit::searchUnitByName
 {
 	for (unsigned int p(0); p < tabUnit_Template.size(); p++)
 	{
-		if (tabUnit_Template[p].name.compare(name) == IDENTICAL_STRINGS)
+		if (tabUnit_Template[p].name.compare(name) == STRINGS::IDENTICAL)
 		{
 			return p;
 		}
@@ -83,7 +127,7 @@ bool Unit::searchUnitTile
 	Select_Type* select
 )
 {
-	if (NO_PLAYER_SELECTED < players.GETselectedPlayerId())
+	if (SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId())
 	{
 		std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
 
@@ -91,18 +135,12 @@ bool Unit::searchUnitTile
 		{
 			if (selPlayer->GETtabUnit()[i]->testPos(mouseCoorNorm.x, mouseCoorNorm.y))
 			{
-			
-
 				selPlayer->SETselectedUnit(i);
 
 				selPlayer->GETtabUnit()[i]->SETshow(true);
-				App::logfileconsole("[INFO]___: Unit select to move n:" + std::to_string(i));
+				R2D::ErrorLog::logEvent("[INFO]___: Unit select to move n:" + std::to_string(i));
 				*select = Select_Type::selectmove;
 				return true;
-			}
-			else
-			{
-
 			}
 		}
 		selPlayer.reset();
@@ -129,43 +167,50 @@ void Unit::tryToMove
 	const MatriceMap& maps,
 	Players& players,
 	Select_Type select,
-	int x,
-	int y
+	const R2D::CardinalDirection& cardinalDirection
 )
 {
-	if (players.GETselectedPlayerId() != NO_PLAYER_SELECTED)
+	if (players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED)
 	{
-		std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
-		int playerToAttack(NO_PLAYER_SELECTED), unitToAttack(NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
+		const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
+		int playerToAttack(SELECTION::NO_PLAYER_SELECTED), unitToAttack(SELECTION::NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
-		switch (searchToMove(maps, players, x, y, &playerToAttack, &unitToAttack))
+		switch (searchToMove(maps, players, cardinalDirection, &playerToAttack, &unitToAttack))
 		{
-		case Move_Type::cannotMove:
-			/*
-			* N/A
-			*/
-			break;
 		case Move_Type::canMove:
 
-			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, x, y);
+			selPlayer->GETtabUnit()[selectunit]->move(select, selectunit, cardinalDirection);
+			selPlayer->SETselectedUnit(selectunit);
+			players.SETneedToUpdateDrawUnit(PlayerH::NEED_TO_UPDATE_DRAW_UNIT);
 			break;
 		case Move_Type::attackMove:
 		{
-			std::shared_ptr<Player> attackPlayer(players.GETvectPlayer()[playerToAttack]);
+			/* safe index playerToAttack / unitToAttack : filled by searchToMove */
+			const std::shared_ptr<Player> attackPlayer(players.GETvectPlayer()[playerToAttack]);
+			const std::shared_ptr<Unit> attackUnit{ selPlayer->GETtabUnit()[selectunit] };
+			const std::shared_ptr<Unit> defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
 
-			selPlayer->GETtabUnit()[selectunit]
-				->attack(*attackPlayer->GETtabUnit()[unitToAttack]);
-
-			if (attackPlayer->GETtabUnit()[unitToAttack]->GETalive() == false)
+			if	(attackUnit->isPossibleToAttack())
 			{
-				attackPlayer->deleteUnit(unitToAttack);
-				tryToMove(maps, players, select, x, y);
+				attackUnit->attack(*(defenderUnit.get()));
+
+				/* if the opposite Unit is destroy, try to move to its position */
+				if (defenderUnit->GETalive() == UNITC::DEAD_UNIT)
+				{
+					attackPlayer->deleteUnit(unitToAttack);
+					tryToMove(maps, players, select, cardinalDirection);
+				}
 			}
-			selPlayer->GETtabUnit()[selectunit]->SETmovement(NO_MOVEMENT);
+			
+			/* Cannot move further for this turn */
+			attackUnit->SETmovement(UNITC::NO_MOVEMENT);
 			break;
 		}
+		case Move_Type::cannotMove:
 		default:
-			/* N/A */
+			/*
+			* Do nothing
+			*/
 			break;
 		}
 	}
@@ -189,10 +234,9 @@ Move_Type Unit::searchToMove
 (
 	const MatriceMap& maps,
 	Players& players,
-	int x,
-	int y,
-	int* playerToAttack,
-	int* unitToAttack
+	const R2D::CardinalDirection& cardinalDirection,
+	int* const playerToAttack,
+	int* const unitToAttack
 )
 {
 
@@ -207,12 +251,15 @@ Move_Type Unit::searchToMove
 	/*		  susceptible de mourrir par l'attaque											   */
 	/* --------------------------------------------------------------------------------------- */
 
-	std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
-	std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
+	const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
+	const std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
+
 
 	bool nextTileValidToMove(false);
-	unsigned int xIndex(MainMap::convertPosXToIndex(unit->GETx() + x));
-	unsigned int yIndex(MainMap::convertPosYToIndex(unit->GETy() + y));
+	const unsigned int xIndex
+	(MainMap::convertPosXToIndex(unit->GETx() + cardinalDirection.GETpixelValueEW()));
+	const unsigned int yIndex
+	(MainMap::convertPosYToIndex(unit->GETy() + cardinalDirection.GETpixelValueNS()));
 
 	if	(
 			unit->isGroundMovement_Type()
@@ -275,11 +322,17 @@ Move_Type Unit::searchToMove
 		/* Next Tile is a ground Tile 											  */
 		/* ---------------------------------------------------------------------- */
 
-		for (unsigned int i = 0; i < players.GETvectPlayer().size(); i++)
+		for (unsigned int i{0}; i < players.GETvectPlayer().size(); i++)
 		{
-			for (unsigned int j = 0; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
+			for (unsigned int j{0}; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
 			{
-				condition = checkUnitNextTile(*unit, *players.GETvectPlayer()[i]->GETtabUnit()[j], x, y);
+				condition = checkUnitNextTile
+					(
+						*unit,
+						*(players.GETvectPlayer()[i]->GETtabUnit()[j]),
+						cardinalDirection.GETpixelValueEW(),
+						cardinalDirection.GETpixelValueNS()
+					);
 				if (true == condition)
 				{
 					if (players.GETselectedPlayerId() == (int)i)
@@ -292,10 +345,6 @@ Move_Type Unit::searchToMove
 						*unitToAttack = (int)j;
 						return Move_Type::attackMove;
 					}
-				}
-				else
-				{
-					/* N/A */
 				}
 			}
 		}
@@ -326,8 +375,8 @@ bool Unit::checkUnitNextTile
 (
 	const Unit& from,
 	const Unit& to,
-	int x,
-	int y
+	const int x,
+	const int y
 )
 {
 	if ((from.GETx() + x) == to.GETx())
@@ -335,17 +384,9 @@ bool Unit::checkUnitNextTile
 		if ((from.GETy() + y) == to.GETy())
 		{
 			return true;
-
-		}
-		else
-		{
-			return false;
 		}
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -363,41 +404,21 @@ bool Unit::checkNextTile
 (
 	const Unit& from,
 	const Tile& to,
-	int x,
-	int y
+	const int x,
+	const int y
 )
 {
-	if ((from.GETx() + (unsigned __int64)x) == (to.tile_x))
+	if ((from.GETx() + x) == (to.tile_x))
 	{
-		if ((from.GETy() + (unsigned __int64)y) == (to.tile_y))
+		if ((from.GETy() + y) == (to.tile_y))
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
 	}
-	else
-	{
-		return false;
-	}
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : irrigate																	   */
-/* ROLE : 	TODO																	   */
-/* RETURNED VALUE : bool															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-bool Unit::irrigate
-(
-
-)
-{
 	return false;
 }
+
+
 
 
 /* *********************************************************
@@ -418,7 +439,7 @@ bool Unit::irrigate
   /* ----------------------------------------------------------------------------------- */
 Unit::Unit()
 : 
-m_name(EMPTY_STRING), 
+m_name(STRINGS::EMPTY),
 m_x(0),
 m_y(0),
 m_movementType(Unit_Movement_Type::ground),
@@ -426,19 +447,22 @@ m_maxlife(100),
 m_maxatq(10),
 m_maxdef(5),
 m_maxmovement(1),
+m_maxNumberOfAttack(1),
 m_maxlevel(100),
 m_life(100), 
 m_atq(10),
 m_def(5),
 m_movement(1),
+m_numberOfAttack(1),
 m_level(1),
 m_alive(true),
 m_maintenance(1.0),
-m_blit(ZERO_BLIT),
+m_blit(UNITC::ZERO_BLIT),
 m_show(true),
-m_showStats(false)
+m_showStats(false),
+m_owner(SELECTION::NO_OWNER)
 {
-	App::logfileconsole("[INFO]___: Create Unit Par Defaut Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Unit Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -465,8 +489,10 @@ Unit::Unit
 	unsigned int atq,
 	unsigned int def,
 	unsigned int move,
+	unsigned int numberOfAttack,
 	unsigned int level,
-	double maintenance
+	double maintenance,
+	Player* ptrToPlayer
 )
 :
 m_name(name),
@@ -477,19 +503,22 @@ m_maxlife(life),
 m_maxatq(atq),
 m_maxdef(def),
 m_maxmovement(move),
+m_maxNumberOfAttack(numberOfAttack),
 m_maxlevel(level),
 m_life(life),
 m_atq(atq),
 m_def(def), 
 m_movement(move),
+m_numberOfAttack(numberOfAttack),
 m_level(level),
 m_alive(true),
 m_maintenance(maintenance),
-m_blit(ZERO_BLIT),
+m_blit(UNITC::ZERO_BLIT),
 m_show(true),
-m_showStats(false)
+m_showStats(false),
+m_owner(ptrToPlayer)
 {
-	App::logfileconsole("[INFO]___: Create Unit:  Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Unit:  Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -501,7 +530,7 @@ m_showStats(false)
 /* ----------------------------------------------------------------------------------- */
 Unit::~Unit()
 {
-	/* N/A */
+	m_owner = nullptr;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -517,7 +546,9 @@ void Unit::attack
 	Unit& cible
 )
 {
-	if (m_movement > NO_MOVEMENT)
+	m_numberOfAttack--;
+
+	if (m_movement > UNITC::NO_MOVEMENT)
 	{
 		cible.defend(m_atq);
 	}
@@ -533,14 +564,14 @@ void Unit::attack
 /* ----------------------------------------------------------------------------------- */
 void Unit::defend
 (
-	int dmg
+	const int dmg
 )
 {
 	if (dmg > m_def)
 	{
-		if ((m_life - (dmg - m_def)) <= ENOUGH_DAMAGE_TO_KILL)
+		if ((m_life - (dmg - m_def)) <= UNITC::ENOUGH_DAMAGE_TO_KILL)
 		{
-			m_life = ZERO_LIFE;
+			m_life = UNITC::ZERO_LIFE;
 			m_alive = false;
 		}
 		else
@@ -566,22 +597,21 @@ void Unit::move
 (
 	Select_Type& select,
 	int& selectunit,
-	int x,
-	int y
+	const R2D::CardinalDirection& cardinalDirection
 )
 {
-	if (NO_MOVEMENT < m_movement)
+	if (UNITC::NO_MOVEMENT < m_movement)
 	{
-		m_x += x;
-		m_y += y;
+		m_x += cardinalDirection.GETpixelValueEW();
+		m_y += cardinalDirection.GETpixelValueNS();
 		m_movement--;
 	}
 
-	if (NO_MOVEMENT == m_movement)
+	if (UNITC::NO_MOVEMENT == m_movement)
 	{
 		select = Select_Type::selectnothing;
-		selectunit = NO_UNIT_SELECTED;
-		m_blit = ZERO_BLIT;
+		selectunit = SELECTION::NO_UNIT_SELECTED;
+		m_blit = UNITC::ZERO_BLIT;
 		m_show = true;
 	}
 }
@@ -598,15 +628,15 @@ void Unit::move
 void Unit::heal
 (
 	const MatriceMap& tiles,
-	unsigned int selectplayer
+	const unsigned int selectplayer
 )
 {
-	int i(MainMap::convertPosXToIndex(m_x));
-	int j(MainMap::convertPosYToIndex(m_y));
+	const int i(MainMap::convertPosXToIndex(m_x));
+	const int j(MainMap::convertPosYToIndex(m_y));
 
-	if (NO_APPARTENANCE == tiles[i][j].appartenance)
+	if (SELECTION::NO_APPARTENANCE == tiles[i][j].appartenance)
 	{
-		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_NO_APPARTENANCE);
+		m_life += (unsigned int)ceil(m_maxlife / UNITC::COEF_DIV_HEAL_NO_APPARTENANCE);
 		if (m_life > m_maxlife)
 		{
 			m_life = m_maxlife;
@@ -615,7 +645,7 @@ void Unit::heal
 	}
 	else if (tiles[i][j].appartenance == (int)selectplayer)
 	{
-		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_APPARTENANCE);
+		m_life += (unsigned int)ceil(m_maxlife / UNITC::COEF_DIV_HEAL_APPARTENANCE);
 		if (m_life > m_maxlife)
 		{
 			m_life = m_maxlife;
@@ -640,7 +670,7 @@ void Unit::levelup()
 {
 	m_level++;
 
-	m_maxlife += (int)ceil(m_maxlife / COEF_DIV_LEVELUP);
+	m_maxlife += (int)ceil(m_maxlife / UNITC::COEF_DIV_LEVELUP);
 	m_life = m_maxlife;
 
 	/* Todo */
@@ -660,6 +690,11 @@ void Unit::RESETmovement()
 	m_movement = m_maxmovement;
 }
 
+void Unit::RESETnumberOfAttack()
+{
+	m_numberOfAttack = m_maxNumberOfAttack;
+}
+
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : testPos																	   */
@@ -671,8 +706,8 @@ void Unit::RESETmovement()
 /* ----------------------------------------------------------------------------------- */
 bool Unit::testPos
 (
-	unsigned int mouse_x,
-	unsigned int mouse_y
+	const unsigned int mouse_x,
+	const unsigned int mouse_y
 )
 {
 	if (
@@ -745,6 +780,52 @@ bool Unit::isDeepWaterMovement_Type()
 	return m_movementType == Unit_Movement_Type::deepwater ? true : false;
 }
 
+bool Unit::isPossibleToAttack()
+{
+	return m_numberOfAttack > UNITC::ZERO_NUMBER_OF_ATTACK ? true : false;
+}
+
+bool Unit::isThisUnitType
+(
+	const std::string& nameToCompare
+)
+{
+	if (m_name.compare(nameToCompare) == STRINGS::IDENTICAL)
+	{
+		return true;
+	}
+	return false;
+}
+
+
+/* ----------------------------------------------------------------------------------- */
+/* NAME : irrigate																	   */
+/* ROLE : Modify GroundType 														   */
+/* RETURNED VALUE : bool															   */
+/* ----------------------------------------------------------------------------------- */
+bool Unit::irrigate
+(
+	MatriceMap& map
+)
+{
+	Tile& tileToIrragate{ map[MainMap::convertPosXToIndex(m_x)][MainMap::convertPosXToIndex(m_y)] };
+
+	if	(
+			(UNITC::NO_MOVEMENT < m_movement)
+			&&
+			(tileToIrragate.tile_spec == GroundSpec_Type::nothing)
+			&&
+			(tileToIrragate.appartenance == m_owner->GETid())
+		)
+	{
+		tileToIrragate.tile_ground = Ground_Type::irragated;
+		tileToIrragate.food = +UNITC::FOOD_ADD_BY_IRRAGATION;
+		tileToIrragate.gold = +UNITC::GOLD_ADD_BY_IRRAGATION;
+		return true;
+	}
+	return false;
+}
+
 /* *********************************************************
  *					END Units::METHODS					   *
  ********************************************************* */
@@ -769,7 +850,7 @@ void Unit::cmpblit()
 	/* ---------------------------------------------------------------------- */
 	/* 50% off 50% on , environ 1s le cycle									  */
 	/* ---------------------------------------------------------------------- */
-	if ((++m_blit %= (RealEngine2D::SCREEN_REFRESH_RATE / BLIT_RATE)) == MODULO_ZERO)
+	if ((++m_blit %= (R2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO::ZERO)
 	{
 		m_show = !m_show;
 	}

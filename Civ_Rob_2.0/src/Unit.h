@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.13.0
-	file version : 1.19
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.7.0
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -44,99 +44,31 @@
 
 #include "LIB.h"
 
+#include "T_Unit.h"
+
 #include "MainMap.h"
 
-#include <vector>
+
 #include <memory>
 #include <glm/glm.hpp>
 
 class Players;
+class Player;
 class GameInput;
+
+#include <R2D/src/CardinalDirection.h> 
 
 
  /* *********************************************************
   *						Constantes						   *
   ********************************************************* */
 
-const unsigned int NO_MOVEMENT = 0;
 
-const unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
-
-const unsigned int ZERO_LIFE = 0;
-
-const unsigned int ZERO_BLIT = 0;
-
-/*
-	use as 1/x
-	default : x = 20
-*/
-const unsigned int COEF_DIV_HEAL_NO_APPARTENANCE = 20;
-
-/*
-	use as 1/x
-	default : x = 5
-*/
-const unsigned int COEF_DIV_HEAL_APPARTENANCE = 5;
-
-/*
-	use as 1/x
-	default : x = 4
-*/
-const unsigned int COEF_DIV_LEVELUP = 4;
-
-/*
-	use as 1/x
-	Use for screen_refresh_rate/BLIT_RATE
-	default = 2
-*/
-const unsigned int BLIT_RATE = 2;
 
   /* *********************************************************
    *						 Enum							   *
    ********************************************************* */
 
-   /* Define movement for the Unit in case of tryToMove */
-enum class Move_Type
-{
-	cannotMove,		/* The Unit cannot move to the next Tile */
-	canMove,		/* The Unit can move to the next Tile */
-	attackMove		/* The Unit can move to the next Tile and attack the other Unit standing on the this Tile */
-};
-
-/* Define movement type of the Unit */
-enum class Unit_Movement_Type
-{
-	ground,			/* The Unit can move on ground (dirt,grass,...) */
-	air,			/* The Unit can move on ground (dirt,grass,...) or on water */
-	water,			/* The Unit can move on water */
-	deepwater		/* The Unit can move on deepwater or on water */
-};
-
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
-
-struct Unit_Template
-{
-
-	// nom de l'unit� -> /bin/UNITNAME.txt
-	std::string name;
-
-	/*
-		statistiques concernant l'unit� -> /bin/UNIT.txt
-	*/
-	Unit_Movement_Type type = Unit_Movement_Type::ground;
-	unsigned int life = 0;
-	unsigned int atq = 0;
-	unsigned int def = 0;
-	unsigned int movement = 0;
-	unsigned int level = 0;
-	unsigned int nbturnToBuild = 0;
-	double workToBuild = 0.0;
-	double maintenance = 0.0;
-};
-
-typedef std::vector<Unit_Template> VectUnitTemplate;
 
 /* *********************************************************
  *						 Classes						   *
@@ -185,7 +117,7 @@ public:
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : tryToMove																	   */
+	/* NAME : tryToMove*																	   */
 	/* ROLE : Recherche � faire bouger l'unit� selon le contexte						   */
 	/* ROLE : Attention : contient un rappel r�cursif									   */
 	/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la MAP				   */
@@ -202,8 +134,7 @@ public:
 		const MatriceMap& maps,
 		Players& players,
 		Select_Type select,
-		int x,
-		int y
+		const R2D::CardinalDirection& cardinalDirection
 	);
 
 private:
@@ -226,10 +157,9 @@ private:
 	(
 		const MatriceMap& maps,
 		Players& players,
-		int x,
-		int y,
-		int* playerToAttack,
-		int* unitToAttack
+		const R2D::CardinalDirection& cardinalDirection,
+		int* const playerToAttack,
+		int* const unitToAttack
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -247,8 +177,8 @@ private:
 	(
 		const Unit& from,
 		const Unit& to,
-		int x,
-		int y
+		const int x,
+		const int y
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -266,23 +196,10 @@ private:
 	(
 		const Unit& from,
 		const Tile& to,
-		int x,
-		int y
+		const int x,
+		const int y
 	);
-
-public:
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : irrigate																	   */
-	/* ROLE : 	TODO																	   */
-	/* RETURNED VALUE : bool															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	static bool irrigate
-	(
-
-	);
+	
 
 public:
 	/* *********************************************************
@@ -322,8 +239,10 @@ public:
 		unsigned int atq,
 		unsigned int def,
 		unsigned int move,
+		unsigned int numberOfAttack,
 		unsigned int level,
-		double maintenance
+		double maintenance,
+		Player* ptrToPlayer
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -359,7 +278,7 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void defend
 	(
-		int dmg
+		const int dmg
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -378,8 +297,7 @@ private:
 	(
 		Select_Type& select,
 		int& selectunit,
-		int x,
-		int y
+		const R2D::CardinalDirection& cardinalDirection
 	);
 
 public:
@@ -396,7 +314,7 @@ public:
 	virtual void heal
 	(
 		const MatriceMap& tiles,
-		unsigned int selectplayer
+		const unsigned int selectplayer
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -419,6 +337,18 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void RESETmovement();
 
+	virtual void RESETnumberOfAttack();
+
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : irrigate																	   */
+	/* ROLE : 	TODO																	   */
+	/* RETURNED VALUE : bool															   */
+	/* ----------------------------------------------------------------------------------- */
+	virtual bool irrigate
+	(
+		MatriceMap& map
+	);
+
 private:
 
 	/* ----------------------------------------------------------------------------------- */
@@ -432,8 +362,8 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool testPos
 	(
-		unsigned int mouse_x,
-		unsigned int mouse_y
+		const unsigned int mouse_x,
+		const unsigned int mouse_y
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -480,6 +410,15 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool isDeepWaterMovement_Type();
 
+	virtual bool isPossibleToAttack();
+
+public:
+
+	virtual bool isThisUnitType
+	(
+		const std::string& nameToCompare
+	);
+
 public:
 	/* *********************************************************
 	 *				Unit::METHODS::AFFICHAGE				   *
@@ -502,25 +441,28 @@ public:
 	 *				Unit::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline std::string GETname()				const { return m_name; };
-	inline unsigned int GETx()							const { return m_x; };
-	inline unsigned int GETy()							const { return m_y; };
-	inline Unit_Movement_Type GETmovementType() const { return m_movementType; };
-	inline int GETmaxlife()						const { return m_maxlife; };
-	inline int GETmaxatq()						const { return m_maxatq; };
-	inline int GETmaxdef()						const { return m_maxdef; };
-	inline int GETmaxmovement()					const { return m_maxmovement; };
-	inline int GETmaxlevel()					const { return m_maxlevel; };
-	inline int GETlife()						const { return m_life; };
-	inline int GETatq()							const { return m_atq; };
-	inline int GETdef()							const { return m_def; };
-	inline int GETmovement()					const { return m_movement; };
-	inline int GETlevel()						const { return m_level; };
-	inline bool GETalive()						const { return m_alive; };
-	inline double GETmaintenance()				const { return m_maintenance; }
-	inline unsigned int GETblit()				const { return m_blit; };
-	inline bool GETshow()						const { return m_show; };
-	inline bool GETshowStats()					const { return m_showStats; };
+	inline std::string GETname()					const { return m_name; };
+	inline unsigned int GETx()						const { return m_x; };
+	inline unsigned int GETy()						const { return m_y; };
+	inline Unit_Movement_Type GETmovementType()		const { return m_movementType; };
+	inline int GETmaxlife()							const { return m_maxlife; };
+	inline int GETmaxatq()							const { return m_maxatq; };
+	inline int GETmaxdef()							const { return m_maxdef; };
+	inline int GETmaxmovement()						const { return m_maxmovement; };
+	inline int GETmaxNumberOfAttack()				const { return m_maxNumberOfAttack; };
+	inline int GETmaxlevel()						const { return m_maxlevel; };
+	inline int GETlife()							const { return m_life; };
+	inline int GETatq()								const { return m_atq; };
+	inline int GETdef()								const { return m_def; };
+	inline int GETmovement()						const { return m_movement; };
+	inline int GETnumberOfAttack()					const { return m_numberOfAttack; };
+	inline int GETlevel()							const { return m_level; };
+	inline bool GETalive()							const { return m_alive; };
+	inline double GETmaintenance()					const { return m_maintenance; }
+	inline unsigned int GETblit()					const { return m_blit; };
+	inline bool GETshow()							const { return m_show; };
+	inline bool GETshowStats()						const { return m_showStats; };
+	inline Player* GETowner()							  { return m_owner; };
 
 
 	inline void SETname(const std::string& name) { m_name = name; };
@@ -531,17 +473,20 @@ public:
 	inline void SETmaxatq(int atq) { m_maxatq = atq; };
 	inline void SETmaxdef(int def) { m_maxdef = def; };
 	inline void SETmaxmovement(int movement) { m_maxmovement = movement; };
+	inline void SETmaxNumberOfAttack(int maxNumberOfAttack) { m_maxNumberOfAttack = maxNumberOfAttack; };
 	inline void SETmaxlevel(int level) { m_maxlevel = level; };
 	inline void SETlife(int life) { m_life = life; };
 	inline void SETatq(int atq) { m_atq = atq; };
 	inline void SETdef(int def) { m_def = def; };
 	inline void SETmovement(int movement) { m_movement = movement; };
+	inline void SETnumberOfAttack(int numberOfAttack) { m_numberOfAttack = numberOfAttack; };
 	inline void SETlevel(int level) { m_level = level; };
 	inline void SETalive(bool alive) { m_alive = alive; };
 	inline void SETmaintenance(double maintenance) { m_maintenance = maintenance; }
 	inline void SETblit(unsigned int blit) { m_blit = blit; };
 	inline void SETshow(bool show) { m_show = show; };
 	inline void SETshowStats(bool showStats) { m_showStats = showStats; };
+	inline void SETowner(Player* owner) { m_owner = owner; };
 
 private:
 	/* *********************************************************
@@ -556,12 +501,14 @@ private:
 	int m_maxatq;
 	int m_maxdef;
 	int m_maxmovement;
+	int m_maxNumberOfAttack;
 	int m_maxlevel;
 
 	int m_life;
 	int m_atq;
 	int m_def;
 	int m_movement;
+	int m_numberOfAttack;
 	int m_level;
 	bool m_alive;
 
@@ -570,6 +517,8 @@ private:
 	unsigned int m_blit;
 	bool m_show;
 	bool m_showStats;
+
+	Player* m_owner;
 };
 
 typedef std::vector<std::shared_ptr<Unit>> VectUnit;

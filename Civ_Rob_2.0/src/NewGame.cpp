@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.8
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -29,11 +29,22 @@
 #include "App.h"
 #include "SaveReload.h"
 
-#include <RealEngine2D/src/GUI.h>
-
-
+#include <R2D/src/GUI.h>
+#include <R2D/src/ErrorLog.h> 
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
+
+namespace NGC
+{
+	/* Minimum space beetween two or more settlers */
+	const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
+
+	const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
+
+	/* The first settler to spawn in the map for each Player does not cost maintenance */
+	const double MAINTENANCE_COST_1TH_SETTLER = 0.0;
+}
+
 
 /* ----------------------------------------------------------------------------------- */
 /* NAME : newGame																	   */
@@ -45,9 +56,9 @@
 /* ------------------------------------------------------------------------------------*/
 void GamePlayScreen::newGame()
 {
-	App::logfileconsole("[INFO]___: Newgame Start");
+	R2D::ErrorLog::logEvent("[INFO]___: Newgame Start");
 	
-	m_SaveReload->createSave(*m_file);
+	m_SaveReload->createSave();
 
 	pushNewPlayer();
 
@@ -59,7 +70,7 @@ void GamePlayScreen::newGame()
 
 	/* ### Don't put code below here ### */
 
-	App::logfileconsole("[INFO]___: Newgame End");
+	R2D::ErrorLog::logEvent("[INFO]___: Newgame End");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -71,9 +82,11 @@ void GamePlayScreen::newGame()
 /* ------------------------------------------------------------------------------------*/
 void GamePlayScreen::pushNewPlayer()
 {
+	unsigned index{ 0 };
 	for (auto& p : m_userInputNewGame->vectPlayerName)
 	{
-		m_players.addPlayer(p);
+		m_players.addPlayer(p, (int)index);
+		index++;
 	}
 }
 
@@ -118,7 +131,7 @@ void GamePlayScreen::makePlayersButtons()
 			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, this));
 		m_screen.m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
 
-		m_screen.m_widgetLabels[i] = RealEngine2D::WidgetLabel(
+		m_screen.m_widgetLabels[i] = R2D::WidgetLabel(
 			m_screen.m_vectPlayerRadioButton[i],
 			m_userInputNewGame->vectPlayerName[i],
 			TEXT_SCALE);
@@ -143,11 +156,10 @@ void GamePlayScreen::newGameSettlerSpawn
 	/* association des vecteurs de position (x,y)							  */
 	/* avec les settlers de départ											  */
 	/* ---------------------------------------------------------------------- */
-	unsigned int selectunit(0);
-	selectunit = Unit::searchUnitByName("settler", players.GETvectUnitTemplate());
+	const size_t selectunit{ Unit::searchUnitByName("settler", players.GETvectUnitTemplate()) };
 
 	std::vector<randomPos> tabRandom;
-	for (unsigned int i(0); i < players.GETvectPlayer().size(); i++)
+	for (size_t i(0); i < players.GETvectPlayer().size(); i++)
 	{
 
 		makeRandomPosTab(mainMap, tabRandom);
@@ -161,8 +173,9 @@ void GamePlayScreen::newGameSettlerSpawn
 			players.GETvectUnitTemplate()[selectunit].atq,
 			players.GETvectUnitTemplate()[selectunit].def,
 			players.GETvectUnitTemplate()[selectunit].movement,
+			players.GETvectUnitTemplate()[selectunit].numberOfAttack,
 			players.GETvectUnitTemplate()[selectunit].level,
-			MAINTENANCE_COST_1TH_SETTLER);
+			NGC::MAINTENANCE_COST_1TH_SETTLER);
 	}
 }
 
@@ -189,10 +202,10 @@ void GamePlayScreen::makeRandomPosTab
 
 	while (continuer)
 	{
-		if (iteration >= MAX_RANDOM_POS_ITERATION)
+		if (iteration >= NGC::MAX_RANDOM_POS_ITERATION)
 		{
 #ifdef _DEBUG
-			throw(MAX_RANDOM_POS_ITERATION);
+			throw(NGC::MAX_RANDOM_POS_ITERATION);
 #endif // DEBUG_MODE
 			/*
 			TODO : remove existing settlers and players
@@ -227,10 +240,10 @@ void GamePlayScreen::makeRandomPos
 	const unsigned int tileSize
 )
 {
-	const unsigned int SEA_BORDER_MAP(MAP_BORDER_MAX * tileSize);
+	const unsigned int SEA_BORDER_MAP(MAPH::MAP_BORDER_MAX * tileSize);
 
-	unsigned int x((rand() % ((matriceMap.size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
-	unsigned int y((rand() % ((matriceMap[0].size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
+	const unsigned int x((rand() % ((matriceMap.size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
+	const unsigned int y((rand() % ((matriceMap[0].size() * tileSize) - SEA_BORDER_MAP)) + SEA_BORDER_MAP);
 
 	RandomPOS.x = (unsigned int)ceil(x / tileSize) * tileSize;
 	RandomPOS.y = (unsigned int)ceil(y / tileSize) * tileSize;
@@ -259,7 +272,7 @@ bool GamePlayScreen::conditionspace
 	/* Return true : Empty tab */
 	if (tabRandom.empty()) return true;
 
-	const unsigned int spaceBetweenSettler(tileSize * MIN_SPACE_BETWEEN_SETTLER);
+	const unsigned int spaceBetweenSettler(tileSize * NGC::MIN_SPACE_BETWEEN_SETTLER);
 
 	bool condition(false);
 	for (size_t i(0); i < tabRandom.size(); i++)
@@ -300,8 +313,8 @@ bool GamePlayScreen::conditionground
 	const randomPos& RandomPOS
 )
 {
-	unsigned int x(MainMap::convertPosXToIndex(RandomPOS.x));
-	unsigned int y(MainMap::convertPosYToIndex(RandomPOS.y));
+	const unsigned int x(MainMap::convertPosXToIndex(RandomPOS.x));
+	const unsigned int y(MainMap::convertPosYToIndex(RandomPOS.y));
 
 	if	(
 			MainMap::assertRangeMapIndex(x, matriceMap.size())

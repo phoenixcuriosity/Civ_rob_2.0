@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.13
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.7.0
+	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,125 +32,38 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
-#include <RealEngine2D/src/IMainGame.h>
-#include <RealEngine2D/src/GLSLProgram.h>
-#include <RealEngine2D/src/Camera2D.h>
-#include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
-#include <RealEngine2D/src/Window.h>
+#include "T_GamePlayScreen.h"
+#include "T_Unit.h"
+#include "T_City.h"
+#include "T_CityScreen.h"
+#include "T_MainMap.h"
+
+#include <R2D/src/IMainGame.h>
 
 #include "NewGame.h"
-#include "GameInput.h"
-
-#include "NextTurn.h"
 #include "MainMap.h"
 #include "Player.h"
-#include "City.h"
+#include "NextTurn.h"
 
-#include <vector>
 #include <memory>
 
 /* *********************************************************
  *						 Structs						   *
  ********************************************************* */
 
-/* 
-	All RealEngine2D objects
-	- Shaders
-	- camera/cameraHUD
-	- Sprite/font
-	- audioEngine
-	- GUI
-*/
-struct Screen
-{
-	RealEngine2D::GLSLProgram gLSLProgram;
-
-	RealEngine2D::Camera2D camera;
-	RealEngine2D::Camera2D cameraHUD;
-
-	std::shared_ptr<RealEngine2D::SpriteFont> spriteFont = nullptr;
-	RealEngine2D::SpriteBatch spriteBatchHUDDynamic;
-	RealEngine2D::SpriteBatch spriteBatchHUDStatic;
-
-	RealEngine2D::AudioEngine audioEngine;
-
-	RealEngine2D::GUI m_gui;
-	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
-	std::vector<RealEngine2D::WidgetLabel> m_widgetLabels;
-
-	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
-};
-
-struct Var
-{
-
-	std::string tempPlayerName = EMPTY_STRING;
-
-	/*
-		état de la sélection du joueur
-		enum Select_Type : unsigned int
-		{
-			selectnothing,
-			selectcreate,
-			selectinspect,
-			selectmove,
-			selectmoveCitizen
-		};
-	*/
-	Select_Type select = Select_Type::selectnothing;
-
-	/*
-		état de l'écran du joueur
-		enum State_Type : unsigned int
-		{
-			STATEnothing,
-			STATEtitleScreen,
-			STATEscreennewgame,
-			STATEreload,
-			STATEmainmap,
-			STATEscience,
-			STATEcitiemap
-		};
-	*/
-	State_Type statescreen = State_Type::error;
-
-	/*
-			état de l'entrée clavier
-			enum CinState_Type : unsigned int
-			{
-				cinNothing,
-				cinTitleScreen,
-				cinScreenNewGameNbPlayer,
-				cinScreenNewGameNamePlayer,
-				cinMainMap,
-			};
-		*/
-	CinState_Type cinState = CinState_Type::cinNothing;
-
-};
-
+ /* N/A */
 
 /* *********************************************************
  *					 Constantes							   *
  ********************************************************* */
 
-const float MS_PER_SECOND(1000.0f);
-const float TARGET_FRAMETIME = MS_PER_SECOND / (float)RealEngine2D::SCREEN_REFRESH_RATE;
-const unsigned int MAX_PHYSICS_STEPS(6);
-const float MAX_DELTA_TIME(1.0f);
-
-/* Define default font for GUI texts */
-const std::string fontGUI = "times.ttf";
+/* N/A */
 
 /* *********************************************************
  *						 Classe							   *
  ********************************************************* */
 
-class GamePlayScreen : public RealEngine2D::IGameScreen
+class GamePlayScreen : public R2D::IGameScreen
 {
 public:
 
@@ -160,7 +73,6 @@ public:
 
 	GamePlayScreen
 	(
-		File* file,
 		SaveReload* saveReload,
 		UserInputNewGame* userInputNewGame
 	);
@@ -213,99 +125,6 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	void loadFile();
 
-	
-public:
-
-	/* *********************************************************
-	 *					STATIC XmlConvertValue				   *
-	 ********************************************************* */
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : xmlGiveStateType																			    	  */
-	/* ROLE : Convert an std::string from XML document to State_Type from Texture class						      */
-	/* INPUT : std::string type																				      */
-	/* RETURNED VALUE    : State_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static State_Type xmlGiveStateType
-	(
-		std::string type
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : xmlGiveSelectType																			    	  */
-	/* ROLE : Convert an std::string from XML document to Select_Type from Texture class					      */
-	/* INPUT : std::string type																				      */
-	/* RETURNED VALUE    : Select_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Select_Type xmlGiveSelectType
-	(
-		std::string type
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convertUintToUnit_Movement_Type															    	  */
-	/* ROLE : Convert a unsigned integer from XML document to Unit_Movement_Type from Unit class			      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : unsigned int toConvert																		      */
-	/* RETURNED VALUE    : Unit_Movement_Type																	  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Unit_Movement_Type convertUintToUnit_Movement_Type
-	(
-		unsigned int toConvert
-	);
-
-	static Unit_Movement_Type xmlGiveMovementType
-	(
-		std::string type
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2ConversionToApply																	    	  */
-	/* ROLE : Convert an integer from XML document to conversionSurplus_Type from City class				      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : conversionSurplus_Type																  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static conversionSurplus_Type convert2ConversionToApply
-	(
-		int toConvert
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2build_Type																		    	  */
-	/* ROLE : Convert an integer from XML document to build_Type from City class							      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : build_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static build_Type convert2build_Type
-	(
-		int toConvert
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2Emotion_Type																		    	  */
-	/* ROLE : Convert an integer from XML document to Emotion_Type from City class							      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : Emotion_Type																			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Emotion_Type convert2Emotion_Type
-	(
-		int toConvert
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : convert2Religion_Type																		    	  */
-	/* ROLE : Convert an integer from XML document to Religion_Type from City class							      */
-	/* ROLE : Exit if error : XML document is not properly formated											      */
-	/* INPUT : int toConvert																				      */
-	/* RETURNED VALUE    : Religion_Type																		  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static Religion_Type convert2Religion_Type
-	(
-		int toConvert
-	);
 
 
 private:
@@ -338,13 +157,6 @@ private:
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
 	void initOpenGLScreen();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : initShaders																   */
-	/* ROLE : Init shaders for OpenGL													   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void initShaders();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initHUDText																   */
@@ -501,7 +313,12 @@ private:
 
 	void moveCameraByDeltaTime();
 
-	void moveCamera(float deltaTime);
+	void moveCamera
+	(
+		const float deltaTime
+	);
+
+	void updateDrawCameraMove();
 
 	void drawGame();
 
@@ -542,15 +359,15 @@ private:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	void wheel
 	(
-		SDL_Event& ev
+		const SDL_Event& ev
 	);
 
 	void mouseClick
 	(
-		SDL_Event& ev
+		const SDL_Event& ev
 	);
 
-	unsigned int getMouseCoorNorm(unsigned char c);
+	unsigned int getMouseCoorNorm(const unsigned char c);
 
 
 
@@ -571,23 +388,22 @@ public:
 	 *						 GET/SET						   *
 	 ********************************************************* */
 
-	inline Screen& GETscreen() { return m_screen; };
-	inline const Screen& GETscreen()const { return m_screen; };
-	inline Var& GETvar() { return m_var; };
-	inline const Var& GETvar()const { return m_var; };
-	inline MainMap& GETmainMap() { return m_mainMap; };
-	inline const MainMap& GETmainMap()const { return m_mainMap; };
-	inline Players& GETPlayers() { return m_players; };
-	inline const Players& GETPlayers()const { return m_players; };
-	inline File* getFile() { return m_file; };
-	inline SaveReload* getSaveReload() { return m_SaveReload; };
-	inline UserInputNewGame* getUserInputNewGame() { return m_userInputNewGame; };
+	Screen& GETscreen();
+	const Screen& GETscreen()const;
+	Var& GETvar();
+	const Var& GETvar()const;
+	MainMap& GETmainMap();
+	const MainMap& GETmainMap()const;
+	Players& GETPlayers();
+	const Players& GETPlayers()const;
+	SaveReload* getSaveReload();
+	UserInputNewGame* getUserInputNewGame();
 
-	inline void SETvar(Var& var) { m_var = var; };
-	inline void SETmainMap(MainMap& mainMap) { m_mainMap = mainMap; };
-	inline void SETPlayers(Players& players) { m_players = players; };
+	void SETvar(Var& var);
+	void SETmainMap(MainMap& mainMap);
+	void SETPlayers(Players& players);
 
-	inline RealEngine2D::Window& getParentWindow() { return m_game->getWindow(); }
+	R2D::Window& getParentWindow();
 
 private:
 
@@ -596,7 +412,7 @@ private:
 	 ********************************************************* */
 
 	 /*
-		 All RealEngine2D objects
+		 All R2D objects
 		 - Shaders
 		 - camera/cameraHUD
 		 - Sprite/font
@@ -613,7 +429,6 @@ private:
 
 	Players m_players;
 
-	File* m_file;
 	SaveReload* m_SaveReload;
 	UserInputNewGame* m_userInputNewGame;
 

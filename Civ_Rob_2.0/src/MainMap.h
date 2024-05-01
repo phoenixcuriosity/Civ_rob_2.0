@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.8
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.2.0
+	file version : 1.13
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,8 +22,8 @@
 
 */
 
-#ifndef GamePlay_H
-#define GamePlay_H
+#ifndef MainMap_H
+#define MainMap_H
 
 /* *********************************************************
  *						Includes						   *
@@ -31,133 +31,19 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/Camera2D.h>
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/Window.h>
+#include <R2D/src/Camera2D.h>
+#include <R2D/src/SpriteBatch.h>
+#include <R2D/src/Window.h>
 
-#include <vector>
+#include <R2D/src/IGameScreen.h>
+#include <R2D/src/IMainGame.h>
+#include <R2D/src/GLSLProgram.h>
+#include <R2D/src/WidgetLabel.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
 
-/* *********************************************************
- *						Constantes						   *
- ********************************************************* */
+#include "T_MainMap.h"
 
-  /* MAP -> Max size - Min size of the map for sea borders */
-const unsigned int MAP_BORDER_MAX = 4;
-const unsigned int MAP_BORDER_MIN = 1;
-
-/* MAP -> value deep_water */
-const unsigned int MAP_BORDER_ZERO = 0;
-
-/* MAP_GEN_RANDOM */
-const unsigned int MAP_GEN_RANDOM_RANGE_GROUND = 100;
-const unsigned int MAP_GEN_RANDOM_OFFSET_GROUND = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_GRASS = 100;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_GRASS = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER = 20;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER1 = 10;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER1 = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER2 = 10;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER2 = 1;
-
-const unsigned int MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER = 50;
-const unsigned int MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER = 1;
-
-const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
-const unsigned int MAX_ITERATION_SCALE = 10000;
-
-/* Minimum space beetween two or more settlers */
-const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
-
-/* The tile is not own by a player */
-const int NO_APPARTENANCE = - 1;
-
-/* Avoid seeing nothing before next tile */
-const unsigned int MAP_CAMERA_MIN_BORDER = 1;
-
-/* Define the index to look in the matrix for its size */
-const unsigned int MAP_CAMERA_INDEX_SIZE = 0;
-
-/* Define an ID which is unused */
-const GLuint UNUSED_ID = 0;
-
-/* *********************************************************
- *						 Enum							   *
- ********************************************************* */
-
- // Define Ground type use on the map
-enum class Ground_Type
-{
-	error,			/* ### Reserved on error detection ### */
-	grass,
-	water,
-	deepwater,
-	dirt,			/* ### Not use as of 0.20.0.3 ### */
-	sand			/* ### Not use as of 0.20.0.3 ### */
-};
-
-// Define specification for a tile on the map
-enum class GroundSpec_Type
-{
-	nothing,		/* The Tile has no specification */
-	coal,
-	copper,
-	iron,
-	tree,
-	stone,
-	uranium,
-	horse,
-	fish,
-	petroleum
-};
-
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
-
-struct Tile
-{
-
-	// index en X de la case : en tileSize
-	unsigned int indexX = 0;
-
-	// index en Y de la case : en tileSize
-	unsigned int indexY = 0;
-
-	// index en X de la case : en pixel
-	unsigned int tile_x = 0;
-
-	// index en Y de la case : en pixel
-	unsigned int tile_y = 0;
-
-	// type de sol -> enum Ground_Type : unsigned int { noGround, grass, water, deepwater, dirt, sand};
-	Ground_Type tile_ground = Ground_Type::error;
-
-	/*
-		type de sp�cification
-		-> enum GroundSpec_Type : unsigned int { nothing, coal, copper, iron, tree, stone, uranium, horse, fish, petroleum };
-	*/
-	GroundSpec_Type tile_spec = GroundSpec_Type::nothing;
-
-	// index d'appartenance d'un case � un joueur : appartenance neutre = -1
-	int appartenance = NO_APPARTENANCE;
-
-	// indice de nourriture de la case
-	int food = -1;
-
-	// indice de production de la case
-	int work = -1;
-
-	// indice financier de la case
-	int gold = -1;
-};
-
-typedef std::vector<Tile> VectMap;
-typedef std::vector<VectMap> MatriceMap;
 
 
 /* *********************************************************
@@ -192,7 +78,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertIndexToPosX
 	(
-		unsigned int index
+		const unsigned int index
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -207,7 +93,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosXToIndex
 	(
-		double posX
+		const double posX
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -221,7 +107,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertIndexToPosY
 	(
-		unsigned int index
+		const unsigned int index
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -235,7 +121,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosYToIndex
 	(
-		double posY
+		const double posY
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -250,8 +136,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static bool assertRangeMapIndex
 	(
-		unsigned int indexToTest,
-		size_t size
+		const unsigned int indexToTest,
+		const size_t size
 	);
 
 public:
@@ -259,7 +145,9 @@ public:
 	MainMap();
 	~MainMap();
 
-	void initMainMap(RealEngine2D::Camera2D& camera);
+	void initMainMap(R2D::Camera2D& camera);
+
+	void initMainMapTexture();
 
 private:
 
@@ -269,38 +157,38 @@ private:
 
 	void setMinMaxScale
 	(
-		RealEngine2D::Camera2D& camera
+		R2D::Camera2D& camera
 	);
 
 	void updateOffset
 	(
-		double x0,
-		double y0,
-		unsigned int windowWidth,
-		unsigned int windowHeight,
-		RealEngine2D::Camera2D& camera
+		const double x0,
+		const double y0,
+		const unsigned int windowWidth,
+		const unsigned int windowHeight,
+		R2D::Camera2D& camera
 	);
 
 	void updateOffsetX
 	(
-		double x0,
-		unsigned int windowWidth,
-		RealEngine2D::Camera2D& camera
+		const double x0,
+		const unsigned int windowWidth,
+		R2D::Camera2D& camera
 	);
 
 	void updateOffsetY
 	(
-		double y0,
-		unsigned int windowHeight,
-		RealEngine2D::Camera2D& camera
+		const double y0,
+		const unsigned int windowHeight,
+		R2D::Camera2D& camera
 	);
 
 public:
 
 	void drawMap
 	(
-		RealEngine2D::Camera2D& camera,
-		RealEngine2D::Window& window
+		R2D::Camera2D& camera,
+		R2D::Window& window
 	);
 
 	void renderMap();
@@ -314,7 +202,7 @@ public:
 	inline unsigned int GETtoolBarSize()const { return m_toolBarSize; };
 	inline MatriceMap& GETmatriceMap() { return m_matriceMap; };
 	inline const MatriceMap& GETmatriceMapConst()const { return m_matriceMap; };
-	RealEngine2D::SpriteBatch& GETspriteBatch() { return m_spriteBatch; };
+	R2D::SpriteBatch& GETspriteBatch() { return m_spriteBatch; };
 
 	inline void SETmapSizePixX(unsigned int mapSizePixX){  m_mapSizePixX = mapSizePixX; };
 	inline void SETmapSizePixY(unsigned int mapSizePixY) {  m_mapSizePixY = mapSizePixY; };
@@ -338,8 +226,8 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	bool mapBordersConditions
 	(
-		unsigned int i,
-		unsigned int j
+		const unsigned int i,
+		const unsigned int j
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -373,8 +261,8 @@ private:
 	void mapIntern
 	(
 		MatriceMap& maps,
-		unsigned int i,
-		unsigned int j
+		const unsigned int i,
+		const unsigned int j
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -391,11 +279,11 @@ private:
 	void tileAffectation
 	(
 		Tile& tile,
-		Ground_Type tile_ground,
-		GroundSpec_Type tile_spec,
-		int food,
-		int work,
-		int gold
+		const Ground_Type tile_ground,
+		const GroundSpec_Type tile_spec,
+		const int food,
+		const int work,
+		const int gold
 	);
 
 
@@ -430,13 +318,17 @@ private:
 	bool m_needToUpdateDraw;
 
 	/* Dedicated spriteBatch for the map */
-	RealEngine2D::SpriteBatch m_spriteBatch;
+	R2D::SpriteBatch m_spriteBatch;
+	/* Need seperate spriteBatch because of the Texture superposition */
+	R2D::SpriteBatch m_spriteBatchAppartenance;
+
+	std::vector<GLuint> s_vectID;
 
 	static unsigned int* s_tileSize;
 };
 
-#endif /* GamePlay_H */
+#endif /* MainMap_H */
 
 /*
-*	End Of File : GamePlay.h
+*	End Of File : MainMap.h
 */

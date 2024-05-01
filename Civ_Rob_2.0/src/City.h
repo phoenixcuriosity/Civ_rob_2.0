@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.22
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.12.0
+	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,136 +31,26 @@
 
 #include "LIB.h"
 
+#include "T_City.h"
+#include "T_CityScreen.h"
+
 #include "MainMap.h"
 #include "Unit.h"
 #include "Citizen.h"
+#include "FoodManager.h"
+#include "CitizenManager.h"
+#include "BuildManager.h"
 
 #include <vector>
 #include <queue>
 #include <memory>
 
-#include <RealEngine2D/src/Window.h>
-#include <RealEngine2D/src/GUI.h>
-
-/* Redef : include in .cpp */
-class GamePlayScreen;
-class Players;
-class Player;
-class GameInput;
-
-struct Screen;
-struct Var;
-struct GoldStats;
-
-/* *********************************************************
- *					 Constantes							   *
- ********************************************************* */
-
-  /* taille de la carte transpos�e dans la citiemap */
-const unsigned int INIT_SIZE_VIEW = 9;
-
-/* Population maximale dans une Citie */
-const unsigned int MAX_POP = 50;
-
-/* Minimal population in City */
-const unsigned int MIN_POP = 1;
-
-/* Minimal influence level in City */
-const unsigned int MIN_INFLUENCE_LEVEL = 1;
-
-/* Todo : g�n�ralisation : compter nb Citie par player dans CITIENAME.txt */
-
-/* Nombre de noms de Citie dans CITIENAME.txt */
-const unsigned int MAX_CITY_PER_PLAYER = 5;
-
-/* Define the maximum range of emotion */
-const double SCALE_RANGE_MAX_EMOTION = 100.0;
-
-/* Define the minimum range of emotion */
-const double SCALE_RANGE_MIN_EMOTION = 0.0;
-
-/* Define the mean emotion */
-const double MEAN_EMOTION = ((SCALE_RANGE_MAX_EMOTION + SCALE_RANGE_MIN_EMOTION) / 2.0);
-
-/* Define the mean value of emotion range */
-const double SCALE_RANGE_MEAN_EMOTION = ((abs(SCALE_RANGE_MAX_EMOTION) + abs(SCALE_RANGE_MIN_EMOTION)) / 2.0);
-
-/* Define the multiplier coefficient to convert work to food */
-const double MULTIPLIER_CONVERSION_WORK_TO_FOOD = 10.0;
-
-/* Define the multiplier coefficient to convert food to work */
-const double MULTIPLIER_CONVERSION_FOOD_TO_WORK = (1.0 / MULTIPLIER_CONVERSION_WORK_TO_FOOD);
-
-/* Define the multiplier coefficient to convert work to gold */
-const double MULTIPLIER_CONVERSION_WORK_TO_GOLD = (10.0 * MULTIPLIER_CONVERSION_WORK_TO_FOOD);
-
-/* Define the multiplier coefficient to convert food to gold */
-const double MULTIPLIER_CONVERSION_FOOD_TO_GOLD = (MULTIPLIER_CONVERSION_WORK_TO_GOLD / MULTIPLIER_CONVERSION_FOOD_TO_WORK);
-
-const unsigned int CITY_IHM_SECOND_INDEX = 1;
-
-/* Define the minimum food in a City */
-const double CITY_ZERO_FOOD = 0.0;
-
-/* Define the minimum food in a City */
-const double CITY_ZERO = 0.0;
+#include <R2D/src/Window.h>
+#include <R2D/src/GUI.h>
 
 
 
 
-/* *********************************************************
- *							 Enum						   *
- ********************************************************* */
-
- /* Define the types of builds that a city can create */
-enum class build_Type : unsigned int
-{
-	building,	/* ### Not implemented as of 0.20.3.1 ### */
-	unit
-};
-
-/* Define types of conversion that a city can apply to the ressources */
-enum class conversionSurplus_Type : unsigned int
-{
-	No_Conversion,
-	FoodToWork, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_WORK */
-	FoodToGold, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_GOLD */
-	WorkToFood, /* Apply MULTIPLIER_CONVERSION_WORK_TO_FOOD */
-	WorkToGold, /* Apply MULTIPLIER_CONVERSION_WORK_TO_GOLD */
-	GoldToFood, /* ### Not implemented as of 0.20.3.1 ### */
-	GoldToWork  /* ### Not implemented as of 0.20.3.1 ### */
-};
-
-/* Define a type to resize Units Texture between city and mainmap */
-enum class resizeUnitTexture_Type : unsigned int
-{
-	mainmap,
-	city
-};
-
-
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
-
- /*
-	 Define a building in a City
-	 Use for building Queue
- */
-struct build
-{
-	std::string name;
-	build_Type type;
-	double remainingWork;
-};
-
-struct buildGUI
-{
-	CEGUI::PushButton* buildG = nullptr;
-	build buildQ;
-};
-
-typedef std::deque<buildGUI> dequeBuild;
 
 /* *********************************************************
  *						 Classes						   *
@@ -182,7 +72,7 @@ public:
 	static void createCity
 	(
 		GamePlayScreen& mainGame,
-		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -199,13 +89,13 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	static void fillCitieTiles
 	(
-		const RealEngine2D::Window& window,
-		unsigned int middletileX,
-		unsigned int middletileY,
-		unsigned int selectplayer,
+		const R2D::Window& window,
+		const unsigned int middletileX,
+		const unsigned int middletileY,
+		const unsigned int selectplayer,
 		MainMap& mainMap,
 		VectMap& tabtile,
-		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
 private:
@@ -219,9 +109,9 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	static bool initSizeInfluenceCondition
 	(
-		int o,
-		int p,
-		unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
+		const int o,
+		const int p,
+		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -235,9 +125,9 @@ private:
 	/* ----------------------------------------------------------------------------------- */
 	static bool cornerCheck
 	(
-		int o,
-		int p,
-		unsigned int influenceLevel
+		const int o,
+		const int p,
+		const unsigned int influenceLevel
 	);
 
 
@@ -271,13 +161,6 @@ public:
 	virtual ~City();
 
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : resetTabCitizen															   */
-	/* ROLE : Remove all Citizens in the City											   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void resetTabCitizen();
-
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : foodNextTurn																   */
 	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
 	/* OUT : GoldStats& goldStats : Player gold stats									   */
@@ -295,19 +178,9 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool searchCityTile
 	(
-		unsigned int indexX,
-		unsigned int indexY
+		const unsigned int indexX,
+		const unsigned int indexY
 	);
-
-private:
-
-	virtual double tileValue
-	(
-		const Tile& tile,
-		double coefFood = 1.0,
-		double coefWork = 1.0,
-		double coefGold = 1.0
-	) const;
 
 public:
 	/* ----------------------------------------------------------------------------------- */
@@ -319,43 +192,10 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual bool testPos
 	(
-		unsigned int x,
-		unsigned int y
+		const unsigned int x,
+		const unsigned int y
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : computeEmotion															   */
-	/* ROLE : Calcul sur une echelle de 0 � 100 le bonheur de la Citie					   */
-	/* INPUT : void																		   */
-	/* INTERNAL OUTPUT : m_emotion : bonheur de la Citie								   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void computeEmotion();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : computeWork																   */
-	/* ROLE : Calculate the work for the turn											   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void computeWork();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : computeWorkToBuild														   */
-	/* ROLE : Compute the remaining work to build a building or unit					   */
-	/* ROLE : if the remaining work is zero then the building or unit is created		   */
-	/* ROLE : if the build is created and there work Surplus then either apply it ...	   */
-	/* ROLE : ... to next build or convert it to food									   */
-	/* INPUT : Player* : ptr to the selected player										   */
-	/* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void computeWorkToBuild
-	(
-		Player& player,
-		const VectUnitTemplate& vectUnitTemplate,
-		bool* needToUpdateDrawUnit
-	);
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeGold																   */
@@ -377,28 +217,6 @@ public:
 	);
 
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : convertWorkSurplusToFood													   */
-	/* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
-	/* INPUT : double workSurplus : work surplus to convert into food					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void convertWorkSurplusToFood
-	(
-		double workSurplus
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : convertWorkSurplusToFood													   */
-	/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
-	/* INPUT : double workSurplus : food surplus to convert into work					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void convertFoodSurplusToWork
-	(
-		double foodSurplus
-	);
-
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertFoodSurplusToGold													   */
 	/* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
 	/* INPUT : double workSurplus : food surplus to convert into work					   */
@@ -407,43 +225,17 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void convertFoodSurplusToGold
 	(
-		double foodSurplus,
+		const double foodSurplus,
 		GoldStats& goldStats
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : addBuildToQueue															   */
-	/* ROLE : Push build to buildQueue													   */
-	/* IN : build buildToQueue : build to push into buildQueue							   */
-	/* OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-	/* INPUT : SDL_Renderer*& renderer : ptr SDL_renderer								   */
-	/* INPUT : TTF_Font* font[] : array of SDL font										   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void addBuildToQueue
-	(
-		const buildGUI& buildToQueue
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : removeBuildToQueueFront													   */
-	/* ROLE : Pop build to buildQueue													   */
-	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void removeBuildToQueueFront();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : removeBuildToQueue														   */
-	/* ROLE : remove build to buildQueue at index										   */
-	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-	/* IN : unsigned int index : index to remove										   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void removeBuildToQueue
-	(
-		size_t index
-	);
+	void addBuildToQueue(const buildGUI& buildToQueue)	{ m_buildManager.addBuildToQueue(buildToQueue); };
+	void removeBuildToQueue(const size_t index)			{ m_buildManager.removeBuildToQueue(index); };
+	double GETBuildPerc()const							{ return m_buildManager.GETBuildPerc(); };
+	void computeWork()									{ m_buildManager.computeWork(); };
+	void computeWorkToBuild(Player& player,
+		const VectUnitTemplate& vectUnitTemplate,
+		bool* needToUpdateDrawUnit)						{m_buildManager.computeWorkToBuild(player, vectUnitTemplate, needToUpdateDrawUnit); };
 
 public:
 	/* *********************************************************
@@ -452,22 +244,25 @@ public:
 
 	inline virtual std::string GETimage()const { return m_image; };
 	inline virtual std::string GETname()const { return m_name; };
+	inline virtual size_t GETnbpop()const { return m_citizenManager.getCitizens().size(); };
 	inline virtual unsigned int GETx()const { return m_x; };
 	inline virtual unsigned int GETy()const { return m_y; };
 	inline virtual VectMap& GETtile() { return m_tile; };
-	inline virtual VectCitizen& GETcitizens() { return m_citizens; };
+	inline virtual VectCitizen& GETcitizens() { return m_citizenManager.getCitizens(); };
 	inline virtual unsigned int GETinfluenceLevel()const { return m_influenceLevel; };
-	inline virtual unsigned int GETnbpop()const { return m_nbpop; };
 	inline virtual unsigned int GETatq()const { return m_atq; };
 	inline virtual unsigned int GETdef()const { return m_def; };
-	inline virtual unsigned int GETemotion()const { return m_emotion; };
+	inline virtual unsigned int GETemotion()const { return m_citizenManager.getEmotion(); };
 	inline virtual unsigned int GETnbstructurebuild()const { return m_nbstructurebuild; };
-	inline virtual double GETfoodStock()const { return m_foodStock; };
-	inline virtual double GETfoodBalance()const { return m_foodBalance; };
-	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodSurplusPreviousTurn; };
+	inline virtual double GETfoodStock()const { return m_foodManager.getFoodStock(); };
+	inline virtual double GETfoodBalance()const { return m_foodManager.getFoodBalanceForConversion(); };
+	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodManager.getFoodSurplusPreviousTurn(); };
+	inline virtual double GETfoodToLevelUp()const { return m_foodManager.getFoodToLevelUp(); };
+	inline virtual FoodManager& GETFoodManager() { return m_foodManager; };
+	inline virtual CitizenManager& GETCitizenManager() { return m_citizenManager; };
 	inline virtual double GETgoldBalance()const { return m_goldBalance; };
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
-	inline virtual dequeBuild& GETbuildQueue() { return m_buildQueue; };
+	inline virtual dequeBuild& GETbuildQueue() { return m_buildManager.getBuildQueue(); };
 
 	inline virtual void SETimage(std::string image) { m_image = image; };
 	inline virtual void SETname(std::string name) { m_name = name; };
@@ -476,14 +271,14 @@ public:
 	inline virtual void SETtile(VectMap& tile) { m_tile = tile; };
 	//inline virtual void SETcitizens(VectCitizen& citizens) { m_citizens = citizens; };
 	inline virtual void SETinfluenceLevel(unsigned int influenceLevel) { m_influenceLevel = influenceLevel; };
-	inline virtual void SETnbpop(unsigned int nbpop) { m_nbpop = nbpop; };
 	inline virtual void SETatq(unsigned int atq) { m_atq = atq; };
 	inline virtual void SETdef(unsigned int def) { m_def = def; };
-	inline virtual void SETemotion(unsigned int emotion) { m_emotion = emotion; };
+	inline virtual void SETemotion(unsigned int emotion) { m_citizenManager.setEmotion(emotion); };
 	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild) { m_nbstructurebuild = nbstructurebuild; };
-	inline virtual void SETfoodStock(double foodStock) { m_foodStock = foodStock; };
-	inline virtual void SETfoodBalance(double foodBalance) { m_foodBalance = foodBalance; };
-	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { m_foodSurplusPreviousTurn = foodSurplusPreviousTurn; };
+	inline virtual void SETfoodStock(double foodStock) { m_foodManager.setFoodStock(foodStock); };
+	inline virtual void SETfoodBalance(double foodBalance) { m_foodManager.setFoodBalance(foodBalance); };
+	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { m_foodManager.setFoodSurplusPreviousTurn(foodSurplusPreviousTurn); };
+	inline virtual void SETfoodToLevelUp(double foodToLevelUp) { m_foodManager.setFoodToLevelUp(foodToLevelUp); };
 	inline virtual void SETgoldBalance(double goldBalance) { m_goldBalance = goldBalance; };
 	inline virtual void SETconversionToApply(conversionSurplus_Type type) { m_conversionToApply = type; };
 
@@ -498,26 +293,18 @@ private:
 	unsigned int m_x;
 	unsigned int m_y;
 	VectMap m_tile;
-	VectCitizen m_citizens;
 	unsigned int m_influenceLevel;
-	unsigned int m_nbpop;
 	unsigned int m_atq;
 	unsigned int m_def;
-	unsigned int m_emotion;
 	unsigned int m_nbstructurebuild;
-
-	double m_foodStock;
-	double m_foodBalance;
-	double m_foodSurplusPreviousTurn;
-
-	double m_workBalance;
-	double m_workSurplusPreviousTurn;
-
-	double m_goldBalance;
 
 	conversionSurplus_Type m_conversionToApply;
 
-	dequeBuild m_buildQueue;
+	CitizenManager m_citizenManager;
+	FoodManager m_foodManager;
+	BuildManager m_buildManager;
+
+	double m_goldBalance;
 };
 
 

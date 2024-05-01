@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.18
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.21
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,15 +27,15 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
-#include <RealEngine2D/src/IMainGame.h>
-#include <RealEngine2D/src/GLSLProgram.h>
-#include <RealEngine2D/src/Camera2D.h>
-#include <RealEngine2D/src/WidgetLabel.h>
-#include <RealEngine2D/src/SpriteBatch.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
-#include <RealEngine2D/src/Window.h>
+#include <R2D/src/IGameScreen.h>
+#include <R2D/src/IMainGame.h>
+#include <R2D/src/GLSLProgram.h>
+#include <R2D/src/Camera2D.h>
+#include <R2D/src/WidgetLabel.h>
+#include <R2D/src/SpriteBatch.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
+#include <R2D/src/Window.h>
 
 #include "Unit.h"
 #include "City.h"
@@ -46,17 +46,15 @@
  *						Constantes						   *
  ********************************************************* */
 
-#define INITIAL_GOLD 100.0
 
-#define NO_PLAYER_SELECTED -1
-#define NO_UNIT_SELECTED -1
-#define NO_CITY_SELECTED -1
+namespace PlayerH
+{
+	const unsigned int NB_MAX_PLAYER = 9;
 
-const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
-const unsigned int NB_MAX_PLAYER = 9;
-const unsigned int VECT_SIZE_OFFSET_ID = 1;
-
-const unsigned int CITY_TYPE = 1;
+	const double INITIAL_GOLD = 100.0;
+	
+	const bool NEED_TO_UPDATE_DRAW_UNIT = true;
+}
 
 /* *********************************************************
  *						 Enum							   *
@@ -140,7 +138,8 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	Player
 	(
-		const std::string&
+		const std::string& name,
+		const int id
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -202,6 +201,7 @@ public:
 		unsigned int atq,
 		unsigned int def,
 		unsigned int move,
+		unsigned int numberOfAttack,
 		unsigned int level,
 		double maintenance
 	);
@@ -217,7 +217,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void deleteUnit
 	(
-		unsigned int index
+		const unsigned int index
 	);
 	
 
@@ -232,8 +232,8 @@ public:
 	virtual void addCity
 	(
 		const std::string&,
-		unsigned int,
-		unsigned int,
+		const unsigned int,
+		const unsigned int,
 		VectMap& tiles
 	);
 
@@ -247,13 +247,13 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void deleteCity
 	(
-		unsigned int
+		const unsigned int index
 	);
 
 	virtual std::shared_ptr<City>* searchCity
 	(
-		unsigned int indexX,
-		unsigned int indexY
+		const unsigned int indexX,
+		const unsigned int indexY
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -289,7 +289,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual void addGoldToGoldConversionSurplus
 	(
-		double goldToAdd
+		const double goldToAdd
 	);
 
 
@@ -300,6 +300,7 @@ public:
 
 
 	inline virtual std::string GETname() const { return m_name; };
+	inline virtual int GETid() const { return m_id; };
 	inline virtual VectUnit GETtabUnit() const { return m_tabUnit; };
 	inline virtual VectCity GETtabCity() const { return m_tabCity; };
 	inline virtual int GETselectedUnit()const { return m_selectedUnit; };
@@ -312,8 +313,9 @@ public:
 	virtual std::shared_ptr<Unit>& GETSelectedUnitPtr(){return m_tabUnit[m_selectedUnit];}
 
 	inline virtual void SETname(const std::string& msg) { m_name = msg; };
-	inline virtual void SETselectedUnit(int selectedUnit) { m_selectedUnit = selectedUnit; };
-	inline virtual void SETselectedCity(int selectedCity) { m_selectedCity = selectedCity; };
+	inline virtual void SETid(const int id) { m_id = id; };
+	inline virtual void SETselectedUnit(const int selectedUnit) { m_selectedUnit = selectedUnit; };
+	inline virtual void SETselectedCity(const int selectedCity) { m_selectedCity = selectedCity; };
 
 private:
 	/* *********************************************************
@@ -322,6 +324,8 @@ private:
 
 
 	std::string m_name;
+	int m_id;
+
 	VectUnit m_tabUnit;
 	VectCity m_tabCity;
 	int m_selectedUnit;
@@ -347,10 +351,10 @@ public:
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
 	inline std::shared_ptr<City>& GETSelectedCity() { return m_selectedCity; };
 
-	inline void SETselectedPlayerId(int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
+	inline void SETselectedPlayerId(const int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
 	inline void SETselectedPlayerPtr(std::shared_ptr<Player>& selectedPlayerPtr) { m_selectedPlayerPtr = selectedPlayerPtr; };
-	inline void SETneedToUpdateDrawUnit(bool need) { m_needToUpdateDrawUnit = need; };
-	inline void SETneedToUpdateDrawCity(bool need) { m_needToUpdateDrawCity = need; };
+	inline void SETneedToUpdateDrawUnit(const bool need) { m_needToUpdateDrawUnit = need; };
+	inline void SETneedToUpdateDrawCity(const bool need) { m_needToUpdateDrawCity = need; };
 	inline void SetSelectedCity(std::shared_ptr<City> selectedCity) { m_selectedCity = selectedCity; };
 
 	inline bool isValidSelectedCity() { if (m_selectedCity != nullptr) return true; else return false; };
@@ -359,23 +363,31 @@ public:
 
 	void init(const std::string& filePath);
 
-	void addPlayer(const std::string& name);
+	void addPlayer
+	(
+		const std::string& name,
+		const int id
+	);
 
 	void deleteAllPlayers();
 
 	void removeIndexPlayer
 	(
-		unsigned int index
+		const unsigned int index
 	);
 
-	void clickToSelectUnit(unsigned int x, unsigned int y);
+	void clickToSelectUnit
+	(
+		const unsigned int x,
+		const unsigned int y
+	);
 
 	void isAUnitSelected();
 
 	void drawUnit
 	(
 		const MainMap& mainMap,
-		RealEngine2D::Camera2D& camera
+		R2D::Camera2D& camera
 	);
 
 	void renderUnit();
@@ -383,16 +395,16 @@ public:
 	void drawCity
 	(
 		const MainMap& mainMap,
-		RealEngine2D::Camera2D& camera,
-		std::shared_ptr<RealEngine2D::SpriteFont>& font
+		R2D::Camera2D& camera,
+		std::shared_ptr<R2D::SpriteFont>& font
 	);
 
 	void renderCity();
 
 	virtual bool searchCity
 	(
-		unsigned int indexX,
-		unsigned int indexY
+		const unsigned int indexX,
+		const unsigned int indexY
 	);
 
 private:
@@ -416,13 +428,13 @@ private:
 	VectPlayer m_vectPlayer;
 
 	/* Dedicated spriteBatch for all Unit */
-	RealEngine2D::SpriteBatch m_spriteBatchUnit;
+	R2D::SpriteBatch m_spriteBatchUnit;
 	bool m_needToUpdateDrawUnit;
 	/* Dedicated spriteBatch for all Cities */
-	RealEngine2D::SpriteBatch m_spriteBatchCity;
+	R2D::SpriteBatch m_spriteBatchCity;
 	bool m_needToUpdateDrawCity;
 
-	RealEngine2D::SpriteBatch m_spriteBatchCityDynamic;
+	R2D::SpriteBatch m_spriteBatchCityDynamic;
 };
 
 

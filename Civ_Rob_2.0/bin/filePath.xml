@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Config>
-
-	<Map>
-		<TileSize>64</TileSize>
-		<MapSizeX>2048</MapSizeX>
-		<MapSizeY>2048</MapSizeY>
-	</Map>
-
 	<FilePaths>
 		<Readme>bin/readme.txt</Readme>
-		<Texts>bin/texts.xml</Texts>
+		
 		<MainMap>bin/mainMap.xml</MainMap>
 
 		<Buildings>bin/buildings.txt</Buildings>
@@ -27,5 +20,11 @@
 
 		<ImagesPath>bin/image/</ImagesPath>
 		<GUIPath>GUI</GUIPath>
+
+		<Texts_MainMenu>bin/Texts/MainMenu.xml</Texts_MainMenu>
+		<Texts_NewGame>bin/Texts/NewGame.xml</Texts_NewGame>
+		<Texts_GamePlay>bin/Texts/GamePlay.xml</Texts_GamePlay>
+		<Texts_City>bin/Texts/City.xml</Texts_City>
+		<Texts_Reload>bin/Texts/Reload.xml</Texts_Reload>
 	</FilePaths>
 </Config>

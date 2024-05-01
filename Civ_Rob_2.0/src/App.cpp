@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.8
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.6.3
+	file version : 1.17
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,26 +24,38 @@
 
 #include "App.h"
 
-#include <RealEngine2D/src/ScreenList.h>
+#include <R2D/src/ScreenList.h>
 
-#include <iostream>
 
 #include <tinyxml2/tinyxml2.h>
 
-static std::ofstream* ptrlogger;
+#include <R2D/src/ResourceManager.h> 
+#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/ExitFromError.h> 
+#include <R2D/src/SpriteFont.h> 
+#include <R2D/src/tinyXml2.h> 
+
+
+namespace FILE_APP
+{
+	namespace PATH
+	{
+		const std::string CONFIG = "bin/filePath.xml";
+		const std::string LOG = "bin/log/log.txt";
+	}
+}
 
 App::App()
 :
-RealEngine2D::IMainGame(),
+R2D::IMainGame(),
 m_mainMenuScreen(nullptr),
 m_newGameScreen(nullptr),
 m_reloadMenuScreen(nullptr),
 m_gamePlayScreen(nullptr),
 m_CityScreen(nullptr),
-m_file(),
 m_saveReload()
 {
-	/* Do nothing */
+	R2D::ResourceManager::initializeRGBA8Map();
 }
 
 App::~App()
@@ -53,25 +65,49 @@ App::~App()
 	m_reloadMenuScreen.reset();
 	m_gamePlayScreen.reset();
 	m_CityScreen.reset();
-	deleteAll();
+	R2D::ExitFromError::deleteAll();
 }
 
 void App::onInit()
 {
 	/* Set location of logging file */
-	m_file.log = "bin/log/log.txt";
-
-	initFile();
-
-	ptrlogger = &m_logger;
+	R2D::ResourceManager::initializeFilePath(e_Files::log, FILE_APP::PATH::LOG);
+	R2D::ErrorLog::initializeLog();
 
 	initMain();
 
-	m_window.SETscreenWidth(RealEngine2D::Window::getHorizontal());
-	m_window.SETscreenHeight(RealEngine2D::Window::getVertical());
-
-	m_saveReload.init(m_file.saveInfo);
+	m_window.SETscreenWidth(R2D::Window::getHorizontal());
+	m_window.SETscreenHeight(R2D::Window::getVertical());
+	
+	m_saveReload.init(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
 }
+
+
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+/* NAME : initShaders																   */
+/* ROLE : Init shaders for OpenGL													   */
+/* ROLE : 2 files : colorShadingVert and colorShadingFrag							   */
+/* ROLE : 3 parameters : vertexPosition	, vertexColor , vertexUV					   */
+/* RETURNED VALUE    : void															   */
+/* ----------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------- */
+void App::InitShaders()
+{
+	R2D::ResourceManager::getGLSLProgram().compileShaders
+	(
+		R2D::ResourceManager::getFile(e_Files::colorShadingVert)->getPath(),
+		R2D::ResourceManager::getFile(e_Files::colorShadingFrag)->getPath()
+	);
+	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
+	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
+	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexUV");
+	R2D::ResourceManager::getGLSLProgram().linkShaders();
+	R2D::ResourceManager::getSpriteFont()
+		= std::make_shared<R2D::SpriteFont>
+		(R2D::FONT::GUI::NAME.c_str(), R2D::FONT::GUI::SIZE::DEFAULT);
+}
+
 
 void App::onExit()
 {
@@ -81,16 +117,26 @@ void App::onExit()
 void App::addScreens()
 {
 	/* Create shared Ptr */
-	m_mainMenuScreen = std::make_shared<MainMenuScreen>(&m_file);
-	m_newGameScreen = std::make_shared<NewGameScreen>(&m_file);
-	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>(&m_file, &m_saveReload);
-	m_gamePlayScreen = std::make_shared<GamePlayScreen>(&m_file, &m_saveReload, m_newGameScreen->getUserInputNewGame());
+	m_mainMenuScreen = std::make_shared<MainMenuScreen>();
+
+	m_newGameScreen = std::make_shared<NewGameScreen>();
+
+	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>
+		(
+			& m_saveReload
+		);
+
+	m_gamePlayScreen = std::make_shared<GamePlayScreen>
+		(
+			&m_saveReload,
+			m_newGameScreen->getUserInputNewGame()
+		);
+
 	m_CityScreen = std::make_shared<CityScreen>
 		(
-			&m_file, &m_saveReload,
+			&m_saveReload,
 			&m_gamePlayScreen->GETPlayers(),
-			m_gamePlayScreen->GETmainMap().GETtileSizePtr(),
-			&m_gamePlayScreen->GETscreen()
+			m_gamePlayScreen->GETmainMap().GETtileSizePtr()
 		);
 
 	/* Add Screen to listed Screen */
@@ -104,31 +150,6 @@ void App::addScreens()
 	m_screenList->setScreen(m_mainMenuScreen->GETscreenIndex());
 }
 
-
-
-
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initFile																	   */
-/* ROLE : Initialisation des fichiers : log											   */
-/* INPUT : struct File& : nom des fichiers											   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::initFile()
-{
-	m_logger.open(m_file.log, std::ofstream::out | std::ofstream::trunc);
-	if (!m_logger.is_open())
-	{
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		/* N/A */
-	}
-}
-
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : initMain																	   */
@@ -139,54 +160,39 @@ void App::initFile()
 /* ----------------------------------------------------------------------------------- */
 void App::initMain()
 {
-	logfileconsole("[INFO]___: [START] : initMain");
+	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
-	config.LoadFile(configFilePath.c_str());
+	config.LoadFile(FILE_APP::PATH::CONFIG.c_str());
 
 	if (config.ErrorID() == 0)
 	{
-		const char* root("Config");
+		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
 
+		for (e_Files it_e_files : tab_e_Files)
+		{
+			if (nullptr != node)
+			{
+				R2D::ResourceManager::initializeFilePath
+				(
+					it_e_files,
+					node->GetText()
+				);
 
-		const char
-			* s_FilePaths("FilePaths"),
-				* s_Readme("Readme"),
-				* s_Texte("Texts"),
-				* s_MainMap("MainMap"),
-				* s_Building("Buildings"),
-				* s_CitieName("CitiesNames"),
-				* s_Unit("Units"),
-				* s_SpecName("SpecNames"),
-				* s_SaveInfo("SaveInfo"),
-				* s_SaveMaps("SaveMaps"),
-				* s_SavePlayer("SavePlayers"),
-				* s_ColorShadingVert("ColorShadingVert"),
-				* s_ColorShadingFrag("ColorShadingFrag"),
-				* s_ImagesPath("ImagesPath"),
-				* s_GUIPath("GUIPath");
-
-		m_file.readme = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Readme)->GetText();
-		m_file.texts = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Texte)->GetText();
-		m_file.mainMap = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_MainMap)->GetText();
-		m_file.buildings = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Building)->GetText();
-		m_file.citiesNames = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_CitieName)->GetText();
-		m_file.units = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_Unit)->GetText();
-		m_file.specNames = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SpecName)->GetText();
-		m_file.saveInfo = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveInfo)->GetText();
-		m_file.saveMaps = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SaveMaps)->GetText();
-		m_file.savePlayers = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_SavePlayer)->GetText();
-		m_file.colorShadingVert = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingVert)->GetText();
-		m_file.colorShadingFrag = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ColorShadingFrag)->GetText();
-		m_file.imagesPath = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_ImagesPath)->GetText();
-		m_file.GUIPath = config.FirstChildElement(root)->FirstChildElement(s_FilePaths)->FirstChildElement(s_GUIPath)->GetText();
+				node = node->NextSiblingElement();
+			}
+			else
+			{
+				throw("Missing path for a file " + FILE_APP::PATH::CONFIG);
+			}
+		}
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + (std::string)configFilePath);
+		throw("Impossible d'ouvrir le fichier " + FILE_APP::PATH::CONFIG);
 	}
 
-	logfileconsole("[INFO]___: [END] : initMain");
+	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
 }
 
 
@@ -194,89 +200,5 @@ void App::initMain()
 
 void App::destroy()
 {
-	deleteAll();
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : exitError																	   */
-/* ROLE : Enregistre l'erreur survenue et termine le programme de façon sécurisée	   */
-/* INPUT : const std::string msg : message de l'erreur								   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
-void App::exitError
-(
-	const std::string& msg
-)
-{
-	logfileconsole("[ERROR]___: " + msg);
-	deleteAll();
-	logfileconsole("[ERROR]___: Last msg before exitError : " + msg);
-	ptrlogger->close();
-	exit(EXIT_FAILURE);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : deleteAll																	   */
-/* ROLE : Destruction des allocations dynamique du programme						   */
-/* ROLE : Destruction de la fenetre et du Renderer de la SDL						   */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
-void App::deleteAll()
-{
-	logfileconsole("[INFO]___: [START] *********_________ DeleteAll _________*********");
-
-
-
-
-	/* *********************************************************
-	 *				 START delete SDL						   *
-	 ********************************************************* */
-
-
-	SDL_Quit();
-
-	/* *********************************************************
-	 *				 END delete SDL							   *
-	 ********************************************************* */
-
-	 /* ### Don't put code below here ### */
-
-	logfileconsole("[INFO]___: [END] : *********_________ DeleteAll _________*********");
-
-	logfileconsole("[INFO]___: SDL_Quit Success");
-	logfileconsole("[INFO]___:________PROGRAMME FINISH________");
-	ptrlogger->close();
-}
-
-//----------------------------------------------------------Logger----------------------------------------------------------------//
-
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : logfileconsole															   */
-/* ROLE : Transmission du message sur la console et dans le fichier log.txt			   */
-/* INPUT : const std::string msg : message											   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::logfileconsole
-(
-	const std::string& msg
-)
-{
-	time_t now{ time(0) };
-	struct tm  tstruct{};
-	char  buf[80]{};
-	localtime_s(&tstruct, &now);
-	strftime(buf, sizeof(buf), "%F %X", &tstruct);
-
-#ifdef _DEBUG
-	std::cout << std::endl << buf << "      " << msg;
-#endif // DEBUG_MODE
-	*ptrlogger << std::endl << buf << "      " << msg;
+	R2D::ExitFromError::deleteAll();
 }

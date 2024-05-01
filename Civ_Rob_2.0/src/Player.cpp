@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.22
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.3.0
+	file version : 1.28
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -32,7 +32,19 @@
 #include "App.h"
 #include "City.h"
 
-#include <RealEngine2D/src/ResourceManager.h>
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ValueToScale.h>
+#include <R2D/src/ErrorLog.h> 
+
+
+namespace
+{
+	const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
+
+	const unsigned int VECT_SIZE_OFFSET_ID = 1;
+
+	const unsigned int CITY_TYPE = 1;
+}
 
  /* *********************************************************
   *				START Player::METHODS					   *
@@ -50,12 +62,12 @@ Player::Player() :
 	m_name("NoName"),
 	m_tabUnit(),
 	m_tabCity(),
-	m_selectedUnit(NO_UNIT_SELECTED),
-	m_selectedCity(NO_CITY_SELECTED),
-	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
+	m_selectedCity(SELECTION::NO_CITY_SELECTED),
+	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	App::logfileconsole("[INFO]___: Create Player Par Defaut Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Player Par Defaut Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -65,16 +77,22 @@ Player::Player() :
 /* INPUT : const std::string&														   */
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
-Player::Player(const std::string& msg) :
-	m_name(msg),
+Player::Player
+(
+	const std::string& name,
+	const int id
+) 
+:
+	m_name(name),
+	m_id(id),
 	m_tabUnit(),
 	m_tabCity(),
-	m_selectedUnit(NO_UNIT_SELECTED),
-	m_selectedCity(NO_CITY_SELECTED),
-	m_goldStats{ INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
+	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
+	m_selectedCity(SELECTION::NO_CITY_SELECTED),
+	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	App::logfileconsole("[INFO]___: Create Player Success");
+	R2D::ErrorLog::logEvent("[INFO]___: Create Player Success");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -99,7 +117,7 @@ Player::~Player()
 Player& Player::operator=
 (
 	const Player& player
-	)
+)
 {
 	if (this != &player)
 	{
@@ -122,18 +140,17 @@ Player& Player::operator=
 /* ----------------------------------------------------------------------------------- */
 void Player::deletePlayer()
 {
-	for (auto u : m_tabUnit)
+	for (auto& u : m_tabUnit)
 	{
 		u.reset();
 	}
 	m_tabUnit.clear();
 
-	for (auto c : m_tabCity)
+	for (auto& c : m_tabCity)
 	{
 		c.reset();
 	}
 	m_tabCity.clear();
-		
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -167,11 +184,18 @@ void Player::addUnit
 	unsigned int atq,
 	unsigned int def,
 	unsigned int move,
+	unsigned int numberOfAttack,
 	unsigned int level,
 	double maintenance
 )
 {
-	m_tabUnit.push_back(std::make_shared<Unit>(name, x, y, movementType, life, atq, def, move, level, maintenance));
+	m_tabUnit.push_back
+	(
+		std::make_shared<Unit>
+		(
+			name, x, y, movementType, life, atq, def, move, numberOfAttack, level, maintenance, this
+		)
+	);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -184,7 +208,7 @@ void Player::addUnit
 /* ----------------------------------------------------------------------------------- */
 void Player::deleteUnit
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	if (Utility::assertSize(m_tabUnit.size(), index))
@@ -217,8 +241,8 @@ void Player::deleteUnit
 void Player::addCity
 (
 	const std::string& name,
-	unsigned int x,
-	unsigned int y,
+	const unsigned int x,
+	const unsigned int y,
 	VectMap& tiles
 )
 {
@@ -235,7 +259,7 @@ void Player::addCity
 /* ----------------------------------------------------------------------------------- */
 void Player::deleteCity
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 
@@ -260,8 +284,8 @@ void Player::deleteCity
 
 std::shared_ptr<City>* Player::searchCity
 (
-	unsigned int indexX,
-	unsigned int indexY
+	const unsigned int indexX,
+	const unsigned int indexY
 )
 {
 	for (auto &c : m_tabCity)
@@ -335,7 +359,7 @@ void Player::resetGoldStats()
 /* ----------------------------------------------------------------------------------- */
 void Player::addGoldToGoldConversionSurplus
 (
-	double goldToAdd
+	const double goldToAdd
 )
 {
 	m_goldStats.goldConversionSurplus += goldToAdd;
@@ -350,7 +374,7 @@ void Player::addGoldToGoldConversionSurplus
 
 Players::Players()
 :
-m_selectedPlayer(NO_PLAYER_SELECTED),
+m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
 m_vectCityName(),
@@ -376,29 +400,29 @@ void Players::init(const std::string& filePath)
 {
 	/*---UNIT---*/
 
-	m_vectIDUnit.resize(m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + NB_MAX_PLAYER);
+	m_vectIDUnit.resize(m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + PlayerH::NB_MAX_PLAYER);
 
 	/* Unit Texture */
 	for (unsigned int i(0); i < m_vectUnitTemplate.size(); i++)
 	{
-		m_vectIDUnit[i] = RealEngine2D::ResourceManager::getTexture(filePath + "units/" + m_vectUnitTemplate[i].name + EXTENSION_PNG)->GETid();
+		m_vectIDUnit[i] = R2D::ResourceManager::getTexture(filePath + "units/" + m_vectUnitTemplate[i].name + EXTENSION_PNG)->GETid();
 	}
 
 	/* Lifebar Texture */
 	for (unsigned int i(0); i < LIFE_BAR_NB_SUBDIVISION - 1; i++)
 	{
 		m_vectIDUnit[m_vectUnitTemplate.size() + i]
-			= RealEngine2D::ResourceManager::getTexture(filePath + "barre de vie/" + "0." + std::to_string(i) + "life" + EXTENSION_PNG)->GETid();
+			= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "0." + std::to_string(i) + "life" + EXTENSION_PNG)->GETid();
 	}
 
 	m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION - 1]
-		= RealEngine2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
+		= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
 
 	/* Appartenance Texture */
-	for (unsigned int i(0); i < NB_MAX_PLAYER; i++)
+	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
 	{
 		m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + i]
-			= RealEngine2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
+			= R2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
 	}
 
 	m_spriteBatchUnit.init();
@@ -407,19 +431,23 @@ void Players::init(const std::string& filePath)
 
 	m_vectIDCity.resize(CITY_TYPE);
 
-	m_vectIDCity[0] = RealEngine2D::ResourceManager::getTexture(filePath + "city/city" + EXTENSION_PNG)->GETid();
+	m_vectIDCity[0] = R2D::ResourceManager::getTexture(filePath + "city/city" + EXTENSION_PNG)->GETid();
 
 	m_spriteBatchCity.init();
 }
 
-void Players::addPlayer(const std::string& name)
+void Players::addPlayer
+(
+	const std::string& name,
+	const int id
+)
 {
-	m_vectPlayer.push_back(std::make_shared<Player>(name));
+	m_vectPlayer.push_back(std::make_shared<Player>(name, id));
 }
 
 void Players::deleteAllPlayers()
 {
-	for (auto p : m_vectPlayer)
+	for (auto& p : m_vectPlayer)
 	{
 		p.reset();
 	}
@@ -427,7 +455,7 @@ void Players::deleteAllPlayers()
 
 void Players::removeIndexPlayer
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	if (Utility::assertSize(m_vectPlayer.size(), index))
@@ -440,13 +468,17 @@ void Players::removeIndexPlayer
 	}
 }
 
-void Players::clickToSelectUnit(unsigned int x, unsigned int y)
+void Players::clickToSelectUnit
+(
+	const unsigned int x,
+	const unsigned int y
+)
 {
-	if (m_selectedPlayer != NO_PLAYER_SELECTED)
+	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
 	{
 		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
 		unsigned int i{ 0 };
-		for (auto u : p->GETtabUnit())
+		for (const auto& u : p->GETtabUnit())
 		{
 			if	(
 					u->GETx() == x
@@ -466,11 +498,11 @@ void Players::clickToSelectUnit(unsigned int x, unsigned int y)
 
 void Players::isAUnitSelected()
 {
-	if (m_selectedPlayer != NO_PLAYER_SELECTED)
+	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
 	{
 		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
 
-		if (p->GETselectedUnit() != NO_UNIT_SELECTED)
+		if (p->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 		{
 			std::shared_ptr<Unit> u{ p->GETtabUnit()[p->GETselectedUnit()] };
 			bool prevShow{ u->GETshow() };
@@ -486,13 +518,13 @@ void Players::isAUnitSelected()
 void Players::drawUnit
 (
 	const MainMap& mainMap,
-	RealEngine2D::Camera2D& camera
+	R2D::Camera2D& camera
 )
 {
 	if (m_needToUpdateDrawUnit)
 	{
 		m_spriteBatchUnit.begin();
-		unsigned int tileSize{ mainMap.GETtileSize() };
+		const unsigned int tileSize{ mainMap.GETtileSize() };
 
 		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
 		{
@@ -515,32 +547,32 @@ void Players::drawUnit
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
-							RealEngine2D::FULL_RECT,
+							R2D::FULL_RECT,
 							m_vectIDUnit[Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate)],
 							0.0f,
-							RealEngine2D::COLOR_WHITE
+							R2D::COLOR_WHITE
 						);
 
 						/* Lifebar Texture */
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
-							RealEngine2D::FULL_RECT,
+							R2D::FULL_RECT,
 							m_vectIDUnit
 							[
 								m_vectUnitTemplate.size() - VECT_SIZE_OFFSET_ID
 								+
-								(int)std::floor(Utility::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
+								(int)std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
 							],
 							0.0f,
-							RealEngine2D::COLOR_WHITE
+							R2D::COLOR_WHITE
 						);
 
 						/* Appartenance Texture */
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
-							RealEngine2D::FULL_RECT,
+							R2D::FULL_RECT,
 							m_vectIDUnit
 							[
 								m_vectUnitTemplate.size()
@@ -550,7 +582,7 @@ void Players::drawUnit
 								i
 							],
 							0.0f,
-							RealEngine2D::COLOR_WHITE
+							R2D::COLOR_WHITE
 						);
 
 					}
@@ -573,8 +605,8 @@ void Players::renderUnit()
 void Players::drawCity
 (
 	const MainMap& mainMap,
-	RealEngine2D::Camera2D& camera,
-	std::shared_ptr<RealEngine2D::SpriteFont>& font
+	R2D::Camera2D& camera,
+	std::shared_ptr<R2D::SpriteFont>& font
 )
 {
 	if (m_needToUpdateDrawCity)
@@ -582,7 +614,7 @@ void Players::drawCity
 		m_spriteBatchCity.begin();
 		m_spriteBatchCityDynamic.begin();
 
-		unsigned int tileSize{ mainMap.GETtileSize() };
+		const unsigned int tileSize{ mainMap.GETtileSize() };
 
 		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
 		{
@@ -604,13 +636,13 @@ void Players::drawCity
 					m_spriteBatchCity.draw
 					(
 						glm::vec4(city->GETx(), city->GETy(), tileSize, tileSize),
-						RealEngine2D::FULL_RECT,
+						R2D::FULL_RECT,
 						m_vectIDCity[0],
 						0.0f,
-						RealEngine2D::COLOR_WHITE
+						R2D::COLOR_WHITE
 					);
 
-		
+					/* City Name */
 					font->draw
 					(
 						m_spriteBatchCityDynamic,
@@ -618,9 +650,8 @@ void Players::drawCity
 						glm::vec2(500.0f, 500.0f), // offset pos
 						glm::vec2(0.32f), // size
 						0.0f,
-						RealEngine2D::COLOR_WHITE
+						R2D::COLOR_WHITE
 					);
-					
 				}
 				city.reset();
 			}
@@ -642,12 +673,12 @@ void Players::renderCity()
 
 bool Players::searchCity
 (
-	unsigned int indexX,
-	unsigned int indexY
+	const unsigned int indexX,
+	const unsigned int indexY
 )
 {
 	std::shared_ptr<City>* ptrCity{};
-	for (auto p : m_vectPlayer)
+	for (auto& p : m_vectPlayer)
 	{
 		ptrCity = p->searchCity(indexX, indexY);
 		if (ptrCity != nullptr && *ptrCity != nullptr)

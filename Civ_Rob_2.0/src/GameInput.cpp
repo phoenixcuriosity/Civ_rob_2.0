@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.35
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.7.0
+	file version : 1.42
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,10 +35,23 @@
 #include <iostream>
 
 #include "Utility.h"
+#include <R2D/src/ResourceManager.h> 
 
  /* *********************************************************
   *						 Classes						   *
   ********************************************************* */
+
+namespace GInput
+{
+	const float KEY_SPEED_MOVE = 2.0f;
+
+	const int UNIT_NO_MOVEMENT = 0;
+
+	const SDL_KeyCode KEY_TO_FOUND_CITY = SDLK_b;
+	const SDL_KeyCode KEY_TO_IRRIGATE = SDLK_i;
+	const SDL_KeyCode KEY_NEXT_TURN = SDLK_SPACE;
+}
+
 
   /* *********************************************************
    *					KeyboardMouse STATIC				   *
@@ -112,18 +125,156 @@ void GamePlayScreen::inputSDL
 /* ---------------------------------------------------------------------------------------------------------- */
 void GamePlayScreen::actionByKey()
 {
-	if (m_game->getInputManager().isKeyDown(SDLK_b))
-	{
-		if (Utility::checkPlayerUnitSelection(m_players))
-		{
-			City::createCity(*this);
-		}
-	}
-	if (m_game->getInputManager().isKeyDown(SDLK_SPACE))
+	/* Next Turn */
+	if (m_game->getInputManager().isKeyDown(GInput::KEY_NEXT_TURN))
 	{
 		m_nextTurn.nextTurn(*this);
-		m_game->getInputManager().releaseKey(SDLK_SPACE);
+		m_game->getInputManager().releaseKey(GInput::KEY_NEXT_TURN);
 	}
+
+
+	if (Utility::checkPlayerUnitSelection(m_players))
+	{
+		/* Found City */
+		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
+		{
+			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
+			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+
+			if (sUnit->isThisUnitType("settler"))
+			{
+				City::createCity(*this);
+				m_mainMap.SETneedToUpdateDraw(true);
+			}
+		}
+
+		/* Irragate */
+		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_IRRIGATE))
+		{
+			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
+			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+
+			if	(sUnit->GETname().starts_with("ouvrier_tier_") == STRINGS::START_WITH)
+			{
+				sUnit->irrigate(m_mainMap.GETmatriceMap());
+				m_mainMap.SETneedToUpdateDraw(true);
+			}
+		}
+
+
+		/* Move Unit */
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_1))
+		{
+			/* ← + ↓ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::SouthWest)
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_2))
+		{
+			/* ↓ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::South)
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_3))
+		{
+			/* → + ↓ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::SouthEst)
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_4))
+		{
+			/* ← */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::West)
+			);
+		}
+		/* NO SDLK_KP_5 : Useless */
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_6))
+		{
+			/* → */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::Est)
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_7))
+		{
+			/* ← + ↑ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::NorthWest)
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_8))
+		{
+			/* ↑ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::North)
+			);
+		}
+		else
+		if (m_game->getInputManager().isKeyDown(SDLK_KP_9))
+		{
+			/* → + ↑ */
+			Unit::tryToMove
+			(
+				m_mainMap.GETmatriceMap(),
+				m_players,
+				Select_Type::selectmove,
+				R2D::ResourceManager::getCardinalDirection
+					(R2D::CardinalDirections::NorthEst)
+			);
+		}
+		else
+		{
+			/* Do nothing */
+		}
+	}
+	
+
+
 
 #ifdef _DEBUG
 	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
@@ -147,7 +298,7 @@ void GamePlayScreen::actionByKey()
 				- (double)m_game->getWindow().GETscreenWidth() / 2
 			)
 		);
-		m_screen.spriteFont->draw
+		R2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_screen.spriteBatchHUDDynamic,
 			buffer,
@@ -158,7 +309,7 @@ void GamePlayScreen::actionByKey()
 			), // offset pos
 			glm::vec2(0.32f), // size
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 
 		sprintf_s
@@ -174,7 +325,7 @@ void GamePlayScreen::actionByKey()
 			)
 		);
 
-		m_screen.spriteFont->draw
+		R2D::ResourceManager::getSpriteFont()->draw
 		(
 			m_screen.spriteBatchHUDDynamic,
 			buffer,
@@ -185,13 +336,15 @@ void GamePlayScreen::actionByKey()
 			), // offset pos
 			glm::vec2(0.32f), // size
 			0.0f,
-			RealEngine2D::COLOR_WHITE
+			R2D::COLOR_WHITE
 		);
 	}
 }
 
-
-void GamePlayScreen::moveCamera(float deltaTime)
+void GamePlayScreen::moveCamera
+(
+	const float deltaTime
+)
 {
 	if (m_game->getInputManager().isKeyDown(SDLK_z) && !m_screen.camera.isLockMoveUP())
 	{
@@ -200,11 +353,9 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(0.0f, KEY_SPEED_MOVE * deltaTime)
+				glm::vec2(0.0f, GInput::KEY_SPEED_MOVE * deltaTime)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_s) && !m_screen.camera.isLockMoveDOWN())
 	{
@@ -213,11 +364,9 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(0.0f, -KEY_SPEED_MOVE * deltaTime)
+				glm::vec2(0.0f, -GInput::KEY_SPEED_MOVE * deltaTime)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_q) && !m_screen.camera.isLockMoveLEFT())
 	{
@@ -226,11 +375,9 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(-KEY_SPEED_MOVE * deltaTime, 0.0f)
+				glm::vec2(-GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
 	if (m_game->getInputManager().isKeyDown(SDLK_d) && !m_screen.camera.isLockMoveRIGHT())
 	{
@@ -239,12 +386,17 @@ void GamePlayScreen::moveCamera(float deltaTime)
 			(
 				m_screen.camera.GETposition()
 				+
-				glm::vec2(KEY_SPEED_MOVE * deltaTime, 0.0f)
+				glm::vec2(GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
-		m_players.SETneedToUpdateDrawCity(true);
+		updateDrawCameraMove();
 	}
+}
+
+void GamePlayScreen::updateDrawCameraMove()
+{
+	m_mainMap.SETneedToUpdateDraw(true);
+	m_players.SETneedToUpdateDrawUnit(true);
+	m_players.SETneedToUpdateDrawCity(true);
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -258,7 +410,7 @@ void GamePlayScreen::moveCamera(float deltaTime)
 /* ---------------------------------------------------------------------------------------------------------- */
 void GamePlayScreen::wheel
 (
-	SDL_Event& ev
+	const SDL_Event& ev
 )
 {
 	/*
@@ -292,13 +444,13 @@ void GamePlayScreen::wheel
 		}
 	}
 	*/
-	if (MOUSE_SCROLL_UP == ev.wheel.y)
+	if (R2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
 	{
 		m_screen.camera.zoom();
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
-	else if (MOUSE_SCROLL_DOWN == ev.wheel.y)
+	else if (R2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
 		m_screen.camera.deZoom();
 		m_mainMap.SETneedToUpdateDraw(true);
@@ -309,11 +461,11 @@ void GamePlayScreen::wheel
 
 void GamePlayScreen::mouseClick
 (
-	SDL_Event& ev
+	const SDL_Event& ev
 )
 {
 	
-	if (ev.button.clicks == TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
+	if (ev.button.clicks == R2D::GUI_MOUSE::TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
 	{
 		if	(
 				m_players.searchCity
@@ -334,8 +486,8 @@ void GamePlayScreen::mouseClick
 				)
 			)
 		{
-			m_screen.m_nextScreenIndexMenu = CITY_SCREEN_INDEX;
-			m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+			m_screen.m_nextScreenIndexMenu = SCREEN_INDEX::CITY;
+			m_currentState = R2D::ScreenState::CHANGE_NEXT;
 		}
 		else
 		{
@@ -348,7 +500,7 @@ void GamePlayScreen::mouseClick
 	}
 }
 
-unsigned int GamePlayScreen::getMouseCoorNorm(unsigned char c)
+unsigned int GamePlayScreen::getMouseCoorNorm(const unsigned char c)
 {
 	if (c == 'X')
 	{

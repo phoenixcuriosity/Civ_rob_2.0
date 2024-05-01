@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.1
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,49 +27,23 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
+#include <deque>
 
-#include <vector>
+#include <R2D/src/IGameScreen.h>
+#include <R2D/src/GUI.h>
+#include <R2D/src/SpriteBatch.h>
 
-#include <RealEngine2D\src\Vertex.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
+#include "T_CityScreen.h"
 
-#include "City.h"
 
-struct File;
-
-/* Define minimum size to cycle builds */
-const unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
-
-/*  */
-const unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
-
-const bool HIDE_BUTTON = false;
-
-const bool SHOW_BUTTON = true;
-
-const bool CYCLE_BUTTON_DIR_UP = false;
-const bool CYCLE_BUTTON_DIR_DOWN = true;
-
-class CityScreen : public RealEngine2D::IGameScreen
+class CityScreen : public R2D::IGameScreen
 {
 public:
 	CityScreen
 	(
-		File* file,
-		SaveReload* SaveReload,
-		Players* players,
-		unsigned int* tileSize,
-		Screen* screen
+		SaveReload* const SaveReload,
+		Players* const players,
+		unsigned int* const tileSize
 	);
 	~CityScreen();
 
@@ -98,11 +72,29 @@ public:
 
 private:
 
-	virtual void input(SDL_Event& ev);
+	virtual void input(const SDL_Event& ev);
 
-	virtual void updatePositionCycleButton(bool dir);
+	virtual void updatePositionCycleButton(const bool dir);
 
 	virtual void drawTextures();
+
+	void drawTile(const size_t kTile);
+
+	void drawTileSpec(const size_t kTile);
+	
+	void drawTileApp(const size_t kTile);
+
+	void drawFood();
+
+	void drawBuild();
+
+	void drawCitizen();
+
+	void drawCityName();
+
+	void drawNbPop();
+
+	void callDraw(const size_t kTile, const GLuint id);
 
 private:
 
@@ -115,22 +107,22 @@ public:
 
 
 private:
-	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
+	int m_nextScreenIndexMenu;
 
-	RealEngine2D::GUI m_gui;
+	R2D::GUI m_gui;
 	unsigned int m_indexCycleBuilds;
 
 	std::deque<buildGUI> m_buttonBuild;
 
 	/* Dedicated spriteBatch */
-	RealEngine2D::SpriteBatch m_spriteBatch;
+	R2D::SpriteBatch m_spriteBatch;
+	R2D::SpriteBatch m_spriteBatchAppartenance;
 	bool m_needToUpdateDraw;
+	std::vector<GLuint> s_vectID;
 
 	Players* m_players;
 	unsigned int* m_tileSize;
-	Screen* m_screen;
 
-	File* m_file;
 	SaveReload* m_SaveReload;
 
 	std::shared_ptr<City> m_selectedCity;

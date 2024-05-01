@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,18 +27,23 @@
 #include "ScreenIndices.h"
 
 #include "App.h"
+#include <R2D/src/ResourceManager.h> 
+
+namespace NUMBER_OF_PLAYER
+{
+	const unsigned int MAX = 9;
+	const unsigned int INITIAL = 1;
+}
 
 NewGameScreen::NewGameScreen
 (
-	File* file
 )
 : 
-RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
+R2D::IGameScreen(),
+m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_userInputNewGame(),
 m_vectSlider(),
 m_gui(),
-m_file(file),
 m_isInitialize(false)
 {
 	build();
@@ -51,16 +56,16 @@ NewGameScreen::~NewGameScreen()
 
 int NewGameScreen::getNextScreenIndex()const
 {
-	return GAMEPLAY_SCREEN_INDEX;
+	return SCREEN_INDEX::GAMEPLAY;
 }
 int NewGameScreen::getPreviousScreenIndex()const
 {
-	return MAINMENU_SCREEN_INDEX;
+	return SCREEN_INDEX::MAINMENU;
 }
 
 void NewGameScreen::build()
 {
-	m_screenIndex = NEWGAME_SCREEN_INDEX;
+	m_screenIndex = SCREEN_INDEX::NEWGAME;
 }
 
 void NewGameScreen::destroy()
@@ -72,7 +77,7 @@ bool NewGameScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		m_gui.init(m_file->GUIPath);
+		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.loadScheme("TaharezLook.scheme");
@@ -115,8 +120,8 @@ bool NewGameScreen::onEntry()
 				{ 0,0,0,0 },
 				"nbPlayerSlider")));
 
-		m_vectSlider["nbPlayerSlider"]->setMaxValue(MAX_NUMBER_OF_PLAYER);
-		m_vectSlider["nbPlayerSlider"]->setCurrentValue(INITIAL_NUMBER_OF_PLAYER);
+		m_vectSlider["nbPlayerSlider"]->setMaxValue(NUMBER_OF_PLAYER::MAX);
+		m_vectSlider["nbPlayerSlider"]->setCurrentValue(NUMBER_OF_PLAYER::INITIAL);
 		m_vectSlider["nbPlayerSlider"]->setClickStep(1.0f);
 		m_vectSlider["nbPlayerSlider"]->subscribeEvent
 		(
@@ -185,7 +190,7 @@ bool NewGameScreen::onDefaultSetupClicked(const CEGUI::EventArgs& /* e */)
 	/* TODO : default configuration */
 
 	/* Enable to change to next ScreenState */
-	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+	m_currentState = R2D::ScreenState::CHANGE_NEXT;
 	return true;
 }
 
@@ -202,7 +207,7 @@ bool NewGameScreen::onSliderPlayer(const CEGUI::EventArgs& /* e */)
 bool NewGameScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
 	/* Enable to change to previous ScreenState */
-	m_currentState = RealEngine2D::ScreenState::CHANGE_PREVIOUS;
+	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
 }
 

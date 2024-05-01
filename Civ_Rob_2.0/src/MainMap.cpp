@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.1.0
-	file version : 1.28
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.36
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -28,15 +28,70 @@
 
 #include "MainMap.h"
 
-#include <RealEngine2D/src/ResourceManager.h>
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h> 
 
 #include "App.h"
+
+namespace MAP_GEN
+{
+	/* MAP -> Max size - Min size of the map for sea borders */
+	const unsigned int BORDER_MIN = 1;
+
+	/* MAP -> value deep_water */
+	const unsigned int BORDER_ZERO = 0;
+
+	/* MAP_GEN_RANDOM */
+	namespace RANDOM
+	{
+		namespace RANGE
+		{
+			const unsigned int GROUND = 100;
+			const unsigned int SPEC_GRASS = 100;
+			const unsigned int SPEC_WATER = 20;
+			const unsigned int SPEC_WATER1 = 10;
+			const unsigned int SPEC_WATER2 = 10;
+			const unsigned int SPEC_WATER_BORDER = 50;
+		}
+
+		namespace OFFSET
+		{
+			const unsigned int GROUND = 1;
+			const unsigned int SPEC_GRASS = 1;
+			const unsigned int SPEC_WATER = 1;
+			const unsigned int SPEC_WATER1 = 1;
+			const unsigned int SPEC_WATER2 = 1;
+			const unsigned int SPEC_WATER_BORDER = 1;
+		}
+	}
+
+	const unsigned int MAX_ITERATION_SCALE = 10000;
+}
+
+namespace MAPCamera
+{
+	/* Avoid seeing nothing before next tile */
+	const unsigned int MIN_BORDER = 1;
+
+	/* Define the index to look in the matrix for its size */
+	const unsigned int INDEX_SIZE = 0;
+}
+
+namespace MAPGUI
+{
+	/* Define an ID which is unused */
+	const GLuint UNUSED_ID = 0;
+}
 
  /* *********************************************************
   *					  Static Var						   *
   ********************************************************* */
 
 unsigned int* MainMap::s_tileSize;
+
+static size_t START_APPARTENANCE_INDEX = 0;
+static size_t START_GROUND_SPEC_INDEX = 0;
+const uint8_t OFFSET_GROUND_TYPE = 1;
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -63,7 +118,8 @@ m_offsetMapCameraYmin(0),
 m_offsetMapCameraYmax(0),
 m_matriceMap(),
 m_needToUpdateDraw(true),
-m_spriteBatch()
+m_spriteBatch(),
+s_vectID()
 {
 	setStaticPtrTileSize();
 }
@@ -74,7 +130,7 @@ MainMap::~MainMap()
 }
 
 
-void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
+void MainMap::initMainMap(R2D::Camera2D& camera)
 {
 	initTile();
 
@@ -89,9 +145,48 @@ void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
 		camera
 	);
 
-	setMinMaxScale(camera);
+	try
+	{
+		setMinMaxScale(camera);
+	}
+	catch (const std::invalid_argument& msg)
+	{
+		R2D::ErrorLog::logEvent("[ERROR]___: initMainMap : " + std::string(msg.what()));
+	}
+	
+
+	initMainMapTexture();
 }
 
+void MainMap::initMainMapTexture()
+{
+	m_spriteBatch.init();
+	m_spriteBatchAppartenance.init();
+
+
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-grass_irr.png")->GETid());
+
+	START_GROUND_SPEC_INDEX = s_vectID.size();
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
+	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
+
+	START_APPARTENANCE_INDEX = s_vectID.size();
+	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
+	{
+		s_vectID.push_back
+			(R2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
+	}
+}
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -103,12 +198,15 @@ void MainMap::initMainMap(RealEngine2D::Camera2D& camera)
 /* ----------------------------------------------------------------------------------- */
 void MainMap::initTile()
 {
-	Tile blankTile;
-	std::vector<Tile> blank;
-	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
+	const Tile blankTile;
+	const std::vector<Tile> blank;
+	const unsigned int endI{ m_mapSizePixX / m_tileSize };
+	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
+
+	for (unsigned int i(0); i < endI; i++)
 	{
 		m_matriceMap.push_back(blank);
-		for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
+		for (unsigned int j(0); j < endJ; j++)
 		{
 			m_matriceMap[i].push_back(blankTile);
 		}
@@ -126,11 +224,14 @@ void MainMap::initTile()
 /* ----------------------------------------------------------------------------------- */
 void MainMap::generateMap()
 {
-	App::logfileconsole("[INFO]___: Groundgen Start");
+	R2D::ErrorLog::logEvent("[INFO]___: Groundgen Start");
 
-	for (unsigned int i(0); i < m_mapSizePixX / m_tileSize; i++)
+	const unsigned int endI{ m_mapSizePixX / m_tileSize };
+	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
+
+	for (unsigned int i(0); i < endI; i++)
 	{
-		for (unsigned int j(0); j < m_mapSizePixY / m_tileSize; j++)
+		for (unsigned int j(0); j < endJ; j++)
 		{
 
 			m_matriceMap[i][j].indexX = i;
@@ -144,10 +245,10 @@ void MainMap::generateMap()
 			 ********************************************************* */
 
 			if (
-				(i == MAP_BORDER_ZERO)
-				|| (i == (m_mapSizePixX / m_tileSize) - (MAP_BORDER_ZERO + 1))
-				|| (j == MAP_BORDER_ZERO)
-				|| (j == (m_mapSizePixY / m_tileSize) - (MAP_BORDER_ZERO + 1))
+				(i == MAP_GEN::BORDER_ZERO)
+				|| (i == (m_mapSizePixX / m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
+				|| (j == MAP_GEN::BORDER_ZERO)
+				|| (j == (m_mapSizePixY / m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
 				)
 			{
 				tileAffectation
@@ -180,7 +281,7 @@ void MainMap::generateMap()
 		}
 	}
 
-	App::logfileconsole("[INFO]___: Groundgen End");
+	R2D::ErrorLog::logEvent("[INFO]___: Groundgen End");
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -196,20 +297,22 @@ void MainMap::generateMap()
 /* ----------------------------------------------------------------------------------- */
 bool MainMap::mapBordersConditions
 (
-	unsigned int i,
-	unsigned int j
+	const unsigned int i,
+	const unsigned int j
 )
 {
-	for (unsigned int index(MAP_BORDER_MIN); index < MAP_BORDER_MAX; index++)
+	const unsigned int cmpX{ m_mapSizePixX / m_tileSize };
+	const unsigned int cmpY{ m_mapSizePixY / m_tileSize };
+	for (unsigned int index(MAP_GEN::BORDER_MIN); index < MAPH::MAP_BORDER_MAX; index++)
 	{
 		if (
 			(i == index)
 			||
-			(i == (m_mapSizePixX / m_tileSize) - (index + 1))
+			(i == cmpX - (index + 1))
 			||
 			(j == index)
 			||
-			(j == (m_mapSizePixY / m_tileSize) - (index + 1))
+			(j == cmpY - (index + 1))
 			)
 		{
 			return true;
@@ -234,7 +337,7 @@ void MainMap::mapBorders
 )
 {
 	unsigned int randomspecwaterborder
-	((rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER_BORDER) + MAP_GEN_RANDOM_OFFSET_SPEC_WATER_BORDER);
+	((rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER_BORDER) + MAP_GEN::RANDOM::OFFSET::SPEC_WATER_BORDER);
 	switch (randomspecwaterborder)
 	{
 	case 1:
@@ -287,8 +390,8 @@ void MainMap::mapBorders
 void MainMap::mapIntern
 (
 	MatriceMap& maps,
-	unsigned int i,
-	unsigned int j
+	const unsigned int i,
+	const unsigned int j
 )
 {
 	unsigned int	randomground(0),
@@ -297,12 +400,12 @@ void MainMap::mapIntern
 		randomspecwater1(0),
 		randomspecwater2(0);
 
-	randomground = rand() % MAP_GEN_RANDOM_RANGE_GROUND + MAP_GEN_RANDOM_OFFSET_GROUND;
+	randomground = rand() % MAP_GEN::RANDOM::RANGE::GROUND + MAP_GEN::RANDOM::OFFSET::GROUND;
 	if (randomground < 92)
 	{
 		maps[i][j].tile_ground = Ground_Type::grass;
 		randomspecgrass =
-			rand() % MAP_GEN_RANDOM_RANGE_SPEC_GRASS + MAP_GEN_RANDOM_OFFSET_SPEC_GRASS;
+			rand() % MAP_GEN::RANDOM::RANGE::SPEC_GRASS + MAP_GEN::RANDOM::OFFSET::SPEC_GRASS;
 		switch (randomspecgrass)
 		{
 		case 1:
@@ -367,7 +470,7 @@ void MainMap::mapIntern
 		if (i > 2 && j > 2)
 		{
 			randomspecwater =
-				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER + MAP_GEN_RANDOM_OFFSET_SPEC_WATER;
+				rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER + MAP_GEN::RANDOM::OFFSET::SPEC_WATER;
 			switch (randomspecwater)
 			{
 			case 1:
@@ -411,7 +514,7 @@ void MainMap::mapIntern
 		if (Ground_Type::deepwater != maps[i - 1][j].tile_ground)
 		{
 			randomspecwater1 =
-				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER1 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER1;
+				rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER1 + MAP_GEN::RANDOM::OFFSET::SPEC_WATER1;
 			switch (randomspecwater1)
 			{
 			case 1:
@@ -455,7 +558,7 @@ void MainMap::mapIntern
 		if (Ground_Type::deepwater != maps[i - 1][j - 1].tile_ground)
 		{
 			randomspecwater2 =
-				rand() % MAP_GEN_RANDOM_RANGE_SPEC_WATER2 + MAP_GEN_RANDOM_OFFSET_SPEC_WATER2;
+				rand() % MAP_GEN::RANDOM::RANGE::SPEC_WATER2 + MAP_GEN::RANDOM::OFFSET::SPEC_WATER2;
 			switch (randomspecwater2)
 			{
 			case 1:
@@ -510,11 +613,11 @@ void MainMap::mapIntern
 void MainMap::tileAffectation
 (
 	Tile& tile,
-	Ground_Type tile_ground,
-	GroundSpec_Type tile_spec,
-	int food,
-	int work,
-	int gold
+	const Ground_Type tile_ground,
+	const GroundSpec_Type tile_spec,
+	const int food,
+	const int work,
+	const int gold
 )
 {
 	tile.tile_ground = tile_ground;
@@ -537,7 +640,7 @@ void MainMap::tileAffectation
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertIndexToPosX
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	return *s_tileSize * index;
@@ -555,7 +658,7 @@ unsigned int MainMap::convertIndexToPosX
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosXToIndex
 (
-	double posX
+	const double posX
 )
 {
 	return (unsigned int)std::floor(posX / (double)*s_tileSize);
@@ -572,7 +675,7 @@ unsigned int MainMap::convertPosXToIndex
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertIndexToPosY
 (
-	unsigned int index
+	const unsigned int index
 )
 {
 	return *s_tileSize * index;
@@ -589,7 +692,7 @@ unsigned int MainMap::convertIndexToPosY
 /* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosYToIndex
 (
-	double posY
+	const double posY
 )
 {
 	return (unsigned int)std::floor(posY / (double)*s_tileSize);
@@ -607,8 +710,8 @@ unsigned int MainMap::convertPosYToIndex
 /* ----------------------------------------------------------------------------------- */
 bool MainMap::assertRangeMapIndex
 (
-	unsigned int indexToTest,
-	size_t size
+	const unsigned int indexToTest,
+	const size_t size
 )
 {
 	return indexToTest < size ? true : false;
@@ -619,16 +722,17 @@ bool MainMap::assertRangeMapIndex
 
 void MainMap::setMinMaxScale
 (
-	RealEngine2D::Camera2D& camera
+	R2D::Camera2D& camera
 )
 {
+	/* Min Scale, to avoid OOR */
 	if	(
 			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenWidth()) > m_mapSizePixX
 			||
 			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenHeight()) > m_mapSizePixY
 		)
 	{
-		throw("[Error]___: setMinMaxScale");
+		throw std::invalid_argument("Width or Height is higher than mapSize");
 	}
 
 	unsigned int i(0);
@@ -644,7 +748,7 @@ void MainMap::setMinMaxScale
 			on = false;
 			i--;
 		}
-		if (i > MAX_ITERATION_SCALE)
+		if (i > MAP_GEN::MAX_ITERATION_SCALE)
 		{
 			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
 		}
@@ -665,7 +769,7 @@ void MainMap::setMinMaxScale
 			on = false;
 			i--;
 		}
-		if (i > MAX_ITERATION_SCALE)
+		if (i > MAP_GEN::MAX_ITERATION_SCALE)
 		{
 			throw("[Error]___: setMinMaxScale : MAX_ITERATION_SCALE");
 		}
@@ -681,11 +785,11 @@ void MainMap::setMinMaxScale
 
 void MainMap::updateOffset
 (
-	double x0,
-	double y0,
-	unsigned int windowWidth,
-	unsigned int windowHeight,
-	RealEngine2D::Camera2D& camera
+	const double x0,
+	const double y0,
+	const unsigned int windowWidth,
+	const unsigned int windowHeight,
+	R2D::Camera2D& camera
 )
 {
 	updateOffsetX(x0, windowWidth, camera);
@@ -695,9 +799,9 @@ void MainMap::updateOffset
 
 void MainMap::updateOffsetX
 (
-	double x0,
-	unsigned int windowWidth,
-	RealEngine2D::Camera2D& camera
+	const double x0,
+	const unsigned int windowWidth,
+	R2D::Camera2D& camera
 )
 {
 	int buffer(0);
@@ -736,10 +840,10 @@ void MainMap::updateOffsetX
 			m_offsetMapCameraXmin
 			+ (unsigned int)std::floor((double)windowWidth / ((double)m_tileSize * camera.GETscale())) /* width of screen */
 			- buffer
-			+ MAP_CAMERA_MIN_BORDER  
+			+ MAPCamera::MIN_BORDER
 			- m_toolBarSize; /* Negative RIGHT offset HUD */
 
-		if (m_offsetMapCameraXmax >= (unsigned int)m_matriceMap.size() + MAP_CAMERA_MIN_BORDER)
+		if (m_offsetMapCameraXmax >= (unsigned int)m_matriceMap.size() + MAPCamera::MIN_BORDER)
 		{
 			camera.lockMoveRIGHT();
 		}
@@ -755,9 +859,9 @@ void MainMap::updateOffsetX
 
 void MainMap::updateOffsetY
 (
-	double y0,
-	unsigned int windowHeight,
-	RealEngine2D::Camera2D& camera
+	const double y0,
+	const unsigned int windowHeight,
+	R2D::Camera2D& camera
 )
 {
 	int buffer(0);
@@ -778,7 +882,7 @@ void MainMap::updateOffsetY
 
 	if ((y0 + (double)windowHeight) >= ((double)m_mapSizePixY - ((double)m_tileSize * camera.GETscale())))
 	{
-		m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size();
+		m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size();
 	}
 	else
 	{
@@ -786,16 +890,16 @@ void MainMap::updateOffsetY
 			m_offsetMapCameraYmin 
 			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_tileSize * camera.GETscale()))
 			- buffer
-			+ MAP_CAMERA_MIN_BORDER;
+			+ MAPCamera::MIN_BORDER;
 
-		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size() + MAP_CAMERA_MIN_BORDER)
+		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size() + MAPCamera::MIN_BORDER)
 		{
 			camera.lockMoveUP();
 		}
 
-		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size())
+		if (m_offsetMapCameraYmax >= (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size())
 		{
-			m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAP_CAMERA_INDEX_SIZE].size();
+			m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size();
 		}
 	}
 
@@ -806,27 +910,13 @@ void MainMap::updateOffsetY
 
 void MainMap::drawMap
 (
-	RealEngine2D::Camera2D& camera,
-	RealEngine2D::Window& window
+	R2D::Camera2D& camera,
+	R2D::Window& window
 )
 {
-	const static GLuint idGrass(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
-	const static GLuint idWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
-	const static GLuint idDeepWater(RealEngine2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
-
-	const static GLuint idCoal(RealEngine2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
-	const static GLuint idCopper(RealEngine2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
-	const static GLuint idFish(RealEngine2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
-	const static GLuint idHorse(RealEngine2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
-	const static GLuint idIron(RealEngine2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
-	const static GLuint idPetroleum(RealEngine2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
-	const static GLuint idStone(RealEngine2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
-	const static GLuint idtree1(RealEngine2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
-	const static GLuint iduranium(RealEngine2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
-
 	if (m_needToUpdateDraw)
 	{
-		GLuint id(UNUSED_ID);
+		GLuint id(MAPGUI::UNUSED_ID);
 
 		updateOffset
 		(
@@ -839,6 +929,7 @@ void MainMap::drawMap
 
 		/* Use this because map is static */
 		m_spriteBatch.begin();
+		m_spriteBatchAppartenance.begin();
 
 		for (unsigned int i(m_offsetMapCameraXmin); i < m_offsetMapCameraXmax; i++)
 		{
@@ -847,13 +938,16 @@ void MainMap::drawMap
 				switch (m_matriceMap[i][j].tile_ground)
 				{
 				case Ground_Type::grass:
-					id = idGrass;
+					id = s_vectID[(uint8_t)Ground_Type::grass - OFFSET_GROUND_TYPE];
 					break;
 				case Ground_Type::water:
-					id = idWater;
+					id = s_vectID[(uint8_t)Ground_Type::water - OFFSET_GROUND_TYPE];
 					break;
 				case Ground_Type::deepwater:
-					id = idDeepWater;
+					id = s_vectID[(uint8_t)Ground_Type::deepwater - OFFSET_GROUND_TYPE];
+					break;
+				case Ground_Type::irragated:
+					id = s_vectID[(uint8_t)Ground_Type::irragated - OFFSET_GROUND_TYPE];
 					break;
 				case Ground_Type::dirt:
 					throw("[Error]___: drawMap : Ground_Type::dirt");
@@ -872,61 +966,74 @@ void MainMap::drawMap
 				m_spriteBatch.draw
 				(
 					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-					RealEngine2D::FULL_RECT,
+					R2D::FULL_RECT,
 					id,
 					0.0f,
-					RealEngine2D::COLOR_WHITE
+					R2D::COLOR_WHITE
 				);
 
 				switch (m_matriceMap[i][j].tile_spec)
 				{
 				case GroundSpec_Type::coal:
-					id = idCoal;
+					id = s_vectID[START_GROUND_SPEC_INDEX];
 					break;
 				case GroundSpec_Type::copper:
-					id = idCopper;
-					break;
-				case GroundSpec_Type::fish:
-					id = idFish;
-					break;
-				case GroundSpec_Type::horse:
-					id = idHorse;
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::coal];
 					break;
 				case GroundSpec_Type::iron:
-					id = idIron;
-					break;
-				case GroundSpec_Type::petroleum:
-					id = idPetroleum;
-					break;
-				case GroundSpec_Type::stone:
-					id = idStone;
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::copper];
 					break;
 				case GroundSpec_Type::tree:
-					id = idtree1;
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::iron];
+					break;
+				case GroundSpec_Type::stone:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::tree];
 					break;
 				case GroundSpec_Type::uranium:
-					id = iduranium;
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::stone];
+					break;
+				case GroundSpec_Type::horse:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::uranium];
+					break;
+				case GroundSpec_Type::fish:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::horse];
+					break;
+				case GroundSpec_Type::petroleum:
+					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::fish];
 					break;
 				case GroundSpec_Type::nothing:
-					id = UNUSED_ID;
+					id = MAPGUI::UNUSED_ID;
 					break;
 				}
 
-				if (UNUSED_ID != id)
+				if (MAPGUI::UNUSED_ID != id)
 				{
 					m_spriteBatch.draw
 					(
 						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
-						RealEngine2D::FULL_RECT,
+						R2D::FULL_RECT,
 						id,
 						0.0f,
-						RealEngine2D::COLOR_WHITE
+						R2D::COLOR_WHITE
+					);
+				}
+
+				if (m_matriceMap[i][j].appartenance != SELECTION::NO_APPARTENANCE)
+				{
+					m_spriteBatchAppartenance.draw
+					(
+						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+						R2D::FULL_RECT,
+						s_vectID[START_APPARTENANCE_INDEX + m_matriceMap[i][j].appartenance],
+						0.0f,
+						R2D::COLOR_WHITE_T25
 					);
 				}
 			}
 		}
 
 		m_spriteBatch.end();
+		m_spriteBatchAppartenance.end();
 
 		m_needToUpdateDraw = false;
 	}
@@ -935,6 +1042,7 @@ void MainMap::drawMap
 void MainMap::renderMap()
 {
 	m_spriteBatch.renderBatch();
+	m_spriteBatchAppartenance.renderBatch();
 }
 
 

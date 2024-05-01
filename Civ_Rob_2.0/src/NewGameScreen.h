@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,27 +27,23 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
+#include <R2D/src/IGameScreen.h>
 
 #include <vector>
 
-#include <RealEngine2D\src\Vertex.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
+#include <R2D\src\Vertex.h>
+#include <R2D\src\GLSLProgram.h>
+#include <R2D\src\GameEngine.h>
+#include <R2D\src\Window.h>
+#include <R2D\src\Camera2D.h>
+#include <R2D\src\SpriteBatch.h>
+#include <R2D\src\InputManager.h>
+#include <R2D\src\Timing.h>
+#include <R2D\src\SpriteFont.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
 
 
-#define MAX_NUMBER_OF_PLAYER 9 
-#define INITIAL_NUMBER_OF_PLAYER 1 
-
-struct File;
 
 struct UserInputNewGame
 {
@@ -55,14 +51,11 @@ struct UserInputNewGame
 
 };
 
-class NewGameScreen : public RealEngine2D::IGameScreen
+class NewGameScreen : public R2D::IGameScreen
 {
 public:
 
-	NewGameScreen
-	(
-		File* file
-	);
+	NewGameScreen();
 	~NewGameScreen();
 
 	virtual int getNextScreenIndex()const override;
@@ -98,14 +91,12 @@ public:
 	UserInputNewGame* getUserInputNewGame() { return &m_userInputNewGame; };
 
 private:
-	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
+	int m_nextScreenIndexMenu;
 
 	UserInputNewGame m_userInputNewGame;
 
 	std::unordered_map<std::string, CEGUI::Slider*> m_vectSlider;
-	RealEngine2D::GUI m_gui;
-
-	File* m_file = nullptr;
+	R2D::GUI m_gui;
 
 	bool m_isInitialize;
 };

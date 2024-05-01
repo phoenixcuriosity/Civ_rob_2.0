@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.7
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.10
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,31 +27,26 @@
 
 #include "LIB.h"
 
-#include <RealEngine2D/src/IGameScreen.h>
+#include <R2D/src/IGameScreen.h>
 
 #include <vector>
 
-#include <RealEngine2D\src\Vertex.h>
-#include <RealEngine2D\src\GLSLProgram.h>
-#include <RealEngine2D\src\GameEngine.h>
-#include <RealEngine2D\src\Window.h>
-#include <RealEngine2D\src\Camera2D.h>
-#include <RealEngine2D\src\SpriteBatch.h>
-#include <RealEngine2D\src\InputManager.h>
-#include <RealEngine2D\src\Timing.h>
-#include <RealEngine2D\src\SpriteFont.h>
-#include <RealEngine2D/src/AudioEngine.h>
-#include <RealEngine2D/src/GUI.h>
+#include <R2D\src\Vertex.h>
+#include <R2D\src\GLSLProgram.h>
+#include <R2D\src\GameEngine.h>
+#include <R2D\src\Window.h>
+#include <R2D\src\Camera2D.h>
+#include <R2D\src\SpriteBatch.h>
+#include <R2D\src\InputManager.h>
+#include <R2D\src\Timing.h>
+#include <R2D\src\SpriteFont.h>
+#include <R2D/src/AudioEngine.h>
+#include <R2D/src/GUI.h>
 
-struct File;
-
-class MainMenuScreen : public RealEngine2D::IGameScreen
+class MainMenuScreen : public R2D::IGameScreen
 {
 public:
-	MainMenuScreen
-	(
-		File* file
-	);
+	MainMenuScreen();
 	~MainMenuScreen();
 
 	virtual int getNextScreenIndex()const override;
@@ -65,7 +60,7 @@ public:
 
 private:
 
-
+	virtual void initHUD();
 
 public:
 
@@ -85,11 +80,11 @@ public:
 
 
 private:
-	int m_nextScreenIndexMenu = INIT_SCREEN_INDEX;
+	int m_nextScreenIndexMenu;
 
-	RealEngine2D::GUI m_gui;
-
-	File* m_file;
+	R2D::Camera2D m_cameraHUD;
+	R2D::SpriteBatch m_spriteBatchHUDStatic;
+	R2D::GUI m_gui;
 
 	bool m_isInitialize;
 };

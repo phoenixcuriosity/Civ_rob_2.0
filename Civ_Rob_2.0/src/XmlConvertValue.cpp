@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.7.0
-	file version : 1.3
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.2.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,9 +26,9 @@
  *						Includes						   *
  ********************************************************* */
 
-#include "GamePlayScreen.h"
+#include "XmlConvertValue.h"
 
-#include "App.h"
+#include <R2D/src/ErrorLog.h> 
 
  /* *********************************************************
   *						 Classes						   *
@@ -43,36 +43,36 @@
   /* RETURNED VALUE    : State_Type																			  */
   /* ---------------------------------------------------------------------------------------------------------- */
   /* ---------------------------------------------------------------------------------------------------------- */
-State_Type GamePlayScreen::xmlGiveStateType
+State_Type XmlConvertValue::xmlGiveStateType
 (
 	std::string type
 )
 {
-	if (type.compare("error") == IDENTICAL_STRINGS)
+	if (type.compare("error") == STRINGS::IDENTICAL)
 	{
 		return State_Type::error;
 	}
-	else if (type.compare("STATEtitleScreen") == IDENTICAL_STRINGS)
+	else if (type.compare("STATEtitleScreen") == STRINGS::IDENTICAL)
 	{
 		return State_Type::STATEtitleScreen;
 	}
-	else if (type.compare("STATEscreennewgame") == IDENTICAL_STRINGS)
+	else if (type.compare("STATEscreennewgame") == STRINGS::IDENTICAL)
 	{
 		return State_Type::STATEscreenNewgame;
 	}
-	else if (type.compare("STATEreload") == IDENTICAL_STRINGS)
+	else if (type.compare("STATEreload") == STRINGS::IDENTICAL)
 	{
 		return State_Type::STATEreload;
 	}
-	else if (type.compare("STATEmainmap") == IDENTICAL_STRINGS)
+	else if (type.compare("STATEmainmap") == STRINGS::IDENTICAL)
 	{
 		return State_Type::STATEmainMap;
 	}
-	else if (type.compare("STATEscience") == IDENTICAL_STRINGS)
+	else if (type.compare("STATEscience") == STRINGS::IDENTICAL)
 	{
 		return State_Type::STATEscience;
 	}
-	else if (type.compare("STATEcitiemap") == IDENTICAL_STRINGS)
+	else if (type.compare("STATEcitiemap") == STRINGS::IDENTICAL)
 	{
 		return State_Type::STATEcityMap;
 	}
@@ -90,28 +90,28 @@ State_Type GamePlayScreen::xmlGiveStateType
 /* RETURNED VALUE    : Select_Type																			  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Select_Type GamePlayScreen::xmlGiveSelectType
+Select_Type XmlConvertValue::xmlGiveSelectType
 (
 	std::string type
 )
 {
-	if (type.compare("selectnothing") == IDENTICAL_STRINGS)
+	if (type.compare("selectnothing") == STRINGS::IDENTICAL)
 	{
 		return Select_Type::selectnothing;
 	}
-	else if (type.compare("selectcreate") == IDENTICAL_STRINGS)
+	else if (type.compare("selectcreate") == STRINGS::IDENTICAL)
 	{
 		return Select_Type::selectcreate;
 	}
-	else if (type.compare("selectinspect") == IDENTICAL_STRINGS)
+	else if (type.compare("selectinspect") == STRINGS::IDENTICAL)
 	{
 		return Select_Type::selectinspect;
 	}
-	else if (type.compare("selectmove") == IDENTICAL_STRINGS)
+	else if (type.compare("selectmove") == STRINGS::IDENTICAL)
 	{
 		return Select_Type::selectmove;
 	}
-	else if (type.compare("selectmoveCitizen") == IDENTICAL_STRINGS)
+	else if (type.compare("selectmoveCitizen") == STRINGS::IDENTICAL)
 	{
 		return Select_Type::selectmoveCitizen;
 	}
@@ -130,7 +130,7 @@ Select_Type GamePlayScreen::xmlGiveSelectType
 /* RETURNED VALUE    : Unit_Movement_Type																	  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Unit_Movement_Type GamePlayScreen::convertUintToUnit_Movement_Type
+Unit_Movement_Type XmlConvertValue::convertUintToUnit_Movement_Type
 (
 	unsigned int toConvert
 )
@@ -146,30 +146,30 @@ Unit_Movement_Type GamePlayScreen::convertUintToUnit_Movement_Type
 	case 3:
 		return Unit_Movement_Type::deepwater;
 	default:
-		App::exitError("[ERROR]___: convertUintToUnit_Movement_Type : case default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convertUintToUnit_Movement_Type : case default");
 		return Unit_Movement_Type::ground;
 	}
 }
 
 
-Unit_Movement_Type GamePlayScreen::xmlGiveMovementType
+Unit_Movement_Type XmlConvertValue::xmlGiveMovementType
 (
 	std::string type
 )
 {
-	if (type.compare("ground") == IDENTICAL_STRINGS)
+	if (type.compare("ground") == STRINGS::IDENTICAL)
 	{
 		return Unit_Movement_Type::ground;
 	}
-	else if (type.compare("air") == IDENTICAL_STRINGS)
+	else if (type.compare("air") == STRINGS::IDENTICAL)
 	{
 		return Unit_Movement_Type::air;
 	}
-	else if (type.compare("water") == IDENTICAL_STRINGS)
+	else if (type.compare("water") == STRINGS::IDENTICAL)
 	{
 		return Unit_Movement_Type::water;
 	}
-	else if (type.compare("deepwater") == IDENTICAL_STRINGS)
+	else if (type.compare("deepwater") == STRINGS::IDENTICAL)
 	{
 		return Unit_Movement_Type::deepwater;
 	}
@@ -188,7 +188,7 @@ Unit_Movement_Type GamePlayScreen::xmlGiveMovementType
 /* RETURNED VALUE    : conversionSurplus_Type																  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-conversionSurplus_Type GamePlayScreen::convert2ConversionToApply
+conversionSurplus_Type XmlConvertValue::convert2ConversionToApply
 (
 	int toConvert
 )
@@ -210,7 +210,7 @@ conversionSurplus_Type GamePlayScreen::convert2ConversionToApply
 	case 6:
 		return conversionSurplus_Type::GoldToWork;
 	default:
-		App::exitError("[ERROR]___: convert2ConversionToApply : default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2ConversionToApply : default");
 		return conversionSurplus_Type::No_Conversion;
 	}
 }
@@ -224,7 +224,7 @@ conversionSurplus_Type GamePlayScreen::convert2ConversionToApply
 /* RETURNED VALUE    : build_Type																			  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-build_Type GamePlayScreen::convert2build_Type
+build_Type XmlConvertValue::convert2build_Type
 (
 	int toConvert
 )
@@ -236,7 +236,7 @@ build_Type GamePlayScreen::convert2build_Type
 	case 1:
 		return build_Type::unit;
 	default:
-		App::exitError("[ERROR]___: convert2ConversionToApply : default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2build_Type : default");
 		return build_Type::building;
 	}
 }
@@ -250,7 +250,7 @@ build_Type GamePlayScreen::convert2build_Type
 /* RETURNED VALUE    : Emotion_Type																			  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Emotion_Type GamePlayScreen::convert2Emotion_Type
+Emotion_Type XmlConvertValue::convert2Emotion_Type
 (
 	int toConvert
 )
@@ -262,14 +262,14 @@ Emotion_Type GamePlayScreen::convert2Emotion_Type
 	case -1:
 		return Emotion_Type::sad;
 	case 0:
-		return Emotion_Type::neutre;
+		return Emotion_Type::neutral;
 	case 1:
 		return Emotion_Type::happy;
 	case 2:
 		return Emotion_Type::ecstatic;
 	default:
-		App::exitError("[ERROR]___: convert2Emotion_Type : default");
-		return Emotion_Type::neutre;
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2Emotion_Type : default");
+		return Emotion_Type::neutral;
 	}
 }
 
@@ -282,7 +282,7 @@ Emotion_Type GamePlayScreen::convert2Emotion_Type
 /* RETURNED VALUE    : Religion_Type																		  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-Religion_Type GamePlayScreen::convert2Religion_Type
+Religion_Type XmlConvertValue::convert2Religion_Type
 (
 	int toConvert
 )
@@ -336,7 +336,7 @@ Religion_Type GamePlayScreen::convert2Religion_Type
 	case 22:
 		return Religion_Type::zoroastrian;
 	default:
-		App::exitError("[ERROR]___: convert2Religion_Type : default");
+		R2D::ErrorLog::logEvent("[ERROR]___: convert2Religion_Type : default");
 		return Religion_Type::catholic;
 	}
 }

@@ -3,7 +3,7 @@
 <Config>
 	<Map>
 		<TileSize>64</TileSize>
-		<MapSizeX>2048</MapSizeX>
-		<MapSizeY>2048</MapSizeY>
+		<MapSizeX>2240</MapSizeX>
+		<MapSizeY>2240</MapSizeY>
 	</Map>
 </Config>

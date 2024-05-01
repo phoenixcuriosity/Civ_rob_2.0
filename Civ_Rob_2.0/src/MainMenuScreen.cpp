@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.9.0
+	file version : 1.12
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,18 +27,23 @@
 
 #include "App.h"
 
+#include <R2D/src/ResourceManager.h> 
+#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/SpriteFont.h> 
+
+
 MainMenuScreen::MainMenuScreen
 (
-	File* file
 )
 : 
-RealEngine2D::IGameScreen(),
-m_nextScreenIndexMenu(INIT_SCREEN_INDEX),
+R2D::IGameScreen(),
+m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
+m_spriteBatchHUDStatic(),
 m_gui(),
-m_file(file),
 m_isInitialize(false)
 {
 	build();
+	R2D::ErrorLog::logEvent("[INFO]___: build MainMenuScreen");
 }
 
 MainMenuScreen::~MainMenuScreen()
@@ -52,12 +57,12 @@ int MainMenuScreen::getNextScreenIndex()const
 }
 int MainMenuScreen::getPreviousScreenIndex()const
 {
-	return INIT_SCREEN_INDEX;
+	return R2D::SCREEN_INDEX::INIT;
 }
 
 void MainMenuScreen::build()
 {
-	m_screenIndex = MAINMENU_SCREEN_INDEX;
+	m_screenIndex = SCREEN_INDEX::MAINMENU;
 }
 
 void MainMenuScreen::destroy()
@@ -69,11 +74,21 @@ bool MainMenuScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		m_gui.init(m_file->GUIPath);
+		R2D::ErrorLog::logEvent("[INFO]___: Init MainMenuScreen");
+
+		m_cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+		m_cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
+
+
+		m_spriteBatchHUDStatic.init();
+
+		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 
 		m_gui.setFont("DejaVuSans-10");
+
+
 
 		const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);
 		float yC(0.4f);
@@ -82,7 +97,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"newGame"));
 
 		newGame->setText("New Game");
@@ -96,7 +111,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC += yDelta, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"Reload"));
 
 		reloadButton->setText("Reload");
@@ -110,7 +125,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC += yDelta, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"Option"));
 
 		optionButton->setText("Option");
@@ -124,7 +139,7 @@ bool MainMenuScreen::onEntry()
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
 				{ xC, yC += yDelta, xL, yL },
-				RealEngine2D::NOT_BY_PERCENT,
+				R2D::NOT_BY_PERCENT,
 				"QuitGame"));
 
 		quitGame->setText("Quit Game");
@@ -141,12 +156,37 @@ bool MainMenuScreen::onEntry()
 		/* HIDE normal mouse cursor */
 		SDL_ShowCursor(0);
 
+		initHUD();
+
 		m_isInitialize = true;
 	}
 	
 
 	return true;
 }
+
+void MainMenuScreen::initHUD()
+{
+	m_spriteBatchHUDStatic.begin();
+
+
+	MapTexts mapTexts;
+	R2D::ResourceManager::getTextFromFile
+	(
+		e_Files::texts_MainMenu,
+		mapTexts
+	);
+
+	R2D::ResourceManager::displayTextFromFile
+	(
+		mapTexts,
+		m_game->getWindow(),
+		m_spriteBatchHUDStatic
+	);
+	
+	m_spriteBatchHUDStatic.end();
+}
+
 
 void MainMenuScreen::onExit()
 {
@@ -160,12 +200,39 @@ void MainMenuScreen::onExit()
 
 void MainMenuScreen::draw()
 {
+	m_cameraHUD.update();
+
 	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	/* Back */
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	R2D::ResourceManager::getGLSLProgram().use();
+
+	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
+	glActiveTexture(GL_TEXTURE0);
+
+	GLint textureLocation = R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
+	glUniform1i(textureLocation, 0);
+
+	/* --- camera --- */
+	/* GL - get parameter P */
+	const GLint pLocation
+		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
+
+	/* Copy camera matrix */
+	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
+
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	m_spriteBatchHUDStatic.renderBatch();
+
+	/* --- GL unbind --- */
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	R2D::ResourceManager::getGLSLProgram().unuse();
 
 	m_gui.draw();
 }
@@ -184,15 +251,15 @@ void MainMenuScreen::update()
 
 bool MainMenuScreen::onNewGameClicked(const CEGUI::EventArgs& /* e */)
 {
-	m_nextScreenIndexMenu = NEWGAME_SCREEN_INDEX;
-	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+	m_nextScreenIndexMenu = SCREEN_INDEX::NEWGAME;
+	m_currentState = R2D::ScreenState::CHANGE_NEXT;
 	return true;
 }
 
 bool MainMenuScreen::onReloadClicked(const CEGUI::EventArgs& /* e */)
 {
-	m_nextScreenIndexMenu = RELOAD_SCREEN_INDEX;
-	m_currentState = RealEngine2D::ScreenState::CHANGE_NEXT;
+	m_nextScreenIndexMenu = SCREEN_INDEX::RELOAD;
+	m_currentState = R2D::ScreenState::CHANGE_NEXT;
 	return true;
 }
 
@@ -203,6 +270,6 @@ bool MainMenuScreen::onOptionClicked(const CEGUI::EventArgs& /* e */)
 
 bool MainMenuScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
-	m_currentState = RealEngine2D::ScreenState::EXIT_APPLICATION;
+	m_currentState = R2D::ScreenState::EXIT_APPLICATION;
 	return true;
 }

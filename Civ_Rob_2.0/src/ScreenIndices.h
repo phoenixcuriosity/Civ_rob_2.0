@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2022 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.0.0
-	file version : 1.1
+	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.1.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,10 +25,13 @@
 #ifndef ScreenIndices_H
 #define ScreenIndices_H
 
-#define MAINMENU_SCREEN_INDEX 0
-#define NEWGAME_SCREEN_INDEX 1
-#define RELOAD_SCREEN_INDEX 2
-#define GAMEPLAY_SCREEN_INDEX 3
-#define CITY_SCREEN_INDEX 4
+namespace SCREEN_INDEX
+{
+	const int MAINMENU = 0;
+	const int NEWGAME = 1;
+	const int RELOAD = 2;
+	const int GAMEPLAY = 3;
+	const int CITY = 4;
+}
 
 #endif /* ScreenIndices_H */
