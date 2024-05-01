@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.2
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.11.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -39,6 +39,22 @@ namespace CITY_INFLUENCE
 
 	/* Minimal influence level in City */
 	const unsigned int MIN_INFLUENCE_LEVEL = 1;
+}
+
+
+namespace EMOTION_RANGE
+{
+	/* Define the maximum range of emotion */
+	const double MAX = 100.0;
+
+	/* Define the minimum range of emotion */
+	const double MIN = 0.0;
+
+	/* Define the mean emotion */
+	const double MEAN = ((MAX + MIN) / 2.0);
+
+	/* Define the mean value of emotion range */
+	const double SCALE_MEAN = ((abs(MAX) + abs(MIN)) / 2.0);
 }
 
 /* *********************************************************

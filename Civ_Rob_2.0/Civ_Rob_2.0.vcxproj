@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\Citizen.cpp" />
+    <ClCompile Include="src\CitizenManager.cpp" />
     <ClCompile Include="src\City.cpp" />
     <ClCompile Include="src\CityScreen.cpp" />
     <ClCompile Include="src\Civ_Rob_2.0.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\Citizen.h" />
+    <ClInclude Include="src\CitizenManager.h" />
     <ClInclude Include="src\City.h" />
     <ClInclude Include="src\CityScreen.h" />
     <ClInclude Include="src\FoodManager.h" />

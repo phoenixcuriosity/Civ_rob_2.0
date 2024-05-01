@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.10.0
-	file version : 1.28
+	last modification on this file on version:0.25.11.0
+	file version : 1.29
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -38,6 +38,7 @@
 #include "Unit.h"
 #include "Citizen.h"
 #include "FoodManager.h"
+#include "CitizenManager.h"
 
 #include <vector>
 #include <queue>
@@ -45,6 +46,7 @@
 
 #include <R2D/src/Window.h>
 #include <R2D/src/GUI.h>
+
 
 /* *********************************************************
  *						 Structs						   *
@@ -160,13 +162,6 @@ public:
 	virtual ~City();
 
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : resetTabCitizen															   */
-	/* ROLE : Remove all Citizens in the City											   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void resetTabCitizen();
-
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : foodNextTurn																   */
 	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
 	/* OUT : GoldStats& goldStats : Player gold stats									   */
@@ -188,16 +183,6 @@ public:
 		const unsigned int indexY
 	);
 
-private:
-
-	virtual double tileValue
-	(
-		const Tile& tile,
-		const double coefFood = 1.0,
-		const double coefWork = 1.0,
-		const double coefGold = 1.0
-	) const;
-
 public:
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : testPos																	   */
@@ -211,15 +196,6 @@ public:
 		const unsigned int x,
 		const unsigned int y
 	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : computeEmotion															   */
-	/* ROLE : Calcul sur une echelle de 0 � 100 le bonheur de la Citie					   */
-	/* INPUT : void																		   */
-	/* INTERNAL OUTPUT : m_emotion : bonheur de la Citie								   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void computeEmotion();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeWork																   */
@@ -341,21 +317,22 @@ public:
 
 	inline virtual std::string GETimage()const { return m_image; };
 	inline virtual std::string GETname()const { return m_name; };
-	inline virtual size_t GETnbpop()const { return m_citizens.size(); };
+	inline virtual size_t GETnbpop()const { return m_citizenManager.getCitizens().size(); };
 	inline virtual unsigned int GETx()const { return m_x; };
 	inline virtual unsigned int GETy()const { return m_y; };
 	inline virtual VectMap& GETtile() { return m_tile; };
-	inline virtual VectCitizen& GETcitizens() { return m_citizens; };
+	inline virtual VectCitizen& GETcitizens() { return m_citizenManager.getCitizens(); };
 	inline virtual unsigned int GETinfluenceLevel()const { return m_influenceLevel; };
 	inline virtual unsigned int GETatq()const { return m_atq; };
 	inline virtual unsigned int GETdef()const { return m_def; };
-	inline virtual unsigned int GETemotion()const { return m_emotion; };
+	inline virtual unsigned int GETemotion()const { return m_citizenManager.getEmotion(); };
 	inline virtual unsigned int GETnbstructurebuild()const { return m_nbstructurebuild; };
 	inline virtual double GETfoodStock()const { return m_foodManager.getFoodStock(); };
 	inline virtual double GETfoodBalance()const { return m_foodManager.getFoodBalanceForConversion(); };
 	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodManager.getFoodSurplusPreviousTurn(); };
 	inline virtual double GETfoodToLevelUp()const { return m_foodManager.getFoodToLevelUp(); };
 	inline virtual FoodManager& GETFoodManager() { return m_foodManager; };
+	inline virtual CitizenManager& GETCitizenManager() { return m_citizenManager; };
 	inline virtual double GETgoldBalance()const { return m_goldBalance; };
 	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
 	inline virtual dequeBuild& GETbuildQueue() { return m_buildQueue; };
@@ -391,7 +368,7 @@ public:
 	inline virtual void SETinfluenceLevel(unsigned int influenceLevel) { m_influenceLevel = influenceLevel; };
 	inline virtual void SETatq(unsigned int atq) { m_atq = atq; };
 	inline virtual void SETdef(unsigned int def) { m_def = def; };
-	inline virtual void SETemotion(unsigned int emotion) { m_emotion = emotion; };
+	inline virtual void SETemotion(unsigned int emotion) { m_citizenManager.setEmotion(emotion); };
 	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild) { m_nbstructurebuild = nbstructurebuild; };
 	inline virtual void SETfoodStock(double foodStock) { m_foodManager.setFoodStock(foodStock); };
 	inline virtual void SETfoodBalance(double foodBalance) { m_foodManager.setFoodBalance(foodBalance); };
@@ -411,13 +388,12 @@ private:
 	unsigned int m_x;
 	unsigned int m_y;
 	VectMap m_tile;
-	VectCitizen m_citizens;
 	unsigned int m_influenceLevel;
 	unsigned int m_atq;
 	unsigned int m_def;
-	unsigned int m_emotion;
 	unsigned int m_nbstructurebuild;
 
+	CitizenManager m_citizenManager;
 	FoodManager m_foodManager;
 
 	double m_workBalance;

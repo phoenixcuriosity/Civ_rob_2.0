@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.10.0
-	file version : 1.47
+	last modification on this file on version:0.25.11.0
+	file version : 1.48
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -45,20 +45,6 @@ namespace POP
 	const unsigned int MIN = 1;
 }
 
-namespace EMOTION_RANGE
-{
-	/* Define the maximum range of emotion */
-	const double MAX = 100.0;
-
-	/* Define the minimum range of emotion */
-	const double MIN = 0.0;
-
-	/* Define the mean emotion */
-	const double MEAN = ((MAX + MIN) / 2.0);
-
-	/* Define the mean value of emotion range */
-	const double SCALE_MEAN = ((abs(MAX) + abs(MIN)) / 2.0);
-}
 
 namespace MULTIPLIER
 {
@@ -360,26 +346,18 @@ City::City
 	m_x(x),
 	m_y(y),
 	m_tile(tiles),
-	m_citizens(),
 	m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
 	m_atq(0),
 	m_def(0),
-	m_emotion((unsigned int)EMOTION_RANGE::MEAN),
 	m_nbstructurebuild(0),
-	m_foodManager(m_citizens, m_emotion),
+	m_citizenManager(m_tile),
+	m_foodManager(m_citizenManager),
 	m_workBalance(0),
 	m_workSurplusPreviousTurn(0),
 	m_goldBalance(0.0),
 	m_conversionToApply(conversionSurplus_Type::No_Conversion),
 	m_buildQueue()
 {
-	/* Add initial citizen in the middle case */
-	m_citizens.push_back
-	(
-		std::make_unique<Citizen>
-		(tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)])
-	);
-
 	R2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
 }
 
@@ -390,24 +368,7 @@ City::City
 /* ----------------------------------------------------------------------------------- */
 City::~City()
 {
-	resetTabCitizen();
-
 	R2D::ErrorLog::logEvent("[INFO]___: Destroy Citie: " + m_name + " Success");
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : resetTabCitizen															   */
-/* ROLE : Remove all Citizens in the City											   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::resetTabCitizen()
-{
-	for (auto& n : m_citizens)
-	{
-		n.reset();
-	}
-	m_citizens.clear();
-	m_citizens.resize(0);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -425,23 +386,9 @@ void City::foodNextTurn
 	{
 	case FoodManagerType::famine:
 
-		if (m_citizens.size() > POP::MIN)
+		if (m_citizenManager.getCitizens().size() > POP::MIN)
 		{
-			double minValueTile{ 999.9 }, curV{ 0.0 };
-			int selectedCitizen{ -1 };
-			for (size_t c(0); c < m_citizens.size(); c++)
-			{
-				if (m_citizens[c]->GETplace() && ((curV = tileValue(m_tile[m_citizens[c]->GETtileOccupied()])) < minValueTile))
-				{
-					minValueTile = curV;
-					selectedCitizen = (int)c;
-				}
-			}
-
-			/* Delete Citizen */
-
-			m_citizens[selectedCitizen].reset();
-			m_citizens.erase(m_citizens.begin() + selectedCitizen);
+			m_citizenManager.removeCitizen();
 
 			m_foodManager.updateFoodStockFromReducePop();
 		}
@@ -453,7 +400,7 @@ void City::foodNextTurn
 		break;
 	case FoodManagerType::surplus:
 
-		m_citizens.push_back(std::make_unique<Citizen>(m_tile, m_citizens));
+		m_citizenManager.addCitizen();
 
 		m_foodManager.updateFoodStockFromIncreasePop();
 
@@ -494,19 +441,6 @@ void City::foodNextTurn
 	}
 }
 
-double City::tileValue
-(
-	const Tile& tile,
-	const double coefFood,
-	const double coefWork,
-	const double coefGold
-)const
-{
-	double sum{ 0.0 };
-	sum = tile.food * coefFood + tile.gold * coefGold + tile.work * coefWork;
-	return sum;
-}
-
 /* ----------------------------------------------------------------------------------- */
 /* NAME : testPos																	   */
 /* ROLE : Retourne si la position est valide										   */
@@ -532,55 +466,6 @@ bool City::testPos
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* NAME : computeEmotion															   */
-/* ROLE : Calcul sur une echelle de 0 � 100 le bonheur de la Citie					   */
-/* INPUT : void																		   */
-/* INTERNAL OUTPUT : m_emotion : bonheur de la Citie									   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::computeEmotion()
-{
-	double result{0.0};
-
-	for (auto& c : m_citizens)
-	{
-		result += (double)c->GEThappiness();
-	}
-	
-	try
-	{
-		m_emotion = (unsigned int)R2D::ValueToScale::computeValueToScale
-		(
-			result,
-			(double)Emotion_Type::angry,
-			(double)Emotion_Type::ecstatic,
-			EMOTION_RANGE::MIN,
-			EMOTION_RANGE::MAX,
-			(int)m_citizens.size()
-		);
-	}
-	catch (std::string const& msg)
-	{
-		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == STRINGS::IDENTICAL)
-		{
-			R2D::ErrorLog::logEvent(msg);
-			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
-#ifdef _DEBUG
-			throw(msg);
-#endif // _DEBUG
-		}
-		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == STRINGS::IDENTICAL)
-		{
-			R2D::ErrorLog::logEvent(msg);
-			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
-#ifdef _DEBUG
-			throw(msg);
-#endif // _DEBUG
-		}
-	}
-}
-
-/* ----------------------------------------------------------------------------------- */
 /* NAME : computeWork																   */
 /* ROLE : Calculate the work for the turn											   */
 /* INPUT : void																		   */
@@ -588,17 +473,11 @@ void City::computeEmotion()
 /* ----------------------------------------------------------------------------------- */
 void City::computeWork()
 {
-	/* Reset m_workBalance to CITY_ZERO */
-	m_workBalance = RESOURCES::WORK::ZERO;
-
 	/* Sum work from citizen */
-	for (const auto& c : m_citizens)
-	{
-		m_workBalance += (double)c->GETwork();
-	}
+	m_workBalance = m_citizenManager.getWorkFromCitizen();
 
 	/* Applying Emotion multiplier */
-	m_workBalance *= ((double)m_emotion / EMOTION_RANGE::SCALE_MEAN);
+	m_workBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
 
 	/* Applying the work which was converted from food in the previous turn */
 	m_workBalance += m_workSurplusPreviousTurn;
@@ -719,17 +598,11 @@ void City::computeWorkToBuild
 /* ----------------------------------------------------------------------------------- */
 void City::computeGold()
 {
-	/* Reset m_goldBalance to CITY_ZERO */
-	m_goldBalance = RESOURCES::GOLD::ZERO;
-
 	/* Sum gold from citizen */
-	for (auto& c : m_citizens)
-	{
-		m_goldBalance += (double)c->GETwork();
-	}
+	m_goldBalance = m_citizenManager.getGoldFromCitizen();
 	
 	/* Applying Emotion multiplier */
-	m_goldBalance *= ((double)m_emotion / EMOTION_RANGE::SCALE_MEAN);
+	m_goldBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
 }
 
 /* ----------------------------------------------------------------------------------- */

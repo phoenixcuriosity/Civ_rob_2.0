@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.10.0
-	file version : 1.1
+	last modification on this file on version:0.25.11.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -57,14 +57,9 @@ namespace FOOD_MANAGER
 	}
 }
 
-FoodManager::FoodManager
-(
-	const VectCitizen& citizens,
-	const unsigned int& emotion
-)
+FoodManager::FoodManager(const CitizenManager& citizenManager)
 : 
-m_citizens(citizens),
-m_emotion(emotion),
+m_citizenManager(citizenManager),
 m_foodStock(FOOD_MANAGER::ZERO_FOOD),
 m_foodBalance(FOOD_MANAGER::ZERO_FOOD),
 m_foodConsumption(FOOD_MANAGER::ZERO_FOOD),
@@ -101,7 +96,7 @@ FoodManagerType FoodManager::updateGetFoodStatus()
 
 void FoodManager::updateFoodStockFromReducePop()
 {
-	m_foodToLevelUp = getFoodToLevelUpFromPop(m_citizens.size());
+	m_foodToLevelUp = getFoodToLevelUpFromPop(m_citizenManager.getCitizens().size());
 	m_foodStock = m_foodToLevelUp - 1.0;
 }
 
@@ -117,14 +112,8 @@ void FoodManager::emptyFoodStock()
 
 void FoodManager::updateFoodBalance()
 {
-	/* Reset to Zero */
-	m_foodBalance = FOOD_MANAGER::ZERO_FOOD;
-
 	/* Add Food from Citizen*/
-	for (const auto& c : m_citizens)
-	{
-		m_foodBalance += c->GETfood();
-	}
+	m_foodBalance = m_citizenManager.getFoodFromCitizen();
 
 	/* Subtract consumption from Citizen */
 	updateFoodConsumption();
@@ -144,12 +133,12 @@ void FoodManager::updateFoodConsumption()
 	m_foodConsumption =
 		FOOD_MANAGER::MULT_FOOD_CONSUMPTION
 		*
-		(static_cast<double>(m_citizens.size()) - FOOD_MANAGER::ONE_POP);
+		(static_cast<double>(m_citizenManager.getCitizens().size()) - FOOD_MANAGER::ONE_POP);
 }
 
 void FoodManager::updateFoodToLevelUp()
 {
-	m_foodToLevelUp = getFoodToLevelUpFromPop(m_citizens.size());
+	m_foodToLevelUp = getFoodToLevelUpFromPop(m_citizenManager.getCitizens().size());
 }
 
 double FoodManager::getFoodToLevelUpFromPop(const size_t nbPop) const
@@ -172,7 +161,7 @@ double FoodManager::getFoodToLevelUpFromPop(const size_t nbPop) const
 
 void FoodManager::updateEmotionCoef()
 {
-	m_emotionCoef = static_cast<double>(m_emotion) / FOOD_MANAGER::EMOTION_RANGE::SCALE_MEAN;
+	m_emotionCoef = static_cast<double>(m_citizenManager.getEmotion()) / FOOD_MANAGER::EMOTION_RANGE::SCALE_MEAN;
 }
 
 /*

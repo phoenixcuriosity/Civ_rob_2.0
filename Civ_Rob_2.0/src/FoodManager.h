@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.10.0
-	file version : 1.1
+	last modification on this file on version:0.25.11.0
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -31,7 +31,8 @@
 
 #include "LIB.h"
 
-#include "T_Citizen.h"
+#include "Citizen.h"
+#include "CitizenManager.h"
 
 enum class FoodManagerType 
 {
@@ -45,11 +46,7 @@ class FoodManager
 {
 public:
 
-	FoodManager
-	(
-		const VectCitizen& citizens,
-		const unsigned int& emotion
-	);
+	FoodManager(const CitizenManager& citizenManager);
 	~FoodManager() {};
 
 public:
@@ -95,8 +92,7 @@ private:
 
 private:
 
-	const VectCitizen& m_citizens;
-	const unsigned int& m_emotion;
+	const CitizenManager& m_citizenManager;
 
 	double m_foodStock;
 

@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.11.0
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -35,34 +35,10 @@
 
 #include "MainMap.h"
 
+
 class Citizen
 {
 public:
-	/* *********************************************************
-	 *					Citizen::STATIC						   *
-	 ********************************************************* */
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : placeCitizen																   */
-	/* ROLE : Placement d'un Citizen en fonction des cases occup�es de la City			   */
-	/* INPUT : std::vector<Tile> : carte de la City										   */
-	/* INPUT : std::vector<Citizen> : tableau de Citizen								   */
-	/* INPUT : int& m_food, int& m_work, int& m_gold : spec de la case					   */
-	/* RETURNED VALUE    : unsigned int : la place allou�e								   */
-	/* ----------------------------------------------------------------------------------- */
-	static unsigned int placeCitizen
-	(
-		VectMap& tile,
-		VectCitizen& citizens,
-		int& m_food,
-		int& m_work,
-		int& m_gold
-	);
-
-
-	/* *********************************************************
-	 *					Citizen::METHODS					   *
-	 ********************************************************* */
 
 	 /* ----------------------------------------------------------------------------------- */
 	 /* NAME : Citizen																	    */
@@ -78,7 +54,7 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	Citizen
 	(
-		Tile tile
+		const Tile& tile
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -89,8 +65,10 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	Citizen
 	(
-		VectMap& tile,
-		VectCitizen& citizens
+		const unsigned int tileOccupied,
+		const int food,
+		const int work,
+		const int gold
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -99,28 +77,6 @@ public:
 	/* INPUT : void																		   */
 	/* ----------------------------------------------------------------------------------- */
 	virtual ~Citizen();
-
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : placeCitizenWithMouse														   */
-	/* ROLE : TODO																		   */
-	/* INPUT : void 																	   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void placeCitizenWithMouse();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : afficher																	   */
-	/* ROLE : affichage du citizen sur la case de la citie map							   */
-	/* INPUT : std::unordered_map<std::string,Texture*>& : tableau de Texture de la Citie  */
-	/* INPUT : unsigned int x : index en x du Citizen									   */
-	/* INPUT : unsigned int y : index en y du Citizen									   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	virtual void afficher
-	(
-
-	);
 
 
 
@@ -163,6 +119,7 @@ private:
 	bool m_place;
 };
 
+typedef std::vector<std::shared_ptr<Citizen>> VectCitizen;
 
 
 #endif /* Citizen_H */

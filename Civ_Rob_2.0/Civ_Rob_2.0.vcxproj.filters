@@ -55,6 +55,9 @@
     <ClCompile Include="src\FoodManager.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
+    <ClCompile Include="src\CitizenManager.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -133,6 +136,9 @@
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
     <ClInclude Include="src\FoodManager.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CitizenManager.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
   </ItemGroup>
