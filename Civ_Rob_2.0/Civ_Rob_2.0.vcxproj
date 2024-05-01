@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\BuildManager.cpp" />
     <ClCompile Include="src\Citizen.cpp" />
     <ClCompile Include="src\CitizenManager.cpp" />
     <ClCompile Include="src\City.cpp" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\App.h" />
+    <ClInclude Include="src\BuildManager.h" />
     <ClInclude Include="src\Citizen.h" />
     <ClInclude Include="src\CitizenManager.h" />
     <ClInclude Include="src\City.h" />

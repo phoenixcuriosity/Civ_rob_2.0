@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.11.0
-	file version : 1.30
+	last modification on this file on version:0.25.12.0
+	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -874,7 +874,7 @@ void SaveReload::loadCityXML
 				if (nullptr == nBuildQueueElementWork) R2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->Work == nullptr");
 				blankBluid.work = std::stod(nBuildQueueElementWork->FirstChild()->Value());
 
-				tinyxml2::XMLNode* nBuildQueueElementRemainingWork = nBuildQueueElementType->NextSibling();
+				tinyxml2::XMLNode* nBuildQueueElementRemainingWork = nBuildQueueElementWork->NextSibling();
 				if (nullptr == nBuildQueueElementRemainingWork) R2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nBuildQueue->RemainingWork == nullptr");
 				blankBluid.remainingWork = std::stod(nBuildQueueElementRemainingWork->FirstChild()->Value());
 

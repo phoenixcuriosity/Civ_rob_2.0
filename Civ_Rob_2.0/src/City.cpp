@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.11.0
-	file version : 1.48
+	last modification on this file on version:0.25.12.0
+	file version : 1.49
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -46,23 +46,6 @@ namespace POP
 }
 
 
-namespace MULTIPLIER
-{
-	namespace CONVERSION
-	{
-		/* Define the multiplier coefficient to convert work to food */
-		const double WORK_TO_FOOD = 10.0;
-
-		/* Define the multiplier coefficient to convert food to work */
-		const double FOOD_TO_WORK = (1.0 / WORK_TO_FOOD);
-
-		/* Define the multiplier coefficient to convert work to gold */
-		const double WORK_TO_GOLD = (10.0 * WORK_TO_FOOD);
-
-		/* Define the multiplier coefficient to convert food to gold */
-		const double FOOD_TO_GOLD = (WORK_TO_GOLD / FOOD_TO_WORK);
-	}
-}
 
 namespace RESOURCES
 {
@@ -73,11 +56,6 @@ namespace RESOURCES
 
 		/* Define the minimum food to level up */
 		const double MIN_TO_LEVEL_UP = 1.0;
-	}
-
-	namespace WORK
-	{
-		const double ZERO = 0.0;
 	}
 
 	namespace GOLD
@@ -350,13 +328,11 @@ City::City
 	m_atq(0),
 	m_def(0),
 	m_nbstructurebuild(0),
+	m_conversionToApply(conversionSurplus_Type::No_Conversion),
 	m_citizenManager(m_tile),
 	m_foodManager(m_citizenManager),
-	m_workBalance(0),
-	m_workSurplusPreviousTurn(0),
-	m_goldBalance(0.0),
-	m_conversionToApply(conversionSurplus_Type::No_Conversion),
-	m_buildQueue()
+	m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
+	m_goldBalance(0.0)
 {
 	R2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
 }
@@ -416,7 +392,7 @@ void City::foodNextTurn
 		/* N/A */
 		break;
 	case conversionSurplus_Type::FoodToWork:
-		convertFoodSurplusToWork(m_foodManager.getFoodBalanceForConversion());
+		m_buildManager.convertFoodSurplusToWork(m_foodManager.getFoodBalanceForConversion());
 		m_foodManager.ResetFoodBalanceFromConversion();
 		break;
 	case conversionSurplus_Type::FoodToGold:
@@ -466,131 +442,6 @@ bool City::testPos
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* NAME : computeWork																   */
-/* ROLE : Calculate the work for the turn											   */
-/* INPUT : void																		   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::computeWork()
-{
-	/* Sum work from citizen */
-	m_workBalance = m_citizenManager.getWorkFromCitizen();
-
-	/* Applying Emotion multiplier */
-	m_workBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
-
-	/* Applying the work which was converted from food in the previous turn */
-	m_workBalance += m_workSurplusPreviousTurn;
-
-	/* Reset m_workSurplusPreviousTurn to CITY_ZERO */
-	m_workSurplusPreviousTurn = RESOURCES::WORK::ZERO;
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeWorkToBuild														   */
-/* ROLE : Compute the remaining work to build a building or unit					   */
-/* ROLE : if the remaining work is zero then the building or unit is created		   */
-/* ROLE : if the build is created and there work Surplus then either apply it ...	   */
-/* ROLE : ... to next build or convert it to food									   */
-/* OUT : Player* : ptr to the selected player										   */
-/* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::computeWorkToBuild
-(
-	Player& player,
-	const VectUnitTemplate& vectUnitTemplate,
-	bool* needToUpdateDrawUnit
-)
-{
-	switch (m_conversionToApply)
-	{
-	case conversionSurplus_Type::No_Conversion:
-	case conversionSurplus_Type::FoodToWork:
-	case conversionSurplus_Type::FoodToGold:
-	case conversionSurplus_Type::WorkToFood:
-	case conversionSurplus_Type::GoldToFood:
-	case conversionSurplus_Type::GoldToWork:
-
-		/* CASE : work to build */
-		if (!m_buildQueue.empty())
-		{
-			/* Decrease by m_workBalance the amont of the remainingWork to build */
-			m_buildQueue.front().buildQ.remainingWork -= m_workBalance;
-
-			double workSurplus(0.0);
-			while (m_buildQueue.front().buildQ.remainingWork < 0.0)
-			{
-				switch (m_buildQueue.front().buildQ.type)
-				{
-				case build_Type::unit:
-				{
-					unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.front().buildQ.name, vectUnitTemplate));
-
-					player.addUnit
-					(
-						m_buildQueue.front().buildQ.name,
-						m_x,
-						m_y,
-						vectUnitTemplate[unitToBuild].type,
-						vectUnitTemplate[unitToBuild].life,
-						vectUnitTemplate[unitToBuild].atq,
-						vectUnitTemplate[unitToBuild].def,
-						vectUnitTemplate[unitToBuild].movement,
-						vectUnitTemplate[unitToBuild].numberOfAttack,
-						vectUnitTemplate[unitToBuild].level,
-						vectUnitTemplate[unitToBuild].maintenance
-					);
-					*needToUpdateDrawUnit = true;
-
-					break;
-				}
-				case build_Type::building:
-
-					/* TODO */
-
-					break;
-				default:
-#ifdef _DEBUG
-					throw("[ERROR]___: computeWorkToBuild : m_buildQueue.front().type == else");
-#endif // _DEBUG
-					break;
-				}
-
-				workSurplus = -m_buildQueue.front().buildQ.remainingWork;
-
-				removeBuildToQueueFront();
-
-				if (!m_buildQueue.empty())
-				{
-					m_buildQueue.front().buildQ.remainingWork -= workSurplus;
-				}
-				else
-				{
-					convertWorkSurplusToFood(workSurplus);
-					return;
-				}
-			}
-		}
-		break;
-	default:
-
-#ifdef _DEBUG
-		throw("[ERROR]___: computeWorkToBuild : conversionSurplus_Type::??????");
-#endif // _DEBUG
-
-		break;
-	case conversionSurplus_Type::WorkToGold:
-
-		/* CASE : work conversion to gold */
-		player.addGoldToGoldConversionSurplus(m_workBalance * MULTIPLIER::CONVERSION::WORK_TO_GOLD);
-
-		break;
-	}
-}
-
-/* ----------------------------------------------------------------------------------- */
 /* NAME : computeGold																   */
 /* ROLE : Calculate the gold for the turn											   */
 /* INPUT : void																		   */
@@ -621,34 +472,6 @@ void City::addCityGoldToTaxIncome
 }
 
 /* ----------------------------------------------------------------------------------- */
-/* NAME : convertWorkSurplusToFood													   */
-/* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
-/* INPUT : double workSurplus : work surplus to convert into food					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::convertWorkSurplusToFood
-(
-	const double workSurplus
-)
-{
-	m_foodManager.setFoodSurplusPreviousTurn(workSurplus * MULTIPLIER::CONVERSION::WORK_TO_FOOD);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertWorkSurplusToFood													   */
-/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
-/* INPUT : double workSurplus : food surplus to convert into work					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::convertFoodSurplusToWork
-(
-	const double foodSurplus
-)
-{
-	m_workSurplusPreviousTurn = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_WORK;
-}
-
-/* ----------------------------------------------------------------------------------- */
 /* NAME : convertFoodSurplusToGold													   */
 /* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
 /* INPUT : double workSurplus : food surplus to convert into work					   */
@@ -664,58 +487,6 @@ void City::convertFoodSurplusToGold
 	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_GOLD;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : addBuildToQueue															   */
-/* ROLE : Push build to buildQueue													   */
-/* IN : build buildToQueue : build to push into buildQueue							   */
-/* OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* INPUT : SDL_Renderer*& renderer : ptr SDL_renderer								   */
-/* INPUT : TTF_Font* font[] : array of SDL font										   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::addBuildToQueue
-(
-	const buildGUI& buildToQueue
-)
-{
-	m_buildQueue.push_back(buildToQueue);
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : removeBuildToQueueFront													   */
-/* ROLE : Pop build to buildQueue													   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::removeBuildToQueueFront()
-{
-	if (m_buildQueue.front().buildG != nullptr)
-	{
-		m_buildQueue.front().buildG->destroy();
-		m_buildQueue.front().buildG = nullptr;
-	}
-	m_buildQueue.pop_front();
-}
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : removeBuildToQueue														   */
-/* ROLE : remove build to buildQueue at index										   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* IN : unsigned int index : index to remove										   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-void City::removeBuildToQueue
-(
-	const size_t index
-)
-{
-	if (m_buildQueue[index].buildG != nullptr)
-	{
-		m_buildQueue[index].buildG->destroy();
-		m_buildQueue[index].buildG = nullptr;
-	}
-	m_buildQueue.erase(m_buildQueue.begin() + index);
-}
 
 /* *********************************************************
  *					END City::METHODS					   *

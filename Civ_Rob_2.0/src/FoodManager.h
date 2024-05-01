@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.11.0
-	file version : 1.2
+	last modification on this file on version:0.25.12.0
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -78,6 +78,17 @@ public:
 
 	void setFoodStock(double foodStock)								{ m_foodStock = foodStock; };
 	void setFoodToLevelUp(double foodToLevelUp)						{ m_foodToLevelUp = foodToLevelUp; };
+
+	/* ----------------------------------------------------------------------------------- */
+	/* NAME : convertWorkSurplusToFood													   */
+	/* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
+	/* INPUT : double workSurplus : work surplus to convert into food					   */
+	/* RETURNED VALUE : void															   */
+	/* ----------------------------------------------------------------------------------- */
+	void convertWorkSurplusToFood
+	(
+		const double workSurplus
+	);
 	
 private:
 

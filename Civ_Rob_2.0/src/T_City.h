@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.11.0
-	file version : 1.3
+	last modification on this file on version:0.25.12.0
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -55,6 +55,25 @@ namespace EMOTION_RANGE
 
 	/* Define the mean value of emotion range */
 	const double SCALE_MEAN = ((abs(MAX) + abs(MIN)) / 2.0);
+}
+
+
+namespace MULTIPLIER
+{
+	namespace CONVERSION
+	{
+		/* Define the multiplier coefficient to convert work to food */
+		const double WORK_TO_FOOD = 10.0;
+
+		/* Define the multiplier coefficient to convert food to work */
+		const double FOOD_TO_WORK = (1.0 / WORK_TO_FOOD);
+
+		/* Define the multiplier coefficient to convert work to gold */
+		const double WORK_TO_GOLD = (10.0 * WORK_TO_FOOD);
+
+		/* Define the multiplier coefficient to convert food to gold */
+		const double FOOD_TO_GOLD = (WORK_TO_GOLD / FOOD_TO_WORK);
+	}
 }
 
 /* *********************************************************
