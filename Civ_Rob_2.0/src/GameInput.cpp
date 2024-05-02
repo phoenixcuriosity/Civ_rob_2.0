@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.7.0
-	file version : 1.42
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.14.2
+	file version : 1.43
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -138,8 +138,8 @@ void GamePlayScreen::actionByKey()
 		/* Found City */
 		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
 		{
-			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
-			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+			Player_PtrT splayer(m_players.GETselectedPlayerPtr());
+			Unit_PtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
 
 			if (sUnit->isThisUnitType("settler"))
 			{
@@ -151,8 +151,8 @@ void GamePlayScreen::actionByKey()
 		/* Irragate */
 		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_IRRIGATE))
 		{
-			std::shared_ptr<Player> splayer(m_players.GETselectedPlayerPtr());
-			std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+			Player_PtrT splayer(m_players.GETselectedPlayerPtr());
+			Unit_PtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
 
 			if	(sUnit->GETname().starts_with("ouvrier_tier_") == STRINGS::START_WITH)
 			{

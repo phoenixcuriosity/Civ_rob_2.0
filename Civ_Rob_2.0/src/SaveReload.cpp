@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.13.1
-	file version : 1.33
+	last modification on this file on version:0.25.14.2
+	file version : 1.34
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -675,10 +675,10 @@ void SaveReload::loadUnitXML
 
 	while (nullptr != nUnit)
 	{
-		std::shared_ptr<Player> blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayerId()]);
+		Player_PtrT blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayerId()]);
 		blankPlayer->addEmptyUnit();
 
-		std::shared_ptr<Unit> blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
+		Unit_PtrT blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
 		blankUnit->SETowner(blankPlayer.get());
 
 		inputNode = nUnit->FirstChild();
@@ -772,11 +772,11 @@ void SaveReload::loadCityXML
 	};
 	BlankCity blankCity;
 	build blankBluid;
-	Citizen* ptrCitizen;
+	Citizen_PtrT ptrCitizen;
 
 
-	std::shared_ptr<Player> ptrPlayer(mainGame.GETPlayers().GETselectedPlayerPtr());
-	std::shared_ptr<City> ptrCity;
+	Player_PtrT ptrPlayer(mainGame.GETPlayers().GETselectedPlayerPtr());
+	City_PtrT ptrCity;
 
 	while (nullptr != nCity)
 	{
@@ -901,7 +901,7 @@ void SaveReload::loadCityXML
 			while (nullptr != nTabCitizenElement)
 			{
 				ptrCity->addCitizen(true);
-				ptrCitizen = ptrCity->GETcitizens().back().get();
+				ptrCitizen = ptrCity->GETcitizens().back();
 
 				tinyxml2::XMLNode* nTabCitizenElementtileOccupied = nTabCitizenElement->FirstChild();
 				if (nullptr == nTabCitizenElementtileOccupied) R2D::ExitFromError::exitFromError("[ERROR]___: loadCityXML : City->nTabCitizen->tileOccupied == nullptr");

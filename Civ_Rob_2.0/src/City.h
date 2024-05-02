@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.4
-	file version : 1.32
+	last modification on this file on version:0.25.14.2
+	file version : 1.33
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -328,8 +328,6 @@ private:
 	double m_goldBalance;
 };
 
-
-typedef std::vector<std::shared_ptr<City>> VectCity;
 
 
 

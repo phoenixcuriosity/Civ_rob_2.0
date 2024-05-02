@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.13.1
-	file version : 1.24
+	last modification on this file on version:0.25.14.2
+	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -521,7 +521,8 @@ private:
 	Player* m_owner;
 };
 
-typedef std::vector<std::shared_ptr<Unit>> VectUnit;
+typedef std::shared_ptr<Unit> Unit_PtrT;
+typedef std::vector<Unit_PtrT> VectUnit;
 
 
 #endif /* Unit_H */

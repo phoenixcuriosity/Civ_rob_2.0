@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.13.1
-	file version : 1.22
+	last modification on this file on version:0.25.14.2
+	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -33,6 +33,7 @@
 #include <R2D/src/Camera2D.h>
 #include <R2D/src/WidgetLabel.h>
 #include <R2D/src/SpriteBatch.h>
+#include <R2D/src/SpriteFont.h>
 #include <R2D/src/AudioEngine.h>
 #include <R2D/src/GUI.h>
 #include <R2D/src/Window.h>
@@ -250,7 +251,7 @@ public:
 		const unsigned int index
 	);
 
-	virtual std::shared_ptr<City>* searchCity
+	virtual City_PtrT* searchCity
 	(
 		const unsigned int indexX,
 		const unsigned int indexY
@@ -304,7 +305,7 @@ public:
 	inline virtual const VectCity& GETtabCity()			const { return m_tabCity; };
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
-	inline virtual const std::shared_ptr<Unit>& GETSelectedUnitPtr() const { return m_tabUnit[m_selectedUnit]; }
+	inline virtual const Unit_PtrT& GETSelectedUnitPtr() const { return m_tabUnit[m_selectedUnit]; }
 
 	inline virtual int GETid()							const { return m_id; };
 	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
@@ -335,8 +336,8 @@ private:
 	OnOffDisplay m_onOffDisplay;
 };
 
-typedef std::vector< std::shared_ptr<Player>> VectPlayer;
-typedef std::vector<GLuint> VectID;
+typedef std::shared_ptr<Player> Player_PtrT;
+typedef std::vector<Player_PtrT> VectPlayer;
 
 class Players
 {
@@ -345,18 +346,18 @@ public:
 	~Players();
 
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
-	inline std::shared_ptr<Player>& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
+	inline Player_PtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
 	inline VectCityName& GETvectCityName() { return m_vectCityName; };
 	inline VectUnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
-	inline std::shared_ptr<City>& GETSelectedCity() { return m_selectedCity; };
+	inline City_PtrT& GETSelectedCity() { return m_selectedCity; };
 
 	inline void SETselectedPlayerId(const int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
-	inline void SETselectedPlayerPtr(std::shared_ptr<Player>& selectedPlayerPtr) { m_selectedPlayerPtr = selectedPlayerPtr; };
+	inline void SETselectedPlayerPtr(Player_PtrT& selectedPlayerPtr) { m_selectedPlayerPtr = selectedPlayerPtr; };
 	inline void SETneedToUpdateDrawUnit(const bool need) { m_needToUpdateDrawUnit = need; };
 	inline void SETneedToUpdateDrawCity(const bool need) { m_needToUpdateDrawCity = need; };
-	inline void SetSelectedCity(std::shared_ptr<City> selectedCity) { m_selectedCity = selectedCity; };
+	inline void SetSelectedCity(City_PtrT selectedCity) { m_selectedCity = selectedCity; };
 
 	inline bool isValidSelectedCity() { if (m_selectedCity != nullptr) return true; else return false; };
 
@@ -397,7 +398,7 @@ public:
 	(
 		const MainMap& mainMap,
 		R2D::Camera2D& camera,
-		std::shared_ptr<R2D::SpriteFont>& font
+		SpriteFont_PtrT& font
 	);
 
 	void renderCity();
@@ -413,10 +414,10 @@ private:
 	// index du joueur actuellement sélectionné
 	int m_selectedPlayer;
 	/* Ptr to the selected Player */
-	std::shared_ptr<Player> m_selectedPlayerPtr;
+	Player_PtrT m_selectedPlayerPtr;
 
 	/* Ptr to the selected City */
-	std::shared_ptr<City> m_selectedCity;
+	City_PtrT m_selectedCity;
 
 	VectCityName m_vectCityName;
 
