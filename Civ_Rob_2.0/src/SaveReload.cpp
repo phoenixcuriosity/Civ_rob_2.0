@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.4
-	file version : 1.32
+	last modification on this file on version:0.25.13.1
+	file version : 1.33
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -195,15 +195,15 @@ void SaveReload::savePlayer
 		tinyxml2::XMLElement* GoldStatsElementArmiesCost = xmlDoc.NewElement("ArmiesCost");
 		tinyxml2::XMLElement* GoldStatsElementBuildingsCost = xmlDoc.NewElement("BuildingsCost");
 
-		GoldStatsElementGold->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().gold);
-		GoldStatsElementGoldBalance->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().goldBalance);
-		GoldStatsElementIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().income);
-		GoldStatsElementCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().cost);
-		GoldStatsElementTaxIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().taxIncome);
-		GoldStatsElementCommerceIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().commerceIncome);
-		GoldStatsElementGoldConversionSurplus->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().goldConversionSurplus);
-		GoldStatsElementArmiesCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().armiesCost);
-		GoldStatsElementBuildingsCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStatsConst().buildingsCost);
+		GoldStatsElementGold->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().gold);
+		GoldStatsElementGoldBalance->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().goldBalance);
+		GoldStatsElementIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().income);
+		GoldStatsElementCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().cost);
+		GoldStatsElementTaxIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().taxIncome);
+		GoldStatsElementCommerceIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().commerceIncome);
+		GoldStatsElementGoldConversionSurplus->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().goldConversionSurplus);
+		GoldStatsElementArmiesCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().armiesCost);
+		GoldStatsElementBuildingsCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().buildingsCost);
 
 		GoldStatsElement->InsertEndChild(GoldStatsElementGold);
 		GoldStatsElement->InsertEndChild(GoldStatsElementGoldBalance);
