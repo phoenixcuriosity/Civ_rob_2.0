@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.1
-	file version : 1.2
+	last modification on this file on version:0.25.12.2
+	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -54,8 +54,8 @@ m_foodManager(foodManager),
 m_x(x),
 m_y(y),
 m_conversionToApply(conversionToApplyf),
-m_workBalance(0.0),
-m_workSurplusPreviousTurn(0.0),
+m_workBalance(RESOURCES::WORK::ZERO),
+m_workSurplusPreviousTurn(RESOURCES::WORK::ZERO),
 m_buildQueue()
 {
 }
@@ -120,8 +120,8 @@ void BuildManager::computeWorkToBuild
 			/* Decrease by m_workBalance the amont of the remainingWork to build */
 			m_buildQueue.front().buildQ.remainingWork -= m_workBalance;
 
-			double workSurplus(0.0);
-			while (m_buildQueue.front().buildQ.remainingWork < 0.0)
+			double workSurplus(RESOURCES::WORK::ZERO);
+			while (m_buildQueue.front().buildQ.remainingWork < RESOURCES::WORK::ZERO)
 			{
 				switch (m_buildQueue.front().buildQ.type)
 				{
@@ -289,7 +289,7 @@ double BuildManager::GETBuildPerc()const
 				* PERCENTAGE::ONE_HUNDRED
 				);
 	}
-	return 0.0;
+	return RESOURCES::WORK::ZERO;
 };
 
 
