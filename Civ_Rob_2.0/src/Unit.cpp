@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.7.0
-	file version : 1.29
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.14.2
+	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -129,7 +129,7 @@ bool Unit::searchUnitTile
 {
 	if (SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId())
 	{
-		std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
+		Player_PtrT selPlayer(players.GETselectedPlayerPtr());
 
 		for (unsigned int i(0); i < selPlayer->GETtabUnit().size(); i++)
 		{
@@ -172,7 +172,7 @@ void Unit::tryToMove
 {
 	if (players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED)
 	{
-		const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
+		const Player_PtrT selPlayer(players.GETselectedPlayerPtr());
 		int playerToAttack(SELECTION::NO_PLAYER_SELECTED), unitToAttack(SELECTION::NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
 		switch (searchToMove(maps, players, cardinalDirection, &playerToAttack, &unitToAttack))
@@ -186,9 +186,9 @@ void Unit::tryToMove
 		case Move_Type::attackMove:
 		{
 			/* safe index playerToAttack / unitToAttack : filled by searchToMove */
-			const std::shared_ptr<Player> attackPlayer(players.GETvectPlayer()[playerToAttack]);
-			const std::shared_ptr<Unit> attackUnit{ selPlayer->GETtabUnit()[selectunit] };
-			const std::shared_ptr<Unit> defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
+			const Player_PtrT attackPlayer(players.GETvectPlayer()[playerToAttack]);
+			const Unit_PtrT attackUnit{ selPlayer->GETtabUnit()[selectunit] };
+			const Unit_PtrT defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
 
 			if	(attackUnit->isPossibleToAttack())
 			{
@@ -251,8 +251,8 @@ Move_Type Unit::searchToMove
 	/*		  susceptible de mourrir par l'attaque											   */
 	/* --------------------------------------------------------------------------------------- */
 
-	const std::shared_ptr<Player> selPlayer(players.GETselectedPlayerPtr());
-	const std::shared_ptr<Unit> unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
+	const Player_PtrT selPlayer(players.GETselectedPlayerPtr());
+	const Unit_PtrT unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 
 	bool nextTileValidToMove(false);

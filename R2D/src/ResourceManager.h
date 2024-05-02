@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.9.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.14.1
+	file version : 1.6
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -59,7 +59,7 @@ namespace R2D
 			const std::string& path
 		);
 
-		static std::shared_ptr<R2D::SpriteFont>& getSpriteFont();
+		static SpriteFont_PtrT& getSpriteFont();
 		static GLSLProgram& getGLSLProgram();
 
 		static bool getTextFromFile
@@ -107,7 +107,7 @@ namespace R2D
 	private:
 		static TextureCache m_textureCache;
 		static Files m_files;
-		static std::shared_ptr<R2D::SpriteFont> m_spriteFont;
+		static SpriteFont_PtrT m_spriteFont;
 		static GLSLProgram m_gLSLProgram;
 		static ColorRGBA8C m_colorsRGBA8;
 		static CardinalDirectionMapping m_cardinalDirectionMapping;

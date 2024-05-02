@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.13.1
-	file version : 1.29
+	last modification on this file on version:0.25.14.2
+	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -282,7 +282,7 @@ void Player::deleteCity
 	}
 }
 
-std::shared_ptr<City>* Player::searchCity
+City_PtrT* Player::searchCity
 (
 	const unsigned int indexX,
 	const unsigned int indexY
@@ -476,7 +476,7 @@ void Players::clickToSelectUnit
 {
 	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
 	{
-		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
+		Player_PtrT p{ m_vectPlayer[m_selectedPlayer] };
 		unsigned int i{ 0 };
 		for (const auto& u : p->GETtabUnit())
 		{
@@ -500,11 +500,11 @@ void Players::isAUnitSelected()
 {
 	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
 	{
-		std::shared_ptr<Player> p{ m_vectPlayer[m_selectedPlayer] };
+		Player_PtrT p{ m_vectPlayer[m_selectedPlayer] };
 
 		if (p->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 		{
-			std::shared_ptr<Unit> u{ p->GETtabUnit()[p->GETselectedUnit()] };
+			Unit_PtrT u{ p->GETtabUnit()[p->GETselectedUnit()] };
 			bool prevShow{ u->GETshow() };
 			u->cmpblit();
 			if (prevShow != u->GETshow())
@@ -530,7 +530,7 @@ void Players::drawUnit
 		{
 			for (unsigned int j(0); j < m_vectPlayer[i]->GETtabUnit().size(); j++)
 			{
-				std::shared_ptr<Unit>unit(m_vectPlayer[i]->GETtabUnit()[j]);
+				Unit_PtrT unit(m_vectPlayer[i]->GETtabUnit()[j]);
 
 				if (unit->GETshow())
 				{
@@ -606,7 +606,7 @@ void Players::drawCity
 (
 	const MainMap& mainMap,
 	R2D::Camera2D& camera,
-	std::shared_ptr<R2D::SpriteFont>& font
+	SpriteFont_PtrT& font
 )
 {
 	if (m_needToUpdateDrawCity)
@@ -620,7 +620,7 @@ void Players::drawCity
 		{
 			for (unsigned int j(0); j < m_vectPlayer[i]->GETtabCity().size(); j++)
 			{
-				std::shared_ptr<City>city(m_vectPlayer[i]->GETtabCity()[j]);
+				City_PtrT city(m_vectPlayer[i]->GETtabCity()[j]);
 
 				
 				if	(
@@ -677,7 +677,7 @@ bool Players::searchCity
 	const unsigned int indexY
 )
 {
-	std::shared_ptr<City>* ptrCity{};
+	City_PtrT* ptrCity{};
 	for (auto& p : m_vectPlayer)
 	{
 		ptrCity = p->searchCity(indexX, indexY);

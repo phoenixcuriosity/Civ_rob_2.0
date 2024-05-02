@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.11.0
-	file version : 1.6
+	last modification on this file on version:0.25.14.2
+	file version : 1.7
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -119,7 +119,8 @@ private:
 	bool m_place;
 };
 
-typedef std::vector<std::shared_ptr<Citizen>> VectCitizen;
+typedef std::shared_ptr<Citizen> Citizen_PtrT;
+typedef std::vector<Citizen_PtrT> VectCitizen;
 
 
 #endif /* Citizen_H */

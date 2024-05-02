@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.13.1
-	file version : 1.14
+	last modification on this file on version:0.25.14.2
+	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -323,7 +323,7 @@ private:
 	/* Need seperate spriteBatch because of the Texture superposition */
 	R2D::SpriteBatch m_spriteBatchAppartenance;
 
-	std::vector<GLuint> s_vectID;
+	VectID s_vectID;
 
 	static unsigned int* s_tileSize;
 };

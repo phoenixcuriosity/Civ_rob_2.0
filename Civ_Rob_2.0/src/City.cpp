@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.3
-	file version : 1.50
+	last modification on this file on version:0.25.14.2
+	file version : 1.51
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -92,9 +92,9 @@ void City::createCity
 )
 {
 	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
-	std::shared_ptr<Player> splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
+	Player_PtrT splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
-	std::shared_ptr<Unit> sUnit(splayer->GETtabUnit()[selectedUnit]);
+	Unit_PtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
 	/* ---------------------------------------------------------------------- */
 	/* 1� : Recherche du nom de la nouvelle Citie 							  */
