@@ -1,9 +1,9 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.21
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.13.1
+	file version : 1.22
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -299,18 +299,19 @@ public:
 	 ********************************************************* */
 
 
-	inline virtual std::string GETname() const { return m_name; };
-	inline virtual int GETid() const { return m_id; };
-	inline virtual VectUnit GETtabUnit() const { return m_tabUnit; };
-	inline virtual VectCity GETtabCity() const { return m_tabCity; };
-	inline virtual int GETselectedUnit()const { return m_selectedUnit; };
-	inline virtual int GETselectedCity() { return m_selectedCity; };
-	inline virtual GoldStats& GETgoldStats() { return m_goldStats; };
-	inline virtual GoldStats GETgoldStatsConst()const { return m_goldStats; };
-	inline virtual OnOffDisplay& GETonOffDisplay() { return m_onOffDisplay; };
-	inline virtual OnOffDisplay GETonOffDisplayConst()const { return m_onOffDisplay; };
+	inline virtual const std::string& GETname()			const { return m_name; };
+	inline virtual const VectUnit& GETtabUnit()			const { return m_tabUnit; };
+	inline virtual const VectCity& GETtabCity()			const { return m_tabCity; };
+	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
+	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
+	inline virtual const std::shared_ptr<Unit>& GETSelectedUnitPtr() const { return m_tabUnit[m_selectedUnit]; }
 
-	virtual std::shared_ptr<Unit>& GETSelectedUnitPtr(){return m_tabUnit[m_selectedUnit];}
+	inline virtual int GETid()							const { return m_id; };
+	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
+	inline virtual int GETselectedCity()				const { return m_selectedCity; };
+
+	inline virtual GoldStats& GETgoldStats()				  { return m_goldStats; };
+	inline virtual OnOffDisplay& GETonOffDisplay()		      { return m_onOffDisplay; };
 
 	inline virtual void SETname(const std::string& msg) { m_name = msg; };
 	inline virtual void SETid(const int id) { m_id = id; };

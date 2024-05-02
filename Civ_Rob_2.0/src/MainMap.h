@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.13
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.13.1
+	file version : 1.14
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -195,20 +195,21 @@ public:
 
 public:
 
-	inline unsigned int GETmapSizePixX()const { return m_mapSizePixX; };
-	inline unsigned int GETmapSizePixY()const { return m_mapSizePixY; };
-	inline unsigned int GETtileSize()const { return m_tileSize; };
-	inline unsigned int* GETtileSizePtr() { return &m_tileSize; };
-	inline unsigned int GETtoolBarSize()const { return m_toolBarSize; };
-	inline MatriceMap& GETmatriceMap() { return m_matriceMap; };
-	inline const MatriceMap& GETmatriceMapConst()const { return m_matriceMap; };
-	R2D::SpriteBatch& GETspriteBatch() { return m_spriteBatch; };
+	inline unsigned int GETmapSizePixX()		const { return m_mapSizePixX; };
+	inline unsigned int GETmapSizePixY()		const { return m_mapSizePixY; };
+	inline unsigned int GETtileSize()			const { return m_tileSize; };
+	inline unsigned int* GETtileSizePtr()			  { return &m_tileSize; };
+	inline unsigned int GETtoolBarSize()		const { return m_toolBarSize; };
+
+	inline MatriceMap& GETmatriceMap()					  { return m_matriceMap; };
+	inline const MatriceMap& GETmatriceMapConst()	const { return m_matriceMap; };
+	inline const R2D::SpriteBatch& GETspriteBatch()	const { return m_spriteBatch; };
 
 	inline void SETmapSizePixX(unsigned int mapSizePixX){  m_mapSizePixX = mapSizePixX; };
 	inline void SETmapSizePixY(unsigned int mapSizePixY) {  m_mapSizePixY = mapSizePixY; };
 	inline void SETtileSize(unsigned int tileSize) {  m_tileSize = tileSize; };
 	inline void SETtoolBarSize(unsigned int toolBarSize) {  m_toolBarSize = toolBarSize; };
-	inline void SETmatriceMap(MatriceMap& matriceMap) {  m_matriceMap = matriceMap; };
+	inline void SETmatriceMap(const MatriceMap& matriceMap) {  m_matriceMap = matriceMap; };
 	inline void SETneedToUpdateDraw(bool needToUpdateDraw) { m_needToUpdateDraw = needToUpdateDraw; };
 
 private:

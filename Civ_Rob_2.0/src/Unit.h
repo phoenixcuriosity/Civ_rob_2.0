@@ -1,9 +1,9 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.7.0
-	file version : 1.23
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	last modification on this file on version:0.25.13.1
+	file version : 1.24
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -441,7 +441,7 @@ public:
 	 *				Unit::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline std::string GETname()					const { return m_name; };
+	inline const std::string& GETname()				const { return m_name; };
 	inline unsigned int GETx()						const { return m_x; };
 	inline unsigned int GETy()						const { return m_y; };
 	inline Unit_Movement_Type GETmovementType()		const { return m_movementType; };
