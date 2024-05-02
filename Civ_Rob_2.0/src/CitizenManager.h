@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.11.0
-	file version : 1.1
+	last modification on this file on version:0.25.12.4
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -50,7 +50,7 @@ public:
 	/* ROLE : Remove all Citizens in the City											   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void resetTabCitizen();
+	void resetTabCitizen();
 
 	void addCitizen();
 	void addCitizen(bool uselessArg);
@@ -61,8 +61,7 @@ public:
 
 	void computeEmotion();
 
-	VectCitizen getCitizens() const { return m_citizens; };
-	VectCitizen& getCitizens()		{ return m_citizens; };
+	const VectCitizen& getCitizens()const { return m_citizens; };
 	unsigned int getEmotion() const { return m_emotion; };
 	unsigned int& getEmotion()		{ return m_emotion; };
 	void setEmotion(unsigned int emotion){ m_emotion = emotion; };

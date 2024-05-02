@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.3
-	file version : 1.3
+	last modification on this file on version:0.25.12.4
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -127,9 +127,10 @@ public:
 	void clearDynamicContextBuildToQueue();
 
 	double GETBuildPerc()const;
-	double getWorkBalance()const { return m_workBalance; };
+	double getWorkBalance()const			{ return m_workBalance; };
 
-	dequeBuild& getBuildQueue() { return m_buildQueue; };
+	dequeBuild& getBuildQueue()				{ return m_buildQueue; };
+	const dequeBuild& getBuildQueue()const	{ return m_buildQueue; };
 	
 
 private:
