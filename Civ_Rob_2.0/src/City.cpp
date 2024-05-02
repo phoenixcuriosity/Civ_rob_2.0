@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.0
-	file version : 1.49
+	last modification on this file on version:0.25.12.3
+	file version : 1.50
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -353,7 +353,7 @@ City::~City()
 /* OUT : GoldStats& goldStats : Player gold stats									   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
-void City::foodNextTurn
+void City::computefood
 (
 	GoldStats& goldStats
 )
@@ -413,6 +413,48 @@ void City::foodNextTurn
 		break;
 	default:
 		/* N/A */
+		break;
+	}
+}
+
+void City::computeWork
+(
+	Player& player,
+	const VectUnitTemplate& vectUnitTemplate,
+	bool* needToUpdateDrawUnit
+)
+{
+	m_buildManager.computeWork();
+
+	switch (m_conversionToApply)
+	{
+	case conversionSurplus_Type::No_Conversion:
+	case conversionSurplus_Type::FoodToWork:
+	case conversionSurplus_Type::FoodToGold:
+	case conversionSurplus_Type::WorkToFood:
+	case conversionSurplus_Type::GoldToFood:
+	case conversionSurplus_Type::GoldToWork:
+
+		m_buildManager.computeWorkToBuild(player, vectUnitTemplate, needToUpdateDrawUnit);
+
+		break;
+	default:
+
+#ifdef _DEBUG
+		throw("[ERROR]___: computeWorkToBuild : conversionSurplus_Type::??????");
+#endif // _DEBUG
+
+		break;
+	case conversionSurplus_Type::WorkToGold:
+
+		/* CASE : work conversion to gold */
+		player.addGoldToGoldConversionSurplus
+			(
+				m_buildManager.getWorkBalance()
+				*
+				MULTIPLIER::CONVERSION::WORK_TO_GOLD
+			);
+
 		break;
 	}
 }

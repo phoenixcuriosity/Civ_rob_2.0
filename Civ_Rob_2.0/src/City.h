@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.0
-	file version : 1.30
+	last modification on this file on version:0.25.12.3
+	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -161,14 +161,21 @@ public:
 	virtual ~City();
 
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : foodNextTurn																   */
+	/* NAME : computefood																   */
 	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
 	/* OUT : GoldStats& goldStats : Player gold stats									   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void foodNextTurn
+	virtual void computefood
 	(
 		GoldStats& goldStats
+	);
+
+	virtual void computeWork
+	(
+		Player& player,
+		const VectUnitTemplate& vectUnitTemplate,
+		bool* needToUpdateDrawUnit
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -231,12 +238,9 @@ public:
 
 	void addBuildToQueue(const buildGUI& buildToQueue)	{ m_buildManager.addBuildToQueue(buildToQueue); };
 	void removeBuildToQueue(const size_t index)			{ m_buildManager.removeBuildToQueue(index); };
+	void clearDynamicContextBuildToQueue()				{ m_buildManager.clearDynamicContextBuildToQueue(); };
 	double GETBuildPerc()const							{ return m_buildManager.GETBuildPerc(); };
-	void computeWork()									{ m_buildManager.computeWork(); };
-	void computeWorkToBuild(Player& player,
-		const VectUnitTemplate& vectUnitTemplate,
-		bool* needToUpdateDrawUnit)						{m_buildManager.computeWorkToBuild(player, vectUnitTemplate, needToUpdateDrawUnit); };
-
+	
 public:
 	/* *********************************************************
 	 *				City::METHODS::GET/SET					   *

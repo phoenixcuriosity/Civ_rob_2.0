@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.2
-	file version : 1.3
+	last modification on this file on version:0.25.12.3
+	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -62,7 +62,7 @@ m_buildQueue()
 
 BuildManager::~BuildManager()
 {
-	clearBuildToQueue();
+	clearDynamicContextBuildToQueue();
 }
 
 
@@ -105,89 +105,64 @@ void BuildManager::computeWorkToBuild
 	bool* needToUpdateDrawUnit
 )
 {
-	switch (m_conversionToApply)
+	if (!m_buildQueue.empty())
 	{
-	case conversionSurplus_Type::No_Conversion:
-	case conversionSurplus_Type::FoodToWork:
-	case conversionSurplus_Type::FoodToGold:
-	case conversionSurplus_Type::WorkToFood:
-	case conversionSurplus_Type::GoldToFood:
-	case conversionSurplus_Type::GoldToWork:
+		/* Decrease by m_workBalance the amont of the remainingWork to build */
+		m_buildQueue.front().buildQ.remainingWork -= m_workBalance;
 
-		/* CASE : work to build */
-		if (!m_buildQueue.empty())
+		double workSurplus(RESOURCES::WORK::ZERO);
+		while (m_buildQueue.front().buildQ.remainingWork < RESOURCES::WORK::ZERO)
 		{
-			/* Decrease by m_workBalance the amont of the remainingWork to build */
-			m_buildQueue.front().buildQ.remainingWork -= m_workBalance;
-
-			double workSurplus(RESOURCES::WORK::ZERO);
-			while (m_buildQueue.front().buildQ.remainingWork < RESOURCES::WORK::ZERO)
+			switch (m_buildQueue.front().buildQ.type)
 			{
-				switch (m_buildQueue.front().buildQ.type)
-				{
-				case build_Type::unit:
-				{
-					unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.front().buildQ.name, vectUnitTemplate));
+			case build_Type::unit:
+			{
+				unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.front().buildQ.name, vectUnitTemplate));
 
-					player.addUnit
-					(
-						m_buildQueue.front().buildQ.name,
-						m_x,
-						m_y,
-						vectUnitTemplate[unitToBuild].type,
-						vectUnitTemplate[unitToBuild].life,
-						vectUnitTemplate[unitToBuild].atq,
-						vectUnitTemplate[unitToBuild].def,
-						vectUnitTemplate[unitToBuild].movement,
-						vectUnitTemplate[unitToBuild].numberOfAttack,
-						vectUnitTemplate[unitToBuild].level,
-						vectUnitTemplate[unitToBuild].maintenance
-					);
-					*needToUpdateDrawUnit = true;
+				player.addUnit
+				(
+					m_buildQueue.front().buildQ.name,
+					m_x,
+					m_y,
+					vectUnitTemplate[unitToBuild].type,
+					vectUnitTemplate[unitToBuild].life,
+					vectUnitTemplate[unitToBuild].atq,
+					vectUnitTemplate[unitToBuild].def,
+					vectUnitTemplate[unitToBuild].movement,
+					vectUnitTemplate[unitToBuild].numberOfAttack,
+					vectUnitTemplate[unitToBuild].level,
+					vectUnitTemplate[unitToBuild].maintenance
+				);
+				*needToUpdateDrawUnit = true;
 
-					break;
-				}
-				case build_Type::building:
+				break;
+			}
+			case build_Type::building:
 
-					/* TODO */
+				/* TODO */
 
-					break;
-				default:
+				break;
+			default:
 #ifdef _DEBUG
-					throw("[ERROR]___: computeWorkToBuild : m_buildQueue.front().type == else");
+				throw("[ERROR]___: computeWorkToBuild : m_buildQueue.front().type == else");
 #endif // _DEBUG
-					break;
-				}
+				break;
+			}
 
-				workSurplus = -m_buildQueue.front().buildQ.remainingWork;
+			workSurplus = -m_buildQueue.front().buildQ.remainingWork;
 
-				removeBuildToQueueFront();
+			removeBuildToQueueFront();
 
-				if (!m_buildQueue.empty())
-				{
-					m_buildQueue.front().buildQ.remainingWork -= workSurplus;
-				}
-				else
-				{
-					m_foodManager.convertWorkSurplusToFood(workSurplus);
-					return;
-				}
+			if (!m_buildQueue.empty())
+			{
+				m_buildQueue.front().buildQ.remainingWork -= workSurplus;
+			}
+			else
+			{
+				m_foodManager.convertWorkSurplusToFood(workSurplus);
+				return;
 			}
 		}
-		break;
-	default:
-
-#ifdef _DEBUG
-		throw("[ERROR]___: computeWorkToBuild : conversionSurplus_Type::??????");
-#endif // _DEBUG
-
-		break;
-	case conversionSurplus_Type::WorkToGold:
-
-		/* CASE : work conversion to gold */
-		player.addGoldToGoldConversionSurplus(m_workBalance * MULTIPLIER::CONVERSION::WORK_TO_GOLD);
-
-		break;
 	}
 }
 
@@ -260,15 +235,16 @@ void BuildManager::removeBuildToQueue
 	m_buildQueue.erase(m_buildQueue.begin() + index);
 }
 
-void BuildManager::clearBuildToQueue()
+void BuildManager::clearDynamicContextBuildToQueue()
 {
-	/* Destroy dynamic context : buildQueue */
 	for (auto& button : m_buildQueue)
 	{
-		button.buildG->destroy();
-		button.buildG = nullptr;
+		if (button.buildG != nullptr)
+		{
+			button.buildG->destroy();
+			button.buildG = nullptr;
+		}
 	}
-	m_buildQueue.clear();
 }
 
 double BuildManager::GETBuildPerc()const
