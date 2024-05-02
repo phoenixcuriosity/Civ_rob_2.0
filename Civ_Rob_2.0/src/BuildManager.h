@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.0
-	file version : 1.1
+	last modification on this file on version:0.25.12.1
+	file version : 1.2
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -123,6 +123,8 @@ public:
 	(
 		const size_t index
 	);
+
+	void clearBuildToQueue();
 
 	double GETBuildPerc()const;
 
