@@ -30,6 +30,7 @@ Modified By: Robin Sauter
 #include <map>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace R2D
 {
@@ -121,5 +122,10 @@ namespace R2D
 
         unsigned int _texID;
     };
+
+
 }
+
+typedef std::shared_ptr<R2D::SpriteFont> SpriteFont_PtrT;
+
 #endif // SpriteFont_h__#pragma once
