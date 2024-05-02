@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.0
-	file version : 1.31
+	last modification on this file on version:0.25.12.4
+	file version : 1.32
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -892,7 +892,7 @@ void SaveReload::loadCityXML
 		}
 
 
-		ptrCity->GETCitizenManager().resetTabCitizen();
+		ptrCity->resetTabCitizen();
 		tinyxml2::XMLNode* nTabCitizen = nBuildQueue->NextSibling();
 		if (nullptr != nTabCitizen)
 		{
@@ -900,7 +900,7 @@ void SaveReload::loadCityXML
 
 			while (nullptr != nTabCitizenElement)
 			{
-				ptrCity->GETCitizenManager().addCitizen(true);
+				ptrCity->addCitizen(true);
 				ptrCitizen = ptrCity->GETcitizens().back().get();
 
 				tinyxml2::XMLNode* nTabCitizenElementtileOccupied = nTabCitizenElement->FirstChild();

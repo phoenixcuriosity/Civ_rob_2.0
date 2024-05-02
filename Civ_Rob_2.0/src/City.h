@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.0
-	file version : 1.30
+	last modification on this file on version:0.25.12.4
+	file version : 1.32
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -161,14 +161,21 @@ public:
 	virtual ~City();
 
 	/* ----------------------------------------------------------------------------------- */
-	/* NAME : foodNextTurn																   */
+	/* NAME : computefood																   */
 	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
 	/* OUT : GoldStats& goldStats : Player gold stats									   */
 	/* RETURNED VALUE : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void foodNextTurn
+	virtual void computefood
 	(
 		GoldStats& goldStats
+	);
+
+	virtual void computeWork
+	(
+		Player& player,
+		const VectUnitTemplate& vectUnitTemplate,
+		bool* needToUpdateDrawUnit
 	);
 
 	/* ----------------------------------------------------------------------------------- */
@@ -229,40 +236,54 @@ public:
 		GoldStats& goldStats
 	);
 
+public:
+
+	/* INTERFACE */
+
 	void addBuildToQueue(const buildGUI& buildToQueue)	{ m_buildManager.addBuildToQueue(buildToQueue); };
 	void removeBuildToQueue(const size_t index)			{ m_buildManager.removeBuildToQueue(index); };
+	void clearDynamicContextBuildToQueue()				{ m_buildManager.clearDynamicContextBuildToQueue(); };
 	double GETBuildPerc()const							{ return m_buildManager.GETBuildPerc(); };
-	void computeWork()									{ m_buildManager.computeWork(); };
-	void computeWorkToBuild(Player& player,
-		const VectUnitTemplate& vectUnitTemplate,
-		bool* needToUpdateDrawUnit)						{m_buildManager.computeWorkToBuild(player, vectUnitTemplate, needToUpdateDrawUnit); };
 
+	void addCitizen(bool uselessArg)					{ m_citizenManager.addCitizen(uselessArg); };
+	void resetTabCitizen()								{ m_citizenManager.resetTabCitizen(); };
+	void computeEmotion()								{ m_citizenManager.computeEmotion(); };
+	
 public:
 	/* *********************************************************
 	 *				City::METHODS::GET/SET					   *
 	 ********************************************************* */
 
-	inline virtual std::string GETimage()const { return m_image; };
-	inline virtual std::string GETname()const { return m_name; };
-	inline virtual size_t GETnbpop()const { return m_citizenManager.getCitizens().size(); };
-	inline virtual unsigned int GETx()const { return m_x; };
-	inline virtual unsigned int GETy()const { return m_y; };
-	inline virtual VectMap& GETtile() { return m_tile; };
-	inline virtual VectCitizen& GETcitizens() { return m_citizenManager.getCitizens(); };
-	inline virtual unsigned int GETinfluenceLevel()const { return m_influenceLevel; };
-	inline virtual unsigned int GETatq()const { return m_atq; };
-	inline virtual unsigned int GETdef()const { return m_def; };
-	inline virtual unsigned int GETemotion()const { return m_citizenManager.getEmotion(); };
-	inline virtual unsigned int GETnbstructurebuild()const { return m_nbstructurebuild; };
-	inline virtual double GETfoodStock()const { return m_foodManager.getFoodStock(); };
-	inline virtual double GETfoodBalance()const { return m_foodManager.getFoodBalanceForConversion(); };
-	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodManager.getFoodSurplusPreviousTurn(); };
-	inline virtual double GETfoodToLevelUp()const { return m_foodManager.getFoodToLevelUp(); };
-	inline virtual FoodManager& GETFoodManager() { return m_foodManager; };
-	inline virtual CitizenManager& GETCitizenManager() { return m_citizenManager; };
-	inline virtual double GETgoldBalance()const { return m_goldBalance; };
-	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
+	/* const & */
+
+	inline virtual const std::string& GETimage()const		{ return m_image; };
+	inline virtual const std::string& GETname()const		{ return m_name; };
+	inline virtual const VectMap& GETtile()const			{ return m_tile; };
+	inline virtual const VectCitizen& GETcitizens()const	{ return m_citizenManager.getCitizens(); };
+	inline virtual const FoodManager& GETFoodManager()const { return m_foodManager; };
+	inline virtual const CitizenManager& GETCitizenManager()const { return m_citizenManager; };
+	inline virtual const dequeBuild& GETbuildQueue()const	{ return m_buildManager.getBuildQueue(); };
+
+	/* & */
+
 	inline virtual dequeBuild& GETbuildQueue() { return m_buildManager.getBuildQueue(); };
+
+	/* implicit const */
+
+	inline virtual size_t GETnbpop()const					{ return m_citizenManager.getCitizens().size(); };
+	inline virtual unsigned int GETx()const					{ return m_x; };
+	inline virtual unsigned int GETy()const					{ return m_y; };
+	inline virtual unsigned int GETinfluenceLevel()const	{ return m_influenceLevel; };
+	inline virtual unsigned int GETatq()const				{ return m_atq; };
+	inline virtual unsigned int GETdef()const				{ return m_def; };
+	inline virtual unsigned int GETemotion()const			{ return m_citizenManager.getEmotion(); };
+	inline virtual unsigned int GETnbstructurebuild()const	{ return m_nbstructurebuild; };
+	inline virtual double GETfoodStock()const				{ return m_foodManager.getFoodStock(); };
+	inline virtual double GETfoodBalance()const				{ return m_foodManager.getFoodBalanceForConversion(); };
+	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodManager.getFoodSurplusPreviousTurn(); };
+	inline virtual double GETfoodToLevelUp()const			{ return m_foodManager.getFoodToLevelUp(); };
+	inline virtual double GETgoldBalance()const				{ return m_goldBalance; };
+	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
 
 	inline virtual void SETimage(std::string image) { m_image = image; };
 	inline virtual void SETname(std::string name) { m_name = name; };

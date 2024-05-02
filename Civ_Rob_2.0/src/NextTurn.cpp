@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.11.0
-	file version : 1.6
+	last modification on this file on version:0.25.12.4
+	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -54,16 +54,12 @@ void NextTurn::nextTurn(GamePlayScreen& mainGame)
 		for (auto& city : player->GETtabCity())
 		{
 			/* computeEmotion must be in first : Emotion use on other computations */
-			city->GETCitizenManager().computeEmotion();
+			city->computeEmotion();
 
-			city->foodNextTurn(player->GETgoldStats());
-			city->computeWork();
-			city->computeWorkToBuild
-			(
-				*player,
+			city->computefood(player->GETgoldStats());
+			city->computeWork(*player,
 				mainGame.GETPlayers().GETvectUnitTemplate(),
-				mainGame.GETPlayers().GETneedToUpdateDrawUnitPtr()
-			);
+				mainGame.GETPlayers().GETneedToUpdateDrawUnitPtr());
 			city->computeGold();
 			city->addCityGoldToTaxIncome(player->GETgoldStats());
 		}
