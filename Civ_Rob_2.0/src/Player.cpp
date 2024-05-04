@@ -2,8 +2,8 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.30
+	last modification on this file on version:0.25.15.1
+	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -647,7 +647,11 @@ void Players::drawCity
 					(
 						m_spriteBatchCityDynamic,
 						city->GETname().c_str(),
-						glm::vec2(500.0f, 500.0f), // offset pos
+						glm::vec2
+						(
+							static_cast<float>(city->GETx()),
+							static_cast<float>(city->GETy())
+						), // offset pos
 						glm::vec2(0.32f), // size
 						0.0f,
 						R2D::COLOR_WHITE
