@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.34
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,8 +22,16 @@
 
 #include "SaveReload.h"
 
-#include "MainMap.h"
 #include "App.h"
+#include "Citizen.h"
+#include "City.h"
+#include "GamePlayScreen.h"
+#include "MainMap.h"
+#include "NewGameScreen.h"
+#include "Player.h"
+#include "Unit.h"
+#include "T_Unit.h"
+#include "XmlConvertValue.h"
 
 #include <direct.h>
 
@@ -33,7 +39,7 @@
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/ExitFromError.h> 
 
-#include "XmlConvertValue.h"
+
 
 /* *********************************************************
  *				START SaveReload::STATIC				   *
@@ -675,10 +681,10 @@ void SaveReload::loadUnitXML
 
 	while (nullptr != nUnit)
 	{
-		Player_PtrT blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayerId()]);
+		PlayerPtrT blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayerId()]);
 		blankPlayer->addEmptyUnit();
 
-		Unit_PtrT blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
+		UnitPtrT blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
 		blankUnit->SETowner(blankPlayer.get());
 
 		inputNode = nUnit->FirstChild();
@@ -772,11 +778,11 @@ void SaveReload::loadCityXML
 	};
 	BlankCity blankCity;
 	build blankBluid;
-	Citizen_PtrT ptrCitizen;
+	CitizenPtrT ptrCitizen;
 
 
-	Player_PtrT ptrPlayer(mainGame.GETPlayers().GETselectedPlayerPtr());
-	City_PtrT ptrCity;
+	PlayerPtrT ptrPlayer(mainGame.GETPlayers().GETselectedPlayerPtr());
+	CityPtrT ptrCity;
 
 	while (nullptr != nCity)
 	{

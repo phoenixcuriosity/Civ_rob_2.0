@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,15 +25,11 @@
 
 #include "LIB.h"
 
-#include <deque>
+#include "T_CityScreen.h"
 
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
 #include <R2D/src/SpriteBatch.h>
-
-#include "T_CityScreen.h"
-#include "T_City.h"
-
 
 class CityScreen : public R2D::IGameScreen
 {
@@ -126,7 +120,7 @@ private:
 
 	SaveReload* m_SaveReload;
 
-	City_PtrT m_selectedCity;
+	CityPtrT m_selectedCity;
 
 	bool m_isInitialize;
 };

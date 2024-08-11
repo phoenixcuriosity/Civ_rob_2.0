@@ -1,9 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.1
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,25 +23,10 @@
 #ifndef T_MainMap_H
 #define T_MainMap_H
 
-#include "LIB.h"
-
-#include <vector>
-
-
-/* *********************************************************
- *						Constantes						   *
- ********************************************************* */
-
 namespace MAPH
 {
 	const unsigned int MAP_BORDER_MAX = 4;
 }
-
-
-
-/* *********************************************************
- *						 Enum							   *
- ********************************************************* */
 
  // Define Ground type use on the map
 enum class Ground_Type
@@ -71,10 +54,6 @@ enum class GroundSpec_Type
 	fish,
 	petroleum
 };
-
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
 
 struct Tile
 {
@@ -118,9 +97,6 @@ struct Tile
 	// indice financier de la case
 	int gold = -1;
 };
-
-typedef std::vector<Tile> VectMap;
-typedef std::vector<VectMap> MatriceMap;
 
 #endif // !T_MainMap_H
 

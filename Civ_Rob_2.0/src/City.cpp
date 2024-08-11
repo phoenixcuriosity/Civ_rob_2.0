@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.51
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,19 +20,19 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "City.h"
 
-#include "Utility.h"
-#include "Citizen.h"
-
 #include "App.h"
-#include <R2D/src/Window.h>
-#include <R2D/src/ValueToScale.h>
+#include "Citizen.h"
+#include "GameplayScreen.h"
+#include "Player.h"
+#include "Players.h"
+#include "Unit.h"
+#include "Utility.h"
+
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/ValueToScale.h>
+#include <R2D/src/Window.h>
 
 namespace POP
 {
@@ -44,8 +42,6 @@ namespace POP
 	/* Minimal population in City */
 	const unsigned int MIN = 1;
 }
-
-
 
 namespace RESOURCES
 {
@@ -64,7 +60,6 @@ namespace RESOURCES
 	}
 }
 
-
 namespace CityC
 {
 	/* Todo : g�n�ralisation : compter nb Citie par player dans CITIENAME.txt */
@@ -75,16 +70,7 @@ namespace CityC
 	const unsigned int CITY_IHM_SECOND_INDEX = 1;
 }
 
- /* *********************************************************
-  *					START City::STATIC					   *
-  ********************************************************* */
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : createCity																   */
-/* ROLE : Cr�ation d'une City � partir d'un settler sur la carte					   */
-/* INPUT/OUTPUT : struct Sysinfo& : Global structure								   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
 void City::createCity
 (
 	GamePlayScreen& mainGame,
@@ -92,9 +78,9 @@ void City::createCity
 )
 {
 	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
-	Player_PtrT splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
+	PlayerPtrT splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
-	Unit_PtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
+	UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
 	/* ---------------------------------------------------------------------- */
 	/* 1� : Recherche du nom de la nouvelle Citie 							  */
@@ -148,18 +134,6 @@ void City::createCity
 	sUnit.reset();
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : fillCitieTiles															   */
-/* ROLE : Rempli le tableau de la Citie avec le point centrale la middletileXY		   */
-/* ROLE : et de largeur et hauteur totale INIT_SIZE_VIEW							   */
-/* INPUT : const Screen& screen	: taille en x et y de l'�cran						   */
-/* INPUT : unsigned int middletileX : index en tileSize de x de la Citie			   */
-/* INPUT : unsigned int middletileY : index en tileSize de y de la Citie			   */
-/* INPUT : unsigned int selectplayer : index d'appartenance							   */
-/* INPUT/OUTPUT : Map& map : structure de la Map									   */
-/* OUTPUT : std::vector<Tile>& tabtile : tableau � remplir de la Citie				   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void City::fillCitieTiles
 (
 	const R2D::Window& window,
@@ -201,13 +175,6 @@ void City::fillCitieTiles
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initSizeInfluenceCondition												   */
-/* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
-/* INPUT : int o :	index en x														   */
-/* INPUT : int p :	index en y														   */
-/* RETURNED VALUE : bool : false -> invalid / true -> valid							   */
-/* ----------------------------------------------------------------------------------- */
 bool City::initSizeInfluenceCondition
 (
 	const int o,
@@ -235,15 +202,6 @@ bool City::initSizeInfluenceCondition
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : cornerCheck																   */
-/* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
-/* IN : int o :	index en x															   */
-/* IN : int p :	index en y															   */
-/* IN : unsigned int influenceLevel : City influence level 							   */
-/* RETURNED VALUE : bool : false -> this tile is a corner							   */
-/* RETURNED VALUE : bool : true -> this tile is not a corner						   */
-/* ----------------------------------------------------------------------------------- */
 bool City::cornerCheck
 (
 	const int o,
@@ -264,13 +222,6 @@ bool City::cornerCheck
 	return true;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : searchCityTile															   */
-/* ROLE : Recherche la case de la City et renvoie vers cityMap						   */
-/* INPUT : const std::vector<Player*>& : Vecteur de joueurs							   */
-/* INPUT/OUTPUT : Var& : Structure Var												   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
 bool City::searchCityTile
 (
 	const unsigned int indexX,
@@ -291,26 +242,6 @@ bool City::searchCityTile
 	}
 }
 
-
-/* *********************************************************
- *					END City::STATIC					   *
- ********************************************************* */
-
-
-
- /* *********************************************************
-  *					START City::METHODS					   *
-  ********************************************************* */
-
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : City																		   */
-/* ROLE : Constructeur complet														   */
-/* INPUT : const std::string &	: name de la Citie									   */
-/* INPUT : unsigned int x : index en x												   */
-/* INPUT : unsigned int y : index en y												   */
-/* INPUT : Tile tile[] : tableau de tile de la Citie								   */
-/* ----------------------------------------------------------------------------------- */
 City::City
 (
 	const std::string& name,
@@ -337,22 +268,11 @@ City::City
 	R2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : ~City																		   */
-/* ROLE : Destructeur																   */
-/* INPUT : void																		   */
-/* ----------------------------------------------------------------------------------- */
 City::~City()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: Destroy Citie: " + m_name + " Success");
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : foodNextTurn																   */
-/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
-/* OUT : GoldStats& goldStats : Player gold stats									   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void City::computefood
 (
 	GoldStats& goldStats
@@ -459,13 +379,6 @@ void City::computeWork
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : testPos																	   */
-/* ROLE : Retourne si la position est valide										   */
-/* INPUT : unsigned int x : position de la souris en x								   */
-/* INPUT : unsigned int y : position de la souris en y								   */
-/* RETURNED VALUE : bool : false : invalid / true : valid							   */
-/* ----------------------------------------------------------------------------------- */
 bool City::testPos
 (
 	const unsigned int mouse_x,
@@ -483,12 +396,6 @@ bool City::testPos
 	return false;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeGold																   */
-/* ROLE : Calculate the gold for the turn											   */
-/* INPUT : void																		   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void City::computeGold()
 {
 	/* Sum gold from citizen */
@@ -498,12 +405,6 @@ void City::computeGold()
 	m_goldBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : addCityGoldToTaxIncome													   */
-/* ROLE : Add m_goldBalance to a player taxIncome 									   */
-/* OUT : GoldStats& goldStats : struct of player gold								   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void City::addCityGoldToTaxIncome
 (
 	GoldStats& goldStats
@@ -513,13 +414,6 @@ void City::addCityGoldToTaxIncome
 	m_goldBalance = 0.0;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertFoodSurplusToGold													   */
-/* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
-/* INPUT : double workSurplus : food surplus to convert into work					   */
-/* OUT : GoldStats& goldStats : gold surplus conversion								   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void City::convertFoodSurplusToGold
 (
 	const double foodSurplus,
@@ -528,12 +422,6 @@ void City::convertFoodSurplusToGold
 {
 	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_GOLD;
 }
-
-
-/* *********************************************************
- *					END City::METHODS					   *
- ********************************************************* */
-
 
  /*
  *	End Of File City.cpp

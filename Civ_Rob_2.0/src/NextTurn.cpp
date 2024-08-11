@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.4
-	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,9 +22,10 @@
 
 #include "NextTurn.h"
 
+#include "City.h"
 #include "GamePlayScreen.h"
 #include "Player.h"
-#include "City.h"
+#include "Unit.h"
 
 NextTurn::NextTurn()
 : m_nbTurn(0)

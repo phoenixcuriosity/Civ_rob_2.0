@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.1
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -26,7 +24,6 @@
 #define T_Unit_H
 
 #include "LIB.h"
-#include <vector>
 
 /* Define movement for the Unit in case of tryToMove */
 enum class Move_Type
@@ -69,9 +66,6 @@ struct Unit_Template
 	double workToBuild = 0.0;
 	double maintenance = 0.0;
 };
-
-typedef std::vector<Unit_Template> VectUnitTemplate;
-
 
 #endif // !T_Unit_H
 

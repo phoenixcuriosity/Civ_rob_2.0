@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.6
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,17 +20,14 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "XmlConvertValue.h"
 
-#include <R2D/src/ErrorLog.h> 
+#include "T_Citizen.h"
+#include "T_City.h"
+#include "T_CityScreen.h"
+#include "T_Unit.h"
 
- /* *********************************************************
-  *						 Classes						   *
-  ********************************************************* */
+#include <R2D/src/ErrorLog.h> 
 
 
   /* ---------------------------------------------------------------------------------------------------------- */

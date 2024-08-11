@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.33
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,68 +23,40 @@
 #ifndef City_H
 #define City_H
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "LIB.h"
 
-#include "T_City.h"
-#include "T_CityScreen.h"
-
-#include "MainMap.h"
-#include "Unit.h"
-#include "Citizen.h"
-#include "FoodManager.h"
-#include "CitizenManager.h"
 #include "BuildManager.h"
-
-#include <vector>
-#include <queue>
-#include <memory>
+#include "T_City.h"
+#include "T_MainMap.h"
 
 #include <R2D/src/Window.h>
 #include <R2D/src/GUI.h>
 
-
-
-
-
-/* *********************************************************
- *						 Classes						   *
- ********************************************************* */
-
 class City
 {
-public:
-	/* *********************************************************
-	 *					City::STATIC						   *
-	 ********************************************************* */
+public: /* STATIC */
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : createCity																   */
-	/* ROLE : Cr�ation d'une City � partir d'un settler sur la carte					   */
-	/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme					   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
+	/**
+	 * Create a City from a Settler on the map
+	 * @param[in,out]	mainGame MainGame object to add the City from the settler position
+	 * @param[in] influenceLevel Optional : Level of influence, default value CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
+	 */
 	static void createCity
 	(
 		GamePlayScreen& mainGame,
 		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : fillCitieTiles															   */
-	/* ROLE : Rempli le tableau de la Citie avec le point centrale la middletileXY		   */
-	/* ROLE : et de largeur et hauteur totale INIT_SIZE_VIEW							   */
-	/* INPUT : const Screen& screen	: taille en x et y de l'�cran						   */
-	/* INPUT : unsigned int middletileX : index en tileSize de x de la Citie			   */
-	/* INPUT : unsigned int middletileY : index en tileSize de y de la Citie			   */
-	/* INPUT : unsigned int selectplayer : index d'appartenance							   */
-	/* INPUT/OUTPUT : Map& map : structure de la Map									   */
-	/* OUTPUT : std::vector<Tile>& tabtile : tableau � remplir de la Citie				   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
+	/**
+	 * Fill the tabtile from mainmap
+	 * @param[in]		  window x and y screen size
+	 * @param[in]	 middletileX X index from mainmap
+	 * @param[in]	 middletileY Y index from mainmap
+	 * @param[in]	selectplayer Selected player index to create the City
+	 * @param[in,out]	 mainMap Main map values to copy from
+	 * @param[out]       tabtile City tile to copy to
+	 * @param[in] influenceLevel Optional : Level of influence, default value CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
+	 */
 	static void fillCitieTiles
 	(
 		const R2D::Window& window,
@@ -100,13 +70,14 @@ public:
 
 private:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : initSizeInfluenceCondition												   */
-	/* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
-	/* INPUT : int o :	index en x														   */
-	/* INPUT : int p :	index en y														   */
-	/* RETURNED VALUE : bool : false -> invalid / true -> valid							   */
-	/* ----------------------------------------------------------------------------------- */
+	/**
+	 * Condition to fill to create a City
+	 * @param[in]			   o X index from mainmap
+	 * @param[in]			   p Y index from mainmap
+	 * @param[in] influenceLevel Optional : Level of influence, default value CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
+	 * @return false if invalid
+	 * @return  true if valid
+	 */
 	static bool initSizeInfluenceCondition
 	(
 		const int o,
@@ -114,15 +85,14 @@ private:
 		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : cornerCheck																   */
-	/* ROLE : Conditions des cases de la ville � l'int�rieur de zone d'influence		   */
-	/* IN : int o :	index en x															   */
-	/* IN : int p :	index en y															   */
-	/* IN : unsigned int influenceLevel : City influence level 							   */
-	/* RETURNED VALUE : bool : false -> this tile is a corner							   */
-	/* RETURNED VALUE : bool : true -> this tile is not a corner						   */
-	/* ----------------------------------------------------------------------------------- */
+	/**
+	 * Condition to validate a corner to create a City
+	 * @param[in]			   o X index from mainmap
+	 * @param[in]			   p Y index from mainmap
+	 * @param[in] influenceLevel Level of influence
+	 * @return false if invalid
+	 * @return  true if valid
+	 */
 	static bool cornerCheck
 	(
 		const int o,
@@ -136,41 +106,41 @@ public:
 	 *					City::METHODS						   *
 	 ********************************************************* */
 
-
-	 /* ----------------------------------------------------------------------------------- */
-	 /* NAME : City																		   */
-	 /* ROLE : Constructeur complet														   */
-	 /* INPUT : const std::string &	: name de la Citie									   */
-	 /* INPUT : unsigned int x : index en x												   */
-	 /* INPUT : unsigned int y : index en y												   */
-	 /* INPUT : Tile tile[] : tableau de tile de la Citie								   */
-	 /* ----------------------------------------------------------------------------------- */
+	/**
+	 * Constructor
+	 * @param[in]  name Name of the City to create
+	 * @param[in]	  x x tile
+	 * @param[in]     y y tile
+	 * @param[in] tiles The City tiles from the MainMap
+	 */
 	City
 	(
-		const std::string&,
+		const std::string& name,
 		unsigned int x,
 		unsigned int y,
 		VectMap& tiles
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : ~City																		   */
-	/* ROLE : Destructeur																   */
-	/* INPUT : void																		   */
-	/* ----------------------------------------------------------------------------------- */
+	/**
+	 * Destructor
+	 */
 	virtual ~City();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : computefood																   */
-	/* ROLE : Calcul et application du niveau de Food pour le prochain tour				   */
-	/* OUT : GoldStats& goldStats : Player gold stats									   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
+	/**
+	 * Compute the current City food stock
+	 * @param[in] goldStats Gold from the player, can be used from gold to food conversion
+	 */
 	virtual void computefood
 	(
 		GoldStats& goldStats
 	);
 
+	/**
+	 * Compute the current City work stock
+	 * @param[out]               player The player, can be used from gold to work conversion
+	 * @param[in]      vectUnitTemplate Template of all Unit
+	 * @param[out] needToUpdateDrawUnit True if the City is created, else false
+	 */
 	virtual void computeWork
 	(
 		Player& player,
@@ -178,11 +148,12 @@ public:
 		bool* needToUpdateDrawUnit
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : searchCityTile															   */
-	/* ROLE : Recherche la case de la City et renvoie vers cityMap						   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
+	/**
+	 * Search if the City is at those coor
+	 * @param[in] indexX x tile
+	 * @param[in] indexY y tile
+	 * @return  true if the City is at those coor, else false
+	 */
 	virtual bool searchCityTile
 	(
 		const unsigned int indexX,
@@ -190,19 +161,18 @@ public:
 	);
 
 public:
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : testPos																	   */
-	/* ROLE : Retourne si la position est valide										   */
-	/* INPUT : unsigned int x : position de la souris en x								   */
-	/* INPUT : unsigned int y : position de la souris en y								   */
-	/* RETURNED VALUE : bool : false : invalid / true : valid							   */
-	/* ----------------------------------------------------------------------------------- */
+
+	/**
+	 * Search if the City is at those coor
+	 * @param[in] indexX x tile
+	 * @param[in] indexY y tile
+	 * @return  true if the City is at those coor, else false
+	 */
 	virtual bool testPos
 	(
 		const unsigned int x,
 		const unsigned int y
 	);
-
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeGold																   */
@@ -305,9 +275,6 @@ public:
 
 
 private:
-	/* *********************************************************
-	 *					City::ATTRIBUTS						   *
-	 ********************************************************* */
 
 	std::string m_image;
 	std::string m_name;

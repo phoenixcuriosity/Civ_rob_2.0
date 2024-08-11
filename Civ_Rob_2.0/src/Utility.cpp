@@ -1,9 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.3.0
-	file version : 1.9
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,18 +20,12 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "Utility.h"
 
 #include "App.h"
 #include "Player.h"
-
- /* *********************************************************
-  *						 Classes						   *
-  ********************************************************* */
+#include "Players.h"
+#include "T_GamePlayScreen.h"
 
 
 /* ----------------------------------------------------------------------------------- */
@@ -135,9 +127,6 @@ bool Utility::assertSize
 {
 	return index < size ? true : false;
 }
-
-
-
 
 /*
 *	End Of File : Utility.cpp

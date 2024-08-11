@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.23
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,27 +25,6 @@
 
 #include "LIB.h"
 
-#include <R2D/src/IGameScreen.h>
-#include <R2D/src/IMainGame.h>
-#include <R2D/src/GLSLProgram.h>
-#include <R2D/src/Camera2D.h>
-#include <R2D/src/WidgetLabel.h>
-#include <R2D/src/SpriteBatch.h>
-#include <R2D/src/SpriteFont.h>
-#include <R2D/src/AudioEngine.h>
-#include <R2D/src/GUI.h>
-#include <R2D/src/Window.h>
-
-#include "Unit.h"
-#include "City.h"
-
-#include <memory>
-
-/* *********************************************************
- *						Constantes						   *
- ********************************************************* */
-
-
 namespace PlayerH
 {
 	const unsigned int NB_MAX_PLAYER = 9;
@@ -57,11 +34,7 @@ namespace PlayerH
 	const bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
-/* *********************************************************
- *						 Enum							   *
- ********************************************************* */
-
-enum class MajorAge : Uint8
+enum class MajorAge
 {
 	Nomade,
 	Farming,
@@ -80,10 +53,6 @@ enum class MajorAge : Uint8
 	Stellar,
 	Galactic
 };
-
-/* *********************************************************
- *						Structures						   *
- ********************************************************* */
 
 struct GoldStats
 {
@@ -105,21 +74,9 @@ struct OnOffDisplay
 	bool showContextGoldStats;
 };
 
-
-typedef std::vector<std::string> VectCityName;
-
-
-/* *********************************************************
- *						 Classes						   *
- ********************************************************* */
-
 class Player
 {
 public:
-	/* *********************************************************
-	 *					Player::METHODS						   *
-	 ********************************************************* */
-
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -251,7 +208,7 @@ public:
 		const unsigned int index
 	);
 
-	virtual City_PtrT* searchCity
+	virtual CityPtrT* searchCity
 	(
 		const unsigned int indexX,
 		const unsigned int indexY
@@ -295,17 +252,13 @@ public:
 
 
 public:
-	/* *********************************************************
-	 *				Player::METHODS::GET/SET				   *
-	 ********************************************************* */
-
 
 	inline virtual const std::string& GETname()			const { return m_name; };
 	inline virtual const VectUnit& GETtabUnit()			const { return m_tabUnit; };
 	inline virtual const VectCity& GETtabCity()			const { return m_tabCity; };
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
-	inline virtual const Unit_PtrT& GETSelectedUnitPtr() const { return m_tabUnit[m_selectedUnit]; }
+	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_tabUnit[m_selectedUnit]; }
 
 	inline virtual int GETid()							const { return m_id; };
 	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
@@ -320,10 +273,6 @@ public:
 	inline virtual void SETselectedCity(const int selectedCity) { m_selectedCity = selectedCity; };
 
 private:
-	/* *********************************************************
-	 *					Player::ATTRIBUTS					   *
-	 ********************************************************* */
-
 
 	std::string m_name;
 	int m_id;
@@ -335,111 +284,6 @@ private:
 	GoldStats m_goldStats;
 	OnOffDisplay m_onOffDisplay;
 };
-
-typedef std::shared_ptr<Player> Player_PtrT;
-typedef std::vector<Player_PtrT> VectPlayer;
-
-class Players
-{
-public:
-	Players();
-	~Players();
-
-	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
-	inline Player_PtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
-	inline VectCityName& GETvectCityName() { return m_vectCityName; };
-	inline VectUnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
-	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
-	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
-	inline City_PtrT& GETSelectedCity() { return m_selectedCity; };
-
-	inline void SETselectedPlayerId(const int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
-	inline void SETselectedPlayerPtr(Player_PtrT& selectedPlayerPtr) { m_selectedPlayerPtr = selectedPlayerPtr; };
-	inline void SETneedToUpdateDrawUnit(const bool need) { m_needToUpdateDrawUnit = need; };
-	inline void SETneedToUpdateDrawCity(const bool need) { m_needToUpdateDrawCity = need; };
-	inline void SetSelectedCity(City_PtrT selectedCity) { m_selectedCity = selectedCity; };
-
-	inline bool isValidSelectedCity() { if (m_selectedCity != nullptr) return true; else return false; };
-
-public:
-
-	void init(const std::string& filePath);
-
-	void addPlayer
-	(
-		const std::string& name,
-		const int id
-	);
-
-	void deleteAllPlayers();
-
-	void removeIndexPlayer
-	(
-		const unsigned int index
-	);
-
-	void clickToSelectUnit
-	(
-		const unsigned int x,
-		const unsigned int y
-	);
-
-	void isAUnitSelected();
-
-	void drawUnit
-	(
-		const MainMap& mainMap,
-		R2D::Camera2D& camera
-	);
-
-	void renderUnit();
-
-	void drawCity
-	(
-		const MainMap& mainMap,
-		R2D::Camera2D& camera,
-		SpriteFont_PtrT& font
-	);
-
-	void renderCity();
-
-	virtual bool searchCity
-	(
-		const unsigned int indexX,
-		const unsigned int indexY
-	);
-
-private:
-
-	// index du joueur actuellement sélectionné
-	int m_selectedPlayer;
-	/* Ptr to the selected Player */
-	Player_PtrT m_selectedPlayerPtr;
-
-	/* Ptr to the selected City */
-	City_PtrT m_selectedCity;
-
-	VectCityName m_vectCityName;
-
-	// tableau des statistiques par défauts des unités
-	VectUnitTemplate m_vectUnitTemplate;
-	VectID m_vectIDUnit;
-	VectUnitTemplate m_vectCityTemplate;
-	VectID m_vectIDCity;
-
-	VectPlayer m_vectPlayer;
-
-	/* Dedicated spriteBatch for all Unit */
-	R2D::SpriteBatch m_spriteBatchUnit;
-	bool m_needToUpdateDrawUnit;
-	/* Dedicated spriteBatch for all Cities */
-	R2D::SpriteBatch m_spriteBatchCity;
-	bool m_needToUpdateDrawCity;
-
-	R2D::SpriteBatch m_spriteBatchCityDynamic;
-};
-
-
 
 #endif /* Player_H */
 

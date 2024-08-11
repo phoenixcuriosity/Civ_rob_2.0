@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.3
-	file version : 1.11
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,11 +22,16 @@
 
 #include "CityScreen.h"
 
-#include "ScreenIndices.h"
-
 #include "App.h"
-
+#include "Citizen.h"
+#include "City.h"
+#include "Player.h"
+#include "Players.h"
+#include "ScreenIndices.h"
 #include "Utility.h"
+#include "T_Citizen.h"
+#include "T_MainMap.h"
+#include "T_Unit.h"
 
 #include <R2D/src/ResourceManager.h>
 

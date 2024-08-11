@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.15
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,11 +23,9 @@
 #ifndef MainMap_H
 #define MainMap_H
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "LIB.h"
+
+#include "T_MainMap.h"
 
 #include <R2D/src/Camera2D.h>
 #include <R2D/src/SpriteBatch.h>
@@ -41,14 +37,6 @@
 #include <R2D/src/WidgetLabel.h>
 #include <R2D/src/AudioEngine.h>
 #include <R2D/src/GUI.h>
-
-#include "T_MainMap.h"
-
-
-
-/* *********************************************************
- *						  Classe						   *
- ********************************************************* */
 
 class MainMap
 {

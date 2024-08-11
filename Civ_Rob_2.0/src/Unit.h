@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.25
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,65 +20,18 @@
 
 */
 
-/*
-
-	Units :
-	Cette classe est la repr�sentation de l'objet Unit
-	Cet objet est d�crit par un nom qui sera li� par un objet de type Texture du meme nom lors de la cr�ation
-	Cet objet a une position lors de la cr�ation qui correspond au coin haut gauche de la tile s�l�ctionn�e
-	Les objets de type Unit ont des caract�ristiques de vie, d'attaque ...
-	m_blit et m_show permettent de savoir lorsqu'il faut afficher l'unit� ou la faire clignoter
-
-
-
-*/
-
 #ifndef Unit_H
 #define Unit_H
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "LIB.h"
 
-#include "T_Unit.h"
-
-#include "MainMap.h"
-
-
-#include <memory>
 #include <glm/glm.hpp>
 
-class Players;
-class Player;
-class GameInput;
-
 #include <R2D/src/CardinalDirection.h> 
-
-
- /* *********************************************************
-  *						Constantes						   *
-  ********************************************************* */
-
-
-
-  /* *********************************************************
-   *						 Enum							   *
-   ********************************************************* */
-
-
-/* *********************************************************
- *						 Classes						   *
- ********************************************************* */
 
 class Unit
 {
 public:
-	/* *********************************************************
-	 *					Unit::STATIC						   *
-	 ********************************************************* */
-
 
 	 /* ----------------------------------------------------------------------------------- */
 	 /* ----------------------------------------------------------------------------------- */
@@ -202,9 +153,6 @@ private:
 	
 
 public:
-	/* *********************************************************
-	 *					Unit::METHODS						   *
-	 ********************************************************* */
 
 	 /* ----------------------------------------------------------------------------------- */
 	 /* ----------------------------------------------------------------------------------- */
@@ -420,9 +368,6 @@ public:
 	);
 
 public:
-	/* *********************************************************
-	 *				Unit::METHODS::AFFICHAGE				   *
-	 ********************************************************* */
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */
@@ -437,9 +382,6 @@ public:
 
 
 public:
-	/* *********************************************************
-	 *				Unit::METHODS::GET/SET					   *
-	 ********************************************************* */
 
 	inline const std::string& GETname()				const { return m_name; };
 	inline unsigned int GETx()						const { return m_x; };
@@ -489,9 +431,7 @@ public:
 	inline void SETowner(Player* owner) { m_owner = owner; };
 
 private:
-	/* *********************************************************
-	 *					Unit::ATTRIBUTS					       *
-	 ********************************************************* */
+
 	std::string m_name;
 	unsigned int m_x;
 	unsigned int m_y;
@@ -520,10 +460,6 @@ private:
 
 	Player* m_owner;
 };
-
-typedef std::shared_ptr<Unit> Unit_PtrT;
-typedef std::vector<Unit_PtrT> VectUnit;
-
 
 #endif /* Unit_H */
 

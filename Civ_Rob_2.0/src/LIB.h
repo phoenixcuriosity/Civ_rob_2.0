@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.2.0
-	file version : 1.21
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,8 +25,11 @@
 
 #define NOMINMAX // forbid to redifine std::max/min by Windows.h and Visual Studio
 
-/* Include for std::string */
+#include <deque>
+#include <memory>
+#include <queue>
 #include <string>
+#include <vector>
 
 namespace STRINGS
 {
@@ -99,27 +100,64 @@ enum class Select_Type
 	selectmoveCitizen		/* ### Not use as of 0.20.0.3 ### */
 };
 
-
-
-struct Screen;
-struct Var;
+struct build;
+struct buildGUI;
 struct GoldStats;
+struct randomPos;
+struct Screen;
+struct Tile;
+struct Unit_Template;
 struct UserInputNewGame;
+struct Var;
 
+class Citizen;
+class City;
+class GameInput;
+class GamePlayScreen;
 class MainMap;
 class NextTurn;
+class Player;
 class Players;
-class GameInput;
 class SaveReload;
 class Unit;
-class City;
-class Citizen;
 
+class CityScreen;
 class GamePlayScreen;
-class Players;
-class Player;
+class MainMenuScreen;
+class NewGameScreen;
+class ReloadMenuScreen;
 
-class GameInput;
+enum class build_Type : unsigned int;
+enum class CinState_Type : unsigned int;
+enum class conversionSurplus_Type : unsigned int;
+enum class Emotion_Type;
+enum class Ground_Type;
+enum class GroundSpec_Type;
+enum class Move_Type;
+enum class Religion_Type;
+enum class resizeUnitTexture_Type : unsigned int;
+enum class Unit_Movement_Type;
+
+typedef std::deque<buildGUI> dequeBuild;
+
+typedef std::shared_ptr<Player> PlayerPtrT;
+typedef std::shared_ptr<Unit> UnitPtrT;
+typedef std::shared_ptr<City> CityPtrT;
+typedef std::shared_ptr<Citizen> CitizenPtrT;
+
+typedef std::shared_ptr<CityScreen>			CityScreenPtrT;
+typedef std::shared_ptr<GamePlayScreen>		GamePlayScreenPtrT;
+typedef std::shared_ptr<MainMenuScreen>		MainMenuScreenPtrT;
+typedef std::shared_ptr<NewGameScreen>		NewGameScreenPtrT;
+typedef std::shared_ptr<ReloadMenuScreen>	ReloadMenuScreenPtrT;
+
+typedef std::vector<Tile> VectMap;
+typedef std::vector<VectMap> MatriceMap;
+typedef std::vector<CitizenPtrT> VectCitizen;
+typedef std::vector<CityPtrT> VectCity;
+typedef std::vector<PlayerPtrT> VectPlayer;
+typedef std::vector<UnitPtrT> VectUnit;
+typedef std::vector<Unit_Template> VectUnitTemplate;
 
 #endif
 

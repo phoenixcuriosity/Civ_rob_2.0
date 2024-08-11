@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.8.0
-	file version : 1.28
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,17 +22,20 @@
 
 #include "GamePlayScreen.h"
 
-#include <tinyxml2/tinyxml2.h>
-
-#include "Utility.h"
-
 #include "App.h"
+#include "Player.h"
 #include "ScreenIndices.h"
+#include "Unit.h"
+#include "Utility.h"
+#include "T_Unit.h"
+#include "XmlConvertValue.h"
+
+#include <tinyxml2/tinyxml2.h>
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/tinyXml2.h> 
-#include "XmlConvertValue.h"
+
 
 
 

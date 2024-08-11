@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.6.3
-	file version : 1.17
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,8 +22,11 @@
 
 #include "App.h"
 
-#include <R2D/src/ScreenList.h>
-
+#include "CityScreen.h"
+#include "GamePlayScreen.h"
+#include "MainMenuScreen.h"
+#include "NewGameScreen.h"
+#include "ReloadMenuScreen.h"
 
 #include <tinyxml2/tinyxml2.h>
 
@@ -34,7 +35,7 @@
 #include <R2D/src/ExitFromError.h> 
 #include <R2D/src/SpriteFont.h> 
 #include <R2D/src/tinyXml2.h> 
-
+#include <R2D/src/ScreenList.h>
 
 namespace FILE_APP
 {
