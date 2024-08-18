@@ -25,9 +25,8 @@
 
 #include "LIB.h"
 
+#include <R2D/src/API_fwd.h>
 #include <glm/glm.hpp>
-
-#include <R2D/src/CardinalDirection.h> 
 
 class Unit
 {

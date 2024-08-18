@@ -28,6 +28,7 @@
 #include "Players.h"
 #include "T_Unit.h"
 
+#include <R2D/src/CardinalDirection.h> 
 #include <R2D/src/ErrorLog.h> 
 
 namespace UNITC

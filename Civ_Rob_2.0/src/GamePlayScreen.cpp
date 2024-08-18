@@ -117,7 +117,7 @@ bool GamePlayScreen::onEntry()
 		loadCitiesNames();
 
 		/* Need to be after loadUnitAndSpec */
-		m_players.init(R2D::ResourceManager::getFile(e_Files::imagesPath)->getPath());
+		m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
 
 		initUI();
 
@@ -209,7 +209,7 @@ void GamePlayScreen::loadFile()
 	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
-	config.LoadFile(R2D::ResourceManager::getFile(e_Files::mainMap)->getPath().c_str());
+	config.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath().c_str());
 	unsigned int tmp{ 0 };
 
 	if (config.ErrorID() == 0)
@@ -238,7 +238,7 @@ void GamePlayScreen::loadFile()
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(e_Files::mainMap)->getPath());
+		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath());
 	}
 
 	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
@@ -314,7 +314,7 @@ void GamePlayScreen::initOpenGLScreen()
 
 	m_game->getInputManager().init(m_mainMap.GETtileSizePtr());
 
-	m_screen.m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+	m_screen.m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -399,7 +399,7 @@ void GamePlayScreen::loadUnitAndSpec()
 {
 	tinyxml2::XMLDocument texteFile{};
 	
-	texteFile.LoadFile(R2D::ResourceManager::getFile(e_Files::units)->getPath().c_str());
+	texteFile.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::units)->getPath().c_str());
 
 	const char* root("Root");
 
@@ -441,7 +441,7 @@ void GamePlayScreen::loadCitiesNames()
 {
 	unsigned int nbcity{ 0 };
 	std::string city{ STRINGS::EMPTY}, dummy{ STRINGS::EMPTY };
-	std::ifstream CITIENAME{ R2D::ResourceManager::getFile(e_Files::citiesNames)->getPath() };
+	std::ifstream CITIENAME{ R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath() };
 
 
 	if (CITIENAME)
@@ -458,7 +458,7 @@ void GamePlayScreen::loadCitiesNames()
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(e_Files::citiesNames)->getPath());
+		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath());
 	}
 }
 

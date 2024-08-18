@@ -29,14 +29,6 @@
 
 #include <R2D/src/Camera2D.h>
 #include <R2D/src/SpriteBatch.h>
-#include <R2D/src/Window.h>
-
-#include <R2D/src/IGameScreen.h>
-#include <R2D/src/IMainGame.h>
-#include <R2D/src/GLSLProgram.h>
-#include <R2D/src/WidgetLabel.h>
-#include <R2D/src/AudioEngine.h>
-#include <R2D/src/GUI.h>
 
 class MainMap
 {
@@ -311,7 +303,7 @@ private:
 	/* Need seperate spriteBatch because of the Texture superposition */
 	R2D::SpriteBatch m_spriteBatchAppartenance;
 
-	VectID s_vectID;
+	R2D::VectID s_vectID;
 
 	static unsigned int* s_tileSize;
 };

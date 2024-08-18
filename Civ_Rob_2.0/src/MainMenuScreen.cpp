@@ -82,7 +82,7 @@ bool MainMenuScreen::onEntry()
 
 		m_spriteBatchHUDStatic.init();
 
-		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 
@@ -170,10 +170,10 @@ void MainMenuScreen::initHUD()
 	m_spriteBatchHUDStatic.begin();
 
 
-	MapTexts mapTexts;
+	R2D::MapTexts mapTexts;
 	R2D::ResourceManager::getTextFromFile
 	(
-		e_Files::texts_MainMenu,
+		R2D::e_Files::texts_MainMenu,
 		mapTexts
 	);
 

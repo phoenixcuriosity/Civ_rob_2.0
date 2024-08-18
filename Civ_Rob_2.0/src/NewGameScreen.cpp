@@ -77,7 +77,7 @@ bool NewGameScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
 
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.loadScheme("TaharezLook.scheme");

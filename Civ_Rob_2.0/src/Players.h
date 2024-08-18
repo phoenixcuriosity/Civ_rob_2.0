@@ -25,18 +25,7 @@
 
 #include "LIB.h"
 
-#include <R2D/src/IGameScreen.h>
-#include <R2D/src/IMainGame.h>
-#include <R2D/src/GLSLProgram.h>
-#include <R2D/src/Camera2D.h>
 #include <R2D/src/WidgetLabel.h>
-#include <R2D/src/SpriteBatch.h>
-#include <R2D/src/SpriteFont.h>
-#include <R2D/src/AudioEngine.h>
-#include <R2D/src/GUI.h>
-#include <R2D/src/Window.h>
-
-typedef std::vector<std::string> VectCityName;
 
 class Players
 {
@@ -122,9 +111,9 @@ private:
 
 	// tableau des statistiques par défauts des unités
 	VectUnitTemplate m_vectUnitTemplate;
-	VectID m_vectIDUnit;
+	R2D::VectID m_vectIDUnit;
 	VectUnitTemplate m_vectCityTemplate;
-	VectID m_vectIDCity;
+	R2D::VectID m_vectIDCity;
 
 	VectPlayer m_vectPlayer;
 

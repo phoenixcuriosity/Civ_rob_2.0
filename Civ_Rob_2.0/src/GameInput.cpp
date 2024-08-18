@@ -32,6 +32,7 @@
 
 #include <iostream>
 
+#include <R2D/src/CardinalDirection.h> 
 #include <R2D/src/ResourceManager.h> 
 
 namespace GInput

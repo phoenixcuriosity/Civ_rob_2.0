@@ -33,6 +33,7 @@
 #include "T_MainMap.h"
 #include "T_Unit.h"
 
+#include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 
 
@@ -186,7 +187,7 @@ bool CityScreen::onEntry()
 			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
 		}
 
-		const std::string CITY_IMAGE_PATH{R2D::ResourceManager::getFile(e_Files::imagesPath)->getPath()};
+		const std::string CITY_IMAGE_PATH{R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath()};
 		const std::string DIR_GROUND {"ground/"};
 		const std::string DIR_SPEC {"spec/"};
 		const std::string DIR_CA {"couleur d'apartenance/"};
@@ -230,7 +231,7 @@ bool CityScreen::onEntry()
 		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "Hammer" + EXTENSION_PNG)->GETid());
 
 		
-		m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
 		m_gui.loadScheme("AlfiskoSkin.scheme");
 		m_gui.setFont("DejaVuSans-10");
 

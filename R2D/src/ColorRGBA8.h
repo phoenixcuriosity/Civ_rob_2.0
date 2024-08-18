@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.0.0
-	file version : 1.3
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,9 +23,7 @@
 #ifndef ColorRGBA8_H
 #define ColorRGBA8_H
 
-#include <SDL\glew.h>
-#include <map>
-#include <string>
+#include "API_fwd.h"
 
 namespace R2D
 {
@@ -59,8 +55,6 @@ const ColorRGBA8 COLOR_GOLD(205, 127, 50, 255);
 
 const ColorRGBA8 COLOR_WHITE_T50(255, 255, 255, 128);
 const ColorRGBA8 COLOR_WHITE_T25(255, 255, 255, 64);
-
-typedef std::map<std::string, ColorRGBA8> ColorRGBA8Map;
 
 class ColorRGBA8C
 {

@@ -30,9 +30,11 @@
 #include "Utility.h"
 #include "T_Unit.h"
 
+#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
-#include <R2D/src/ErrorLog.h> 
+
 
 
 namespace

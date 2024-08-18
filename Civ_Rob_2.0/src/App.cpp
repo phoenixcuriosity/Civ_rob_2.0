@@ -72,7 +72,7 @@ App::~App()
 void App::onInit()
 {
 	/* Set location of logging file */
-	R2D::ResourceManager::initializeFilePath(e_Files::log, FILE_APP::PATH::LOG);
+	R2D::ResourceManager::initializeFilePath(R2D::e_Files::log, FILE_APP::PATH::LOG);
 	R2D::ErrorLog::initializeLog();
 
 	initMain();
@@ -80,7 +80,7 @@ void App::onInit()
 	m_window.SETscreenWidth(R2D::Window::getHorizontal());
 	m_window.SETscreenHeight(R2D::Window::getVertical());
 	
-	m_saveReload.init(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+	m_saveReload.init(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 }
 
 
@@ -97,8 +97,8 @@ void App::InitShaders()
 {
 	R2D::ResourceManager::getGLSLProgram().compileShaders
 	(
-		R2D::ResourceManager::getFile(e_Files::colorShadingVert)->getPath(),
-		R2D::ResourceManager::getFile(e_Files::colorShadingFrag)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingVert)->getPath(),
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingFrag)->getPath()
 	);
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
@@ -170,7 +170,7 @@ void App::initMain()
 	{
 		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
 
-		for (e_Files it_e_files : tab_e_Files)
+		for (R2D::e_Files it_e_files : R2D::tab_e_Files)
 		{
 			if (nullptr != node)
 			{

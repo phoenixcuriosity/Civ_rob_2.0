@@ -25,19 +25,10 @@
 
 #include "LIB.h"
 
-#include <R2D/src/IGameScreen.h>
-
-#include <R2D\src\Vertex.h>
-#include <R2D\src\GLSLProgram.h>
-#include <R2D\src\GameEngine.h>
-#include <R2D\src\Window.h>
 #include <R2D\src\Camera2D.h>
-#include <R2D\src\SpriteBatch.h>
-#include <R2D\src\InputManager.h>
-#include <R2D\src\Timing.h>
-#include <R2D\src\SpriteFont.h>
-#include <R2D/src/AudioEngine.h>
 #include <R2D/src/GUI.h>
+#include <R2D/src/IGameScreen.h>
+#include <R2D\src\SpriteBatch.h>
 
 class MainMenuScreen : public R2D::IGameScreen
 {

@@ -27,6 +27,7 @@
 
 #include "T_CityScreen.h"
 
+#include <R2D/src/API_fwd.h>
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
 #include <R2D/src/SpriteBatch.h>
@@ -113,7 +114,7 @@ private:
 	R2D::SpriteBatch m_spriteBatch;
 	R2D::SpriteBatch m_spriteBatchAppartenance;
 	bool m_needToUpdateDraw;
-	VectID s_vectID;
+	R2D::VectID s_vectID;
 
 	Players* m_players;
 	unsigned int* m_tileSize;

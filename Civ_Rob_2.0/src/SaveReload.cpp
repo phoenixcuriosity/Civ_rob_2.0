@@ -107,7 +107,7 @@ void SaveReload::saveMaps
 )
 {
 	
-	std::ofstream saveMaps{ R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath() };
+	std::ofstream saveMaps{ R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() };
 	if (saveMaps)
 	{
 		for (size_t i{0}; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -132,7 +132,7 @@ void SaveReload::saveMaps
 		(
 			"[ERROR]___: Impossible d'ouvrir le fichier "
 			+ 
-			R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
 		);
 }
 
@@ -399,7 +399,7 @@ void SaveReload::savePlayer
 		pRoot->InsertEndChild(playerElement);
 	}
 	
-	xmlDoc.SaveFile(R2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str());
+	xmlDoc.SaveFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str());
 }
 
 
@@ -447,7 +447,7 @@ void SaveReload::loadMaps
 {
 	std::string input(STRINGS::EMPTY);
 
-	std::ifstream saveMaps(R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath());
+	std::ifstream saveMaps(R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -491,7 +491,7 @@ void SaveReload::loadMaps
 		(
 			"[ERROR]___: Impossible d'ouvrir le fichier "
 			+
-			R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
 		);
 
 	R2D::ErrorLog::logEvent("[INFO]___: Save End");
@@ -513,7 +513,7 @@ void SaveReload::loadPlayer
 	std::string errCheck(STRINGS::EMPTY);
 	tinyxml2::XMLDocument xmlDoc;
 	
-	if (xmlDoc.LoadFile(R2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
+	if (xmlDoc.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
 	{
 		tinyxml2::XMLNode* pRoot = xmlDoc.FirstChild();
 		if (nullptr == pRoot) R2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : pRoot == nullptr");
@@ -981,7 +981,7 @@ L10:
 	}
 
 
-	std::ofstream saveInfo(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+	std::ofstream saveInfo(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 	if (saveInfo)
 	{
 		saveInfo << "NbSave=";
@@ -991,7 +991,7 @@ L10:
 			saveInfo << std::endl << m_tabSave[i];
 	}
 	else
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 
 	std::string save = "save/" + std::to_string(m_currentSave);
 
@@ -1002,15 +1002,15 @@ L10:
 	
 	R2D::ResourceManager::modifyFilePath
 	(
-		e_Files::saveMaps,
+		R2D::e_Files::saveMaps,
 		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
 	);
 	R2D::ResourceManager::modifyFilePath
 	(
-		e_Files::savePlayers,
+		R2D::e_Files::savePlayers,
 		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(e_Files::savePlayers)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()
 	);
 
 	R2D::ErrorLog::logEvent("[INFO]___: createSave End");

@@ -30,7 +30,6 @@
 #include "T_MainMap.h"
 
 #include <R2D/src/Window.h>
-#include <R2D/src/GUI.h>
 
 class City
 {
