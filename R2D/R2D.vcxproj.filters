@@ -28,6 +28,7 @@
     <ClInclude Include="src\ValueToScale.h" />
     <ClInclude Include="src\tinyXml2.h" />
     <ClInclude Include="src\CardinalDirection.h" />
+    <ClInclude Include="src\API_fwd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />

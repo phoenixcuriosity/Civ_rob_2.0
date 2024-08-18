@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.30
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,14 +20,15 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "Unit.h"
-#include "Player.h"
-#include "App.h"
 
+#include "App.h"
+#include "MainMap.h"
+#include "Player.h"
+#include "Players.h"
+#include "T_Unit.h"
+
+#include <R2D/src/CardinalDirection.h> 
 #include <R2D/src/ErrorLog.h> 
 
 namespace UNITC
@@ -74,15 +73,6 @@ namespace UNITC
 	const int FOOD_ADD_BY_IRRAGATION = 2;
 	const int GOLD_ADD_BY_IRRAGATION = 1;
 }
-
- /* *********************************************************
-  *						 Classes						   *
-  ********************************************************* */
-
-  /* *********************************************************
-   *					START Unit::STATIC					   *
-   ********************************************************* */
-
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -129,7 +119,7 @@ bool Unit::searchUnitTile
 {
 	if (SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId())
 	{
-		Player_PtrT selPlayer(players.GETselectedPlayerPtr());
+		PlayerPtrT selPlayer(players.GETselectedPlayerPtr());
 
 		for (unsigned int i(0); i < selPlayer->GETtabUnit().size(); i++)
 		{
@@ -172,7 +162,7 @@ void Unit::tryToMove
 {
 	if (players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED)
 	{
-		const Player_PtrT selPlayer(players.GETselectedPlayerPtr());
+		const PlayerPtrT selPlayer(players.GETselectedPlayerPtr());
 		int playerToAttack(SELECTION::NO_PLAYER_SELECTED), unitToAttack(SELECTION::NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
 		switch (searchToMove(maps, players, cardinalDirection, &playerToAttack, &unitToAttack))
@@ -186,9 +176,9 @@ void Unit::tryToMove
 		case Move_Type::attackMove:
 		{
 			/* safe index playerToAttack / unitToAttack : filled by searchToMove */
-			const Player_PtrT attackPlayer(players.GETvectPlayer()[playerToAttack]);
-			const Unit_PtrT attackUnit{ selPlayer->GETtabUnit()[selectunit] };
-			const Unit_PtrT defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
+			const PlayerPtrT attackPlayer(players.GETvectPlayer()[playerToAttack]);
+			const UnitPtrT attackUnit{ selPlayer->GETtabUnit()[selectunit] };
+			const UnitPtrT defenderUnit{ attackPlayer->GETtabUnit()[unitToAttack] };
 
 			if	(attackUnit->isPossibleToAttack())
 			{
@@ -251,8 +241,8 @@ Move_Type Unit::searchToMove
 	/*		  susceptible de mourrir par l'attaque											   */
 	/* --------------------------------------------------------------------------------------- */
 
-	const Player_PtrT selPlayer(players.GETselectedPlayerPtr());
-	const Unit_PtrT unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
+	const PlayerPtrT selPlayer(players.GETselectedPlayerPtr());
+	const UnitPtrT unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 
 	bool nextTileValidToMove(false);
@@ -418,19 +408,6 @@ bool Unit::checkNextTile
 	return false;
 }
 
-
-
-
-/* *********************************************************
- *					END Units::STATIC					   *
- ********************************************************* */
-
-
- /* *********************************************************
-  *				START Units::METHODS					   *
-  ********************************************************* */
-
-  /* ----------------------------------------------------------------------------------- */
   /* ----------------------------------------------------------------------------------- */
   /* NAME : Unit																		   */
   /* ROLE : Constructeur par d�faut													   */
@@ -826,16 +803,6 @@ bool Unit::irrigate
 	return false;
 }
 
-/* *********************************************************
- *					END Units::METHODS					   *
- ********************************************************* */
-
-
- /* *********************************************************
-  *			START Units::METHODS::AFFICHAGE				   *
-  ********************************************************* */
-
-
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
 /* NAME : cmpblit																	   */
@@ -859,11 +826,6 @@ void Unit::cmpblit()
 		/* N/A */
 	}
 }
-
-
-/* *********************************************************
- *				END Units::METHODS::AFFICHAGE			   *
- ********************************************************* */
 
 
  /*

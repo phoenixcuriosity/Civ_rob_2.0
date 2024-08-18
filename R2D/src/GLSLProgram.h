@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.3.0
-	file version : 1.1
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,8 +23,7 @@
 #ifndef GLSLProgram_H
 #define GLSLProgram_H
 
-#include <string>
-#include <SDL\glew.h>
+#include "API_fwd.h"
 
 namespace R2D
 {

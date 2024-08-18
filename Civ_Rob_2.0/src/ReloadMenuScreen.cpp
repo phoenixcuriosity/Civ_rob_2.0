@@ -119,7 +119,7 @@ void ReloadMenuScreen::initOpenGLScreen()
 void ReloadMenuScreen::initHUD()
 {
 
-	m_gui.init(R2D::ResourceManager::getFile(e_Files::GUIPath)->getPath());
+	m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
 
 	m_gui.loadScheme("AlfiskoSkin.scheme");
 	m_gui.loadScheme("TaharezLook.scheme");
@@ -301,8 +301,8 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 			dummy.erase(0, 5);
 
 			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
-			R2D::ResourceManager::modifyFilePath(e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
-			R2D::ResourceManager::modifyFilePath(e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
+			R2D::ResourceManager::modifyFilePath(R2D::e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
+			R2D::ResourceManager::modifyFilePath(R2D::e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
 			return true;
 		}
 	}
@@ -329,7 +329,7 @@ bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
 	
-	m_SaveReload->clearSave(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+	m_SaveReload->clearSave(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 
 	return true;
 }

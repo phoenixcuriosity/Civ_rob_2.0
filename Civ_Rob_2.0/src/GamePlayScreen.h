@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.7.0
-	file version : 1.19
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,51 +23,18 @@
 #ifndef GamePlayScreen_H
 #define GamePlayScreen_H
 
-
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "LIB.h"
 
+#include "MainMap.h"
+#include "NextTurn.h"
+#include "Players.h"
 #include "T_GamePlayScreen.h"
-#include "T_Unit.h"
-#include "T_City.h"
-#include "T_CityScreen.h"
-#include "T_MainMap.h"
 
 #include <R2D/src/IMainGame.h>
-
-#include "NewGame.h"
-#include "MainMap.h"
-#include "Player.h"
-#include "NextTurn.h"
-
-#include <memory>
-
-/* *********************************************************
- *						 Structs						   *
- ********************************************************* */
-
- /* N/A */
-
-/* *********************************************************
- *					 Constantes							   *
- ********************************************************* */
-
-/* N/A */
-
-/* *********************************************************
- *						 Classe							   *
- ********************************************************* */
 
 class GamePlayScreen : public R2D::IGameScreen
 {
 public:
-
-	/* *********************************************************
-	 *					Constructor/Destructor				   *
-	 ********************************************************* */
 
 	GamePlayScreen
 	(
@@ -81,10 +46,6 @@ public:
 
 
 public:
-
-	/* *********************************************************
-	 *					   Parent override					   *
-	 ********************************************************* */
 
 	virtual int getNextScreenIndex()const override;
 	virtual int getPreviousScreenIndex()const override;
@@ -129,10 +90,6 @@ private:
 
 private:
 
-	/* *********************************************************
-	 *							Init						   *
-	 ********************************************************* */
-
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initStructs																   */
@@ -169,10 +126,6 @@ private:
 
 public:
 
-	/* *********************************************************
-	 *							Load						   *
-	 ********************************************************* */
-
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : loadUnitAndSpec															   */
 	/* ROLE : Chargement des informations concernant les unit�s � partir d'un fichier	   */
@@ -185,10 +138,6 @@ public:
 	void loadCitiesNames();
 
 private:
-
-	/* *********************************************************
-	 *						New Game						   *
-	 ********************************************************* */
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : newGame																   	   */
@@ -326,10 +275,6 @@ private:
 
 private:
 
-	/* *********************************************************
-	 *					   Input Manager					   *
-	 ********************************************************* */
-
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : run_SDL																					    	  */
 	/* ROLE : Recherche infini des �venements d'entr� de type SDL_event : souris, clavier					      */
@@ -375,18 +320,9 @@ private:
 
 private:
 
-	/* *********************************************************
-	 *				   Screen Input Manager		    		   *
-	 ********************************************************* */
-
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
-
 public:
-
-	/* *********************************************************
-	 *						 GET/SET						   *
-	 ********************************************************* */
 
 	Screen& GETscreen();
 	const Screen& GETscreen()const;
@@ -407,18 +343,6 @@ public:
 
 private:
 
-	/* *********************************************************
-	 *						 Attributs						   *
-	 ********************************************************* */
-
-	 /*
-		 All R2D objects
-		 - Shaders
-		 - camera/cameraHUD
-		 - Sprite/font
-		 - audioEngine
-		 - GUI
-	*/
 	Screen m_screen;
 
 	Var m_var;
@@ -434,9 +358,6 @@ private:
 
 	bool m_isInitialize;
 };
-
-
-
 
 #endif // !GamePlayScreen_H
 

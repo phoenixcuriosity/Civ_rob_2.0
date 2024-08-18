@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.23.9.0
-	file version : 1.1
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,20 +23,18 @@
 #ifndef WidgetLabel_H
 #define WidgetLabel_H
 
-#include <string>
+#include "API_fwd.h"
 
 #include <glm/glm.hpp>
 #include <CEGUI/CEGUI.h>
 
 #include "ColorRGBA8.h"
+#include "SpriteBatch.h"
+#include "SpriteFont.h"
+#include "Window.h"
 
 namespace R2D
 {
-
-class Window;
-class SpriteBatch;
-class SpriteFont;
-struct ColorRGBA8;
 
 class WidgetLabel
 {

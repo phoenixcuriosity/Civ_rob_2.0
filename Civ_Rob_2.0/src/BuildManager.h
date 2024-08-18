@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.12.4
-	file version : 1.4
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,17 +23,11 @@
 #ifndef BuildManager_H
 #define BuildManager_H
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "LIB.h"
-#include "T_CityScreen.h"
-#include "T_City.h"
-#include "T_Unit.h"
+
 #include "CitizenManager.h"
 #include "FoodManager.h"
-
+#include "T_CityScreen.h"
 
 class BuildManager
 {

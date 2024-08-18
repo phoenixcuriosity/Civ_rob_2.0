@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2021 (robin.sauter@orange.fr)
-	last modification on this file on version:0.24.3.0
-	file version : 1.4
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,16 +23,13 @@
 #ifndef IMainGame_H
 #define IMainGame_H
 
+#include "API_fwd.h"
+
 #include "Window.h"
 #include "InputManager.h"
 
-#include <memory>
-
 namespace R2D
 {
-
-class ScreenList;
-class IGameScreen;
 
 class IMainGame
 {

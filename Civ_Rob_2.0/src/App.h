@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.11
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -27,18 +25,9 @@
 
 #include "LIB.h"
 
-#include <memory>
-
-#include <R2D/src/IMainGame.h>
-
-#include "GamePlayScreen.h"
-#include "MainMenuScreen.h"
-#include "ReloadMenuScreen.h"
-#include "NewGameScreen.h"
-#include "CityScreen.h"
-
 #include "SaveReload.h"
 
+#include <R2D/src/IMainGame.h>
 
 class App : public R2D::IMainGame
 {
@@ -65,17 +54,14 @@ public:
 
 
 private:
-	std::shared_ptr<MainMenuScreen> m_mainMenuScreen;
-	std::shared_ptr<NewGameScreen> m_newGameScreen;
-	std::shared_ptr<ReloadMenuScreen> m_reloadMenuScreen;
-	std::shared_ptr<GamePlayScreen> m_gamePlayScreen;
-	std::shared_ptr<CityScreen> m_CityScreen;
+	MainMenuScreenPtrT m_mainMenuScreen;
+	NewGameScreenPtrT m_newGameScreen;
+	ReloadMenuScreenPtrT m_reloadMenuScreen;
+	GamePlayScreenPtrT m_gamePlayScreen;
+	CityScreenPtrT m_CityScreen;
 
 	SaveReload m_saveReload;
 };
-
-
-
 
 #endif // !App_H
 

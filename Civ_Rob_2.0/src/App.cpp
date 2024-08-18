@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.6.3
-	file version : 1.17
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,8 +22,11 @@
 
 #include "App.h"
 
-#include <R2D/src/ScreenList.h>
-
+#include "CityScreen.h"
+#include "GamePlayScreen.h"
+#include "MainMenuScreen.h"
+#include "NewGameScreen.h"
+#include "ReloadMenuScreen.h"
 
 #include <tinyxml2/tinyxml2.h>
 
@@ -34,7 +35,7 @@
 #include <R2D/src/ExitFromError.h> 
 #include <R2D/src/SpriteFont.h> 
 #include <R2D/src/tinyXml2.h> 
-
+#include <R2D/src/ScreenList.h>
 
 namespace FILE_APP
 {
@@ -71,7 +72,7 @@ App::~App()
 void App::onInit()
 {
 	/* Set location of logging file */
-	R2D::ResourceManager::initializeFilePath(e_Files::log, FILE_APP::PATH::LOG);
+	R2D::ResourceManager::initializeFilePath(R2D::e_Files::log, FILE_APP::PATH::LOG);
 	R2D::ErrorLog::initializeLog();
 
 	initMain();
@@ -79,7 +80,7 @@ void App::onInit()
 	m_window.SETscreenWidth(R2D::Window::getHorizontal());
 	m_window.SETscreenHeight(R2D::Window::getVertical());
 	
-	m_saveReload.init(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+	m_saveReload.init(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 }
 
 
@@ -96,8 +97,8 @@ void App::InitShaders()
 {
 	R2D::ResourceManager::getGLSLProgram().compileShaders
 	(
-		R2D::ResourceManager::getFile(e_Files::colorShadingVert)->getPath(),
-		R2D::ResourceManager::getFile(e_Files::colorShadingFrag)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingVert)->getPath(),
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingFrag)->getPath()
 	);
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
@@ -169,7 +170,7 @@ void App::initMain()
 	{
 		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
 
-		for (e_Files it_e_files : tab_e_Files)
+		for (R2D::e_Files it_e_files : R2D::tab_e_Files)
 		{
 			if (nullptr != node)
 			{

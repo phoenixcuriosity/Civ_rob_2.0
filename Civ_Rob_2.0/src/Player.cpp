@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.15.1
-	file version : 1.31
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,42 +20,21 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "Player.h"
 
-#include "Utility.h"
 #include "App.h"
 #include "City.h"
+#include "Unit.h"
+#include "Utility.h"
 
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/ErrorLog.h> 
 
-
-namespace
-{
-	const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
-
-	const unsigned int VECT_SIZE_OFFSET_ID = 1;
-
-	const unsigned int CITY_TYPE = 1;
-}
-
  /* *********************************************************
   *				START Player::METHODS					   *
   ********************************************************* */
 
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : Player																	   */
-/* ROLE : Constructeur par défaut													   */
-/* INPUT : void																		   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Player::Player() :
 	m_name("NoName"),
 	m_tabUnit(),
@@ -70,13 +47,6 @@ Player::Player() :
 	R2D::ErrorLog::logEvent("[INFO]___: Create Player Par Defaut Success");
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : Player																	   */
-/* ROLE : Constructeur par nom du joueur											   */
-/* INPUT : const std::string&														   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Player::Player
 (
 	const std::string& name,
@@ -95,25 +65,11 @@ Player::Player
 	R2D::ErrorLog::logEvent("[INFO]___: Create Player Success");
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : ~Player																	   */
-/* ROLE : Initialisation d'une Unit vide											   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Player::~Player()
 {
 	deletePlayer();
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : operator=																	   */
-/* ROLE : Redéfinition de l'opérateur =												   */
-/* INPUT : const Player& player : l'objet à copier									   */
-/* RETURNED VALUE : Player&	: l'objet recopié										   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Player& Player::operator=
 (
 	const Player& player
@@ -130,14 +86,6 @@ Player& Player::operator=
 	return *this;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : deletePlayer																   */
-/* ROLE : Destruction de l'objet et de ses ptr										   */
-/* INPUT : void																		   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::deletePlayer()
 {
 	for (auto& u : m_tabUnit)
@@ -153,27 +101,11 @@ void Player::deletePlayer()
 	m_tabCity.clear();
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : addEmptyUnit																   */
-/* ROLE : Initialisation d'une Unit vide											   */
-/* INPUT : void																		   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::addEmptyUnit()
 {
 	m_tabUnit.push_back(std::make_shared<Unit>());
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : addUnit																	   */
-/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
-/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::addUnit
 (
 	const std::string& name,
@@ -198,14 +130,6 @@ void Player::addUnit
 	);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : deleteUnit																   */
-/* ROLE : Suppression d'une Unit du joueur											   */
-/* INPUT : unsigned int : index de Unit dans le tableau								   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::deleteUnit
 (
 	const unsigned int index
@@ -230,14 +154,6 @@ void Player::deleteUnit
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : addCity																	   */
-/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
-/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::addCity
 (
 	const std::string& name,
@@ -249,14 +165,6 @@ void Player::addCity
 	m_tabCity.push_back(std::make_shared<City>(name, x, y, tiles));
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : deleteCity																   */
-/* ROLE : Suppression d'une City du joueur											   */
-/* INPUT : unsigned int : index de City dans le tableau								   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::deleteCity
 (
 	const unsigned int index
@@ -282,7 +190,7 @@ void Player::deleteCity
 	}
 }
 
-City_PtrT* Player::searchCity
+CityPtrT* Player::searchCity
 (
 	const unsigned int indexX,
 	const unsigned int indexY
@@ -295,15 +203,6 @@ City_PtrT* Player::searchCity
 	return nullptr;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeGold																   */
-/* ROLE : Compute income and cost then the balance between the two					   */
-/* ROLE : Add balance to the player gold											   */
-/* INPUT : void																		   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::computeGold()
 {
 	computeMaintenanceCostUnit();
@@ -330,14 +229,6 @@ void Player::computeMaintenanceCostUnit()
 	*/
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : resetGoldStats															   */
-/* ROLE : Reset all stats of m_goldStats except gold									   */
-/* INPUT : void																		   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::resetGoldStats()
 {
 	m_goldStats.goldBalance = 0.0;
@@ -349,349 +240,12 @@ void Player::resetGoldStats()
 	m_goldStats.armiesCost = 0.0;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : resetGoldStats															   */
-/* ROLE : Reset all stats of m_goldStats except gold									   */
-/* INPUT : double goldToAdd	: gold to add in goldConversionSurplus					   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void Player::addGoldToGoldConversionSurplus
 (
 	const double goldToAdd
 )
 {
 	m_goldStats.goldConversionSurplus += goldToAdd;
-}
-
-
-/* *********************************************************
- *				END Player::METHODS						   *
- ********************************************************* */
-
-
-
-Players::Players()
-:
-m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
-m_selectedPlayerPtr(),
-m_selectedCity(),
-m_vectCityName(),
-m_vectUnitTemplate(),
-m_vectIDUnit(),
-m_vectCityTemplate(),
-m_vectIDCity(),
-m_vectPlayer(),
-m_spriteBatchUnit(),
-m_needToUpdateDrawUnit(true),
-m_spriteBatchCity(),
-m_needToUpdateDrawCity(true)
-{
-	m_spriteBatchCityDynamic.init();
-}
-
-Players::~Players()
-{
-	deleteAllPlayers();
-}
-
-void Players::init(const std::string& filePath)
-{
-	/*---UNIT---*/
-
-	m_vectIDUnit.resize(m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + PlayerH::NB_MAX_PLAYER);
-
-	/* Unit Texture */
-	for (unsigned int i(0); i < m_vectUnitTemplate.size(); i++)
-	{
-		m_vectIDUnit[i] = R2D::ResourceManager::getTexture(filePath + "units/" + m_vectUnitTemplate[i].name + EXTENSION_PNG)->GETid();
-	}
-
-	/* Lifebar Texture */
-	for (unsigned int i(0); i < LIFE_BAR_NB_SUBDIVISION - 1; i++)
-	{
-		m_vectIDUnit[m_vectUnitTemplate.size() + i]
-			= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "0." + std::to_string(i) + "life" + EXTENSION_PNG)->GETid();
-	}
-
-	m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION - 1]
-		= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
-
-	/* Appartenance Texture */
-	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
-	{
-		m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + i]
-			= R2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
-	}
-
-	m_spriteBatchUnit.init();
-
-	/*---CITY---*/
-
-	m_vectIDCity.resize(CITY_TYPE);
-
-	m_vectIDCity[0] = R2D::ResourceManager::getTexture(filePath + "city/city" + EXTENSION_PNG)->GETid();
-
-	m_spriteBatchCity.init();
-}
-
-void Players::addPlayer
-(
-	const std::string& name,
-	const int id
-)
-{
-	m_vectPlayer.push_back(std::make_shared<Player>(name, id));
-}
-
-void Players::deleteAllPlayers()
-{
-	for (auto& p : m_vectPlayer)
-	{
-		p.reset();
-	}
-}
-
-void Players::removeIndexPlayer
-(
-	const unsigned int index
-)
-{
-	if (Utility::assertSize(m_vectPlayer.size(), index))
-	{
-		m_vectPlayer[index].reset();
-	}
-	else
-	{
-		throw("[ERROR]__: removeIndexPlayer : assertSize");
-	}
-}
-
-void Players::clickToSelectUnit
-(
-	const unsigned int x,
-	const unsigned int y
-)
-{
-	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
-	{
-		Player_PtrT p{ m_vectPlayer[m_selectedPlayer] };
-		unsigned int i{ 0 };
-		for (const auto& u : p->GETtabUnit())
-		{
-			if	(
-					u->GETx() == x
-					&&
-					u->GETy() == y
-				)
-			{
-				p->SETselectedUnit(i);
-				break;
-			}
-			i++;
-		}
-		p.reset();
-	}
-}
-
-
-void Players::isAUnitSelected()
-{
-	if (m_selectedPlayer != SELECTION::NO_PLAYER_SELECTED)
-	{
-		Player_PtrT p{ m_vectPlayer[m_selectedPlayer] };
-
-		if (p->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
-		{
-			Unit_PtrT u{ p->GETtabUnit()[p->GETselectedUnit()] };
-			bool prevShow{ u->GETshow() };
-			u->cmpblit();
-			if (prevShow != u->GETshow())
-			{
-				m_needToUpdateDrawUnit = true;
-			}
-		}
-	}
-}
-
-void Players::drawUnit
-(
-	const MainMap& mainMap,
-	R2D::Camera2D& camera
-)
-{
-	if (m_needToUpdateDrawUnit)
-	{
-		m_spriteBatchUnit.begin();
-		const unsigned int tileSize{ mainMap.GETtileSize() };
-
-		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
-		{
-			for (unsigned int j(0); j < m_vectPlayer[i]->GETtabUnit().size(); j++)
-			{
-				Unit_PtrT unit(m_vectPlayer[i]->GETtabUnit()[j]);
-
-				if (unit->GETshow())
-				{
-					if	(
-							camera.isBoxInView
-							(
-								{ unit->GETx(), unit->GETy() },
-								{ tileSize , tileSize },
-								mainMap.GETtoolBarSize() * tileSize
-							)
-						)
-					{
-						/* Unit Texture */
-						m_spriteBatchUnit.draw
-						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
-							R2D::FULL_RECT,
-							m_vectIDUnit[Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate)],
-							0.0f,
-							R2D::COLOR_WHITE
-						);
-
-						/* Lifebar Texture */
-						m_spriteBatchUnit.draw
-						(
-							glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
-							R2D::FULL_RECT,
-							m_vectIDUnit
-							[
-								m_vectUnitTemplate.size() - VECT_SIZE_OFFSET_ID
-								+
-								(int)std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
-							],
-							0.0f,
-							R2D::COLOR_WHITE
-						);
-
-						/* Appartenance Texture */
-						m_spriteBatchUnit.draw
-						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
-							R2D::FULL_RECT,
-							m_vectIDUnit
-							[
-								m_vectUnitTemplate.size()
-								+
-								LIFE_BAR_NB_SUBDIVISION
-								+
-								i
-							],
-							0.0f,
-							R2D::COLOR_WHITE
-						);
-
-					}
-				}
-				unit.reset();
-			}
-		}
-
-		m_spriteBatchUnit.end();
-
-		m_needToUpdateDrawUnit = false;
-	}
-}
-
-void Players::renderUnit()
-{
-	m_spriteBatchUnit.renderBatch();
-}
-
-void Players::drawCity
-(
-	const MainMap& mainMap,
-	R2D::Camera2D& camera,
-	SpriteFont_PtrT& font
-)
-{
-	if (m_needToUpdateDrawCity)
-	{
-		m_spriteBatchCity.begin();
-		m_spriteBatchCityDynamic.begin();
-
-		const unsigned int tileSize{ mainMap.GETtileSize() };
-
-		for (unsigned int i(0); i < m_vectPlayer.size(); i++)
-		{
-			for (unsigned int j(0); j < m_vectPlayer[i]->GETtabCity().size(); j++)
-			{
-				City_PtrT city(m_vectPlayer[i]->GETtabCity()[j]);
-
-				
-				if	(
-						camera.isBoxInView
-						(
-							{ city->GETx(), city->GETy() },
-							{ tileSize , tileSize },
-							mainMap.GETtoolBarSize() * tileSize
-						)
-					)
-				{
-					/* City Texture */
-					m_spriteBatchCity.draw
-					(
-						glm::vec4(city->GETx(), city->GETy(), tileSize, tileSize),
-						R2D::FULL_RECT,
-						m_vectIDCity[0],
-						0.0f,
-						R2D::COLOR_WHITE
-					);
-
-					/* City Name */
-					font->draw
-					(
-						m_spriteBatchCityDynamic,
-						city->GETname().c_str(),
-						glm::vec2
-						(
-							static_cast<float>(city->GETx()),
-							static_cast<float>(city->GETy())
-						), // offset pos
-						glm::vec2(0.32f), // size
-						0.0f,
-						R2D::COLOR_WHITE
-					);
-				}
-				city.reset();
-			}
-		}
-
-		m_spriteBatchCity.end();
-		m_spriteBatchCityDynamic.end();
-
-		m_needToUpdateDrawCity = false;
-	}
-}
-
-void Players::renderCity()
-{
-	m_spriteBatchCity.renderBatch();
-	m_spriteBatchCityDynamic.renderBatch();
-}
-
-
-bool Players::searchCity
-(
-	const unsigned int indexX,
-	const unsigned int indexY
-)
-{
-	City_PtrT* ptrCity{};
-	for (auto& p : m_vectPlayer)
-	{
-		ptrCity = p->searchCity(indexX, indexY);
-		if (ptrCity != nullptr && *ptrCity != nullptr)
-		{
-			m_selectedCity = *ptrCity;
-			return true;
-		}
-	}
-	return false;
 }
 
  /*

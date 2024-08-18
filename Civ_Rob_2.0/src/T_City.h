@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.5
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,14 +22,6 @@
 
 #ifndef T_CITY_H
 #define T_CITY_H
-
-#include "LIB.h"
-#include <memory>
-#include <vector>
-
-/* *********************************************************
- *					 Constantes							   *
- ********************************************************* */
 
 namespace CITY_INFLUENCE
 {
@@ -79,13 +69,7 @@ namespace MULTIPLIER
 	}
 }
 
-/* *********************************************************
- *							 Enum						   *
- ********************************************************* */
-
-
-
- /* Define types of conversion that a city can apply to the ressources */
+/* Define types of conversion that a city can apply to the ressources */
 enum class conversionSurplus_Type : unsigned int
 {
 	No_Conversion,
@@ -103,10 +87,6 @@ enum class resizeUnitTexture_Type : unsigned int
 	mainmap,
 	city
 };
-
-
-typedef std::shared_ptr<City> City_PtrT;
-typedef std::vector<City_PtrT> VectCity;
 
 #endif
 

@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.8
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,16 +23,6 @@
 #ifndef GameInput_H
 #define GameInput_H
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
-/* N/A */
-
-/* *********************************************************
- *						 Enum							   *
- ********************************************************* */
-
  /* Define input from keyboard in a context */
 enum class CinState_Type : unsigned int
 {
@@ -45,15 +33,7 @@ enum class CinState_Type : unsigned int
 	cinMainMap,						/* Inputs from keyboards are use in Main map */
 };
 
-/* *********************************************************
- *						Structures						   *
- ********************************************************* */
-
- /* N/A */
-
-
 #endif /* GameInput_H */
-
 
 /*
 *	End Of File : GameInput.h

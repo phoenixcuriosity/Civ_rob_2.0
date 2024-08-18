@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.34
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -24,8 +22,16 @@
 
 #include "SaveReload.h"
 
-#include "MainMap.h"
 #include "App.h"
+#include "Citizen.h"
+#include "City.h"
+#include "GamePlayScreen.h"
+#include "MainMap.h"
+#include "NewGameScreen.h"
+#include "Player.h"
+#include "Unit.h"
+#include "T_Unit.h"
+#include "XmlConvertValue.h"
 
 #include <direct.h>
 
@@ -33,7 +39,7 @@
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/ExitFromError.h> 
 
-#include "XmlConvertValue.h"
+
 
 /* *********************************************************
  *				START SaveReload::STATIC				   *
@@ -101,7 +107,7 @@ void SaveReload::saveMaps
 )
 {
 	
-	std::ofstream saveMaps{ R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath() };
+	std::ofstream saveMaps{ R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() };
 	if (saveMaps)
 	{
 		for (size_t i{0}; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -126,7 +132,7 @@ void SaveReload::saveMaps
 		(
 			"[ERROR]___: Impossible d'ouvrir le fichier "
 			+ 
-			R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
 		);
 }
 
@@ -393,7 +399,7 @@ void SaveReload::savePlayer
 		pRoot->InsertEndChild(playerElement);
 	}
 	
-	xmlDoc.SaveFile(R2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str());
+	xmlDoc.SaveFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str());
 }
 
 
@@ -441,7 +447,7 @@ void SaveReload::loadMaps
 {
 	std::string input(STRINGS::EMPTY);
 
-	std::ifstream saveMaps(R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath());
+	std::ifstream saveMaps(R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -485,7 +491,7 @@ void SaveReload::loadMaps
 		(
 			"[ERROR]___: Impossible d'ouvrir le fichier "
 			+
-			R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
 		);
 
 	R2D::ErrorLog::logEvent("[INFO]___: Save End");
@@ -507,7 +513,7 @@ void SaveReload::loadPlayer
 	std::string errCheck(STRINGS::EMPTY);
 	tinyxml2::XMLDocument xmlDoc;
 	
-	if (xmlDoc.LoadFile(R2D::ResourceManager::getFile(e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
+	if (xmlDoc.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
 	{
 		tinyxml2::XMLNode* pRoot = xmlDoc.FirstChild();
 		if (nullptr == pRoot) R2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : pRoot == nullptr");
@@ -675,10 +681,10 @@ void SaveReload::loadUnitXML
 
 	while (nullptr != nUnit)
 	{
-		Player_PtrT blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayerId()]);
+		PlayerPtrT blankPlayer(mainGame.GETPlayers().GETvectPlayer()[mainGame.GETPlayers().GETselectedPlayerId()]);
 		blankPlayer->addEmptyUnit();
 
-		Unit_PtrT blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
+		UnitPtrT blankUnit(blankPlayer->GETtabUnit()[(unsigned int)(blankPlayer->GETtabUnit().size() - 1)]);
 		blankUnit->SETowner(blankPlayer.get());
 
 		inputNode = nUnit->FirstChild();
@@ -772,11 +778,11 @@ void SaveReload::loadCityXML
 	};
 	BlankCity blankCity;
 	build blankBluid;
-	Citizen_PtrT ptrCitizen;
+	CitizenPtrT ptrCitizen;
 
 
-	Player_PtrT ptrPlayer(mainGame.GETPlayers().GETselectedPlayerPtr());
-	City_PtrT ptrCity;
+	PlayerPtrT ptrPlayer(mainGame.GETPlayers().GETselectedPlayerPtr());
+	CityPtrT ptrCity;
 
 	while (nullptr != nCity)
 	{
@@ -975,7 +981,7 @@ L10:
 	}
 
 
-	std::ofstream saveInfo(R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+	std::ofstream saveInfo(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 	if (saveInfo)
 	{
 		saveInfo << "NbSave=";
@@ -985,7 +991,7 @@ L10:
 			saveInfo << std::endl << m_tabSave[i];
 	}
 	else
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(e_Files::saveInfo)->getPath());
+		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 
 	std::string save = "save/" + std::to_string(m_currentSave);
 
@@ -996,15 +1002,15 @@ L10:
 	
 	R2D::ResourceManager::modifyFilePath
 	(
-		e_Files::saveMaps,
+		R2D::e_Files::saveMaps,
 		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(e_Files::saveMaps)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
 	);
 	R2D::ResourceManager::modifyFilePath
 	(
-		e_Files::savePlayers,
+		R2D::e_Files::savePlayers,
 		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(e_Files::savePlayers)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()
 	);
 
 	R2D::ErrorLog::logEvent("[INFO]___: createSave End");

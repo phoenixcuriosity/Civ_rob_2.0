@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.3
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,20 +23,13 @@
 #ifndef GUI_H
 #define GUI_H
 
+#include "API_fwd.h"
 
 #include <glm/glm.hpp>
-#include <SDL\glew.h>
 #include <SDL/SDL.h>
 
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/OpenGL/GL3Renderer.h>
-
-
-#include "InputManager.h"
-
-/* *********************************************************
- *						Classe							   *
- ********************************************************* */
 
 namespace R2D
 {

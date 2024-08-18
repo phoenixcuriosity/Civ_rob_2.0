@@ -2,8 +2,6 @@
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.14.2
-	file version : 1.43
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -22,24 +20,20 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "GameInput.h"
-#include "GamePlayScreen.h"
-
-#include "ScreenIndices.h"
 
 #include "App.h"
+#include "City.h"
+#include "GamePlayScreen.h"
+#include "Player.h"
+#include "ScreenIndices.h"
+#include "Unit.h"
+#include "Utility.h"
+
 #include <iostream>
 
-#include "Utility.h"
+#include <R2D/src/CardinalDirection.h> 
 #include <R2D/src/ResourceManager.h> 
-
- /* *********************************************************
-  *						 Classes						   *
-  ********************************************************* */
 
 namespace GInput
 {
@@ -51,13 +45,6 @@ namespace GInput
 	const SDL_KeyCode KEY_TO_IRRIGATE = SDLK_i;
 	const SDL_KeyCode KEY_NEXT_TURN = SDLK_SPACE;
 }
-
-
-  /* *********************************************************
-   *					KeyboardMouse STATIC				   *
-   ********************************************************* */
-
-
    
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -138,8 +125,8 @@ void GamePlayScreen::actionByKey()
 		/* Found City */
 		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
 		{
-			Player_PtrT splayer(m_players.GETselectedPlayerPtr());
-			Unit_PtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+			PlayerPtrT splayer(m_players.GETselectedPlayerPtr());
+			UnitPtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
 
 			if (sUnit->isThisUnitType("settler"))
 			{
@@ -151,8 +138,8 @@ void GamePlayScreen::actionByKey()
 		/* Irragate */
 		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_IRRIGATE))
 		{
-			Player_PtrT splayer(m_players.GETselectedPlayerPtr());
-			Unit_PtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+			PlayerPtrT splayer(m_players.GETselectedPlayerPtr());
+			UnitPtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
 
 			if	(sUnit->GETname().starts_with("ouvrier_tier_") == STRINGS::START_WITH)
 			{

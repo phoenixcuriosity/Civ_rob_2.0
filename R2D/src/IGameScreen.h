@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.5
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -25,6 +23,8 @@
 #ifndef IGameScreen_H
 #define IGameScreen_H
 
+#include "API_fwd.h"
+
 #include <glm\glm.hpp>
 
 namespace R2D
@@ -35,9 +35,6 @@ namespace SCREEN_INDEX
 {
 	const int INIT = -1;
 }
-
-
-class IMainGame;
 
 enum class ScreenState
 {
@@ -50,7 +47,6 @@ enum class ScreenState
 
 /* Setting to not use percent for a widget */
 const glm::vec4 NOT_BY_PERCENT = { 0.0f, 0.0f, 0.0f, 0.0f };
-
 
 class IGameScreen
 {

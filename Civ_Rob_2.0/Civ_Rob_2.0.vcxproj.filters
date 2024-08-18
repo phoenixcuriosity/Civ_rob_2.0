@@ -61,6 +61,9 @@
     <ClCompile Include="src\BuildManager.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
+    <ClCompile Include="src\Players.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -145,6 +148,9 @@
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
     <ClInclude Include="src\BuildManager.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Players.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
   </ItemGroup>
