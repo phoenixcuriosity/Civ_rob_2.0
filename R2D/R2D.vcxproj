@@ -157,6 +157,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\API_fwd.h" />
     <ClInclude Include="src\AudioEngine.h" />
     <ClInclude Include="src\Camera2D.h" />
     <ClInclude Include="src\CardinalDirection.h" />
