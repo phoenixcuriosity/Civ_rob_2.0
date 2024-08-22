@@ -173,6 +173,7 @@
     <ClCompile Include="src\NewGameScreen.cpp" />
     <ClCompile Include="src\NextTurn.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Players.cpp" />
     <ClCompile Include="src\ReloadMenuScreen.cpp" />
     <ClCompile Include="src\SaveReload.cpp" />
     <ClCompile Include="src\Unit.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="src\NewGameScreen.h" />
     <ClInclude Include="src\NextTurn.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Players.h" />
     <ClInclude Include="src\ReloadMenuScreen.h" />
     <ClInclude Include="src\SaveReload.h" />
     <ClInclude Include="src\ScreenIndices.h" />
