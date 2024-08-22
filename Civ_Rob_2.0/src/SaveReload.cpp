@@ -39,11 +39,6 @@
 
 #include <filesystem>
 
-
-/* *********************************************************
- *				START SaveReload::STATIC				   *
- ********************************************************* */
-
 void SaveReload::init(const std::string& filePath)
 {
 	std::string destroy{ STRINGS::EMPTY };
@@ -1024,54 +1019,19 @@ L10:
 void SaveReload::removeSave(const std::string& filePath)
 {
 	R2D::ErrorLog::logEvent("[INFO]___: removeSave Start");
-	std::string file(STRINGS::EMPTY);
-	bool condition(false);
 
-	if (m_currentSave != SELECTION::NO_CURRENT_SAVE_SELECTED)
+	if (isSelectCurrentSave())
 	{
-
-		for (unsigned int i(0); i < m_tabSave.size(); i++)
+		if (isSelectCurrentSaveInTab())
 		{
-			if (m_currentSave == (int)m_tabSave[i])
-			{
-				condition = true;
-				break;
-			}
-			else
-			{
-				/* N/A */
-			}
-		}
-
-
-		if (condition)
-		{
-
-			file = "save/" + std::to_string(m_currentSave) + "/saveMaps.txt";
-			if (remove(file.c_str()) != 0)
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-			else
-				R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-			file = "save/" + std::to_string(m_currentSave) + "/savePlayers.xml";
-			if (remove(file.c_str()) != 0)
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-			else
-				R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-			file = "save/" + std::to_string(m_currentSave);
-			if (_rmdir(file.c_str()) != 0)
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le dossier " + file);
-			else
-				R2D::ErrorLog::logEvent("[INFO]___: directory : " + file + " successfully remove");
+			removeSaveDir(m_currentSave);
 
 			if (m_tabSave.size() == 1)
 				m_tabSave.clear();
 			else
 				m_tabSave.erase(m_tabSave.begin() + m_currentSave - 1);
 
-			m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
-
+			unselectCurrentSave();
 
 			std::ofstream saveInfo(filePath);
 			if (saveInfo)
@@ -1096,43 +1056,13 @@ void SaveReload::removeSave(const std::string& filePath)
 	R2D::ErrorLog::logEvent("[INFO]___: removeSave End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : clearSave																					    	  */
-/* ROLE : Supprime toutes les sauvegardes du dossier													      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::clearSave(const std::string& filePath)
 {
 	R2D::ErrorLog::logEvent("[INFO]___: clearSave Start");
 
-	for (unsigned int j(0); j < m_tabSave.size(); j++)
+	for (const auto index : m_tabSave)
 	{
-		/* TODO for buuton save */
-	}
-
-	std::string file(STRINGS::EMPTY);
-	for (unsigned int i(0); i < m_tabSave.size(); i++)
-	{
-		file = "save/" + std::to_string(m_tabSave[i]) + "/saveMaps.txt";
-		if (remove(file.c_str()) != 0)
-			R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-		else
-			R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-		file = "save/" + std::to_string(m_tabSave[i]) + "/savePlayers.xml";
-		if (remove(file.c_str()) != 0)
-			R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-		else
-			R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-		file = "save/" + std::to_string(m_tabSave[i]);
-		if (_rmdir(file.c_str()) != 0)
-			R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le dossier " + file);
-		else
-			R2D::ErrorLog::logEvent("[INFO]___: directory : " + file + " successfully remove");
+		removeSaveDir(index);
 	}
 
 	std::ofstream saveInfo(filePath);
@@ -1145,7 +1075,7 @@ void SaveReload::clearSave(const std::string& filePath)
 	else
 		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
 
-	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
+	unselectCurrentSave();
 	m_tabSave.clear();
 
 	R2D::ErrorLog::logEvent("[INFO]___: clearSave End");
@@ -1166,42 +1096,38 @@ void SaveReload::removeSaveFile(const std::string& file)
 		R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
 }
 
-/* *********************************************************
- *				END SaveReload::STATIC					   *
- ********************************************************* */
+void SaveReload::unselectCurrentSave()
+{
+	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
+}
 
+bool SaveReload::isSelectCurrentSave()
+{
+	return m_currentSave != SELECTION::NO_CURRENT_SAVE_SELECTED;
+}
 
+bool SaveReload::isSelectCurrentSaveInTab()
+{
+	for (const auto index : m_tabSave)
+	{
+		if (m_currentSave == static_cast<int>(index))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
- /* *********************************************************
-  *				START SaveReload::METHODS				    *
-  ********************************************************* */
-
-
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* NAME : SaveReload																				    	  */
-  /* ROLE : Constructeur par défaut																		      */
-  /* INPUT : void																							      */
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* ---------------------------------------------------------------------------------------------------------- */
-SaveReload::SaveReload() : m_currentSave(SELECTION::NO_CURRENT_SAVE_SELECTED)
+SaveReload::SaveReload() 
+: 
+m_tabSave(),
+m_currentSave(SELECTION::NO_CURRENT_SAVE_SELECTED)
 {
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : ~SaveReload																				    	  */
-/* ROLE : Destructeur par défaut																		      */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 SaveReload::~SaveReload()
 {
 }
-
-
-/* *********************************************************
- *				END SaveReload::METHODS					   *
- ********************************************************* */
 
  /*
  *	End Of File : SaveReload.cpp
