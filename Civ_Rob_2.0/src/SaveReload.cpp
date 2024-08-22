@@ -33,12 +33,11 @@
 #include "T_Unit.h"
 #include "XmlConvertValue.h"
 
-#include <direct.h>
-
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/ExitFromError.h> 
 
+#include <filesystem>
 
 
 /* *********************************************************
@@ -993,11 +992,9 @@ L10:
 	else
 		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 
-	std::string save = "save/" + std::to_string(m_currentSave);
-
-	if (_mkdir(save.c_str()) != 0)
+	if (!std::filesystem::create_directory("save/" + std::to_string(m_currentSave)))
 	{
-		R2D::ErrorLog::logEvent("[ERROR]___: mkdir failed ");
+		R2D::ErrorLog::logEvent("[ERROR]___: create directory failed ");
 	}
 	
 	R2D::ResourceManager::modifyFilePath
@@ -1154,7 +1151,20 @@ void SaveReload::clearSave(const std::string& filePath)
 	R2D::ErrorLog::logEvent("[INFO]___: clearSave End");
 }
 
+void SaveReload::removeSaveDir(const size_t index)
+{
+	removeSaveFile("save/" + std::to_string(index) + "/saveMaps.txt");
+	removeSaveFile("save/" + std::to_string(index) + "/savePlayers.xml");
+	removeSaveFile("save/" + std::to_string(index));
+}
 
+void SaveReload::removeSaveFile(const std::string& file)
+{
+	if (!std::filesystem::remove(file))
+		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
+	else
+		R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
+}
 
 /* *********************************************************
  *				END SaveReload::STATIC					   *
