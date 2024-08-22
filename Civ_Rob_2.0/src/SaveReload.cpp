@@ -68,16 +68,6 @@ void SaveReload::init(const std::string& filePath)
 	}
 }
 
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : save																						    	  */
-/* ROLE : Save Maps and Player info in a folder in 2 files												      */
-/* ROLE : Maps in saveMaps.txt and Player info in savePlayers.xml 										      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::save
 (
 	GamePlayScreen& mainGame
@@ -87,14 +77,6 @@ void SaveReload::save
 	savePlayer(mainGame);
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : savemaps																					    	  */
-/* ROLE : Sauvegardes des sys map.map et map.screen														      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																	    			  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::saveMaps
 (
 	GamePlayScreen& mainGame
@@ -130,14 +112,6 @@ void SaveReload::saveMaps
 		);
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : savePlayer																				    	  */
-/* ROLE : Sauvegarde des joueurs (units et cities) dans savePlayers.xml									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void 																				  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::savePlayer
 (
 	GamePlayScreen& mainGame
@@ -396,15 +370,6 @@ void SaveReload::savePlayer
 	xmlDoc.SaveFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str());
 }
 
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : reload																					    	  */
-/* ROLE : Chargement de la partie à patir des fichiers de sauvegarde									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::reload
 (
 	GamePlayScreen& mainGame
@@ -426,14 +391,6 @@ void SaveReload::reload
 	R2D::ErrorLog::logEvent("[INFO]___: Reload End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadMaps																					    	  */
-/* ROLE : Chargement des sys map.map et map.screen														      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadMaps
 (
 	GamePlayScreen& mainGame
@@ -491,14 +448,6 @@ void SaveReload::loadMaps
 	R2D::ErrorLog::logEvent("[INFO]___: Save End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadPlayer																				    	  */
-/* ROLE : Chargement des joueurs (units et cities) dans SavePlayer.txt									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadPlayer
 (
 	GamePlayScreen& mainGame
@@ -598,17 +547,6 @@ void SaveReload::loadPlayer
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadGoldStatsXML																			    	  */
-/* ROLE : Load Gold Stats reference to Player															      */
-/* ROLE : Player->GETgoldStats() should be used instead of Player->GETgoldStatsConst()						  */
-/* ROLE : Data type : double ; use std::stod															      */
-/* INPUT/OUTPUT : GoldStats& goldStats : Structure of the Player's gold stats 							      */
-/* INPUT/OUTPUT : tinyxml2::XMLNode* nGoldStats : Ptr on the GoldStats node in the XML document			      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadGoldStatsXML
 (
 	GoldStats& goldStats,
@@ -654,16 +592,6 @@ void SaveReload::loadGoldStatsXML
 	goldStats.buildingsCost = std::stod(inputNode->FirstChild()->Value());
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadUnitXML																				    	  */
-/* ROLE : Load Unit reference to Player																	      */
-/* ROLE : While Loop : load all Units to a Player														      */
-/* INPUT/OUTPUT : MainGame& mainGame : General struct							 							      */
-/* INPUT/OUTPUT : tinyxml2::XMLNode* nUnit : Ptr on the Unit node in the XML document					      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadUnitXML
 (
 	GamePlayScreen& mainGame,
@@ -743,16 +671,6 @@ void SaveReload::loadUnitXML
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadCityXML																				    	  */
-/* ROLE : Load City reference to Player																	      */
-/* ROLE : While Loop : load all Cities to a Player														      */
-/* INPUT/OUTPUT : MainGame& mainGame : General struct							 							      */
-/* INPUT/OUTPUT : tinyxml2::XMLNode* nCity : Ptr on the City node in the XML document					      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadCityXML
 (
 	GamePlayScreen& mainGame,
@@ -940,14 +858,6 @@ void SaveReload::loadCityXML
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : createSave																				    	  */
-/* ROLE : Création d'un emplacement de fichier de sauvegarde (courant)									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::createSave()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: createSave Start");
@@ -1008,14 +918,6 @@ L10:
 	R2D::ErrorLog::logEvent("[INFO]___: createSave End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : removeSave																				    	  */
-/* ROLE : Supprime une sauvegarde du dossier de sauvegarde												      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::removeSave(const std::string& filePath)
 {
 	R2D::ErrorLog::logEvent("[INFO]___: removeSave Start");
