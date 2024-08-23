@@ -39,6 +39,11 @@
 
 #include <filesystem>
 
+namespace SAVE
+{
+	const size_t OFFSET_INDEX = 1;
+}
+
 void SaveReload::init(const std::string& filePath)
 {
 	std::string destroy{ STRINGS::EMPTY };
@@ -918,39 +923,19 @@ L10:
 	R2D::ErrorLog::logEvent("[INFO]___: createSave End");
 }
 
-void SaveReload::removeSave(const std::string& filePath)
+void SaveReload::removeSave()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: removeSave Start");
 
-	if (isSelectCurrentSave())
+	if (isSelectCurrentSave() && isSelectCurrentSaveInTab())
 	{
-		if (isSelectCurrentSaveInTab())
-		{
-			removeSaveDir(m_currentSave);
+		removeSaveDir(m_currentSave);
 
-			if (m_tabSave.size() == 1)
-				m_tabSave.clear();
-			else
-				m_tabSave.erase(m_tabSave.begin() + m_currentSave - 1);
+		m_tabSave.erase(m_tabSave.begin() + m_currentSave - SAVE::OFFSET_INDEX);
 
-			unselectCurrentSave();
+		unselectCurrentSave();
 
-			std::ofstream saveInfo(filePath);
-			if (saveInfo)
-			{
-				saveInfo << "NbSave=";
-				saveInfo << std::endl << m_tabSave.size();
-				saveInfo << std::endl << "SaveUse=";
-				for (unsigned int i(0); i < m_tabSave.size(); i++)
-					saveInfo << std::endl << m_tabSave[i];
-			}
-			else
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
-		}
-		else
-		{
-			/* N/A */
-		}
+		rewriteSaveInfoFile();
 	}
 	else
 		R2D::ErrorLog::logEvent("[ERROR]___: currentSave = 0");
@@ -958,7 +943,7 @@ void SaveReload::removeSave(const std::string& filePath)
 	R2D::ErrorLog::logEvent("[INFO]___: removeSave End");
 }
 
-void SaveReload::clearSave(const std::string& filePath)
+void SaveReload::clearSave()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: clearSave Start");
 
@@ -967,27 +952,21 @@ void SaveReload::clearSave(const std::string& filePath)
 		removeSaveDir(index);
 	}
 
-	std::ofstream saveInfo(filePath);
-	if (saveInfo)
-	{
-		saveInfo << "NbSave=";
-		saveInfo << std::endl << "0";
-		saveInfo << std::endl << "SaveUse=";
-	}
-	else
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
+	m_tabSave.clear();
 
 	unselectCurrentSave();
-	m_tabSave.clear();
+
+	rewriteSaveInfoFile();
 
 	R2D::ErrorLog::logEvent("[INFO]___: clearSave End");
 }
 
 void SaveReload::removeSaveDir(const size_t index)
 {
-	removeSaveFile("save/" + std::to_string(index) + "/saveMaps.txt");
-	removeSaveFile("save/" + std::to_string(index) + "/savePlayers.xml");
-	removeSaveFile("save/" + std::to_string(index));
+	const std::string dir{ "save/" + std::to_string(index) };
+	removeSaveFile(dir + "/saveMaps.txt");
+	removeSaveFile(dir + "/savePlayers.xml");
+	removeSaveFile(dir);
 }
 
 void SaveReload::removeSaveFile(const std::string& file)
@@ -1018,6 +997,21 @@ bool SaveReload::isSelectCurrentSaveInTab()
 		}
 	}
 	return false;
+}
+
+void SaveReload::rewriteSaveInfoFile()
+{
+	const std::string& file{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath() };
+	std::ofstream saveInfo(file);
+	if (saveInfo)
+	{
+		saveInfo << "NbSave="			<< std::endl;
+		saveInfo << m_tabSave.size()	<< std::endl;
+		saveInfo << "SaveUse="			<< std::endl;
+		for (const auto index : m_tabSave) saveInfo << index << std::endl;
+	}
+	else
+		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + file);
 }
 
 SaveReload::SaveReload() 

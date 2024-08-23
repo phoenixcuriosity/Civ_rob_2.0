@@ -329,7 +329,7 @@ bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
 	
-	m_SaveReload->clearSave(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
+	m_SaveReload->clearSave();
 
 	return true;
 }
