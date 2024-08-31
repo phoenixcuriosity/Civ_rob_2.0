@@ -24,6 +24,7 @@
 
 #include <utf8/utf8.h>
 
+#include "ExitFromError.h"
 #include "InputManager.h"
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
@@ -321,6 +322,23 @@ CEGUI::Window* GUI::createWidget
 	m_root->addChild(newWindow);
 	setWidgetDestRect(newWindow, destRectPerc, destRectPix);
 	return newWindow;
+}
+
+CEGUI::Window* GUI::getWidget(const std::string& name)
+{
+    try 
+    {
+        CEGUI::Window* returnObj{ m_root->getChild(name) };
+        if (returnObj)
+        {
+            return returnObj;
+        }
+    }
+    catch(const std::exception& /* e */)
+    {
+        ExitFromError::exitFromError("Widget not find in GUI : " + name);
+    }
+    return nullptr;
 }
 
 void GUI::setWidgetDestRect
