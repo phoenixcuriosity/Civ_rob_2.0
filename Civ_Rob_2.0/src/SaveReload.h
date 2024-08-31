@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include <R2D/src/API_fwd.h>
+
 #include <tinyxml2/tinyxml2.h>
 
 class SaveReload
@@ -183,7 +185,7 @@ public:
 	/* RETURNED VALUE    : void																					  */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
-	void removeSave(const std::string& filePath);
+	void removeSave();
 
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
@@ -193,7 +195,7 @@ public:
 	/* RETURNED VALUE    : void																					  */
 	/* ---------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------------------- */
-	void clearSave(const std::string& filePath);
+	void clearSave();
 
 
 
@@ -216,6 +218,22 @@ public:
 	/* ---------------------------------------------------------------------------------------------------------- */
 	~SaveReload();
 
+private:
+
+	void createSaveDir();
+
+	void removeSaveDir(const size_t index);
+
+	void removeSaveFile(const std::string& file);
+
+	void unselectCurrentSave();
+
+	bool isSelectCurrentSave();
+
+	bool isSelectCurrentSaveInTab();
+
+	void rewriteSaveInfoFile();
+
 public:
 
 	inline std::vector<unsigned int>& GETtabSave() { return m_tabSave; };
@@ -228,7 +246,7 @@ public:
 
 private:
 
-	std::vector<unsigned int> m_tabSave;
+	R2D::VectID m_tabSave;
 	int m_currentSave;
 };
 

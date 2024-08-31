@@ -33,28 +33,33 @@
 #include "T_Unit.h"
 #include "XmlConvertValue.h"
 
-#include <direct.h>
-
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/ExitFromError.h> 
 
+#include <filesystem>
 
-
-/* *********************************************************
- *				START SaveReload::STATIC				   *
- ********************************************************* */
+namespace SAVE
+{
+	const size_t OFFSET_INDEX = 1;
+}
 
 void SaveReload::init(const std::string& filePath)
 {
 	std::string destroy{ STRINGS::EMPTY };
 	std::ifstream loadInfo{ filePath };
-	unsigned int currentSave{ 0 };
 	size_t size{ 0 };
+	bool wellFormatedSaveFile{ false };
 
 	if (loadInfo)
 	{
-		loadInfo >> destroy;
+		while (!wellFormatedSaveFile && std::getline(loadInfo, destroy))
+		{
+			auto pos = destroy.find("NbSave=");
+			if (pos != std::string::npos) wellFormatedSaveFile = true;
+		}
+
+		if(!wellFormatedSaveFile) throw(std::exception("Corrupted or damaged Save file"));
 
 		loadInfo >> size;
 
@@ -62,11 +67,7 @@ void SaveReload::init(const std::string& filePath)
 
 		loadInfo >> destroy;
 
-		for (size_t i{0}; i < m_tabSave.size(); i++)
-		{
-			loadInfo >> currentSave;
-			m_tabSave[i] = currentSave;
-		}
+		for (auto& index : m_tabSave) loadInfo >> index;
 	}
 	else
 	{
@@ -74,16 +75,6 @@ void SaveReload::init(const std::string& filePath)
 	}
 }
 
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : save																						    	  */
-/* ROLE : Save Maps and Player info in a folder in 2 files												      */
-/* ROLE : Maps in saveMaps.txt and Player info in savePlayers.xml 										      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::save
 (
 	GamePlayScreen& mainGame
@@ -93,14 +84,6 @@ void SaveReload::save
 	savePlayer(mainGame);
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : savemaps																					    	  */
-/* ROLE : Sauvegardes des sys map.map et map.screen														      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																	    			  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::saveMaps
 (
 	GamePlayScreen& mainGame
@@ -136,14 +119,6 @@ void SaveReload::saveMaps
 		);
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : savePlayer																				    	  */
-/* ROLE : Sauvegarde des joueurs (units et cities) dans savePlayers.xml									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void 																				  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::savePlayer
 (
 	GamePlayScreen& mainGame
@@ -402,15 +377,6 @@ void SaveReload::savePlayer
 	xmlDoc.SaveFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str());
 }
 
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : reload																					    	  */
-/* ROLE : Chargement de la partie à patir des fichiers de sauvegarde									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::reload
 (
 	GamePlayScreen& mainGame
@@ -427,19 +393,9 @@ void SaveReload::reload
 	mainGame.makePlayersButtons();
 	mainGame.GETmainMap().initMainMapTexture();
 
-	//SDL_RenderPresent(sysinfo.screen.renderer);
-
 	R2D::ErrorLog::logEvent("[INFO]___: Reload End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadMaps																					    	  */
-/* ROLE : Chargement des sys map.map et map.screen														      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadMaps
 (
 	GamePlayScreen& mainGame
@@ -497,14 +453,6 @@ void SaveReload::loadMaps
 	R2D::ErrorLog::logEvent("[INFO]___: Save End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadPlayer																				    	  */
-/* ROLE : Chargement des joueurs (units et cities) dans SavePlayer.txt									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadPlayer
 (
 	GamePlayScreen& mainGame
@@ -604,17 +552,6 @@ void SaveReload::loadPlayer
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadGoldStatsXML																			    	  */
-/* ROLE : Load Gold Stats reference to Player															      */
-/* ROLE : Player->GETgoldStats() should be used instead of Player->GETgoldStatsConst()						  */
-/* ROLE : Data type : double ; use std::stod															      */
-/* INPUT/OUTPUT : GoldStats& goldStats : Structure of the Player's gold stats 							      */
-/* INPUT/OUTPUT : tinyxml2::XMLNode* nGoldStats : Ptr on the GoldStats node in the XML document			      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadGoldStatsXML
 (
 	GoldStats& goldStats,
@@ -660,16 +597,6 @@ void SaveReload::loadGoldStatsXML
 	goldStats.buildingsCost = std::stod(inputNode->FirstChild()->Value());
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadUnitXML																				    	  */
-/* ROLE : Load Unit reference to Player																	      */
-/* ROLE : While Loop : load all Units to a Player														      */
-/* INPUT/OUTPUT : MainGame& mainGame : General struct							 							      */
-/* INPUT/OUTPUT : tinyxml2::XMLNode* nUnit : Ptr on the Unit node in the XML document					      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadUnitXML
 (
 	GamePlayScreen& mainGame,
@@ -749,16 +676,6 @@ void SaveReload::loadUnitXML
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : loadCityXML																				    	  */
-/* ROLE : Load City reference to Player																	      */
-/* ROLE : While Loop : load all Cities to a Player														      */
-/* INPUT/OUTPUT : MainGame& mainGame : General struct							 							      */
-/* INPUT/OUTPUT : tinyxml2::XMLNode* nCity : Ptr on the City node in the XML document					      */
-/* RETURNED VALUE    : void								    												  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::loadCityXML
 (
 	GamePlayScreen& mainGame,
@@ -946,152 +863,63 @@ void SaveReload::loadCityXML
 	}
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : createSave																				    	  */
-/* ROLE : Création d'un emplacement de fichier de sauvegarde (courant)									      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 void SaveReload::createSave()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: createSave Start");
 	std::string destroy;
 
-	for (unsigned int i(0); i < m_tabSave.size(); i++)
+	for (unsigned int i(SAVE::OFFSET_INDEX); i < m_tabSave.size() + SAVE::OFFSET_INDEX; i++)
 	{
-		if ((i + 1) != m_tabSave[i])
+		if (i != m_tabSave[i - SAVE::OFFSET_INDEX])
 		{
-			m_currentSave = i + 1;
+			m_currentSave = i;
 			m_tabSave.push_back(m_currentSave);
-			goto L10;
+			break;
 		}
 	}
 
-L10:
 	if (m_currentSave <= 0)
 	{
-		m_currentSave = (int)m_tabSave.size() + 1;
+		m_currentSave = static_cast<int>(m_tabSave.size() + SAVE::OFFSET_INDEX);
 		m_tabSave.push_back(m_currentSave);
 	}
-	else
-	{
-		/* N/A */
-	}
 
+	rewriteSaveInfoFile();
 
-	std::ofstream saveInfo(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
-	if (saveInfo)
-	{
-		saveInfo << "NbSave=";
-		saveInfo << std::endl << m_tabSave.size();
-		saveInfo << std::endl << "SaveUse=";
-		for (unsigned int i(0); i < m_tabSave.size(); i++)
-			saveInfo << std::endl << m_tabSave[i];
-	}
-	else
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
-
-	std::string save = "save/" + std::to_string(m_currentSave);
-
-	if (_mkdir(save.c_str()) != 0)
-	{
-		R2D::ErrorLog::logEvent("[ERROR]___: mkdir failed ");
-	}
-	
-	R2D::ResourceManager::modifyFilePath
-	(
-		R2D::e_Files::saveMaps,
-		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
-	);
-	R2D::ResourceManager::modifyFilePath
-	(
-		R2D::e_Files::savePlayers,
-		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()
-	);
+	createSaveDir();
 
 	R2D::ErrorLog::logEvent("[INFO]___: createSave End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : removeSave																				    	  */
-/* ROLE : Supprime une sauvegarde du dossier de sauvegarde												      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-void SaveReload::removeSave(const std::string& filePath)
+void SaveReload::createSaveDir()
+{
+	const std::string dir{ "save/" + std::to_string(m_currentSave) };
+
+	if (!std::filesystem::create_directory(dir))
+	{
+		R2D::ErrorLog::logEvent("[ERROR]___: create directory failed ");
+	}
+
+	R2D::ResourceManager::modifyFilePath(
+		R2D::e_Files::saveMaps, dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+
+	R2D::ResourceManager::modifyFilePath(
+		R2D::e_Files::savePlayers, dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath());
+}
+
+void SaveReload::removeSave()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: removeSave Start");
-	std::string file(STRINGS::EMPTY);
-	bool condition(false);
 
-	if (m_currentSave != SELECTION::NO_CURRENT_SAVE_SELECTED)
+	if (isSelectCurrentSave() && isSelectCurrentSaveInTab())
 	{
+		removeSaveDir(m_currentSave);
 
-		for (unsigned int i(0); i < m_tabSave.size(); i++)
-		{
-			if (m_currentSave == (int)m_tabSave[i])
-			{
-				condition = true;
-				break;
-			}
-			else
-			{
-				/* N/A */
-			}
-		}
+		m_tabSave.erase(m_tabSave.begin() + m_currentSave - SAVE::OFFSET_INDEX);
 
+		unselectCurrentSave();
 
-		if (condition)
-		{
-
-			file = "save/" + std::to_string(m_currentSave) + "/saveMaps.txt";
-			if (remove(file.c_str()) != 0)
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-			else
-				R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-			file = "save/" + std::to_string(m_currentSave) + "/savePlayers.xml";
-			if (remove(file.c_str()) != 0)
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-			else
-				R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-			file = "save/" + std::to_string(m_currentSave);
-			if (_rmdir(file.c_str()) != 0)
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le dossier " + file);
-			else
-				R2D::ErrorLog::logEvent("[INFO]___: directory : " + file + " successfully remove");
-
-			if (m_tabSave.size() == 1)
-				m_tabSave.clear();
-			else
-				m_tabSave.erase(m_tabSave.begin() + m_currentSave - 1);
-
-			m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
-
-
-			std::ofstream saveInfo(filePath);
-			if (saveInfo)
-			{
-				saveInfo << "NbSave=";
-				saveInfo << std::endl << m_tabSave.size();
-				saveInfo << std::endl << "SaveUse=";
-				for (unsigned int i(0); i < m_tabSave.size(); i++)
-					saveInfo << std::endl << m_tabSave[i];
-			}
-			else
-				R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
-		}
-		else
-		{
-			/* N/A */
-		}
+		rewriteSaveInfoFile();
 	}
 	else
 		R2D::ErrorLog::logEvent("[ERROR]___: currentSave = 0");
@@ -1099,99 +927,87 @@ void SaveReload::removeSave(const std::string& filePath)
 	R2D::ErrorLog::logEvent("[INFO]___: removeSave End");
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : clearSave																					    	  */
-/* ROLE : Supprime toutes les sauvegardes du dossier													      */
-/* INPUT/OUTPUT : struct Sysinfo& : structure globale du programme										      */
-/* RETURNED VALUE    : void																					  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-void SaveReload::clearSave(const std::string& filePath)
+void SaveReload::clearSave()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: clearSave Start");
 
-	for (unsigned int j(0); j < m_tabSave.size(); j++)
+	for (const auto index : m_tabSave)
 	{
-		/* TODO for buuton save */
+		removeSaveDir(index);
 	}
 
-	std::string file(STRINGS::EMPTY);
-	for (unsigned int i(0); i < m_tabSave.size(); i++)
-	{
-		file = "save/" + std::to_string(m_tabSave[i]) + "/saveMaps.txt";
-		if (remove(file.c_str()) != 0)
-			R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-		else
-			R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-		file = "save/" + std::to_string(m_tabSave[i]) + "/savePlayers.xml";
-		if (remove(file.c_str()) != 0)
-			R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
-		else
-			R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
-
-		file = "save/" + std::to_string(m_tabSave[i]);
-		if (_rmdir(file.c_str()) != 0)
-			R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le dossier " + file);
-		else
-			R2D::ErrorLog::logEvent("[INFO]___: directory : " + file + " successfully remove");
-	}
-
-	std::ofstream saveInfo(filePath);
-	if (saveInfo)
-	{
-		saveInfo << "NbSave=";
-		saveInfo << std::endl << "0";
-		saveInfo << std::endl << "SaveUse=";
-	}
-	else
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + filePath);
-
-	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
 	m_tabSave.clear();
+
+	unselectCurrentSave();
+
+	rewriteSaveInfoFile();
 
 	R2D::ErrorLog::logEvent("[INFO]___: clearSave End");
 }
 
+void SaveReload::removeSaveDir(const size_t index)
+{
+	const std::string dir{ "save/" + std::to_string(index) };
+	removeSaveFile(dir + "/saveMaps.txt");
+	removeSaveFile(dir + "/savePlayers.xml");
+	removeSaveFile(dir);
+}
 
+void SaveReload::removeSaveFile(const std::string& file)
+{
+	if (!std::filesystem::remove(file))
+		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
+	else
+		R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
+}
 
-/* *********************************************************
- *				END SaveReload::STATIC					   *
- ********************************************************* */
+void SaveReload::unselectCurrentSave()
+{
+	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
+}
 
+bool SaveReload::isSelectCurrentSave()
+{
+	return m_currentSave != SELECTION::NO_CURRENT_SAVE_SELECTED;
+}
 
+bool SaveReload::isSelectCurrentSaveInTab()
+{
+	for (const auto index : m_tabSave)
+	{
+		if (m_currentSave == static_cast<int>(index))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
- /* *********************************************************
-  *				START SaveReload::METHODS				    *
-  ********************************************************* */
+void SaveReload::rewriteSaveInfoFile()
+{
+	const std::string& file{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath() };
+	std::ofstream saveInfo(file);
+	if (saveInfo)
+	{
+		saveInfo << "NbSave="			<< std::endl;
+		saveInfo << m_tabSave.size()	<< std::endl;
+		saveInfo << "SaveUse="			<< std::endl;
+		for (const auto index : m_tabSave) saveInfo << index << std::endl;
+	}
+	else
+		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + file);
+}
 
-
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* NAME : SaveReload																				    	  */
-  /* ROLE : Constructeur par défaut																		      */
-  /* INPUT : void																							      */
-  /* ---------------------------------------------------------------------------------------------------------- */
-  /* ---------------------------------------------------------------------------------------------------------- */
-SaveReload::SaveReload() : m_currentSave(SELECTION::NO_CURRENT_SAVE_SELECTED)
+SaveReload::SaveReload() 
+: 
+m_tabSave(),
+m_currentSave(SELECTION::NO_CURRENT_SAVE_SELECTED)
 {
 }
 
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : ~SaveReload																				    	  */
-/* ROLE : Destructeur par défaut																		      */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
 SaveReload::~SaveReload()
 {
 }
-
-
-/* *********************************************************
- *				END SaveReload::METHODS					   *
- ********************************************************* */
 
  /*
  *	End Of File : SaveReload.cpp
