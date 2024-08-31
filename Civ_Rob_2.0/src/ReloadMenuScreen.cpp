@@ -154,6 +154,8 @@ void ReloadMenuScreen::initHUD()
 		CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&ReloadMenuScreen::onLoadSave, this)
 	);
+	loadSelectedSave->hide();
+
 	CEGUI::PushButton* removeSelectedSaveButton = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
 			"AlfiskoSkin/Button",
@@ -302,6 +304,17 @@ void ReloadMenuScreen::update()
 	}
 }
 
+void ReloadMenuScreen::showIfSaveSelected()
+{
+	(static_cast<CEGUI::PushButton*>(m_gui.getWidget("LoadSelectedSave")))->show();
+	(static_cast<CEGUI::PushButton*>(m_gui.getWidget("removeSelectedSaveButton")))->show();
+}
+
+void ReloadMenuScreen::hideIfSaveSelected()
+{
+	(static_cast<CEGUI::PushButton*>(m_gui.getWidget("LoadSelectedSave")))->hide();
+	(static_cast<CEGUI::PushButton*>(m_gui.getWidget("removeSelectedSaveButton")))->hide();
+}
 
 
 bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
@@ -317,6 +330,9 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
 			R2D::ResourceManager::modifyFilePath(R2D::e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
 			R2D::ResourceManager::modifyFilePath(R2D::e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
+
+			showIfSaveSelected();
+
 			return true;
 		}
 	}
