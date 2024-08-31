@@ -78,6 +78,8 @@ namespace R2D
 			const std::string& name = ""
 		);
 
+
+
 		static void setWidgetDestRect
 		(
 			CEGUI::Window* window,
@@ -87,6 +89,7 @@ namespace R2D
 
 		static CEGUI::OpenGL3Renderer* getRenderer() { return m_renderer; };
 		const CEGUI::GUIContext* getContext() { return m_context; };
+		CEGUI::Window* getWidget(const std::string& name);
 
 		CEGUI::MouseButton SDLButtonToCEGUI(Uint8 sdlButton);
 
