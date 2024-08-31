@@ -48,12 +48,18 @@ void SaveReload::init(const std::string& filePath)
 {
 	std::string destroy{ STRINGS::EMPTY };
 	std::ifstream loadInfo{ filePath };
-	unsigned int currentSave{ 0 };
 	size_t size{ 0 };
+	bool wellFormatedSaveFile{ false };
 
 	if (loadInfo)
 	{
-		loadInfo >> destroy;
+		while (!wellFormatedSaveFile && std::getline(loadInfo, destroy))
+		{
+			auto pos = destroy.find("NbSave=");
+			if (pos != std::string::npos) wellFormatedSaveFile = true;
+		}
+
+		if(!wellFormatedSaveFile) throw(std::exception("Corrupted or damaged Save file"));
 
 		loadInfo >> size;
 
@@ -61,11 +67,7 @@ void SaveReload::init(const std::string& filePath)
 
 		loadInfo >> destroy;
 
-		for (size_t i{0}; i < m_tabSave.size(); i++)
-		{
-			loadInfo >> currentSave;
-			m_tabSave[i] = currentSave;
-		}
+		for (auto& index : m_tabSave) loadInfo >> index;
 	}
 	else
 	{
@@ -390,8 +392,6 @@ void SaveReload::reload
 
 	mainGame.makePlayersButtons();
 	mainGame.GETmainMap().initMainMapTexture();
-
-	//SDL_RenderPresent(sysinfo.screen.renderer);
 
 	R2D::ErrorLog::logEvent("[INFO]___: Reload End");
 }
@@ -868,59 +868,43 @@ void SaveReload::createSave()
 	R2D::ErrorLog::logEvent("[INFO]___: createSave Start");
 	std::string destroy;
 
-	for (unsigned int i(0); i < m_tabSave.size(); i++)
+	for (unsigned int i(SAVE::OFFSET_INDEX); i < m_tabSave.size() + SAVE::OFFSET_INDEX; i++)
 	{
-		if ((i + 1) != m_tabSave[i])
+		if (i != m_tabSave[i - SAVE::OFFSET_INDEX])
 		{
-			m_currentSave = i + 1;
+			m_currentSave = i;
 			m_tabSave.push_back(m_currentSave);
-			goto L10;
+			break;
 		}
 	}
 
-L10:
 	if (m_currentSave <= 0)
 	{
-		m_currentSave = (int)m_tabSave.size() + 1;
+		m_currentSave = static_cast<int>(m_tabSave.size() + SAVE::OFFSET_INDEX);
 		m_tabSave.push_back(m_currentSave);
 	}
-	else
-	{
-		/* N/A */
-	}
 
+	rewriteSaveInfoFile();
 
-	std::ofstream saveInfo(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
-	if (saveInfo)
-	{
-		saveInfo << "NbSave=";
-		saveInfo << std::endl << m_tabSave.size();
-		saveInfo << std::endl << "SaveUse=";
-		for (unsigned int i(0); i < m_tabSave.size(); i++)
-			saveInfo << std::endl << m_tabSave[i];
-	}
-	else
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
+	createSaveDir();
 
-	if (!std::filesystem::create_directory("save/" + std::to_string(m_currentSave)))
+	R2D::ErrorLog::logEvent("[INFO]___: createSave End");
+}
+
+void SaveReload::createSaveDir()
+{
+	const std::string dir{ "save/" + std::to_string(m_currentSave) };
+
+	if (!std::filesystem::create_directory(dir))
 	{
 		R2D::ErrorLog::logEvent("[ERROR]___: create directory failed ");
 	}
-	
-	R2D::ResourceManager::modifyFilePath
-	(
-		R2D::e_Files::saveMaps,
-		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
-	);
-	R2D::ResourceManager::modifyFilePath
-	(
-		R2D::e_Files::savePlayers,
-		"save/" + std::to_string(m_currentSave) + "/" +
-		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()
-	);
 
-	R2D::ErrorLog::logEvent("[INFO]___: createSave End");
+	R2D::ResourceManager::modifyFilePath(
+		R2D::e_Files::saveMaps, dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+
+	R2D::ResourceManager::modifyFilePath(
+		R2D::e_Files::savePlayers, dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath());
 }
 
 void SaveReload::removeSave()

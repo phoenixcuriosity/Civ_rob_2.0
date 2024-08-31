@@ -220,6 +220,8 @@ public:
 
 private:
 
+	void createSaveDir();
+
 	void removeSaveDir(const size_t index);
 
 	void removeSaveFile(const std::string& file);
