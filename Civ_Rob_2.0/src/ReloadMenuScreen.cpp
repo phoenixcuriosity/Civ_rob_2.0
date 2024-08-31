@@ -154,11 +154,25 @@ void ReloadMenuScreen::initHUD()
 		CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&ReloadMenuScreen::onLoadSave, this)
 	);
+	CEGUI::PushButton* removeSelectedSaveButton = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ 0.45f, 0.5f, 0.2f, 0.05f },
+			{ 0,0,0,0 },
+			"removeSelectedSaveButton"));
+
+	removeSelectedSaveButton->setText("Remove Selected Save");
+	removeSelectedSaveButton->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&ReloadMenuScreen::onClearASaveCliked, this)
+	);
+	removeSelectedSaveButton->hide();
 
 	CEGUI::PushButton* clearSavesButton = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
 			"AlfiskoSkin/Button",
-			{ 0.45f, 0.5f, 0.1f, 0.05f },
+			{ 0.45f, 0.45f, 0.1f, 0.05f },
 			{ 0,0,0,0 },
 			"ClearSaves"));
 
@@ -315,6 +329,22 @@ bool ReloadMenuScreen::onLoadSave(const CEGUI::EventArgs& /* e */)
 	{
 		m_nextScreenIndexMenu = SCREEN_INDEX::GAMEPLAY;
 		m_currentState = R2D::ScreenState::CHANGE_NEXT;
+	}
+	return true;
+}
+
+bool ReloadMenuScreen::onClearASaveCliked(const CEGUI::EventArgs& /* e */)
+{
+	size_t index{ 0 };
+	for (auto& button : m_vectSavesRadioButton)
+	{
+		if (button->isSelected())
+		{
+			m_SaveReload->removeSave();
+			button->destroy();
+			break;
+		};
+		index++;
 	}
 	return true;
 }
