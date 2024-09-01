@@ -44,12 +44,15 @@ public:
 
 public:
 
-	void initUI();
-	void initHUDText();
 	void drawAll();
 	void updateInputManager(SDL_Event& ev, InputManager& resourceManager);
+	void redrawInit();
 
 private:
+
+	void initAll();
+	void initUI();
+	void initHUDText();
 
 	virtual void doInitUI() = 0;
 	virtual void doInitHUDText() = 0;
@@ -62,9 +65,10 @@ protected:
 	SpriteBatch m_spriteBatchHUDDynamic;
 	SpriteBatch m_spriteBatchHUDStatic;
 
-	AudioEngine m_audioEngine;
-
 	GUI m_gui;
+
+private:
+	bool m_isInitialized;
 };
 
 }

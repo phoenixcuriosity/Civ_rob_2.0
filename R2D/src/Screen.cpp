@@ -32,8 +32,8 @@ m_camera(),
 m_cameraHUD(),
 m_spriteBatchHUDDynamic(),
 m_spriteBatchHUDStatic(),
-m_audioEngine(),
-m_gui()
+m_gui(),
+m_isInitialized(false)
 {
 }
 
@@ -44,17 +44,19 @@ CScreen::~CScreen()
 
 bool CScreen::init(const int width, const int height)
 {
-	m_camera.init(width, height);
-	m_camera.SETposition(glm::vec2(width / 2, height / 2));
-	m_cameraHUD.init(width, height);
-	m_cameraHUD.SETposition(glm::vec2(width / 2, height / 2));
+	if (!m_isInitialized)
+	{
+		m_camera.init(width, height);
+		m_camera.SETposition(glm::vec2(width / 2, height / 2));
+		m_cameraHUD.init(width, height);
+		m_cameraHUD.SETposition(glm::vec2(width / 2, height / 2));
 
-	m_spriteBatchHUDDynamic.init();
-	m_spriteBatchHUDStatic.init();
+		m_spriteBatchHUDDynamic.init();
+		m_spriteBatchHUDStatic.init();
 
-	m_audioEngine.init();
-
-	m_gui.init(ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(ResourceManager::getFile(e_Files::GUIPath)->getPath());
+	}
+	initAll();
 	return true;
 }
 
@@ -64,18 +66,27 @@ bool CScreen::end()
 	return true;
 }
 
+void CScreen::initAll()
+{
+	initUI();
+	initHUDText();
+}
+
 void CScreen::initUI()
 {
-	m_gui.loadScheme("AlfiskoSkin.scheme");
-	m_gui.loadScheme("TaharezLook.scheme");
+	if (!m_isInitialized)
+	{
+		m_gui.loadScheme("AlfiskoSkin.scheme");
+		m_gui.loadScheme("TaharezLook.scheme");
 
-	m_gui.setFont("DejaVuSans-10");
+		m_gui.setFont("DejaVuSans-10");
 
-	m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
-	m_gui.showMouseCursor();
+		m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
+		m_gui.showMouseCursor();
 
-	/* HIDE normal mouse cursor */
-	SDL_ShowCursor(0);
+		/* HIDE normal mouse cursor */
+		SDL_ShowCursor(0);
+	}
 
 	doInitUI();
 }
@@ -120,9 +131,14 @@ void CScreen::drawAll()
 	/*  */
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
+	m_spriteBatchHUDDynamic.begin();
+
 	doDrawAll();
 
+	m_spriteBatchHUDDynamic.end();
+
 	m_spriteBatchHUDStatic.renderBatch();
+	m_spriteBatchHUDDynamic.renderBatch();
 
 	/* --- GL unbind --- */
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -135,4 +151,9 @@ void CScreen::drawAll()
 void CScreen::updateInputManager(SDL_Event& ev, InputManager& resourceManager)
 {
 	m_gui.onSDLEvent(ev, resourceManager);
+}
+
+void CScreen::redrawInit()
+{
+	initAll();
 }
