@@ -1,9 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
-	last modification on this file on version:0.25.1.0
-	file version : 1.10
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -43,12 +41,10 @@ ReloadMenuScreen::ReloadMenuScreen
 )
 :
 R2D::IGameScreen(),
+R2D::CScreen(),
 m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
-m_cameraHUD(),
-m_gui(),
 m_vectSavesRadioButton(),
 m_widgetLabels(),
-m_spriteBatchHUDDynamic(),
 m_SaveReload(SaveReload),
 m_isInitialize(false)
 {
@@ -76,7 +72,7 @@ void ReloadMenuScreen::build()
 
 void ReloadMenuScreen::destroy()
 {
-	m_gui.destroy();
+	end();
 
 	m_widgetLabels.clear();
 }
@@ -85,12 +81,10 @@ bool ReloadMenuScreen::onEntry()
 {
 	if (!m_isInitialize)
 	{
-		initOpenGLScreen();
-		initHUD();
+		init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 
 		m_isInitialize = true;
 	}
-
 	return true;
 }
 
@@ -99,33 +93,14 @@ void ReloadMenuScreen::onExit()
 	/* Do nothing */
 }
 
-
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initOpenGLScreen															   */
-/* ROLE : Init m_screen.openGLScreen and m_mainMap									   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void ReloadMenuScreen::initOpenGLScreen()
+void ReloadMenuScreen::doInitUI()
 {
-	m_cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
-	m_cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
-
-	m_spriteBatchHUDDynamic.init();
+	buttonDisplay();
+	radioButtonDisplay();
 }
 
-void ReloadMenuScreen::initHUD()
+void ReloadMenuScreen::buttonDisplay()
 {
-
-	m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
-
-	m_gui.loadScheme("AlfiskoSkin.scheme");
-	m_gui.loadScheme("TaharezLook.scheme");
-
-	m_gui.setFont("DejaVuSans-10");
-
 	CEGUI::PushButton* mainMenuButton = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
 			"AlfiskoSkin/Button",
@@ -139,7 +114,6 @@ void ReloadMenuScreen::initHUD()
 		CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&ReloadMenuScreen::onExitClicked, this)
 	);
-
 
 	CEGUI::PushButton* loadSelectedSave = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
@@ -168,8 +142,10 @@ void ReloadMenuScreen::initHUD()
 		CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&ReloadMenuScreen::onClearSavesCliked, this)
 	);
+}
 
-
+void ReloadMenuScreen::radioButtonDisplay()
+{
 	float X_POS = 0.1f;
 	float Y_POS = 0.20f;
 	const float DIMS_PIXELS = 20.0f;
@@ -214,50 +190,22 @@ void ReloadMenuScreen::initHUD()
 			TEXT_SCALE);
 
 	}
-
-
-
-	m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
-	m_gui.showMouseCursor();
-
-	/* HIDE normal mouse cursor */
-	SDL_ShowCursor(0);
 }
 
+void ReloadMenuScreen::doInitHUDText()
+{
+
+}
 
 //----------------------------------------------------------GameLoop----------------------------------------------------------------//
 
-
-
 void ReloadMenuScreen::draw()
 {
-	m_cameraHUD.update();
+	drawAll();
+}
 
-
-	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	/* Back */
-	glClearDepth(1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	R2D::ResourceManager::getGLSLProgram().use();
-	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
-	glActiveTexture(GL_TEXTURE0);
-
-	const GLint textureLocation =
-		R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
-	glUniform1i(textureLocation, 0);
-
-	/* camera */
-	const GLint pLocation
-		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
-	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
-
-	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
-
-	m_spriteBatchHUDDynamic.begin();
-	
+void ReloadMenuScreen::doDrawAll()
+{
 	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
 	{
 		if (m_vectSavesRadioButton[i]->isVisible())
@@ -265,18 +213,7 @@ void ReloadMenuScreen::draw()
 			m_widgetLabels[i].draw(m_spriteBatchHUDDynamic, *R2D::ResourceManager::getSpriteFont(), m_game->getWindow());
 		}
 	}
-
-	m_spriteBatchHUDDynamic.end();
-
-	m_spriteBatchHUDDynamic.renderBatch();
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	R2D::ResourceManager::getGLSLProgram().unuse();
-
-	m_gui.draw();
 }
-
 
 void ReloadMenuScreen::update()
 {
@@ -284,11 +221,9 @@ void ReloadMenuScreen::update()
 	while (SDL_PollEvent(&ev))
 	{
 		m_game->onSDLEvent(ev);
-		m_gui.onSDLEvent(ev, m_game->getInputManager());
+		updateInputManager(ev, m_game->getInputManager());
 	}
 }
-
-
 
 bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 {
