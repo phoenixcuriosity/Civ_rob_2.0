@@ -54,6 +54,7 @@ namespace R2D
 	class Music;
 	class RenderBatch;
 	class ResourceManager;
+	class CScreen;
 	class ScreenList;
 	class SpriteBatch;
 	class TextureCache;

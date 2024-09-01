@@ -38,7 +38,6 @@
 
 
 
-
 namespace DELTA_TIME
 {
 	const float MS_PER_SECOND(1000.0f);
@@ -50,7 +49,7 @@ namespace DELTA_TIME
 
 GamePlayScreen::GamePlayScreen
 (
-	SaveReload* SaveReload,
+	SaveReloadPtrT SaveReload,
 	UserInputNewGame* userInputNewGame
 )
 : 
@@ -686,7 +685,7 @@ const Players& GamePlayScreen::GETPlayers()const
 	return m_players; 
 };
 
-SaveReload* GamePlayScreen::getSaveReload()
+SaveReloadPtrT GamePlayScreen::getSaveReload()
 { 
 	return m_SaveReload; 
 };

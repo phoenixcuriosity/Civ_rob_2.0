@@ -31,15 +31,13 @@
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/SpriteFont.h> 
 
-
 MainMenuScreen::MainMenuScreen
 (
 )
 : 
 R2D::IGameScreen(),
+R2D::CScreen(),
 m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
-m_spriteBatchHUDStatic(),
-m_gui(),
 m_isInitialize(false)
 {
 	build();
@@ -67,7 +65,7 @@ void MainMenuScreen::build()
 
 void MainMenuScreen::destroy()
 {
-	m_gui.destroy();
+	end();
 }
 
 bool MainMenuScreen::onEntry()
@@ -76,100 +74,81 @@ bool MainMenuScreen::onEntry()
 	{
 		R2D::ErrorLog::logEvent("[INFO]___: Init MainMenuScreen");
 
-		m_cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
-		m_cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
+		init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 
+		initUI();
 
-		m_spriteBatchHUDStatic.init();
-
-		m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
-
-		m_gui.loadScheme("AlfiskoSkin.scheme");
-
-		m_gui.setFont("DejaVuSans-10");
-
-
-
-		const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);
-		float yC(0.4f);
-
-		CEGUI::PushButton* newGame = static_cast<CEGUI::PushButton*>
-			(m_gui.createWidget(
-				"AlfiskoSkin/Button",
-				{ xC, yC, xL, yL },
-				R2D::NOT_BY_PERCENT,
-				"newGame"));
-
-		newGame->setText("New Game");
-		newGame->subscribeEvent
-		(
-			CEGUI::PushButton::EventClicked,
-			CEGUI::Event::Subscriber(&MainMenuScreen::onNewGameClicked, this)
-		);
-
-		CEGUI::PushButton* reloadButton = static_cast<CEGUI::PushButton*>
-			(m_gui.createWidget(
-				"AlfiskoSkin/Button",
-				{ xC, yC += yDelta, xL, yL },
-				R2D::NOT_BY_PERCENT,
-				"Reload"));
-
-		reloadButton->setText("Reload");
-		reloadButton->subscribeEvent
-		(
-			CEGUI::PushButton::EventClicked,
-			CEGUI::Event::Subscriber(&MainMenuScreen::onReloadClicked, this)
-		);
-
-		CEGUI::PushButton* optionButton = static_cast<CEGUI::PushButton*>
-			(m_gui.createWidget(
-				"AlfiskoSkin/Button",
-				{ xC, yC += yDelta, xL, yL },
-				R2D::NOT_BY_PERCENT,
-				"Option"));
-
-		optionButton->setText("Option");
-		optionButton->subscribeEvent
-		(
-			CEGUI::PushButton::EventClicked,
-			CEGUI::Event::Subscriber(&MainMenuScreen::onOptionClicked, this)
-		);
-
-		CEGUI::PushButton* quitGame = static_cast<CEGUI::PushButton*>
-			(m_gui.createWidget(
-				"AlfiskoSkin/Button",
-				{ xC, yC += yDelta, xL, yL },
-				R2D::NOT_BY_PERCENT,
-				"QuitGame"));
-
-		quitGame->setText("Quit Game");
-		quitGame->subscribeEvent
-		(
-			CEGUI::PushButton::EventClicked,
-			CEGUI::Event::Subscriber(&MainMenuScreen::onExitClicked, this)
-		);
-
-
-		m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
-		m_gui.showMouseCursor();
-
-		/* HIDE normal mouse cursor */
-		SDL_ShowCursor(0);
-
-		initHUD();
+		initHUDText();
 
 		m_isInitialize = true;
 	}
-	
-
 	return true;
 }
 
-void MainMenuScreen::initHUD()
+void MainMenuScreen::doInitUI()
 {
-	m_spriteBatchHUDStatic.begin();
+	const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);
+	float yC(0.4f);
 
+	CEGUI::PushButton* newGame = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ xC, yC, xL, yL },
+			R2D::NOT_BY_PERCENT,
+			"newGame"));
 
+	newGame->setText("New Game");
+	newGame->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&MainMenuScreen::onNewGameClicked, this)
+	);
+
+	CEGUI::PushButton* reloadButton = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ xC, yC += yDelta, xL, yL },
+			R2D::NOT_BY_PERCENT,
+			"Reload"));
+
+	reloadButton->setText("Reload");
+	reloadButton->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&MainMenuScreen::onReloadClicked, this)
+	);
+
+	CEGUI::PushButton* optionButton = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ xC, yC += yDelta, xL, yL },
+			R2D::NOT_BY_PERCENT,
+			"Option"));
+
+	optionButton->setText("Option");
+	optionButton->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&MainMenuScreen::onOptionClicked, this)
+	);
+
+	CEGUI::PushButton* quitGame = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ xC, yC += yDelta, xL, yL },
+			R2D::NOT_BY_PERCENT,
+			"QuitGame"));
+
+	quitGame->setText("Quit Game");
+	quitGame->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&MainMenuScreen::onExitClicked, this)
+	);
+}
+
+void MainMenuScreen::doInitHUDText()
+{
 	R2D::MapTexts mapTexts;
 	R2D::ResourceManager::getTextFromFile
 	(
@@ -183,8 +162,6 @@ void MainMenuScreen::initHUD()
 		m_game->getWindow(),
 		m_spriteBatchHUDStatic
 	);
-	
-	m_spriteBatchHUDStatic.end();
 }
 
 
@@ -197,44 +174,14 @@ void MainMenuScreen::onExit()
 //----------------------------------------------------------GameLoop----------------------------------------------------------------//
 
 
-
 void MainMenuScreen::draw()
 {
-	m_cameraHUD.update();
+	drawAll();
+}
 
-	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	/* Back */
-	glClearDepth(1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	R2D::ResourceManager::getGLSLProgram().use();
-
-	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
-	glActiveTexture(GL_TEXTURE0);
-
-	GLint textureLocation = R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
-	glUniform1i(textureLocation, 0);
-
-	/* --- camera --- */
-	/* GL - get parameter P */
-	const GLint pLocation
-		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
-
-	/* Copy camera matrix */
-	glm::mat4 cameraMatrix = m_cameraHUD.GETcameraMatrix();
-
-	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
-
-	m_spriteBatchHUDStatic.renderBatch();
-
-	/* --- GL unbind --- */
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	R2D::ResourceManager::getGLSLProgram().unuse();
-
-	m_gui.draw();
+void MainMenuScreen::doDrawAll()
+{
+	
 }
 
 
@@ -243,7 +190,7 @@ void MainMenuScreen::update()
 	SDL_Event ev{};
 	while (SDL_PollEvent(&ev))
 	{
-		m_gui.onSDLEvent(ev, m_game->getInputManager());
+		updateInputManager(ev, m_game->getInputManager());
 		m_game->onSDLEvent(ev);
 	}
 }
