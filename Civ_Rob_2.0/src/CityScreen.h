@@ -37,7 +37,7 @@ class CityScreen : public R2D::IGameScreen
 public:
 	CityScreen
 	(
-		SaveReload* const SaveReload,
+		SaveReloadPtrT const SaveReload,
 		Players* const players,
 		unsigned int* const tileSize
 	);
@@ -119,7 +119,7 @@ private:
 	Players* m_players;
 	unsigned int* m_tileSize;
 
-	SaveReload* m_SaveReload;
+	SaveReloadPtrT m_SaveReload;
 
 	CityPtrT m_selectedCity;
 

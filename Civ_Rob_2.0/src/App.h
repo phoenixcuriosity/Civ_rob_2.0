@@ -59,8 +59,6 @@ private:
 	ReloadMenuScreenPtrT m_reloadMenuScreen;
 	GamePlayScreenPtrT m_gamePlayScreen;
 	CityScreenPtrT m_CityScreen;
-
-	SaveReload m_saveReload;
 };
 
 #endif // !App_H

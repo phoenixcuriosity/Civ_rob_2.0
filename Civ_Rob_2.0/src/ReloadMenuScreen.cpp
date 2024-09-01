@@ -39,7 +39,7 @@ namespace IHM_SAVE_BUTTON
 
 ReloadMenuScreen::ReloadMenuScreen
 (
-	SaveReload* SaveReload
+	SaveReloadPtrT SaveReload
 )
 :
 R2D::IGameScreen(),

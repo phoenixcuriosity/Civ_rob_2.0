@@ -53,8 +53,7 @@ m_mainMenuScreen(nullptr),
 m_newGameScreen(nullptr),
 m_reloadMenuScreen(nullptr),
 m_gamePlayScreen(nullptr),
-m_CityScreen(nullptr),
-m_saveReload()
+m_CityScreen(nullptr)
 {
 	R2D::ResourceManager::initializeRGBA8Map();
 }
@@ -79,8 +78,6 @@ void App::onInit()
 
 	m_window.SETscreenWidth(R2D::Window::getHorizontal());
 	m_window.SETscreenHeight(R2D::Window::getVertical());
-	
-	m_saveReload.init(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
 }
 
 
@@ -122,20 +119,23 @@ void App::addScreens()
 
 	m_newGameScreen = std::make_shared<NewGameScreen>();
 
+	SaveReloadPtrT saveReload = std::make_shared<SaveReload>();
+	saveReload->init(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
+
 	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>
 		(
-			& m_saveReload
+			saveReload
 		);
 
 	m_gamePlayScreen = std::make_shared<GamePlayScreen>
 		(
-			&m_saveReload,
+			saveReload,
 			m_newGameScreen->getUserInputNewGame()
 		);
 
 	m_CityScreen = std::make_shared<CityScreen>
 		(
-			&m_saveReload,
+			saveReload,
 			&m_gamePlayScreen->GETPlayers(),
 			m_gamePlayScreen->GETmainMap().GETtileSizePtr()
 		);
