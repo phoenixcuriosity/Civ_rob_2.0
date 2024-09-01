@@ -29,8 +29,9 @@
 #include <R2D/src/GUI.h>
 #include <R2D/src/IGameScreen.h>
 #include <R2D\src\SpriteBatch.h>
+#include <R2D/src/Screen.h>
 
-class MainMenuScreen : public R2D::IGameScreen
+class MainMenuScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	MainMenuScreen();
@@ -45,33 +46,24 @@ public:
 	virtual bool onEntry() override;
 	virtual void onExit() override;
 
-private:
-
-	virtual void initHUD();
-
-public:
-
-	virtual void update() override;
 	virtual void draw() override;
-
+	virtual void update() override;
 
 private:
 
-	bool onNewGameClicked(const CEGUI::EventArgs& e);
+	virtual void doInitUI() override;
+	virtual void doInitHUDText()override;
+	virtual void doDrawAll()override;
+
+private:
+
+    bool onNewGameClicked(const CEGUI::EventArgs& e);
 	bool onReloadClicked(const CEGUI::EventArgs& e);
 	bool onOptionClicked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
-
-public:
-
-
 private:
 	int m_nextScreenIndexMenu;
-
-	R2D::Camera2D m_cameraHUD;
-	R2D::SpriteBatch m_spriteBatchHUDStatic;
-	R2D::GUI m_gui;
 
 	bool m_isInitialize;
 };

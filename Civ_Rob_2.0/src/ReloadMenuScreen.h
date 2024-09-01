@@ -29,9 +29,10 @@
 #include <R2D\src\Camera2D.h>
 #include <R2D\src\GUI.h>
 #include <R2D/src/IGameScreen.h>
+#include <R2D/src/Screen.h>
 #include <R2D/src/WidgetLabel.h>
 
-class ReloadMenuScreen : public R2D::IGameScreen
+class ReloadMenuScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	ReloadMenuScreen
@@ -39,6 +40,8 @@ public:
 		SaveReloadPtrT SaveReload
 	);
 	~ReloadMenuScreen();
+
+private: /* Override from R2D::IGameScreen */
 
 	virtual int getNextScreenIndex()const override;
 	virtual int getPreviousScreenIndex()const override;
@@ -49,38 +52,32 @@ public:
 	virtual bool onEntry() override;
 	virtual void onExit() override;
 
-private:
-
-	void initOpenGLScreen();
-	void initHUD();
-
-
-public:
-
 	virtual void update() override;
 	virtual void draw() override;
 
+private: /* Override from R2D::CScreen */
 
-private:
+	virtual void doInitUI() override;
+	virtual void doInitHUDText()override;
+	virtual void doDrawAll()override;
+
+private: /* doInitUI helpers */
+
+	void buttonDisplay();
+	void radioButtonDisplay();
+
+private: /* subscribeEvent from Button */
 
 	bool onOneSaveCliked(const CEGUI::EventArgs& e);
 	bool onLoadSave(const CEGUI::EventArgs& e);
 	bool onClearSavesCliked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
-
-public:
-
-
 private:
 	int m_nextScreenIndexMenu;
 
-	R2D::Camera2D m_cameraHUD;
-
-	R2D::GUI m_gui;
 	std::vector<CEGUI::RadioButton*> m_vectSavesRadioButton;
 	std::vector<R2D::WidgetLabel> m_widgetLabels;
-	R2D::SpriteBatch m_spriteBatchHUDDynamic;
 
 	SaveReloadPtrT m_SaveReload;
 
