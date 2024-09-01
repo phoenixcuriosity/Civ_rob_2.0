@@ -36,7 +36,7 @@ class ReloadMenuScreen : public R2D::IGameScreen
 public:
 	ReloadMenuScreen
 	(
-		SaveReload* SaveReload
+		SaveReloadPtrT SaveReload
 	);
 	~ReloadMenuScreen();
 
@@ -82,7 +82,7 @@ private:
 	std::vector<R2D::WidgetLabel> m_widgetLabels;
 	R2D::SpriteBatch m_spriteBatchHUDDynamic;
 
-	SaveReload* m_SaveReload;
+	SaveReloadPtrT m_SaveReload;
 
 	bool m_isInitialize;
 };

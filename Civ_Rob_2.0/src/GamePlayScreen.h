@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -38,7 +38,7 @@ public:
 
 	GamePlayScreen
 	(
-		SaveReload* saveReload,
+		SaveReloadPtrT saveReload,
 		UserInputNewGame* userInputNewGame
 	);
 
@@ -332,7 +332,7 @@ public:
 	const MainMap& GETmainMap()const;
 	Players& GETPlayers();
 	const Players& GETPlayers()const;
-	SaveReload* getSaveReload();
+	SaveReloadPtrT getSaveReload();
 	UserInputNewGame* getUserInputNewGame();
 
 	void SETvar(Var& var);
@@ -353,7 +353,7 @@ private:
 
 	Players m_players;
 
-	SaveReload* m_SaveReload;
+	SaveReloadPtrT m_SaveReload;
 	UserInputNewGame* m_userInputNewGame;
 
 	bool m_isInitialize;
