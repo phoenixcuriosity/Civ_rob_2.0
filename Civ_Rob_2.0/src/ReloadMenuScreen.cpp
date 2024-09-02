@@ -210,29 +210,26 @@ void ReloadMenuScreen::radioButtonDisplay()
 
 void ReloadMenuScreen::updateRadioButtonPosition()
 {
-	for (auto& radioButton : m_vectSavesRadioButton)
+	float X_POS = 0.1f;
+	float Y_POS = 0.20f;
+	const float PADDING = 0.035f;
+	const float TEXT_SCALE = 0.6f;
+
+	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
 	{
-		float X_POS = 0.1f;
-		float Y_POS = 0.20f;
-		const float PADDING = 0.035f;
-		const float TEXT_SCALE = 0.6f;
+		m_vectSavesRadioButton[i]->setPosition
+			(CEGUI::UVector2
+				(
+					CEGUI::UDim(X_POS, 0.0f),
+					CEGUI::UDim(Y_POS += PADDING, 0.0f)
+				)
+			);
 
-		for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
-		{
-			m_vectSavesRadioButton[i]->setPosition
-				(CEGUI::UVector2
-					(
-						CEGUI::UDim(X_POS, 0.0f),
-						CEGUI::UDim(Y_POS += PADDING, 0.0f)
-					)
-				);
+		m_widgetLabels[i] = R2D::WidgetLabel(
+			m_vectSavesRadioButton[i],
+			"Save " + std::to_string(m_SaveReload->GETtabSave()[i]),
+			TEXT_SCALE);
 
-			m_widgetLabels[i] = R2D::WidgetLabel(
-				m_vectSavesRadioButton[i],
-				"Save " + std::to_string(m_SaveReload->GETtabSave()[i]),
-				TEXT_SCALE);
-
-		}
 	}
 }
 
