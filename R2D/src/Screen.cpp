@@ -56,6 +56,7 @@ bool CScreen::init(const int width, const int height)
 
 		m_gui.init(ResourceManager::getFile(e_Files::GUIPath)->getPath());
 	}
+
 	initAll();
 	return true;
 }
@@ -86,8 +87,10 @@ void CScreen::initUI()
 
 		/* HIDE normal mouse cursor */
 		SDL_ShowCursor(0);
-	}
 
+		m_isInitialized = true;
+	}
+	
 	doInitUI();
 }
 
@@ -151,9 +154,4 @@ void CScreen::drawAll()
 void CScreen::updateInputManager(SDL_Event& ev, InputManager& resourceManager)
 {
 	m_gui.onSDLEvent(ev, resourceManager);
-}
-
-void CScreen::redrawInit()
-{
-	initAll();
 }

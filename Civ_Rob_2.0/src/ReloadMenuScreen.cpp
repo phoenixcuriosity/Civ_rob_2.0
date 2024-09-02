@@ -128,11 +128,27 @@ void ReloadMenuScreen::buttonDisplay()
 		CEGUI::PushButton::EventClicked,
 		CEGUI::Event::Subscriber(&ReloadMenuScreen::onLoadSave, this)
 	);
+	loadSelectedSave->hide();
+
+	CEGUI::PushButton* removeSelectedSaveButton = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ 0.45f, 0.5f, 0.2f, 0.05f },
+			{ 0,0,0,0 },
+			"removeSelectedSaveButton"));
+
+	removeSelectedSaveButton->setText("Remove Selected Save");
+	removeSelectedSaveButton->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&ReloadMenuScreen::onClearASaveCliked, this)
+	);
+	removeSelectedSaveButton->hide();
 
 	CEGUI::PushButton* clearSavesButton = static_cast<CEGUI::PushButton*>
 		(m_gui.createWidget(
 			"AlfiskoSkin/Button",
-			{ 0.45f, 0.5f, 0.1f, 0.05f },
+			{ 0.45f, 0.45f, 0.1f, 0.05f },
 			{ 0,0,0,0 },
 			"ClearSaves"));
 
@@ -192,6 +208,34 @@ void ReloadMenuScreen::radioButtonDisplay()
 	}
 }
 
+void ReloadMenuScreen::updateRadioButtonPosition()
+{
+	for (auto& radioButton : m_vectSavesRadioButton)
+	{
+		float X_POS = 0.1f;
+		float Y_POS = 0.20f;
+		const float PADDING = 0.035f;
+		const float TEXT_SCALE = 0.6f;
+
+		for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
+		{
+			m_vectSavesRadioButton[i]->setPosition
+				(CEGUI::UVector2
+					(
+						CEGUI::UDim(X_POS, 0.0f),
+						CEGUI::UDim(Y_POS += PADDING, 0.0f)
+					)
+				);
+
+			m_widgetLabels[i] = R2D::WidgetLabel(
+				m_vectSavesRadioButton[i],
+				"Save " + std::to_string(m_SaveReload->GETtabSave()[i]),
+				TEXT_SCALE);
+
+		}
+	}
+}
+
 void ReloadMenuScreen::doInitHUDText()
 {
 
@@ -225,6 +269,21 @@ void ReloadMenuScreen::update()
 	}
 }
 
+void ReloadMenuScreen::updateVisibilityIfSaveSelected()
+{
+	if (m_SaveReload->isSelectCurrentSave())
+	{
+		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("LoadSelectedSave")))->show();
+		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("removeSelectedSaveButton")))->show();
+	}
+	else
+	{
+		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("LoadSelectedSave")))->hide();
+		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("removeSelectedSaveButton")))->hide();
+	}
+	
+}
+
 bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 {
 	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
@@ -238,6 +297,9 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
 			R2D::ResourceManager::modifyFilePath(R2D::e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
 			R2D::ResourceManager::modifyFilePath(R2D::e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
+
+			updateVisibilityIfSaveSelected();
+
 			return true;
 		}
 	}
@@ -254,17 +316,43 @@ bool ReloadMenuScreen::onLoadSave(const CEGUI::EventArgs& /* e */)
 	return true;
 }
 
+bool ReloadMenuScreen::onClearASaveCliked(const CEGUI::EventArgs& /* e */)
+{
+	size_t index{ 0 };
+	for (auto& button : m_vectSavesRadioButton)
+	{
+		if (button->isSelected())
+		{
+			m_SaveReload->removeSave();
+
+			m_gui.destroyWidget(button);
+
+			m_vectSavesRadioButton.erase(m_vectSavesRadioButton.begin() + index);
+			m_widgetLabels.erase(m_widgetLabels.begin() + index);
+
+			updateRadioButtonPosition();
+
+			updateVisibilityIfSaveSelected();
+			break;
+		};
+		index++;
+	}
+	return true;
+}
+
 bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 {
 	/* Remove saves from GUI */
 	for (auto& button : m_vectSavesRadioButton)
 	{
-		button->destroy();
+		m_gui.destroyWidget(button);
 	}
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
 	
 	m_SaveReload->clearSave();
+
+	updateVisibilityIfSaveSelected();
 
 	return true;
 }

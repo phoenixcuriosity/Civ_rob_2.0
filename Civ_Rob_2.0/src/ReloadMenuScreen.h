@@ -55,6 +55,10 @@ private: /* Override from R2D::IGameScreen */
 	virtual void update() override;
 	virtual void draw() override;
 
+private:
+
+	void updateVisibilityIfSaveSelected();
+	
 private: /* Override from R2D::CScreen */
 
 	virtual void doInitUI() override;
@@ -66,10 +70,13 @@ private: /* doInitUI helpers */
 	void buttonDisplay();
 	void radioButtonDisplay();
 
+	void updateRadioButtonPosition();
+
 private: /* subscribeEvent from Button */
 
 	bool onOneSaveCliked(const CEGUI::EventArgs& e);
 	bool onLoadSave(const CEGUI::EventArgs& e);
+	bool onClearASaveCliked(const CEGUI::EventArgs& e);
 	bool onClearSavesCliked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 

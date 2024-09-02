@@ -915,7 +915,7 @@ void SaveReload::removeSave()
 	{
 		removeSaveDir(m_currentSave);
 
-		m_tabSave.erase(m_tabSave.begin() + m_currentSave - SAVE::OFFSET_INDEX);
+		m_tabSave.erase(m_tabSave.begin() + searchIndexToRemove());
 
 		unselectCurrentSave();
 
@@ -998,6 +998,20 @@ void SaveReload::rewriteSaveInfoFile()
 		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + file);
 }
 
+size_t SaveReload::searchIndexToRemove()
+{
+	size_t loopIndex{ 0 };
+	for (const auto index : m_tabSave)
+	{
+		if (index == static_cast<GLuint>(m_currentSave))
+		{
+			return loopIndex;
+		}
+		loopIndex++;
+	}
+	return 0;
+}
+
 SaveReload::SaveReload() 
 : 
 m_tabSave(),
@@ -1007,6 +1021,11 @@ m_currentSave(SELECTION::NO_CURRENT_SAVE_SELECTED)
 
 SaveReload::~SaveReload()
 {
+}
+
+void SaveReload::resetCurrentSave()
+{
+	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
 }
 
  /*

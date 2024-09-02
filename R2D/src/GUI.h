@@ -78,7 +78,7 @@ namespace R2D
 			const std::string& name = ""
 		);
 
-
+		void destroyWidget(CEGUI::Window* widget);
 
 		static void setWidgetDestRect
 		(
