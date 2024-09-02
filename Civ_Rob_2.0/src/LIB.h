@@ -144,6 +144,7 @@ typedef std::shared_ptr<Player> PlayerPtrT;
 typedef std::shared_ptr<Unit> UnitPtrT;
 typedef std::shared_ptr<City> CityPtrT;
 typedef std::shared_ptr<Citizen> CitizenPtrT;
+typedef std::shared_ptr<SaveReload> SaveReloadPtrT;
 
 typedef std::shared_ptr<CityScreen>			CityScreenPtrT;
 typedef std::shared_ptr<GamePlayScreen>		GamePlayScreenPtrT;

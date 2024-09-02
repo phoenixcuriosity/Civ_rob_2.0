@@ -115,7 +115,7 @@ static size_t START_ICON_INDEX = 0;
 /* ----------------------------------------------------------------------------------- */
 CityScreen::CityScreen
 (
-	SaveReload* const SaveReload,
+	SaveReloadPtrT const SaveReload,
 	Players* const players,
 	unsigned int* const tileSize
 )
