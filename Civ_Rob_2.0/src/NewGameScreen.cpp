@@ -40,10 +40,10 @@ NewGameScreen::NewGameScreen
 )
 : 
 R2D::IGameScreen(),
+R2D::CScreen(),
 m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_userInputNewGame(),
 m_vectSlider(),
-m_gui(),
 m_isInitialize(false)
 {
 	build();
@@ -75,16 +75,14 @@ void NewGameScreen::destroy()
 
 bool NewGameScreen::onEntry()
 {
+	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+	return true;
+}
+
+void NewGameScreen::doInitUI()
+{
 	if (!m_isInitialize)
 	{
-		m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
-
-		m_gui.loadScheme("AlfiskoSkin.scheme");
-		m_gui.loadScheme("TaharezLook.scheme");
-
-		m_gui.setFont("DejaVuSans-12");
-
-
 		CEGUI::PushButton* previousMenu = static_cast<CEGUI::PushButton*>
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
@@ -129,17 +127,13 @@ bool NewGameScreen::onEntry()
 			CEGUI::Event::Subscriber(&NewGameScreen::onSliderPlayer, this)
 		);
 
-
-		m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
-		m_gui.showMouseCursor();
-
-		/* HIDE normal mouse cursor */
-		SDL_ShowCursor(0);
-
 		m_isInitialize = true;
 	}
+}
 
-	return true;
+void NewGameScreen::doInitHUDText()
+{
+	/* Do nothing */
 }
 
 void NewGameScreen::onExit()
@@ -155,14 +149,16 @@ void NewGameScreen::onExit()
 
 void NewGameScreen::draw()
 {
-	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	drawAll();
+}
 
-	/* Back */
-	glClearDepth(1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	m_gui.draw();
+void NewGameScreen::doDrawAll()
+{
+	/* Do nothing for now
+	* 
+	*	Place here new display on each cycle
+	* 
+	*/
 }
 
 

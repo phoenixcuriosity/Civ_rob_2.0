@@ -27,6 +27,7 @@
 
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
+#include <R2D/src/Screen.h>
 
 struct UserInputNewGame
 {
@@ -34,12 +35,14 @@ struct UserInputNewGame
 
 };
 
-class NewGameScreen : public R2D::IGameScreen
+class NewGameScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 
 	NewGameScreen();
 	~NewGameScreen();
+
+public: /* Override from R2D::IGameScreen */
 
 	int getNextScreenIndex()const override;
 	int getPreviousScreenIndex()const override;
@@ -48,17 +51,16 @@ public:
 	void destroy() override;
 
 	bool onEntry() override;
-
-private:
-
-
-
-public:
-
 	void onExit() override;
 
 	void update() override;
 	void draw() override;
+
+private: /* Override from R2D::CScreen */
+
+	void doInitUI() override;
+	void doInitHUDText() override;
+	void doDrawAll() override;
 
 
 private:
@@ -67,9 +69,7 @@ private:
 	bool onSliderPlayer(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
-
 public:
-
 
 	UserInputNewGame* getUserInputNewGame() { return &m_userInputNewGame; };
 
@@ -79,7 +79,6 @@ private:
 	UserInputNewGame m_userInputNewGame;
 
 	std::unordered_map<std::string, CEGUI::Slider*> m_vectSlider;
-	R2D::GUI m_gui;
 
 	bool m_isInitialize;
 };
