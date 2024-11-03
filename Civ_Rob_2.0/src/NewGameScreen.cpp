@@ -31,8 +31,8 @@
 
 namespace NUMBER_OF_PLAYER
 {
-	const unsigned int MAX = 9;
-	const unsigned int INITIAL = 1;
+	constexpr unsigned int MAX = 9;
+	constexpr unsigned int INITIAL = 1;
 }
 
 NewGameScreen::NewGameScreen

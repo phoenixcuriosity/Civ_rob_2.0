@@ -40,10 +40,10 @@
 
 namespace DELTA_TIME
 {
-	const float MS_PER_SECOND(1000.0f);
+	constexpr float MS_PER_SECOND(1000.0f);
 	const float TARGET_FRAMETIME = MS_PER_SECOND / (float)R2D::SCREEN_REFRESH_RATE;
-	const unsigned int MAX_PHYSICS_STEPS(6);
-	const float MAX_DELTA_TIME(1.0f);
+	constexpr unsigned int MAX_PHYSICS_STEPS(6);
+	constexpr float MAX_DELTA_TIME(1.0f);
 }
 
 

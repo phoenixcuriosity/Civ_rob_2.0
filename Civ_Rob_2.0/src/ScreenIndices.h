@@ -27,11 +27,11 @@
 
 namespace SCREEN_INDEX
 {
-	const int MAINMENU = 0;
-	const int NEWGAME = 1;
-	const int RELOAD = 2;
-	const int GAMEPLAY = 3;
-	const int CITY = 4;
+	constexpr int MAINMENU = 0;
+	constexpr int NEWGAME = 1;
+	constexpr int RELOAD = 2;
+	constexpr int GAMEPLAY = 3;
+	constexpr int CITY = 4;
 }
 
 #endif /* ScreenIndices_H */

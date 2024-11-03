@@ -170,7 +170,7 @@ void App::initMain()
 	{
 		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
 
-		for (R2D::e_Files it_e_files : R2D::tab_e_Files)
+		for (const R2D::e_Files it_e_files : R2D::tab_e_Files)
 		{
 			if (nullptr != node)
 			{

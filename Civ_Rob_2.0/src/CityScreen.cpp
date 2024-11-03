@@ -44,62 +44,62 @@ namespace CITY_IHM
 		{
 			namespace LIST
 			{
-				const float POS_X = 0.75f;
-				const float POS_Y = 0.1f;
-				const float DELTA_X = 0.2f;
-				const float DELTA_Y = 0.026f;
+				constexpr float POS_X = 0.75f;
+				constexpr float POS_Y = 0.1f;
+				constexpr float DELTA_X = 0.2f;
+				constexpr float DELTA_Y = 0.026f;
 			}
 
 			namespace QUEUE
 			{
-				const float	POS_X = 0.8f;
-				const float	POS_Y = 0.5f;
-				const float	DELTA_X = 0.1f;
-				const float	DELTA_Y = 0.026f;
+				constexpr float	POS_X = 0.8f;
+				constexpr float	POS_Y = 0.5f;
+				constexpr float	DELTA_X = 0.1f;
+				constexpr float	DELTA_Y = 0.026f;
 			}
 		}
 
 		namespace FOOD
 		{
-			const unsigned int POS_X = 50;
-			const unsigned int POS_Y = 300;
-			const unsigned int DELTA_X = 32;
-			const unsigned int DELTA_Y = 32;
+			constexpr unsigned int POS_X = 50;
+			constexpr unsigned int POS_Y = 300;
+			constexpr unsigned int DELTA_X = 32;
+			constexpr unsigned int DELTA_Y = 32;
 		}
 
 		namespace WORK
 		{
-			const unsigned int POS_X = 50;
-			const unsigned int POS_Y = 700;
-			const unsigned int DELTA_X = 32;
-			const unsigned int DELTA_Y = 32;
+			constexpr unsigned int POS_X = 50;
+			constexpr unsigned int POS_Y = 700;
+			constexpr unsigned int DELTA_X = 32;
+			constexpr unsigned int DELTA_Y = 32;
 		}
 	}
 
-	const unsigned int OFFSET_EMOTION{ 8 };
+	constexpr unsigned int OFFSET_EMOTION{ 8 };
 
-	const unsigned int MODULO_TEN{ 10 };
+	constexpr unsigned int MODULO_TEN{ 10 };
 }
 
 namespace CitySC
 {
 	/* Define an ID which is unused */
-	const GLuint UNUSED_ID = 0;
+	constexpr GLuint UNUSED_ID = 0;
 
-	const size_t OFFSET_INDEX_ERASE_BUTTON = 1;
+	constexpr size_t OFFSET_INDEX_ERASE_BUTTON = 1;
 
 	/* Define minimum size to cycle builds */
-	const unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
+	constexpr unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
 
 	/*  */
-	const unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
+	constexpr unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
 
-	const bool HIDE_BUTTON = false;
+	constexpr bool HIDE_BUTTON = false;
 
-	const bool SHOW_BUTTON = true;
+	constexpr bool SHOW_BUTTON = true;
 
-	const bool CYCLE_BUTTON_DIR_UP = false;
-	const bool CYCLE_BUTTON_DIR_DOWN = true;
+	constexpr bool CYCLE_BUTTON_DIR_UP = false;
+	constexpr bool CYCLE_BUTTON_DIR_DOWN = true;
 }
 
 static size_t START_APPARTENANCE_INDEX = 0;

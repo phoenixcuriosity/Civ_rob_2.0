@@ -32,7 +32,7 @@
 
 namespace IHM_SAVE_BUTTON
 {
-	const unsigned int MAX_VISISBLE = 10;
+	constexpr unsigned int MAX_VISISBLE = 10;
 }
 
 ReloadMenuScreen::ReloadMenuScreen
@@ -164,10 +164,10 @@ void ReloadMenuScreen::radioButtonDisplay()
 {
 	float X_POS = 0.1f;
 	float Y_POS = 0.20f;
-	const float DIMS_PIXELS = 20.0f;
-	const float PADDING = 0.035f;
-	const float TEXT_SCALE = 0.6f;
-	const int GROUP_ID = 2;
+	constexpr float DIMS_PIXELS = 20.0f;
+	constexpr float PADDING = 0.035f;
+	constexpr float TEXT_SCALE = 0.6f;
+	constexpr int GROUP_ID = 2;
 
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
@@ -212,8 +212,8 @@ void ReloadMenuScreen::updateRadioButtonPosition()
 {
 	float X_POS = 0.1f;
 	float Y_POS = 0.20f;
-	const float PADDING = 0.035f;
-	const float TEXT_SCALE = 0.6f;
+	constexpr float PADDING = 0.035f;
+	constexpr float TEXT_SCALE = 0.6f;
 
 	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
 	{
