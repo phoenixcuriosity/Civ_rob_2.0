@@ -70,7 +70,7 @@ void NewGameScreen::build()
 
 void NewGameScreen::destroy()
 {
-	m_gui.destroy();
+	end();
 }
 
 bool NewGameScreen::onEntry()

@@ -259,73 +259,6 @@ void GamePlayScreen::actionByKey()
 			/* Do nothing */
 		}
 	}
-	
-
-
-
-#ifdef _DEBUG
-	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
-	{
-		m_players.clickToSelectUnit(getMouseCoorNorm('X'), getMouseCoorNorm('Y'));
-	}
-#endif // _DEBUG
-
-	if (m_game->getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
-	{
-		char buffer[256];
-
-		sprintf_s
-		(buffer, "%d",
-			m_mainMap.GETtileSize()
-			*
-			MainMap::convertPosXToIndex
-			(
-				(double)m_game->getInputManager().GETmouseCoords().x
-				+ (double)m_screen.camera.GETposition().x
-				- (double)m_game->getWindow().GETscreenWidth() / 2
-			)
-		);
-		R2D::ResourceManager::getSpriteFont()->draw
-		(
-			m_screen.spriteBatchHUDDynamic,
-			buffer,
-			glm::vec2
-			(
-				(double)m_game->getInputManager().GETmouseCoords().x,
-				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y
-			), // offset pos
-			glm::vec2(0.32f), // size
-			0.0f,
-			R2D::COLOR_WHITE
-		);
-
-		sprintf_s
-		(
-			buffer, "%d",
-			m_mainMap.GETtileSize()
-			*
-			MainMap::convertPosYToIndex
-			(
-				-(double)m_game->getInputManager().GETmouseCoords().y
-				+ (double)m_screen.camera.GETposition().y
-				+ (double)m_game->getWindow().GETscreenHeight() / 2
-			)
-		);
-
-		R2D::ResourceManager::getSpriteFont()->draw
-		(
-			m_screen.spriteBatchHUDDynamic,
-			buffer,
-			glm::vec2
-			(
-				(double)m_game->getInputManager().GETmouseCoords().x,
-				(double)m_game->getWindow().GETscreenHeight() - (double)m_game->getInputManager().GETmouseCoords().y - 60
-			), // offset pos
-			glm::vec2(0.32f), // size
-			0.0f,
-			R2D::COLOR_WHITE
-		);
-	}
 }
 
 void GamePlayScreen::moveCamera
@@ -333,45 +266,41 @@ void GamePlayScreen::moveCamera
 	const float deltaTime
 )
 {
-	if (m_game->getInputManager().isKeyDown(SDLK_z) && !m_screen.camera.isLockMoveUP())
+	if (m_game->getInputManager().isKeyDown(SDLK_z) && !m_camera.isLockMoveUP())
 	{
-		m_screen.camera
-			.SETposition
+		m_camera.SETposition
 			(
-				m_screen.camera.GETposition()
+				m_camera.GETposition()
 				+
 				glm::vec2(0.0f, GInput::KEY_SPEED_MOVE * deltaTime)
 			);
 		updateDrawCameraMove();
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_s) && !m_screen.camera.isLockMoveDOWN())
+	if (m_game->getInputManager().isKeyDown(SDLK_s) && !m_camera.isLockMoveDOWN())
 	{
-		m_screen.camera
-			.SETposition
+		m_camera.SETposition
 			(
-				m_screen.camera.GETposition()
+				m_camera.GETposition()
 				+
 				glm::vec2(0.0f, -GInput::KEY_SPEED_MOVE * deltaTime)
 			);
 		updateDrawCameraMove();
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_q) && !m_screen.camera.isLockMoveLEFT())
+	if (m_game->getInputManager().isKeyDown(SDLK_q) && !m_camera.isLockMoveLEFT())
 	{
-		m_screen.camera
-			.SETposition
+		m_camera.SETposition
 			(
-				m_screen.camera.GETposition()
+				m_camera.GETposition()
 				+
 				glm::vec2(-GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
 		updateDrawCameraMove();
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_d) && !m_screen.camera.isLockMoveRIGHT())
+	if (m_game->getInputManager().isKeyDown(SDLK_d) && !m_camera.isLockMoveRIGHT())
 	{
-		m_screen.camera
-			.SETposition
+		m_camera.SETposition
 			(
-				m_screen.camera.GETposition()
+				m_camera.GETposition()
 				+
 				glm::vec2(GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
@@ -433,13 +362,13 @@ void GamePlayScreen::wheel
 	*/
 	if (R2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
 	{
-		m_screen.camera.zoom();
+		m_camera.zoom();
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
 	else if (R2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
-		m_screen.camera.deZoom();
+		m_camera.deZoom();
 		m_mainMap.SETneedToUpdateDraw(true);
 		m_players.SETneedToUpdateDrawUnit(true);
 	}
@@ -460,14 +389,14 @@ void GamePlayScreen::mouseClick
 					MainMap::convertPosXToIndex
 					(
 						(double)m_game->getInputManager().GETmouseCoords().x
-						+ (double)m_screen.camera.GETposition().x
+						+ (double)m_camera.GETposition().x
 						- (double)m_game->getWindow().GETscreenWidth() / 2
 					)
 					,
 					MainMap::convertPosYToIndex
 					(
 						-(double)m_game->getInputManager().GETmouseCoords().y
-						+ (double)m_screen.camera.GETposition().y
+						+ (double)m_camera.GETposition().y
 						+ (double)m_game->getWindow().GETscreenHeight() / 2
 					)
 				)
@@ -498,7 +427,7 @@ unsigned int GamePlayScreen::getMouseCoorNorm(const unsigned char c)
 			MainMap::convertPosXToIndex
 			(
 				(double)m_game->getInputManager().GETmouseCoords().x
-				+ (double)m_screen.camera.GETposition().x 
+				+ (double)m_camera.GETposition().x
 				- (double)m_game->getWindow().GETscreenWidth() / 2
 			)
 		);
@@ -513,7 +442,7 @@ unsigned int GamePlayScreen::getMouseCoorNorm(const unsigned char c)
 			MainMap::convertPosYToIndex
 			(
 				-(double)m_game->getInputManager().GETmouseCoords().y
-				+ (double)m_screen.camera.GETposition().y
+				+ (double)m_camera.GETposition().y
 				+ (double)m_game->getWindow().GETscreenHeight() / 2
 			)
 		);

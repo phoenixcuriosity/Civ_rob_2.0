@@ -130,13 +130,15 @@ void CScreen::drawAll()
 
 	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_camera.GETcameraMatrix();
-
-	/*  */
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	m_spriteBatchHUDDynamic.begin();
 
 	doDrawAll();
+
+	/* Copy camera matrix */
+	glm::mat4 cameraMatrixHUD = m_cameraHUD.GETcameraMatrix();
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrixHUD[0][0]));
 
 	m_spriteBatchHUDDynamic.end();
 

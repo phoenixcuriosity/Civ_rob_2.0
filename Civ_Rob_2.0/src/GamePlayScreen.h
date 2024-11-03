@@ -31,8 +31,9 @@
 #include "T_GamePlayScreen.h"
 
 #include <R2D/src/IMainGame.h>
+#include <R2D/src/Screen.h>
 
-class GamePlayScreen : public R2D::IGameScreen
+class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 
@@ -44,8 +45,7 @@ public:
 
 	~GamePlayScreen();
 
-
-public:
+public: /* Override from R2D::IGameScreen */
 
 	int getNextScreenIndex()const override;
 	int getPreviousScreenIndex()const override;
@@ -54,111 +54,72 @@ public:
 	void destroy() override;
 
 	bool onEntry() override;
-
 	void onExit() override;
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : update																	   */
-	/* ROLE : Call each cycle 															   */
-	/* ROLE : Update input from SDL and game / Update GUI input							   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void update() override;
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : draw																		   */
-	/* ROLE : Call each cycle 															   */
-	/* ROLE : Update picture from game and GUI 											   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void draw() override;
+
+private: /* Override from R2D::CScreen */
+
+	void doInitUI() override;
+	void doInitHUDText() override;
+	void doDrawAll() override;
 
 private:
 
-	/* *********************************************************
-	 *							File						   *
-	 ********************************************************* */
-
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : loadFile																	   */
 	/* ROLE :																			   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void loadFile();
-
-
 
 private:
 
-
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initStructs																   */
 	/* ROLE : Initialisation des donn�es par d�faut des structures						   */
 	/* INPUT : struct Sysinfo& : structure globale du programme							   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void initStructsNULL();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeSize																   */
 	/* ROLE : Calcul des diff�rentes tailles de fenetre en fonction de tileSize			   */
 	/* INPUT/OUTPUT : Screen& screen : longueur et hauteur �cran						   */
 	/* INPUT/OUTPUT : struct Sysinfo& : diff�rentes tailles de fenetre					   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void computeSize();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : initOpenGLScreen															   */
 	/* ROLE : Init m_screen.openGLScreen and m_mainMap									   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void initOpenGLScreen();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : initHUDText																   */
-	/* ROLE : Init static Text in HUD													   */
-	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void initHUDText();
-
-	void initUI();
 
 public:
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : loadUnitAndSpec															   */
 	/* ROLE : Chargement des informations concernant les unit�s � partir d'un fichier	   */
 	/* INPUT : const std::string& : nom du fichier � ouvrir								   */
 	/* OUTPUT : std::vector<Unit_Template>& : Vecteur des Unit							   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void loadUnitAndSpec();
 
 	void loadCitiesNames();
 
 private:
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : newGame																   	   */
 	/* ROLE : Create a new save with new spaw settlers		 							   */
 	/* ROLE : Players names are associate to radio button		 						   */
 	/* ROLE : Save the new game set								 						   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : void														       */
-	/* ------------------------------------------------------------------------------------*/
 	void newGame();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : pushNewPlayer															   	   */
 	/* ROLE : For every name in struct UserInputNewGame push new player in m_players	   */
 	/* attribut in : UserInputNewGame* m_userInputNewGame								   */
 	/* attribut out : m_players															   */
 	/* RETURNED VALUE : void														       */
-	/* ------------------------------------------------------------------------------------*/
 	void pushNewPlayer();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : newGameSettlerSpawn														   */
 	/* ROLE : Création des position pour les settlers de chaque joueurs					   */
 	/* INPUT : const std::vector<Unit_Template>& : tableau des statistiques ...			   */
@@ -166,14 +127,12 @@ private:
 	/* INPUT : const struct Map& map : structure globale de la map						   */
 	/* INPUT/OUTPUT : std::vector<Player*>& : vecteurs de joueurs						   */
 	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
 	void newGameSettlerSpawn
 	(
 		Players& players,
 		const MainMap& mainMap
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : makeRandomPosTab															   */
 	/* ROLE : WHILE new positions are not valid, create new ones						   */
 	/* ROLE : --- create new positions with matriceMap & tileSize						   */
@@ -183,14 +142,12 @@ private:
 	/* IN : const Map& map : struct main map : map & tileSize							   */
 	/* IN/OUT : std::vector<randomPos>& : New vector positions							   */
 	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
 	void makeRandomPosTab
 	(
 		const MainMap& mainMap,
 		std::vector<randomPos>& tabRandom
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : makeRandomPos																   */
 	/* ROLE : Create random positions between matriceMap								   */
 	/* ROLE : pos === size - 2 * MAP_BORDER_MAX * tileSize								   */
@@ -199,7 +156,6 @@ private:
 	/* IN : const MatriceMap& matriceMap : matriceMap for size							   */
 	/* IN : const unsigned int tileSize	: Globale tileSize								   */
 	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
 	void makeRandomPos
 	(
 		randomPos& RandomPOS,
@@ -207,7 +163,6 @@ private:
 		const unsigned int tileSize
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : conditionspace															   */
 	/* ROLE : IF empty tab return TRUE													   */
 	/* ROLE : ELSE test every positions with new positions  							   */
@@ -219,7 +174,6 @@ private:
 	/* INPUT : const unsigned int tileSize : Globale tileSize							   */
 	/* RETURNED VALUE : TRUE -> New positions valid									       */
 	/* RETURNED VALUE : FALSE -> New positions not valid						           */
-	/* ------------------------------------------------------------------------------------*/
 	bool conditionspace
 	(
 		const randomPos& RandomPOS,
@@ -227,7 +181,6 @@ private:
 		const unsigned int tileSize
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : conditionground															   */
 	/* ROLE : Convert new positions to index											   */
 	/* ROLE : IF Assert index to maticeMap size && tile index is ground THEN return TRUE   */
@@ -236,7 +189,6 @@ private:
 	/* INPUT : const randomPos& RandomPOS :	New positions								   */
 	/* RETURNED VALUE : TRUE -> New positions valid									       */
 	/* RETURNED VALUE : FALSE -> New positions not valid						           */
-	/* ------------------------------------------------------------------------------------*/
 	bool conditionground
 	(
 		const MatriceMap& matriceMap,
@@ -245,20 +197,14 @@ private:
 
 public:
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : makePlayersButtons														   */
 	/* ROLE : Create for p, number of players, a radio button 							   */
 	/* ROLE : Button will be arrange in vertical axis and by p order					   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : void														       */
-	/* ------------------------------------------------------------------------------------*/
 	void makePlayersButtons();
 
 private:
-
-	/* *********************************************************
-	 *						Draw/Camera						   *
-	 ********************************************************* */
 
 	void moveCameraByDeltaTime();
 
@@ -269,39 +215,29 @@ private:
 
 	void updateDrawCameraMove();
 
-	void drawGame();
-
-	void drawHUD();
-
 private:
 
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : run_SDL																					    	  */
 	/* ROLE : Recherche infini des �venements d'entr� de type SDL_event : souris, clavier					      */
 	/* ROLE : Si aucun �venements n'est trouv� alors le programme continue									      */
 	/* INPUT : struct Sysinfo& : structure globale du programme									    			  */
 	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	void inputSDL
 	(
 		SDL_Event& ev
 	);
 
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : actionByKey																				    	  */
 	/* ROLE : Define action for each key press																      */
 	/* INPUT : SDL_Event& ev : Event from SDL input												    			  */
 	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	void actionByKey();
 
-	/* ---------------------------------------------------------------------------------------------------------- */
 	/* NAME : wheel																						    	  */
 	/* ROLE : Recherche l'incr�mentation ou d�cr�mentation du contexte										      */
 	/* INPUT : struct Sysinfo& : structure globale du programme												      */
 	/* INPUT : int& wheel : l'�venement de scroll de la souris													  */
 	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	void wheel
 	(
 		const SDL_Event& ev

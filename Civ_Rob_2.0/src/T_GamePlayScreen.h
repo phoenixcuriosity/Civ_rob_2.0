@@ -46,15 +46,8 @@
 */
 struct Screen
 {
-	R2D::Camera2D camera;
-	R2D::Camera2D cameraHUD;
-
-	R2D::SpriteBatch spriteBatchHUDDynamic;
-	R2D::SpriteBatch spriteBatchHUDStatic;
-
 	R2D::AudioEngine audioEngine;
 
-	R2D::GUI m_gui;
 	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
 	std::vector<R2D::WidgetLabel> m_widgetLabels;
 

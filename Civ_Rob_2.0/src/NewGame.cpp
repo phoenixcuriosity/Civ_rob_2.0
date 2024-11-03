@@ -119,7 +119,7 @@ void GamePlayScreen::makePlayersButtons()
 	{
 		m_screen.m_vectPlayerRadioButton[i]
 			= static_cast<CEGUI::RadioButton*>
-			(m_screen.m_gui.createWidget(
+			(m_gui.createWidget(
 				"TaharezLook/RadioButton",
 				glm::vec4(X_POS, Y_POS += PADDING, 0.0f, 0.0f),
 				glm::vec4(0.0f, 0.0f, DIMS_PIXELS, DIMS_PIXELS),
