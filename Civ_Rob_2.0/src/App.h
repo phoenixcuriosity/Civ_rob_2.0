@@ -35,10 +35,10 @@ public:
 	App();
 	~App();
 
-	virtual void onInit() override;
-	virtual void InitShaders() override;
-	virtual void onExit() override;
-	virtual void addScreens() override;
+	void onInit() override;
+	void InitShaders() override;
+	void onExit() override;
+	void addScreens() override;
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */

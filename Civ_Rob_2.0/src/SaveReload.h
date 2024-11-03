@@ -228,11 +228,15 @@ private:
 
 	void unselectCurrentSave();
 
-	bool isSelectCurrentSave();
-
 	bool isSelectCurrentSaveInTab();
 
 	void rewriteSaveInfoFile();
+
+	size_t searchIndexToRemove();
+
+public:
+
+	bool isSelectCurrentSave();
 
 public:
 
@@ -242,7 +246,7 @@ public:
 	inline void SETtabSave(std::vector<unsigned int>& tab) { m_tabSave = tab; };
 	inline void SETcurrentSave(int currentSave) { m_currentSave = currentSave; };
 
-
+	inline void resetCurrentSave();
 
 private:
 

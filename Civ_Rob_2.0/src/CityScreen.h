@@ -1,7 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -30,9 +30,10 @@
 #include <R2D/src/API_fwd.h>
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
+#include <R2D/src/Screen.h>
 #include <R2D/src/SpriteBatch.h>
 
-class CityScreen : public R2D::IGameScreen
+class CityScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	CityScreen
@@ -43,28 +44,31 @@ public:
 	);
 	~CityScreen();
 
-	virtual int getNextScreenIndex()const override;
-	virtual int getPreviousScreenIndex()const override;
+public: /* Override from R2D::IGameScreen */
 
-	virtual void build() override;
-	virtual void destroy() override;
+	int getNextScreenIndex()const override;
+	int getPreviousScreenIndex()const override;
 
-	virtual bool onEntry() override;
-	virtual void onExit() override;
+	void build() override;
+	void destroy() override;
 
-private:
+	bool onEntry() override;
+	void onExit() override;
+
+	void update() override;
+	void draw() override;
+
+private: /* Override from R2D::CScreen */
+
+	void doInitUI() override;
+	void doInitHUDText() override;
+	void doDrawAll() override;
+
+private: /* Helper to Override from R2D::CScreen */
 
 	virtual void resetInternalEntry();
 
 	virtual void createDynamicContext();
-
-
-
-public:
-
-
-	virtual void update() override;
-	virtual void draw() override;
 
 private:
 
@@ -98,20 +102,14 @@ private:
 	bool onBuildQueueToBuildClicked(const CEGUI::EventArgs& e);
 	bool onReturnToMapClicked(const CEGUI::EventArgs& e);
 
-
-public:
-
-
 private:
 	int m_nextScreenIndexMenu;
 
-	R2D::GUI m_gui;
 	unsigned int m_indexCycleBuilds;
 
 	dequeBuild m_buttonBuild;
 
 	/* Dedicated spriteBatch */
-	R2D::SpriteBatch m_spriteBatch;
 	R2D::SpriteBatch m_spriteBatchAppartenance;
 	bool m_needToUpdateDraw;
 	R2D::VectID s_vectID;

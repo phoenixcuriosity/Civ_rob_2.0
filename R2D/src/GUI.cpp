@@ -324,6 +324,20 @@ CEGUI::Window* GUI::createWidget
 	return newWindow;
 }
 
+void GUI::destroyWidget(CEGUI::Window* widget)
+{
+    try 
+    {
+        m_root->removeChild(widget);
+        widget->destroy();
+        widget = nullptr;
+    }
+    catch (const std::exception& /* e */)
+    {
+        ExitFromError::exitFromError("Cannot destroy Widget : " + static_cast<std::string>(widget->getName().c_str()));
+    }
+}
+
 CEGUI::Window* GUI::getWidget(const std::string& name)
 {
     try 

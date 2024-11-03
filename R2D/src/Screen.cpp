@@ -56,6 +56,7 @@ bool CScreen::init(const int width, const int height)
 
 		m_gui.init(ResourceManager::getFile(e_Files::GUIPath)->getPath());
 	}
+
 	initAll();
 	return true;
 }
@@ -86,8 +87,10 @@ void CScreen::initUI()
 
 		/* HIDE normal mouse cursor */
 		SDL_ShowCursor(0);
-	}
 
+		m_isInitialized = true;
+	}
+	
 	doInitUI();
 }
 
@@ -127,13 +130,15 @@ void CScreen::drawAll()
 
 	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_camera.GETcameraMatrix();
-
-	/*  */
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	m_spriteBatchHUDDynamic.begin();
 
 	doDrawAll();
+
+	/* Copy camera matrix */
+	glm::mat4 cameraMatrixHUD = m_cameraHUD.GETcameraMatrix();
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrixHUD[0][0]));
 
 	m_spriteBatchHUDDynamic.end();
 
@@ -151,9 +156,4 @@ void CScreen::drawAll()
 void CScreen::updateInputManager(SDL_Event& ev, InputManager& resourceManager)
 {
 	m_gui.onSDLEvent(ev, resourceManager);
-}
-
-void CScreen::redrawInit()
-{
-	initAll();
 }

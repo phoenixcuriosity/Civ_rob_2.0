@@ -76,10 +76,6 @@ bool MainMenuScreen::onEntry()
 
 		init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 
-		initUI();
-
-		initHUDText();
-
 		m_isInitialize = true;
 	}
 	return true;

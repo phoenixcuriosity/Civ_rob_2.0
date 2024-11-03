@@ -43,33 +43,40 @@ public:
 
 private: /* Override from R2D::IGameScreen */
 
-	virtual int getNextScreenIndex()const override;
-	virtual int getPreviousScreenIndex()const override;
+	int getNextScreenIndex()const override;
+	int getPreviousScreenIndex()const override;
 
-	virtual void build() override;
-	virtual void destroy() override;
+	void build() override;
+	void destroy() override;
 
-	virtual bool onEntry() override;
-	virtual void onExit() override;
+	bool onEntry() override;
+	void onExit() override;
 
-	virtual void update() override;
-	virtual void draw() override;
+	void update() override;
+	void draw() override;
 
+private:
+
+	void updateVisibilityIfSaveSelected();
+	
 private: /* Override from R2D::CScreen */
 
-	virtual void doInitUI() override;
-	virtual void doInitHUDText()override;
-	virtual void doDrawAll()override;
+	void doInitUI() override;
+	void doInitHUDText()override;
+	void doDrawAll()override;
 
 private: /* doInitUI helpers */
 
 	void buttonDisplay();
 	void radioButtonDisplay();
 
+	void updateRadioButtonPosition();
+
 private: /* subscribeEvent from Button */
 
 	bool onOneSaveCliked(const CEGUI::EventArgs& e);
 	bool onLoadSave(const CEGUI::EventArgs& e);
+	bool onClearASaveCliked(const CEGUI::EventArgs& e);
 	bool onClearSavesCliked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
@@ -79,7 +86,7 @@ private:
 	std::vector<CEGUI::RadioButton*> m_vectSavesRadioButton;
 	std::vector<R2D::WidgetLabel> m_widgetLabels;
 
-	SaveReloadPtrT m_SaveReload;
+	const SaveReloadPtrT m_SaveReload;
 
 	bool m_isInitialize;
 };

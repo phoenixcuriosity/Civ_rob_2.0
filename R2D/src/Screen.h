@@ -46,7 +46,6 @@ public:
 
 	void drawAll();
 	void updateInputManager(SDL_Event& ev, InputManager& resourceManager);
-	void redrawInit();
 
 private:
 

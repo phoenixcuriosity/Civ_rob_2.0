@@ -58,7 +58,7 @@ public:
 	{};
 
 
-	virtual ~IGameScreen() {};
+	~IGameScreen() {};
 
 	virtual int getNextScreenIndex()const = 0;
 	virtual int getPreviousScreenIndex()const = 0;

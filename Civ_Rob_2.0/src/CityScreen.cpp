@@ -1,7 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2023 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -36,8 +36,6 @@
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 
-
-
 namespace CITY_IHM
 {
 	namespace DIPSLAY
@@ -46,62 +44,62 @@ namespace CITY_IHM
 		{
 			namespace LIST
 			{
-				const float POS_X = 0.75f;
-				const float POS_Y = 0.1f;
-				const float DELTA_X = 0.2f;
-				const float DELTA_Y = 0.026f;
+				constexpr float POS_X = 0.75f;
+				constexpr float POS_Y = 0.1f;
+				constexpr float DELTA_X = 0.2f;
+				constexpr float DELTA_Y = 0.026f;
 			}
 
 			namespace QUEUE
 			{
-				const float	POS_X = 0.8f;
-				const float	POS_Y = 0.5f;
-				const float	DELTA_X = 0.1f;
-				const float	DELTA_Y = 0.026f;
+				constexpr float	POS_X = 0.8f;
+				constexpr float	POS_Y = 0.5f;
+				constexpr float	DELTA_X = 0.1f;
+				constexpr float	DELTA_Y = 0.026f;
 			}
 		}
 
 		namespace FOOD
 		{
-			const unsigned int POS_X = 50;
-			const unsigned int POS_Y = 300;
-			const unsigned int DELTA_X = 32;
-			const unsigned int DELTA_Y = 32;
+			constexpr unsigned int POS_X = 50;
+			constexpr unsigned int POS_Y = 300;
+			constexpr unsigned int DELTA_X = 32;
+			constexpr unsigned int DELTA_Y = 32;
 		}
 
 		namespace WORK
 		{
-			const unsigned int POS_X = 50;
-			const unsigned int POS_Y = 700;
-			const unsigned int DELTA_X = 32;
-			const unsigned int DELTA_Y = 32;
+			constexpr unsigned int POS_X = 50;
+			constexpr unsigned int POS_Y = 700;
+			constexpr unsigned int DELTA_X = 32;
+			constexpr unsigned int DELTA_Y = 32;
 		}
 	}
 
-	const unsigned int OFFSET_EMOTION{ 8 };
+	constexpr unsigned int OFFSET_EMOTION{ 8 };
 
-	const unsigned int MODULO_TEN{ 10 };
+	constexpr unsigned int MODULO_TEN{ 10 };
 }
 
 namespace CitySC
 {
 	/* Define an ID which is unused */
-	const GLuint UNUSED_ID = 0;
+	constexpr GLuint UNUSED_ID = 0;
 
-	const size_t OFFSET_INDEX_ERASE_BUTTON = 1;
+	constexpr size_t OFFSET_INDEX_ERASE_BUTTON = 1;
 
 	/* Define minimum size to cycle builds */
-	const unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
+	constexpr unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
 
 	/*  */
-	const unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
+	constexpr unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
 
-	const bool HIDE_BUTTON = false;
+	constexpr bool HIDE_BUTTON = false;
 
-	const bool SHOW_BUTTON = true;
+	constexpr bool SHOW_BUTTON = true;
 
-	const bool CYCLE_BUTTON_DIR_UP = false;
-	const bool CYCLE_BUTTON_DIR_DOWN = true;
+	constexpr bool CYCLE_BUTTON_DIR_UP = false;
+	constexpr bool CYCLE_BUTTON_DIR_DOWN = true;
 }
 
 static size_t START_APPARTENANCE_INDEX = 0;
@@ -121,11 +119,10 @@ CityScreen::CityScreen
 )
 :
 R2D::IGameScreen(),
+R2D::CScreen(),
 m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
-m_gui(),
 m_indexCycleBuilds(0),
 m_buttonBuild(),
-m_spriteBatch(),
 m_spriteBatchAppartenance(),
 m_needToUpdateDraw(true),
 s_vectID(),
@@ -147,11 +144,55 @@ CityScreen::~CityScreen()
 void CityScreen::build()
 {
 	m_screenIndex = SCREEN_INDEX::CITY;
+
+	using R2D::ResourceManager;
+	static const std::string CITY_IMAGE_PATH{ R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath() };
+	static const std::string DIR_GROUND{ "ground/" };
+	static const std::string DIR_SPEC{ "spec/" };
+	static const std::string DIR_CA{ "couleur d'apartenance/" };
+	static const std::string DIR_CITIZEN{ "citizen/" };
+	static const std::string DIR_CITY{ "city/" };
+
+	using R2D::ResourceManager;
+
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-grass" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-water" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-deepwater" + EXTENSION_PNG)->GETid());
+
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "coal" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "copper" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "fish" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "horse" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "iron" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "petroleum" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "stone" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "tree1" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "uranium" + EXTENSION_PNG)->GETid());
+	START_APPARTENANCE_INDEX = s_vectID.size();
+
+	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
+	{
+		s_vectID.push_back
+		(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CA + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
+	}
+
+	START_EMOTION_INDEX = s_vectID.size();
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "ecstatic" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "happy" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "neutral" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "sad" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "angry" + EXTENSION_PNG)->GETid());
+
+
+	START_ICON_INDEX = s_vectID.size();
+
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "food" + EXTENSION_PNG)->GETid());
+	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "Hammer" + EXTENSION_PNG)->GETid());
 }
 
 void CityScreen::destroy()
 {
-	m_gui.destroy();
+	end();
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -178,6 +219,12 @@ int CityScreen::getPreviousScreenIndex()const
 
 bool CityScreen::onEntry()
 {
+	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+	return true;
+}
+
+void CityScreen::doInitUI()
+{
 	/* --- Add static city context --- */
 	if (!m_isInitialize)
 	{
@@ -186,55 +233,6 @@ bool CityScreen::onEntry()
 		{
 			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
 		}
-
-		const std::string CITY_IMAGE_PATH{R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath()};
-		const std::string DIR_GROUND {"ground/"};
-		const std::string DIR_SPEC {"spec/"};
-		const std::string DIR_CA {"couleur d'apartenance/"};
-		const std::string DIR_CITIZEN {"citizen/"};
-		const std::string DIR_CITY {"city/"};
-
-		using R2D::ResourceManager;
-
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-grass" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-water" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-deepwater" + EXTENSION_PNG)->GETid());
-
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "coal" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "copper" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "fish" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "horse" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "iron" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "petroleum" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "stone" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "tree1" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "uranium" + EXTENSION_PNG)->GETid());
-		START_APPARTENANCE_INDEX = s_vectID.size();
-
-		for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
-		{
-			s_vectID.push_back
-			(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CA + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
-		}
-
-		START_EMOTION_INDEX = s_vectID.size();
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "ecstatic" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "happy" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "neutral" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "sad" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "angry" + EXTENSION_PNG)->GETid());
-
-
-		START_ICON_INDEX = s_vectID.size();
-
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "food" + EXTENSION_PNG)->GETid());
-		s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "Hammer" + EXTENSION_PNG)->GETid());
-
-		
-		m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
-		m_gui.loadScheme("AlfiskoSkin.scheme");
-		m_gui.setFont("DejaVuSans-10");
-
 
 		CEGUI::PushButton* returnToMap = static_cast<CEGUI::PushButton*>
 			(m_gui.createWidget(
@@ -249,7 +247,7 @@ bool CityScreen::onEntry()
 			CEGUI::PushButton::EventClicked,
 			CEGUI::Event::Subscriber(&CityScreen::onReturnToMapClicked, this)
 		);
-		
+
 		unsigned int i{ 0 };
 		for (const auto& p : m_players->GETvectUnitTemplate())
 		{
@@ -263,7 +261,7 @@ bool CityScreen::onEntry()
 							"AlfiskoSkin/Button",
 							{
 								CITY_IHM::DIPSLAY::BUILD::LIST::POS_X,
-								CITY_IHM::DIPSLAY::BUILD::LIST:: POS_Y + CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_Y * m_buttonBuild.size(),
+								CITY_IHM::DIPSLAY::BUILD::LIST::POS_Y + CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_Y * m_buttonBuild.size(),
 								CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_X,
 								CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_Y
 							},
@@ -289,7 +287,7 @@ bool CityScreen::onEntry()
 					+ "/"
 					+ std::to_string(p.movement)
 					+ "/"
-					+ Utility::to_string_with_precision(p.maintenance,1)
+					+ Utility::to_string_with_precision(p.maintenance, 1)
 				);
 			m_buttonBuild.back().buildG->subscribeEvent
 			(
@@ -307,13 +305,6 @@ bool CityScreen::onEntry()
 			i++;
 		}
 
-		m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
-		m_gui.showMouseCursor();
-
-		/* HIDE normal mouse cursor */
-		SDL_ShowCursor(0);
-
-		m_spriteBatch.init();
 		m_spriteBatchAppartenance.init();
 
 		m_isInitialize = true;
@@ -322,12 +313,13 @@ bool CityScreen::onEntry()
 	m_needToUpdateDraw = true;
 
 	resetInternalEntry();
-	
+
 	createDynamicContext();
+}
 
+void CityScreen::doInitHUDText()
+{
 	drawTextures();
-
-	return true;
 }
 
 void CityScreen::onExit()
@@ -385,33 +377,12 @@ void CityScreen::createDynamicContext()
 
 void CityScreen::draw()
 {
-	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	drawAll();
+}
 
-	/* Back */
-	glClearDepth(1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	R2D::ResourceManager::getGLSLProgram().use();
-	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
-	glActiveTexture(GL_TEXTURE0);
-
-	GLint textureLocation = R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
-	glUniform1i(textureLocation, 0);
-
-	/* --- Draw --- */
-	/* Nothing to draw every cycle */
-	
-	/* --- Render --- */
-	m_spriteBatch.renderBatch();
+void CityScreen::doDrawAll()
+{
 	m_spriteBatchAppartenance.renderBatch();
-
-	/* --- GL unbind --- */
-	glBindTexture(GL_TEXTURE_2D, 0);
-	R2D::ResourceManager::getGLSLProgram().unuse();
-
-	/* Need to be done after GL display */
-	m_gui.draw();
 }
 
 void CityScreen::drawTile(const size_t kTile)
@@ -515,7 +486,7 @@ void CityScreen::drawFood()
 			i++
 		)
 	{
-		m_spriteBatch.draw
+		m_spriteBatchHUDStatic.draw
 		(
 			glm::vec4
 			(
@@ -543,7 +514,7 @@ void CityScreen::callDraw(const size_t kTile, const GLuint id)
 {
 	if (CitySC::UNUSED_ID != id)
 	{
-		m_spriteBatch.draw
+		m_spriteBatchHUDStatic.draw
 		(
 			glm::vec4
 			(
@@ -570,7 +541,7 @@ void CityScreen::drawBuild()
 			i++
 		)
 	{
-		m_spriteBatch.draw
+		m_spriteBatchHUDStatic.draw
 		(
 			glm::vec4
 			(
@@ -622,7 +593,7 @@ void CityScreen::drawCitizen()
 			break;
 		}
 
-		m_spriteBatch.draw
+		m_spriteBatchHUDStatic.draw
 		(
 			glm::vec4
 			(
@@ -644,7 +615,7 @@ void CityScreen::drawCityName()
 	/* City Name */
 	R2D::ResourceManager::getSpriteFont()->draw
 	(
-		m_spriteBatch,
+		m_spriteBatchHUDStatic,
 		m_players->GETSelectedCity()->GETname().c_str(),
 		glm::vec2(900.0f, 1020.0f), // offset pos
 		glm::vec2(3.2f), // size
@@ -658,7 +629,7 @@ void CityScreen::drawNbPop()
 	/* City Nb POP */
 	R2D::ResourceManager::getSpriteFont()->draw
 	(
-		m_spriteBatch,
+		m_spriteBatchHUDStatic,
 		std::to_string(m_players->GETSelectedCity()->GETnbpop()).c_str(),
 		glm::vec2(900.0f, 920.0f), // offset pos
 		glm::vec2(1.28f), // size
@@ -671,7 +642,6 @@ void CityScreen::drawTextures()
 {
 	if (m_needToUpdateDraw)
 	{
-		m_spriteBatch.begin();
 		m_spriteBatchAppartenance.begin();
 
 		size_t k{ 0 };
@@ -699,7 +669,6 @@ void CityScreen::drawTextures()
 
 		drawNbPop();
 
-		m_spriteBatch.end();
 		m_spriteBatchAppartenance.end();
 
 		m_needToUpdateDraw = false;
@@ -713,8 +682,8 @@ void CityScreen::update()
 	SDL_Event ev{};
 	while (SDL_PollEvent(&ev))
 	{
-		m_gui.onSDLEvent(ev, m_game->getInputManager());
 		m_game->onSDLEvent(ev);
+		updateInputManager(ev, m_game->getInputManager());
 		input(ev);
 	}
 }

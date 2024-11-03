@@ -40,10 +40,10 @@
 
 namespace DELTA_TIME
 {
-	const float MS_PER_SECOND(1000.0f);
+	constexpr float MS_PER_SECOND(1000.0f);
 	const float TARGET_FRAMETIME = MS_PER_SECOND / (float)R2D::SCREEN_REFRESH_RATE;
-	const unsigned int MAX_PHYSICS_STEPS(6);
-	const float MAX_DELTA_TIME(1.0f);
+	constexpr unsigned int MAX_PHYSICS_STEPS(6);
+	constexpr float MAX_DELTA_TIME(1.0f);
 }
 
 
@@ -54,6 +54,7 @@ GamePlayScreen::GamePlayScreen
 )
 : 
 R2D::IGameScreen(),
+R2D::CScreen(),
 m_screen(),
 m_var(),
 m_mainMap(),
@@ -87,7 +88,7 @@ void GamePlayScreen::build()
 
 void GamePlayScreen::destroy()
 {
-	m_screen.m_gui.destroy();
+	end();
 
 	m_screen.m_widgetLabels.clear();
 
@@ -96,6 +97,8 @@ void GamePlayScreen::destroy()
 
 bool GamePlayScreen::onEntry()
 {
+	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+
 	if (!m_isInitialize)
 	{
 		loadFile();
@@ -109,8 +112,6 @@ bool GamePlayScreen::onEntry()
 
 		initOpenGLScreen();
 
-		initHUDText();
-
 		loadUnitAndSpec();
 
 		loadCitiesNames();
@@ -118,12 +119,9 @@ bool GamePlayScreen::onEntry()
 		/* Need to be after loadUnitAndSpec */
 		m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
 
-		initUI();
-
 		try
 		{
-			m_mainMap.initMainMap(m_screen.camera);
-
+			m_mainMap.initMainMap(m_camera);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
 			if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
@@ -147,20 +145,54 @@ bool GamePlayScreen::onEntry()
 	return true;
 }
 
-void GamePlayScreen::onExit()
+void GamePlayScreen::doInitUI()
 {
+	/* MainMenuButton */
+	CEGUI::PushButton* mainMenuButton = static_cast<CEGUI::PushButton*>
+		(m_gui.createWidget(
+			"AlfiskoSkin/Button",
+			{ 0.0f, 0.0f, 0.1f, 0.05f },
+			{ 0,0,0,0 },
+			"TestButton"));
 
+	mainMenuButton->setText("Main Menu");
+	mainMenuButton->subscribeEvent
+	(
+		CEGUI::PushButton::EventClicked,
+		CEGUI::Event::Subscriber(&GamePlayScreen::onExitClicked, this)
+	);
 }
 
+void GamePlayScreen::doInitHUDText()
+{
+	std::string buffer = std::format("Civ_Rob_2.0 : version {}.{}.{}", "0", 25, "xxxx");
+	R2D::ResourceManager::getSpriteFont()->draw
+	(
+		m_spriteBatchHUDStatic,
+		buffer.c_str(),
+		glm::vec2(0.0f, 2.0f), // offset pos
+		glm::vec2(R2D::SpriteFont::getScaleFontToScreen(1.28)), // size
+		0.0f,
+		R2D::COLOR_WHITE
+	);
 
-/*--------------------------------------------------------------------START-CYCLE----------------------------------------------------------------------------*/
+	/*
+	static GLuint id = R2D::ResourceManager::getTexture("bin/image/toolbar.png")->GETid();
+	m_screen.openGLScreen.spriteBatchHUDStatic.draw
+	(
+		glm::vec4(0.0f, 0.0f, (int)ceil((m_mainMap.GETtoolBarSize() + 1) * m_mainMap.GETtileSize()), m_screen.screenHeight),
+		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		id,
+		0.0f,
+		R2D::COLOR_WHITE
+	)*/
+}
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : update																	   */
-/* ROLE : Call each cycle 															   */
-/* ROLE : Update input from SDL and game / Update GUI input							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
+void GamePlayScreen::onExit()
+{
+	/* Do nothing */
+}
+
 void GamePlayScreen::update()
 {
 	SDL_Event ev{};
@@ -171,7 +203,7 @@ void GamePlayScreen::update()
 		m_game->onSDLEvent(ev);
 		inputSDL(ev);
 		mouseClick(ev);
-		m_screen.m_gui.onSDLEvent(ev, m_game->getInputManager());
+		updateInputManager(ev, m_game->getInputManager());
 	}
 
 	/* Process Input */
@@ -179,30 +211,70 @@ void GamePlayScreen::update()
 	moveCameraByDeltaTime();
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : draw																		   */
-/* ROLE : Call each cycle 															   */
-/* ROLE : Update picture from game and GUI 											   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::draw()
 {
-	m_screen.camera.update();
-	m_screen.cameraHUD.update();
-
-	drawGame();
+	drawAll();
 }
 
-/*---------------------------------------------------------------------END-CYCLE---------------------------------------------------------------------------------*/
+void GamePlayScreen::doDrawAll()
+{
+	/* --- Draw --- */
+	m_mainMap.drawMap(m_camera, m_game->getWindow());
+
+	m_players.isAUnitSelected();
+	m_players.drawUnit(m_mainMap, m_camera);
+	m_players.drawCity(m_mainMap, m_camera, R2D::ResourceManager::getSpriteFont());
+
+	/* --- Render --- */
+	m_mainMap.renderMap();
+	m_players.renderUnit();
+	m_players.renderCity();
+
+	static const float FONT_SIZE_G = R2D::SpriteFont::getScaleFontToScreen(0.32f);
 
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : loadFile																	   */
-/* ROLE : 										   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
+	std::string buffer = std::format("FPS : {}",  m_game->getFPS());
+	R2D::ResourceManager::getSpriteFont()->draw
+	(
+		m_spriteBatchHUDDynamic,
+		buffer.c_str(),
+		glm::vec2(0.0f, 32.0f), // offset pos
+		glm::vec2(FONT_SIZE_G), // size
+		0.0f,
+		R2D::COLOR_WHITE
+	);
+
+	buffer = std::format("Nb Turn : {}", m_nextTurn.GETnbTurn());
+	R2D::ResourceManager::getSpriteFont()->draw
+	(
+		m_spriteBatchHUDDynamic,
+		buffer.c_str(),
+		glm::vec2(0.0f, 64.0f), // offset pos
+		glm::vec2(FONT_SIZE_G), // size
+		0.0f,
+		R2D::COLOR_BLUE
+	);
+
+#ifdef _DEBUG
+
+	buffer = std::format("Scale : {}", m_camera.GETscale());
+	R2D::ResourceManager::getSpriteFont()->draw
+	(
+		m_spriteBatchHUDDynamic,
+		buffer.c_str(),
+		glm::vec2(0.0f, 500.0f), // offset pos
+		glm::vec2(FONT_SIZE_G), // size
+		0.0f,
+		R2D::COLOR_RED
+	);
+
+#endif // _DEBUG
+
+	for (auto& l : m_screen.m_widgetLabels)
+		l.draw(m_spriteBatchHUDDynamic, *R2D::ResourceManager::getSpriteFont(), m_game->getWindow());
+
+}
+
 void GamePlayScreen::loadFile()
 {
 	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
@@ -243,41 +315,14 @@ void GamePlayScreen::loadFile()
 	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
 }
 
-
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initStructs																   */
-/* ROLE : Initialisation des données par défaut des structures						   */
-/* INPUT : struct Sysinfo& : structure globale du programme							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::initStructsNULL()
 {
-	/* ### Mettre ici les cas d'inialisation des structures ### */
-
-	/* *********************************************************
-	 *					   sysinfo.var						   *
-	 ********************************************************* */
-
 	m_var.tempPlayerName = STRINGS::EMPTY;
 	m_var.select = Select_Type::selectnothing;
 	m_var.statescreen = State_Type::error;
 	m_var.cinState = CinState_Type::cinNothing;
-
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeSize																   */
-/* ROLE : Calcul des différentes tailles de fenetre en fonction de tileSize			   */
-/* INPUT/OUTPUT : Screen& screen : longueur et hauteur écran						   */
-/* INPUT/OUTPUT : struct Sysinfo& : différentes tailles de fenetre					   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::computeSize()
 {
 	m_mainMap.SETtoolBarSize
@@ -291,109 +336,13 @@ void GamePlayScreen::computeSize()
 	);
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initOpenGLScreen															   */
-/* ROLE : Init m_screen.openGLScreen and m_mainMap									   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::initOpenGLScreen()
 {
-	m_screen.camera.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
-	m_screen.camera.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
-	m_screen.cameraHUD.init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
-	m_screen.cameraHUD.SETposition(glm::vec2(m_game->getWindow().GETscreenWidth() / 2, m_game->getWindow().GETscreenHeight() / 2));
-
-	m_screen.spriteBatchHUDDynamic.init();
-	m_screen.spriteBatchHUDStatic.init();
-
 	m_screen.audioEngine.init();
 
 	m_game->getInputManager().init(m_mainMap.GETtileSizePtr());
-
-	m_screen.m_gui.init(R2D::ResourceManager::getFile(R2D::e_Files::GUIPath)->getPath());
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initHUDText																   */
-/* ROLE : Init static Text in HUD													   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void GamePlayScreen::initHUDText()
-{
-	char buffer[256]{};
-
-	m_screen.spriteBatchHUDStatic.begin();
-
-	sprintf_s(buffer, "Civ_Rob_2.0 : version 0.23.10.0");
-	R2D::ResourceManager::getSpriteFont()->draw
-	(
-		m_screen.spriteBatchHUDStatic,
-		buffer,
-		glm::vec2(0.0f, 2.0f), // offset pos
-		glm::vec2(R2D::SpriteFont::getScaleFontToScreen(0.32f)), // size
-		0.0f,
-		R2D::COLOR_WHITE
-	);
-
-	/*
-	static GLuint id = R2D::ResourceManager::getTexture("bin/image/toolbar.png")->GETid();
-	m_screen.openGLScreen.spriteBatchHUDStatic.draw
-	(
-		glm::vec4(0.0f, 0.0f, (int)ceil((m_mainMap.GETtoolBarSize() + 1) * m_mainMap.GETtileSize()), m_screen.screenHeight),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-		id,
-		0.0f,
-		R2D::COLOR_WHITE
-	)*/
-
-	m_screen.spriteBatchHUDStatic.end();
-}
-
-void GamePlayScreen::initUI()
-{
-	m_screen.m_gui.loadScheme("AlfiskoSkin.scheme");
-	m_screen.m_gui.loadScheme("TaharezLook.scheme");
-
-	m_screen.m_gui.setFont("DejaVuSans-10");
-
-	/* MainMenuButton */
-	CEGUI::PushButton* mainMenuButton = static_cast<CEGUI::PushButton*>
-		(m_screen.m_gui.createWidget(
-			"AlfiskoSkin/Button",
-			{ 0.0f, 0.0f, 0.1f, 0.05f },
-			{ 0,0,0,0 },
-			"TestButton"));
-
-	mainMenuButton->setText("Main Menu");
-	mainMenuButton->subscribeEvent
-	(
-		CEGUI::PushButton::EventClicked,
-		CEGUI::Event::Subscriber(&GamePlayScreen::onExitClicked, this)
-	);
-	
-	m_screen.m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
-	m_screen.m_gui.showMouseCursor();
-
-	/* HIDE normal mouse cursor */
-	SDL_ShowCursor(0);
-}
-
-//----------------------------------------------------------Load----------------------------------------------------------------//
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : loadUnitAndSpec															   */
-/* ROLE : Chargement des informations concernant les unités à partir d'un fichier	   */
-/* INPUT : const std::string& : nom du fichier à ouvrir								   */
-/* OUTPUT : std::vector<Unit_Template>& : Vecteur des Unit							   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void GamePlayScreen::loadUnitAndSpec()
 {
 	tinyxml2::XMLDocument texteFile{};
@@ -461,9 +410,6 @@ void GamePlayScreen::loadCitiesNames()
 	}
 }
 
-//----------------------------------------------------------GameLoop----------------------------------------------------------------//
-
-
 void GamePlayScreen::moveCameraByDeltaTime()
 {
 	static Uint32 prevTicks{ SDL_GetTicks() };
@@ -484,125 +430,6 @@ void GamePlayScreen::moveCameraByDeltaTime()
 		i++;
 	}
 }
-
-
-void GamePlayScreen::drawGame()
-{
-	/* line for CEGUI because CEGUI doesn't do it, do not remove  */
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	/* Back */
-	glClearDepth(1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	R2D::ResourceManager::getGLSLProgram().use();
-	/* use GL_TEXTURE0 for 1 pipe; use GL_TEXTURE1/2/3 for multiple */
-	glActiveTexture(GL_TEXTURE0);
-
-	const GLint textureLocation
-		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
-	glUniform1i(textureLocation, 0);
-
-	/* --- camera --- */
-	/* GL - get parameter P */
-	const GLint pLocation
-		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
-
-	/* Copy camera matrix */
-	glm::mat4 cameraMatrix = m_screen.camera.GETcameraMatrix();
-
-	/*  */
-	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
-
-	/* --- Draw --- */
-	m_mainMap.drawMap(m_screen.camera, m_game->getWindow());
-
-	m_players.isAUnitSelected();
-	m_players.drawUnit(m_mainMap, m_screen.camera);
-	m_players.drawCity(m_mainMap, m_screen.camera, R2D::ResourceManager::getSpriteFont());
-
-	/* --- Render --- */
-	m_mainMap.renderMap();
-	m_players.renderUnit();
-	m_players.renderCity();
-
-
-	drawHUD();
-
-	/* --- GL unbind --- */
-	glBindTexture(GL_TEXTURE_2D, 0);
-	R2D::ResourceManager::getGLSLProgram().unuse();
-
-	/* --- Draw UI --- */
-	m_screen.m_gui.draw();
-}
-
-void GamePlayScreen::drawHUD()
-{
-	/* camera HUD */
-	const GLint pLocation
-		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
-	glm::mat4 cameraMatrix = m_screen.cameraHUD.GETcameraMatrix();
-
-	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
-
-	char buffer[256];
-
-	static const float FONT_SIZE_G = R2D::SpriteFont::getScaleFontToScreen(0.32f);
-
-	m_screen.spriteBatchHUDDynamic.begin();
-
-	sprintf_s(buffer, "FPS %f", m_game->getFPS());
-	R2D::ResourceManager::getSpriteFont()->draw
-	(
-		m_screen.spriteBatchHUDDynamic,
-		buffer,
-		glm::vec2(0.0f, 32.0f), // offset pos
-		glm::vec2(FONT_SIZE_G), // size
-		0.0f,
-		R2D::COLOR_WHITE
-	);
-
-
-
-	sprintf_s(buffer, "Nb Turn %d", m_nextTurn.GETnbTurn());
-	R2D::ResourceManager::getSpriteFont()->draw
-	(
-		m_screen.spriteBatchHUDDynamic,
-		buffer,
-		glm::vec2(0.0f, 64.0f), // offset pos
-		glm::vec2(FONT_SIZE_G), // size
-		0.0f,
-		R2D::COLOR_BLUE
-	);
-
-#ifdef _DEBUG
-
-	sprintf_s(buffer, "Scale %lf", m_screen.camera.GETscale());
-	R2D::ResourceManager::getSpriteFont()->draw
-	(
-		m_screen.spriteBatchHUDDynamic,
-		buffer,
-		glm::vec2(0.0f, 500.0f), // offset pos
-		glm::vec2(FONT_SIZE_G), // size
-		0.0f,
-		R2D::COLOR_RED
-	);
-
-#endif // _DEBUG
-
-	
-
-	for (auto& l : m_screen.m_widgetLabels) 
-		l.draw(m_screen.spriteBatchHUDDynamic, *R2D::ResourceManager::getSpriteFont(), m_game->getWindow());
-
-
-	m_screen.spriteBatchHUDDynamic.end();
-
-	m_screen.spriteBatchHUDDynamic.renderBatch();
-	m_screen.spriteBatchHUDStatic.renderBatch();
-}
-
 
 bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 {
