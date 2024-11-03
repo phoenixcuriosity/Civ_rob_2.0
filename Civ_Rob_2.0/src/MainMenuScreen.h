@@ -37,23 +37,23 @@ public:
 	MainMenuScreen();
 	~MainMenuScreen();
 
-	virtual int getNextScreenIndex()const override;
-	virtual int getPreviousScreenIndex()const override;
+	int getNextScreenIndex()const override;
+	int getPreviousScreenIndex()const override;
 
-	virtual void build() override;
-	virtual void destroy() override;
+	void build() override;
+	void destroy() override;
 
-	virtual bool onEntry() override;
-	virtual void onExit() override;
+	bool onEntry() override;
+	void onExit() override;
 
-	virtual void draw() override;
-	virtual void update() override;
+	void draw() override;
+	void update() override;
 
 private:
 
-	virtual void doInitUI() override;
-	virtual void doInitHUDText()override;
-	virtual void doDrawAll()override;
+	void doInitUI() override;
+	void doInitHUDText()override;
+	void doDrawAll()override;
 
 private:
 

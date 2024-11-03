@@ -46,17 +46,17 @@ public:
 
 public: /* Override from R2D::IGameScreen */
 
-	virtual int getNextScreenIndex()const override;
-	virtual int getPreviousScreenIndex()const override;
+	int getNextScreenIndex()const override;
+	int getPreviousScreenIndex()const override;
 
-	virtual void build() override;
-	virtual void destroy() override;
+	void build() override;
+	void destroy() override;
 
-	virtual bool onEntry() override;
-	virtual void onExit() override;
+	bool onEntry() override;
+	void onExit() override;
 
-	virtual void update() override;
-	virtual void draw() override;
+	void update() override;
+	void draw() override;
 
 private: /* Override from R2D::CScreen */
 

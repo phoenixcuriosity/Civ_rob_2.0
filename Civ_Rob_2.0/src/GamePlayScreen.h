@@ -47,15 +47,15 @@ public:
 
 public:
 
-	virtual int getNextScreenIndex()const override;
-	virtual int getPreviousScreenIndex()const override;
+	int getNextScreenIndex()const override;
+	int getPreviousScreenIndex()const override;
 
-	virtual void build() override;
-	virtual void destroy() override;
+	void build() override;
+	void destroy() override;
 
-	virtual bool onEntry() override;
+	bool onEntry() override;
 
-	virtual void onExit() override;
+	void onExit() override;
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : update																	   */
@@ -63,7 +63,7 @@ public:
 	/* ROLE : Update input from SDL and game / Update GUI input							   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void update() override;
+	void update() override;
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : draw																		   */
@@ -71,7 +71,7 @@ public:
 	/* ROLE : Update picture from game and GUI 											   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	virtual void draw() override;
+	void draw() override;
 
 private:
 

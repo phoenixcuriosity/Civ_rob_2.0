@@ -41,13 +41,13 @@ public:
 	NewGameScreen();
 	~NewGameScreen();
 
-	virtual int getNextScreenIndex()const override;
-	virtual int getPreviousScreenIndex()const override;
+	int getNextScreenIndex()const override;
+	int getPreviousScreenIndex()const override;
 
-	virtual void build() override;
-	virtual void destroy() override;
+	void build() override;
+	void destroy() override;
 
-	virtual bool onEntry() override;
+	bool onEntry() override;
 
 private:
 
@@ -55,10 +55,10 @@ private:
 
 public:
 
-	virtual void onExit() override;
+	void onExit() override;
 
-	virtual void update() override;
-	virtual void draw() override;
+	void update() override;
+	void draw() override;
 
 
 private:
