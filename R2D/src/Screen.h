@@ -57,6 +57,10 @@ private:
 	virtual void doInitHUDText() = 0;
 	virtual void doDrawAll() = 0;
 
+public:
+
+	Camera2D& getCamera() { return m_camera; };
+
 protected:
 	Camera2D m_camera;
 	Camera2D m_cameraHUD;
