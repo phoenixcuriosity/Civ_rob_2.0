@@ -166,6 +166,7 @@
     <ClCompile Include="src\FoodManager.cpp" />
     <ClCompile Include="src\GameInput.cpp" />
     <ClCompile Include="src\GamePlayScreen.cpp" />
+    <ClCompile Include="src\InitLoadFromFile.cpp" />
     <ClCompile Include="src\MainMap.cpp" />
     <ClCompile Include="src\MainMapGen.cpp" />
     <ClCompile Include="src\MainMenuScreen.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="src\FoodManager.h" />
     <ClInclude Include="src\GameInput.h" />
     <ClInclude Include="src\GamePlayScreen.h" />
+    <ClInclude Include="src\InitLoadFromFile.h" />
     <ClInclude Include="src\LIB.h" />
     <ClInclude Include="src\MainMap.h" />
     <ClInclude Include="src\MainMapGen.h" />
@@ -208,6 +210,7 @@
     <ClInclude Include="src\T_CityScreen.h" />
     <ClInclude Include="src\T_GamePlayScreen.h" />
     <ClInclude Include="src\T_MainMap.h" />
+    <ClInclude Include="src\T_NewGameScreen.h" />
     <ClInclude Include="src\T_Unit.h" />
     <ClInclude Include="src\Unit.h" />
     <ClInclude Include="src\Utility.h" />
