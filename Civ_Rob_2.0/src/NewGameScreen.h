@@ -29,11 +29,7 @@
 #include <R2D/src/GUI.h>
 #include <R2D/src/Screen.h>
 
-struct UserInputNewGame
-{
-	std::vector<std::string> vectPlayerName;
-
-};
+#include "T_NewGameScreen.h"
 
 class NewGameScreen : public R2D::IGameScreen, public R2D::CScreen
 {

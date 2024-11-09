@@ -20,60 +20,14 @@
 
 */
 
-#ifndef SCREEN_H
-#define SCREEN_H
+#ifndef T_NewGameScreen_H
+#define T_NewGameScreen_H
 
-#include "AudioEngine.h"
-#include "Camera2D.h"
-#include "GUI.h"
-#include "SpriteBatch.h"
+#include "LIB.h"
 
-namespace R2D
+struct UserInputNewGame
 {
-
-class CScreen
-{
-public:
-	CScreen();
-	~CScreen();
-
-public:
-
-	bool init(const int width, const int height);
-	bool end();
-
-public:
-
-	void drawAll();
-	void updateInputManager(SDL_Event& ev, InputManager& resourceManager);
-
-private:
-
-	void initAll();
-	void initUI();
-	void initHUDText();
-
-	virtual void doInitUI() = 0;
-	virtual void doInitHUDText() = 0;
-	virtual void doDrawAll() = 0;
-
-public:
-
-	Camera2D& getCamera() { return m_camera; };
-
-protected:
-	Camera2D m_camera;
-	Camera2D m_cameraHUD;
-
-	SpriteBatch m_spriteBatchHUDDynamic;
-	SpriteBatch m_spriteBatchHUDStatic;
-
-	GUI m_gui;
-
-private:
-	bool m_isInitialized;
+	VectPlayerName vectPlayerName;
 };
 
-}
-
-#endif /* SCREEN_H */
+#endif /* T_NewGameScreen_H */

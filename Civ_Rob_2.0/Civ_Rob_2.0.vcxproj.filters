@@ -64,6 +64,9 @@
     <ClCompile Include="src\Players.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
+    <ClCompile Include="src\InitLoadFromFile.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -152,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="src\Players.h">
       <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InitLoadFromFile.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_NewGameScreen.h">
+      <Filter>T_struct</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

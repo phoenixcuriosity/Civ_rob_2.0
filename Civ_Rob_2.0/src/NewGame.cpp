@@ -38,12 +38,12 @@
 namespace NGC
 {
 	/* Minimum space beetween two or more settlers */
-	const unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
+	constexpr unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
 
-	const unsigned int MAX_RANDOM_POS_ITERATION = 10000;
+	constexpr unsigned int MAX_RANDOM_POS_ITERATION = 10000;
 
 	/* The first settler to spawn in the map for each Player does not cost maintenance */
-	const double MAINTENANCE_COST_1TH_SETTLER = 0.0;
+	constexpr double MAINTENANCE_COST_1TH_SETTLER = 0.0;
 }
 
 
@@ -55,19 +55,17 @@ namespace NGC
 /* INPUT : void																		   */
 /* RETURNED VALUE : void														       */
 /* ------------------------------------------------------------------------------------*/
-void GamePlayScreen::newGame()
+void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 {
 	R2D::ErrorLog::logEvent("[INFO]___: Newgame Start");
 	
-	m_SaveReload->createSave();
+	gamePlayScreen.getSaveReload()->createSave();
 
-	pushNewPlayer();
+	pushNewPlayer(gamePlayScreen.getUserInputNewGame()->vectPlayerName, gamePlayScreen.GETPlayers());
 
-	makePlayersButtons();
+	newGameSettlerSpawn(gamePlayScreen.GETPlayers(), gamePlayScreen.GETmainMap());
 
-	newGameSettlerSpawn(m_players, m_mainMap);
-
-	SaveReload::save(*this);
+	SaveReload::save(gamePlayScreen);
 
 	/* ### Don't put code below here ### */
 
@@ -81,64 +79,21 @@ void GamePlayScreen::newGame()
 /* attribut out : m_players															   */
 /* RETURNED VALUE : void														       */
 /* ------------------------------------------------------------------------------------*/
-void GamePlayScreen::pushNewPlayer()
+void NewGameManager::pushNewPlayer
+(
+	const VectCityName& vectCityName,
+	Players& players
+)
 {
-	unsigned index{ 0 };
-	for (auto& p : m_userInputNewGame->vectPlayerName)
+	int index{ 0 };
+	for (const auto& p : vectCityName)
 	{
-		m_players.addPlayer(p, (int)index);
+		players.addPlayer(p, index);
 		index++;
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : makePlayersButtons														   */
-/* ROLE : Create for p, number of players, a radio button 							   */
-/* ROLE : Button will be arrange in vertical axis and by p order					   */
-/* INPUT : void																		   */
-/* RETURNED VALUE : void														       */
-/* ------------------------------------------------------------------------------------*/
-void GamePlayScreen::makePlayersButtons()
-{
-	float X_POS = 0.01f;
-	float Y_POS = 0.20f;
-	const float DIMS_PIXELS = 20.0f;
-	const float PADDING = 0.035f;
-	const float TEXT_SCALE = 0.6f;
-	const int GROUP_ID = 1;
 
-	/* Clear buffer */
-	m_screen.m_vectPlayerRadioButton.clear();
-	m_screen.m_widgetLabels.clear();
-
-	/* Resize buffer */
-	m_screen.m_vectPlayerRadioButton.resize(m_userInputNewGame->vectPlayerName.size());
-	m_screen.m_widgetLabels.resize(m_userInputNewGame->vectPlayerName.size());
-
-	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
-	{
-		m_screen.m_vectPlayerRadioButton[i]
-			= static_cast<CEGUI::RadioButton*>
-			(m_gui.createWidget(
-				"TaharezLook/RadioButton",
-				glm::vec4(X_POS, Y_POS += PADDING, 0.0f, 0.0f),
-				glm::vec4(0.0f, 0.0f, DIMS_PIXELS, DIMS_PIXELS),
-				m_userInputNewGame->vectPlayerName[i]));
-
-		m_screen.m_vectPlayerRadioButton[i]->setSelected(false);
-
-		m_screen.m_vectPlayerRadioButton[i]->subscribeEvent
-		(CEGUI::RadioButton::EventMouseClick,
-			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, this));
-		m_screen.m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
-
-		m_screen.m_widgetLabels[i] = R2D::WidgetLabel(
-			m_screen.m_vectPlayerRadioButton[i],
-			m_userInputNewGame->vectPlayerName[i],
-			TEXT_SCALE);
-
-	}
-}
 
 /* ----------------------------------------------------------------------------------- */
 /* NAME : newGameSettlerSpawn														   */
@@ -147,7 +102,7 @@ void GamePlayScreen::makePlayersButtons()
 /* IN : const MainMap& mainMap												   */
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
-void GamePlayScreen::newGameSettlerSpawn
+void NewGameManager::newGameSettlerSpawn
 (
 	Players& players,
 	const MainMap& mainMap
@@ -191,7 +146,7 @@ void GamePlayScreen::newGameSettlerSpawn
 /* IN/OUT : std::vector<randomPos>& : New vector positions							   */
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
-void GamePlayScreen::makeRandomPosTab
+void NewGameManager::makeRandomPosTab
 (
 	const MainMap& mainMap,
 	std::vector<randomPos>& tabRandom
@@ -234,7 +189,7 @@ void GamePlayScreen::makeRandomPosTab
 /* IN : const unsigned int tileSize	: Globale tileSize								   */
 /* RETURNED VALUE    : void															   */
 /* ------------------------------------------------------------------------------------*/
-void GamePlayScreen::makeRandomPos
+void NewGameManager::makeRandomPos
 (
 	randomPos& RandomPOS,
 	const MatriceMap& matriceMap,
@@ -263,7 +218,7 @@ void GamePlayScreen::makeRandomPos
 /* RETURNED VALUE : TRUE -> New positions valid									       */
 /* RETURNED VALUE : FALSE -> New positions not valid						           */
 /* ------------------------------------------------------------------------------------*/
-bool GamePlayScreen::conditionspace
+bool NewGameManager::conditionspace
 (
 	const randomPos& RandomPOS,
 	const std::vector<randomPos>& tabRandom,
@@ -308,7 +263,7 @@ bool GamePlayScreen::conditionspace
 /* RETURNED VALUE : TRUE -> New positions valid									       */
 /* RETURNED VALUE : FALSE -> New positions not valid						           */
 /* ------------------------------------------------------------------------------------*/
-bool GamePlayScreen::conditionground
+bool NewGameManager::conditionground
 (
 	const MatriceMap& matriceMap,
 	const randomPos& RandomPOS
