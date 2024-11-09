@@ -32,7 +32,7 @@ namespace RESOURCES
 {
 	namespace WORK
 	{
-		const double ZERO = 0.0;
+		constexpr double ZERO = 0.0;
 	}
 }
 

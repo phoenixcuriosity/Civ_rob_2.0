@@ -41,8 +41,8 @@ namespace FILE_APP
 {
 	namespace PATH
 	{
-		const std::string CONFIG = "bin/filePath.xml";
-		const std::string LOG = "bin/log/log.txt";
+		constexpr char CONFIG[] = "bin/filePath.xml";
+		constexpr char LOG[] = "bin/log/log.txt";
 	}
 }
 
@@ -164,7 +164,7 @@ void App::initMain()
 	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
 
 	tinyxml2::XMLDocument config{};
-	config.LoadFile(FILE_APP::PATH::CONFIG.c_str());
+	config.LoadFile(FILE_APP::PATH::CONFIG);
 
 	if (config.ErrorID() == 0)
 	{
@@ -184,13 +184,13 @@ void App::initMain()
 			}
 			else
 			{
-				throw("Missing path for a file " + FILE_APP::PATH::CONFIG);
+				throw("Missing path for a file " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
 			}
 		}
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + FILE_APP::PATH::CONFIG);
+		throw("Impossible d'ouvrir le fichier " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
 	}
 
 	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");

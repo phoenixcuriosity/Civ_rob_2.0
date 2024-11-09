@@ -41,7 +41,7 @@
 
 namespace SAVE
 {
-	const size_t OFFSET_INDEX = 1;
+	constexpr size_t OFFSET_INDEX = 1;
 }
 
 void SaveReload::init(const std::string& filePath)

@@ -27,11 +27,11 @@
 
 namespace PlayerH
 {
-	const unsigned int NB_MAX_PLAYER = 9;
+	constexpr unsigned int NB_MAX_PLAYER = 9;
 
-	const double INITIAL_GOLD = 100.0;
+	constexpr double INITIAL_GOLD = 100.0;
 	
-	const bool NEED_TO_UPDATE_DRAW_UNIT = true;
+	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
 enum class MajorAge

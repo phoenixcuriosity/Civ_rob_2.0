@@ -26,25 +26,25 @@
 namespace CITY_INFLUENCE
 {
 	/* taille de la carte transpos�e dans la citiemap */
-	const unsigned int INIT_SIZE_VIEW = 9;
+	constexpr unsigned int INIT_SIZE_VIEW = 9;
 
-	const unsigned int INIT_AREA_VIEW = INIT_SIZE_VIEW * INIT_SIZE_VIEW;
+	constexpr unsigned int INIT_AREA_VIEW = INIT_SIZE_VIEW * INIT_SIZE_VIEW;
 
 	/* Minimal influence level in City */
-	const unsigned int MIN_INFLUENCE_LEVEL = 1;
+	constexpr unsigned int MIN_INFLUENCE_LEVEL = 1;
 }
 
 
 namespace EMOTION_RANGE
 {
 	/* Define the maximum range of emotion */
-	const double MAX = 100.0;
+	constexpr double MAX = 100.0;
 
 	/* Define the minimum range of emotion */
-	const double MIN = 0.0;
+	constexpr double MIN = 0.0;
 
 	/* Define the mean emotion */
-	const double MEAN = ((MAX + MIN) / 2.0);
+	constexpr double MEAN = ((MAX + MIN) / 2.0);
 
 	/* Define the mean value of emotion range */
 	const double SCALE_MEAN = ((abs(MAX) + abs(MIN)) / 2.0);
@@ -56,16 +56,16 @@ namespace MULTIPLIER
 	namespace CONVERSION
 	{
 		/* Define the multiplier coefficient to convert work to food */
-		const double WORK_TO_FOOD = 10.0;
+		constexpr double WORK_TO_FOOD = 10.0;
 
 		/* Define the multiplier coefficient to convert food to work */
-		const double FOOD_TO_WORK = (1.0 / WORK_TO_FOOD);
+		constexpr double FOOD_TO_WORK = (1.0 / WORK_TO_FOOD);
 
 		/* Define the multiplier coefficient to convert work to gold */
-		const double WORK_TO_GOLD = (10.0 * WORK_TO_FOOD);
+		constexpr double WORK_TO_GOLD = (10.0 * WORK_TO_FOOD);
 
 		/* Define the multiplier coefficient to convert food to gold */
-		const double FOOD_TO_GOLD = (WORK_TO_GOLD / FOOD_TO_WORK);
+		constexpr double FOOD_TO_GOLD = (WORK_TO_GOLD / FOOD_TO_WORK);
 	}
 }
 

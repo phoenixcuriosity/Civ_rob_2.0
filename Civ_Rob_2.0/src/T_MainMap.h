@@ -25,7 +25,7 @@
 
 namespace MAPH
 {
-	const unsigned int MAP_BORDER_MAX = 4;
+	constexpr unsigned int MAP_BORDER_MAX = 4;
 }
 
  // Define Ground type use on the map
