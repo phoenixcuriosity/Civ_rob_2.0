@@ -33,45 +33,45 @@
 
 namespace UNITC
 {
-	const unsigned int NO_MOVEMENT = 0;
+	constexpr unsigned int NO_MOVEMENT = 0;
 
-	const unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
+	constexpr unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
 
-	const unsigned int ZERO_LIFE = 0;
+	constexpr unsigned int ZERO_LIFE = 0;
 
-	const unsigned int ZERO_BLIT = 0;
+	constexpr unsigned int ZERO_BLIT = 0;
 
-	const unsigned int ZERO_NUMBER_OF_ATTACK = 0;
+	constexpr unsigned int ZERO_NUMBER_OF_ATTACK = 0;
 
-	const bool DEAD_UNIT = false;
+	constexpr bool DEAD_UNIT = false;
 
 	/*
 		use as 1/x
 		default : x = 20
 	*/
-	const unsigned int COEF_DIV_HEAL_NO_APPARTENANCE = 20;
+	constexpr unsigned int COEF_DIV_HEAL_NO_APPARTENANCE = 20;
 
 	/*
 		use as 1/x
 		default : x = 5
 	*/
-	const unsigned int COEF_DIV_HEAL_APPARTENANCE = 5;
+	constexpr unsigned int COEF_DIV_HEAL_APPARTENANCE = 5;
 
 	/*
 		use as 1/x
 		default : x = 4
 	*/
-	const unsigned int COEF_DIV_LEVELUP = 4;
+	constexpr unsigned int COEF_DIV_LEVELUP = 4;
 
 	/*
 		use as 1/x
 		Use for screen_refresh_rate/BLIT_RATE
 		default = 2
 	*/
-	const unsigned int BLIT_RATE = 2;
+	constexpr unsigned int BLIT_RATE = 2;
 
-	const int FOOD_ADD_BY_IRRAGATION = 2;
-	const int GOLD_ADD_BY_IRRAGATION = 1;
+	constexpr int FOOD_ADD_BY_IRRAGATION = 2;
+	constexpr int GOLD_ADD_BY_IRRAGATION = 1;
 }
 
 /* ----------------------------------------------------------------------------------- */

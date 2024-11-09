@@ -32,51 +32,51 @@
 namespace MAP_GEN
 {
 	/* MAP -> Max size - Min size of the map for sea borders */
-	const unsigned int BORDER_MIN = 1;
+	constexpr unsigned int BORDER_MIN = 1;
 
 	/* MAP -> value deep_water */
-	const unsigned int BORDER_ZERO = 0;
+	constexpr unsigned int BORDER_ZERO = 0;
 
 	/* MAP_GEN_RANDOM */
 	namespace RANDOM
 	{
 		namespace RANGE
 		{
-			const unsigned int GROUND = 100;
-			const unsigned int SPEC_GRASS = 100;
-			const unsigned int SPEC_WATER = 20;
-			const unsigned int SPEC_WATER1 = 10;
-			const unsigned int SPEC_WATER2 = 10;
-			const unsigned int SPEC_WATER_BORDER = 50;
+			constexpr unsigned int GROUND = 100;
+			constexpr unsigned int SPEC_GRASS = 100;
+			constexpr unsigned int SPEC_WATER = 20;
+			constexpr unsigned int SPEC_WATER1 = 10;
+			constexpr unsigned int SPEC_WATER2 = 10;
+			constexpr unsigned int SPEC_WATER_BORDER = 50;
 		}
 
 		namespace OFFSET
 		{
-			const unsigned int GROUND = 1;
-			const unsigned int SPEC_GRASS = 1;
-			const unsigned int SPEC_WATER = 1;
-			const unsigned int SPEC_WATER1 = 1;
-			const unsigned int SPEC_WATER2 = 1;
-			const unsigned int SPEC_WATER_BORDER = 1;
+			constexpr unsigned int GROUND = 1;
+			constexpr unsigned int SPEC_GRASS = 1;
+			constexpr unsigned int SPEC_WATER = 1;
+			constexpr unsigned int SPEC_WATER1 = 1;
+			constexpr unsigned int SPEC_WATER2 = 1;
+			constexpr unsigned int SPEC_WATER_BORDER = 1;
 		}
 	}
 
-	const unsigned int MAX_ITERATION_SCALE = 10000;
+	constexpr unsigned int MAX_ITERATION_SCALE = 10000;
 }
 
 namespace MAPCamera
 {
 	/* Avoid seeing nothing before next tile */
-	const unsigned int MIN_BORDER = 1;
+	constexpr unsigned int MIN_BORDER = 1;
 
 	/* Define the index to look in the matrix for its size */
-	const unsigned int INDEX_SIZE = 0;
+	constexpr unsigned int INDEX_SIZE = 0;
 }
 
 namespace MAPGUI
 {
 	/* Define an ID which is unused */
-	const GLuint UNUSED_ID = 0;
+	constexpr GLuint UNUSED_ID = 0;
 }
 
  /* *********************************************************
@@ -87,7 +87,7 @@ unsigned int* MainMap::s_tileSize;
 
 static size_t START_APPARTENANCE_INDEX = 0;
 static size_t START_GROUND_SPEC_INDEX = 0;
-const uint8_t OFFSET_GROUND_TYPE = 1;
+constexpr uint8_t OFFSET_GROUND_TYPE = 1;
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */

@@ -39,11 +39,11 @@
 
 namespace
 {
-	const unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
+	constexpr unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
 
-	const unsigned int VECT_SIZE_OFFSET_ID = 1;
+	constexpr unsigned int VECT_SIZE_OFFSET_ID = 1;
 
-	const unsigned int CITY_TYPE = 1;
+	constexpr unsigned int CITY_TYPE = 1;
 }
 
 Players::Players()
