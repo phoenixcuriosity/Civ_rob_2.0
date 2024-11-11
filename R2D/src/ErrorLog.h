@@ -26,35 +26,34 @@
 #include <iostream>
 #include <fstream>
 
+#include "LogLevel.h"
+
 namespace R2D
 {
-	namespace BUFFER_LOGEVENT
-	{
-		const unsigned int MAX_CHAR = 80;
-	}
 
-	class ErrorLog
-	{
-	public:
+class ErrorLog
+{
+public:
 
-		static void initializeLog();
+	static void initializeLog();
 
-		static void closeLog();
+	static void closeLog();
 
-		static void logEvent
-		(
-			const std::string& evt
-		);
+	static void logEvent
+	(
+		const std::string& evt
+	);
 
-	private:
+private:
 
-		static std::ofstream m_log;
-		static char m_buffer[BUFFER_LOGEVENT::MAX_CHAR];
-		static std::string m_lastEvent;
-		static bool m_isInitialize;
-	};
+	static std::ofstream m_log;
+	static std::string m_lastEvent;
+	static bool m_isInitialize;
+};
 
 }
+
+
 
 
 #endif // !ErrorLog_H

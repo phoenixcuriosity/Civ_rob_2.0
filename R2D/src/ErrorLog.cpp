@@ -29,7 +29,6 @@ using namespace R2D;
 std::ofstream ErrorLog::m_log;
 std::string ErrorLog::m_lastEvent;
 bool ErrorLog::m_isInitialize;
-char ErrorLog::m_buffer[BUFFER_LOGEVENT::MAX_CHAR];
 
 void ErrorLog::initializeLog()
 {
@@ -72,13 +71,7 @@ void ErrorLog::logEvent
 {
 	if (true == m_isInitialize)
 	{
-		time_t now{ time(0) };
-		struct tm  tstruct {};
-		localtime_s(&tstruct, &now);
-		strftime(m_buffer, sizeof(m_buffer), "%F %X", &tstruct);
-
-		m_lastEvent = m_buffer + (std::string)"      " + msg;
-
+		m_lastEvent = msg;
 #ifdef _DEBUG
 		std::cout << std::endl << m_lastEvent;
 #endif // DEBUG_MODE
