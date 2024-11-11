@@ -32,6 +32,7 @@
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/ExitFromError.h> 
 #include <R2D/src/SpriteFont.h> 
 #include <R2D/src/tinyXml2.h> 
@@ -73,6 +74,7 @@ void App::onInit()
 	/* Set location of logging file */
 	R2D::ResourceManager::initializeFilePath(R2D::e_Files::log, FILE_APP::PATH::LOG);
 	R2D::ErrorLog::initializeLog();
+	R2D::Logger::instance().init(R2D::LogLevelType::info, R2D::FileLineFunctionType::dont_show);
 
 	initMain();
 
