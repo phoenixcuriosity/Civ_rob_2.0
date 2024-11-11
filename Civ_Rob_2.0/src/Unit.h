@@ -32,23 +32,17 @@ class Unit
 {
 public:
 
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
 	 /* NAME : searchUnitByName															   */
 	 /* ROLE : Search the unit in vector template by name								   */
 	 /* INPUT : std::string name : name to compared										   */
 	 /* INPUT : std::vector<Unit_Template>& : vector of template unit 					   */
-	 /* RETURNED VALUE : unsigned int : index of the unit										   */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
+	 /* RETURNED VALUE : unsigned int : index of the unit								   */
 	static unsigned int searchUnitByName
 	(
 		const std::string& name,
 		const VectUnitTemplate& tabUnit_Template
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : searchUnitTile															   */
 	/* ROLE : Cherche l'unit� �tant dans la case s�l�ctionn�							   */
 	/* INPUT/OUTPUT : SubcatPlayer& s_player : structure concernant un joueur			   */
@@ -56,8 +50,6 @@ public:
 	/* INPUT/OUTPUT : std::vector<Player*>& tabplayer : Vecteur de joueurs				   */
 	/* OUTPUT : Select_Type* select : type de s�lection									   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static bool searchUnitTile
 	(
 		Players& players,
@@ -65,8 +57,6 @@ public:
 		Select_Type* select
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : tryToMove*																	   */
 	/* ROLE : Recherche � faire bouger l'unit� selon le contexte						   */
 	/* ROLE : Attention : contient un rappel r�cursif									   */
@@ -77,8 +67,6 @@ public:
 	/* INPUT : int x : pos X															   */
 	/* INPUT : int y : pos Y															   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static void tryToMove
 	(
 		const MatriceMap& maps,
@@ -89,8 +77,6 @@ public:
 
 private:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : searchToMove																   */
 	/* ROLE : Recherche � faire bouger l'unit� selon le contexte						   */
 	/* ROLE : Action conditionnelle (case libre, ennemi, amis)							   */
@@ -101,8 +87,6 @@ private:
 	/* INPUT : int y : pos Y															   */
 	/* RETURNED VALUE : Move_Type : / 0 : ne bouge pas / 1 : case libre : peut bouger	   */
 	/* RETURNED VALUE : Move_Type : / 2 : ennemi : ne bouge pas							   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static Move_Type searchToMove
 	(
 		const MatriceMap& maps,
@@ -112,8 +96,6 @@ private:
 		int* const unitToAttack
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : checkUnitNextTile															   */
 	/* ROLE : Check des �qualit�s des positions des Units avec + x et +y				   */
 	/* INPUT : const Unit* from : Unit avec un mouvement possible + x + y				   */
@@ -121,8 +103,6 @@ private:
 	/* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
 	/* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
 	/* RETURNED VALUE : bool : false->position diff�rente / true->m�me positions		   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static bool checkUnitNextTile
 	(
 		const Unit& from,
@@ -131,8 +111,6 @@ private:
 		const int y
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : checkNextTile																   */
 	/* ROLE : Check des �qualit�s des positions des Units avec + x et +y				   */
 	/* INPUT : const Unit* from : Unit aux positions + x + y							   */
@@ -140,8 +118,6 @@ private:
 	/* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
 	/* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
 	/* RETURNED VALUE : bool : false->position diff�rente / true->m�me positions		   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static bool checkNextTile
 	(
 		const Unit& from,
@@ -153,17 +129,8 @@ private:
 
 public:
 
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* NAME : Unit																		   */
-	 /* ROLE : Constructeur par d�faut													   */
-	 /* INPUT : void																		   */
-	 /* ----------------------------------------------------------------------------------- */
-	 /* ----------------------------------------------------------------------------------- */
 	Unit();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : Unit																		   */
 	/* ROLE : Constructeur par complet													   */
 	/* INPUT : const std::string &name : nom											   */
@@ -174,8 +141,6 @@ public:
 	/* INPUT : unsigned int def	: def max												   */
 	/* INPUT : unsigned int move : move max												   */
 	/* INPUT : unsigned int level : level 1												   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	Unit
 	(
 		const std::string& name,
@@ -192,44 +157,28 @@ public:
 		Player* ptrToPlayer
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : ~Unit																		   */
-	/* ROLE : Destructeur																   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual ~Unit();
 
 private:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : attack																	   */
 	/* ROLE : Attaque la cible avec les dommages appliqu�s de l'unit�					   */
 	/* INPUT/OUTPUT : Units* : pointeur vers l'unit� qui doit se d�fendre				   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void attack
 	(
 		Unit&
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : defend																	   */
 	/* ROLE : D�fense de l'unit� face � une attaque										   */
 	/* INPUT : unsigned int : dommage appliqu� par l'attaque							   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void defend
 	(
 		const int dmg
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : move																		   */
 	/* ROLE : Application du mouvement � l'unit�										   */
 	/* ROLE : Si l'unit� n'a plus de mouvement disponible alors arret					   */
@@ -238,8 +187,6 @@ private:
 	/* INPUT : int x : incrementation coor x											   */
 	/* INPUT : int y : incrementation coor y											   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void move
 	(
 		Select_Type& select,
@@ -249,48 +196,33 @@ private:
 
 public:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : heal																		   */
 	/* ROLE : Soigne l'unit� en fonction du territoire sur lequel elle se trouve		   */
 	/* INPUT : const std::vector<std::vector<Tile>>& tiles : tableau de cases			   */
 	/* INPUT : unsigned int : donn�es g�n�rale de la map : joueur s�lectionn�			   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void heal
 	(
 		const MatriceMap& tiles,
 		const unsigned int selectplayer
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : levelup																	   */
 	/* ROLE : Incr�mentation de 1 de level												   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void levelup();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : RESETmovement																   */
 	/* ROLE : Reset du nombre de mouvement disponible pour un tour						   */
 	/* INPUT : void																	       */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void RESETmovement();
 
 	virtual void RESETnumberOfAttack();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : irrigate																	   */
 	/* ROLE : 	TODO																	   */
 	/* RETURNED VALUE : bool															   */
-	/* ----------------------------------------------------------------------------------- */
 	virtual bool irrigate
 	(
 		MatriceMap& map
@@ -298,63 +230,43 @@ public:
 
 private:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : testPos																	   */
 	/* ROLE : Test sur les positions de la souris et de l'unit�							   */
 	/* INPUT : unsigned int mouse_x : position x										   */
 	/* INPUT : unsigned int mouse_y : position y										   */
 	/* RETURNED VALUE    : int : 0 : pas s�lection� / 1 : s�lectionn�					   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual bool testPos
 	(
 		const unsigned int mouse_x,
 		const unsigned int mouse_y
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : isGroundMovement_Type														   */
 	/* ROLE : Check if the movement type of the Unit is	ground							   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : bool : false -> movement type is not ground						   */
 	/* RETURNED VALUE : bool : true -> movement type is ground							   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual bool isGroundMovement_Type();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : isAirMovement_Type														   */
 	/* ROLE : Check if the movement type of the Unit is	air								   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : bool : false -> movement type is not air						   */
 	/* RETURNED VALUE : bool : true -> movement type is air								   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual bool isAirMovement_Type();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : isWaterMovement_Type														   */
 	/* ROLE : Check if the movement type of the Unit is	water							   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : bool : false -> movement type is not water						   */
 	/* RETURNED VALUE : bool : true -> movement type is water							   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual bool isWaterMovement_Type();
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : isDeepWaterMovement_Type													   */
 	/* ROLE : Check if the movement type of the Unit is	DeepWater						   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : bool : false -> movement type is not DeepWater					   */
 	/* RETURNED VALUE : bool : true -> movement type is DeepWater						   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual bool isDeepWaterMovement_Type();
 
 	virtual bool isPossibleToAttack();
@@ -368,15 +280,11 @@ public:
 
 public:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : cmpblit																	   */
 	/* ROLE : Compteur permettant de faire clignoter l'unit�							   */
 	/* ROLE : Attention : bas� sur SCREEN_REFRESH_RATE									   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE    : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void cmpblit();
 
 

@@ -24,6 +24,7 @@
 
 #include "CityScreen.h"
 #include "GamePlayScreen.h"
+#include "LogSentences.h"
 #include "MainMenuScreen.h"
 #include "NewGameScreen.h"
 #include "ReloadMenuScreen.h"
@@ -163,7 +164,7 @@ void App::addScreens()
 /* ----------------------------------------------------------------------------------- */
 void App::initMain()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::START);
 
 	tinyxml2::XMLDocument config{};
 	config.LoadFile(FILE_APP::PATH::CONFIG);
@@ -186,16 +187,18 @@ void App::initMain()
 			}
 			else
 			{
+				LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::MISSING_PATH_FILE, FILE_APP::PATH::CONFIG);
 				throw("Missing path for a file " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
 			}
 		}
 	}
 	else
 	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, FILE_APP::PATH::CONFIG);
 		throw("Impossible d'ouvrir le fichier " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
 	}
 
-	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::END);
 }
 
 

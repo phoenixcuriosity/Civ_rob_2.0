@@ -36,6 +36,9 @@ namespace logS
 		constexpr char CREATE_CITY[] = "[Create City]";
 		constexpr char DELETE_CITY[] = "[Delete City]";
 
+		constexpr char CREATE_CITIZEN[] = "[CREATE_CITIZEN]";
+		constexpr char DELETE_CITIZEN[] = "[DELETE_CITIZEN]";
+
 		constexpr char CREATE_PLAYER[] = "[CREATE_PLAYER]";
 		constexpr char DELETE_PLAYER[] = "[DELETE_PLAYER]";
 
@@ -72,6 +75,8 @@ namespace logS
 
 		constexpr char CONSTRUCTOR_CITY[] = " -> m_image : {}, m_name : {}, m_x : {}, m_y : {}, m_influenceLevel : {}";
 		constexpr char DESTRUCTOR_CITY[] = " -> m_name";
+
+		constexpr char CONSTRUCTOR_CITIZEN[] = " -> m_tileOccupied : {}, m_food : {}, m_work : {}, m_gold : {}, m_revolt : {}";
 
 		constexpr char CONSTRUCTOR_PLAYER[] = " -> m_name : {}, m_id : {}";
 		constexpr char DESTRUCTOR_PLAYER[] = " -> m_name";

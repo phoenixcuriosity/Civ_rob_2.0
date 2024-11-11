@@ -22,6 +22,7 @@
 
 #include "InitLoadFromFile.h"
 
+#include "LogSentences.h"
 #include "MainMap.h"
 #include "T_Unit.h"
 #include "XmlConvertValue.h"
@@ -29,12 +30,12 @@
 #include <tinyxml2/tinyxml2.h>
 
 #include <R2D/src/ResourceManager.h> 
-#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/tinyXml2.h> 
 
 void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 {
-	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::START);
 
 	tinyxml2::XMLDocument config{};
 	config.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath().c_str());
@@ -66,10 +67,11 @@ void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath());
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, 
+			R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath());
 	}
 
-	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::END);
 }
 
 void InitLoadFromFile::initFromFile(VectUnitTemplate& vectUnitTemplate, VectCityName& vectCityName)
@@ -142,6 +144,7 @@ void InitLoadFromFile::loadCitiesNames(VectCityName& vectCityName)
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath());
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
+			R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath());
 	}
 }

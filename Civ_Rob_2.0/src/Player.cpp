@@ -24,12 +24,14 @@
 
 #include "App.h"
 #include "City.h"
+#include "LogSentences.h"
 #include "Unit.h"
 #include "Utility.h"
 
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 
  /* *********************************************************
   *				START Player::METHODS					   *
@@ -44,7 +46,8 @@ Player::Player() :
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Create Player Par Defaut Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, 
+		m_name, m_id);
 }
 
 Player::Player
@@ -62,11 +65,13 @@ Player::Player
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Create Player Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER,
+		m_name, m_id);
 }
 
 Player::~Player()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::DESTRUCTOR_PLAYER, m_name);
 	deletePlayer();
 }
 
@@ -149,7 +154,7 @@ void Player::deleteUnit
 		}
 		else
 		{
-			throw("[ERROR]__: deleteUnit : nullptr == m_tabUnit[index]");
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_TAB_UNIT, logS::DATA::ERROR_DELETE_TAB_UNIT);
 		}
 	}
 }
@@ -185,7 +190,7 @@ void Player::deleteCity
 		}
 		else
 		{
-			throw("[ERROR]__: deleteCity : nullptr == m_tabCity[index]");
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_TAB_CITY, logS::DATA::ERROR_DELETE_TAB_CITY);
 		}
 	}
 }

@@ -36,11 +36,6 @@
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/tinyXml2.h> 
 
-
-
-
-
-
 GamePlayScreen::GamePlayScreen
 (
 	SaveReloadPtrT SaveReload,
@@ -95,24 +90,24 @@ bool GamePlayScreen::onEntry()
 
 	if (!m_isInitialize)
 	{
-		InitLoadFromFile::loadMainMapConfig(m_mainMap);
-
-		R2D::ResourceManager::InitializeCardinalDirectionMapping
-			(m_mainMap.GETtileSize());
-
-		initStructsNULL();
-
-		computeSize();
-
-		initOpenGLScreen();
-
-		InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
-
-		/* Need to be after loadUnitAndSpec */
-		m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
-
 		try
 		{
+			InitLoadFromFile::loadMainMapConfig(m_mainMap);
+
+			R2D::ResourceManager::InitializeCardinalDirectionMapping
+			(m_mainMap.GETtileSize());
+
+			initStructsNULL();
+
+			computeSize();
+
+			initOpenGLScreen();
+
+			InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
+
+			/* Need to be after loadUnitAndSpec */
+			m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
+
 			m_mainMap.initMainMap(m_camera);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 

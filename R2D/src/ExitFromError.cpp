@@ -22,7 +22,7 @@
 
 #include "ExitFromError.h"
 
-#include "ErrorLog.h"
+#include "Log.h"
 #include "../../Dependencies/SDL/SDL.h"
 
 using namespace R2D;
@@ -30,8 +30,7 @@ using namespace R2D;
 
 void ExitFromError::deleteAll()
 {
-	ErrorLog::logEvent("[INFO]___: [START] *********_________ DeleteAll _________*********");
-
+	LOG(R2D::LogLevelType::info, 0, "[CIV_ROB]", "[START]","*********_________ DeleteAll _________*********");
 
 
 
@@ -48,10 +47,9 @@ void ExitFromError::deleteAll()
 
 	 /* ### Don't put code below here ### */
 
-	ErrorLog::logEvent("[INFO]___: [END] : *********_________ DeleteAll _________*********");
 
-	ErrorLog::logEvent("[INFO]___: SDL_Quit Success");
-	ErrorLog::logEvent("[INFO]___:________PROGRAMME FINISH________");
+	LOG(R2D::LogLevelType::info, 0, "[CIV_ROB]", "[N/A]", "SDL_Quit");
+	LOG(R2D::LogLevelType::info, 0, "[CIV_ROB]", "[n/A]", "________PROGRAMME FINISH________");
 	ErrorLog::closeLog();
 }
 
@@ -60,9 +58,9 @@ void ExitFromError::exitFromError
 	const std::string& errorMsg
 )
 {
-	ErrorLog::logEvent("[ERROR]___: " + errorMsg);
+	LOG(R2D::LogLevelType::error, 0, "[CIV_ROB]", "[CRASH]", "{}", errorMsg);
 	deleteAll();
-	ErrorLog::logEvent("[ERROR]___: Last msg before exitError : " + errorMsg);
+	LOG(R2D::LogLevelType::error, 0, "[CIV_ROB]", "[CRASH]", "Last msg before exitError : {}", errorMsg);
 	ErrorLog::closeLog();
 	exit(EXIT_FAILURE);
 }
