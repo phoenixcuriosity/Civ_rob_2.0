@@ -172,6 +172,7 @@
     <ClInclude Include="src\IGameScreen.h" />
     <ClInclude Include="src\IMainGame.h" />
     <ClInclude Include="src\InputManager.h" />
+    <ClInclude Include="src\LogLevel.h" />
     <ClInclude Include="src\RealEngineError.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\Screen.h" />
