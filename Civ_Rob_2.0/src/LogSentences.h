@@ -30,6 +30,9 @@ namespace logS
 		constexpr char APP[] = "[APP]";
 		constexpr char GAMEPLAY[] = "[GamePlay]";
 		constexpr char MAIN_MENU[] = "[MAIN_MENU]";
+		constexpr char CITY_MENU[] = "[CITY_MENU]";
+		constexpr char NEWGAME_MENU[] = "[NEWGAME_MENU]";
+		constexpr char RELOAD_MENU[] = "[RELOAD_MENU]";
 	};
 	namespace WHAT
 	{
@@ -68,21 +71,27 @@ namespace logS
 		constexpr char OPEN_FILE[] = "[OPEN_FILE]";
 
 		constexpr char ON_ENTRY[] = "[ON_ENTRY]";
+
+		constexpr char COMPUTE_EMOTION[] = "[COMPUTE_EMOTION]";
+
+		constexpr char BUTTON_CLICK[] = "[BUTTON_CLICK]";
+
+		constexpr char VALUE_CONVERSION[] = "[VALUE_CONVERSION]";
 	};
 	namespace DATA
 	{
 		constexpr char MISSING_PATH_FILE[] = " Missing path for a file : {}";
 
 		constexpr char CONSTRUCTOR_CITY[] = " -> m_image : {}, m_name : {}, m_x : {}, m_y : {}, m_influenceLevel : {}";
-		constexpr char DESTRUCTOR_CITY[] = " -> m_name";
+		constexpr char DESTRUCTOR_CITY[] = " -> m_name {}";
 
 		constexpr char CONSTRUCTOR_CITIZEN[] = " -> m_tileOccupied : {}, m_food : {}, m_work : {}, m_gold : {}, m_revolt : {}";
 
 		constexpr char CONSTRUCTOR_PLAYER[] = " -> m_name : {}, m_id : {}";
-		constexpr char DESTRUCTOR_PLAYER[] = " -> m_name";
+		constexpr char DESTRUCTOR_PLAYER[] = " -> m_name {}";
 
 		constexpr char CONSTRUCTOR_UNIT[] = " -> m_name : {} , m_x : {} , m_y : {}";
-		constexpr char DESTRUCTOR_UNIT[] = " -> m_name";
+		constexpr char DESTRUCTOR_UNIT[] = " -> m_name {}";
 
 		constexpr char ERROR_DELETE_TAB_UNIT[] = "[ERROR_DELETE_TAB_UNIT]";
 		constexpr char ERROR_DELETE_TAB_CITY[] = "[ERROR_DELETE_TAB_CITY]";
@@ -101,6 +110,16 @@ namespace logS
 
 		constexpr char ERROR_CURRENT_SAVE[] = "ERROR_CURRENT_SAVE : {}";
 		constexpr char ERROR_DELETE_SAVE_FILE[] = "ERROR_DELETE_SAVE_FILE : {}";
+
+		constexpr char ERROR_DIV_ZERO[] = "ERROR_DIV_ZERO : {}";
+		constexpr char ERROR_MIN_MAX_RANGE[] = "checkMinMaxValidityRange : {}";
+
+		constexpr char PLAYER_BUTTON[] = "[PLAYER_BUTTON]";
+		constexpr char EXIT_BUTTON[] = "[EXIT_BUTTON]";
+
+		constexpr char ERROR_VALUE_CONVERSION[] = "[ERROR_VALUE_CONVERSION] : {} , {}";
+
+		constexpr char SCREEN[] = "[SCREEN]";
 	};
 };
 

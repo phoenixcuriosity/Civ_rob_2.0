@@ -22,6 +22,7 @@
 
 #include "ReloadMenuScreen.h"
 
+#include "LogSentences.h"
 #include "ScreenIndices.h"
 
 #include "App.h"
@@ -29,6 +30,7 @@
 #include <string>
 
 #include <R2D/src/ResourceManager.h> 
+#include <R2D/src/Log.h> 
 
 namespace IHM_SAVE_BUTTON
 {
@@ -48,11 +50,13 @@ m_widgetLabels(),
 m_SaveReload(SaveReload),
 m_isInitialize(false)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::RELOAD_MENU, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 	build();
 }
 
 ReloadMenuScreen::~ReloadMenuScreen()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::RELOAD_MENU, logS::WHAT::DESTRUCTOR, logS::DATA::SCREEN);
 	destroy();
 }
 
@@ -79,12 +83,14 @@ void ReloadMenuScreen::destroy()
 
 bool ReloadMenuScreen::onEntry()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::RELOAD_MENU, logS::WHAT::ON_ENTRY, logS::DATA::START);
 	if (!m_isInitialize)
 	{
 		init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 
 		m_isInitialize = true;
 	}
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::RELOAD_MENU, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
 }
 

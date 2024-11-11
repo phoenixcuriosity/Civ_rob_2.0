@@ -71,7 +71,7 @@ Player::Player
 
 Player::~Player()
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::DESTRUCTOR_PLAYER, m_name);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_PLAYER, logS::DATA::DESTRUCTOR_PLAYER, m_name);
 	deletePlayer();
 }
 

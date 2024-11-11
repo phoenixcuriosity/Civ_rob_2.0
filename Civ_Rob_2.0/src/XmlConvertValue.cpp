@@ -22,12 +22,14 @@
 
 #include "XmlConvertValue.h"
 
+#include "LogSentences.h"
 #include "T_Citizen.h"
 #include "T_City.h"
 #include "T_CityScreen.h"
 #include "T_Unit.h"
 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 
 
   /* ---------------------------------------------------------------------------------------------------------- */
@@ -141,7 +143,8 @@ Unit_Movement_Type XmlConvertValue::convertUintToUnit_Movement_Type
 	case 3:
 		return Unit_Movement_Type::deepwater;
 	default:
-		R2D::ErrorLog::logEvent("[ERROR]___: convertUintToUnit_Movement_Type : case default");
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::VALUE_CONVERSION,
+			logS::DATA::ERROR_VALUE_CONVERSION, "convertUintToUnit_Movement_Type case default : ", toConvert);
 		return Unit_Movement_Type::ground;
 	}
 }
@@ -205,7 +208,8 @@ conversionSurplus_Type XmlConvertValue::convert2ConversionToApply
 	case 6:
 		return conversionSurplus_Type::GoldToWork;
 	default:
-		R2D::ErrorLog::logEvent("[ERROR]___: convert2ConversionToApply : default");
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::VALUE_CONVERSION,
+			logS::DATA::ERROR_VALUE_CONVERSION, "convert2ConversionToApply case default : ", toConvert);
 		return conversionSurplus_Type::No_Conversion;
 	}
 }
@@ -231,7 +235,8 @@ build_Type XmlConvertValue::convert2build_Type
 	case 1:
 		return build_Type::unit;
 	default:
-		R2D::ErrorLog::logEvent("[ERROR]___: convert2build_Type : default");
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::VALUE_CONVERSION,
+			logS::DATA::ERROR_VALUE_CONVERSION, "convert2build_Type case default : ", toConvert);
 		return build_Type::building;
 	}
 }
@@ -263,7 +268,8 @@ Emotion_Type XmlConvertValue::convert2Emotion_Type
 	case 2:
 		return Emotion_Type::ecstatic;
 	default:
-		R2D::ErrorLog::logEvent("[ERROR]___: convert2Emotion_Type : default");
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::VALUE_CONVERSION,
+			logS::DATA::ERROR_VALUE_CONVERSION, "convert2Emotion_Type case default : ", toConvert);
 		return Emotion_Type::neutral;
 	}
 }
@@ -331,7 +337,8 @@ Religion_Type XmlConvertValue::convert2Religion_Type
 	case 22:
 		return Religion_Type::zoroastrian;
 	default:
-		R2D::ErrorLog::logEvent("[ERROR]___: convert2Religion_Type : default");
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::VALUE_CONVERSION,
+			logS::DATA::ERROR_VALUE_CONVERSION, "convert2Religion_Type case default : ", toConvert);
 		return Religion_Type::catholic;
 	}
 }

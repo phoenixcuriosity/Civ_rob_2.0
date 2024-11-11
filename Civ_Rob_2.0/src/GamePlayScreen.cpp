@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "InitLoadFromFile.h"
+#include "LogSentences.h"
 #include "Player.h"
 #include "NewGame.h"
 #include "ScreenIndices.h"
@@ -34,6 +35,7 @@
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/tinyXml2.h> 
 
 GamePlayScreen::GamePlayScreen
@@ -54,11 +56,13 @@ m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
 	build();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 }
 
 GamePlayScreen::~GamePlayScreen()
 {
 	destroy();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::SCREEN);
 }
 
 int GamePlayScreen::getNextScreenIndex()const
@@ -86,6 +90,7 @@ void GamePlayScreen::destroy()
 
 bool GamePlayScreen::onEntry()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::START);
 	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 
 	if (!m_isInitialize)
@@ -124,10 +129,11 @@ bool GamePlayScreen::onEntry()
 		}
 		catch (const std::string& msg)
 		{
-			R2D::ErrorLog::logEvent("[ERROR]___: GamePlayScreen::onEntry : " + msg);
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::MSG_DATA, msg);
 			return false;
 		}
 	}
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
 }
 
@@ -343,6 +349,7 @@ void GamePlayScreen::makePlayersButtons()
 
 bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::PLAYER_BUTTON);
 	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
 		if (m_screen.m_vectPlayerRadioButton[i]->isSelected())
@@ -374,6 +381,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 
 bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::EXIT_BUTTON);
 	SaveReload::save(*this);
 
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
