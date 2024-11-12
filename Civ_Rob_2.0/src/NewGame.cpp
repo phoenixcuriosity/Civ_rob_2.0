@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "GamePlayScreen.h"
+#include "LogSentences.h"
 #include "NewGameScreen.h"
 #include "Player.h"
 #include "SaveReload.h"
@@ -31,7 +32,7 @@
 #include "T_Unit.h"
 
 #include <R2D/src/GUI.h>
-#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
@@ -57,7 +58,7 @@ namespace NGC
 /* ------------------------------------------------------------------------------------*/
 void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Newgame Start");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::START);
 	
 	gamePlayScreen.getSaveReload()->createSave();
 
@@ -65,11 +66,18 @@ void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 
 	newGameSettlerSpawn(gamePlayScreen.GETPlayers(), gamePlayScreen.GETmainMap());
 
-	SaveReload::save(gamePlayScreen);
+	try
+	{
+		SaveReload::save(gamePlayScreen);
+	}
+	catch (const std::exception e)
+	{
+		LOG(R2D::LogLevelType::error, 0, "[new game]", "[save]", "{}", e.what());
+	}
 
 	/* ### Don't put code below here ### */
 
-	R2D::ErrorLog::logEvent("[INFO]___: Newgame End");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::END);
 }
 
 /* ----------------------------------------------------------------------------------- */

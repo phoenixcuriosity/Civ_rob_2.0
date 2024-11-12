@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "InitLoadFromFile.h"
+#include "LogSentences.h"
 #include "Player.h"
 #include "NewGame.h"
 #include "ScreenIndices.h"
@@ -34,12 +35,8 @@
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/tinyXml2.h> 
-
-
-
-
-
 
 GamePlayScreen::GamePlayScreen
 (
@@ -59,11 +56,13 @@ m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
 	build();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 }
 
 GamePlayScreen::~GamePlayScreen()
 {
 	destroy();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::SCREEN);
 }
 
 int GamePlayScreen::getNextScreenIndex()const
@@ -91,28 +90,29 @@ void GamePlayScreen::destroy()
 
 bool GamePlayScreen::onEntry()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::START);
 	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 
 	if (!m_isInitialize)
 	{
-		InitLoadFromFile::loadMainMapConfig(m_mainMap);
-
-		R2D::ResourceManager::InitializeCardinalDirectionMapping
-			(m_mainMap.GETtileSize());
-
-		initStructsNULL();
-
-		computeSize();
-
-		initOpenGLScreen();
-
-		InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
-
-		/* Need to be after loadUnitAndSpec */
-		m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
-
 		try
 		{
+			InitLoadFromFile::loadMainMapConfig(m_mainMap);
+
+			R2D::ResourceManager::InitializeCardinalDirectionMapping
+			(m_mainMap.GETtileSize());
+
+			initStructsNULL();
+
+			computeSize();
+
+			initOpenGLScreen();
+
+			InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
+
+			/* Need to be after loadUnitAndSpec */
+			m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
+
 			m_mainMap.initMainMap(m_camera);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
@@ -129,10 +129,11 @@ bool GamePlayScreen::onEntry()
 		}
 		catch (const std::string& msg)
 		{
-			R2D::ErrorLog::logEvent("[ERROR]___: GamePlayScreen::onEntry : " + msg);
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::MSG_DATA, msg);
 			return false;
 		}
 	}
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
 }
 
@@ -348,6 +349,7 @@ void GamePlayScreen::makePlayersButtons()
 
 bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::PLAYER_BUTTON);
 	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
 		if (m_screen.m_vectPlayerRadioButton[i]->isSelected())
@@ -379,6 +381,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 
 bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::EXIT_BUTTON);
 	SaveReload::save(*this);
 
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;

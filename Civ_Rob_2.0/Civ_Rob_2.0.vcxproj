@@ -194,6 +194,7 @@
     <ClInclude Include="src\GamePlayScreen.h" />
     <ClInclude Include="src\InitLoadFromFile.h" />
     <ClInclude Include="src\LIB.h" />
+    <ClInclude Include="src\LogSentences.h" />
     <ClInclude Include="src\MainMap.h" />
     <ClInclude Include="src\MainMapGen.h" />
     <ClInclude Include="src\MainMenuScreen.h" />

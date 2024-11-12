@@ -23,11 +23,12 @@
 #include "MainMap.h"
 
 #include "App.h"
+#include "LogSentences.h"
 #include "Player.h"
 
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
-#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 
 namespace MAP_GEN
 {
@@ -118,16 +119,18 @@ m_spriteBatch(),
 s_vectID()
 {
 	setStaticPtrTileSize();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::MAINMAP);
 }
 
 MainMap::~MainMap()
 {
-
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::MAINMAP);
 }
 
 
 void MainMap::initMainMap(R2D::Camera2D& camera)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::START);
 	initTile();
 
 	generateMap();
@@ -147,11 +150,12 @@ void MainMap::initMainMap(R2D::Camera2D& camera)
 	}
 	catch (const std::invalid_argument& msg)
 	{
-		R2D::ErrorLog::logEvent("[ERROR]___: initMainMap : " + std::string(msg.what()));
+		LOG(R2D::LogLevelType::warning, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::MSG_DATA, msg.what());
 	}
 	
 
 	initMainMapTexture();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::END);
 }
 
 void MainMap::initMainMapTexture()
@@ -220,7 +224,7 @@ void MainMap::initTile()
 /* ----------------------------------------------------------------------------------- */
 void MainMap::generateMap()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Groundgen Start");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::GENERATION_MAINMAP, logS::DATA::START);
 
 	const unsigned int endI{ m_mapSizePixX / m_tileSize };
 	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
@@ -277,7 +281,7 @@ void MainMap::generateMap()
 		}
 	}
 
-	R2D::ErrorLog::logEvent("[INFO]___: Groundgen End");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::GENERATION_MAINMAP, logS::DATA::END);
 }
 
 /* ----------------------------------------------------------------------------------- */

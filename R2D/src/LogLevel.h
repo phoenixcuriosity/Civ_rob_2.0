@@ -20,41 +20,28 @@
 
 */
 
-#ifndef ErrorLog_H
-#define ErrorLog_H
-
-#include <iostream>
-#include <fstream>
-
-#include "LogLevel.h"
+#ifndef LOGLEVEL_H
+#define LOGLEVEL_H
 
 namespace R2D
 {
-
-class ErrorLog
+	
+enum class LogLevelType
 {
-public:
-
-	static void initializeLog();
-
-	static void closeLog();
-
-	static void logEvent
-	(
-		const std::string& evt
-	);
-
-private:
-
-	static std::ofstream m_log;
-	static std::string m_lastEvent;
-	static bool m_isInitialize;
+	info,   
+	debug,  
+	warning,
+	error,  
 };
+
+constexpr char STR_DEBUG[] = "debug";
+constexpr char STR_INFO[] = "info";
+constexpr char STR_WARN[] = "warning";
+constexpr char STR_ERR[] = "error";
 
 }
 
 
 
-
-#endif // !ErrorLog_H
+#endif // !LOGLEVEL_H
 

@@ -25,12 +25,13 @@
 #include "App.h"
 #include "Citizen.h"
 #include "GameplayScreen.h"
+#include "LogSentences.h"
 #include "Player.h"
 #include "Players.h"
 #include "Unit.h"
 #include "Utility.h"
 
-#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/Window.h>
 
@@ -265,12 +266,13 @@ City::City
 	m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
 	m_goldBalance(0.0)
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
+		m_image, m_name, m_x, m_y, m_influenceLevel);
 }
 
 City::~City()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Destroy Citie: " + m_name + " Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITY, logS::DATA::DESTRUCTOR_CITY, m_name);
 }
 
 void City::computefood

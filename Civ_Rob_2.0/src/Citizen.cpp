@@ -24,10 +24,11 @@
 
 #include "App.h"
 #include "City.h"
+#include "LogSentences.h"
 #include "T_Citizen.h"
 #include "T_MainMap.h"
 
-#include "../../R2D/src/ErrorLog.h"
+#include <R2D/src/Log.h>
 
 /* ----------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------- */
@@ -47,7 +48,8 @@ Citizen::Citizen()
 	m_religion(Religion_Type::catholic),
 	m_place(false)
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
+		m_tileOccupied, m_food, m_work, m_gold, m_revolt);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -71,7 +73,8 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
+		m_tileOccupied, m_food, m_work, m_gold, m_revolt);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -99,7 +102,8 @@ Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Create Citizen Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
+		m_tileOccupied, m_food, m_work, m_gold, m_revolt);
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -111,7 +115,7 @@ Citizen::Citizen
 /* ----------------------------------------------------------------------------------- */
 Citizen::~Citizen()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Kill Citizen Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITIZEN, logS::DATA::EMPTY_DATA);
 }
 
 

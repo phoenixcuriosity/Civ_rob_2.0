@@ -26,6 +26,7 @@
 #include "Citizen.h"
 #include "City.h"
 #include "GamePlayScreen.h"
+#include "LogSentences.h"
 #include "MainMap.h"
 #include "NewGameScreen.h"
 #include "Player.h"
@@ -36,6 +37,7 @@
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/ExitFromError.h> 
+#include <R2D/src/Log.h> 
 
 #include <filesystem>
 
@@ -71,6 +73,7 @@ void SaveReload::init(const std::string& filePath)
 	}
 	else
 	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, filePath);
 		throw("Impossible d'ouvrir le fichier " + filePath);
 	}
 }
@@ -89,7 +92,6 @@ void SaveReload::saveMaps
 	GamePlayScreen& mainGame
 )
 {
-	
 	std::ofstream saveMaps{ R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() };
 	if (saveMaps)
 	{
@@ -111,12 +113,10 @@ void SaveReload::saveMaps
 		}
 	}
 	else
-		R2D::ErrorLog::logEvent
-		(
-			"[ERROR]___: Impossible d'ouvrir le fichier "
-			+ 
-			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
-		);
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
+			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+	}
 }
 
 void SaveReload::savePlayer
@@ -382,7 +382,7 @@ void SaveReload::reload
 	GamePlayScreen& mainGame
 )
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Reload Start");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::START);
 
 	loadMaps(mainGame);
 	loadPlayer(mainGame);
@@ -393,7 +393,7 @@ void SaveReload::reload
 	mainGame.makePlayersButtons();
 	mainGame.GETmainMap().initMainMapTexture();
 
-	R2D::ErrorLog::logEvent("[INFO]___: Reload End");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::END);
 }
 
 void SaveReload::loadMaps
@@ -443,14 +443,10 @@ void SaveReload::loadMaps
 		}
 	}
 	else
-		R2D::ErrorLog::logEvent
-		(
-			"[ERROR]___: Impossible d'ouvrir le fichier "
-			+
-			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()
-		);
-
-	R2D::ErrorLog::logEvent("[INFO]___: Save End");
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
+			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+	}
 }
 
 void SaveReload::loadPlayer
@@ -865,9 +861,9 @@ void SaveReload::loadCityXML
 
 void SaveReload::createSave()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: createSave Start");
-	std::string destroy;
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_SAVE, logS::DATA::START);
 
+	std::string destroy;
 	for (unsigned int i(SAVE::OFFSET_INDEX); i < m_tabSave.size() + SAVE::OFFSET_INDEX; i++)
 	{
 		if (i != m_tabSave[i - SAVE::OFFSET_INDEX])
@@ -888,7 +884,7 @@ void SaveReload::createSave()
 
 	createSaveDir();
 
-	R2D::ErrorLog::logEvent("[INFO]___: createSave End");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_SAVE, logS::DATA::END);
 }
 
 void SaveReload::createSaveDir()
@@ -897,7 +893,7 @@ void SaveReload::createSaveDir()
 
 	if (!std::filesystem::create_directory(dir))
 	{
-		R2D::ErrorLog::logEvent("[ERROR]___: create directory failed ");
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_DIR, logS::DATA::ERROR_CREATE_DIR, dir);
 	}
 
 	R2D::ResourceManager::modifyFilePath(
@@ -909,7 +905,7 @@ void SaveReload::createSaveDir()
 
 void SaveReload::removeSave()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: removeSave Start");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE, logS::DATA::START);
 
 	if (isSelectCurrentSave() && isSelectCurrentSaveInTab())
 	{
@@ -922,14 +918,16 @@ void SaveReload::removeSave()
 		rewriteSaveInfoFile();
 	}
 	else
-		R2D::ErrorLog::logEvent("[ERROR]___: currentSave = 0");
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE, logS::DATA::ERROR_CURRENT_SAVE, m_currentSave);
+	}
 
-	R2D::ErrorLog::logEvent("[INFO]___: removeSave End");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE, logS::DATA::END);
 }
 
 void SaveReload::clearSave()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: clearSave Start");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CLEAR_SAVES, logS::DATA::START);
 
 	for (const auto index : m_tabSave)
 	{
@@ -942,7 +940,7 @@ void SaveReload::clearSave()
 
 	rewriteSaveInfoFile();
 
-	R2D::ErrorLog::logEvent("[INFO]___: clearSave End");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CLEAR_SAVES, logS::DATA::END);
 }
 
 void SaveReload::removeSaveDir(const size_t index)
@@ -956,9 +954,13 @@ void SaveReload::removeSaveDir(const size_t index)
 void SaveReload::removeSaveFile(const std::string& file)
 {
 	if (!std::filesystem::remove(file))
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'effacer le fichier " + file);
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE_FILE, logS::DATA::ERROR_DELETE_SAVE_FILE, file);
+	}
 	else
-		R2D::ErrorLog::logEvent("[INFO]___: file : " + file + " successfully remove");
+	{
+		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE_FILE, logS::DATA::ERROR_DELETE_SAVE_FILE, file + " successfully remove");
+	}
 }
 
 void SaveReload::unselectCurrentSave()
@@ -995,7 +997,9 @@ void SaveReload::rewriteSaveInfoFile()
 		for (const auto index : m_tabSave) saveInfo << index << std::endl;
 	}
 	else
-		R2D::ErrorLog::logEvent("[ERROR]___: Impossible d'ouvrir le fichier " + file);
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, file);
+	}
 }
 
 size_t SaveReload::searchIndexToRemove()

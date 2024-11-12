@@ -162,6 +162,7 @@
     <ClInclude Include="src\T_NewGameScreen.h">
       <Filter>T_struct</Filter>
     </ClInclude>
+    <ClInclude Include="src\LogSentences.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

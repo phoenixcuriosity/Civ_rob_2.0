@@ -25,6 +25,7 @@
 #include "App.h"
 #include "Citizen.h"
 #include "City.h"
+#include "LogSentences.h"
 #include "Player.h"
 #include "Players.h"
 #include "ScreenIndices.h"
@@ -35,6 +36,7 @@
 
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
+#include <R2D/src/Log.h>
 
 namespace CITY_IHM
 {
@@ -132,11 +134,13 @@ m_tileSize(tileSize),
 m_selectedCity(),
 m_isInitialize(false)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::CITY_MENU, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 	build();
 }
 
 CityScreen::~CityScreen()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::CITY_MENU, logS::WHAT::DESTRUCTOR, logS::DATA::SCREEN);
 	destroy();
 }
 
@@ -219,7 +223,9 @@ int CityScreen::getPreviousScreenIndex()const
 
 bool CityScreen::onEntry()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::CITY_MENU, logS::WHAT::ON_ENTRY, logS::DATA::START);
 	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::CITY_MENU, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
 }
 
