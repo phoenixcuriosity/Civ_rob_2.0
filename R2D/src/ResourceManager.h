@@ -39,6 +39,7 @@ namespace R2D
 
 	public:
 		static std::unique_ptr<GLTexture>& getTexture(const std::string& name);
+		static void getTextureIdFromDir(const std::string& path, IdMap& vectId);
 
 		static File* getFile(const e_Files name);
 		static void initializeFilePath
