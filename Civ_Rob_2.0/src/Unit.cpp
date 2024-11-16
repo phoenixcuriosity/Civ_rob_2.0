@@ -432,6 +432,7 @@ void Unit::attack
 
 	if (m_movement > UNITC::NO_MOVEMENT)
 	{
+		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::ATTACK, m_name, cible.GETname());
 		cible.defend(m_atq);
 	}
 }
@@ -443,14 +444,17 @@ void Unit::defend
 {
 	if (dmg > m_def)
 	{
-		if ((m_life - (dmg - m_def)) <= UNITC::ENOUGH_DAMAGE_TO_KILL)
+		const int damageReceive{ (dmg - m_def) };
+		if ((m_life - damageReceive) <= UNITC::ENOUGH_DAMAGE_TO_KILL)
 		{
 			m_life = UNITC::ZERO_LIFE;
 			m_alive = false;
+			LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::DIE_FROM_ATTACK, m_name, damageReceive);
 		}
 		else
 		{
-			m_life -= (dmg - m_def);
+			m_life -= damageReceive;
+			LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::DMG_FROM_ATTACK, m_name, damageReceive, m_life);
 		}
 	}
 }
@@ -467,6 +471,7 @@ void Unit::move
 		m_x += cardinalDirection.GETpixelValueEW();
 		m_y += cardinalDirection.GETpixelValueNS();
 		m_movement--;
+		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::MOVE, m_name, m_movement);
 	}
 
 	if (UNITC::NO_MOVEMENT == m_movement)
@@ -475,6 +480,7 @@ void Unit::move
 		selectunit = SELECTION::NO_UNIT_SELECTED;
 		m_blit = UNITC::ZERO_BLIT;
 		m_show = true;
+		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::FINISH_MOVING, m_name);
 	}
 }
 
