@@ -23,6 +23,10 @@
 #include "TextureCache.h"
 
 #include "GLTexture.h"
+#include "Log.h"
+#include "LogSentences.h"
+
+#include <filesystem>
 
 using namespace R2D;
 
@@ -50,4 +54,30 @@ std::unique_ptr<GLTexture>& TextureCache::getTexture(const std::string& name)
 		return m_textureMap[name];
 	}
 	return it->second;
+}
+
+void TextureCache::getTextureIdFromDir(const std::string& path, IdMap& vectId)
+{
+	if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
+	{
+		for (const auto& entry : std::filesystem::directory_iterator(path)) 
+		{
+			if (entry.is_directory() == false)
+			{
+				auto result = vectId.try_emplace(entry.path().stem().string(), getTexture(entry.path().generic_string())->GETid());
+				if (result.second)
+				{
+					LOG(R2D::LogLevelType::info, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::TEXTURE, logS::DATA::LOAD_TEXTURE, entry.path().generic_string());
+				}
+				else
+				{
+					LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::TEXTURE, logS::DATA::ERROR_LOAD_TEXTURE, entry.path().generic_string());
+				}
+			}
+			else
+			{
+				getTextureIdFromDir(entry.path().generic_string(), vectId);
+			}
+		}
+	}	
 }

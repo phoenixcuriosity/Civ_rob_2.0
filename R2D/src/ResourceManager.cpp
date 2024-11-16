@@ -47,6 +47,11 @@ std::unique_ptr<GLTexture>& ResourceManager::getTexture(const std::string& name)
 	return m_textureCache.getTexture(name);
 }
 
+void ResourceManager::getTextureIdFromDir(const std::string& path, IdMap& vectId)
+{
+	m_textureCache.getTextureIdFromDir(path, vectId);
+}
+
 File* ResourceManager::getFile(const e_Files name)
 {
 	return m_files.getFile(name);

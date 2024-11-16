@@ -37,6 +37,8 @@ namespace R2D
 
 		std::unique_ptr<GLTexture>& getTexture(const std::string& name);
 
+		void getTextureIdFromDir(const std::string& path, IdMap& vectId);
+
 	private:
 		std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
 	};
