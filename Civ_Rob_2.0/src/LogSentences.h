@@ -77,6 +77,9 @@ namespace logS
 		constexpr char BUTTON_CLICK[] = "[BUTTON_CLICK]";
 
 		constexpr char VALUE_CONVERSION[] = "[VALUE_CONVERSION]";
+		constexpr char TEXTURE[] = "[TEXTURE]";
+
+		constexpr char UNIT[] = "[UNIT]";
 	};
 	namespace DATA
 	{
@@ -120,6 +123,18 @@ namespace logS
 		constexpr char ERROR_VALUE_CONVERSION[] = "[ERROR_VALUE_CONVERSION] : {} , {}";
 
 		constexpr char SCREEN[] = "[SCREEN]";
+
+		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
+
+		constexpr char ATTACK[] = "[ATTACK] : attack from {} to {}";
+		constexpr char DIE_FROM_ATTACK[] = "[DIE_FROM_ATTACK] : {} : dmg receive : {}";
+		constexpr char DMG_FROM_ATTACK[] = "[DMG_FROM_ATTACK] : {} : dmg receive : {} , life remaining {}";
+		constexpr char MOVE[] = "[MOVE] : {} : movement remaining : {}";
+		constexpr char FINISH_MOVING[] = "[FINISH_MOVING] : {}";
+
+
+
+		constexpr char ff[] = "[ff] : {}";
 	};
 };
 

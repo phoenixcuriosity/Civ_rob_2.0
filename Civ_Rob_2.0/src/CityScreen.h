@@ -94,7 +94,7 @@ private:
 
 	void drawNbPop();
 
-	void callDraw(const size_t kTile, const GLuint id);
+	void callDraw(const size_t kTile, const GLuint id, const float depth);
 
 private:
 
@@ -103,16 +103,17 @@ private:
 	bool onReturnToMapClicked(const CEGUI::EventArgs& e);
 
 private:
+
+	GLuint searchKeyInIdMap(const std::string & key);
+
+private:
 	int m_nextScreenIndexMenu;
 
 	unsigned int m_indexCycleBuilds;
 
 	dequeBuild m_buttonBuild;
 
-	/* Dedicated spriteBatch */
-	R2D::SpriteBatch m_spriteBatchAppartenance;
-	bool m_needToUpdateDraw;
-	R2D::VectID s_vectID;
+	R2D::IdMap m_idMap;
 
 	Players* m_players;
 	unsigned int* m_tileSize;

@@ -38,6 +38,9 @@
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/Log.h>
 
+#include <format>
+
+
 namespace CITY_IHM
 {
 	namespace DIPSLAY
@@ -125,9 +128,7 @@ R2D::CScreen(),
 m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_indexCycleBuilds(0),
 m_buttonBuild(),
-m_spriteBatchAppartenance(),
-m_needToUpdateDraw(true),
-s_vectID(),
+m_idMap(),
 m_SaveReload(SaveReload),
 m_players(players),
 m_tileSize(tileSize),
@@ -135,7 +136,6 @@ m_selectedCity(),
 m_isInitialize(false)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::CITY_MENU, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
-	build();
 }
 
 CityScreen::~CityScreen()
@@ -151,47 +151,8 @@ void CityScreen::build()
 
 	using R2D::ResourceManager;
 	static const std::string CITY_IMAGE_PATH{ R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath() };
-	static const std::string DIR_GROUND{ "ground/" };
-	static const std::string DIR_SPEC{ "spec/" };
-	static const std::string DIR_CA{ "couleur d'apartenance/" };
-	static const std::string DIR_CITIZEN{ "citizen/" };
-	static const std::string DIR_CITY{ "city/" };
 
-	using R2D::ResourceManager;
-
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-grass" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-water" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_GROUND + "hr-deepwater" + EXTENSION_PNG)->GETid());
-
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "coal" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "copper" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "fish" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "horse" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "iron" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "petroleum" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "stone" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "tree1" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_SPEC + "uranium" + EXTENSION_PNG)->GETid());
-	START_APPARTENANCE_INDEX = s_vectID.size();
-
-	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
-	{
-		s_vectID.push_back
-		(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CA + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
-	}
-
-	START_EMOTION_INDEX = s_vectID.size();
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "ecstatic" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "happy" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "neutral" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "sad" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITIZEN + "angry" + EXTENSION_PNG)->GETid());
-
-
-	START_ICON_INDEX = s_vectID.size();
-
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "food" + EXTENSION_PNG)->GETid());
-	s_vectID.push_back(ResourceManager::getTexture(CITY_IMAGE_PATH + DIR_CITY + "Hammer" + EXTENSION_PNG)->GETid());
+	ResourceManager::getTextureIdFromDir(CITY_IMAGE_PATH, m_idMap);
 }
 
 void CityScreen::destroy()
@@ -311,12 +272,8 @@ void CityScreen::doInitUI()
 			i++;
 		}
 
-		m_spriteBatchAppartenance.init();
-
 		m_isInitialize = true;
 	}
-
-	m_needToUpdateDraw = true;
 
 	resetInternalEntry();
 
@@ -388,7 +345,7 @@ void CityScreen::draw()
 
 void CityScreen::doDrawAll()
 {
-	m_spriteBatchAppartenance.renderBatch();
+	/* Nothing yet */
 }
 
 void CityScreen::drawTile(const size_t kTile)
@@ -398,13 +355,16 @@ void CityScreen::drawTile(const size_t kTile)
 	switch (m_players->GETSelectedCity()->GETtile()[kTile].tile_ground)
 	{
 	case Ground_Type::grass:
-		id = s_vectID[0];
+		id = m_idMap["grass"];
 		break;
 	case Ground_Type::water:
-		id = s_vectID[1];
+		id = m_idMap["water"];
 		break;
 	case Ground_Type::deepwater:
-		id = s_vectID[2];
+		id = m_idMap["deepwater"];
+		break;
+	case Ground_Type::irragated:
+		id = m_idMap["grassIrr"];
 		break;
 	case Ground_Type::dirt:
 		throw("[Error]___: drawMap : Ground_Type::dirt");
@@ -420,7 +380,7 @@ void CityScreen::drawTile(const size_t kTile)
 		break;
 	}
 
-	callDraw(kTile, id);
+	callDraw(kTile, id, 0.0f);
 }
 void CityScreen::drawTileSpec(const size_t kTile)
 {
@@ -429,44 +389,44 @@ void CityScreen::drawTileSpec(const size_t kTile)
 	switch (m_players->GETSelectedCity()->GETtile()[kTile].tile_spec)
 	{
 	case GroundSpec_Type::coal:
-		id = s_vectID[3];
+		id = m_idMap["coal"];
 		break;
 	case GroundSpec_Type::copper:
-		id = s_vectID[4];
-		break;
-	case GroundSpec_Type::fish:
-		id = s_vectID[5];
-		break;
-	case GroundSpec_Type::horse:
-		id = s_vectID[6];
+		id = m_idMap["copper"];
 		break;
 	case GroundSpec_Type::iron:
-		id = s_vectID[7];
-		break;
-	case GroundSpec_Type::petroleum:
-		id = s_vectID[8];
-		break;
-	case GroundSpec_Type::stone:
-		id = s_vectID[9];
+		id = m_idMap["iron"];
 		break;
 	case GroundSpec_Type::tree:
-		id = s_vectID[10];
+		id = m_idMap["tree1"];
+		break;
+	case GroundSpec_Type::stone:
+		id = m_idMap["stone"];
 		break;
 	case GroundSpec_Type::uranium:
-		id = s_vectID[11];
+		id = m_idMap["uranium"];
+		break;
+	case GroundSpec_Type::horse:
+		id = m_idMap["horse"];
+		break;
+	case GroundSpec_Type::fish:
+		id = m_idMap["fish"];
+		break;
+	case GroundSpec_Type::petroleum:
+		id = m_idMap["petroleum"];
 		break;
 	case GroundSpec_Type::nothing:
 		id = CitySC::UNUSED_ID;
 		break;
 	}
 
-	callDraw(kTile, id);
+	callDraw(kTile, id, 0.1f);
 }
 void CityScreen::drawTileApp(const size_t kTile)
 {
 	if (m_players->GETSelectedCity()->GETtile()[kTile].appartenance != SELECTION::NO_APPARTENANCE)
 	{
-		m_spriteBatchAppartenance.draw
+		m_spriteBatchHUDStatic.draw
 		(
 			glm::vec4
 			(
@@ -476,8 +436,8 @@ void CityScreen::drawTileApp(const size_t kTile)
 				*m_tileSize
 			),
 			R2D::FULL_RECT,
-			s_vectID[START_APPARTENANCE_INDEX + m_players->GETSelectedCity()->GETtile()[kTile].appartenance],
-			0.0f,
+			m_idMap[std::format("ColorPlayer{}", m_players->GETSelectedCity()->GETtile()[kTile].appartenance)],
+			0.5f,
 			R2D::COLOR_WHITE_T25
 		);
 	}
@@ -502,8 +462,8 @@ void CityScreen::drawFood()
 				CITY_IHM::DIPSLAY::FOOD::DELTA_Y
 			),
 			R2D::FULL_RECT,
-			s_vectID[START_ICON_INDEX],
-			0.0f,
+			searchKeyInIdMap("food"),
+			1.f,
 			R2D::COLOR_WHITE
 		);
 
@@ -516,7 +476,7 @@ void CityScreen::drawFood()
 	}
 }
 
-void CityScreen::callDraw(const size_t kTile, const GLuint id)
+void CityScreen::callDraw(const size_t kTile, const GLuint id, const float depth)
 {
 	if (CitySC::UNUSED_ID != id)
 	{
@@ -531,7 +491,7 @@ void CityScreen::callDraw(const size_t kTile, const GLuint id)
 			),
 			R2D::FULL_RECT,
 			id,
-			0.0f,
+			depth,
 			R2D::COLOR_WHITE
 		);
 	}
@@ -557,8 +517,8 @@ void CityScreen::drawBuild()
 				CITY_IHM::DIPSLAY::WORK::DELTA_Y
 			),
 			R2D::FULL_RECT,
-			s_vectID[START_ICON_INDEX + 1],
-			0.0f,
+			searchKeyInIdMap("Hammer"),
+			1.f,
 			R2D::COLOR_WHITE
 		);
 
@@ -580,22 +540,22 @@ void CityScreen::drawCitizen()
 		switch (citizen->GEThappiness())
 		{
 		case Emotion_Type::ecstatic:
-			id = s_vectID[START_EMOTION_INDEX];
+			id = searchKeyInIdMap("ecstatic");
 			break;
 		case Emotion_Type::happy:
-			id = s_vectID[START_EMOTION_INDEX + 1];
+			id = searchKeyInIdMap("happy");
 			break;
 		case Emotion_Type::neutral:
-			id = s_vectID[START_EMOTION_INDEX + 2];
+			id = searchKeyInIdMap("neutral");
 			break;
 		case Emotion_Type::sad:
-			id = s_vectID[START_EMOTION_INDEX + 3];
+			id = searchKeyInIdMap("sad");
 			break;
 		case Emotion_Type::angry:
-			id = s_vectID[START_EMOTION_INDEX + 4];
+			id = searchKeyInIdMap("angry");
 			break;
 		default:
-			id = s_vectID[START_EMOTION_INDEX + 2];
+			id = searchKeyInIdMap("neutral");
 			break;
 		}
 
@@ -610,7 +570,7 @@ void CityScreen::drawCitizen()
 			),
 			R2D::FULL_RECT,
 			id,
-			0.0f,
+			1.f,
 			R2D::COLOR_WHITE
 		);
 	}
@@ -625,7 +585,7 @@ void CityScreen::drawCityName()
 		m_players->GETSelectedCity()->GETname().c_str(),
 		glm::vec2(900.0f, 1020.0f), // offset pos
 		glm::vec2(3.2f), // size
-		0.0f,
+		1.f,
 		R2D::COLOR_GOLD
 	);
 }
@@ -639,46 +599,37 @@ void CityScreen::drawNbPop()
 		std::to_string(m_players->GETSelectedCity()->GETnbpop()).c_str(),
 		glm::vec2(900.0f, 920.0f), // offset pos
 		glm::vec2(1.28f), // size
-		0.0f,
+		1.f,
 		R2D::COLOR_LIGHT_GREY
 	);
 }
 
 void CityScreen::drawTextures()
 {
-	if (m_needToUpdateDraw)
+	size_t k{ 0 };
+	for (unsigned int i(0); i < CITY_INFLUENCE::INIT_SIZE_VIEW; i++)
 	{
-		m_spriteBatchAppartenance.begin();
-
-		size_t k{ 0 };
-		for (unsigned int i(0); i < CITY_INFLUENCE::INIT_SIZE_VIEW; i++)
+		for (unsigned int j(0); j < CITY_INFLUENCE::INIT_SIZE_VIEW; j++)
 		{
-			for (unsigned int j(0); j < CITY_INFLUENCE::INIT_SIZE_VIEW; j++)
-			{
-				drawTile(k);
+			drawTile(k);
 
-				drawTileSpec(k);
+			drawTileSpec(k);
 
-				drawTileApp(k);
+			drawTileApp(k);
 
-				k++;
-			}
+			k++;
 		}
-
-		drawFood();
-
-		drawBuild();
-
-		drawCitizen();
-
-		drawCityName();
-
-		drawNbPop();
-
-		m_spriteBatchAppartenance.end();
-
-		m_needToUpdateDraw = false;
 	}
+
+	drawFood();
+
+	drawBuild();
+
+	drawCitizen();
+
+	drawCityName();
+
+	drawNbPop();
 }
 
 
@@ -792,7 +743,6 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 				CEGUI::Event::Subscriber(&CityScreen::onBuildQueueToBuildClicked, this)
 			);
 
-			m_needToUpdateDraw = true;
 			break;
 		}
 	}
@@ -819,7 +769,6 @@ bool CityScreen::onBuildQueueToBuildClicked(const CEGUI::EventArgs& /* e */)
 			/* --- Destroy build from City --- */
 			m_selectedCity->removeBuildToQueue(removeIndex);
 
-			m_needToUpdateDraw = true;
 			break;
 		}
 		removeIndex++;
@@ -832,4 +781,17 @@ bool CityScreen::onReturnToMapClicked(const CEGUI::EventArgs& /* e */)
 	m_nextScreenIndexMenu = SCREEN_INDEX::GAMEPLAY;
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
+}
+
+GLuint CityScreen::searchKeyInIdMap(const std::string& key)
+{
+	if (auto search = m_idMap.find(key); search != m_idMap.end())
+	{
+		return search->second;
+	}
+	else
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::CITY_MENU, logS::WHAT::TEXTURE, logS::DATA::ERROR_FIND_TEXTURE, key);
+		return 0;
+	}
 }
