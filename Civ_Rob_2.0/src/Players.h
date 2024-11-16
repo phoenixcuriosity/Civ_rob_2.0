@@ -111,9 +111,9 @@ private:
 
 	// tableau des statistiques par défauts des unités
 	VectUnitTemplate m_vectUnitTemplate;
-	R2D::VectID m_vectIDUnit;
 	VectUnitTemplate m_vectCityTemplate;
-	R2D::VectID m_vectIDCity;
+
+	R2D::IdMap m_idMap;
 
 	VectPlayer m_vectPlayer;
 

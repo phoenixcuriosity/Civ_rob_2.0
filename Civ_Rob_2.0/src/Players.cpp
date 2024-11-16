@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "City.h"
+#include "LogSentences.h"
 #include "MainMap.h"
 #include "Player.h"
 #include "Unit.h"
@@ -31,6 +32,7 @@
 #include "T_Unit.h"
 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
@@ -53,9 +55,7 @@ m_selectedPlayerPtr(),
 m_selectedCity(),
 m_vectCityName(),
 m_vectUnitTemplate(),
-m_vectIDUnit(),
 m_vectCityTemplate(),
-m_vectIDCity(),
 m_vectPlayer(),
 m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
@@ -72,41 +72,10 @@ Players::~Players()
 
 void Players::init(const std::string& filePath)
 {
-	/*---UNIT---*/
-
-	m_vectIDUnit.resize(m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + PlayerH::NB_MAX_PLAYER);
-
-	/* Unit Texture */
-	for (unsigned int i(0); i < m_vectUnitTemplate.size(); i++)
-	{
-		m_vectIDUnit[i] = R2D::ResourceManager::getTexture(filePath + "units/" + m_vectUnitTemplate[i].name + EXTENSION_PNG)->GETid();
-	}
-
-	/* Lifebar Texture */
-	for (unsigned int i(0); i < LIFE_BAR_NB_SUBDIVISION - 1; i++)
-	{
-		m_vectIDUnit[m_vectUnitTemplate.size() + i]
-			= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "0." + std::to_string(i) + "life" + EXTENSION_PNG)->GETid();
-	}
-
-	m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION - 1]
-		= R2D::ResourceManager::getTexture(filePath + "barre de vie/" + "maxlife" + EXTENSION_PNG)->GETid();
-
-	/* Appartenance Texture */
-	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
-	{
-		m_vectIDUnit[m_vectUnitTemplate.size() + LIFE_BAR_NB_SUBDIVISION + i]
-			= R2D::ResourceManager::getTexture(filePath + "couleur d'apartenance/" + "ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid();
-	}
+	using R2D::ResourceManager;
+	ResourceManager::getTextureIdFromDir(filePath, m_idMap);
 
 	m_spriteBatchUnit.init();
-
-	/*---CITY---*/
-
-	m_vectIDCity.resize(CITY_TYPE);
-
-	m_vectIDCity[0] = R2D::ResourceManager::getTexture(filePath + "city/city" + EXTENSION_PNG)->GETid();
-
 	m_spriteBatchCity.init();
 }
 
@@ -222,39 +191,43 @@ void Players::drawUnit
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
 							R2D::FULL_RECT,
-							m_vectIDUnit[Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate)],
+							m_idMap[unit->GETname()],
 							0.0f,
 							R2D::COLOR_WHITE
 						);
 
 						/* Lifebar Texture */
-						m_spriteBatchUnit.draw
-						(
-							glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
-							R2D::FULL_RECT,
-							m_vectIDUnit
-							[
-								m_vectUnitTemplate.size() - VECT_SIZE_OFFSET_ID
-								+
-								(int)std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, (double)LIFE_BAR_NB_SUBDIVISION))
-							],
-							0.0f,
-							R2D::COLOR_WHITE
-						);
+						if (unit->GETlife() == unit->GETmaxlife())
+						{
+							m_spriteBatchUnit.draw
+							(
+								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								R2D::FULL_RECT,
+								m_idMap["maxlife"],
+								0.0f,
+								R2D::COLOR_WHITE
+							);
+						}
+						else
+						{
+							m_spriteBatchUnit.draw
+							(
+								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								R2D::FULL_RECT,
+								m_idMap[std::format("{:.1f}life",
+									R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, 0.99))],
+								0.0f,
+								R2D::COLOR_WHITE
+							);
+						}
+						
 
 						/* Appartenance Texture */
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
 							R2D::FULL_RECT,
-							m_vectIDUnit
-							[
-								m_vectUnitTemplate.size()
-								+
-								LIFE_BAR_NB_SUBDIVISION
-								+
-								i
-							],
+							m_idMap[std::format("ColorPlayer{}", i)],
 							0.0f,
 							R2D::COLOR_WHITE
 						);
@@ -311,7 +284,7 @@ void Players::drawCity
 					(
 						glm::vec4(city->GETx(), city->GETy(), tileSize, tileSize),
 						R2D::FULL_RECT,
-						m_vectIDCity[0],
+						m_idMap["city"],
 						0.0f,
 						R2D::COLOR_WHITE
 					);
