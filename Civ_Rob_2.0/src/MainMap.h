@@ -303,7 +303,8 @@ private:
 	/* Need seperate spriteBatch because of the Texture superposition */
 	R2D::SpriteBatch m_spriteBatchAppartenance;
 
-	R2D::VectID s_vectID;
+	//R2D::VectID s_vectID;
+	R2D::IdMap m_idMap;
 
 	static unsigned int* s_tileSize;
 };
