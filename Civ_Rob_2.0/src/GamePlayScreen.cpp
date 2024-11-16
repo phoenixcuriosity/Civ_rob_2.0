@@ -55,7 +55,6 @@ m_SaveReload(SaveReload),
 m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
-	build();
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 }
 
@@ -228,9 +227,12 @@ void GamePlayScreen::doDrawAll()
 	m_players.drawCity(m_mainMap, m_camera, R2D::ResourceManager::getSpriteFont());
 
 	/* --- Render --- */
+	// background
 	m_mainMap.renderMap();
-	m_players.renderUnit();
+	// first depth
 	m_players.renderCity();
+	// front depth
+	m_players.renderUnit();
 
 	static const float FONT_SIZE_G = R2D::SpriteFont::getScaleFontToScreen(0.32f);
 
