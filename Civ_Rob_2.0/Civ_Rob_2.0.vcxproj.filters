@@ -163,6 +163,9 @@
       <Filter>T_struct</Filter>
     </ClInclude>
     <ClInclude Include="src\LogSentences.h" />
+    <ClInclude Include="src\CityScreenEnumTexture.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

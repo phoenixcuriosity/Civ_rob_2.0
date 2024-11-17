@@ -189,6 +189,7 @@
     <ClInclude Include="src\CitizenManager.h" />
     <ClInclude Include="src\City.h" />
     <ClInclude Include="src\CityScreen.h" />
+    <ClInclude Include="src\CityScreenEnumTexture.h" />
     <ClInclude Include="src\FoodManager.h" />
     <ClInclude Include="src\GameInput.h" />
     <ClInclude Include="src\GamePlayScreen.h" />

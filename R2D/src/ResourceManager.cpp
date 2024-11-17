@@ -52,6 +52,11 @@ void ResourceManager::copyIdMap(IdMap& dest)
 	m_textureCache.copyIdMap(dest);
 }
 
+GLuint ResourceManager::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
+{
+	return TextureCache::searchKeyInIdMap(idMap, key);
+}
+
 File* ResourceManager::getFile(const e_Files name)
 {
 	return m_files.getFile(name);

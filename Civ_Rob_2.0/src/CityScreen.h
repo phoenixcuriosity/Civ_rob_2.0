@@ -25,6 +25,7 @@
 
 #include "LIB.h"
 
+#include "CityScreenEnumTexture.h"
 #include "T_CityScreen.h"
 
 #include <R2D/src/API_fwd.h>
@@ -103,17 +104,13 @@ private:
 	bool onReturnToMapClicked(const CEGUI::EventArgs& e);
 
 private:
-
-	GLuint searchKeyInIdMap(const std::string & key);
-
-private:
 	int m_nextScreenIndexMenu;
 
 	unsigned int m_indexCycleBuilds;
 
 	dequeBuild m_buttonBuild;
 
-	R2D::IdMap m_idMap;
+	std::unordered_map<CityScreenEnumTexture, GLuint> m_idTexture;
 
 	Players* m_players;
 	unsigned int* m_tileSize;

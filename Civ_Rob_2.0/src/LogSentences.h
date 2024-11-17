@@ -124,17 +124,11 @@ namespace logS
 
 		constexpr char SCREEN[] = "[SCREEN]";
 
-		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
-
 		constexpr char ATTACK[] = "[ATTACK] : attack from {} to {}";
 		constexpr char DIE_FROM_ATTACK[] = "[DIE_FROM_ATTACK] : {} : dmg receive : {}";
 		constexpr char DMG_FROM_ATTACK[] = "[DMG_FROM_ATTACK] : {} : dmg receive : {} , life remaining {}";
 		constexpr char MOVE[] = "[MOVE] : {} : movement remaining : {}";
 		constexpr char FINISH_MOVING[] = "[FINISH_MOVING] : {}";
-
-
-
-		constexpr char ff[] = "[ff] : {}";
 	};
 };
 

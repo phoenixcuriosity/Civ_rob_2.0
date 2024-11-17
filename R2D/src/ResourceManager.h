@@ -23,6 +23,7 @@
 #ifndef ResourceManager_H
 #define ResourceManager_H
 
+#include "API_fwd.h"
 #include "TextureCache.h"
 #include "Files.h"
 #include "SpriteFont.h"
@@ -40,6 +41,7 @@ namespace R2D
 	public:
 		static void loadTextureFromDir(const std::string& path);
 		static void copyIdMap(IdMap& dest);
+		static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
 
 		static File* getFile(const e_Files name);
 		static void initializeFilePath

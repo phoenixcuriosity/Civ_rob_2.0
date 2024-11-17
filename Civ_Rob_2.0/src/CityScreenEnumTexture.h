@@ -1,4 +1,4 @@
-﻿/*
+/*
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
@@ -20,30 +20,52 @@
 
 */
 
-#ifndef LogSentences_H
-#define LogSentences_H
+#ifndef CityScreenEnumTexture_H
+#define CityScreenEnumTexture_H
 
-namespace logS
+#include "LIB.h"
+
+enum class CityScreenEnumTexture
 {
-	namespace WHO
-	{
-		constexpr char RESSOURCES_MANAGER[] = "[RESSOURCES_MANAGER]";
-	};
-	namespace WHAT
-	{
-		constexpr char TEXTURE[] = "[TEXTURE]";
-	};
-	namespace DATA
-	{
-		constexpr char ERROR_LOAD_TEXTURE[] = "[ERROR_LOAD_TEXTURE] : {}";
-		constexpr char LOAD_TEXTURE[] = "[LOAD_TEXTURE] : {}";
+	deepwater,
+	grass,
+	grassIrr,
+	water,
+	coal,
+	copper,
+	fish,
+	horse,
+	iron,
+	petroleum,
+	stone,
+	tree1,
+	uranium,
+	ColorPlayer0,
+	ColorPlayer1,
+	ColorPlayer2,
+	ColorPlayer3,
+	ColorPlayer4,
+	ColorPlayer5,
+	ColorPlayer6,
+	ColorPlayer7,
+	ColorPlayer8,
+	ecstatic,
+	happy,
+	neutral,
+	sad,
+	angry,
+	food,
+	Hammer
+};
 
-		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
-	};
+template <>
+struct std::hash<CityScreenEnumTexture>
+{
+	std::size_t operator()(CityScreenEnumTexture texture) const noexcept 
+	{
+		return static_cast<std::size_t>(texture);
+	}
 };
 
 
-
-#endif // !LogSentences_H
-
-
+#endif // !CityScreenEnumTexture_H

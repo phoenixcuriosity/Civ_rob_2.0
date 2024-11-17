@@ -81,3 +81,16 @@ void TextureCache::loadTextureFromDir(const std::string& path)
 		}
 	}	
 }
+
+GLuint TextureCache::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
+{
+	if (auto search = idMap.find(key); search != idMap.end())
+	{
+		return search->second;
+	}
+	else
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::TEXTURE, logS::DATA::ERROR_FIND_TEXTURE, key);
+		return 0;
+	}
+}
