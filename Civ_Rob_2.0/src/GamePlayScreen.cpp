@@ -110,7 +110,7 @@ bool GamePlayScreen::onEntry()
 			InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
 
 			/* Need to be after loadUnitAndSpec */
-			m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
+			m_players.init();
 
 			m_mainMap.initMainMap(m_camera);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
@@ -169,17 +169,6 @@ void GamePlayScreen::doInitHUDText()
 		0.0f,
 		R2D::COLOR_WHITE
 	);
-
-	/*
-	static GLuint id = R2D::ResourceManager::getTexture("bin/image/toolbar.png")->GETid();
-	m_screen.openGLScreen.spriteBatchHUDStatic.draw
-	(
-		glm::vec4(0.0f, 0.0f, (int)ceil((m_mainMap.GETtoolBarSize() + 1) * m_mainMap.GETtileSize()), m_screen.screenHeight),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-		id,
-		0.0f,
-		R2D::COLOR_WHITE
-	)*/
 }
 
 void GamePlayScreen::onExit()

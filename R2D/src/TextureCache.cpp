@@ -56,7 +56,7 @@ std::unique_ptr<GLTexture>& TextureCache::getTexture(const std::string& name)
 	return it->second;
 }
 
-void TextureCache::getTextureIdFromDir(const std::string& path, IdMap& vectId)
+void TextureCache::loadTextureFromDir(const std::string& path)
 {
 	if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
 	{
@@ -64,7 +64,7 @@ void TextureCache::getTextureIdFromDir(const std::string& path, IdMap& vectId)
 		{
 			if (entry.is_directory() == false)
 			{
-				auto result = vectId.try_emplace(entry.path().stem().string(), getTexture(entry.path().generic_string())->GETid());
+				auto result = m_idMap.try_emplace(entry.path().stem().string(), getTexture(entry.path().generic_string())->GETid());
 				if (result.second)
 				{
 					LOG(R2D::LogLevelType::info, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::TEXTURE, logS::DATA::LOAD_TEXTURE, entry.path().generic_string());
@@ -76,7 +76,7 @@ void TextureCache::getTextureIdFromDir(const std::string& path, IdMap& vectId)
 			}
 			else
 			{
-				getTextureIdFromDir(entry.path().generic_string(), vectId);
+				loadTextureFromDir(entry.path().generic_string());
 			}
 		}
 	}	

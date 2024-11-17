@@ -147,10 +147,7 @@ void MainMap::initMainMapTexture()
 	m_spriteBatch.init();
 	m_spriteBatchAppartenance.init();
 
-	static const std::string CITY_IMAGE_PATH{ R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath() };
-
-	using R2D::ResourceManager;
-	ResourceManager::getTextureIdFromDir(CITY_IMAGE_PATH, m_idMap);
+	R2D::ResourceManager::copyIdMap(m_idMap);
 }
 
 void MainMap::initTile()

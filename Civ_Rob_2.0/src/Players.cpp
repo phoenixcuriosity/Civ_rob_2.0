@@ -70,10 +70,9 @@ Players::~Players()
 	deleteAllPlayers();
 }
 
-void Players::init(const std::string& filePath)
+void Players::init()
 {
-	using R2D::ResourceManager;
-	ResourceManager::getTextureIdFromDir(filePath, m_idMap);
+	R2D::ResourceManager::copyIdMap(m_idMap);
 
 	m_spriteBatchUnit.init();
 	m_spriteBatchCity.init();

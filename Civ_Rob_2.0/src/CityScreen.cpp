@@ -148,11 +148,6 @@ CityScreen::~CityScreen()
 void CityScreen::build()
 {
 	m_screenIndex = SCREEN_INDEX::CITY;
-
-	using R2D::ResourceManager;
-	static const std::string CITY_IMAGE_PATH{ R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath() };
-
-	ResourceManager::getTextureIdFromDir(CITY_IMAGE_PATH, m_idMap);
 }
 
 void CityScreen::destroy()
@@ -195,6 +190,8 @@ void CityScreen::doInitUI()
 	/* --- Add static city context --- */
 	if (!m_isInitialize)
 	{
+		R2D::ResourceManager::copyIdMap(m_idMap);
+
 		/* Check Errors / Critical Error */
 		if (m_players->GETvectUnitTemplate().size() < (size_t)CitySC::MIN_INDEX_CYCLE_BUILDS)
 		{

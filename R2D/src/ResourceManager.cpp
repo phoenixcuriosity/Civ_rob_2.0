@@ -42,14 +42,14 @@ GLSLProgram ResourceManager::m_gLSLProgram;
 ColorRGBA8C ResourceManager::m_colorsRGBA8;
 CardinalDirectionMapping ResourceManager::m_cardinalDirectionMapping;
 
-std::unique_ptr<GLTexture>& ResourceManager::getTexture(const std::string& name)
+void ResourceManager::loadTextureFromDir(const std::string& path)
 {
-	return m_textureCache.getTexture(name);
+	m_textureCache.loadTextureFromDir(path);
 }
 
-void ResourceManager::getTextureIdFromDir(const std::string& path, IdMap& vectId)
+void ResourceManager::copyIdMap(IdMap& dest)
 {
-	m_textureCache.getTextureIdFromDir(path, vectId);
+	m_textureCache.copyIdMap(dest);
 }
 
 File* ResourceManager::getFile(const e_Files name)

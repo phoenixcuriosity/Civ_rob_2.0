@@ -51,7 +51,7 @@ public:
 
 public:
 
-	void init(const std::string& filePath);
+	void init();
 
 	void addPlayer
 	(

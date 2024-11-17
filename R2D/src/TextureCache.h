@@ -37,10 +37,13 @@ namespace R2D
 
 		std::unique_ptr<GLTexture>& getTexture(const std::string& name);
 
-		void getTextureIdFromDir(const std::string& path, IdMap& vectId);
+		void loadTextureFromDir(const std::string& path);
+
+		inline void copyIdMap(IdMap& dest)const { dest = m_idMap; };
 
 	private:
 		std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
+		IdMap m_idMap;
 	};
 }
 #endif // !TextureCache_H
