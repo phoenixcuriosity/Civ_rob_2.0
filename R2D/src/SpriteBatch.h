@@ -87,7 +87,7 @@ public:
 
 	void init();
 
-	void begin(GlyphSortType sortType = GlyphSortType::TEXTURE);
+	void begin(GlyphSortType sortType = GlyphSortType::FRONT_TO_BACK);
 	void end();
 
 	void draw

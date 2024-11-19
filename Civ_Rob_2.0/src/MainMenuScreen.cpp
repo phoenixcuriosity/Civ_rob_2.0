@@ -23,12 +23,15 @@
 */
 
 #include "MainMenuScreen.h"
+
+#include "LogSentences.h"
 #include "ScreenIndices.h"
 
 #include "App.h"
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/SpriteFont.h> 
 
 MainMenuScreen::MainMenuScreen
@@ -41,12 +44,13 @@ m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_isInitialize(false)
 {
 	build();
-	R2D::ErrorLog::logEvent("[INFO]___: build MainMenuScreen");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::MAIN_MENU, logS::WHAT::CONSTRUCTOR, logS::DATA::EMPTY_DATA);
 }
 
 MainMenuScreen::~MainMenuScreen()
 {
 	destroy();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::MAIN_MENU, logS::WHAT::DESTRUCTOR, logS::DATA::EMPTY_DATA);
 }
 
 int MainMenuScreen::getNextScreenIndex()const
@@ -70,15 +74,21 @@ void MainMenuScreen::destroy()
 
 bool MainMenuScreen::onEntry()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::MAIN_MENU, logS::WHAT::ON_ENTRY, logS::DATA::START);
+
 	if (!m_isInitialize)
 	{
-		R2D::ErrorLog::logEvent("[INFO]___: Init MainMenuScreen");
-
 		init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
-
 		m_isInitialize = true;
 	}
+
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::MAIN_MENU, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
+}
+
+void MainMenuScreen::doInitOptimizeTexture()
+{
+	/* Do nothing */
 }
 
 void MainMenuScreen::doInitUI()

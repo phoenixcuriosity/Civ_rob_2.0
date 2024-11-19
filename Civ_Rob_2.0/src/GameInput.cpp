@@ -32,19 +32,52 @@
 
 #include <iostream>
 
-#include <R2D/src/CardinalDirection.h> 
+#include <R2D/src/CardinalDirection.h>
+#include <R2D/src/InputManager.h>
 #include <R2D/src/ResourceManager.h> 
 
 namespace GInput
 {
-	const float KEY_SPEED_MOVE = 2.0f;
+	constexpr float KEY_SPEED_MOVE = 2.0f;
 
-	const int UNIT_NO_MOVEMENT = 0;
+	constexpr int UNIT_NO_MOVEMENT = 0;
 
-	const SDL_KeyCode KEY_TO_FOUND_CITY = SDLK_b;
-	const SDL_KeyCode KEY_TO_IRRIGATE = SDLK_i;
-	const SDL_KeyCode KEY_NEXT_TURN = SDLK_SPACE;
+	constexpr SDL_KeyCode KEY_TO_FOUND_CITY = SDLK_b;
+	constexpr SDL_KeyCode KEY_TO_IRRIGATE = SDLK_i;
+	constexpr SDL_KeyCode KEY_NEXT_TURN = SDLK_SPACE;
 }
+
+namespace DELTA_TIME
+{
+	constexpr float MS_PER_SECOND(1000.0f);
+	const float TARGET_FRAMETIME = MS_PER_SECOND / static_cast<float>(R2D::SCREEN_REFRESH_RATE);
+	constexpr unsigned int MAX_PHYSICS_STEPS(6);
+	constexpr float MAX_DELTA_TIME(1.0f);
+}
+
+
+
+void GameInput::updateSDLInputCycle
+(
+	SDL_Event& ev,
+	R2D::InputManager& inputManager,
+	R2D::Camera2D& camera,
+	MainMap& mainMap,
+	Players& players,
+	const R2D::Window& window,
+	int& nextScreenIndexMenu,
+	R2D::ScreenState& currentState
+)
+{
+	inputSDL(ev, inputManager, camera, mainMap, players, window, nextScreenIndexMenu, currentState);
+}
+
+void GameInput::processInput(GamePlayScreen& gamePlayScreen)
+{
+	actionByKey(gamePlayScreen);
+	moveCameraByDeltaTime(gamePlayScreen.getInputManager(), gamePlayScreen.getCamera(), gamePlayScreen.GETmainMap(), gamePlayScreen.GETPlayers());
+}
+
    
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -55,31 +88,38 @@ namespace GInput
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void GamePlayScreen::inputSDL
+void GameInput::inputSDL
 (
-	SDL_Event& ev
+	SDL_Event& ev,
+	R2D::InputManager& inputManager,
+	R2D::Camera2D& camera,
+	MainMap& mainMap,
+	Players& players,
+	const R2D::Window& window,
+	int& nextScreenIndexMenu,
+	R2D::ScreenState& currentState
 )
 {
 	switch (ev.type)
 	{
 
 	case SDL_KEYDOWN:
-		m_game->getInputManager().pressKey(ev.key.keysym.sym);
+		inputManager.pressKey(ev.key.keysym.sym);
 			
 		break;
 	case SDL_KEYUP:
-		m_game->getInputManager().releaseKey(ev.key.keysym.sym);
+		inputManager.releaseKey(ev.key.keysym.sym);
 		break;
 		/* ---------------------------------------------------------------------- */
 		/* test sur le type d'�v�nement click souris (enfonc�)					  */
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEBUTTONDOWN:
-		m_game->getInputManager().pressKey(ev.button.button);
-		mouseClick(ev);
+		inputManager.pressKey(ev.button.button);
+		mouseClick(ev, inputManager, camera, players, window, nextScreenIndexMenu, currentState);
 		break;
 	case SDL_MOUSEBUTTONUP:
-		m_game->getInputManager().releaseKey(ev.button.button);
+		inputManager.releaseKey(ev.button.button);
 		break;
 
 		/* ---------------------------------------------------------------------- */
@@ -87,7 +127,7 @@ void GamePlayScreen::inputSDL
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEWHEEL:
-		wheel(ev);
+		wheel(ev, camera, mainMap, players);
 		break;
 
 		/* ---------------------------------------------------------------------- */
@@ -95,7 +135,7 @@ void GamePlayScreen::inputSDL
 		/* ---------------------------------------------------------------------- */
 
 	case SDL_MOUSEMOTION:
-		m_game->getInputManager().setMouseCoords(ev.motion.x, ev.motion.y);
+		inputManager.setMouseCoords(ev.motion.x, ev.motion.y);
 		break;
 
 	default:
@@ -110,148 +150,143 @@ void GamePlayScreen::inputSDL
 /* INPUT : SDL_Event& ev : Event from SDL input												    			  */
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
-void GamePlayScreen::actionByKey()
+void GameInput::actionByKey
+(
+	GamePlayScreen& gamePlayScreen
+)
 {
 	/* Next Turn */
-	if (m_game->getInputManager().isKeyDown(GInput::KEY_NEXT_TURN))
+	if (gamePlayScreen.getInputManager().isKeyDown(GInput::KEY_NEXT_TURN))
 	{
-		m_nextTurn.nextTurn(*this);
-		m_game->getInputManager().releaseKey(GInput::KEY_NEXT_TURN);
+		gamePlayScreen.getNextTurn().nextTurn(gamePlayScreen);
+		gamePlayScreen.getInputManager().releaseKey(GInput::KEY_NEXT_TURN);
 	}
 
 
-	if (Utility::checkPlayerUnitSelection(m_players))
+	if (Utility::checkPlayerUnitSelection(gamePlayScreen.GETPlayers()))
 	{
 		/* Found City */
-		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
+		if (gamePlayScreen.getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
 		{
-			PlayerPtrT splayer(m_players.GETselectedPlayerPtr());
+			PlayerPtrT splayer(gamePlayScreen.GETPlayers().GETselectedPlayerPtr());
 			UnitPtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
 
 			if (sUnit->isThisUnitType("settler"))
 			{
-				City::createCity(*this);
-				m_mainMap.SETneedToUpdateDraw(true);
+				City::createCity(gamePlayScreen);
+				gamePlayScreen.GETmainMap().SETneedToUpdateDraw(true);
 			}
 		}
 
 		/* Irragate */
-		if (m_game->getInputManager().isKeyDown(GInput::KEY_TO_IRRIGATE))
+		if (gamePlayScreen.getInputManager().isKeyDown(GInput::KEY_TO_IRRIGATE))
 		{
-			PlayerPtrT splayer(m_players.GETselectedPlayerPtr());
+			PlayerPtrT splayer(gamePlayScreen.GETPlayers().GETselectedPlayerPtr());
 			UnitPtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
 
 			if	(sUnit->GETname().starts_with("ouvrier_tier_") == STRINGS::START_WITH)
 			{
-				sUnit->irrigate(m_mainMap.GETmatriceMap());
-				m_mainMap.SETneedToUpdateDraw(true);
+				sUnit->irrigate(gamePlayScreen.GETmainMap().GETmatriceMap());
+				gamePlayScreen.GETmainMap().SETneedToUpdateDraw(true);
 			}
 		}
 
 
 		/* Move Unit */
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_1))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_1))
 		{
 			/* ← + ↓ */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::SouthWest)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::SouthWest)
 			);
 		}
 		else
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_2))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_2))
 		{
 			/* ↓ */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::South)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::South)
 			);
 		}
 		else
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_3))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_3))
 		{
 			/* → + ↓ */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::SouthEst)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::SouthEst)
 			);
 		}
 		else
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_4))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_4))
 		{
 			/* ← */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::West)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::West)
 			);
 		}
 		/* NO SDLK_KP_5 : Useless */
 		else
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_6))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_6))
 		{
 			/* → */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::Est)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::Est)
 			);
 		}
 		else
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_7))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_7))
 		{
 			/* ← + ↑ */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::NorthWest)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::NorthWest)
 			);
 		}
 		else
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_8))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_8))
 		{
 			/* ↑ */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::North)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::North)
 			);
 		}
 		else
-		if (m_game->getInputManager().isKeyDown(SDLK_KP_9))
+		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_9))
 		{
 			/* → + ↑ */
 			Unit::tryToMove
 			(
-				m_mainMap.GETmatriceMap(),
-				m_players,
+				gamePlayScreen.GETmainMap().GETmatriceMap(),
+				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection
-					(R2D::CardinalDirections::NorthEst)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::NorthEst)
 			);
 		}
 		else
@@ -259,60 +294,109 @@ void GamePlayScreen::actionByKey()
 			/* Do nothing */
 		}
 	}
+
+#ifdef _DEBUG
+	if (gamePlayScreen.getInputManager().isKeyDown(SDL_BUTTON_RIGHT))
+	{
+		gamePlayScreen.GETPlayers().clickToSelectUnit
+		(
+			getMouseCoorNorm('X', gamePlayScreen.GETmainMap(), gamePlayScreen.getInputManager(), gamePlayScreen.getCamera(), gamePlayScreen.getParentWindow()),
+			getMouseCoorNorm('Y', gamePlayScreen.GETmainMap(), gamePlayScreen.getInputManager(), gamePlayScreen.getCamera(), gamePlayScreen.getParentWindow())
+		);
+	}
+#endif // _DEBUG
+
 }
 
-void GamePlayScreen::moveCamera
+
+void GameInput::moveCameraByDeltaTime
 (
-	const float deltaTime
+	R2D::InputManager& inputManager,
+	R2D::Camera2D& camera,
+	MainMap& mainMap,
+	Players& players
 )
 {
-	if (m_game->getInputManager().isKeyDown(SDLK_z) && !m_camera.isLockMoveUP())
+	static Uint32 prevTicks{ SDL_GetTicks() };
+	Uint32 frameTime{ 0 }, newTicks{ 0 };
+	float totalDeltaTime{ 0.0f }, deltaTime{ 0.0f };
+
+	newTicks = SDL_GetTicks();
+	frameTime = newTicks - prevTicks;
+	prevTicks = newTicks;
+	totalDeltaTime = (float)frameTime / DELTA_TIME::TARGET_FRAMETIME;
+	int i{ 0 };
+
+	while (totalDeltaTime > 0.0f && i < DELTA_TIME::MAX_PHYSICS_STEPS)
 	{
-		m_camera.SETposition
+		deltaTime = std::min(totalDeltaTime, DELTA_TIME::MAX_DELTA_TIME);
+		moveCamera(deltaTime, inputManager, camera, mainMap, players);
+		totalDeltaTime -= deltaTime;
+		i++;
+	}
+}
+
+void GameInput::moveCamera
+(
+	const float deltaTime,
+	R2D::InputManager& inputManager,
+	R2D::Camera2D& camera,
+	MainMap& mainMap,
+	Players& players
+)
+{
+	if (inputManager.isKeyDown(SDLK_z) && !camera.isLockMoveUP())
+	{
+		camera.SETposition
 			(
-				m_camera.GETposition()
+				camera.GETposition()
 				+
 				glm::vec2(0.0f, GInput::KEY_SPEED_MOVE * deltaTime)
 			);
-		updateDrawCameraMove();
+		updateDrawCameraMove(mainMap, players);
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_s) && !m_camera.isLockMoveDOWN())
+	if (inputManager.isKeyDown(SDLK_s) && !camera.isLockMoveDOWN())
 	{
-		m_camera.SETposition
+		camera.SETposition
 			(
-				m_camera.GETposition()
+				camera.GETposition()
 				+
 				glm::vec2(0.0f, -GInput::KEY_SPEED_MOVE * deltaTime)
 			);
-		updateDrawCameraMove();
+		updateDrawCameraMove(mainMap, players);
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_q) && !m_camera.isLockMoveLEFT())
+	if (inputManager.isKeyDown(SDLK_q) && !camera.isLockMoveLEFT())
 	{
-		m_camera.SETposition
+		camera.SETposition
 			(
-				m_camera.GETposition()
+				camera.GETposition()
 				+
 				glm::vec2(-GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
-		updateDrawCameraMove();
+		updateDrawCameraMove(mainMap, players);
 	}
-	if (m_game->getInputManager().isKeyDown(SDLK_d) && !m_camera.isLockMoveRIGHT())
+	if (inputManager.isKeyDown(SDLK_d) && !camera.isLockMoveRIGHT())
 	{
-		m_camera.SETposition
+		camera.SETposition
 			(
-				m_camera.GETposition()
+				camera.GETposition()
 				+
 				glm::vec2(GInput::KEY_SPEED_MOVE * deltaTime, 0.0f)
 			);
-		updateDrawCameraMove();
+		updateDrawCameraMove(mainMap, players);
 	}
 }
 
-void GamePlayScreen::updateDrawCameraMove()
+
+void GameInput::updateDrawCameraMove
+(
+	MainMap& mainMap,
+	Players& players
+)
 {
-	m_mainMap.SETneedToUpdateDraw(true);
-	m_players.SETneedToUpdateDrawUnit(true);
-	m_players.SETneedToUpdateDrawCity(true);
+	mainMap.SETneedToUpdateDraw(true);
+	players.SETneedToUpdateDrawUnit(true);
+	players.SETneedToUpdateDrawCity(true);
 }
 
 /* ---------------------------------------------------------------------------------------------------------- */
@@ -324,9 +408,12 @@ void GamePlayScreen::updateDrawCameraMove()
 /* RETURNED VALUE    : void																					  */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
-void GamePlayScreen::wheel
+void GameInput::wheel
 (
-	const SDL_Event& ev
+	const SDL_Event& ev,
+	R2D::Camera2D& camera,
+	MainMap& mainMap,
+	Players& players
 )
 {
 	/*
@@ -362,48 +449,54 @@ void GamePlayScreen::wheel
 	*/
 	if (R2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
 	{
-		m_camera.zoom();
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
+		camera.zoom();
+		mainMap.SETneedToUpdateDraw(true);
+		players.SETneedToUpdateDrawUnit(true);
 	}
 	else if (R2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
-		m_camera.deZoom();
-		m_mainMap.SETneedToUpdateDraw(true);
-		m_players.SETneedToUpdateDrawUnit(true);
+		camera.deZoom();
+		mainMap.SETneedToUpdateDraw(true);
+		players.SETneedToUpdateDrawUnit(true);
 	}
 }
 
 
-void GamePlayScreen::mouseClick
+void GameInput::mouseClick
 (
-	const SDL_Event& ev
+	const SDL_Event& ev,
+	R2D::InputManager& inputManager,
+	R2D::Camera2D& camera,
+	Players& players,
+	const R2D::Window& window,
+	int& nextScreenIndexMenu,
+	R2D::ScreenState& currentState
 )
 {
 	
-	if (ev.button.clicks == R2D::GUI_MOUSE::TWO_CLICKS && m_game->getInputManager().isKeyDown(SDL_BUTTON_LEFT))
+	if (ev.button.clicks == R2D::GUI_MOUSE::TWO_CLICKS && inputManager.isKeyDown(SDL_BUTTON_LEFT))
 	{
 		if	(
-				m_players.searchCity
+			players.searchCity
 				(
 					MainMap::convertPosXToIndex
 					(
-						(double)m_game->getInputManager().GETmouseCoords().x
-						+ (double)m_camera.GETposition().x
-						- (double)m_game->getWindow().GETscreenWidth() / 2
+						(double)inputManager.GETmouseCoords().x
+						+ (double)camera.GETposition().x
+						- (double)window.GETscreenWidth() / 2
 					)
 					,
 					MainMap::convertPosYToIndex
 					(
-						-(double)m_game->getInputManager().GETmouseCoords().y
-						+ (double)m_camera.GETposition().y
-						+ (double)m_game->getWindow().GETscreenHeight() / 2
+						-(double)inputManager.GETmouseCoords().y
+						+ (double)camera.GETposition().y
+						+ (double)window.GETscreenHeight() / 2
 					)
 				)
 			)
 		{
-			m_screen.m_nextScreenIndexMenu = SCREEN_INDEX::CITY;
-			m_currentState = R2D::ScreenState::CHANGE_NEXT;
+			nextScreenIndexMenu = SCREEN_INDEX::CITY;
+			currentState = R2D::ScreenState::CHANGE_NEXT;
 		}
 		else
 		{
@@ -416,19 +509,26 @@ void GamePlayScreen::mouseClick
 	}
 }
 
-unsigned int GamePlayScreen::getMouseCoorNorm(const unsigned char c)
+unsigned int GameInput::getMouseCoorNorm
+(
+	const unsigned char c,
+	const MainMap& mainMap,
+	R2D::InputManager& inputManager,
+	R2D::Camera2D& camera,
+	const R2D::Window& window
+)
 {
 	if (c == 'X')
 	{
 		return
 		(
-			m_mainMap.GETtileSize()
+			mainMap.GETtileSize()
 			*
 			MainMap::convertPosXToIndex
 			(
-				(double)m_game->getInputManager().GETmouseCoords().x
-				+ (double)m_camera.GETposition().x
-				- (double)m_game->getWindow().GETscreenWidth() / 2
+				(double)inputManager.GETmouseCoords().x
+				+ (double)camera.GETposition().x
+				- (double)window.GETscreenWidth() / 2
 			)
 		);
 	}
@@ -437,13 +537,13 @@ unsigned int GamePlayScreen::getMouseCoorNorm(const unsigned char c)
 	{
 		return 
 		(
-			m_mainMap.GETtileSize()
+			mainMap.GETtileSize()
 			*
 			MainMap::convertPosYToIndex
 			(
-				-(double)m_game->getInputManager().GETmouseCoords().y
-				+ (double)m_camera.GETposition().y
-				+ (double)m_game->getWindow().GETscreenHeight() / 2
+				-(double)inputManager.GETmouseCoords().y
+				+ (double)camera.GETposition().y
+				+ (double)window.GETscreenHeight() / 2
 			)
 		);
 	}

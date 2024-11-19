@@ -84,7 +84,7 @@ void SpriteBatch::init()
 
 void SpriteBatch::begin
 (
-	GlyphSortType sortType /* = GlyphSortType::TEXTURE */
+	GlyphSortType sortType /* = GlyphSortType::FRONT_TO_BACK */
 )
 {
 	m_sortType = sortType;

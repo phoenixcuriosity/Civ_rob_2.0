@@ -24,6 +24,7 @@
 #define T_GamePlayScreen_H
 
 #include "GameInput.h"
+#include "GamePlayScreenEnumTexture.h"
 
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/Camera2D.h>
@@ -50,6 +51,8 @@ struct Screen
 
 	std::vector<CEGUI::RadioButton*> m_vectPlayerRadioButton;
 	std::vector<R2D::WidgetLabel> m_widgetLabels;
+
+	GamePlayScreenTexture m_idTexture;
 
 	int m_nextScreenIndexMenu = R2D::SCREEN_INDEX::INIT;
 };

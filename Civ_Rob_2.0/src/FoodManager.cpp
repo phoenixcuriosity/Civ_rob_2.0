@@ -29,26 +29,26 @@
 
 namespace FOOD_MANAGER
 {
-	const double ZERO_FOOD = 0.0;
+	constexpr double ZERO_FOOD = 0.0;
 
-	const double OFFSET_FOOD_LEVEL = 15.0;
-	const double COEF1_MULT_FOOD_LEVEL = 6.0;
-	const double COEF2_MULT_FOOD_LEVEL = 1.8;
+	constexpr double OFFSET_FOOD_LEVEL = 15.0;
+	constexpr double COEF1_MULT_FOOD_LEVEL = 6.0;
+	constexpr double COEF2_MULT_FOOD_LEVEL = 1.8;
 
-	const double MULT_FOOD_CONSUMPTION = 2.0;
+	constexpr double MULT_FOOD_CONSUMPTION = 2.0;
 
-	const size_t ONE_POP = 1;
+	constexpr size_t ONE_POP = 1;
 
 	namespace EMOTION_RANGE
 	{
 		/* Define the maximum range of emotion */
-		const double MAX = 100.0;
+		constexpr double MAX = 100.0;
 
 		/* Define the minimum range of emotion */
-		const double MIN = 0.0;
+		constexpr double MIN = 0.0;
 
 		/* Define the mean emotion */
-		const double MEAN = ((MAX + MIN) / 2.0);
+		constexpr double MEAN = ((MAX + MIN) / 2.0);
 
 		/* Define the mean value of emotion range */
 		const double SCALE_MEAN = ((abs(MAX) + abs(MIN)) / 2.0);

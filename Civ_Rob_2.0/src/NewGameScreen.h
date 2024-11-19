@@ -29,11 +29,7 @@
 #include <R2D/src/GUI.h>
 #include <R2D/src/Screen.h>
 
-struct UserInputNewGame
-{
-	std::vector<std::string> vectPlayerName;
-
-};
+#include "T_NewGameScreen.h"
 
 class NewGameScreen : public R2D::IGameScreen, public R2D::CScreen
 {
@@ -58,6 +54,7 @@ public: /* Override from R2D::IGameScreen */
 
 private: /* Override from R2D::CScreen */
 
+	void doInitOptimizeTexture()override;
 	void doInitUI() override;
 	void doInitHUDText() override;
 	void doDrawAll() override;

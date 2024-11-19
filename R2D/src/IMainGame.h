@@ -55,6 +55,7 @@ protected:
 	virtual bool init();
 	virtual bool initSystem();
 	virtual void InitShaders() = 0;
+	virtual void InitTexture() = 0;
 
 public:
 

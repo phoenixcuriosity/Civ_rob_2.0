@@ -24,6 +24,7 @@
 
 #include "CityScreen.h"
 #include "GamePlayScreen.h"
+#include "LogSentences.h"
 #include "MainMenuScreen.h"
 #include "NewGameScreen.h"
 #include "ReloadMenuScreen.h"
@@ -32,6 +33,7 @@
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/ExitFromError.h> 
 #include <R2D/src/SpriteFont.h> 
 #include <R2D/src/tinyXml2.h> 
@@ -41,8 +43,8 @@ namespace FILE_APP
 {
 	namespace PATH
 	{
-		const std::string CONFIG = "bin/filePath.xml";
-		const std::string LOG = "bin/log/log.txt";
+		constexpr char CONFIG[] = "bin/filePath.xml";
+		constexpr char LOG[] = "bin/log/log.txt";
 	}
 }
 
@@ -73,6 +75,7 @@ void App::onInit()
 	/* Set location of logging file */
 	R2D::ResourceManager::initializeFilePath(R2D::e_Files::log, FILE_APP::PATH::LOG);
 	R2D::ErrorLog::initializeLog();
+	R2D::Logger::instance().init(R2D::LogLevelType::info, R2D::FileLineFunctionType::dont_show);
 
 	initMain();
 
@@ -104,6 +107,11 @@ void App::InitShaders()
 	R2D::ResourceManager::getSpriteFont()
 		= std::make_shared<R2D::SpriteFont>
 		(R2D::FONT::GUI::NAME.c_str(), R2D::FONT::GUI::SIZE::DEFAULT);
+}
+
+void App::InitTexture()
+{
+	R2D::ResourceManager::loadTextureFromDir(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
 }
 
 
@@ -161,10 +169,10 @@ void App::addScreens()
 /* ----------------------------------------------------------------------------------- */
 void App::initMain()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::START);
 
 	tinyxml2::XMLDocument config{};
-	config.LoadFile(FILE_APP::PATH::CONFIG.c_str());
+	config.LoadFile(FILE_APP::PATH::CONFIG);
 
 	if (config.ErrorID() == 0)
 	{
@@ -184,16 +192,18 @@ void App::initMain()
 			}
 			else
 			{
-				throw("Missing path for a file " + FILE_APP::PATH::CONFIG);
+				LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::MISSING_PATH_FILE, FILE_APP::PATH::CONFIG);
+				throw("Missing path for a file " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
 			}
 		}
 	}
 	else
 	{
-		throw("Impossible d'ouvrir le fichier " + FILE_APP::PATH::CONFIG);
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, FILE_APP::PATH::CONFIG);
+		throw("Impossible d'ouvrir le fichier " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
 	}
 
-	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::END);
 }
 
 

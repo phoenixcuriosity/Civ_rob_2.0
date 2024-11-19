@@ -20,41 +20,45 @@
 
 */
 
-#ifndef ErrorLog_H
-#define ErrorLog_H
+#ifndef CityScreenEnumTexture_H
+#define CityScreenEnumTexture_H
 
-#include <iostream>
-#include <fstream>
+#include "TemplateEnumTexture.h"
 
-#include "LogLevel.h"
-
-namespace R2D
+enum class CityScreenEnumTexture
 {
-
-class ErrorLog
-{
-public:
-
-	static void initializeLog();
-
-	static void closeLog();
-
-	static void logEvent
-	(
-		const std::string& evt
-	);
-
-private:
-
-	static std::ofstream m_log;
-	static std::string m_lastEvent;
-	static bool m_isInitialize;
+	deepwater,
+	grass,
+	grassIrr,
+	water,
+	coal,
+	copper,
+	fish,
+	horse,
+	iron,
+	petroleum,
+	stone,
+	tree1,
+	uranium,
+	ColorPlayer0,
+	ColorPlayer1,
+	ColorPlayer2,
+	ColorPlayer3,
+	ColorPlayer4,
+	ColorPlayer5,
+	ColorPlayer6,
+	ColorPlayer7,
+	ColorPlayer8,
+	ecstatic,
+	happy,
+	neutral,
+	sad,
+	angry,
+	food,
+	Hammer,
+	ENUM_SIZE
 };
 
-}
+typedef EnumArray<CityScreenEnumTexture, CityScreenEnumTexture::ENUM_SIZE> CityScreenTexture;
 
-
-
-
-#endif // !ErrorLog_H
-
+#endif // !CityScreenEnumTexture_H

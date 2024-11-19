@@ -69,6 +69,7 @@ bool CScreen::end()
 
 void CScreen::initAll()
 {
+	doInitOptimizeTexture();
 	initUI();
 	initHUDText();
 }

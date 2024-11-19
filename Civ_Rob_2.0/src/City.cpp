@@ -25,22 +25,23 @@
 #include "App.h"
 #include "Citizen.h"
 #include "GameplayScreen.h"
+#include "LogSentences.h"
 #include "Player.h"
 #include "Players.h"
 #include "Unit.h"
 #include "Utility.h"
 
-#include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/Window.h>
 
 namespace POP
 {
 	/* Population maximale dans une Citie */
-	const unsigned int MAX = 50;
+	constexpr unsigned int MAX = 50;
 
 	/* Minimal population in City */
-	const unsigned int MIN = 1;
+	constexpr unsigned int MIN = 1;
 }
 
 namespace RESOURCES
@@ -48,15 +49,15 @@ namespace RESOURCES
 	namespace FOOD
 	{
 		/* Define the minimum food in a City */
-		const double ZERO = 0.0;
+		constexpr double ZERO = 0.0;
 
 		/* Define the minimum food to level up */
-		const double MIN_TO_LEVEL_UP = 1.0;
+		constexpr double MIN_TO_LEVEL_UP = 1.0;
 	}
 
 	namespace GOLD
 	{
-		const double ZERO = 0.0;
+		constexpr double ZERO = 0.0;
 	}
 }
 
@@ -65,9 +66,9 @@ namespace CityC
 	/* Todo : g�n�ralisation : compter nb Citie par player dans CITIENAME.txt */
 
 	/* Nombre de noms de Citie dans CITIENAME.txt */
-	const unsigned int MAX_CITY_PER_PLAYER = 5;
+	constexpr unsigned int MAX_CITY_PER_PLAYER = 5;
 
-	const unsigned int CITY_IHM_SECOND_INDEX = 1;
+	constexpr unsigned int CITY_IHM_SECOND_INDEX = 1;
 }
 
 
@@ -265,12 +266,13 @@ City::City
 	m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
 	m_goldBalance(0.0)
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Create Citie: " + m_name + " Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
+		m_image, m_name, m_x, m_y, m_influenceLevel);
 }
 
 City::~City()
 {
-	R2D::ErrorLog::logEvent("[INFO]___: Destroy Citie: " + m_name + " Success");
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITY, logS::DATA::DESTRUCTOR_CITY, m_name);
 }
 
 void City::computefood

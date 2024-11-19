@@ -25,6 +25,7 @@
 
 #define NOMINMAX // forbid to redifine std::max/min by Windows.h and Visual Studio
 
+#include <array>
 #include <deque>
 #include <memory>
 #include <queue>
@@ -34,47 +35,47 @@
 namespace STRINGS
 {
 	/* Define an empty string */
-	const std::string EMPTY = "";
+	constexpr char EMPTY[] = "";
 
 	/* Define that the compared strings are identical */
-	const int IDENTICAL = 0;
+	constexpr int IDENTICAL = 0;
 
 	/* Define that the compared strings are identical */
-	const bool START_WITH = true;
+	constexpr bool START_WITH = true;
 }
 
 namespace MODULO
 {
 	/* Define 0 for module use */
-	const unsigned int ZERO = 0;
+	constexpr unsigned int ZERO = 0;
 }
 
 namespace PERCENTAGE
 {
 	/* Define Percent */
-	const double ONE_HUNDRED = 100.0;
+	constexpr double ONE_HUNDRED = 100.0;
 }
 
 namespace CONTAINERS
 {
 	/* Define a non EMPTY vect/list/map */
-	const bool NOT_EMPTY = false;
+	constexpr bool NOT_EMPTY = false;
 }
 
 namespace SELECTION
 {
-	const int NO_PLAYER_SELECTED = -1;
+	constexpr int NO_PLAYER_SELECTED = -1;
 
-	const int NO_UNIT_SELECTED = -1;
+	constexpr int NO_UNIT_SELECTED = -1;
 
-	const int NO_CITY_SELECTED = -1;
+	constexpr int NO_CITY_SELECTED = -1;
 
 	/* The tile is not own by a player */
-	const int NO_APPARTENANCE = -1;
+	constexpr int NO_APPARTENANCE = -1;
 
-	const auto NO_OWNER = nullptr;
+	constexpr auto NO_OWNER = nullptr;
 
-	const int NO_CURRENT_SAVE_SELECTED = -1;
+	constexpr int NO_CURRENT_SAVE_SELECTED = -1;
 }
 
  // Define all State of the game, relate to screen
@@ -158,6 +159,7 @@ typedef std::vector<CitizenPtrT> VectCitizen;
 typedef std::vector<CityPtrT> VectCity;
 typedef std::vector<std::string> VectCityName;
 typedef std::vector<PlayerPtrT> VectPlayer;
+typedef std::vector<std::string> VectPlayerName;
 typedef std::vector<UnitPtrT> VectUnit;
 typedef std::vector<Unit_Template> VectUnitTemplate;
 

@@ -27,12 +27,14 @@
 #include "CitizenManager.h"
 
 #include "Citizen.h"
+#include "LogSentences.h"
 #include "T_Citizen.h"
 #include "T_City.h"
 #include "T_MainMap.h"
 
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 
 
 CitizenManager::CitizenManager(const VectMap& tiles)
@@ -192,7 +194,7 @@ void CitizenManager::computeEmotion()
 	{
 		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == STRINGS::IDENTICAL)
 		{
-			R2D::ErrorLog::logEvent(msg);
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::COMPUTE_EMOTION, logS::DATA::ERROR_DIV_ZERO, msg);
 			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
 #ifdef _DEBUG
 			throw(msg);
@@ -200,7 +202,7 @@ void CitizenManager::computeEmotion()
 		}
 		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == STRINGS::IDENTICAL)
 		{
-			R2D::ErrorLog::logEvent(msg);
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::COMPUTE_EMOTION, logS::DATA::ERROR_MIN_MAX_RANGE, msg);
 			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
 #ifdef _DEBUG
 			throw(msg);

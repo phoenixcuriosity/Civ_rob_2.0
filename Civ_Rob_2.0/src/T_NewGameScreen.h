@@ -20,41 +20,14 @@
 
 */
 
-#ifndef ErrorLog_H
-#define ErrorLog_H
+#ifndef T_NewGameScreen_H
+#define T_NewGameScreen_H
 
-#include <iostream>
-#include <fstream>
+#include "LIB.h"
 
-#include "LogLevel.h"
-
-namespace R2D
+struct UserInputNewGame
 {
-
-class ErrorLog
-{
-public:
-
-	static void initializeLog();
-
-	static void closeLog();
-
-	static void logEvent
-	(
-		const std::string& evt
-	);
-
-private:
-
-	static std::ofstream m_log;
-	static std::string m_lastEvent;
-	static bool m_isInitialize;
+	VectPlayerName vectPlayerName;
 };
 
-}
-
-
-
-
-#endif // !ErrorLog_H
-
+#endif /* T_NewGameScreen_H */

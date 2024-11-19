@@ -1,4 +1,4 @@
-/*
+﻿/*
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
@@ -20,41 +20,30 @@
 
 */
 
-#ifndef ErrorLog_H
-#define ErrorLog_H
+#ifndef LogSentences_H
+#define LogSentences_H
 
-#include <iostream>
-#include <fstream>
-
-#include "LogLevel.h"
-
-namespace R2D
+namespace logS
 {
+	namespace WHO
+	{
+		constexpr char RESSOURCES_MANAGER[] = "[RESSOURCES_MANAGER]";
+	};
+	namespace WHAT
+	{
+		constexpr char TEXTURE[] = "[TEXTURE]";
+	};
+	namespace DATA
+	{
+		constexpr char ERROR_LOAD_TEXTURE[] = "[ERROR_LOAD_TEXTURE] : {}";
+		constexpr char LOAD_TEXTURE[] = "[LOAD_TEXTURE] : {}";
 
-class ErrorLog
-{
-public:
-
-	static void initializeLog();
-
-	static void closeLog();
-
-	static void logEvent
-	(
-		const std::string& evt
-	);
-
-private:
-
-	static std::ofstream m_log;
-	static std::string m_lastEvent;
-	static bool m_isInitialize;
+		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
+	};
 };
 
-}
 
 
+#endif // !LogSentences_H
 
-
-#endif // !ErrorLog_H
 

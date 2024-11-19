@@ -31,6 +31,9 @@
     <ClInclude Include="src\CardinalDirection.h" />
     <ClInclude Include="src\API_fwd.h" />
     <ClInclude Include="src\Screen.h" />
+    <ClInclude Include="src\LogLevel.h" />
+    <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\LogSentences.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -58,5 +61,6 @@
     <ClCompile Include="src\tinyXml2.cpp" />
     <ClCompile Include="src\CardinalDirection.cpp" />
     <ClCompile Include="src\Screen.cpp" />
+    <ClCompile Include="src\Log.cpp" />
   </ItemGroup>
 </Project>

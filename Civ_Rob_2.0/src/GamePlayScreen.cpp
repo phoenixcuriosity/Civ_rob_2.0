@@ -23,29 +23,20 @@
 #include "GamePlayScreen.h"
 
 #include "App.h"
+#include "InitLoadFromFile.h"
+#include "LogSentences.h"
 #include "Player.h"
+#include "NewGame.h"
 #include "ScreenIndices.h"
 #include "Unit.h"
-#include "Utility.h"
-#include "T_Unit.h"
-#include "XmlConvertValue.h"
+#include "T_NewGameScreen.h"
 
 #include <tinyxml2/tinyxml2.h>
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
+#include <R2D/src/Log.h> 
 #include <R2D/src/tinyXml2.h> 
-
-
-
-namespace DELTA_TIME
-{
-	constexpr float MS_PER_SECOND(1000.0f);
-	const float TARGET_FRAMETIME = MS_PER_SECOND / (float)R2D::SCREEN_REFRESH_RATE;
-	constexpr unsigned int MAX_PHYSICS_STEPS(6);
-	constexpr float MAX_DELTA_TIME(1.0f);
-}
-
 
 GamePlayScreen::GamePlayScreen
 (
@@ -64,12 +55,13 @@ m_SaveReload(SaveReload),
 m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
-	build();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 }
 
 GamePlayScreen::~GamePlayScreen()
 {
 	destroy();
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::SCREEN);
 }
 
 int GamePlayScreen::getNextScreenIndex()const
@@ -97,31 +89,30 @@ void GamePlayScreen::destroy()
 
 bool GamePlayScreen::onEntry()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::START);
 	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 
 	if (!m_isInitialize)
 	{
-		loadFile();
-
-		R2D::ResourceManager::InitializeCardinalDirectionMapping
-			(m_mainMap.GETtileSize());
-
-		initStructsNULL();
-
-		computeSize();
-
-		initOpenGLScreen();
-
-		loadUnitAndSpec();
-
-		loadCitiesNames();
-
-		/* Need to be after loadUnitAndSpec */
-		m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
-
 		try
 		{
-			m_mainMap.initMainMap(m_camera);
+			InitLoadFromFile::loadMainMapConfig(m_mainMap);
+
+			R2D::ResourceManager::InitializeCardinalDirectionMapping
+			(m_mainMap.GETtileSize());
+
+			initStructsNULL();
+
+			computeSize();
+
+			initOpenGLScreen();
+
+			InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
+
+			/* Need to be after loadUnitAndSpec */
+			m_players.init(m_screen.m_idTexture);
+
+			m_mainMap.initMainMap(m_camera, m_screen.m_idTexture);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
 			if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
@@ -130,37 +121,95 @@ bool GamePlayScreen::onEntry()
 			}
 			else
 			{
-				newGame();
+				NewGameManager::newGame(*this);
+				makePlayersButtons();
 			}
-
+			m_isInitialize = true;
 		}
 		catch (const std::string& msg)
 		{
-			R2D::ErrorLog::logEvent("[ERROR]___: GamePlayScreen::onEntry : " + msg);
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::MSG_DATA, msg);
 			return false;
 		}
-
-		m_isInitialize = true;
 	}
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
+}
+
+void GamePlayScreen::doInitOptimizeTexture()
+{
+	R2D::IdMap idMap;
+	R2D::ResourceManager::copyIdMap(idMap);
+
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::grass] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grass");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::grassIrr] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grassIrr");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::deepwater] = R2D::ResourceManager::searchKeyInIdMap(idMap, "deepwater");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::water] = R2D::ResourceManager::searchKeyInIdMap(idMap, "water");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::coal] = R2D::ResourceManager::searchKeyInIdMap(idMap, "coal");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::copper] = R2D::ResourceManager::searchKeyInIdMap(idMap, "copper");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::fish] = R2D::ResourceManager::searchKeyInIdMap(idMap, "fish");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::iron] = R2D::ResourceManager::searchKeyInIdMap(idMap, "iron");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::petroleum] = R2D::ResourceManager::searchKeyInIdMap(idMap, "petroleum");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::stone] = R2D::ResourceManager::searchKeyInIdMap(idMap, "stone");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::tree1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "tree1");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::uranium] = R2D::ResourceManager::searchKeyInIdMap(idMap, "uranium");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer0] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer0");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer1");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer2");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer3");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer4] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer4");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer5] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer5");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer6] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer6");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer7] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer7");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer8] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer8");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life0] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.0life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.1life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.2life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.3life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life4] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.4life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life5] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.5life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life6] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.6life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life7] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.7life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life8] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.8life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life9] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.9life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::maxlife] = R2D::ResourceManager::searchKeyInIdMap(idMap, "maxlife");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::city] = R2D::ResourceManager::searchKeyInIdMap(idMap, "city");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::battleoids] = R2D::ResourceManager::searchKeyInIdMap(idMap, "battleoids");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::biter] = R2D::ResourceManager::searchKeyInIdMap(idMap, "biter");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::bombardier] = R2D::ResourceManager::searchKeyInIdMap(idMap, "bombardier");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::car] = R2D::ResourceManager::searchKeyInIdMap(idMap, "car");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ouvrier_tier_1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ouvrier_tier_1");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ouvrier_tier_2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ouvrier_tier_2");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ouvrier_tier_3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ouvrier_tier_3");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::robot] = R2D::ResourceManager::searchKeyInIdMap(idMap, "robot");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::rocket] = R2D::ResourceManager::searchKeyInIdMap(idMap, "rocket");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::rover] = R2D::ResourceManager::searchKeyInIdMap(idMap, "rover");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::satellite] = R2D::ResourceManager::searchKeyInIdMap(idMap, "satellite");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::settler] = R2D::ResourceManager::searchKeyInIdMap(idMap, "settler");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::spitter] = R2D::ResourceManager::searchKeyInIdMap(idMap, "spitter");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::tank] = R2D::ResourceManager::searchKeyInIdMap(idMap, "tank");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::transport_plan] = R2D::ResourceManager::searchKeyInIdMap(idMap, "transport_plan");
 }
 
 void GamePlayScreen::doInitUI()
 {
-	/* MainMenuButton */
-	CEGUI::PushButton* mainMenuButton = static_cast<CEGUI::PushButton*>
-		(m_gui.createWidget(
-			"AlfiskoSkin/Button",
-			{ 0.0f, 0.0f, 0.1f, 0.05f },
-			{ 0,0,0,0 },
-			"TestButton"));
+	if (!m_isInitialize)
+	{
+		/* MainMenuButton */
+		CEGUI::PushButton* mainMenuButton = static_cast<CEGUI::PushButton*>
+			(m_gui.createWidget(
+				"AlfiskoSkin/Button",
+				{ 0.0f, 0.0f, 0.1f, 0.05f },
+				{ 0,0,0,0 },
+				"TestButton"));
 
-	mainMenuButton->setText("Main Menu");
-	mainMenuButton->subscribeEvent
-	(
-		CEGUI::PushButton::EventClicked,
-		CEGUI::Event::Subscriber(&GamePlayScreen::onExitClicked, this)
-	);
+		mainMenuButton->setText("Main Menu");
+		mainMenuButton->subscribeEvent
+		(
+			CEGUI::PushButton::EventClicked,
+			CEGUI::Event::Subscriber(&GamePlayScreen::onExitClicked, this)
+		);
+	}
 }
 
 void GamePlayScreen::doInitHUDText()
@@ -175,17 +224,6 @@ void GamePlayScreen::doInitHUDText()
 		0.0f,
 		R2D::COLOR_WHITE
 	);
-
-	/*
-	static GLuint id = R2D::ResourceManager::getTexture("bin/image/toolbar.png")->GETid();
-	m_screen.openGLScreen.spriteBatchHUDStatic.draw
-	(
-		glm::vec4(0.0f, 0.0f, (int)ceil((m_mainMap.GETtoolBarSize() + 1) * m_mainMap.GETtileSize()), m_screen.screenHeight),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-		id,
-		0.0f,
-		R2D::COLOR_WHITE
-	)*/
 }
 
 void GamePlayScreen::onExit()
@@ -201,15 +239,22 @@ void GamePlayScreen::update()
 	while (SDL_PollEvent(&ev))
 	{
 		m_game->onSDLEvent(ev);
-		inputSDL(ev);
-		mouseClick(ev);
+		GameInput::updateSDLInputCycle
+		(
+			ev,
+			m_game->getInputManager(),
+			m_camera,
+			m_mainMap,
+			m_players,
+			getParentWindow(),
+			m_screen.m_nextScreenIndexMenu,
+			m_currentState
+		);
 		updateInputManager(ev, m_game->getInputManager());
 	}
-
-	/* Process Input */
-	actionByKey();
-	moveCameraByDeltaTime();
+	GameInput::processInput(*this);
 }
+
 
 void GamePlayScreen::draw()
 {
@@ -226,9 +271,12 @@ void GamePlayScreen::doDrawAll()
 	m_players.drawCity(m_mainMap, m_camera, R2D::ResourceManager::getSpriteFont());
 
 	/* --- Render --- */
+	// background
 	m_mainMap.renderMap();
-	m_players.renderUnit();
+	// first depth
 	m_players.renderCity();
+	// front depth
+	m_players.renderUnit();
 
 	static const float FONT_SIZE_G = R2D::SpriteFont::getScaleFontToScreen(0.32f);
 
@@ -275,46 +323,6 @@ void GamePlayScreen::doDrawAll()
 
 }
 
-void GamePlayScreen::loadFile()
-{
-	R2D::ErrorLog::logEvent("[INFO]___: [START] : initMain");
-
-	tinyxml2::XMLDocument config{};
-	config.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath().c_str());
-	unsigned int tmp{ 0 };
-
-	if (config.ErrorID() == 0)
-	{
-		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
-
-		if (nullptr != node)
-		{
-			node->QueryUnsignedText(&tmp);
-			m_mainMap.SETtileSize(tmp);
-		}
-		node = node->NextSiblingElement();
-
-		if (nullptr != node)
-		{
-			node->QueryUnsignedText(&tmp);
-			m_mainMap.SETmapSizePixX(tmp);
-		}
-		node = node->NextSiblingElement();
-
-		if (nullptr != node)
-		{
-			node->QueryUnsignedText(&tmp);
-			m_mainMap.SETmapSizePixY(tmp);
-		}
-	}
-	else
-	{
-		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath());
-	}
-
-	R2D::ErrorLog::logEvent("[INFO]___: [END] : initMain");
-}
-
 void GamePlayScreen::initStructsNULL()
 {
 	m_var.tempPlayerName = STRINGS::EMPTY;
@@ -343,96 +351,51 @@ void GamePlayScreen::initOpenGLScreen()
 	m_game->getInputManager().init(m_mainMap.GETtileSizePtr());
 }
 
-void GamePlayScreen::loadUnitAndSpec()
+void GamePlayScreen::makePlayersButtons()
 {
-	tinyxml2::XMLDocument texteFile{};
-	
-	texteFile.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::units)->getPath().c_str());
+	float X_POS = 0.01f;
+	float Y_POS = 0.20f;
+	const float DIMS_PIXELS = 20.0f;
+	const float PADDING = 0.035f;
+	const float TEXT_SCALE = 0.6f;
+	const int GROUP_ID = 1;
 
-	const char* root("Root");
+	/* Clear buffer */
+	m_screen.m_vectPlayerRadioButton.clear();
+	m_screen.m_widgetLabels.clear();
 
-	const char* s_Unit("Unit"),
-		* s_Name("Name"),
-		* s_MovementType("MovementType"),
-		* s_Life("Life"),
-		* s_Atq("Atq"),
-		* s_Def("Def"),
-		* s_Mouvement("Mouvement"),
-		* s_NumberOfAttack("NumberOfAttack"),
-		* s_Level("Level"),
-		* s_WorkToBuild("WorkToBuild"),
-		* s_Maintenance("Maintenance");
+	/* Resize buffer */
+	m_screen.m_vectPlayerRadioButton.resize(m_userInputNewGame->vectPlayerName.size());
+	m_screen.m_widgetLabels.resize(m_userInputNewGame->vectPlayerName.size());
 
-	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
-	Unit_Template currentUnit;
-
-	while (nullptr != node)
+	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
-		currentUnit.name = node->FirstChildElement(s_Name)->GetText();
-		currentUnit.type = XmlConvertValue::xmlGiveMovementType(node->FirstChildElement(s_MovementType)->GetText());
-		node->FirstChildElement(s_Life)->QueryIntText((int*)&currentUnit.life);
-		node->FirstChildElement(s_Atq)->QueryIntText((int*)&currentUnit.atq);
-		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
-		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)&currentUnit.movement);
-		node->FirstChildElement(s_NumberOfAttack)->QueryIntText((int*)&currentUnit.numberOfAttack);
-		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
-		node->FirstChildElement(s_WorkToBuild)->QueryDoubleText((double*)&currentUnit.workToBuild);
-		node->FirstChildElement(s_Maintenance)->QueryDoubleText((double*)&currentUnit.maintenance);
+		m_screen.m_vectPlayerRadioButton[i]
+			= static_cast<CEGUI::RadioButton*>
+			(m_gui.createWidget(
+				"TaharezLook/RadioButton",
+				glm::vec4(X_POS, Y_POS += PADDING, 0.0f, 0.0f),
+				glm::vec4(0.0f, 0.0f, DIMS_PIXELS, DIMS_PIXELS),
+				m_userInputNewGame->vectPlayerName[i]));
 
-		m_players.GETvectUnitTemplate().push_back(currentUnit);
+		m_screen.m_vectPlayerRadioButton[i]->setSelected(false);
 
-		node = node->NextSibling();
-	}
-}
+		m_screen.m_vectPlayerRadioButton[i]->subscribeEvent
+		(CEGUI::RadioButton::EventMouseClick,
+			CEGUI::Event::Subscriber(&GamePlayScreen::onPlayerButtonClicked, this));
+		m_screen.m_vectPlayerRadioButton[i]->setGroupID(GROUP_ID);
 
-void GamePlayScreen::loadCitiesNames()
-{
-	unsigned int nbcity{ 0 };
-	std::string city{ STRINGS::EMPTY}, dummy{ STRINGS::EMPTY };
-	std::ifstream CITIENAME{ R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath() };
+		m_screen.m_widgetLabels[i] = R2D::WidgetLabel(
+			m_screen.m_vectPlayerRadioButton[i],
+			m_userInputNewGame->vectPlayerName[i],
+			TEXT_SCALE);
 
-
-	if (CITIENAME)
-	{
-		CITIENAME >> dummy;
-
-		CITIENAME >> nbcity;
-		m_players.GETvectCityName().resize(nbcity);
-
-		for (auto& c : m_players.GETvectCityName())
-		{
-			CITIENAME >> c;
-		}
-	}
-	else
-	{
-		throw("Impossible d'ouvrir le fichier " + R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath());
-	}
-}
-
-void GamePlayScreen::moveCameraByDeltaTime()
-{
-	static Uint32 prevTicks{ SDL_GetTicks() };
-	Uint32 frameTime{ 0 }, newTicks{ 0 };
-	float totalDeltaTime{ 0.0f }, deltaTime{ 0.0f };
-
-	newTicks = SDL_GetTicks();
-	frameTime = newTicks - prevTicks;
-	prevTicks = newTicks;
-	totalDeltaTime = (float)frameTime / DELTA_TIME::TARGET_FRAMETIME;
-	int i{ 0 };
-
-	while (totalDeltaTime > 0.0f && i < DELTA_TIME::MAX_PHYSICS_STEPS)
-	{
-		deltaTime = std::min(totalDeltaTime, DELTA_TIME::MAX_DELTA_TIME);
-		moveCamera(deltaTime);
-		totalDeltaTime -= deltaTime;
-		i++;
 	}
 }
 
 bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::PLAYER_BUTTON);
 	for (size_t i(0); i < m_screen.m_vectPlayerRadioButton.size(); i++)
 	{
 		if (m_screen.m_vectPlayerRadioButton[i]->isSelected())
@@ -464,80 +427,9 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 
 bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::EXIT_BUTTON);
 	SaveReload::save(*this);
 
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
-}
-
-
-
-Screen& GamePlayScreen::GETscreen()
-{
-	return m_screen;
-};
-
-const Screen& GamePlayScreen::GETscreen()const
-{
-	return m_screen;
-};
-
-Var& GamePlayScreen::GETvar()
-{ 
-	return m_var;
-};
-
-const Var& GamePlayScreen::GETvar()const
-{
-	return m_var; 
-};
-
-MainMap& GamePlayScreen::GETmainMap()
-{
-	return m_mainMap;
-};
-
-const MainMap& GamePlayScreen::GETmainMap()const
-{ 
-	return m_mainMap; 
-};
-
-Players& GamePlayScreen::GETPlayers()
-{ 
-	return m_players;
-};
-
-const Players& GamePlayScreen::GETPlayers()const
-{
-	return m_players; 
-};
-
-SaveReloadPtrT GamePlayScreen::getSaveReload()
-{ 
-	return m_SaveReload; 
-};
-
-UserInputNewGame* GamePlayScreen::getUserInputNewGame()
-{ 
-	return m_userInputNewGame;
-};
-
-void GamePlayScreen::SETvar(Var& var)
-{ 
-	m_var = var; 
-};
-
-void GamePlayScreen::SETmainMap(MainMap& mainMap)
-{
-	m_mainMap = mainMap; 
-};
-
-void GamePlayScreen::SETPlayers(Players& players)
-{ 
-	m_players = players;
-};
-
-R2D::Window& GamePlayScreen::getParentWindow()
-{
-	return m_game->getWindow();
 }

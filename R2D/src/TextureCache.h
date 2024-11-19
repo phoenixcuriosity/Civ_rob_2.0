@@ -27,18 +27,31 @@
 
 namespace R2D
 {
-	class TextureCache
-	{
-	public:
-		TextureCache();
-		~TextureCache();
 
-	public:
+class TextureCache
+{
+public:
+	TextureCache();
+	~TextureCache();
 
-		std::unique_ptr<GLTexture>& getTexture(const std::string& name);
+private:
 
-	private:
-		std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
-	};
+	std::unique_ptr<GLTexture>& getTexture(const std::string& name);
+
+public:
+
+	void loadTextureFromDir(const std::string& path);
+
+	inline void copyIdMap(IdMap& dest)const { dest = m_idMap; };
+
+public:
+
+	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
+
+private:
+	std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
+	IdMap m_idMap;
+};
+
 }
 #endif // !TextureCache_H

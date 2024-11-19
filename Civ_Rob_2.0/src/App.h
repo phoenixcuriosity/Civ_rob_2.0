@@ -39,6 +39,7 @@ public:
 	void InitShaders() override;
 	void onExit() override;
 	void addScreens() override;
+    void InitTexture() override;
 
 	/* ----------------------------------------------------------------------------------- */
 	/* ----------------------------------------------------------------------------------- */

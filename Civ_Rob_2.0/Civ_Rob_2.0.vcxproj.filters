@@ -64,6 +64,9 @@
     <ClCompile Include="src\Players.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
+    <ClCompile Include="src\InitLoadFromFile.cpp">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -153,6 +156,22 @@
     <ClInclude Include="src\Players.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
+    <ClInclude Include="src\InitLoadFromFile.h">
+      <Filter>Class GamePlayScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\T_NewGameScreen.h">
+      <Filter>T_struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LogSentences.h" />
+    <ClInclude Include="src\CityScreenEnumTexture.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GamePlayScreenEnumTexture.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TemplateEnumTexture.h">
+      <Filter>template</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">
@@ -166,6 +185,9 @@
     </Filter>
     <Filter Include="T_struct">
       <UniqueIdentifier>{5aad5700-2fee-471a-9d86-585b9b5aee0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="template">
+      <UniqueIdentifier>{a30df055-622d-45e2-a087-044dd752657c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

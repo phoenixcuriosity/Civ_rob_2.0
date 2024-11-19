@@ -24,10 +24,12 @@
 
 #include "NewGameScreen.h"
 
+#include "LogSentences.h"
 #include "ScreenIndices.h"
 
 #include "App.h"
 #include <R2D/src/ResourceManager.h> 
+#include <R2D/src/Log.h> 
 
 namespace NUMBER_OF_PLAYER
 {
@@ -46,11 +48,13 @@ m_userInputNewGame(),
 m_vectSlider(),
 m_isInitialize(false)
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::NEWGAME_MENU, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 	build();
 }
 
 NewGameScreen::~NewGameScreen()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::NEWGAME_MENU, logS::WHAT::DESTRUCTOR, logS::DATA::SCREEN);
 	destroy();
 }
 
@@ -75,8 +79,15 @@ void NewGameScreen::destroy()
 
 bool NewGameScreen::onEntry()
 {
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::NEWGAME_MENU, logS::WHAT::ON_ENTRY, logS::DATA::START);
 	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::NEWGAME_MENU, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
+}
+
+void NewGameScreen::doInitOptimizeTexture()
+{
+	/* Do nothing */
 }
 
 void NewGameScreen::doInitUI()

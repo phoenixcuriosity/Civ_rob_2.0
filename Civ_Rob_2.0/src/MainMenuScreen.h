@@ -51,6 +51,7 @@ public:
 
 private:
 
+	void doInitOptimizeTexture()override;
 	void doInitUI() override;
 	void doInitHUDText()override;
 	void doDrawAll()override;
