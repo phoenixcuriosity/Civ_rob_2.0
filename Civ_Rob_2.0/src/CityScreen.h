@@ -25,6 +25,7 @@
 
 #include "LIB.h"
 
+#include "CityScreenEnumTexture.h"
 #include "T_CityScreen.h"
 
 #include <R2D/src/API_fwd.h>
@@ -60,6 +61,7 @@ public: /* Override from R2D::IGameScreen */
 
 private: /* Override from R2D::CScreen */
 
+	void doInitOptimizeTexture()override;
 	void doInitUI() override;
 	void doInitHUDText() override;
 	void doDrawAll() override;
@@ -94,7 +96,7 @@ private:
 
 	void drawNbPop();
 
-	void callDraw(const size_t kTile, const GLuint id);
+	void callDraw(const size_t kTile, const GLuint id, const float depth);
 
 private:
 
@@ -109,10 +111,7 @@ private:
 
 	dequeBuild m_buttonBuild;
 
-	/* Dedicated spriteBatch */
-	R2D::SpriteBatch m_spriteBatchAppartenance;
-	bool m_needToUpdateDraw;
-	R2D::VectID s_vectID;
+	CityScreenTexture m_idTexture;
 
 	Players* m_players;
 	unsigned int* m_tileSize;

@@ -189,9 +189,11 @@
     <ClInclude Include="src\CitizenManager.h" />
     <ClInclude Include="src\City.h" />
     <ClInclude Include="src\CityScreen.h" />
+    <ClInclude Include="src\CityScreenEnumTexture.h" />
     <ClInclude Include="src\FoodManager.h" />
     <ClInclude Include="src\GameInput.h" />
     <ClInclude Include="src\GamePlayScreen.h" />
+    <ClInclude Include="src\GamePlayScreenEnumTexture.h" />
     <ClInclude Include="src\InitLoadFromFile.h" />
     <ClInclude Include="src\LIB.h" />
     <ClInclude Include="src\LogSentences.h" />
@@ -206,6 +208,7 @@
     <ClInclude Include="src\ReloadMenuScreen.h" />
     <ClInclude Include="src\SaveReload.h" />
     <ClInclude Include="src\ScreenIndices.h" />
+    <ClInclude Include="src\TemplateEnumTexture.h" />
     <ClInclude Include="src\T_Citizen.h" />
     <ClInclude Include="src\T_City.h" />
     <ClInclude Include="src\T_CityScreen.h" />

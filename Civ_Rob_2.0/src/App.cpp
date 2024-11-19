@@ -109,6 +109,11 @@ void App::InitShaders()
 		(R2D::FONT::GUI::NAME.c_str(), R2D::FONT::GUI::SIZE::DEFAULT);
 }
 
+void App::InitTexture()
+{
+	R2D::ResourceManager::loadTextureFromDir(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
+}
+
 
 void App::onExit()
 {

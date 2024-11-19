@@ -54,6 +54,7 @@ public: /* Override from R2D::IGameScreen */
 
 private: /* Override from R2D::CScreen */
 
+	void doInitOptimizeTexture()override;
 	void doInitUI() override;
 	void doInitHUDText() override;
 	void doDrawAll() override;

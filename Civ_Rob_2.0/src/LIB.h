@@ -25,6 +25,7 @@
 
 #define NOMINMAX // forbid to redifine std::max/min by Windows.h and Visual Studio
 
+#include <array>
 #include <deque>
 #include <memory>
 #include <queue>

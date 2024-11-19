@@ -80,24 +80,9 @@ namespace MAPGUI
 	constexpr GLuint UNUSED_ID = 0;
 }
 
- /* *********************************************************
-  *					  Static Var						   *
-  ********************************************************* */
-
 unsigned int* MainMap::s_tileSize;
 
-static size_t START_APPARTENANCE_INDEX = 0;
-static size_t START_GROUND_SPEC_INDEX = 0;
-constexpr uint8_t OFFSET_GROUND_TYPE = 1;
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : getPtrTileSize															   */
-/* ROLE : Initialize ptr on tileSize from sysinfo									   */
-/* INPUT : unsigned int* const : ptr on tileSize									   */
-/* RETURNED VALUE : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void MainMap::setStaticPtrTileSize()
 {
 	s_tileSize = &m_tileSize;
@@ -113,10 +98,10 @@ m_offsetMapCameraXmin(0),
 m_offsetMapCameraXmax(0),
 m_offsetMapCameraYmin(0),
 m_offsetMapCameraYmax(0),
+m_idTexture(),
 m_matriceMap(),
 m_needToUpdateDraw(true),
-m_spriteBatch(),
-s_vectID()
+m_spriteBatch()
 {
 	setStaticPtrTileSize();
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::MAINMAP);
@@ -128,7 +113,7 @@ MainMap::~MainMap()
 }
 
 
-void MainMap::initMainMap(R2D::Camera2D& camera)
+void MainMap::initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::START);
 	initTile();
@@ -154,48 +139,17 @@ void MainMap::initMainMap(R2D::Camera2D& camera)
 	}
 	
 
-	initMainMapTexture();
+	initMainMapTexture(idTexture);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::END);
 }
 
-void MainMap::initMainMapTexture()
+void MainMap::initMainMapTexture(const GamePlayScreenTexture& idTexture)
 {
+	m_idTexture = idTexture;
 	m_spriteBatch.init();
 	m_spriteBatchAppartenance.init();
-
-
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-grass.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-water.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-deepwater.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/ground/hr-grass_irr.png")->GETid());
-
-	START_GROUND_SPEC_INDEX = s_vectID.size();
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/coal.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/copper.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/iron.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/tree1.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/stone.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/uranium.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/horse.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/fish.png")->GETid());
-	s_vectID.push_back(R2D::ResourceManager::getTexture("bin/image/spec/petroleum.png")->GETid());
-
-	START_APPARTENANCE_INDEX = s_vectID.size();
-	for (unsigned int i(0); i < PlayerH::NB_MAX_PLAYER; i++)
-	{
-		s_vectID.push_back
-			(R2D::ResourceManager::getTexture("bin/image/couleur d'apartenance/ColorPlayer" + std::to_string(i) + EXTENSION_PNG)->GETid());
-	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initTile																	   */
-/* ROLE : Initialisation des cases de la map en fonction de sa taille				   */
-/* INPUT : struct Map& : données générale de la map : taille						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 void MainMap::initTile()
 {
 	const Tile blankTile;
@@ -213,15 +167,6 @@ void MainMap::initTile()
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : groundGen																	   */
-/* ROLE : G�n�ration du sol et des spec de la map									   */
-/* INPUT/OUTPUT : Map& map : structure de la MAP									   */
-/* INPUT : Uint16 screenWidth : taille en de l'�cran en pixel (axe x)				   */
-/* RETURNED VALUE : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void MainMap::generateMap()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::GENERATION_MAINMAP, logS::DATA::START);
@@ -284,17 +229,6 @@ void MainMap::generateMap()
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::GENERATION_MAINMAP, logS::DATA::END);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : mapBordersConditions														   */
-/* ROLE : Boucle For de conditions													   */
-/* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2				   */
-/* INPUT : const Map& map : structure de la MAP										   */
-/* INPUT : unsigned int i : index en X												   */
-/* INPUT : unsigned int j : index en Y												   */
-/* RETURNED VALUE : bool : valid = true / not valid = false							   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 bool MainMap::mapBordersConditions
 (
 	const unsigned int i,
@@ -321,16 +255,6 @@ bool MainMap::mapBordersConditions
 	return false;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : mapBorders																   */
-/* ROLE : Affectation des caract�ristiques de la case en fonction ...				   */
-/* ROLE : ... de la fonction rand, dans la bordure de la map entre ...				   */
-/* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX										   */
-/* OUTPUT : Tile& tile : tile � affecter											   */
-/* RETURNED VALUE : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void MainMap::mapBorders
 (
 	Tile& tile
@@ -374,19 +298,6 @@ void MainMap::mapBorders
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : mapIntern																	   */
-/* ROLE : Affectation des caract�ristiques de la case en fonction ...				   */
-/* ROLE : ... de la fonction rand, dans le reste de la map							   */
-/* ROLE : Si la case est de type water alors cr�ation de 2 autres ...				   */
-/* ROLE : ... cases de type water pour obtenir une forme en L						   */
-/* INPUT/OUTPUT : std::vector<std::vector<Tile>>& maps : matrice de la map			   */
-/* INPUT : unsigned int i : index en X												   */
-/* INPUT : unsigned int j : index en Y												   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void MainMap::mapIntern
 (
 	MatriceMap& maps,
@@ -599,17 +510,6 @@ void MainMap::mapIntern
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : tileAffectation															   */
-/* ROLE : Affectation des caract�ristiques � une case								   */
-/* OUTPUT : Tile& tile, : la case � affecter										   */
-/* INPUT : unsigned int tile_ground, std::string tile_stringground,						   */
-/* INPUT : unsigned int tile_spec, std::string tile_stringspec,							   */
-/* INPUT : int food, int work, int gold									   */
-/* RETURNED VALUE : void															   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 void MainMap::tileAffectation
 (
 	Tile& tile,
@@ -627,17 +527,6 @@ void MainMap::tileAffectation
 	tile.gold = gold;
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertIndexToPosX														   */
-/* ROLE : Convert the index of the matrix Map to a position on X axis in pixel		   */
-/* ROLE : Offset by toolBar size													   */
-/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
-/* INPUT : unsigned int index : index to convert									   */
-/* RETURNED VALUE : unsigned int : position on X axis in pixel						   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertIndexToPosX
 (
 	const unsigned int index
@@ -646,16 +535,6 @@ unsigned int MainMap::convertIndexToPosX
 	return *s_tileSize * index;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertPosXToIndex														   */
-/* ROLE : Convert position on X axis in pixel of the matrix Map to a index			   */
-/* ROLE : Offset by toolBar size													   */
-/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
-/* INPUT : unsigned int index : position on X axis in pixel	to convert				   */
-/* RETURNED VALUE : unsigned int : index											   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosXToIndex
 (
 	const double posX
@@ -664,15 +543,6 @@ unsigned int MainMap::convertPosXToIndex
 	return (unsigned int)std::floor(posX / (double)*s_tileSize);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertIndexToPosY														   */
-/* ROLE : Convert the index of the matrix Map to a position on Y axis in pixel		   */
-/* ROLE : Use 1 input static const ptr : s_tileSize									   */
-/* INPUT : unsigned int index : index to convert									   */
-/* RETURNED VALUE : unsigned int : position on Y axis in pixel						   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertIndexToPosY
 (
 	const unsigned int index
@@ -681,15 +551,6 @@ unsigned int MainMap::convertIndexToPosY
 	return *s_tileSize * index;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertPosXToIndex														   */
-/* ROLE : Convert position on Y axis in pixel of the matrix Map to a index			   */
-/* ROLE : Use 1 input static const ptr : s_tileSize									   */
-/* INPUT : unsigned int index : position on Y axis in pixel	to convert				   */
-/* RETURNED VALUE : unsigned int : index											   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 unsigned int MainMap::convertPosYToIndex
 (
 	const double posY
@@ -698,16 +559,6 @@ unsigned int MainMap::convertPosYToIndex
 	return (unsigned int)std::floor(posY / (double)*s_tileSize);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : assertRangeMapIndex														   */
-/* ROLE : assert that the index provided is between 0 and size						   */
-/* INPUT : unsigned int indexToTest : index to compare to size						   */
-/* INPUT : size_t size : reference size								 				   */
-/* RETURNED VALUE : bool : false -> indexToTest is equal or > than size				   */
-/* RETURNED VALUE : bool : true -> indexToTest is <	than size						   */
-/* ------------------------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------------------- */
 bool MainMap::assertRangeMapIndex
 (
 	const unsigned int indexToTest,
@@ -938,16 +789,16 @@ void MainMap::drawMap
 				switch (m_matriceMap[i][j].tile_ground)
 				{
 				case Ground_Type::grass:
-					id = s_vectID[(uint8_t)Ground_Type::grass - OFFSET_GROUND_TYPE];
+					id = m_idTexture[GamePlayScreenEnumTexture::grass];
 					break;
 				case Ground_Type::water:
-					id = s_vectID[(uint8_t)Ground_Type::water - OFFSET_GROUND_TYPE];
+					id = m_idTexture[GamePlayScreenEnumTexture::water];
 					break;
 				case Ground_Type::deepwater:
-					id = s_vectID[(uint8_t)Ground_Type::deepwater - OFFSET_GROUND_TYPE];
+					id = m_idTexture[GamePlayScreenEnumTexture::deepwater];
 					break;
 				case Ground_Type::irragated:
-					id = s_vectID[(uint8_t)Ground_Type::irragated - OFFSET_GROUND_TYPE];
+					id = m_idTexture[GamePlayScreenEnumTexture::grassIrr];
 					break;
 				case Ground_Type::dirt:
 					throw("[Error]___: drawMap : Ground_Type::dirt");
@@ -975,31 +826,31 @@ void MainMap::drawMap
 				switch (m_matriceMap[i][j].tile_spec)
 				{
 				case GroundSpec_Type::coal:
-					id = s_vectID[START_GROUND_SPEC_INDEX];
+					id = m_idTexture[GamePlayScreenEnumTexture::coal];
 					break;
 				case GroundSpec_Type::copper:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::coal];
+					id = m_idTexture[GamePlayScreenEnumTexture::copper];
 					break;
 				case GroundSpec_Type::iron:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::copper];
+					id = m_idTexture[GamePlayScreenEnumTexture::iron];
 					break;
 				case GroundSpec_Type::tree:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::iron];
+					id = m_idTexture[GamePlayScreenEnumTexture::tree1];
 					break;
 				case GroundSpec_Type::stone:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::tree];
+					id = m_idTexture[GamePlayScreenEnumTexture::stone];
 					break;
 				case GroundSpec_Type::uranium:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::stone];
+					id = m_idTexture[GamePlayScreenEnumTexture::uranium];
 					break;
 				case GroundSpec_Type::horse:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::uranium];
+					id = m_idTexture[GamePlayScreenEnumTexture::horse];
 					break;
 				case GroundSpec_Type::fish:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::horse];
+					id = m_idTexture[GamePlayScreenEnumTexture::fish];
 					break;
 				case GroundSpec_Type::petroleum:
-					id = s_vectID[START_GROUND_SPEC_INDEX + (uint8_t)GroundSpec_Type::fish];
+					id = m_idTexture[GamePlayScreenEnumTexture::petroleum];
 					break;
 				case GroundSpec_Type::nothing:
 					id = MAPGUI::UNUSED_ID;
@@ -1013,7 +864,7 @@ void MainMap::drawMap
 						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
 						R2D::FULL_RECT,
 						id,
-						0.0f,
+						0.1f,
 						R2D::COLOR_WHITE
 					);
 				}
@@ -1024,8 +875,8 @@ void MainMap::drawMap
 					(
 						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
 						R2D::FULL_RECT,
-						s_vectID[START_APPARTENANCE_INDEX + m_matriceMap[i][j].appartenance],
-						0.0f,
+						m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::ColorPlayer0) + m_matriceMap[i][j].appartenance)],
+						0.5f,
 						R2D::COLOR_WHITE_T25
 					);
 				}

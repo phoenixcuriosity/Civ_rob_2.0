@@ -33,6 +33,7 @@
     <ClInclude Include="src\Screen.h" />
     <ClInclude Include="src\LogLevel.h" />
     <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\LogSentences.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />

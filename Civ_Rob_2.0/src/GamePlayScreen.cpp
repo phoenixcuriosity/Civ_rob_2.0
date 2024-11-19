@@ -55,7 +55,6 @@ m_SaveReload(SaveReload),
 m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
-	build();
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 }
 
@@ -111,9 +110,9 @@ bool GamePlayScreen::onEntry()
 			InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
 
 			/* Need to be after loadUnitAndSpec */
-			m_players.init(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
+			m_players.init(m_screen.m_idTexture);
 
-			m_mainMap.initMainMap(m_camera);
+			m_mainMap.initMainMap(m_camera, m_screen.m_idTexture);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
 			if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
@@ -135,6 +134,61 @@ bool GamePlayScreen::onEntry()
 	}
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
+}
+
+void GamePlayScreen::doInitOptimizeTexture()
+{
+	R2D::IdMap idMap;
+	R2D::ResourceManager::copyIdMap(idMap);
+
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::grass] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grass");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::grassIrr] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grassIrr");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::deepwater] = R2D::ResourceManager::searchKeyInIdMap(idMap, "deepwater");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::water] = R2D::ResourceManager::searchKeyInIdMap(idMap, "water");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::coal] = R2D::ResourceManager::searchKeyInIdMap(idMap, "coal");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::copper] = R2D::ResourceManager::searchKeyInIdMap(idMap, "copper");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::fish] = R2D::ResourceManager::searchKeyInIdMap(idMap, "fish");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::iron] = R2D::ResourceManager::searchKeyInIdMap(idMap, "iron");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::petroleum] = R2D::ResourceManager::searchKeyInIdMap(idMap, "petroleum");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::stone] = R2D::ResourceManager::searchKeyInIdMap(idMap, "stone");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::tree1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "tree1");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::uranium] = R2D::ResourceManager::searchKeyInIdMap(idMap, "uranium");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer0] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer0");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer1");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer2");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer3");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer4] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer4");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer5] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer5");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer6] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer6");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer7] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer7");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ColorPlayer8] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer8");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life0] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.0life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.1life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.2life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.3life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life4] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.4life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life5] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.5life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life6] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.6life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life7] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.7life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life8] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.8life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::life9] = R2D::ResourceManager::searchKeyInIdMap(idMap, "0.9life");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::maxlife] = R2D::ResourceManager::searchKeyInIdMap(idMap, "maxlife");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::city] = R2D::ResourceManager::searchKeyInIdMap(idMap, "city");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::battleoids] = R2D::ResourceManager::searchKeyInIdMap(idMap, "battleoids");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::biter] = R2D::ResourceManager::searchKeyInIdMap(idMap, "biter");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::bombardier] = R2D::ResourceManager::searchKeyInIdMap(idMap, "bombardier");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::car] = R2D::ResourceManager::searchKeyInIdMap(idMap, "car");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ouvrier_tier_1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ouvrier_tier_1");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ouvrier_tier_2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ouvrier_tier_2");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::ouvrier_tier_3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ouvrier_tier_3");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::robot] = R2D::ResourceManager::searchKeyInIdMap(idMap, "robot");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::rocket] = R2D::ResourceManager::searchKeyInIdMap(idMap, "rocket");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::rover] = R2D::ResourceManager::searchKeyInIdMap(idMap, "rover");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::satellite] = R2D::ResourceManager::searchKeyInIdMap(idMap, "satellite");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::settler] = R2D::ResourceManager::searchKeyInIdMap(idMap, "settler");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::spitter] = R2D::ResourceManager::searchKeyInIdMap(idMap, "spitter");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::tank] = R2D::ResourceManager::searchKeyInIdMap(idMap, "tank");
+	m_screen.m_idTexture[GamePlayScreenEnumTexture::transport_plan] = R2D::ResourceManager::searchKeyInIdMap(idMap, "transport_plan");
 }
 
 void GamePlayScreen::doInitUI()
@@ -170,17 +224,6 @@ void GamePlayScreen::doInitHUDText()
 		0.0f,
 		R2D::COLOR_WHITE
 	);
-
-	/*
-	static GLuint id = R2D::ResourceManager::getTexture("bin/image/toolbar.png")->GETid();
-	m_screen.openGLScreen.spriteBatchHUDStatic.draw
-	(
-		glm::vec4(0.0f, 0.0f, (int)ceil((m_mainMap.GETtoolBarSize() + 1) * m_mainMap.GETtileSize()), m_screen.screenHeight),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-		id,
-		0.0f,
-		R2D::COLOR_WHITE
-	)*/
 }
 
 void GamePlayScreen::onExit()
@@ -228,9 +271,12 @@ void GamePlayScreen::doDrawAll()
 	m_players.drawCity(m_mainMap, m_camera, R2D::ResourceManager::getSpriteFont());
 
 	/* --- Render --- */
+	// background
 	m_mainMap.renderMap();
-	m_players.renderUnit();
+	// first depth
 	m_players.renderCity();
+	// front depth
+	m_players.renderUnit();
 
 	static const float FONT_SIZE_G = R2D::SpriteFont::getScaleFontToScreen(0.32f);
 

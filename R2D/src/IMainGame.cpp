@@ -219,6 +219,7 @@ bool IMainGame::init()
 	m_currentScreen = m_screenList->getCurrent();
 	m_currentScreen->onEntry();
 	m_currentScreen->setRunning();
+	InitTexture();
 	return true;
 }
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
@@ -20,38 +20,30 @@
 
 */
 
-#ifndef TextureCache_H
-#define TextureCache_H
+#ifndef LogSentences_H
+#define LogSentences_H
 
-#include "API_fwd.h"
-
-namespace R2D
+namespace logS
 {
+	namespace WHO
+	{
+		constexpr char RESSOURCES_MANAGER[] = "[RESSOURCES_MANAGER]";
+	};
+	namespace WHAT
+	{
+		constexpr char TEXTURE[] = "[TEXTURE]";
+	};
+	namespace DATA
+	{
+		constexpr char ERROR_LOAD_TEXTURE[] = "[ERROR_LOAD_TEXTURE] : {}";
+		constexpr char LOAD_TEXTURE[] = "[LOAD_TEXTURE] : {}";
 
-class TextureCache
-{
-public:
-	TextureCache();
-	~TextureCache();
-
-private:
-
-	std::unique_ptr<GLTexture>& getTexture(const std::string& name);
-
-public:
-
-	void loadTextureFromDir(const std::string& path);
-
-	inline void copyIdMap(IdMap& dest)const { dest = m_idMap; };
-
-public:
-
-	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
-
-private:
-	std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
-	IdMap m_idMap;
+		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
+	};
 };
 
-}
-#endif // !TextureCache_H
+
+
+#endif // !LogSentences_H
+
+

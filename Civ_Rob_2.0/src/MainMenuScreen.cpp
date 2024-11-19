@@ -86,6 +86,11 @@ bool MainMenuScreen::onEntry()
 	return true;
 }
 
+void MainMenuScreen::doInitOptimizeTexture()
+{
+	/* Do nothing */
+}
+
 void MainMenuScreen::doInitUI()
 {
 	const float xC(0.45f), xL(0.1f), yL(0.05f), yDelta(0.1f);

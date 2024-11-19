@@ -25,6 +25,7 @@
 
 #include "LIB.h"
 
+#include "GamePlayScreenEnumTexture.h"
 #include "T_MainMap.h"
 
 #include <R2D/src/Camera2D.h>
@@ -125,9 +126,9 @@ public:
 	MainMap();
 	~MainMap();
 
-	void initMainMap(R2D::Camera2D& camera);
+	void initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture);
 
-	void initMainMapTexture();
+	void initMainMapTexture(const GamePlayScreenTexture& idTexture);
 
 private:
 
@@ -303,7 +304,7 @@ private:
 	/* Need seperate spriteBatch because of the Texture superposition */
 	R2D::SpriteBatch m_spriteBatchAppartenance;
 
-	R2D::VectID s_vectID;
+	GamePlayScreenTexture m_idTexture;
 
 	static unsigned int* s_tileSize;
 };

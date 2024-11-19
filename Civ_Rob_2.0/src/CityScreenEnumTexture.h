@@ -20,38 +20,45 @@
 
 */
 
-#ifndef TextureCache_H
-#define TextureCache_H
+#ifndef CityScreenEnumTexture_H
+#define CityScreenEnumTexture_H
 
-#include "API_fwd.h"
+#include "TemplateEnumTexture.h"
 
-namespace R2D
+enum class CityScreenEnumTexture
 {
-
-class TextureCache
-{
-public:
-	TextureCache();
-	~TextureCache();
-
-private:
-
-	std::unique_ptr<GLTexture>& getTexture(const std::string& name);
-
-public:
-
-	void loadTextureFromDir(const std::string& path);
-
-	inline void copyIdMap(IdMap& dest)const { dest = m_idMap; };
-
-public:
-
-	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
-
-private:
-	std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
-	IdMap m_idMap;
+	deepwater,
+	grass,
+	grassIrr,
+	water,
+	coal,
+	copper,
+	fish,
+	horse,
+	iron,
+	petroleum,
+	stone,
+	tree1,
+	uranium,
+	ColorPlayer0,
+	ColorPlayer1,
+	ColorPlayer2,
+	ColorPlayer3,
+	ColorPlayer4,
+	ColorPlayer5,
+	ColorPlayer6,
+	ColorPlayer7,
+	ColorPlayer8,
+	ecstatic,
+	happy,
+	neutral,
+	sad,
+	angry,
+	food,
+	Hammer,
+	ENUM_SIZE
 };
 
-}
-#endif // !TextureCache_H
+typedef EnumArray<CityScreenEnumTexture, CityScreenEnumTexture::ENUM_SIZE> CityScreenTexture;
+
+#endif // !CityScreenEnumTexture_H

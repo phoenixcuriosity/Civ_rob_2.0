@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include "GamePlayScreenEnumTexture.h"
+
 #include <R2D/src/WidgetLabel.h>
 
 class Players
@@ -51,7 +53,7 @@ public:
 
 public:
 
-	void init(const std::string& filePath);
+	void init(const GamePlayScreenTexture& idTexture);
 
 	void addPlayer
 	(
@@ -111,9 +113,9 @@ private:
 
 	// tableau des statistiques par défauts des unités
 	VectUnitTemplate m_vectUnitTemplate;
-	R2D::VectID m_vectIDUnit;
 	VectUnitTemplate m_vectCityTemplate;
-	R2D::VectID m_vectIDCity;
+
+	GamePlayScreenTexture m_idTexture;
 
 	VectPlayer m_vectPlayer;
 

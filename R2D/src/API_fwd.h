@@ -73,6 +73,7 @@ namespace R2D
 
 	typedef std::map<CardinalDirections, CardinalDirection> CardinalDirectionMapping;
 	typedef std::map<std::string, ColorRGBA8> ColorRGBA8Map;
+	typedef std::unordered_map<std::string, GLuint> IdMap;
 	typedef std::map<std::string, Text> MapTexts;
 	typedef std::vector<GLuint> VectID;
 }

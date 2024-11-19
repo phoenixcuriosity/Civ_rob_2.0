@@ -20,61 +20,36 @@
 
 */
 
-#ifndef SCREEN_H
-#define SCREEN_H
+#ifndef TemplateEnumTexture_H
+#define TemplateEnumTexture_H
 
-#include "AudioEngine.h"
-#include "Camera2D.h"
-#include "GUI.h"
-#include "SpriteBatch.h"
+#include "LIB.h"
 
-namespace R2D
+#include <SDL/glew.h>
+#include <type_traits>
+
+template <typename Enum, Enum Count>
+class EnumArray 
 {
-
-class CScreen
-{
-public:
-	CScreen();
-	~CScreen();
-
-public:
-
-	bool init(const int width, const int height);
-	bool end();
-
-public:
-
-	void drawAll();
-	void updateInputManager(SDL_Event& ev, InputManager& resourceManager);
+	static_assert(std::is_enum_v<Enum>, "Template parameter must be an enum type");
+	static_assert(static_cast<size_t>(Count) > 0, "Enum Count must be greater than 0");
 
 private:
-
-	void initAll();
-	void initUI();
-	void initHUDText();
-
-	virtual void doInitOptimizeTexture() = 0;
-	virtual void doInitUI() = 0;
-	virtual void doInitHUDText() = 0;
-	virtual void doDrawAll() = 0;
+	std::array<GLuint, static_cast<size_t>(Count)> values;
 
 public:
+	EnumArray() : values{} {}
 
-	Camera2D& getCamera() { return m_camera; };
+	GLuint& operator[](Enum index)
+	{
+		return values[static_cast<size_t>(index)];
+	}
 
-protected:
-	Camera2D m_camera;
-	Camera2D m_cameraHUD;
-
-	SpriteBatch m_spriteBatchHUDDynamic;
-	SpriteBatch m_spriteBatchHUDStatic;
-
-	GUI m_gui;
-
-private:
-	bool m_isInitialized;
+	const GLuint& operator[](Enum index) const
+	{
+		return values[static_cast<size_t>(index)];
+	}
 };
 
-}
 
-#endif /* SCREEN_H */
+#endif // !TemplateEnumTexture_H
