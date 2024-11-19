@@ -20,12 +20,12 @@
 
 */
 
-#ifndef CityScreenEnumTexture_H
-#define CityScreenEnumTexture_H
+#ifndef GamePlayScreenEnumTexture_H
+#define GamePlayScreenEnumTexture_H
 
 #include "TemplateEnumTexture.h"
 
-enum class CityScreenEnumTexture
+enum class GamePlayScreenEnumTexture
 {
 	deepwater,
 	grass,
@@ -49,16 +49,36 @@ enum class CityScreenEnumTexture
 	ColorPlayer6,
 	ColorPlayer7,
 	ColorPlayer8,
-	ecstatic,
-	happy,
-	neutral,
-	sad,
-	angry,
-	food,
-	Hammer,
+	life0,
+	life1,
+	life2,
+	life3,
+	life4,
+	life5,
+	life6,
+	life7,
+	life8,
+	life9,
+	maxlife,
+	city,
+	battleoids,
+	biter,
+	bombardier,
+	car,
+	ouvrier_tier_1,
+	ouvrier_tier_2,
+	ouvrier_tier_3,
+	robot,
+	rocket,
+	rover,
+	satellite,
+	settler,
+	spitter,
+	tank,
+	transport_plan,
 	ENUM_SIZE
 };
 
-typedef EnumArray<CityScreenEnumTexture, CityScreenEnumTexture::ENUM_SIZE> CityScreenTexture;
+typedef EnumArray<GamePlayScreenEnumTexture, GamePlayScreenEnumTexture::ENUM_SIZE> GamePlayScreenTexture;
 
-#endif // !CityScreenEnumTexture_H
+#endif // !GamePlayScreenEnumTexture_H

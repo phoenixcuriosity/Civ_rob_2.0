@@ -20,45 +20,36 @@
 
 */
 
-#ifndef CityScreenEnumTexture_H
-#define CityScreenEnumTexture_H
+#ifndef TemplateEnumTexture_H
+#define TemplateEnumTexture_H
 
-#include "TemplateEnumTexture.h"
+#include "LIB.h"
 
-enum class CityScreenEnumTexture
+#include <SDL/glew.h>
+#include <type_traits>
+
+template <typename Enum, Enum Count>
+class EnumArray 
 {
-	deepwater,
-	grass,
-	grassIrr,
-	water,
-	coal,
-	copper,
-	fish,
-	horse,
-	iron,
-	petroleum,
-	stone,
-	tree1,
-	uranium,
-	ColorPlayer0,
-	ColorPlayer1,
-	ColorPlayer2,
-	ColorPlayer3,
-	ColorPlayer4,
-	ColorPlayer5,
-	ColorPlayer6,
-	ColorPlayer7,
-	ColorPlayer8,
-	ecstatic,
-	happy,
-	neutral,
-	sad,
-	angry,
-	food,
-	Hammer,
-	ENUM_SIZE
+	static_assert(std::is_enum_v<Enum>, "Template parameter must be an enum type");
+	static_assert(static_cast<size_t>(Count) > 0, "Enum Count must be greater than 0");
+
+private:
+	std::array<GLuint, static_cast<size_t>(Count)> values;
+
+public:
+	EnumArray() : values{} {}
+
+	GLuint& operator[](Enum index)
+	{
+		return values[static_cast<size_t>(index)];
+	}
+
+	const GLuint& operator[](Enum index) const
+	{
+		return values[static_cast<size_t>(index)];
+	}
 };
 
-typedef EnumArray<CityScreenEnumTexture, CityScreenEnumTexture::ENUM_SIZE> CityScreenTexture;
 
-#endif // !CityScreenEnumTexture_H
+#endif // !TemplateEnumTexture_H
