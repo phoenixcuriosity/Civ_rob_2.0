@@ -57,6 +57,7 @@ m_vectCityName(),
 m_vectUnitTemplate(),
 m_vectCityTemplate(),
 m_vectPlayer(),
+m_idTexture(),
 m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
 m_spriteBatchCity(),
@@ -70,10 +71,9 @@ Players::~Players()
 	deleteAllPlayers();
 }
 
-void Players::init()
+void Players::init(const GamePlayScreenTexture& idTexture)
 {
-	R2D::ResourceManager::copyIdMap(m_idMap);
-
+	m_idTexture = idTexture;
 	m_spriteBatchUnit.init();
 	m_spriteBatchCity.init();
 }
@@ -185,12 +185,15 @@ void Players::drawUnit
 							)
 						)
 					{
+
+						auto fes = static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::battleoids) + Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate));
+
 						/* Unit Texture */
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
 							R2D::FULL_RECT,
-							m_idMap[unit->GETname()],
+							m_idTexture[fes],
 							0.0f,
 							R2D::COLOR_WHITE
 						);
@@ -202,7 +205,7 @@ void Players::drawUnit
 							(
 								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
 								R2D::FULL_RECT,
-								m_idMap["maxlife"],
+								m_idTexture[GamePlayScreenEnumTexture::maxlife],
 								0.0f,
 								R2D::COLOR_WHITE
 							);
@@ -213,8 +216,8 @@ void Players::drawUnit
 							(
 								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
 								R2D::FULL_RECT,
-								m_idMap[std::format("{:.1f}life",
-									R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, 0.99))],
+								m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::life0) +
+									std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, 9.99)))],
 								0.0f,
 								R2D::COLOR_WHITE
 							);
@@ -226,7 +229,7 @@ void Players::drawUnit
 						(
 							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
 							R2D::FULL_RECT,
-							m_idMap[std::format("ColorPlayer{}", i)],
+							m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::ColorPlayer0) + i)],
 							0.0f,
 							R2D::COLOR_WHITE
 						);
@@ -283,7 +286,7 @@ void Players::drawCity
 					(
 						glm::vec4(city->GETx(), city->GETy(), tileSize, tileSize),
 						R2D::FULL_RECT,
-						m_idMap["city"],
+						m_idTexture[GamePlayScreenEnumTexture::city],
 						0.0f,
 						R2D::COLOR_WHITE
 					);

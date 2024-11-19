@@ -53,6 +53,7 @@ private:
 	void initUI();
 	void initHUDText();
 
+	virtual void doInitOptimizeTexture() = 0;
 	virtual void doInitUI() = 0;
 	virtual void doInitHUDText() = 0;
 	virtual void doDrawAll() = 0;

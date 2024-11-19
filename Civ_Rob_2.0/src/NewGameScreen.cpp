@@ -85,6 +85,11 @@ bool NewGameScreen::onEntry()
 	return true;
 }
 
+void NewGameScreen::doInitOptimizeTexture()
+{
+	/* Do nothing */
+}
+
 void NewGameScreen::doInitUI()
 {
 	if (!m_isInitialize)

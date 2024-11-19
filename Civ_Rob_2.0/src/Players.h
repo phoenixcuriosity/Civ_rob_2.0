@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include "GamePlayScreenEnumTexture.h"
+
 #include <R2D/src/WidgetLabel.h>
 
 class Players
@@ -51,7 +53,7 @@ public:
 
 public:
 
-	void init();
+	void init(const GamePlayScreenTexture& idTexture);
 
 	void addPlayer
 	(
@@ -113,7 +115,7 @@ private:
 	VectUnitTemplate m_vectUnitTemplate;
 	VectUnitTemplate m_vectCityTemplate;
 
-	R2D::IdMap m_idMap;
+	GamePlayScreenTexture m_idTexture;
 
 	VectPlayer m_vectPlayer;
 

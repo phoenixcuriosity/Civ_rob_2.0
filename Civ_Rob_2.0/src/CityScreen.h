@@ -61,6 +61,7 @@ public: /* Override from R2D::IGameScreen */
 
 private: /* Override from R2D::CScreen */
 
+	void doInitOptimizeTexture()override;
 	void doInitUI() override;
 	void doInitHUDText() override;
 	void doDrawAll() override;
@@ -110,7 +111,7 @@ private:
 
 	dequeBuild m_buttonBuild;
 
-	std::unordered_map<CityScreenEnumTexture, GLuint> m_idTexture;
+	CityScreenTexture m_idTexture;
 
 	Players* m_players;
 	unsigned int* m_tileSize;

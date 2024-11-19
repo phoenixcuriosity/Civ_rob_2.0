@@ -98,6 +98,7 @@ m_offsetMapCameraXmin(0),
 m_offsetMapCameraXmax(0),
 m_offsetMapCameraYmin(0),
 m_offsetMapCameraYmax(0),
+m_idTexture(),
 m_matriceMap(),
 m_needToUpdateDraw(true),
 m_spriteBatch()
@@ -112,7 +113,7 @@ MainMap::~MainMap()
 }
 
 
-void MainMap::initMainMap(R2D::Camera2D& camera)
+void MainMap::initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::START);
 	initTile();
@@ -138,16 +139,15 @@ void MainMap::initMainMap(R2D::Camera2D& camera)
 	}
 	
 
-	initMainMapTexture();
+	initMainMapTexture(idTexture);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::END);
 }
 
-void MainMap::initMainMapTexture()
+void MainMap::initMainMapTexture(const GamePlayScreenTexture& idTexture)
 {
+	m_idTexture = idTexture;
 	m_spriteBatch.init();
 	m_spriteBatchAppartenance.init();
-
-	R2D::ResourceManager::copyIdMap(m_idMap);
 }
 
 void MainMap::initTile()
@@ -789,16 +789,16 @@ void MainMap::drawMap
 				switch (m_matriceMap[i][j].tile_ground)
 				{
 				case Ground_Type::grass:
-					id = m_idMap["grass"];
+					id = m_idTexture[GamePlayScreenEnumTexture::grass];
 					break;
 				case Ground_Type::water:
-					id = m_idMap["water"];
+					id = m_idTexture[GamePlayScreenEnumTexture::water];
 					break;
 				case Ground_Type::deepwater:
-					id = m_idMap["deepwater"];
+					id = m_idTexture[GamePlayScreenEnumTexture::deepwater];
 					break;
 				case Ground_Type::irragated:
-					id = m_idMap["grassIrr"];
+					id = m_idTexture[GamePlayScreenEnumTexture::grassIrr];
 					break;
 				case Ground_Type::dirt:
 					throw("[Error]___: drawMap : Ground_Type::dirt");
@@ -826,31 +826,31 @@ void MainMap::drawMap
 				switch (m_matriceMap[i][j].tile_spec)
 				{
 				case GroundSpec_Type::coal:
-					id = m_idMap["coal"];
+					id = m_idTexture[GamePlayScreenEnumTexture::coal];
 					break;
 				case GroundSpec_Type::copper:
-					id = m_idMap["copper"];
+					id = m_idTexture[GamePlayScreenEnumTexture::copper];
 					break;
 				case GroundSpec_Type::iron:
-					id = m_idMap["iron"];
+					id = m_idTexture[GamePlayScreenEnumTexture::iron];
 					break;
 				case GroundSpec_Type::tree:
-					id = m_idMap["tree1"];
+					id = m_idTexture[GamePlayScreenEnumTexture::tree1];
 					break;
 				case GroundSpec_Type::stone:
-					id = m_idMap["stone"];
+					id = m_idTexture[GamePlayScreenEnumTexture::stone];
 					break;
 				case GroundSpec_Type::uranium:
-					id = m_idMap["uranium"];
+					id = m_idTexture[GamePlayScreenEnumTexture::uranium];
 					break;
 				case GroundSpec_Type::horse:
-					id = m_idMap["horse"];
+					id = m_idTexture[GamePlayScreenEnumTexture::horse];
 					break;
 				case GroundSpec_Type::fish:
-					id = m_idMap["fish"];
+					id = m_idTexture[GamePlayScreenEnumTexture::fish];
 					break;
 				case GroundSpec_Type::petroleum:
-					id = m_idMap["petroleum"];
+					id = m_idTexture[GamePlayScreenEnumTexture::petroleum];
 					break;
 				case GroundSpec_Type::nothing:
 					id = MAPGUI::UNUSED_ID;
@@ -875,7 +875,7 @@ void MainMap::drawMap
 					(
 						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
 						R2D::FULL_RECT,
-						m_idMap[std::format("ColorPlayer{}", m_matriceMap[i][j].appartenance)],
+						m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::ColorPlayer0) + m_matriceMap[i][j].appartenance)],
 						0.5f,
 						R2D::COLOR_WHITE_T25
 					);

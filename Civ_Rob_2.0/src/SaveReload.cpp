@@ -389,9 +389,9 @@ void SaveReload::reload
 
 	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
 	mainGame.GETPlayers().SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
-
+	
 	mainGame.makePlayersButtons();
-	mainGame.GETmainMap().initMainMapTexture();
+	mainGame.GETmainMap().initMainMapTexture(mainGame.GETscreen().m_idTexture);
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::END);
 }

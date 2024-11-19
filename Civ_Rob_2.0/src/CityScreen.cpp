@@ -185,43 +185,46 @@ bool CityScreen::onEntry()
 	return true;
 }
 
+void CityScreen::doInitOptimizeTexture()
+{
+	R2D::IdMap idMap;
+	R2D::ResourceManager::copyIdMap(idMap);
+
+	m_idTexture[CityScreenEnumTexture::grass] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grass");
+	m_idTexture[CityScreenEnumTexture::grassIrr] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grassIrr");
+	m_idTexture[CityScreenEnumTexture::deepwater] = R2D::ResourceManager::searchKeyInIdMap(idMap, "deepwater");
+	m_idTexture[CityScreenEnumTexture::water] = R2D::ResourceManager::searchKeyInIdMap(idMap, "water");
+	m_idTexture[CityScreenEnumTexture::coal] = R2D::ResourceManager::searchKeyInIdMap(idMap, "coal");
+	m_idTexture[CityScreenEnumTexture::copper] = R2D::ResourceManager::searchKeyInIdMap(idMap, "copper");
+	m_idTexture[CityScreenEnumTexture::fish] = R2D::ResourceManager::searchKeyInIdMap(idMap, "fish");
+	m_idTexture[CityScreenEnumTexture::iron] = R2D::ResourceManager::searchKeyInIdMap(idMap, "iron");
+	m_idTexture[CityScreenEnumTexture::petroleum] = R2D::ResourceManager::searchKeyInIdMap(idMap, "petroleum");
+	m_idTexture[CityScreenEnumTexture::stone] = R2D::ResourceManager::searchKeyInIdMap(idMap, "stone");
+	m_idTexture[CityScreenEnumTexture::tree1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "tree1");
+	m_idTexture[CityScreenEnumTexture::uranium] = R2D::ResourceManager::searchKeyInIdMap(idMap, "uranium");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer0] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer0");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer1");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer2");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer3");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer4] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer4");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer5] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer5");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer6] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer6");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer7] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer7");
+	m_idTexture[CityScreenEnumTexture::ColorPlayer8] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer8");
+	m_idTexture[CityScreenEnumTexture::ecstatic] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ecstatic");
+	m_idTexture[CityScreenEnumTexture::happy] = R2D::ResourceManager::searchKeyInIdMap(idMap, "happy");
+	m_idTexture[CityScreenEnumTexture::neutral] = R2D::ResourceManager::searchKeyInIdMap(idMap, "neutral");
+	m_idTexture[CityScreenEnumTexture::sad] = R2D::ResourceManager::searchKeyInIdMap(idMap, "sad");
+	m_idTexture[CityScreenEnumTexture::angry] = R2D::ResourceManager::searchKeyInIdMap(idMap, "angry");
+	m_idTexture[CityScreenEnumTexture::food] = R2D::ResourceManager::searchKeyInIdMap(idMap, "food");
+	m_idTexture[CityScreenEnumTexture::Hammer] = R2D::ResourceManager::searchKeyInIdMap(idMap, "Hammer");
+}
+
 void CityScreen::doInitUI()
 {
 	/* --- Add static city context --- */
 	if (!m_isInitialize)
 	{
-		R2D::IdMap idMap;
-		R2D::ResourceManager::copyIdMap(idMap);
-
-		m_idTexture[CityScreenEnumTexture::grass] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grass");
-		m_idTexture[CityScreenEnumTexture::grassIrr] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grassIrr");
-		m_idTexture[CityScreenEnumTexture::deepwater] = R2D::ResourceManager::searchKeyInIdMap(idMap, "deepwater");
-		m_idTexture[CityScreenEnumTexture::water] = R2D::ResourceManager::searchKeyInIdMap(idMap, "water");
-		m_idTexture[CityScreenEnumTexture::coal] = R2D::ResourceManager::searchKeyInIdMap(idMap, "coal");
-		m_idTexture[CityScreenEnumTexture::copper] = R2D::ResourceManager::searchKeyInIdMap(idMap, "copper");
-		m_idTexture[CityScreenEnumTexture::fish] = R2D::ResourceManager::searchKeyInIdMap(idMap, "fish");
-		m_idTexture[CityScreenEnumTexture::iron] = R2D::ResourceManager::searchKeyInIdMap(idMap, "iron");
-		m_idTexture[CityScreenEnumTexture::petroleum] = R2D::ResourceManager::searchKeyInIdMap(idMap, "petroleum");
-		m_idTexture[CityScreenEnumTexture::stone] = R2D::ResourceManager::searchKeyInIdMap(idMap, "stone");
-		m_idTexture[CityScreenEnumTexture::tree1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "tree1");
-		m_idTexture[CityScreenEnumTexture::uranium] = R2D::ResourceManager::searchKeyInIdMap(idMap, "uranium");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer0] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer0");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer1] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer1");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer2] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer2");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer3] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer3");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer4] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer4");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer5] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer5");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer6] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer6");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer7] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer7");
-		m_idTexture[CityScreenEnumTexture::ColorPlayer8] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ColorPlayer8");
-		m_idTexture[CityScreenEnumTexture::ecstatic] = R2D::ResourceManager::searchKeyInIdMap(idMap, "ecstatic");
-		m_idTexture[CityScreenEnumTexture::happy] = R2D::ResourceManager::searchKeyInIdMap(idMap, "happy");
-		m_idTexture[CityScreenEnumTexture::neutral] = R2D::ResourceManager::searchKeyInIdMap(idMap, "neutral");
-		m_idTexture[CityScreenEnumTexture::sad] = R2D::ResourceManager::searchKeyInIdMap(idMap, "sad");
-		m_idTexture[CityScreenEnumTexture::angry] = R2D::ResourceManager::searchKeyInIdMap(idMap, "angry");
-		m_idTexture[CityScreenEnumTexture::food] = R2D::ResourceManager::searchKeyInIdMap(idMap, "food");
-		m_idTexture[CityScreenEnumTexture::Hammer] = R2D::ResourceManager::searchKeyInIdMap(idMap, "Hammer");
-
 		/* Check Errors / Critical Error */
 		if (m_players->GETvectUnitTemplate().size() < (size_t)CitySC::MIN_INDEX_CYCLE_BUILDS)
 		{

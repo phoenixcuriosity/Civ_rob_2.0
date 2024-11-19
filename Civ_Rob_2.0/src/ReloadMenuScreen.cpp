@@ -99,6 +99,11 @@ void ReloadMenuScreen::onExit()
 	/* Do nothing */
 }
 
+void ReloadMenuScreen::doInitOptimizeTexture()
+{
+	/* Do nothing */
+}
+
 void ReloadMenuScreen::doInitUI()
 {
 	buttonDisplay();
