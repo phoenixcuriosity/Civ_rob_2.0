@@ -1,4 +1,4 @@
-﻿/*
+/*
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
@@ -20,34 +20,33 @@
 
 */
 
-#ifndef LogSentences_H
-#define LogSentences_H
+#include "LoadingFileToString.h"
 
-namespace logS
+#include "Log.h"
+#include "LogSentences.h"
+
+#include <filesystem>
+
+using namespace R2D;
+
+std::string FileTools::loadFileToString(const std::string& path)
 {
-	namespace WHO
+	std::error_code ec;
+	const uintmax_t length = std::filesystem::file_size(path, ec);
+	if (ec)
 	{
-		constexpr char RESSOURCES_MANAGER[] = "[RESSOURCES_MANAGER]";
-	};
-	namespace WHAT
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_SIZE_FILE, path);
+	}
+	std::string buffer(length, '\0'); 
+	std::ifstream stream(path, std::ios::in);
+	stream.read(buffer.data(), length);
+	stream.close();
+
+	const std::string text{ std::string(buffer.c_str(), strlen(buffer.c_str())) };
+	if (text.empty())
 	{
-		constexpr char TEXTURE[] = "[TEXTURE]";
-		constexpr char FILE[] = "[FILE]";
-	};
-	namespace DATA
-	{
-		constexpr char ERROR_LOAD_TEXTURE[] = "[ERROR_LOAD_TEXTURE] : {}";
-		constexpr char LOAD_TEXTURE[] = "[LOAD_TEXTURE] : {}";
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_EMPTY_FILE, path);
+	}
 
-		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
-		constexpr char ERROR_OPEN_FILE[] = "ERROR_OPEN_FILE : {}";
-		constexpr char ERROR_EMPTY_FILE[] = "ERROR_EMPTY_FILE : {}";
-		constexpr char ERROR_SIZE_FILE[] = "ERROR_SIZE_FILE : {}";
-	};
-};
-
-
-
-#endif // !LogSentences_H
-
-
+	return text;
+}

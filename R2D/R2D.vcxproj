@@ -172,6 +172,7 @@
     <ClInclude Include="src\IGameScreen.h" />
     <ClInclude Include="src\IMainGame.h" />
     <ClInclude Include="src\InputManager.h" />
+    <ClInclude Include="src\LoadingFileToString.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\LogLevel.h" />
     <ClInclude Include="src\LogSentences.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\IMainGame.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="src\LoadingFileToString.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\RealEngineError.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />

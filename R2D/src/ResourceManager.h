@@ -28,6 +28,7 @@
 #include "Files.h"
 #include "SpriteFont.h"
 #include "GLSLProgram.h"
+#include "LoadingFileToString.h"
 
 #define EXTENSION_PNG ".png"
 
@@ -54,6 +55,8 @@ namespace R2D
 			const e_Files name,
 			const std::string& path
 		);
+
+		static std::string loadFileToString(const std::string& path);
 
 		static SpriteFont_PtrT& getSpriteFont();
 		static GLSLProgram& getGLSLProgram();
@@ -103,6 +106,7 @@ namespace R2D
 	private:
 		static TextureCache m_textureCache;
 		static Files m_files;
+		static FileTools m_fileTools;
 		static SpriteFont_PtrT m_spriteFont;
 		static GLSLProgram m_gLSLProgram;
 		static ColorRGBA8C m_colorsRGBA8;

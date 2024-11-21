@@ -34,6 +34,7 @@
     <ClInclude Include="src\LogLevel.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\LogSentences.h" />
+    <ClInclude Include="src\LoadingFileToString.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -62,5 +63,6 @@
     <ClCompile Include="src\CardinalDirection.cpp" />
     <ClCompile Include="src\Screen.cpp" />
     <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\LoadingFileToString.cpp" />
   </ItemGroup>
 </Project>

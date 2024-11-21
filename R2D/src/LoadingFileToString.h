@@ -1,4 +1,4 @@
-﻿/*
+/*
 
 	Civ_rob_2
 	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
@@ -20,34 +20,26 @@
 
 */
 
-#ifndef LogSentences_H
-#define LogSentences_H
+#ifndef LoadingFileToString_H
+#define LoadingFileToString_H
 
-namespace logS
+#include "API_fwd.h"
+
+namespace R2D
 {
-	namespace WHO
-	{
-		constexpr char RESSOURCES_MANAGER[] = "[RESSOURCES_MANAGER]";
-	};
-	namespace WHAT
-	{
-		constexpr char TEXTURE[] = "[TEXTURE]";
-		constexpr char FILE[] = "[FILE]";
-	};
-	namespace DATA
-	{
-		constexpr char ERROR_LOAD_TEXTURE[] = "[ERROR_LOAD_TEXTURE] : {}";
-		constexpr char LOAD_TEXTURE[] = "[LOAD_TEXTURE] : {}";
 
-		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
-		constexpr char ERROR_OPEN_FILE[] = "ERROR_OPEN_FILE : {}";
-		constexpr char ERROR_EMPTY_FILE[] = "ERROR_EMPTY_FILE : {}";
-		constexpr char ERROR_SIZE_FILE[] = "ERROR_SIZE_FILE : {}";
-	};
+class FileTools
+{
+public:
+	FileTools() = default;
+	~FileTools() = default;
+public:
+	static std::string loadFileToString(const std::string& path);
 };
 
 
+}
 
-#endif // !LogSentences_H
 
+#endif // !LoadingFileToString_H
 

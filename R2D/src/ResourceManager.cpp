@@ -37,6 +37,7 @@ using namespace R2D;
 
 TextureCache ResourceManager::m_textureCache;
 Files ResourceManager::m_files;
+FileTools ResourceManager::m_fileTools;
 std::shared_ptr<SpriteFont> ResourceManager::m_spriteFont;
 GLSLProgram ResourceManager::m_gLSLProgram;
 ColorRGBA8C ResourceManager::m_colorsRGBA8;
@@ -78,6 +79,14 @@ void ResourceManager::modifyFilePath
 )
 {
 	m_files.modifyPath(name, path);
+}
+
+std::string ResourceManager::loadFileToString
+(
+	const std::string& path
+)
+{
+	return m_fileTools.loadFileToString(path);
 }
 
 std::shared_ptr<SpriteFont>& ResourceManager::getSpriteFont()
