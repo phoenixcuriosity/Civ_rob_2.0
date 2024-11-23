@@ -40,41 +40,26 @@
 #include <R2D/src/Log.h> 
 
 #include <filesystem>
+#include <algorithm> // For std::max_element
+#include <execution> // For std::execution::par
 
 namespace SAVE
 {
 	constexpr size_t OFFSET_INDEX = 1;
 }
 
-void SaveReload::init(const std::string& filePath)
+void SaveReload::init()
 {
-	std::string destroy{ STRINGS::EMPTY };
-	std::ifstream loadInfo{ filePath };
-	size_t size{ 0 };
-	bool wellFormatedSaveFile{ false };
-
-	if (loadInfo)
+	const std::string filePath{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath() };
+	if (std::filesystem::exists(filePath) && std::filesystem::is_directory(filePath))
 	{
-		while (!wellFormatedSaveFile && std::getline(loadInfo, destroy))
+		for (const auto& entry : std::filesystem::directory_iterator(filePath))
 		{
-			auto pos = destroy.find("NbSave=");
-			if (pos != std::string::npos) wellFormatedSaveFile = true;
+			if (entry.is_directory())
+			{
+				m_tabSave.push_back(std::stoul(entry.path().stem().string()));
+			}
 		}
-
-		if(!wellFormatedSaveFile) throw(std::exception("Corrupted or damaged Save file"));
-
-		loadInfo >> size;
-
-		m_tabSave.resize(size);
-
-		loadInfo >> destroy;
-
-		for (auto& index : m_tabSave) loadInfo >> index;
-	}
-	else
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, filePath);
-		throw("Impossible d'ouvrir le fichier " + filePath);
 	}
 }
 
@@ -863,24 +848,16 @@ void SaveReload::createSave()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_SAVE, logS::DATA::START);
 
-	std::string destroy;
-	for (unsigned int i(SAVE::OFFSET_INDEX); i < m_tabSave.size() + SAVE::OFFSET_INDEX; i++)
+	const auto max_it = std::max_element(std::execution::par, m_tabSave.begin(), m_tabSave.end());
+	if (max_it != m_tabSave.end())
 	{
-		if (i != m_tabSave[i - SAVE::OFFSET_INDEX])
-		{
-			m_currentSave = i;
-			m_tabSave.push_back(m_currentSave);
-			break;
-		}
+		m_currentSave = (*max_it) + SAVE::OFFSET_INDEX;
 	}
-
-	if (m_currentSave <= 0)
+	else
 	{
-		m_currentSave = static_cast<int>(m_tabSave.size() + SAVE::OFFSET_INDEX);
-		m_tabSave.push_back(m_currentSave);
+		m_currentSave = SAVE::OFFSET_INDEX;
 	}
-
-	rewriteSaveInfoFile();
+	m_tabSave.push_back(m_currentSave);
 
 	createSaveDir();
 
@@ -889,7 +866,7 @@ void SaveReload::createSave()
 
 void SaveReload::createSaveDir()
 {
-	const std::string dir{ "save/" + std::to_string(m_currentSave) };
+	const std::string dir{ std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(), m_currentSave) };
 
 	if (!std::filesystem::create_directory(dir))
 	{
@@ -911,11 +888,9 @@ void SaveReload::removeSave()
 	{
 		removeSaveDir(m_currentSave);
 
-		m_tabSave.erase(m_tabSave.begin() + searchIndexToRemove());
+		removeIndex(m_currentSave);
 
 		unselectCurrentSave();
-
-		rewriteSaveInfoFile();
 	}
 	else
 	{
@@ -938,16 +913,14 @@ void SaveReload::clearSave()
 
 	unselectCurrentSave();
 
-	rewriteSaveInfoFile();
-
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CLEAR_SAVES, logS::DATA::END);
 }
 
 void SaveReload::removeSaveDir(const size_t index)
 {
-	const std::string dir{ "save/" + std::to_string(index) };
-	removeSaveFile(dir + "/saveMaps.txt");
-	removeSaveFile(dir + "/savePlayers.xml");
+	const std::string dir{ std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(), index) };
+	removeSaveFile(dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+	removeSaveFile(dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath());
 	removeSaveFile(dir);
 }
 
@@ -963,6 +936,19 @@ void SaveReload::removeSaveFile(const std::string& file)
 	}
 }
 
+void SaveReload::removeIndex(const size_t index)
+{
+	const auto itFound = std::find(m_tabSave.begin(), m_tabSave.end(), index);
+	if (itFound != m_tabSave.end())
+	{
+		m_tabSave.erase(itFound);
+	}
+	else
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE_FILE, logS::DATA::ERROR_ERASE_INDEX, *itFound);
+	}
+}
+
 void SaveReload::unselectCurrentSave()
 {
 	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
@@ -975,45 +961,12 @@ bool SaveReload::isSelectCurrentSave()
 
 bool SaveReload::isSelectCurrentSaveInTab()
 {
-	for (const auto index : m_tabSave)
+	const auto findCurrentSave = std::find(m_tabSave.begin(), m_tabSave.end(), static_cast<size_t>(m_currentSave));
+	if (findCurrentSave != m_tabSave.end())
 	{
-		if (m_currentSave == static_cast<int>(index))
-		{
-			return true;
-		}
+		return true;
 	}
 	return false;
-}
-
-void SaveReload::rewriteSaveInfoFile()
-{
-	const std::string& file{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath() };
-	std::ofstream saveInfo(file);
-	if (saveInfo)
-	{
-		saveInfo << "NbSave="			<< std::endl;
-		saveInfo << m_tabSave.size()	<< std::endl;
-		saveInfo << "SaveUse="			<< std::endl;
-		for (const auto index : m_tabSave) saveInfo << index << std::endl;
-	}
-	else
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, file);
-	}
-}
-
-size_t SaveReload::searchIndexToRemove()
-{
-	size_t loopIndex{ 0 };
-	for (const auto index : m_tabSave)
-	{
-		if (index == static_cast<GLuint>(m_currentSave))
-		{
-			return loopIndex;
-		}
-		loopIndex++;
-	}
-	return 0;
 }
 
 SaveReload::SaveReload() 

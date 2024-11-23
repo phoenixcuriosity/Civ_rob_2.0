@@ -128,7 +128,7 @@ void App::addScreens()
 	m_newGameScreen = std::make_shared<NewGameScreen>();
 
 	SaveReloadPtrT saveReload = std::make_shared<SaveReload>();
-	saveReload->init(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
+	saveReload->init();
 
 	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>
 		(
