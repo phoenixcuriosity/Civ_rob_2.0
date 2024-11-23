@@ -172,6 +172,7 @@
     <ClInclude Include="src\TemplateEnumTexture.h">
       <Filter>template</Filter>
     </ClInclude>
+    <ClInclude Include="src\jsonloader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

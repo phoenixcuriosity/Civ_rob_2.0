@@ -196,6 +196,7 @@
     <ClInclude Include="src\GamePlayScreen.h" />
     <ClInclude Include="src\GamePlayScreenEnumTexture.h" />
     <ClInclude Include="src\InitLoadFromFile.h" />
+    <ClInclude Include="src\jsonloader.h" />
     <ClInclude Include="src\LIB.h" />
     <ClInclude Include="src\LogSentences.h" />
     <ClInclude Include="src\MainMap.h" />
