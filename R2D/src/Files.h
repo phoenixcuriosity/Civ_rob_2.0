@@ -40,10 +40,8 @@ enum class e_Files
 	readme				= 10,
 
 	mainMap				= 12,
-	buildings			= 13,
 	citiesNames			= 14,
 	units				= 15,
-	specNames			= 16,
 
 	saveInfo			= 20,
 
@@ -67,10 +65,8 @@ const e_Files tab_e_Files[]=
 {
 	e_Files::readme,
 	e_Files::mainMap,
-	e_Files::buildings,
 	e_Files::citiesNames,
 	e_Files::units,
-	e_Files::specNames,
 	e_Files::saveInfo,
 	e_Files::saveMaps,
 	e_Files::savePlayers,
@@ -100,7 +96,7 @@ struct Text
 class File
 {
 public:
-	File();
+	File() = delete;
 	File(const std::string& path);
 	~File();
 

@@ -24,13 +24,6 @@
 
 using namespace R2D;
 
-File::File()
-:
-m_path(""),
-m_isInitilize(false)
-{
-}
-
 File::File
 (
 	const std::string& path
