@@ -54,6 +54,8 @@ namespace logS
 		constexpr char INIT_MAIN[] = "[INIT_MAIN]";
 		constexpr char NEWGAME[] = "[newGame]";
 		constexpr char LOAD_MAINMAP_CONFIG[] = "[loadMainMapConfig]";
+		constexpr char LOAD_UNIT_CONFIG[] = "[LOAD_UNIT_CONFIG]";
+		constexpr char LOAD_CITY_NAME[] = "[LOAD_CITY_NAME]";
 		constexpr char INIT_MAINMAP[] = "[initMainMap]";
 		constexpr char GENERATION_MAINMAP[] = "[Map generation]";
 		constexpr char RELOAD[] = "[RELOAD]";
@@ -113,6 +115,7 @@ namespace logS
 
 		constexpr char ERROR_CURRENT_SAVE[] = "ERROR_CURRENT_SAVE : {}";
 		constexpr char ERROR_DELETE_SAVE_FILE[] = "ERROR_DELETE_SAVE_FILE : {}";
+		constexpr char ERROR_ERASE_INDEX[] = "ERROR_DELETE_SAVE_FILE : {}";
 
 		constexpr char ERROR_DIV_ZERO[] = "ERROR_DIV_ZERO : {}";
 		constexpr char ERROR_MIN_MAX_RANGE[] = "checkMinMaxValidityRange : {}";
@@ -129,6 +132,10 @@ namespace logS
 		constexpr char DMG_FROM_ATTACK[] = "[DMG_FROM_ATTACK] : {} : dmg receive : {} , life remaining {}";
 		constexpr char MOVE[] = "[MOVE] : {} : movement remaining : {}";
 		constexpr char FINISH_MOVING[] = "[FINISH_MOVING] : {}";
+
+
+		constexpr char ERROR_KEY_JSON[] = "[ERROR_KEY_JSON] : {}";
+		constexpr char MISSING_KEY_JSON[] = "[MISSING_KEY_JSON] : {} : {}";
 	};
 };
 

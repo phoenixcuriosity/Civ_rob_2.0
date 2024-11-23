@@ -4,14 +4,12 @@
 	<FilePaths>
 		<Readme>bin/readme.txt</Readme>
 		
-		<MainMap>bin/mainMap.xml</MainMap>
+		<MainMap>bin/mainMap.json</MainMap>
 
-		<Buildings>bin/buildings.txt</Buildings>
-		<CitiesNames>bin/citiesNames.txt</CitiesNames>
-		<Units>bin/units.xml</Units>
-		<SpecNames>bin/specNames.txt</SpecNames>
+		<CitiesNames>bin/citiesNames.json</CitiesNames>
+		<Units>bin/units.json</Units>
 
-		<SaveInfo>save/saveInfo.txt</SaveInfo>
+		<SaveInfo>save/</SaveInfo>
 		<SaveMaps>saveMaps.txt</SaveMaps>
 		<SavePlayers>savePlayers.xml</SavePlayers>
 

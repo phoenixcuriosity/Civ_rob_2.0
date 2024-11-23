@@ -22,6 +22,7 @@
 
 #include "InitLoadFromFile.h"
 
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "T_Unit.h"
@@ -37,38 +38,28 @@ void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::START);
 
-	tinyxml2::XMLDocument config{};
-	config.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath().c_str());
-	unsigned int tmp{ 0 };
-
-	if (config.ErrorID() == 0)
+	try 
 	{
-		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
+		const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath()) };
 
-		if (nullptr != node)
+		const jsoncons::ojson configuration = jsoncons::ojson::parse(text);
+
+		if (configuration.contains(jsonloader::KEY_MAP))
 		{
-			node->QueryUnsignedText(&tmp);
-			mainMap.SETtileSize(tmp);
+			const jsonloader::MapConfigJSON characteristic = configuration[jsonloader::KEY_MAP].as<jsonloader::MapConfigJSON>();
+			mainMap.SETtileSize(characteristic.TileSize);
+			mainMap.SETmapSizePixX(characteristic.MapSizeX);
+			mainMap.SETmapSizePixY(characteristic.MapSizeY);
 		}
-		node = node->NextSiblingElement();
-
-		if (nullptr != node)
+		else
 		{
-			node->QueryUnsignedText(&tmp);
-			mainMap.SETmapSizePixX(tmp);
-		}
-		node = node->NextSiblingElement();
-
-		if (nullptr != node)
-		{
-			node->QueryUnsignedText(&tmp);
-			mainMap.SETmapSizePixY(tmp);
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::MISSING_KEY_JSON,
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_MAP);
 		}
 	}
-	else
+	catch (const std::exception& e)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, 
-			R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath());
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::END);
