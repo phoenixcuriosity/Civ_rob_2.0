@@ -61,7 +61,7 @@ void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
-
+	
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::END);
 }
 
@@ -85,9 +85,9 @@ void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 		{
 			const std::vector<jsonloader::Unit_Template> units = configuration[jsonloader::KEY_UNIT_TEMPLATE].as<std::vector<jsonloader::Unit_Template>>();
 
-	Unit_Template currentUnit;
+			Unit_Template currentUnit;
 			for (const auto& unit : units)
-	{
+			{
 				currentUnit.name = unit.name;
 				currentUnit.type = XmlConvertValue::xmlGiveMovementType(unit.type);
 				currentUnit.life = unit.life;
@@ -99,7 +99,7 @@ void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 				currentUnit.workToBuild = unit.workToBuild;
 				currentUnit.maintenance = unit.maintenance;
 
-		vectUnitTemplate.push_back(currentUnit);
+				vectUnitTemplate.push_back(currentUnit);
 			}
 		}
 		else
@@ -117,26 +117,19 @@ void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 
 void InitLoadFromFile::loadCitiesNames(VectCityName& vectCityName)
 {
-	unsigned int nbcity{ 0 };
-	std::string city{ STRINGS::EMPTY }, dummy{ STRINGS::EMPTY };
-	std::ifstream CITIENAME{ R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath() };
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_CITY_NAME, logS::DATA::START);
 
+	const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath()) };
 
-	if (CITIENAME)
+	const jsoncons::json configuration = jsoncons::json::parse(text);
+
+	for (const auto& country : configuration.object_range()) 
 	{
-		CITIENAME >> dummy;
-
-		CITIENAME >> nbcity;
-		vectCityName.resize(nbcity);
-
-		for (auto& c : vectCityName)
+		for (const auto& city : country.value().array_range())
 		{
-			CITIENAME >> c;
+			vectCityName.push_back(city.as_string());
 		}
 	}
-	else
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
-			R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath());
-	}
+
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_CITY_NAME, logS::DATA::END);
 }
