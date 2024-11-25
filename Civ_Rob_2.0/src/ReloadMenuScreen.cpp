@@ -303,8 +303,6 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 			dummy.erase(0, 5);
 
 			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
-			R2D::ResourceManager::modifyFilePath(R2D::e_Files::saveMaps, "save/" + dummy + "/saveMaps.txt");
-			R2D::ResourceManager::modifyFilePath(R2D::e_Files::savePlayers, "save/" + dummy + "/savePlayers.xml");
 
 			updateVisibilityIfSaveSelected();
 

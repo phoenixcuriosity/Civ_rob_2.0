@@ -50,11 +50,6 @@ namespace R2D
 			const e_Files name,
 			const std::string& path
 		);
-		static void modifyFilePath
-		(
-			const e_Files name,
-			const std::string& path
-		);
 
 		static std::string loadFileToString(const std::string& path);
 

@@ -80,22 +80,6 @@ bool Files::initializePath
 	return false;
 }
 
-bool Files::modifyPath
-(
-	const e_Files name,
-	const std::string& path
-)
-{
-	const auto it = m_map_FileConf.find(name);
-
-	if	(it == m_map_FileConf.end())
-	{
-		return false;
-	}
-	it->second->modifyPath(path);
-	return true;
-}
-
 File* Files::getFile(const e_Files name)
 {
 	const auto it = m_map_FileConf.find(name);

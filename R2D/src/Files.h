@@ -129,12 +129,6 @@ public:
 		const std::string& path
 	);
 
-	bool modifyPath
-	(
-		const e_Files name,
-		const std::string& path
-	);
-
 	File* getFile(const e_Files name);
 
 private:
