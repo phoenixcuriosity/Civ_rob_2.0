@@ -77,7 +77,13 @@ void SaveReload::saveMaps
 	GamePlayScreen& mainGame
 )
 {
-	std::ofstream saveMaps{ R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() };
+	std::ofstream saveMaps{ 
+		std::format("{}{:04}/{}",
+			R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
+			mainGame.getSaveReload()->GETcurrentSave(),
+			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() )
+		};
+
 	if (saveMaps)
 	{
 		for (size_t i{0}; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -359,7 +365,10 @@ void SaveReload::savePlayer
 		pRoot->InsertEndChild(playerElement);
 	}
 	
-	xmlDoc.SaveFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str());
+	xmlDoc.SaveFile((std::format("{}{:04}/{}",
+		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
+		mainGame.getSaveReload()->GETcurrentSave(),
+		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str()));
 }
 
 void SaveReload::reload
@@ -388,7 +397,10 @@ void SaveReload::loadMaps
 {
 	std::string input(STRINGS::EMPTY);
 
-	std::ifstream saveMaps(R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+	std::ifstream saveMaps(std::format("{}{:04}/{}",
+		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
+		mainGame.getSaveReload()->GETcurrentSave(),
+		R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()));
 	if (saveMaps)
 	{
 		for (unsigned int i = 0; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
@@ -430,7 +442,10 @@ void SaveReload::loadMaps
 	else
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
-			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+			std::format("{}{:04}/{}",
+				R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
+				mainGame.getSaveReload()->GETcurrentSave(),
+				R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()));
 	}
 }
 
@@ -442,7 +457,10 @@ void SaveReload::loadPlayer
 	std::string errCheck(STRINGS::EMPTY);
 	tinyxml2::XMLDocument xmlDoc;
 	
-	if (xmlDoc.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
+	if (xmlDoc.LoadFile(std::format("{}{:04}/{}",
+		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
+		mainGame.getSaveReload()->GETcurrentSave(),
+		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str()) == tinyxml2::XML_SUCCESS)
 	{
 		tinyxml2::XMLNode* pRoot = xmlDoc.FirstChild();
 		if (nullptr == pRoot) R2D::ExitFromError::exitFromError("[ERROR]___: loadPlayer : pRoot == nullptr");
@@ -872,12 +890,6 @@ void SaveReload::createSaveDir()
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_DIR, logS::DATA::ERROR_CREATE_DIR, dir);
 	}
-
-	R2D::ResourceManager::modifyFilePath(
-		R2D::e_Files::saveMaps, dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
-
-	R2D::ResourceManager::modifyFilePath(
-		R2D::e_Files::savePlayers, dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath());
 }
 
 void SaveReload::removeSave()

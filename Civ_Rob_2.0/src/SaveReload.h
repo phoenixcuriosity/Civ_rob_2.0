@@ -149,8 +149,6 @@ public:
 	/* RETURNED VALUE    : void																					  */
 	void clearSave();
 
-
-
 public:
 
 	 /* NAME : SaveReload																				    	   */

@@ -72,15 +72,6 @@ void ResourceManager::initializeFilePath
 	m_files.initializePath(name, path);
 }
 
-void ResourceManager::modifyFilePath
-(
-	const e_Files name,
-	const std::string& path
-)
-{
-	m_files.modifyPath(name, path);
-}
-
 std::string ResourceManager::loadFileToString
 (
 	const std::string& path
