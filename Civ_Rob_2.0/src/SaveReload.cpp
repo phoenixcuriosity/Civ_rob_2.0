@@ -77,36 +77,21 @@ void SaveReload::saveMaps
 	GamePlayScreen& mainGame
 )
 {
-	std::ofstream saveMaps{ 
-		std::format("{}{:04}/{}",
+	try
+	{
+		std::ofstream ofs{ std::format("{}{:04}/{}",
 			R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
 			mainGame.getSaveReload()->GETcurrentSave(),
-			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() )
-		};
+				R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() )};
 
-	if (saveMaps)
-	{
-		for (size_t i{0}; i < mainGame.GETmainMap().GETmatriceMap().size(); i++)
-		{
-			for (size_t j{0}; j < mainGame.GETmainMap().GETmatriceMap()[i].size(); j++)
-			{
-				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].indexX << std::endl;
-				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].indexY << std::endl;
-				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].tile_x << std::endl;
-				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].tile_y << std::endl;
-				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].tile_ground << std::endl;
-				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].tile_spec << std::endl;
-				saveMaps << mainGame.GETmainMap().GETmatriceMap()[i][j].appartenance << std::endl;
-				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].food << std::endl;
-				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].work << std::endl;
-				saveMaps << (unsigned int)mainGame.GETmainMap().GETmatriceMap()[i][j].gold << std::endl << std::endl;
+		if (!ofs) { throw std::runtime_error("Failed to open file for writing."); }
+	
+		jsoncons::encode_json(mainGame.GETmainMap().saveToOjson(), ofs, jsoncons::indenting::indent);
 			}
-		}
-	}
-	else
+	catch (const std::exception& e)
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
-			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
+			e.what());
 	}
 }
 
@@ -115,262 +100,24 @@ void SaveReload::savePlayer
 	GamePlayScreen& mainGame
 )
 {
-	tinyxml2::XMLDocument xmlDoc;
-	xmlDoc.Clear();
-	tinyxml2::XMLNode* pRoot{ xmlDoc.NewElement("SavePlayers") };
-
-	xmlDoc.InsertFirstChild(pRoot);
-
-	/* ---------------------------------------------------------------------- */
-	/* Level :																  */
-	/* ----- :																  */
-	/* 1 : Player															  */
-	/* 1.1			-> Name  												  */
-	/* 1.2			-> TabUnit  											  */
-	/* 1.2.1		->	-> Unit  											  */
-	/* 1.2.1.1		->  ->	-> Name  										  */
-	/* 1.2.1.2		->  ->	-> X  											  */
-	/* 1.2.1.3		->  ->	-> Y  											  */
-	/* 1.2.1.4		->  ->	-> MovementType  								  */
-	/* 1.2.1.5		->  ->	-> Life  										  */
-	/* 1.2.1.6		->  ->	-> Atq  										  */
-	/* 1.2.1.7		->  ->	-> Def  										  */
-	/* 1.2.1.8		->  ->	-> Movement  									  */
-	/* 1.2.1.9		->  ->	-> Level	  									  */
-	/* 1.3			-> TabCity  											  */
-	/* 1.3.1		->	-> City  											  */
-	/* 1.3.1.1		->  ->	-> Name  										  */
-	/* 1.3.1.2		->  ->	-> X  											  */
-	/* 1.3.1.3		->	->	-> Y  											  */
-	/* ---------------------------------------------------------------------- */
-
-	for (unsigned int p(0); p < mainGame.GETPlayers().GETvectPlayer().size(); p++)
+	try
 	{
-		tinyxml2::XMLElement* playerElement = xmlDoc.NewElement("Player");
-		tinyxml2::XMLElement* playerNameElement = xmlDoc.NewElement("Name");
-		playerNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETname().c_str());
-		playerElement->InsertEndChild(playerNameElement);
+		std::ofstream ofs((std::format("{}{:04}/{}",
+			R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
+			mainGame.getSaveReload()->GETcurrentSave(),
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str()));
 
-		tinyxml2::XMLElement* playerIDElement = xmlDoc.NewElement("ID");
-		playerIDElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETid());
-		playerElement->InsertEndChild(playerIDElement);
+		if (!ofs) { throw std::runtime_error("Failed to open file for writing."); }
 
-		tinyxml2::XMLElement* GoldStatsElement = xmlDoc.NewElement("GoldStats");
-
-		tinyxml2::XMLElement* GoldStatsElementGold = xmlDoc.NewElement("Gold");
-		tinyxml2::XMLElement* GoldStatsElementGoldBalance = xmlDoc.NewElement("GoldBalance");
-		tinyxml2::XMLElement* GoldStatsElementIncome = xmlDoc.NewElement("Income");
-		tinyxml2::XMLElement* GoldStatsElementCost = xmlDoc.NewElement("Cost");
-		tinyxml2::XMLElement* GoldStatsElementTaxIncome = xmlDoc.NewElement("TaxIncome");
-		tinyxml2::XMLElement* GoldStatsElementCommerceIncome = xmlDoc.NewElement("CommerceIncome");
-		tinyxml2::XMLElement* GoldStatsElementGoldConversionSurplus = xmlDoc.NewElement("GoldConversionSurplus");
-		tinyxml2::XMLElement* GoldStatsElementArmiesCost = xmlDoc.NewElement("ArmiesCost");
-		tinyxml2::XMLElement* GoldStatsElementBuildingsCost = xmlDoc.NewElement("BuildingsCost");
-
-		GoldStatsElementGold->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().gold);
-		GoldStatsElementGoldBalance->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().goldBalance);
-		GoldStatsElementIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().income);
-		GoldStatsElementCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().cost);
-		GoldStatsElementTaxIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().taxIncome);
-		GoldStatsElementCommerceIncome->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().commerceIncome);
-		GoldStatsElementGoldConversionSurplus->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().goldConversionSurplus);
-		GoldStatsElementArmiesCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().armiesCost);
-		GoldStatsElementBuildingsCost->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETgoldStats().buildingsCost);
-
-		GoldStatsElement->InsertEndChild(GoldStatsElementGold);
-		GoldStatsElement->InsertEndChild(GoldStatsElementGoldBalance);
-		GoldStatsElement->InsertEndChild(GoldStatsElementIncome);
-		GoldStatsElement->InsertEndChild(GoldStatsElementCost);
-		GoldStatsElement->InsertEndChild(GoldStatsElementTaxIncome);
-		GoldStatsElement->InsertEndChild(GoldStatsElementCommerceIncome);
-		GoldStatsElement->InsertEndChild(GoldStatsElementGoldConversionSurplus);
-		GoldStatsElement->InsertEndChild(GoldStatsElementArmiesCost);
-		GoldStatsElement->InsertEndChild(GoldStatsElementBuildingsCost);
-
-		playerElement->InsertEndChild(GoldStatsElement);
-
-		tinyxml2::XMLElement* tabUnitElement = xmlDoc.NewElement("TabUnit");
-
-		for (unsigned int i(0); i < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit().size(); i++)
-		{
-			tinyxml2::XMLElement* unitElement = xmlDoc.NewElement("Unit");
-			tinyxml2::XMLElement* unitNameElement = xmlDoc.NewElement("Name");
-			tinyxml2::XMLElement* unitXElement = xmlDoc.NewElement("X");
-			tinyxml2::XMLElement* unitYElement = xmlDoc.NewElement("Y");
-			tinyxml2::XMLElement* unitMovementTypeElement = xmlDoc.NewElement("MovementType");
-			tinyxml2::XMLElement* unitLifeElement = xmlDoc.NewElement("Life");
-			tinyxml2::XMLElement* unitAtqElement = xmlDoc.NewElement("Atq");
-			tinyxml2::XMLElement* unitDefElement = xmlDoc.NewElement("Def");
-			tinyxml2::XMLElement* unitMovementElement = xmlDoc.NewElement("Movement");
-			tinyxml2::XMLElement* unitNumberOfAttackElement = xmlDoc.NewElement("NumberOfAttack");
-			tinyxml2::XMLElement* unitLevelElement = xmlDoc.NewElement("Level");
-			tinyxml2::XMLElement* unitMaintenanceElement = xmlDoc.NewElement("Maintenance");
-
-			unitNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETname().c_str());
-			unitXElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETx());
-			unitYElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETy());
-			unitMovementTypeElement->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmovementType());
-			unitLifeElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETlife());
-			unitAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETatq());
-			unitDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETdef());
-			unitMovementElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmovement());
-			unitNumberOfAttackElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETnumberOfAttack());
-			unitLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETlevel());
-			unitMaintenanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabUnit()[i]->GETmaintenance());
-
-			unitElement->InsertEndChild(unitNameElement);
-			unitElement->InsertEndChild(unitXElement);
-			unitElement->InsertEndChild(unitYElement);
-			unitElement->InsertEndChild(unitMovementTypeElement);
-			unitElement->InsertEndChild(unitLifeElement);
-			unitElement->InsertEndChild(unitAtqElement);
-			unitElement->InsertEndChild(unitDefElement);
-			unitElement->InsertEndChild(unitMovementElement);
-			unitElement->InsertEndChild(unitNumberOfAttackElement);
-			unitElement->InsertEndChild(unitLevelElement);
-			unitElement->InsertEndChild(unitMaintenanceElement);
-
-			tabUnitElement->InsertEndChild(unitElement);
-			playerElement->InsertEndChild(tabUnitElement);
+		jsoncons::encode_json(mainGame.GETPlayers().saveToOjson(), ofs, jsoncons::indenting::indent);
 		}
-
-		tinyxml2::XMLElement* tabCityElement = xmlDoc.NewElement("TabCity");
-
-		for (unsigned int i(0); i < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity().size(); i++)
+	catch (const std::exception& e)
 		{
-			tinyxml2::XMLElement* cityElement = xmlDoc.NewElement("City");
-			tinyxml2::XMLElement* cityNameElement = xmlDoc.NewElement("Name");
-			tinyxml2::XMLElement* cityXElement = xmlDoc.NewElement("X");
-			tinyxml2::XMLElement* cityYElement = xmlDoc.NewElement("Y");
-			tinyxml2::XMLElement* cityInfluenceLevelElement = xmlDoc.NewElement("InfluenceLevel");
-			tinyxml2::XMLElement* cityAtqElement = xmlDoc.NewElement("Atq");
-			tinyxml2::XMLElement* cityDefElement = xmlDoc.NewElement("Def");
-			tinyxml2::XMLElement* cityEmotionElement = xmlDoc.NewElement("Emotion");
-			tinyxml2::XMLElement* cityFoodStockElement = xmlDoc.NewElement("FoodStock");
-			tinyxml2::XMLElement* cityFoodBalanceElement = xmlDoc.NewElement("FoodBalance");
-			tinyxml2::XMLElement* cityFoodSurplusPreviousTurnElement = xmlDoc.NewElement("FoodSurplusPreviousTurn");
-			tinyxml2::XMLElement* cityFoodToLevelUp = xmlDoc.NewElement("FoodToLevelUp");
-			tinyxml2::XMLElement* cityGoldBalanceElement = xmlDoc.NewElement("GoldBalance");
-			tinyxml2::XMLElement* cityConversionToApplyElement = xmlDoc.NewElement("ConversionToApply");
-
-			tinyxml2::XMLElement* cityBuildQueueElement = xmlDoc.NewElement("BuildQueue");
-			tinyxml2::XMLElement* cityTabCitizenElement = xmlDoc.NewElement("TabCitizen");
-
-			cityNameElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETname().c_str());
-			cityXElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETx());
-			cityYElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETy());
-			cityInfluenceLevelElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETinfluenceLevel());
-			cityAtqElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETatq());
-			cityDefElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETdef());
-			cityEmotionElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETemotion());
-			cityFoodStockElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodStock());
-			cityFoodBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodBalance());
-			cityFoodSurplusPreviousTurnElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodSurplusPreviousTurn());
-			cityFoodToLevelUp->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETfoodToLevelUp());
-			cityGoldBalanceElement->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETgoldBalance());
-			cityConversionToApplyElement->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETconversionToApply());
-
-			cityElement->InsertEndChild(cityNameElement);
-			cityElement->InsertEndChild(cityXElement);
-			cityElement->InsertEndChild(cityYElement);
-			cityElement->InsertEndChild(cityInfluenceLevelElement);
-			cityElement->InsertEndChild(cityAtqElement);
-			cityElement->InsertEndChild(cityDefElement);
-			cityElement->InsertEndChild(cityEmotionElement);
-			cityElement->InsertEndChild(cityFoodStockElement);
-			cityElement->InsertEndChild(cityFoodBalanceElement);
-			cityElement->InsertEndChild(cityFoodSurplusPreviousTurnElement);
-			cityElement->InsertEndChild(cityFoodToLevelUp);
-			cityElement->InsertEndChild(cityGoldBalanceElement);
-			cityElement->InsertEndChild(cityConversionToApplyElement);
-
-			for (
-				unsigned int indexBuild(0);
-				indexBuild < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue().size();
-				indexBuild++
-				)
-			{
-				tinyxml2::XMLElement* cityBuildInQueueElement = xmlDoc.NewElement("BuildInQueue");
-
-				tinyxml2::XMLElement* cityBuildInQueueNameElement = xmlDoc.NewElement("Name");
-				tinyxml2::XMLElement* cityBuildInQueueTypeElement = xmlDoc.NewElement("Type");
-				tinyxml2::XMLElement* cityBuildInQueueWorkElement = xmlDoc.NewElement("Work");
-				tinyxml2::XMLElement* cityBuildInQueueRemainingWorkElement = xmlDoc.NewElement("RemainingWork");
-
-				cityBuildInQueueNameElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.name.c_str());
-				cityBuildInQueueTypeElement
-					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.type);
-				cityBuildInQueueWorkElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.work);
-				cityBuildInQueueRemainingWorkElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETbuildQueue()[indexBuild].buildQ.remainingWork);
-
-				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueNameElement);
-				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueTypeElement);
-				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueWorkElement);
-				cityBuildInQueueElement->InsertEndChild(cityBuildInQueueRemainingWorkElement);
-
-				cityBuildQueueElement->InsertEndChild(cityBuildInQueueElement);
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
+			e.what());
 			}
-
-			for (unsigned int indexCitizen(0); indexCitizen < mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens().size(); indexCitizen++)
-			{
-				tinyxml2::XMLElement* cityCitizensElement = xmlDoc.NewElement("Citizens");
-				tinyxml2::XMLElement* cityCitizensTileOccupiedElement = xmlDoc.NewElement("TileOccupied");
-				tinyxml2::XMLElement* cityCitizensHappinessElement = xmlDoc.NewElement("Happiness");
-				tinyxml2::XMLElement* cityCitizensFoodElement = xmlDoc.NewElement("Food");
-				tinyxml2::XMLElement* cityCitizensWorkElement = xmlDoc.NewElement("Work");
-				tinyxml2::XMLElement* cityCitizensGoldElement = xmlDoc.NewElement("Gold");
-				tinyxml2::XMLElement* cityCitizensRevoltElement = xmlDoc.NewElement("Revolt");
-				tinyxml2::XMLElement* cityCitizensReligionElement = xmlDoc.NewElement("Religion");
-				tinyxml2::XMLElement* cityCitizensPlaceElement = xmlDoc.NewElement("Place");
-
-				cityCitizensTileOccupiedElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETtileOccupied());
-				cityCitizensHappinessElement
-					->SetText((int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GEThappiness());
-				cityCitizensFoodElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETfood());
-				cityCitizensWorkElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETwork());
-				cityCitizensGoldElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETgold());
-				cityCitizensRevoltElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETrevolt());
-				cityCitizensReligionElement
-					->SetText((unsigned int)mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETreligion());
-				cityCitizensPlaceElement
-					->SetText(mainGame.GETPlayers().GETvectPlayer()[p]->GETtabCity()[i]->GETcitizens()[indexCitizen]->GETplace());
-
-				cityCitizensElement->InsertEndChild(cityCitizensTileOccupiedElement);
-				cityCitizensElement->InsertEndChild(cityCitizensHappinessElement);
-				cityCitizensElement->InsertEndChild(cityCitizensFoodElement);
-				cityCitizensElement->InsertEndChild(cityCitizensWorkElement);
-				cityCitizensElement->InsertEndChild(cityCitizensGoldElement);
-				cityCitizensElement->InsertEndChild(cityCitizensRevoltElement);
-				cityCitizensElement->InsertEndChild(cityCitizensReligionElement);
-				cityCitizensElement->InsertEndChild(cityCitizensPlaceElement);
-
-				cityTabCitizenElement->InsertEndChild(cityCitizensElement);
-			}
-
-			cityElement->InsertEndChild(cityBuildQueueElement);
-			cityElement->InsertEndChild(cityTabCitizenElement);
-
-			tabCityElement->InsertEndChild(cityElement);
-
-			playerElement->InsertEndChild(tabCityElement);
-		}
-		pRoot->InsertEndChild(playerElement);
 	}
 	
-	xmlDoc.SaveFile((std::format("{}{:04}/{}",
-		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-		mainGame.getSaveReload()->GETcurrentSave(),
-		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str()));
-}
-
 void SaveReload::reload
 (
 	GamePlayScreen& mainGame
