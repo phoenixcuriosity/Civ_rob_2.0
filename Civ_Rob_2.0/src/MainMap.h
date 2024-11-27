@@ -28,6 +28,7 @@
 #include "GamePlayScreenEnumTexture.h"
 #include "T_MainMap.h"
 
+#include <jsoncons/json.hpp>
 #include <R2D/src/Camera2D.h>
 #include <R2D/src/SpriteBatch.h>
 
@@ -35,86 +36,62 @@ class MainMap
 {
 public:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : getPtrTileSize															   */
 	/* ROLE : Initialize ptr on tileSize from sysinfo									   */
 	/* INPUT : unsigned int* const : ptr on tileSize									   */
 	/* RETURNED VALUE : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	void setStaticPtrTileSize();
 
 public:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertIndexToPosX														   */
 	/* ROLE : Convert the index of the matrix Map to a position on X axis in pixel		   */
 	/* ROLE : Offset by toolBar size													   */
 	/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
 	/* INPUT : unsigned int index : index to convert									   */
 	/* RETURNED VALUE : unsigned int : position on X axis in pixel						   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertIndexToPosX
 	(
 		const unsigned int index
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertPosXToIndex														   */
 	/* ROLE : Convert position on X axis in pixel of the matrix Map to a index			   */
 	/* ROLE : Offset by toolBar size													   */
 	/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
 	/* INPUT : unsigned int index : position on X axis in pixel	to convert				   */
 	/* RETURNED VALUE : unsigned int : index											   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosXToIndex
 	(
 		const double posX
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertIndexToPosY														   */
 	/* ROLE : Convert the index of the matrix Map to a position on Y axis in pixel		   */
 	/* ROLE : Use 1 input static const ptr : s_tileSize									   */
 	/* INPUT : unsigned int index : index to convert									   */
 	/* RETURNED VALUE : unsigned int : position on Y axis in pixel						   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertIndexToPosY
 	(
 		const unsigned int index
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertPosXToIndex														   */
 	/* ROLE : Convert position on Y axis in pixel of the matrix Map to a index			   */
 	/* ROLE : Use 1 input static const ptr : s_tileSize									   */
 	/* INPUT : unsigned int index : position on Y axis in pixel	to convert				   */
 	/* RETURNED VALUE : unsigned int : index											   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	static unsigned int convertPosYToIndex
 	(
 		const double posY
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : assertRangeMapIndex														   */
 	/* ROLE : assert that the index provided is between 0 and size						   */
 	/* INPUT : unsigned int indexToTest : index to compare to size						   */
 	/* INPUT : size_t size : reference size								 				   */
 	/* RETURNED VALUE : bool : false -> indexToTest is equal or > than size				   */
 	/* RETURNED VALUE : bool : true -> indexToTest is <	than size						   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	static bool assertRangeMapIndex
 	(
 		const unsigned int indexToTest,
@@ -195,8 +172,6 @@ public:
 
 private:
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : mapBordersConditions														   */
 	/* ROLE : Boucle For de conditions													   */
 	/* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2				   */
@@ -204,31 +179,23 @@ private:
 	/* INPUT : unsigned int i : index en X												   */
 	/* INPUT : unsigned int j : index en Y												   */
 	/* RETURNED VALUE : bool : valid = true / not valid = false							   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	bool mapBordersConditions
 	(
 		const unsigned int i,
 		const unsigned int j
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : mapBorders																   */
 	/* ROLE : Affectation des caract�ristiques de la case en fonction ...				   */
 	/* ROLE : ... de la fonction rand, dans la bordure de la map entre ...				   */
 	/* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX										   */
 	/* OUTPUT : Tile& tile : tile � affecter											   */
 	/* RETURNED VALUE : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	void mapBorders
 	(
 		Tile& tile
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : mapIntern																	   */
 	/* ROLE : Affectation des caract�ristiques de la case en fonction ...				   */
 	/* ROLE : ... de la fonction rand, dans le reste de la map							   */
@@ -238,8 +205,6 @@ private:
 	/* INPUT : unsigned int i : index en X												   */
 	/* INPUT : unsigned int j : index en Y												   */
 	/* RETURNED VALUE    : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	void mapIntern
 	(
 		MatriceMap& maps,
@@ -247,8 +212,6 @@ private:
 		const unsigned int j
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : tileAffectation															   */
 	/* ROLE : Affectation des caract�ristiques � une case								   */
 	/* OUTPUT : Tile& tile, : la case � affecter										   */
@@ -256,8 +219,6 @@ private:
 	/* INPUT : unsigned int tile_spec, std::string tile_stringspec,						   */
 	/* INPUT : int food, int work, int gold												   */
 	/* RETURNED VALUE : void															   */
-	/* ------------------------------------------------------------------------------------*/
-	/* ----------------------------------------------------------------------------------- */
 	void tileAffectation
 	(
 		Tile& tile,
@@ -268,6 +229,9 @@ private:
 		const int gold
 	);
 
+public:
+
+	jsoncons::ojson saveToOjson();
 
 public:
 
