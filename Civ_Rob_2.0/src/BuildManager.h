@@ -123,7 +123,10 @@ public:
 
 	dequeBuild& getBuildQueue()				{ return m_buildQueue; };
 	const dequeBuild& getBuildQueue()const	{ return m_buildQueue; };
+
+public:
 	
+	jsoncons::ojson saveToOjson();
 
 private:
 
