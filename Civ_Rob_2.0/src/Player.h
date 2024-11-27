@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include <jsoncons/json.hpp>
+
 namespace PlayerH
 {
 	constexpr unsigned int NB_MAX_PLAYER = 9;
@@ -192,6 +194,9 @@ public:
 		const double goldToAdd
 	);
 
+public:
+
+	jsoncons::ojson saveToOjson();
 
 public:
 
