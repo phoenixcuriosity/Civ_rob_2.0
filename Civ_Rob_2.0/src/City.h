@@ -31,6 +31,8 @@
 
 #include "R2D/src/API_fwd.h"
 
+#include <jsoncons/json.hpp>
+
 class City
 {
 public: /* STATIC */
@@ -217,6 +219,10 @@ public:
 	void addCitizen(bool uselessArg)					{ m_citizenManager.addCitizen(uselessArg); };
 	void resetTabCitizen()								{ m_citizenManager.resetTabCitizen(); };
 	void computeEmotion()								{ m_citizenManager.computeEmotion(); };
+
+public:
+
+	jsoncons::ojson saveToOjson();
 	
 public:
 	/* *********************************************************
