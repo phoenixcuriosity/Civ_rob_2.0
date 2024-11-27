@@ -56,6 +56,7 @@ namespace logS
 		constexpr char LOAD_MAINMAP_CONFIG[] = "[loadMainMapConfig]";
 		constexpr char LOAD_UNIT_CONFIG[] = "[LOAD_UNIT_CONFIG]";
 		constexpr char LOAD_CITY_NAME[] = "[LOAD_CITY_NAME]";
+		constexpr char LOAD_MAIN_MAP[] = "[LOAD_CITY_NAME]";
 		constexpr char INIT_MAINMAP[] = "[initMainMap]";
 		constexpr char GENERATION_MAINMAP[] = "[Map generation]";
 		constexpr char RELOAD[] = "[RELOAD]";
@@ -87,13 +88,13 @@ namespace logS
 	{
 		constexpr char MISSING_PATH_FILE[] = " Missing path for a file : {}";
 
-		constexpr char CONSTRUCTOR_CITY[] = " -> m_image : {}, m_name : {}, m_x : {}, m_y : {}, m_influenceLevel : {}";
+		constexpr char CONSTRUCTOR_CITY[] = " : {}";
 		constexpr char DESTRUCTOR_CITY[] = " -> m_name {}";
 
-		constexpr char CONSTRUCTOR_CITIZEN[] = " -> m_tileOccupied : {}, m_food : {}, m_work : {}, m_gold : {}, m_revolt : {}";
+		constexpr char CONSTRUCTOR_CITIZEN[] = " : {}";
 
-		constexpr char CONSTRUCTOR_PLAYER[] = " -> m_name : {}, m_id : {}";
-		constexpr char DESTRUCTOR_PLAYER[] = " -> m_name {}";
+		constexpr char CONSTRUCTOR_PLAYER[] = " : {}";
+		constexpr char DESTRUCTOR_PLAYER[] = " : {}";
 
 		constexpr char CONSTRUCTOR_UNIT[] = " -> m_name : {} , m_x : {} , m_y : {}";
 		constexpr char DESTRUCTOR_UNIT[] = " -> m_name {}";
