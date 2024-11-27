@@ -93,6 +93,9 @@ private:
 
 	void updateEmotionCoef();
 
+public:
+
+	jsoncons::ojson saveToOjson();
 
 private:
 

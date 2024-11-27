@@ -178,6 +178,19 @@ void FoodManager::updateEmotionCoef()
 	m_emotionCoef = static_cast<double>(m_citizenManager.getEmotion()) / FOOD_MANAGER::EMOTION_RANGE::SCALE_MEAN;
 }
 
+jsoncons::ojson FoodManager::saveToOjson()
+{
+	jsoncons::ojson value;
+	value.insert_or_assign("m_foodStock", m_foodStock);
+	value.insert_or_assign("m_foodBalance", m_foodBalance);
+	value.insert_or_assign("m_foodConsumption", m_foodConsumption);
+	value.insert_or_assign("m_foodSurplusPreviousTurn", m_foodSurplusPreviousTurn);
+	value.insert_or_assign("m_foodToLevelUp", m_foodToLevelUp);
+	value.insert_or_assign("m_emotionCoef", m_emotionCoef);
+	value.insert_or_assign("m_foodManagerType", static_cast<size_t>(m_foodManagerType));
+	return value;
+}
+
 /*
 *	End Of File : FoodManager.cpp
 */
