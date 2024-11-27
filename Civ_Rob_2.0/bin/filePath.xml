@@ -10,8 +10,8 @@
 		<Units>bin/units.json</Units>
 
 		<SaveInfo>save/</SaveInfo>
-		<SaveMaps>saveMaps.txt</SaveMaps>
-		<SavePlayers>savePlayers.xml</SavePlayers>
+		<SaveMaps>saveMaps.json</SaveMaps>
+		<SavePlayers>savePlayers.json</SavePlayers>
 
 		<ColorShadingVert>shaders/ColorShading.vert</ColorShadingVert>
 		<ColorShadingFrag>shaders/ColorShading.frag</ColorShadingFrag>
