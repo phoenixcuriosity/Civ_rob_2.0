@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include <jsoncons/json.hpp>
+
 class CitizenManager
 {
 public:
@@ -83,6 +85,10 @@ private:
 		const double coefWork = 1.0,
 		const double coefGold = 1.0
 	) const;
+
+public:
+
+	jsoncons::ojson saveToOjson();
 
 private:
 

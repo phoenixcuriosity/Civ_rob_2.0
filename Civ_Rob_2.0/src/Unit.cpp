@@ -634,6 +634,26 @@ void Unit::cmpblit()
 	}
 }
 
+jsoncons::ojson Unit::saveToOjson()
+{
+	jsoncons::ojson value;
+	value.insert_or_assign("m_name", m_name);
+	value.insert_or_assign("m_x", m_x);
+	value.insert_or_assign("m_y", m_y);
+	value.insert_or_assign("m_movementType", static_cast<size_t>(m_movementType));
+	value.insert_or_assign("m_maxlife", m_maxlife);
+	value.insert_or_assign("m_maxatq", m_maxatq);
+	value.insert_or_assign("m_maxdef", m_maxdef);
+	value.insert_or_assign("m_maxmovement", m_maxmovement);
+	value.insert_or_assign("m_level", m_level);
+	value.insert_or_assign("m_life", m_life);
+	value.insert_or_assign("m_atq", m_atq);
+	value.insert_or_assign("m_def", m_def);
+	value.insert_or_assign("m_movement", m_movement);
+	value.insert_or_assign("m_level", m_level);
+	value.insert_or_assign("m_maintenance", m_maintenance);
+	return value;
+}
 
  /*
  *	End Of File Unit.cpp

@@ -343,6 +343,21 @@ bool Players::searchCity
 	return false;
 }
 
+jsoncons::ojson Players::saveToOjson()
+{
+	jsoncons::ojson value;
+	jsoncons::ojson players{ jsoncons::ojson::make_array() };;
+
+	for (const auto& player : m_vectPlayer)
+	{
+		players.push_back(player->saveToOjson());
+	}
+
+	value.insert_or_assign("Players", players);
+
+	return value;
+}
+
  /*
  *	End Of File : Players.cpp
  */

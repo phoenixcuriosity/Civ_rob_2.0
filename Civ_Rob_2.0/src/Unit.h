@@ -27,6 +27,7 @@
 
 #include <R2D/src/API_fwd.h>
 #include <glm/glm.hpp>
+#include <jsoncons/json.hpp>
 
 class Unit
 {
@@ -287,6 +288,9 @@ public:
 	/* RETURNED VALUE    : void															   */
 	virtual void cmpblit();
 
+public:
+
+	jsoncons::ojson saveToOjson();
 
 public:
 

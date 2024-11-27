@@ -30,13 +30,6 @@
 
 #include <R2D/src/Log.h>
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : Citizen																	   */
-/* ROLE : Constructeur par d�faut													   */
-/* INPUT : void																		   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Citizen::Citizen()
 	:
 	m_tileOccupied((unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)),
@@ -49,16 +42,9 @@ Citizen::Citizen()
 	m_place(false)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
-		m_tileOccupied, m_food, m_work, m_gold, m_revolt);
+		saveToOjson().as_string());
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : Citizen																	   */
-/* ROLE : Constructeur par une Tile													   */
-/* INPUT : Tile tile : tile centrale de la Citie									   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Citizen::Citizen
 (
 	const Tile& tile
@@ -74,17 +60,9 @@ Citizen::Citizen
 	m_place(true)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
-		m_tileOccupied, m_food, m_work, m_gold, m_revolt);
+		saveToOjson().as_string());
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : Citizen																	   */
-/* ROLE : Constructeur par une Tile													   */
-/* INPUT : std::vector<Tile>& tile : tableau de Tile de la Citie					   */
-/* INPUT : std::vector<Citizen*>& citizens : tableau de Citizens					   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Citizen::Citizen
 (
 	const unsigned int tileOccupied,
@@ -103,25 +81,28 @@ Citizen::Citizen
 	m_place(true)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
-		m_tileOccupied, m_food, m_work, m_gold, m_revolt);
+		saveToOjson().as_string());
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : ~Citizen																	   */
-/* ROLE : Destructeur																   */
-/* INPUT : void																		   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
 Citizen::~Citizen()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITIZEN, logS::DATA::EMPTY_DATA);
 }
 
+jsoncons::ojson Citizen::saveToOjson()
+{
+	jsoncons::ojson value;
+	value.insert_or_assign("m_tileOccupied", m_tileOccupied);
+	value.insert_or_assign("m_food", m_food);
+	value.insert_or_assign("m_work", m_work);
+	value.insert_or_assign("m_gold", m_gold);
+	value.insert_or_assign("m_happiness", static_cast<int>(m_happiness));
+	value.insert_or_assign("m_revolt", m_revolt);
+	value.insert_or_assign("m_religion", static_cast<size_t>(m_religion));
+	value.insert_or_assign("m_place", m_place);
+	return value;
+}
 
-/* *********************************************************
- *					END Citizen::METHODS				   *
- ********************************************************* */
 
  /*
   *	End Of File : Citizen.cpp

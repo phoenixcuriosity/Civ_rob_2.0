@@ -267,7 +267,7 @@ City::City
 	m_goldBalance(0.0)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
-		m_image, m_name, m_x, m_y, m_influenceLevel);
+		saveToOjson().as_string());
 }
 
 City::~City()
@@ -423,6 +423,23 @@ void City::convertFoodSurplusToGold
 )
 {
 	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_GOLD;
+}
+
+jsoncons::ojson City::saveToOjson()
+{
+	jsoncons::ojson value;
+	value.insert_or_assign("m_image", m_image);
+	value.insert_or_assign("m_name", m_name);
+	value.insert_or_assign("m_x", m_x);
+	value.insert_or_assign("m_y", m_y);
+	value.insert_or_assign("m_influenceLevel", m_influenceLevel);
+	value.insert_or_assign("m_atq", m_atq);
+	value.insert_or_assign("m_def", m_def);
+	value.insert_or_assign("m_nbstructurebuild", m_nbstructurebuild);
+	value.insert_or_assign("Citizens", m_citizenManager.saveToOjson());
+	value.insert_or_assign("Food", m_foodManager.saveToOjson());
+	value.insert_or_assign("BuildQueue", m_buildManager.saveToOjson());
+	return value;
 }
 
  /*

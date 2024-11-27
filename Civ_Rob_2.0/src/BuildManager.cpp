@@ -265,7 +265,27 @@ double BuildManager::GETBuildPerc()const
 	return RESOURCES::WORK::ZERO;
 };
 
+jsoncons::ojson BuildManager::saveToOjson()
+{
+	jsoncons::ojson value;
+	jsoncons::ojson builds{ jsoncons::ojson::make_array() };
 
+	for (const auto build : m_buildQueue)
+	{
+		jsoncons::ojson b;
+		b.insert_or_assign("name", build.buildQ.name);
+		b.insert_or_assign("type", static_cast<size_t>(build.buildQ.type));
+		b.insert_or_assign("work", build.buildQ.work);
+		b.insert_or_assign("remainingWork", build.buildQ.remainingWork);
+		builds.push_back(b);
+	}
+
+	value.insert_or_assign("m_workBalance", m_workBalance);
+	value.insert_or_assign("m_workSurplusPreviousTurn", m_workSurplusPreviousTurn);
+	value.insert_or_assign("m_buildQueue", builds);
+
+	return value;
+}
 
 /*
 *	End Of File : BuildManager.cpp

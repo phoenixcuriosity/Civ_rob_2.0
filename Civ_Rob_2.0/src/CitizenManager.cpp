@@ -241,6 +241,20 @@ double CitizenManager::getFoodFromCitizen()const
 	return rValue;
 }
 
+jsoncons::ojson CitizenManager::saveToOjson()
+{
+	jsoncons::ojson value;
+	jsoncons::ojson citizens{ jsoncons::ojson::make_array() };
+
+	for (const auto citizen : m_citizens)
+	{
+		citizens.push_back(citizen->saveToOjson());
+	}
+	value.insert_or_assign("Emotion", m_emotion);
+	value.insert_or_assign("Citizens", citizens);
+	return value;
+}
+
 
 /*
 *	End Of File : CitizenManager.cpp

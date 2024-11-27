@@ -23,6 +23,7 @@
 #ifndef jsonloader_H
 #define jsonloader_H
 
+
 #include <jsoncons/json.hpp>
 
 namespace jsonloader
@@ -30,6 +31,8 @@ namespace jsonloader
 
 constexpr char KEY_MAP[] = "Map";
 constexpr char KEY_UNIT_TEMPLATE[] = "Units";
+constexpr char KEY_MATRICE_MAP[] = "MatriceMap";
+
 struct MapConfigJSON
 {
 	unsigned int TileSize;
@@ -51,6 +54,20 @@ struct Unit_Template
 	double maintenance;
 };
 
+struct Tile
+{
+	unsigned int indexX;
+	unsigned int indexY;
+	unsigned int tile_x;
+	unsigned int tile_y;
+	size_t tile_ground;
+	size_t tile_spec;
+	int appartenance;
+	int food;
+	int work;
+	int gold;
+};
+
 }
 
 
@@ -66,6 +83,19 @@ JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::Unit_Template,
 	(level, "Level"),
 	(workToBuild, "WorkToBuild"),
 	(maintenance, "Maintenance"))
+JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::Tile,
+	(indexX, "indexX"),
+	(indexY, "indexY"),
+	(tile_x, "tile_x"),
+	(tile_y, "tile_y"),
+	(tile_ground, "tile_ground"),
+	(tile_spec, "tile_spec"),
+	(appartenance, "appartenance"),
+	(food, "food"),
+	(work, "work"),
+	(gold, "gold"))
+
+
 
 #endif // !jsonloader_H
 

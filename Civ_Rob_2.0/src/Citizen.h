@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include <jsoncons/json.hpp>
+
 class Citizen
 {
 public:
@@ -67,6 +69,9 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual ~Citizen();
 
+public:
+
+	jsoncons::ojson saveToOjson();
 
 
 public:

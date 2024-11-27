@@ -23,6 +23,7 @@
 #include "MainMap.h"
 
 #include "App.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "Player.h"
 
@@ -896,6 +897,32 @@ void MainMap::renderMap()
 	m_spriteBatchAppartenance.renderBatch();
 }
 
+jsoncons::ojson MainMap::saveToOjson()
+{
+	jsoncons::ojson value;
+	jsoncons::ojson tiles{ jsoncons::ojson::make_array() };
+
+	for (const auto& row : m_matriceMap)
+	{
+		for (const auto& tilef : row)
+		{
+			jsoncons::ojson tile;
+			tile.insert_or_assign("indexX", tilef.indexX);
+			tile.insert_or_assign("indexY", tilef.indexY);
+			tile.insert_or_assign("tile_x", tilef.tile_x);
+			tile.insert_or_assign("tile_y", tilef.tile_y);
+			tile.insert_or_assign("tile_ground", static_cast<size_t>(tilef.tile_ground));
+			tile.insert_or_assign("tile_spec", static_cast<size_t>(tilef.tile_spec));
+			tile.insert_or_assign("appartenance", tilef.appartenance);
+			tile.insert_or_assign("food", tilef.food);
+			tile.insert_or_assign("work", tilef.work);
+			tile.insert_or_assign("gold", tilef.gold);
+			tiles.push_back(tile);
+		}
+	}
+	value.insert_or_assign(jsonloader::KEY_MATRICE_MAP, tiles);
+	return value;
+}
 
 /*
 *	End Of File : GamePlay.cpp

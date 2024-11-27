@@ -35,7 +35,7 @@ std::string FileTools::loadFileToString(const std::string& path)
 	const uintmax_t length = std::filesystem::file_size(path, ec);
 	if (ec)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_SIZE_FILE, path);
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_SIZE_FILE, ec.message());
 	}
 	std::string buffer(length, '\0'); 
 	std::ifstream stream(path, std::ios::in);
