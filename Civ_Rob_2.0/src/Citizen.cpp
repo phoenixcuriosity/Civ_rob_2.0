@@ -104,6 +104,28 @@ jsoncons::ojson Citizen::saveToOjson()
 	return value;
 }
 
+void Citizen::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if (
+			jsonLoad.contains("m_tileOccupied") && jsonLoad.contains("m_food") && jsonLoad.contains("m_work") &&
+			jsonLoad.contains("m_gold") && jsonLoad.contains("m_happiness") && jsonLoad.contains("m_revolt") &&
+			jsonLoad.contains("m_religion") && jsonLoad.contains("m_place")
+		)
+	{
+		m_tileOccupied = jsonLoad["m_tileOccupied"].as<unsigned int>();
+		m_food = jsonLoad["m_food"].as<int>();
+		m_work = jsonLoad["m_work"].as<int>();
+		m_gold = jsonLoad["m_gold"].as<int>();
+		m_happiness = static_cast<Emotion_Type>(jsonLoad["m_happiness"].as<int>());
+		m_revolt = jsonLoad["m_revolt"].as<int>();
+		m_religion = static_cast<Religion_Type>(jsonLoad["m_religion"].as<size_t>());
+		m_place = jsonLoad["m_place"].as<bool>();
+	}
+	else
+	{
+		throw("Citizen::loadFromOjson");
+	}
+}
 
  /*
   *	End Of File : Citizen.cpp

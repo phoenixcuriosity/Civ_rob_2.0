@@ -565,7 +565,6 @@ bool Unit::isGroundMovement_Type()
 	return m_movementType == Unit_Movement_Type::ground ? true : false;
 }
 
-/* ----------------------------------------------------------------------------------- */
 bool Unit::isAirMovement_Type()
 {
 	return m_movementType == Unit_Movement_Type::air ? true : false;
@@ -647,7 +646,7 @@ jsoncons::ojson Unit::saveToOjson()
 	value.insert_or_assign("m_maxatq", m_maxatq);
 	value.insert_or_assign("m_maxdef", m_maxdef);
 	value.insert_or_assign("m_maxmovement", m_maxmovement);
-	value.insert_or_assign("m_level", m_level);
+	value.insert_or_assign("m_maxlevel", m_maxlevel);
 	value.insert_or_assign("m_life", m_life);
 	value.insert_or_assign("m_atq", m_atq);
 	value.insert_or_assign("m_def", m_def);
@@ -655,6 +654,38 @@ jsoncons::ojson Unit::saveToOjson()
 	value.insert_or_assign("m_level", m_level);
 	value.insert_or_assign("m_maintenance", m_maintenance);
 	return value;
+}
+
+void Unit::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if	(
+			jsonLoad.contains("m_name") && jsonLoad.contains("m_x") && jsonLoad.contains("m_y") &&
+			jsonLoad.contains("m_movementType") && jsonLoad.contains("m_maxlife") && jsonLoad.contains("m_maxatq") &&
+			jsonLoad.contains("m_maxdef") && jsonLoad.contains("m_maxmovement") && jsonLoad.contains("m_maxlevel") &&
+			jsonLoad.contains("m_life") && jsonLoad.contains("m_atq") && jsonLoad.contains("m_def") &&
+			jsonLoad.contains("m_movement") && jsonLoad.contains("m_level") && jsonLoad.contains("m_maintenance")
+		)
+	{
+		m_name = jsonLoad["m_name"].as_string();
+		m_x = jsonLoad["m_x"].as<unsigned int>();
+		m_y = jsonLoad["m_y"].as<unsigned int>();
+		m_movementType = static_cast<Unit_Movement_Type>(jsonLoad["m_movementType"].as<size_t>());
+		m_maxlife = jsonLoad["m_maxlife"].as<int>();
+		m_maxatq = jsonLoad["m_maxatq"].as<int>();
+		m_maxdef = jsonLoad["m_maxdef"].as<int>();
+		m_maxmovement = jsonLoad["m_maxmovement"].as<int>();
+		m_maxlevel = jsonLoad["m_maxlevel"].as<int>();
+		m_life = jsonLoad["m_life"].as<int>();
+		m_atq = jsonLoad["m_atq"].as<int>();
+		m_def = jsonLoad["m_def"].as<int>();
+		m_movement = jsonLoad["m_movement"].as<int>();
+		m_level = jsonLoad["m_level"].as<int>();
+		m_maintenance = jsonLoad["m_maintenance"].as<int>();
+	}
+	else
+	{
+		throw(jsonloader::KEY_PLAYERS);
+	}
 }
 
  /*

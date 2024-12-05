@@ -58,7 +58,6 @@ public: /* STATIC */
 	 */
 	static void fillCitieTiles
 	(
-		const R2D::Window& window,
 		const unsigned int middletileX,
 		const unsigned int middletileY,
 		const unsigned int selectplayer,
@@ -101,9 +100,7 @@ private:
 
 
 public:
-	/* *********************************************************
-	 *					City::METHODS						   *
-	 ********************************************************* */
+	City();
 
 	/**
 	 * Constructor

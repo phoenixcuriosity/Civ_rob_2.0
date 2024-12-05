@@ -44,8 +44,11 @@ m_tiles(tiles),
 m_citizens(),
 m_emotion((unsigned int)EMOTION_RANGE::MEAN)
 {
-	/* Add initial citizen in the middle case */
-	addCitizen(tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)]);
+	if (!m_tiles.empty())
+	{
+		/* Add initial citizen in the middle case */
+		addCitizen(m_tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)]);
+	}
 }
 
 CitizenManager::~CitizenManager()
@@ -254,6 +257,24 @@ jsoncons::ojson CitizenManager::saveToOjson()
 	value.insert_or_assign("Emotion", m_emotion);
 	value.insert_or_assign("Citizens", citizens);
 	return value;
+}
+
+void CitizenManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if	(
+			jsonLoad.contains("Emotion") && 
+			jsonLoad.contains("Citizens") && 
+			jsonLoad["Citizens"].is_array()
+		)
+	{
+		m_emotion = jsonLoad["Emotion"].as<unsigned int>();
+
+		for (const auto& citizen : jsonLoad["Citizens"].array_range())
+		{
+			addCitizen(true);
+			m_citizens.back()->loadFromOjson(citizen);
+		}
+	}
 }
 
 

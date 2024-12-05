@@ -93,7 +93,11 @@ public:
 		double maintenance
 	);
 
+private:
+
 	virtual void addEmptyUnit();
+
+public:
 	
 	/* NAME : deleteUnit																   */
 	/* ROLE : Suppression d'une Unit du joueur											   */
@@ -115,6 +119,12 @@ public:
 		const unsigned int,
 		VectMap& tiles
 	);
+
+private:
+
+	virtual void addEmptyCity();
+
+public:
 
 	/* NAME : deleteCity																   */
 	/* ROLE : Suppression d'une City du joueur											   */

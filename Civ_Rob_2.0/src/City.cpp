@@ -110,7 +110,6 @@ void City::createCity
 
 	fillCitieTiles
 	(
-		mainGame.getParentWindow(),
 		MainMap::convertPosXToIndex(sUnit->GETx()),
 		MainMap::convertPosYToIndex(sUnit->GETy()),
 		selectedPlayer,
@@ -139,7 +138,6 @@ void City::createCity
 
 void City::fillCitieTiles
 (
-	const R2D::Window& window,
 	const unsigned int middletileX,
 	const unsigned int middletileY,
 	const unsigned int selectplayer,
@@ -156,23 +154,11 @@ void City::fillCitieTiles
 		{
 			if (initSizeInfluenceCondition(o, p, influenceLevel))
 			{
-				mainMap.GETmatriceMap()[(unsigned int)((double)middletileX + o)]
-					[(unsigned int)((double)middletileY + p)]
-				.appartenance = (int)selectplayer;
-			}
-			else
-			{
-				/* N/A */
+				mainMap.GETmatriceMap()[(unsigned int)((double)middletileX + o)][(unsigned int)((double)middletileY + p)]
+					.appartenance = (int)selectplayer;
 			}
 
-			/* ---------------------------------------------------------------------- */
-			/* Remplissage du tableau de Tile								 		  */
-			/* ---------------------------------------------------------------------- */
-			tabtile[k] = mainMap.GETmatriceMap()
-				[(unsigned int)((double)middletileX + o)]
-			[(unsigned int)((double)middletileY + p)];
-			tabtile[k].tileXCityScreen = (window.GETscreenWidth() / 2) - (-o * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
-			tabtile[k].tileYCityScreen = (window.GETscreenHeight() / 2) - (-p * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
+			tabtile[k] = mainMap.GETmatriceMap()[(unsigned int)((double)middletileX + o)][(unsigned int)((double)middletileY + p)];
 			k++;
 		}
 	}
@@ -243,6 +229,27 @@ bool City::searchCityTile
 	{
 		return false;
 	}
+}
+
+City::City()
+:
+m_image("EMPTY"),
+m_name("EMPTY"),
+m_x(0),
+m_y(0),
+m_tile(),
+m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
+m_atq(0),
+m_def(0),
+m_nbstructurebuild(0),
+m_conversionToApply(conversionSurplus_Type::No_Conversion),
+m_citizenManager(m_tile),
+m_foodManager(m_citizenManager),
+m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
+m_goldBalance(0.0)
+{
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
+		saveToOjson().as_string());
 }
 
 City::City
@@ -430,10 +437,29 @@ void City::convertFoodSurplusToGold
 jsoncons::ojson City::saveToOjson()
 {
 	jsoncons::ojson value;
+	jsoncons::ojson tiles{ jsoncons::ojson::make_array() };
+
+	for (const auto& tile : m_tile)
+	{
+		jsoncons::ojson oTile;
+		oTile.insert_or_assign("indexX", tile.indexX);
+		oTile.insert_or_assign("indexY", tile.indexY);
+		oTile.insert_or_assign("tile_x", tile.tile_x);
+		oTile.insert_or_assign("tile_y", tile.tile_y);
+		oTile.insert_or_assign("tile_ground", static_cast<size_t>(tile.tile_ground));
+		oTile.insert_or_assign("tile_spec", static_cast<size_t>(tile.tile_spec));
+		oTile.insert_or_assign("appartenance", tile.appartenance);
+		oTile.insert_or_assign("food", tile.food);
+		oTile.insert_or_assign("work", tile.work);
+		oTile.insert_or_assign("gold", tile.gold);
+		tiles.push_back(oTile);
+	}
+
 	value.insert_or_assign("m_image", m_image);
 	value.insert_or_assign("m_name", m_name);
 	value.insert_or_assign("m_x", m_x);
 	value.insert_or_assign("m_y", m_y);
+	value.insert_or_assign("VectMap", tiles);
 	value.insert_or_assign("m_influenceLevel", m_influenceLevel);
 	value.insert_or_assign("m_atq", m_atq);
 	value.insert_or_assign("m_def", m_def);
@@ -442,6 +468,50 @@ jsoncons::ojson City::saveToOjson()
 	value.insert_or_assign("Food", m_foodManager.saveToOjson());
 	value.insert_or_assign("BuildQueue", m_buildManager.saveToOjson());
 	return value;
+}
+
+void City::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if	(
+			jsonLoad.contains("m_image") && jsonLoad.contains("m_name") && jsonLoad.contains("m_x") &&
+			jsonLoad.contains("m_y") && jsonLoad.contains("m_influenceLevel") && jsonLoad.contains("m_atq") &&
+			jsonLoad.contains("m_def") && jsonLoad.contains("m_nbstructurebuild") && jsonLoad.contains("Citizens") &&
+			jsonLoad.contains("Food") && jsonLoad.contains("BuildQueue") &&
+			jsonLoad.contains("VectMap") && jsonLoad["VectMap"].is_array()
+		)
+	{
+		m_image = jsonLoad["m_image"].as_string();
+		m_name = jsonLoad["m_name"].as_string();
+		m_x = jsonLoad["m_x"].as<unsigned int>();
+		m_y = jsonLoad["m_y"].as<unsigned int>();
+
+		const std::vector<jsonloader::Tile> mapTile = jsonLoad["VectMap"].as<std::vector<jsonloader::Tile>>();
+		m_tile.resize(mapTile.size());
+		size_t loopIndex{ 0 };
+		for (const auto& tile : mapTile)
+		{
+			m_tile[loopIndex].indexX = tile.indexX;
+			m_tile[loopIndex].indexY = tile.indexY;
+			m_tile[loopIndex].tile_x = tile.tile_x;
+			m_tile[loopIndex].tile_y = tile.tile_y;
+			m_tile[loopIndex].tile_ground = static_cast<Ground_Type>(tile.tile_ground);
+			m_tile[loopIndex].tile_spec = static_cast<GroundSpec_Type>(tile.tile_spec);
+			m_tile[loopIndex].appartenance = tile.appartenance;
+			m_tile[loopIndex].food = tile.food;
+			m_tile[loopIndex].work = tile.work;
+			m_tile[loopIndex].gold = tile.gold;
+			loopIndex++;
+		}
+
+		m_influenceLevel = jsonLoad["m_influenceLevel"].as<unsigned int>();
+		m_atq = jsonLoad["m_atq"].as<unsigned int>();
+		m_def = jsonLoad["m_def"].as<unsigned int>();
+		m_nbstructurebuild = jsonLoad["m_nbstructurebuild"].as<unsigned int>();
+	
+		m_citizenManager.loadFromOjson(jsonLoad["Citizens"]);
+		m_foodManager.loadFromOjson(jsonLoad["Food"]);
+		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"]);
+	}
 }
 
  /*
