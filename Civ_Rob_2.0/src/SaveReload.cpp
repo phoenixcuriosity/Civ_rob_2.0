@@ -32,7 +32,6 @@
 #include "Player.h"
 #include "Unit.h"
 #include "T_Unit.h"
-#include "XmlConvertValue.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h> 

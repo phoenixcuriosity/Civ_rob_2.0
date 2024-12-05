@@ -180,7 +180,6 @@
     <ClCompile Include="src\SaveReload.cpp" />
     <ClCompile Include="src\Unit.cpp" />
     <ClCompile Include="src\Utility.cpp" />
-    <ClCompile Include="src\XmlConvertValue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -222,7 +221,6 @@
     <ClInclude Include="src\T_Unit.h" />
     <ClInclude Include="src\Unit.h" />
     <ClInclude Include="src\Utility.h" />
-    <ClInclude Include="src\XmlConvertValue.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Civ_Rob_2.0.rc" />

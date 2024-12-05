@@ -26,13 +26,9 @@
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "T_Unit.h"
-#include "XmlConvertValue.h"
-
-#include <tinyxml2/tinyxml2.h>
 
 #include <R2D/src/ResourceManager.h> 
-#include <R2D/src/Log.h> 
-#include <R2D/src/tinyXml2.h> 
+#include <R2D/src/Log.h>
 
 void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 {
@@ -86,7 +82,7 @@ void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 			for (const auto& unit : units)
 			{
 				currentUnit.name = unit.name;
-				currentUnit.type = XmlConvertValue::xmlGiveMovementType(unit.type);
+				currentUnit.type = static_cast<Unit_Movement_Type>(unit.type);
 				currentUnit.life = unit.life;
 				currentUnit.atq = unit.atq;
 				currentUnit.def = unit.def;

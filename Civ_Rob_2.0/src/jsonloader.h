@@ -40,7 +40,7 @@ constexpr char KEY_UNIT_TEMPLATE[]		= "Units";
 struct Unit_Template
 {
 	std::string name;
-	std::string type;
+	size_t type;
 	unsigned int life;
 	unsigned int atq;
 	unsigned int def;

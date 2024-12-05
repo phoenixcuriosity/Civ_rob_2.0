@@ -42,9 +42,6 @@
     <ClCompile Include="src\Unit.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\XmlConvertValue.cpp">
-      <Filter>Class GamePlayScreen</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility.cpp" />
     <ClCompile Include="src\CityScreen.cpp">
       <Filter>Screen</Filter>
@@ -119,9 +116,6 @@
     <ClInclude Include="src\Utility.h" />
     <ClInclude Include="src\CityScreen.h">
       <Filter>Screen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\XmlConvertValue.h">
-      <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
     <ClInclude Include="src\T_Unit.h">
       <Filter>T_struct</Filter>
