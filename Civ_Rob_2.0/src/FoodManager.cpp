@@ -26,6 +26,7 @@
 #include "MainMap.h"
 #include "T_City.h"
 
+#include <jsoncons/json.hpp>
 
 namespace FOOD_MANAGER
 {
@@ -189,6 +190,24 @@ jsoncons::ojson FoodManager::saveToOjson()
 	value.insert_or_assign("m_emotionCoef", m_emotionCoef);
 	value.insert_or_assign("m_foodManagerType", static_cast<size_t>(m_foodManagerType));
 	return value;
+}
+
+void FoodManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if	(
+			jsonLoad.contains("m_foodStock") && jsonLoad.contains("m_foodBalance") && jsonLoad.contains("m_foodConsumption") &&
+			jsonLoad.contains("m_foodSurplusPreviousTurn") && jsonLoad.contains("m_foodToLevelUp") && jsonLoad.contains("m_emotionCoef") &&
+			jsonLoad.contains("m_foodManagerType")
+		)
+	{
+		m_foodStock = jsonLoad["m_foodStock"].as<double>();
+		m_foodBalance = jsonLoad["m_foodBalance"].as<double>();
+		m_foodConsumption = jsonLoad["m_foodConsumption"].as<double>();
+		m_foodSurplusPreviousTurn = jsonLoad["m_foodSurplusPreviousTurn"].as<double>();
+		m_foodToLevelUp = jsonLoad["m_foodToLevelUp"].as<double>();
+		m_emotionCoef = jsonLoad["m_emotionCoef"].as<double>();
+		m_foodManagerType = static_cast<FoodManagerType>(jsonLoad["m_foodStock"].as<double>());
+	}
 }
 
 /*

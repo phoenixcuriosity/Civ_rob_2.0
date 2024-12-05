@@ -27,6 +27,7 @@
 #include "T_CityScreen.h"
 #include "T_Unit.h"
 
+#include <jsoncons/json.hpp>
 
 namespace RESOURCES
 {
@@ -285,6 +286,28 @@ jsoncons::ojson BuildManager::saveToOjson()
 	value.insert_or_assign("m_buildQueue", builds);
 
 	return value;
+}
+
+void BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if	(
+			jsonLoad.contains("m_workBalance") && jsonLoad.contains("m_workSurplusPreviousTurn") && jsonLoad.contains("m_buildQueue") &&
+			jsonLoad["m_buildQueue"].is_array()
+		)
+	{
+		m_workBalance = jsonLoad["m_workBalance"].as<double>();
+		m_workSurplusPreviousTurn = jsonLoad["m_workSurplusPreviousTurn"].as<double>();
+
+		for (const auto& build : jsonLoad["m_buildQueue"].array_range())
+		{
+			buildGUI buildToQueue;
+			buildToQueue.buildQ.name = build["name"].as_string();
+			buildToQueue.buildQ.type = static_cast<build_Type>(build["type"].as<size_t>());
+			buildToQueue.buildQ.work = build["work"].as<double>();
+			buildToQueue.buildQ.remainingWork = build["remainingWork"].as<double>();
+			m_buildQueue.push_back(buildToQueue);
+		}
+	}
 }
 
 /*

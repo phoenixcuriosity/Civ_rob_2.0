@@ -25,7 +25,7 @@
 
 #include "LIB.h"
 
-#include <jsoncons/json.hpp>
+#include "T_Player.h"
 
 namespace PlayerH
 {
@@ -36,45 +36,6 @@ namespace PlayerH
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
-enum class MajorAge
-{
-	Nomade,
-	Farming,
-	Stone,
-	Bronze,
-	Iron,
-	Antiquity,
-	Vikings,
-	Crusade,
-	Renaissance,
-	Colonization,
-	Enlightenment,
-	Industrial,
-	Modern,
-	Cyber,
-	Stellar,
-	Galactic
-};
-
-struct GoldStats
-{
-	double gold;
-	double goldBalance;
-	double income;
-	double cost;
-
-	double taxIncome;
-	double commerceIncome;
-	double goldConversionSurplus;
-
-	double armiesCost;
-	double buildingsCost;
-};
-
-struct OnOffDisplay
-{
-	bool showContextGoldStats;
-};
 
 class Player
 {
@@ -132,7 +93,11 @@ public:
 		double maintenance
 	);
 
+private:
+
 	virtual void addEmptyUnit();
+
+public:
 	
 	/* NAME : deleteUnit																   */
 	/* ROLE : Suppression d'une Unit du joueur											   */
@@ -154,6 +119,12 @@ public:
 		const unsigned int,
 		VectMap& tiles
 	);
+
+private:
+
+	virtual void addEmptyCity();
+
+public:
 
 	/* NAME : deleteCity																   */
 	/* ROLE : Suppression d'une City du joueur											   */
@@ -197,6 +168,8 @@ public:
 public:
 
 	jsoncons::ojson saveToOjson();
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
 

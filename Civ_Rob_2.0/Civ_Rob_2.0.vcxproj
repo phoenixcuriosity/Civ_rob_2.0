@@ -214,9 +214,11 @@
     <ClInclude Include="src\T_Citizen.h" />
     <ClInclude Include="src\T_City.h" />
     <ClInclude Include="src\T_CityScreen.h" />
+    <ClInclude Include="src\T_Coor.h" />
     <ClInclude Include="src\T_GamePlayScreen.h" />
     <ClInclude Include="src\T_MainMap.h" />
     <ClInclude Include="src\T_NewGameScreen.h" />
+    <ClInclude Include="src\T_Player.h" />
     <ClInclude Include="src\T_Unit.h" />
     <ClInclude Include="src\Unit.h" />
     <ClInclude Include="src\Utility.h" />

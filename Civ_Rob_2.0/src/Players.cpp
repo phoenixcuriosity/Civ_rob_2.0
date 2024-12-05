@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "City.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "Player.h"
@@ -31,6 +32,7 @@
 #include "Utility.h"
 #include "T_Unit.h"
 
+#include <jsoncons/json.hpp>
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/Log.h> 
 #include <R2D/src/GLTexture.h>
@@ -353,9 +355,34 @@ jsoncons::ojson Players::saveToOjson()
 		players.push_back(player->saveToOjson());
 	}
 
-	value.insert_or_assign("Players", players);
+	value.insert_or_assign(jsonloader::KEY_PLAYERS, players);
 
 	return value;
+}
+
+void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if (jsonLoad.contains(jsonloader::KEY_PLAYERS) && jsonLoad[jsonloader::KEY_PLAYERS].is_array())
+	{
+		for (const auto& player : jsonLoad[jsonloader::KEY_PLAYERS].array_range())
+		{
+			if (player.contains("m_name") && player.contains("m_id"))
+			{
+				addPlayer(player["m_name"].as_string(), player["m_id"].as<int32_t>());
+				m_vectPlayer.back()->loadFromOjson(player);
+			}
+			else
+			{
+				LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
+					R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+			}
+		}
+	}
+	else
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+	}
 }
 
  /*

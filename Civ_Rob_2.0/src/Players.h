@@ -27,7 +27,6 @@
 
 #include "GamePlayScreenEnumTexture.h"
 
-#include <jsoncons/json.hpp>
 #include <R2D/src/WidgetLabel.h>
 
 class Players
@@ -103,6 +102,8 @@ public:
 public:
 
 	jsoncons::ojson saveToOjson();
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 

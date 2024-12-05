@@ -55,6 +55,7 @@ namespace logS
 		constexpr char NEWGAME[] = "[newGame]";
 		constexpr char LOAD_MAINMAP_CONFIG[] = "[loadMainMapConfig]";
 		constexpr char LOAD_UNIT_CONFIG[] = "[LOAD_UNIT_CONFIG]";
+		constexpr char LOAD_SAVE_PLAYER[] = "[LOAD_SAVE_PLAYER]";
 		constexpr char LOAD_CITY_NAME[] = "[LOAD_CITY_NAME]";
 		constexpr char LOAD_MAIN_MAP[] = "[LOAD_CITY_NAME]";
 		constexpr char INIT_MAINMAP[] = "[initMainMap]";

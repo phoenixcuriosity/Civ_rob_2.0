@@ -27,8 +27,6 @@
 
 #include <R2D/src/API_fwd.h>
 
-#include <tinyxml2/tinyxml2.h>
-
 class SaveReload
 {
 public:
@@ -90,43 +88,6 @@ private:
 	static void loadPlayer
 	(
 		GamePlayScreen& mainGame
-	);
-
-	/* NAME : loadGoldStatsXML																			    	  */
-	/* ROLE : Load Gold Stats reference to Player															      */
-	/* ROLE : Player->GETgoldStats() should be used instead of Player->GETgoldStatsConst()						  */
-	/* ROLE : Data type : double ; use std::stod															      */
-	/* INPUT/OUTPUT : GoldStats& goldStats : Structure of the Player's gold stats 							      */
-	/* INPUT/OUTPUT : tinyxml2::XMLNode* nGoldStats : Ptr on the GoldStats node in the XML document			      */
-	/* RETURNED VALUE    : void								    												  */
-	static void loadGoldStatsXML
-	(
-		GoldStats& goldStats,
-		tinyxml2::XMLNode* nGoldStats
-	);
-
-	/* NAME : loadUnitXML																				    	  */
-	/* ROLE : Load Unit reference to Player																	      */
-	/* ROLE : While Loop : load all Units to a Player														      */
-	/* INPUT/OUTPUT : MainGame& mainGame sysinfo : General struct							 				      */
-	/* INPUT/OUTPUT : tinyxml2::XMLNode* nUnit : Ptr on the Unit node in the XML document					      */
-	/* RETURNED VALUE    : void								    												  */
-	static void loadUnitXML
-	(
-		GamePlayScreen& mainGame,
-		tinyxml2::XMLNode* nUnit
-	);
-
-	/* NAME : loadCityXML																				    	  */
-	/* ROLE : Load City reference to Player																	      */
-	/* ROLE : While Loop : load all Cities to a Player														      */
-	/* INPUT/OUTPUT : MainGame& mainGame sysinfo : General struct							 				      */
-	/* INPUT/OUTPUT : tinyxml2::XMLNode* nCity : Ptr on the City node in the XML document					      */
-	/* RETURNED VALUE    : void								    												  */
-	static void loadCityXML
-	(
-		GamePlayScreen& mainGame,
-		tinyxml2::XMLNode* nCity
 	);
 
 public:

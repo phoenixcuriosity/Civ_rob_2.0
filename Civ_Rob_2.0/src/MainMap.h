@@ -28,7 +28,6 @@
 #include "GamePlayScreenEnumTexture.h"
 #include "T_MainMap.h"
 
-#include <jsoncons/json.hpp>
 #include <R2D/src/Camera2D.h>
 #include <R2D/src/SpriteBatch.h>
 
@@ -153,19 +152,15 @@ public:
 
 public:
 
-	inline unsigned int GETmapSizePixX()		const { return m_mapSizePixX; };
-	inline unsigned int GETmapSizePixY()		const { return m_mapSizePixY; };
-	inline unsigned int GETtileSize()			const { return m_tileSize; };
-	inline unsigned int* GETtileSizePtr()			  { return &m_tileSize; };
+	inline unsigned int* GETtileSizePtr()			  { return &m_mainMapConfig.m_tileSize; };
+	inline unsigned int GETtileSize()			const { return m_mainMapConfig.m_tileSize; };
 	inline unsigned int GETtoolBarSize()		const { return m_toolBarSize; };
 
 	inline MatriceMap& GETmatriceMap()					  { return m_matriceMap; };
 	inline const MatriceMap& GETmatriceMapConst()	const { return m_matriceMap; };
 	inline const R2D::SpriteBatch& GETspriteBatch()	const { return m_spriteBatch; };
 
-	inline void SETmapSizePixX(unsigned int mapSizePixX){  m_mapSizePixX = mapSizePixX; };
-	inline void SETmapSizePixY(unsigned int mapSizePixY) {  m_mapSizePixY = mapSizePixY; };
-	inline void SETtileSize(unsigned int tileSize) {  m_tileSize = tileSize; };
+	inline void SETMainMapConfig(const MainMapConfig& mainMapConfig) { m_mainMapConfig = mainMapConfig; };
 	inline void SETtoolBarSize(unsigned int toolBarSize) {  m_toolBarSize = toolBarSize; };
 	inline void SETmatriceMap(const MatriceMap& matriceMap) {  m_matriceMap = matriceMap; };
 	inline void SETneedToUpdateDraw(bool needToUpdateDraw) { m_needToUpdateDraw = needToUpdateDraw; };
@@ -233,20 +228,15 @@ public:
 
 	jsoncons::ojson saveToOjson();
 
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+
 public:
 
-	unsigned int* GETtileSizePtr()const { return (unsigned int*)&m_tileSize; };
+	unsigned int* GETtileSizePtr()const { return (unsigned int*)&m_mainMapConfig.m_tileSize; };
 
 private:
 
-	/* Width of the map in pixels */
-	unsigned int m_mapSizePixX;
-
-	/* Height of the map in pixels */
-	unsigned int m_mapSizePixY;
-
-	/* Size of a default tile in the map */
-	unsigned int m_tileSize;
+	MainMapConfig m_mainMapConfig;
 
 	/* Size of the toolBar in pixels */
 	unsigned int m_toolBarSize;

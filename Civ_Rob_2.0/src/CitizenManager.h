@@ -25,8 +25,6 @@
 
 #include "LIB.h"
 
-#include <jsoncons/json.hpp>
-
 class CitizenManager
 {
 public:
@@ -89,6 +87,8 @@ private:
 public:
 
 	jsoncons::ojson saveToOjson();
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 

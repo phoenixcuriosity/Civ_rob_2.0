@@ -131,6 +131,7 @@ m_buttonBuild(),
 m_idTexture(),
 m_SaveReload(SaveReload),
 m_players(players),
+m_displayTileVect(),
 m_tileSize(tileSize),
 m_selectedCity(),
 m_isInitialize(false)
@@ -147,6 +148,8 @@ CityScreen::~CityScreen()
 
 void CityScreen::build()
 {
+	m_displayTileVect.reserve(CITY_INFLUENCE::INIT_AREA_VIEW);
+	m_displayTileVect.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 	m_screenIndex = SCREEN_INDEX::CITY;
 }
 
@@ -180,6 +183,7 @@ int CityScreen::getPreviousScreenIndex()const
 bool CityScreen::onEntry()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::CITY_MENU, logS::WHAT::ON_ENTRY, logS::DATA::START);
+	initCoorVectTilePos();
 	init(m_game->getWindow().GETscreenWidth(), m_game->getWindow().GETscreenHeight());
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::CITY_MENU, logS::WHAT::ON_ENTRY, logS::DATA::END);
 	return true;
@@ -318,6 +322,25 @@ void CityScreen::doInitHUDText()
 void CityScreen::onExit()
 {
 	m_selectedCity->clearDynamicContextBuildToQueue();
+}
+
+void CityScreen::initCoorVectTilePos()
+{
+	const unsigned int screenWidth{ static_cast<unsigned int>(m_game->getWindow().GETscreenWidth()) };
+	const unsigned int screenHeight{ static_cast<unsigned int>(m_game->getWindow().GETscreenHeight()) };
+
+	unsigned int k(0);
+
+	for (int o(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); o <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); o++)
+	{
+		for (int p(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); p <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); p++)
+		{
+			
+			m_displayTileVect[k].x = (screenWidth / 2) - (-o * *m_tileSize) - *m_tileSize / 2;
+			m_displayTileVect[k].y = (screenHeight / 2) - (-p * *m_tileSize) - *m_tileSize / 2;
+			k++;
+		}
+	}
 }
 
 void CityScreen::resetInternalEntry()
@@ -460,8 +483,8 @@ void CityScreen::drawTileApp(const size_t kTile)
 		(
 			glm::vec4
 			(
-				m_players->GETSelectedCity()->GETtile()[kTile].tileXCityScreen,
-				m_players->GETSelectedCity()->GETtile()[kTile].tileYCityScreen,
+				m_displayTileVect[kTile].x,
+				m_displayTileVect[kTile].y,
 				*m_tileSize,
 				*m_tileSize
 			),
@@ -514,8 +537,8 @@ void CityScreen::callDraw(const size_t kTile, const GLuint id, const float depth
 		(
 			glm::vec4
 			(
-				m_players->GETSelectedCity()->GETtile()[kTile].tileXCityScreen,
-				m_players->GETSelectedCity()->GETtile()[kTile].tileYCityScreen,
+				m_displayTileVect[kTile].x,
+				m_displayTileVect[kTile].y,
 				*m_tileSize,
 				*m_tileSize
 			),
@@ -593,8 +616,8 @@ void CityScreen::drawCitizen()
 		(
 			glm::vec4
 			(
-				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileXCityScreen + CITY_IHM::OFFSET_EMOTION / 2,
-				m_players->GETSelectedCity()->GETtile()[citizen->GETtileOccupied()].tileYCityScreen + CITY_IHM::OFFSET_EMOTION / 2,
+				m_displayTileVect[citizen->GETtileOccupied()].x + CITY_IHM::OFFSET_EMOTION / 2,
+				m_displayTileVect[citizen->GETtileOccupied()].y + CITY_IHM::OFFSET_EMOTION / 2,
 				*m_tileSize - CITY_IHM::OFFSET_EMOTION,
 				*m_tileSize - CITY_IHM::OFFSET_EMOTION
 			),
