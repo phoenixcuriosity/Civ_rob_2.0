@@ -23,22 +23,19 @@
 #ifndef jsonloader_H
 #define jsonloader_H
 
+#include "T_Coor.h"
+#include "T_Player.h"
+#include "T_MainMap.h"
 
 #include <jsoncons/json.hpp>
 
 namespace jsonloader
 {
 
-constexpr char KEY_MAP[] = "Map";
-constexpr char KEY_UNIT_TEMPLATE[] = "Units";
-constexpr char KEY_MATRICE_MAP[] = "MatriceMap";
-
-struct MapConfigJSON
-{
-	unsigned int TileSize;
-	unsigned int MapSizeX;
-	unsigned int MapSizeY;
-};
+constexpr char KEY_MAP[]				= "Map";
+constexpr char KEY_MATRICE_MAP[]		= "MatriceMap";
+constexpr char KEY_PLAYERS[]			= "Players";
+constexpr char KEY_UNIT_TEMPLATE[]		= "Units";
 
 struct Unit_Template
 {
@@ -70,8 +67,8 @@ struct Tile
 
 }
 
-
-JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::MapConfigJSON, (TileSize, "TileSize"), (MapSizeX, "MapSizeX"), (MapSizeY, "MapSizeY"))
+JSONCONS_ALL_MEMBER_NAME_TRAITS(Coor, (x, "x"), (y, "y"))
+JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
 JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::Unit_Template,
 	(name, "Name"),
 	(type, "MovementType"),
@@ -94,6 +91,17 @@ JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::Tile,
 	(food, "food"),
 	(work, "work"),
 	(gold, "gold"))
+JSONCONS_ALL_MEMBER_NAME_TRAITS(GoldStats,
+	(gold, "gold"),
+	(goldBalance, "goldBalance"),
+	(income, "income"),
+	(cost, "cost"),
+	(taxIncome, "taxIncome"),
+	(commerceIncome, "commerceIncome"),
+	(goldConversionSurplus, "goldConversionSurplus"),
+	(armiesCost, "armiesCost"),
+	(buildingsCost, "buildingsCost"))
+
 
 
 

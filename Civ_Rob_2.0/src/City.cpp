@@ -25,12 +25,14 @@
 #include "App.h"
 #include "Citizen.h"
 #include "GameplayScreen.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "Player.h"
 #include "Players.h"
 #include "Unit.h"
 #include "Utility.h"
 
+#include <jsoncons/json.hpp>
 #include <R2D/src/Log.h> 
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/Window.h>

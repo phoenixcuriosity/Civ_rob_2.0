@@ -26,6 +26,7 @@
 #include "MainMap.h"
 #include "T_City.h"
 
+#include <jsoncons/json.hpp>
 
 namespace FOOD_MANAGER
 {

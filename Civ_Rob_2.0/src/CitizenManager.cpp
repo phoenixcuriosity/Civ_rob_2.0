@@ -32,6 +32,7 @@
 #include "T_City.h"
 #include "T_MainMap.h"
 
+#include <jsoncons/json.hpp>
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/Log.h> 

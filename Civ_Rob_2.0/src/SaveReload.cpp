@@ -34,6 +34,7 @@
 #include "T_Unit.h"
 #include "XmlConvertValue.h"
 
+#include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/ExitFromError.h> 

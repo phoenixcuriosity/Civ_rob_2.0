@@ -28,6 +28,7 @@
 #include "T_Citizen.h"
 #include "T_MainMap.h"
 
+#include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
 
 Citizen::Citizen()

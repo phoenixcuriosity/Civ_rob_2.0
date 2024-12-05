@@ -31,8 +31,6 @@
 
 #include "R2D/src/API_fwd.h"
 
-#include <jsoncons/json.hpp>
-
 class City
 {
 public: /* STATIC */

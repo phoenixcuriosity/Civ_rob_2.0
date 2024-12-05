@@ -27,6 +27,7 @@
 #include "T_CityScreen.h"
 #include "T_Unit.h"
 
+#include <jsoncons/json.hpp>
 
 namespace RESOURCES
 {

@@ -27,7 +27,6 @@
 
 #include "GamePlayScreenEnumTexture.h"
 
-#include <jsoncons/json.hpp>
 #include <R2D/src/WidgetLabel.h>
 
 class Players
