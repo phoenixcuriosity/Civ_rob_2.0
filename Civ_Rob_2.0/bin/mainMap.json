@@ -2,7 +2,10 @@
 	"Map": 
 	{
 		"TileSize": 64,
-		"MapSizeX": 2240,
-		"MapSizeY": 2240
+		"MapSize": 
+		{
+        "x": 2240,
+        "y": 2240
+    }
 	}
 }

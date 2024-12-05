@@ -46,10 +46,7 @@ void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 
 		if (configuration.contains(jsonloader::KEY_MAP))
 		{
-			const jsonloader::MapConfigJSON characteristic = configuration[jsonloader::KEY_MAP].as<jsonloader::MapConfigJSON>();
-			mainMap.SETtileSize(characteristic.TileSize);
-			mainMap.SETmapSizePixX(characteristic.MapSizeX);
-			mainMap.SETmapSizePixY(characteristic.MapSizeY);
+			mainMap.SETMainMapConfig(configuration[jsonloader::KEY_MAP].as<MainMapConfig>());
 		}
 		else
 		{

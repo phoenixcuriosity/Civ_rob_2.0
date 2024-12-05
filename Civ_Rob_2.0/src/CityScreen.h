@@ -69,6 +69,8 @@ private: /* Override from R2D::CScreen */
 
 private: /* Helper to Override from R2D::CScreen */
 
+	virtual void initCoorVectTilePos();
+
 	virtual void resetInternalEntry();
 
 	virtual void createDynamicContext();
@@ -115,6 +117,7 @@ private:
 	CityScreenTexture m_idTexture;
 
 	Players* m_players;
+	VectCoor m_displayTileVect;
 	unsigned int* m_tileSize;
 
 	SaveReloadPtrT m_SaveReload;
