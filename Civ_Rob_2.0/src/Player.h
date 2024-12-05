@@ -36,45 +36,6 @@ namespace PlayerH
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
-enum class MajorAge
-{
-	Nomade,
-	Farming,
-	Stone,
-	Bronze,
-	Iron,
-	Antiquity,
-	Vikings,
-	Crusade,
-	Renaissance,
-	Colonization,
-	Enlightenment,
-	Industrial,
-	Modern,
-	Cyber,
-	Stellar,
-	Galactic
-};
-
-struct GoldStats
-{
-	double gold;
-	double goldBalance;
-	double income;
-	double cost;
-
-	double taxIncome;
-	double commerceIncome;
-	double goldConversionSurplus;
-
-	double armiesCost;
-	double buildingsCost;
-};
-
-struct OnOffDisplay
-{
-	bool showContextGoldStats;
-};
 
 class Player
 {

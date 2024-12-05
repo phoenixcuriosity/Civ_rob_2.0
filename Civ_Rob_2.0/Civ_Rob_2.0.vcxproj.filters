@@ -173,6 +173,8 @@
       <Filter>template</Filter>
     </ClInclude>
     <ClInclude Include="src\jsonloader.h" />
+    <ClInclude Include="src\T_Player.h" />
+    <ClInclude Include="src\T_Coor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">
