@@ -170,32 +170,26 @@ public:
 		const unsigned int y
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : computeGold																   */
 	/* ROLE : Calculate the gold for the turn											   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void computeGold();
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : addCityGoldToTaxIncome													   */
 	/* ROLE : Add m_goldBalance to a player taxIncome 									   */
 	/* OUT : GoldStats& goldStats : struct of player gold								   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void addCityGoldToTaxIncome
 	(
 		GoldStats& goldStats
 	);
 
-	/* ----------------------------------------------------------------------------------- */
 	/* NAME : convertFoodSurplusToGold													   */
 	/* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
 	/* INPUT : double workSurplus : food surplus to convert into work					   */
 	/* OUT : GoldStats& goldStats : gold surplus conversion								   */
 	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	virtual void convertFoodSurplusToGold
 	(
 		const double foodSurplus,
@@ -218,59 +212,25 @@ public:
 public:
 
 	jsoncons::ojson saveToOjson();
-	
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+	
 public:
 	/* const & */
-
 	inline virtual const std::string& GETimage()const		{ return m_image; };
 	inline virtual const std::string& GETname()const		{ return m_name; };
 	inline virtual const VectMap& GETtile()const			{ return m_tile; };
 	inline virtual const VectCitizen& GETcitizens()const	{ return m_citizenManager.getCitizens(); };
 	inline virtual const FoodManager& GETFoodManager()const { return m_foodManager; };
-	inline virtual const CitizenManager& GETCitizenManager()const { return m_citizenManager; };
 	inline virtual const dequeBuild& GETbuildQueue()const	{ return m_buildManager.getBuildQueue(); };
 
 	/* & */
-
 	inline virtual dequeBuild& GETbuildQueue() { return m_buildManager.getBuildQueue(); };
 
 	/* implicit const */
-
 	inline virtual size_t GETnbpop()const					{ return m_citizenManager.getCitizens().size(); };
 	inline virtual unsigned int GETx()const					{ return m_x; };
 	inline virtual unsigned int GETy()const					{ return m_y; };
-	inline virtual unsigned int GETinfluenceLevel()const	{ return m_influenceLevel; };
-	inline virtual unsigned int GETatq()const				{ return m_atq; };
-	inline virtual unsigned int GETdef()const				{ return m_def; };
-	inline virtual unsigned int GETemotion()const			{ return m_citizenManager.getEmotion(); };
-	inline virtual unsigned int GETnbstructurebuild()const	{ return m_nbstructurebuild; };
-	inline virtual double GETfoodStock()const				{ return m_foodManager.getFoodStock(); };
-	inline virtual double GETfoodBalance()const				{ return m_foodManager.getFoodBalanceForConversion(); };
-	inline virtual double GETfoodSurplusPreviousTurn()const { return m_foodManager.getFoodSurplusPreviousTurn(); };
-	inline virtual double GETfoodToLevelUp()const			{ return m_foodManager.getFoodToLevelUp(); };
-	inline virtual double GETgoldBalance()const				{ return m_goldBalance; };
-	inline virtual conversionSurplus_Type GETconversionToApply()const { return m_conversionToApply; };
-
-	inline virtual void SETimage(std::string image) { m_image = image; };
-	inline virtual void SETname(std::string name) { m_name = name; };
-	inline virtual void SETx(unsigned int x) { m_x = x; };
-	inline virtual void SETy(unsigned int y) { m_y = y; };
-	inline virtual void SETtile(VectMap& tile) { m_tile = tile; };
-	//inline virtual void SETcitizens(VectCitizen& citizens) { m_citizens = citizens; };
-	inline virtual void SETinfluenceLevel(unsigned int influenceLevel) { m_influenceLevel = influenceLevel; };
-	inline virtual void SETatq(unsigned int atq) { m_atq = atq; };
-	inline virtual void SETdef(unsigned int def) { m_def = def; };
-	inline virtual void SETemotion(unsigned int emotion) { m_citizenManager.setEmotion(emotion); };
-	inline virtual void SETnbstructurebuild(unsigned int nbstructurebuild) { m_nbstructurebuild = nbstructurebuild; };
-	inline virtual void SETfoodStock(double foodStock) { m_foodManager.setFoodStock(foodStock); };
-	inline virtual void SETfoodBalance(double foodBalance) { m_foodManager.setFoodBalance(foodBalance); };
-	inline virtual void SETfoodSurplusPreviousTurn(double foodSurplusPreviousTurn) { m_foodManager.setFoodSurplusPreviousTurn(foodSurplusPreviousTurn); };
-	inline virtual void SETfoodToLevelUp(double foodToLevelUp) { m_foodManager.setFoodToLevelUp(foodToLevelUp); };
-	inline virtual void SETgoldBalance(double goldBalance) { m_goldBalance = goldBalance; };
-	inline virtual void SETconversionToApply(conversionSurplus_Type type) { m_conversionToApply = type; };
-
 
 private:
 
