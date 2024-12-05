@@ -159,6 +159,8 @@ public:
 
 	jsoncons::ojson saveToOjson();
 
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+
 public:
 
 	inline virtual const std::string& GETname()			const { return m_name; };

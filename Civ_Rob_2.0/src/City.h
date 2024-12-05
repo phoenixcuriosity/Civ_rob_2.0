@@ -222,11 +222,9 @@ public:
 
 	jsoncons::ojson saveToOjson();
 	
-public:
-	/* *********************************************************
-	 *				City::METHODS::GET/SET					   *
-	 ********************************************************* */
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
+public:
 	/* const & */
 
 	inline virtual const std::string& GETimage()const		{ return m_image; };

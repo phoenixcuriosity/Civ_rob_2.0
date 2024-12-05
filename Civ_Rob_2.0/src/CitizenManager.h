@@ -88,6 +88,8 @@ public:
 
 	jsoncons::ojson saveToOjson();
 
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+
 private:
 
 	const VectMap& m_tiles;

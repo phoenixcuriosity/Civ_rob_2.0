@@ -27,6 +27,7 @@
 
 #include "CityScreenEnumTexture.h"
 #include "T_CityScreen.h"
+#include "T_Coor.h"
 
 #include <R2D/src/API_fwd.h>
 #include <R2D/src/IGameScreen.h>

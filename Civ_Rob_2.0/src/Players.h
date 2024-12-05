@@ -103,6 +103,8 @@ public:
 
 	jsoncons::ojson saveToOjson();
 
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+
 private:
 
 	// index du joueur actuellement sélectionné

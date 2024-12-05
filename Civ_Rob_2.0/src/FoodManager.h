@@ -97,6 +97,8 @@ public:
 
 	jsoncons::ojson saveToOjson();
 
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+
 private:
 
 	const CitizenManager& m_citizenManager;

@@ -71,6 +71,7 @@ public:
 
 	jsoncons::ojson saveToOjson();
 
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
 	/* *********************************************************
