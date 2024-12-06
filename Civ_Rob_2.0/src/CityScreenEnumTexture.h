@@ -55,10 +55,9 @@ enum class CityScreenEnumTexture
 	sad,
 	angry,
 	food,
-	Hammer,
-	ENUM_SIZE
+	Hammer
 };
 
-typedef EnumArray<CityScreenEnumTexture, CityScreenEnumTexture::ENUM_SIZE> CityScreenTexture;
+typedef EnumArray<CityScreenEnumTexture, CityScreenEnumTexture::deepwater, CityScreenEnumTexture::Hammer> CityScreenTexture;
 
 #endif // !CityScreenEnumTexture_H

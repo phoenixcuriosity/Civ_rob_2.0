@@ -28,14 +28,17 @@
 #include <SDL/glew.h>
 #include <type_traits>
 
-template <typename Enum, Enum Count>
+constexpr size_t ARRAY_SIZE_OFFSET = 1;
+
+template <typename Enum, Enum firstValue, Enum lastValue>
 class EnumArray 
 {
 	static_assert(std::is_enum_v<Enum>, "Template parameter must be an enum type");
-	static_assert(static_cast<size_t>(Count) > 0, "Enum Count must be greater than 0");
+	static_assert(static_cast<size_t>(firstValue) == 0, "First Enum value must be 0");
+	static_assert(static_cast<size_t>(lastValue) > static_cast<size_t>(firstValue), "Last Enum value must be greater than 0");
 
 private:
-	std::array<GLuint, static_cast<size_t>(Count)> values;
+	std::array<GLuint, (static_cast<size_t>(lastValue) + ARRAY_SIZE_OFFSET)> values;
 
 public:
 	EnumArray() : values{} {}

@@ -75,10 +75,9 @@ enum class GamePlayScreenEnumTexture
 	settler,
 	spitter,
 	tank,
-	transport_plan,
-	ENUM_SIZE
+	transport_plan
 };
 
-typedef EnumArray<GamePlayScreenEnumTexture, GamePlayScreenEnumTexture::ENUM_SIZE> GamePlayScreenTexture;
+typedef EnumArray<GamePlayScreenEnumTexture, GamePlayScreenEnumTexture::deepwater, GamePlayScreenEnumTexture::transport_plan> GamePlayScreenTexture;
 
 #endif // !GamePlayScreenEnumTexture_H
