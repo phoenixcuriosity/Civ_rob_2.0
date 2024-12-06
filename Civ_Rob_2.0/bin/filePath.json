@@ -1,0 +1,20 @@
+{
+  "FilePaths": [
+    "bin/readme.txt",
+    "bin/mainMap.json",
+    "bin/citiesNames.json",
+    "bin/units.json",
+    "save/",
+    "saveMaps.json",
+    "savePlayers.json",
+    "shaders/ColorShading.vert",
+    "shaders/ColorShading.frag",
+    "bin/image/",
+    "GUI",
+    "bin/Texts/MainMenu.json",
+    "bin/Texts/NewGame.json",
+    "bin/Texts/GamePlay.json",
+    "bin/Texts/City.json",
+    "bin/Texts/Reload.json"
+  ]
+}
