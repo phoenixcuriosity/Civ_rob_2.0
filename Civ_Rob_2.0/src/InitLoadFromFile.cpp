@@ -22,55 +22,39 @@
 
 #include "InitLoadFromFile.h"
 
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "T_Unit.h"
-#include "XmlConvertValue.h"
-
-#include <tinyxml2/tinyxml2.h>
 
 #include <R2D/src/ResourceManager.h> 
-#include <R2D/src/Log.h> 
-#include <R2D/src/tinyXml2.h> 
+#include <R2D/src/Log.h>
 
 void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::START);
 
-	tinyxml2::XMLDocument config{};
-	config.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath().c_str());
-	unsigned int tmp{ 0 };
-
-	if (config.ErrorID() == 0)
+	try 
 	{
-		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
+		const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath()) };
 
-		if (nullptr != node)
+		const jsoncons::ojson configuration = jsoncons::ojson::parse(text);
+
+		if (configuration.contains(jsonloader::KEY_MAP))
 		{
-			node->QueryUnsignedText(&tmp);
-			mainMap.SETtileSize(tmp);
+			mainMap.SETMainMapConfig(configuration[jsonloader::KEY_MAP].as<MainMapConfig>());
 		}
-		node = node->NextSiblingElement();
-
-		if (nullptr != node)
+		else
 		{
-			node->QueryUnsignedText(&tmp);
-			mainMap.SETmapSizePixX(tmp);
-		}
-		node = node->NextSiblingElement();
-
-		if (nullptr != node)
-		{
-			node->QueryUnsignedText(&tmp);
-			mainMap.SETmapSizePixY(tmp);
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::MISSING_KEY_JSON,
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_MAP);
 		}
 	}
-	else
+	catch (const std::exception& e)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, 
-			R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath());
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
-
+	
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::END);
 }
 
@@ -83,68 +67,62 @@ void InitLoadFromFile::initFromFile(VectUnitTemplate& vectUnitTemplate, VectCity
 
 void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 {
-	tinyxml2::XMLDocument texteFile{};
-
-	texteFile.LoadFile(R2D::ResourceManager::getFile(R2D::e_Files::units)->getPath().c_str());
-
-	const char* root("Root");
-
-	const char* s_Unit("Unit"),
-		* s_Name("Name"),
-		* s_MovementType("MovementType"),
-		* s_Life("Life"),
-		* s_Atq("Atq"),
-		* s_Def("Def"),
-		* s_Mouvement("Mouvement"),
-		* s_NumberOfAttack("NumberOfAttack"),
-		* s_Level("Level"),
-		* s_WorkToBuild("WorkToBuild"),
-		* s_Maintenance("Maintenance");
-
-	tinyxml2::XMLNode* node(texteFile.FirstChildElement(root)->FirstChildElement(s_Unit));
-	Unit_Template currentUnit;
-
-	while (nullptr != node)
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::START);
+	try
 	{
-		currentUnit.name = node->FirstChildElement(s_Name)->GetText();
-		currentUnit.type = XmlConvertValue::xmlGiveMovementType(node->FirstChildElement(s_MovementType)->GetText());
-		node->FirstChildElement(s_Life)->QueryIntText((int*)&currentUnit.life);
-		node->FirstChildElement(s_Atq)->QueryIntText((int*)&currentUnit.atq);
-		node->FirstChildElement(s_Def)->QueryIntText((int*)&currentUnit.def);
-		node->FirstChildElement(s_Mouvement)->QueryIntText((int*)&currentUnit.movement);
-		node->FirstChildElement(s_NumberOfAttack)->QueryIntText((int*)&currentUnit.numberOfAttack);
-		node->FirstChildElement(s_Level)->QueryIntText((int*)&currentUnit.level);
-		node->FirstChildElement(s_WorkToBuild)->QueryDoubleText((double*)&currentUnit.workToBuild);
-		node->FirstChildElement(s_Maintenance)->QueryDoubleText((double*)&currentUnit.maintenance);
+		const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::units)->getPath()) };
 
-		vectUnitTemplate.push_back(currentUnit);
+		const jsoncons::json configuration = jsoncons::json::parse(text);
 
-		node = node->NextSibling();
+		if (configuration.contains(jsonloader::KEY_UNIT_TEMPLATE))
+		{
+			const std::vector<jsonloader::Unit_Template> units = configuration[jsonloader::KEY_UNIT_TEMPLATE].as<std::vector<jsonloader::Unit_Template>>();
+
+			Unit_Template currentUnit;
+			for (const auto& unit : units)
+			{
+				currentUnit.name = unit.name;
+				currentUnit.type = static_cast<Unit_Movement_Type>(unit.type);
+				currentUnit.life = unit.life;
+				currentUnit.atq = unit.atq;
+				currentUnit.def = unit.def;
+				currentUnit.movement = unit.movement;
+				currentUnit.numberOfAttack = unit.numberOfAttack;
+				currentUnit.level = unit.level;
+				currentUnit.workToBuild = unit.workToBuild;
+				currentUnit.maintenance = unit.maintenance;
+
+				vectUnitTemplate.push_back(currentUnit);
+			}
+		}
+		else
+		{
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::MISSING_KEY_JSON,
+				R2D::ResourceManager::getFile(R2D::e_Files::units)->getPath(), jsonloader::KEY_UNIT_TEMPLATE);
+		}
 	}
+	catch (const std::exception& e)
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
+	}
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::END);
 }
 
 void InitLoadFromFile::loadCitiesNames(VectCityName& vectCityName)
 {
-	unsigned int nbcity{ 0 };
-	std::string city{ STRINGS::EMPTY }, dummy{ STRINGS::EMPTY };
-	std::ifstream CITIENAME{ R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath() };
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_CITY_NAME, logS::DATA::START);
 
+	const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath()) };
 
-	if (CITIENAME)
+	const jsoncons::json configuration = jsoncons::json::parse(text);
+
+	for (const auto& country : configuration.object_range()) 
 	{
-		CITIENAME >> dummy;
-
-		CITIENAME >> nbcity;
-		vectCityName.resize(nbcity);
-
-		for (auto& c : vectCityName)
+		for (const auto& city : country.value().array_range())
 		{
-			CITIENAME >> c;
+			vectCityName.push_back(city.as_string());
 		}
 	}
-	else
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
-			R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath());
-	}
+
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_CITY_NAME, logS::DATA::END);
 }

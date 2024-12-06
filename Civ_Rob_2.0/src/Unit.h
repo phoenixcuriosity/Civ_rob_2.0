@@ -287,6 +287,11 @@ public:
 	/* RETURNED VALUE    : void															   */
 	virtual void cmpblit();
 
+public:
+
+	jsoncons::ojson saveToOjson()const;
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
 
@@ -313,28 +318,8 @@ public:
 	inline bool GETshowStats()						const { return m_showStats; };
 	inline Player* GETowner()							  { return m_owner; };
 
-
-	inline void SETname(const std::string& name) { m_name = name; };
-	inline void SETx(unsigned int x) { m_x = x; };
-	inline void SETy(unsigned int y) { m_y = y; };
-	inline void SETmovementType(Unit_Movement_Type movementType) { m_movementType = movementType; };
-	inline void SETmaxlife(int life) { m_maxlife = life; };
-	inline void SETmaxatq(int atq) { m_maxatq = atq; };
-	inline void SETmaxdef(int def) { m_maxdef = def; };
-	inline void SETmaxmovement(int movement) { m_maxmovement = movement; };
-	inline void SETmaxNumberOfAttack(int maxNumberOfAttack) { m_maxNumberOfAttack = maxNumberOfAttack; };
-	inline void SETmaxlevel(int level) { m_maxlevel = level; };
-	inline void SETlife(int life) { m_life = life; };
-	inline void SETatq(int atq) { m_atq = atq; };
-	inline void SETdef(int def) { m_def = def; };
 	inline void SETmovement(int movement) { m_movement = movement; };
-	inline void SETnumberOfAttack(int numberOfAttack) { m_numberOfAttack = numberOfAttack; };
-	inline void SETlevel(int level) { m_level = level; };
-	inline void SETalive(bool alive) { m_alive = alive; };
-	inline void SETmaintenance(double maintenance) { m_maintenance = maintenance; }
-	inline void SETblit(unsigned int blit) { m_blit = blit; };
 	inline void SETshow(bool show) { m_show = show; };
-	inline void SETshowStats(bool showStats) { m_showStats = showStats; };
 	inline void SETowner(Player* owner) { m_owner = owner; };
 
 private:

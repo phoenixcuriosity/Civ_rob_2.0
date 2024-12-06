@@ -68,7 +68,7 @@ void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 
 	try
 	{
-		SaveReload::save(gamePlayScreen);
+		gamePlayScreen.getSaveReload()->save(gamePlayScreen.GETmainMap(), gamePlayScreen.GETPlayers());
 	}
 	catch (const std::exception e)
 	{

@@ -23,6 +23,7 @@
 #include "MainMap.h"
 
 #include "App.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "Player.h"
 
@@ -85,14 +86,12 @@ unsigned int* MainMap::s_tileSize;
 
 void MainMap::setStaticPtrTileSize()
 {
-	s_tileSize = &m_tileSize;
+	s_tileSize = &m_mainMapConfig.m_tileSize;
 }
 
 
 MainMap::MainMap():
-m_mapSizePixX(0),
-m_mapSizePixY(0),
-m_tileSize(0),
+m_mainMapConfig(),
 m_toolBarSize(0),
 m_offsetMapCameraXmin(0),
 m_offsetMapCameraXmax(0),
@@ -154,8 +153,8 @@ void MainMap::initTile()
 {
 	const Tile blankTile;
 	const std::vector<Tile> blank;
-	const unsigned int endI{ m_mapSizePixX / m_tileSize };
-	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
+	const unsigned int endI{ m_mainMapConfig.m_mapSizePix.x / m_mainMapConfig.m_tileSize };
+	const unsigned int endJ{ m_mainMapConfig.m_mapSizePix.y / m_mainMapConfig.m_tileSize };
 
 	for (unsigned int i(0); i < endI; i++)
 	{
@@ -171,8 +170,8 @@ void MainMap::generateMap()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::GENERATION_MAINMAP, logS::DATA::START);
 
-	const unsigned int endI{ m_mapSizePixX / m_tileSize };
-	const unsigned int endJ{ m_mapSizePixY / m_tileSize };
+	const unsigned int endI{ m_mainMapConfig.m_mapSizePix.x / m_mainMapConfig.m_tileSize };
+	const unsigned int endJ{ m_mainMapConfig.m_mapSizePix.y / m_mainMapConfig.m_tileSize };
 
 	for (unsigned int i(0); i < endI; i++)
 	{
@@ -191,9 +190,9 @@ void MainMap::generateMap()
 
 			if (
 				(i == MAP_GEN::BORDER_ZERO)
-				|| (i == (m_mapSizePixX / m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
+				|| (i == (m_mainMapConfig.m_mapSizePix.x / m_mainMapConfig.m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
 				|| (j == MAP_GEN::BORDER_ZERO)
-				|| (j == (m_mapSizePixY / m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
+				|| (j == (m_mainMapConfig.m_mapSizePix.y / m_mainMapConfig.m_tileSize) - (MAP_GEN::BORDER_ZERO + 1))
 				)
 			{
 				tileAffectation
@@ -235,8 +234,8 @@ bool MainMap::mapBordersConditions
 	const unsigned int j
 )
 {
-	const unsigned int cmpX{ m_mapSizePixX / m_tileSize };
-	const unsigned int cmpY{ m_mapSizePixY / m_tileSize };
+	const unsigned int cmpX{ m_mainMapConfig.m_mapSizePix.x / m_mainMapConfig.m_tileSize };
+	const unsigned int cmpY{ m_mainMapConfig.m_mapSizePix.y / m_mainMapConfig.m_tileSize };
 	for (unsigned int index(MAP_GEN::BORDER_MIN); index < MAPH::MAP_BORDER_MAX; index++)
 	{
 		if (
@@ -578,9 +577,9 @@ void MainMap::setMinMaxScale
 {
 	/* Min Scale, to avoid OOR */
 	if	(
-			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenWidth()) > m_mapSizePixX
+			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenWidth()) > m_mainMapConfig.m_mapSizePix.x
 			||
-			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenHeight()) > m_mapSizePixY
+			((unsigned int)camera.GETscale() * (unsigned int)camera.getScreenHeight()) > m_mainMapConfig.m_mapSizePix.y
 		)
 	{
 		throw std::invalid_argument("Width or Height is higher than mapSize");
@@ -594,7 +593,7 @@ void MainMap::setMinMaxScale
 		buffer *= camera.GETscaleRate();
 		i++;
 
-		if (buffer >= (float)std::min(m_mapSizePixX, m_mapSizePixY))
+		if (buffer >= (float)std::min(m_mainMapConfig.m_mapSizePix.x, m_mainMapConfig.m_mapSizePix.y))
 		{
 			on = false;
 			i--;
@@ -615,7 +614,7 @@ void MainMap::setMinMaxScale
 		buffer /= camera.GETscaleRate();
 		i++;
 
-		if (buffer <= ((float)m_tileSize * 8))
+		if (buffer <= ((float)m_mainMapConfig.m_tileSize * 8))
 		{
 			on = false;
 			i--;
@@ -657,17 +656,17 @@ void MainMap::updateOffsetX
 {
 	int buffer(0);
 
-	if (x0 <= -((double)m_toolBarSize * m_tileSize * camera.GETscale()))
+	if (x0 <= -((double)m_toolBarSize * m_mainMapConfig.m_tileSize * camera.GETscale()))
 	{
 		m_offsetMapCameraXmin = 0;
-		buffer = -(int)m_toolBarSize - (int)std::floor(x0 / ((double)m_tileSize * camera.GETscale()));
+		buffer = -(int)m_toolBarSize - (int)std::floor(x0 / ((double)m_mainMapConfig.m_tileSize * camera.GETscale()));
 		camera.lockMoveLEFT();
 	}
 	else
-	if (x0 > ((double)m_mapSizePixX - (double)windowWidth))
+	if (x0 > ((double)m_mainMapConfig.m_mapSizePix.x - (double)windowWidth))
 	{
 		m_offsetMapCameraXmin = m_toolBarSize;
-		m_offsetMapCameraXmin += (unsigned int)std::floor(x0 / (double)m_tileSize);
+		m_offsetMapCameraXmin += (unsigned int)std::floor(x0 / (double)m_mainMapConfig.m_tileSize);
 		camera.lockMoveRIGHT();
 		return;
 	}
@@ -675,13 +674,13 @@ void MainMap::updateOffsetX
 	{
 		/* Positive LEFT offset HUD */
 		m_offsetMapCameraXmin = m_toolBarSize;
-		m_offsetMapCameraXmin += (unsigned int)std::floor(x0 / (double)m_tileSize);
+		m_offsetMapCameraXmin += (unsigned int)std::floor(x0 / (double)m_mainMapConfig.m_tileSize);
 		camera.unlockMoveLEFT();
 		camera.unlockMoveRIGHT();
 	}
 
 
-	if ((x0 + (double)windowWidth) > (double)m_mapSizePixX)
+	if ((x0 + (double)windowWidth) > (double)m_mainMapConfig.m_mapSizePix.x)
 	{
 		m_offsetMapCameraXmax = (unsigned int)m_matriceMap.size();
 	}
@@ -689,7 +688,7 @@ void MainMap::updateOffsetX
 	{
 		m_offsetMapCameraXmax =
 			m_offsetMapCameraXmin
-			+ (unsigned int)std::floor((double)windowWidth / ((double)m_tileSize * camera.GETscale())) /* width of screen */
+			+ (unsigned int)std::floor((double)windowWidth / ((double)m_mainMapConfig.m_tileSize * camera.GETscale())) /* width of screen */
 			- buffer
 			+ MAPCamera::MIN_BORDER
 			- m_toolBarSize; /* Negative RIGHT offset HUD */
@@ -720,18 +719,18 @@ void MainMap::updateOffsetY
 	if (y0 < 0.0)
 	{
 		m_offsetMapCameraYmin = 0;
-		buffer = -(int)std::floor((double)y0 / ((double)m_tileSize * camera.GETscale()));
+		buffer = -(int)std::floor((double)y0 / ((double)m_mainMapConfig.m_tileSize * camera.GETscale()));
 		camera.lockMoveDOWN();
 	}
 	else
 	{
-		m_offsetMapCameraYmin = (unsigned int)std::floor(y0 / (double)m_tileSize);
+		m_offsetMapCameraYmin = (unsigned int)std::floor(y0 / (double)m_mainMapConfig.m_tileSize);
 		camera.unlockMoveUP();
 		camera.unlockMoveDOWN();
 	}
 
 
-	if ((y0 + (double)windowHeight) >= ((double)m_mapSizePixY - ((double)m_tileSize * camera.GETscale())))
+	if ((y0 + (double)windowHeight) >= ((double)m_mainMapConfig.m_mapSizePix.y - ((double)m_mainMapConfig.m_tileSize * camera.GETscale())))
 	{
 		m_offsetMapCameraYmax = (unsigned int)m_matriceMap[MAPCamera::INDEX_SIZE].size();
 	}
@@ -739,7 +738,7 @@ void MainMap::updateOffsetY
 	{
 		m_offsetMapCameraYmax = 
 			m_offsetMapCameraYmin 
-			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_tileSize * camera.GETscale()))
+			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_mainMapConfig.m_tileSize * camera.GETscale()))
 			- buffer
 			+ MAPCamera::MIN_BORDER;
 
@@ -816,7 +815,7 @@ void MainMap::drawMap
 
 				m_spriteBatch.draw
 				(
-					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+					glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_mainMapConfig.m_tileSize, m_mainMapConfig.m_tileSize),
 					R2D::FULL_RECT,
 					id,
 					0.0f,
@@ -861,7 +860,7 @@ void MainMap::drawMap
 				{
 					m_spriteBatch.draw
 					(
-						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_mainMapConfig.m_tileSize, m_mainMapConfig.m_tileSize),
 						R2D::FULL_RECT,
 						id,
 						0.1f,
@@ -873,7 +872,7 @@ void MainMap::drawMap
 				{
 					m_spriteBatchAppartenance.draw
 					(
-						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_tileSize, m_tileSize),
+						glm::vec4(m_matriceMap[i][j].tile_x, m_matriceMap[i][j].tile_y, m_mainMapConfig.m_tileSize, m_mainMapConfig.m_tileSize),
 						R2D::FULL_RECT,
 						m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::ColorPlayer0) + m_matriceMap[i][j].appartenance)],
 						0.5f,
@@ -896,6 +895,67 @@ void MainMap::renderMap()
 	m_spriteBatchAppartenance.renderBatch();
 }
 
+jsoncons::ojson MainMap::saveToOjson()const
+{
+	jsoncons::ojson value;
+	jsoncons::ojson tiles{ jsoncons::ojson::make_array() };
+
+	for (const auto& row : m_matriceMap)
+	{
+		for (const auto& tilef : row)
+		{
+			jsoncons::ojson tile;
+			tile.insert_or_assign("indexX", tilef.indexX);
+			tile.insert_or_assign("indexY", tilef.indexY);
+			tile.insert_or_assign("tile_x", tilef.tile_x);
+			tile.insert_or_assign("tile_y", tilef.tile_y);
+			tile.insert_or_assign("tile_ground", static_cast<size_t>(tilef.tile_ground));
+			tile.insert_or_assign("tile_spec", static_cast<size_t>(tilef.tile_spec));
+			tile.insert_or_assign("appartenance", tilef.appartenance);
+			tile.insert_or_assign("food", tilef.food);
+			tile.insert_or_assign("work", tilef.work);
+			tile.insert_or_assign("gold", tilef.gold);
+			tiles.push_back(tile);
+		}
+	}
+	value.insert_or_assign(jsonloader::KEY_MATRICE_MAP, tiles);
+	return value;
+}
+
+
+void MainMap::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	try
+	{
+		if (jsonLoad.contains(jsonloader::KEY_MATRICE_MAP))
+		{
+			const std::vector<jsonloader::Tile> characteristic = jsonLoad[jsonloader::KEY_MATRICE_MAP].as<std::vector<jsonloader::Tile>>();
+
+			for (const auto& tile : characteristic)
+			{
+				m_matriceMap[tile.indexX][tile.indexY].indexX = tile.indexX;
+				m_matriceMap[tile.indexX][tile.indexY].indexY = tile.indexY;
+				m_matriceMap[tile.indexX][tile.indexY].tile_x = tile.tile_x;
+				m_matriceMap[tile.indexX][tile.indexY].tile_y = tile.tile_y;
+				m_matriceMap[tile.indexX][tile.indexY].tile_ground = static_cast<Ground_Type>(tile.tile_ground);
+				m_matriceMap[tile.indexX][tile.indexY].tile_spec = static_cast<GroundSpec_Type>(tile.tile_spec);
+				m_matriceMap[tile.indexX][tile.indexY].appartenance = tile.appartenance;
+				m_matriceMap[tile.indexX][tile.indexY].food = tile.food;
+				m_matriceMap[tile.indexX][tile.indexY].work = tile.work;
+				m_matriceMap[tile.indexX][tile.indexY].gold = tile.gold;
+			}
+		}
+		else
+		{
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAIN_MAP, logS::DATA::MISSING_KEY_JSON,
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_MATRICE_MAP);
+		}
+	}
+	catch (const std::exception& e)
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAIN_MAP, logS::DATA::ERROR_KEY_JSON, e.what());
+	}
+}
 
 /*
 *	End Of File : GamePlay.cpp

@@ -24,13 +24,6 @@
 
 using namespace R2D;
 
-File::File()
-:
-m_path(""),
-m_isInitilize(false)
-{
-}
-
 File::File
 (
 	const std::string& path
@@ -85,22 +78,6 @@ bool Files::initializePath
 		return true;
 	}
 	return false;
-}
-
-bool Files::modifyPath
-(
-	const e_Files name,
-	const std::string& path
-)
-{
-	const auto it = m_map_FileConf.find(name);
-
-	if	(it == m_map_FileConf.end())
-	{
-		return false;
-	}
-	it->second->modifyPath(path);
-	return true;
 }
 
 File* Files::getFile(const e_Files name)

@@ -22,11 +22,11 @@
 
 #include "ResourceManager.h"
 
-#include "..\..\Dependencies\tinyxml2\tinyxml2.h"
-
 #include "CardinalDirection.h"
 #include "ErrorLog.h"
 #include "GLTexture.h"
+#include "Log.h"
+#include "LogSentences.h"
 #include "SpriteBatch.h"
 #include "Window.h"
 
@@ -37,6 +37,8 @@ using namespace R2D;
 
 TextureCache ResourceManager::m_textureCache;
 Files ResourceManager::m_files;
+Text ResourceManager::m_Text;
+FileTools ResourceManager::m_fileTools;
 std::shared_ptr<SpriteFont> ResourceManager::m_spriteFont;
 GLSLProgram ResourceManager::m_gLSLProgram;
 ColorRGBA8C ResourceManager::m_colorsRGBA8;
@@ -71,13 +73,12 @@ void ResourceManager::initializeFilePath
 	m_files.initializePath(name, path);
 }
 
-void ResourceManager::modifyFilePath
+std::string ResourceManager::loadFileToString
 (
-	const e_Files name,
 	const std::string& path
 )
 {
-	m_files.modifyPath(name, path);
+	return m_fileTools.loadFileToString(path);
 }
 
 std::shared_ptr<SpriteFont>& ResourceManager::getSpriteFont()
@@ -90,76 +91,13 @@ GLSLProgram& ResourceManager::getGLSLProgram()
 	return m_gLSLProgram;
 }
 
-bool ResourceManager::getTextFromFile
+void ResourceManager::getTextFromFile
 (
-	/* IN */
 	const e_Files name,
-	/* OUT */
 	MapTexts& mapTexts
 )
 {
-	std::string errCheck("");
-	tinyxml2::XMLDocument xmlDoc;
-	Text blankText;
-
-	/* Clear previous Texts */
-	mapTexts.clear();
-
-	if (xmlDoc.LoadFile(R2D::ResourceManager::getFile(name)->getPath().c_str()) == tinyxml2::XML_SUCCESS)
-	{
-		tinyxml2::XMLNode* pRoot = xmlDoc.FirstChild();
-		if (nullptr == pRoot)
-		{
-			R2D::ErrorLog::logEvent("Error on getTextFromFile : nullptr == pRoot");
-			return false;
-		}
-
-		tinyxml2::XMLNode* nTextRoot = pRoot->FirstChild();
-		errCheck = nTextRoot->Value();
-		if (errCheck.compare("Text") != 0) 
-		{
-			R2D::ErrorLog::logEvent("Error on getTextFromFile : errCheck.compare(Text) != 0");
-			return false;
-		}
-
-		while (nullptr != nTextRoot)
-		{
-			tinyxml2::XMLNode* nText = nTextRoot->FirstChild();
-			tinyxml2::XMLNode* nX = nText->NextSibling();
-			tinyxml2::XMLNode* nY = nX->NextSibling();
-			tinyxml2::XMLNode* nSize = nY->NextSibling();
-			tinyxml2::XMLNode* nAlpha = nSize->NextSibling();
-			tinyxml2::XMLNode* nColor = nAlpha->NextSibling();
-			tinyxml2::XMLNode* nCenter = nColor->NextSibling();
-
-			try
-			{
-				blankText.text = nText->FirstChild()->Value();
-				blankText.x = std::stod(nX->FirstChild()->Value());
-				blankText.y = std::stod(nY->FirstChild()->Value());
-				blankText.size = std::stof(nSize->FirstChild()->Value());
-				blankText.alpha = std::stof(nAlpha->FirstChild()->Value());
-				blankText.color = getRGBA8Color(nColor->FirstChild()->Value());
-				blankText.justification = getJustification(nCenter->FirstChild()->Value());
-			}
-			catch (const std::invalid_argument error)
-			{
-				R2D::ErrorLog::logEvent("Error on getTextFromFile : invalid_argument : " + std::string(error.what()));
-				return false;
-			}
-			catch (const std::out_of_range error)
-			{
-				R2D::ErrorLog::logEvent("Error on getTextFromFile : out_of_range : " + std::string(error.what()));
-				return false;
-			}
-			
-
-			mapTexts.emplace(blankText.text, blankText);
-
-			nTextRoot = nTextRoot->NextSibling();
-		}
-	}
-	return true;
+	m_Text.getTextFromFile(name, mapTexts);
 }
 
 void ResourceManager::displayTextFromFile
@@ -171,23 +109,7 @@ void ResourceManager::displayTextFromFile
 	SpriteBatch& spriteBatchHUDStatic
 )
 {
-	for (const auto& text : mapTexts)
-	{
-		R2D::ResourceManager::getSpriteFont()->draw
-		(
-			spriteBatchHUDStatic,
-			text.second.text.c_str(),
-			glm::vec2
-			(
-				window.getWidthPositionScaleToWindow(text.second.x),
-				window.getHeightPositionScaleToWindow(text.second.y)
-			), // offset pos
-			glm::vec2(R2D::SpriteFont::getScaleFontToScreen(text.second.size)), // size
-			text.second.alpha,
-			text.second.color,
-			text.second.justification
-		);
-	}
+	m_Text.displayTextFromFile(mapTexts, window, spriteBatchHUDStatic);
 }
 
 void ResourceManager::initializeRGBA8Map()

@@ -32,6 +32,8 @@ Modified By: Robin Sauter
 #include <string>
 #include <memory>
 
+#include "Text.h"
+
 namespace R2D
 {
 
@@ -69,11 +71,6 @@ namespace R2D
 #define FIRST_PRINTABLE_CHAR ((char)32)
 #define LAST_PRINTABLE_CHAR ((char)126)
 
-    /// For text justification
-    enum class Justification 
-    {
-        LEFT, MIDDLE, RIGHT
-    };
 
     class SpriteFont
     {

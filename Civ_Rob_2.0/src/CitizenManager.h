@@ -84,6 +84,12 @@ private:
 		const double coefGold = 1.0
 	) const;
 
+public:
+
+	jsoncons::ojson saveToOjson()const;
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+
 private:
 
 	const VectMap& m_tiles;

@@ -99,6 +99,12 @@ public:
 		const unsigned int indexY
 	);
 
+public:
+
+	jsoncons::ojson saveToOjson()const;
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+
 private:
 
 	// index du joueur actuellement sélectionné

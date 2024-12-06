@@ -163,6 +163,15 @@ typedef std::vector<std::string> VectPlayerName;
 typedef std::vector<UnitPtrT> VectUnit;
 typedef std::vector<Unit_Template> VectUnitTemplate;
 
+namespace jsoncons
+{
+	template <typename CharT, typename Policy, typename Allocator>
+	class basic_json;
+
+	struct order_preserving_policy;
+	using ojson = basic_json<char, order_preserving_policy, std::allocator<char>>;
+}
+
 #endif
 
 

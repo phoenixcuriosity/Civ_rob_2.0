@@ -40,10 +40,8 @@ enum class e_Files
 	readme				= 10,
 
 	mainMap				= 12,
-	buildings			= 13,
 	citiesNames			= 14,
 	units				= 15,
-	specNames			= 16,
 
 	saveInfo			= 20,
 
@@ -67,10 +65,8 @@ const e_Files tab_e_Files[]=
 {
 	e_Files::readme,
 	e_Files::mainMap,
-	e_Files::buildings,
 	e_Files::citiesNames,
 	e_Files::units,
-	e_Files::specNames,
 	e_Files::saveInfo,
 	e_Files::saveMaps,
 	e_Files::savePlayers,
@@ -85,22 +81,14 @@ const e_Files tab_e_Files[]=
 	e_Files::texts_Reload
 };
 
-struct Text
-{
-	std::string text;
-	double x;
-	double y;
-	float size;
-	float alpha;
-	R2D::ColorRGBA8 color;
-	R2D::Justification justification;
-};
+constexpr size_t NUMBER_OF_FILEPATH = sizeof(tab_e_Files) / sizeof(tab_e_Files[0]);
+
 
 
 class File
 {
 public:
-	File();
+	File() = delete;
 	File(const std::string& path);
 	~File();
 
@@ -128,12 +116,6 @@ public:
 public:
 
 	bool initializePath
-	(
-		const e_Files name,
-		const std::string& path
-	);
-
-	bool modifyPath
 	(
 		const e_Files name,
 		const std::string& path

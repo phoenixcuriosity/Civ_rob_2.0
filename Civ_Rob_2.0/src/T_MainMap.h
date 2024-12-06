@@ -23,6 +23,10 @@
 #ifndef T_MainMap_H
 #define T_MainMap_H
 
+#include "LIB.h"
+
+#include "T_Coor.h"
+
 namespace MAPH
 {
 	constexpr unsigned int MAP_BORDER_MAX = 4;
@@ -57,7 +61,6 @@ enum class GroundSpec_Type
 
 struct Tile
 {
-
 	// index en X de la case : en tileSize
 	unsigned int indexX = 0;
 
@@ -69,12 +72,6 @@ struct Tile
 
 	// index en Y de la case : en pixel
 	unsigned int tile_y = 0;
-
-	// index en X de la case : en pixel
-	unsigned int tileXCityScreen = 0;
-
-	// index en Y de la case : en pixel
-	unsigned int tileYCityScreen = 0;
 
 	// type de sol -> enum Ground_Type : unsigned int { noGround, grass, water, deepwater, dirt, sand};
 	Ground_Type tile_ground = Ground_Type::error;
@@ -96,6 +93,12 @@ struct Tile
 
 	// indice financier de la case
 	int gold = -1;
+};
+
+struct MainMapConfig
+{
+	unsigned int m_tileSize = 0;
+	Coor m_mapSizePix;
 };
 
 #endif // !T_MainMap_H

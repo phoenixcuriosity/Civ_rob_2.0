@@ -24,10 +24,12 @@
 
 #include "App.h"
 #include "City.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "Unit.h"
 #include "Utility.h"
 
+#include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/ErrorLog.h> 
@@ -46,8 +48,7 @@ Player::Player() :
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, 
-		m_name, m_id);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, saveToOjson().as_string());
 }
 
 Player::Player
@@ -65,13 +66,12 @@ Player::Player
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false }
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER,
-		m_name, m_id);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, saveToOjson().as_string());
 }
 
 Player::~Player()
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_PLAYER, logS::DATA::DESTRUCTOR_PLAYER, m_name);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_PLAYER, logS::DATA::DESTRUCTOR_PLAYER, saveToOjson().as_string());
 	deletePlayer();
 }
 
@@ -170,6 +170,11 @@ void Player::addCity
 	m_tabCity.push_back(std::make_shared<City>(name, x, y, tiles));
 }
 
+void Player::addEmptyCity()
+{
+	m_tabCity.push_back(std::make_shared<City>());
+}
+
 void Player::deleteCity
 (
 	const unsigned int index
@@ -251,6 +256,80 @@ void Player::addGoldToGoldConversionSurplus
 )
 {
 	m_goldStats.goldConversionSurplus += goldToAdd;
+}
+
+jsoncons::ojson Player::saveToOjson()const
+{
+	jsoncons::ojson value;
+	jsoncons::ojson units{ jsoncons::ojson::make_array() };
+	jsoncons::ojson cities{ jsoncons::ojson::make_array() };
+	jsoncons::ojson goldStats;
+
+	for (const auto& unit : m_tabUnit)
+	{
+		units.push_back(unit->saveToOjson());
+	}
+
+	for (const auto& city : m_tabCity)
+	{
+		cities.push_back(city->saveToOjson());
+	}
+
+	goldStats.insert_or_assign("gold", m_goldStats.gold);
+	goldStats.insert_or_assign("goldBalance", m_goldStats.goldBalance);
+	goldStats.insert_or_assign("income", m_goldStats.income);
+	goldStats.insert_or_assign("cost", m_goldStats.cost);
+	goldStats.insert_or_assign("taxIncome", m_goldStats.taxIncome);
+	goldStats.insert_or_assign("commerceIncome", m_goldStats.commerceIncome);
+	goldStats.insert_or_assign("goldConversionSurplus", m_goldStats.goldConversionSurplus);
+	goldStats.insert_or_assign("armiesCost", m_goldStats.armiesCost);
+	goldStats.insert_or_assign("buildingsCost", m_goldStats.buildingsCost);
+
+	value.insert_or_assign("m_name", m_name);
+	value.insert_or_assign("m_id", m_id);
+	value.insert_or_assign("m_tabUnit", units);
+	value.insert_or_assign("m_tabCity", cities);
+	value.insert_or_assign("m_selectedUnit", m_selectedUnit);
+	value.insert_or_assign("m_selectedCity", m_selectedCity);
+	value.insert_or_assign("m_goldStats", goldStats);
+
+	return value;
+}
+
+void Player::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if (
+			jsonLoad.contains("m_tabUnit") && jsonLoad["m_tabUnit"].is_array() &&
+			jsonLoad.contains("m_tabCity") && jsonLoad["m_tabCity"].is_array() &&
+			jsonLoad.contains("m_selectedUnit") && jsonLoad.contains("m_selectedCity") &&
+			jsonLoad.contains("m_goldStats") && jsonLoad["m_goldStats"].contains("cost") &&
+			jsonLoad["m_goldStats"].contains("gold") && jsonLoad["m_goldStats"].contains("goldBalance") &&
+			jsonLoad["m_goldStats"].contains("income") && jsonLoad["m_goldStats"].contains("taxIncome") &&
+			jsonLoad["m_goldStats"].contains("commerceIncome") && jsonLoad["m_goldStats"].contains("goldConversionSurplus") &&
+			jsonLoad["m_goldStats"].contains("armiesCost") && jsonLoad["m_goldStats"].contains("buildingsCost")
+		)
+	{
+		m_selectedUnit = jsonLoad["m_selectedUnit"].as<int>();
+		m_selectedCity = jsonLoad["m_selectedCity"].as<int>();
+		m_goldStats = jsonLoad["m_goldStats"].as<GoldStats>();
+
+		for (const auto& unit : jsonLoad["m_tabUnit"].array_range())
+		{
+			addEmptyUnit();
+			m_tabUnit.back()->loadFromOjson(unit);
+		}
+
+		for (const auto& city : jsonLoad["m_tabCity"].array_range())
+		{
+			addEmptyCity();
+			m_tabCity.back()->loadFromOjson(city);
+		}
+	}
+	else
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+	}
 }
 
  /*

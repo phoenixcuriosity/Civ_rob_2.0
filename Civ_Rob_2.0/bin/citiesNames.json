@@ -1,0 +1,13 @@
+{
+  "France": [ "Paris", "Lyon", "Marseille", "Mulhouse", "Rosenau" ],
+  "Italy": [ "Rome", "Venise", "Pompei", "Milan", "Turin" ],
+  "Germany": [ "Berlin", "Francfort", "Dresde", "Hambourg", "Stuttgart" ],
+  "United Kingdom": [ "Londres", "Oxford", "Portsmouth", "Cambridge", "Leeds" ],
+  "Spain": [ "Madrid", "Barcelone", "Malaga", "Saragosse", "Carthagene" ],
+  "China": [ "Pekin", "Yantai", "Wuhan", "Canton", "Xiamen" ],
+  "Japan": [ "Tokyo", "Kyoto", "Kobe", "Hiroshima", "Sendai" ],
+  "India": [ "Delhi", "Bombay", "Hyderbad", "Kanpur", "Bhopal" ],
+  "United States": [ "Washington", "New-York", "San-Fransico", "Los-Angeles", "Las-Vegas" ]
+}
+
+
