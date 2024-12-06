@@ -179,7 +179,7 @@ void FoodManager::updateEmotionCoef()
 	m_emotionCoef = static_cast<double>(m_citizenManager.getEmotion()) / FOOD_MANAGER::EMOTION_RANGE::SCALE_MEAN;
 }
 
-jsoncons::ojson FoodManager::saveToOjson()
+jsoncons::ojson FoodManager::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_foodStock", m_foodStock);

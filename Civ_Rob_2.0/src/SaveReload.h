@@ -37,9 +37,10 @@ public:
 	 /* ROLE : Chargement de la partie � patir des fichiers de sauvegarde									       */
 	 /* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							       */
 	 /* RETURNED VALUE    : void																				   */
-	static void save
+	void save
 	(
-		GamePlayScreen& mainGame
+		const MainMap& mainMap,
+		const Players& players
 	);
 
 private:
@@ -47,18 +48,18 @@ private:
 	/* ROLE : Sauvegardes des sys map.map et map.screen														      */
 	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
 	/* RETURNED VALUE    : void																	    			  */
-	static void saveMaps
+	void saveMaps
 	(
-		GamePlayScreen& mainGame
+		const MainMap& mainMap
 	);
 
 	/* NAME : savePlayer																				    	  */
 	/* ROLE : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt									      */
 	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
 	/* RETURNED VALUE    : void 																				  */
-	static void savePlayer
+	void savePlayer
 	(
-		GamePlayScreen& mainGame
+		const Players& players
 	);
 
 public:
@@ -66,7 +67,7 @@ public:
 	/* ROLE : Chargement de la partie � patir des fichiers de sauvegarde									      */
 	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
 	/* RETURNED VALUE    : void																					  */
-	static void reload
+	void reload
 	(
 		GamePlayScreen& mainGame
 	);
@@ -76,18 +77,18 @@ private:
 	/* ROLE : Chargement des sys map.map et map.screen														      */
 	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
 	/* RETURNED VALUE    : void								    												  */
-	static void loadMaps
+	void loadMaps
 	(
-		GamePlayScreen& mainGame
+		MainMap& mainMap
 	);
 
 	/* NAME : loadPlayer																				    	  */
 	/* ROLE : Chargement des joueurs (units et cities) dans SavePlayer.txt									      */
 	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
 	/* RETURNED VALUE    : void																					  */
-	static void loadPlayer
+	void loadPlayer
 	(
-		GamePlayScreen& mainGame
+		Players& players
 	);
 
 public:

@@ -895,7 +895,7 @@ void MainMap::renderMap()
 	m_spriteBatchAppartenance.renderBatch();
 }
 
-jsoncons::ojson MainMap::saveToOjson()
+jsoncons::ojson MainMap::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson tiles{ jsoncons::ojson::make_array() };

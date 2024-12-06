@@ -434,7 +434,7 @@ void City::convertFoodSurplusToGold
 	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_GOLD;
 }
 
-jsoncons::ojson City::saveToOjson()
+jsoncons::ojson City::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson tiles{ jsoncons::ojson::make_array() };

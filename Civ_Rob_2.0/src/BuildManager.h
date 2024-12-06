@@ -126,7 +126,7 @@ public:
 
 public:
 	
-	jsoncons::ojson saveToOjson();
+	jsoncons::ojson saveToOjson()const;
 
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 

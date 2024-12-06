@@ -345,7 +345,7 @@ bool Players::searchCity
 	return false;
 }
 
-jsoncons::ojson Players::saveToOjson()
+jsoncons::ojson Players::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson players{ jsoncons::ojson::make_array() };;

@@ -258,7 +258,7 @@ void Player::addGoldToGoldConversionSurplus
 	m_goldStats.goldConversionSurplus += goldToAdd;
 }
 
-jsoncons::ojson Player::saveToOjson()
+jsoncons::ojson Player::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson units{ jsoncons::ojson::make_array() };

@@ -266,7 +266,7 @@ double BuildManager::GETBuildPerc()const
 	return RESOURCES::WORK::ZERO;
 };
 
-jsoncons::ojson BuildManager::saveToOjson()
+jsoncons::ojson BuildManager::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson builds{ jsoncons::ojson::make_array() };

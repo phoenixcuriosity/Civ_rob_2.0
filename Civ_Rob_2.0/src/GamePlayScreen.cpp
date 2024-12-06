@@ -217,7 +217,7 @@ void GamePlayScreen::doInitHUDText()
 		m_spriteBatchHUDStatic,
 		buffer.c_str(),
 		glm::vec2(0.0f, 2.0f), // offset pos
-		glm::vec2(R2D::SpriteFont::getScaleFontToScreen(1.28)), // size
+		glm::vec2(R2D::SpriteFont::getScaleFontToScreen(1.28f)), // size
 		0.0f,
 		R2D::COLOR_WHITE
 	);
@@ -425,7 +425,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::EXIT_BUTTON);
-	SaveReload::save(*this);
+	this->getSaveReload()->save(m_mainMap, m_players);
 
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;

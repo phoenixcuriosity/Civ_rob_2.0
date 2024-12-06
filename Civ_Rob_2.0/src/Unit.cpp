@@ -635,7 +635,7 @@ void Unit::cmpblit()
 	}
 }
 
-jsoncons::ojson Unit::saveToOjson()
+jsoncons::ojson Unit::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_name", m_name);

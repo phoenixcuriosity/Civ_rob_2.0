@@ -90,7 +90,7 @@ Citizen::~Citizen()
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITIZEN, logS::DATA::EMPTY_DATA);
 }
 
-jsoncons::ojson Citizen::saveToOjson()
+jsoncons::ojson Citizen::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_tileOccupied", m_tileOccupied);

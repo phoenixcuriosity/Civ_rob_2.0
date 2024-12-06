@@ -245,7 +245,7 @@ double CitizenManager::getFoodFromCitizen()const
 	return rValue;
 }
 
-jsoncons::ojson CitizenManager::saveToOjson()
+jsoncons::ojson CitizenManager::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson citizens{ jsoncons::ojson::make_array() };

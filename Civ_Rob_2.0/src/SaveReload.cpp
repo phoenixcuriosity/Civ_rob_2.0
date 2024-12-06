@@ -65,28 +65,29 @@ void SaveReload::init()
 
 void SaveReload::save
 (
-	GamePlayScreen& mainGame
+	const MainMap& mainMap,
+	const Players& players
 )
 {
-	saveMaps(mainGame);
-	savePlayer(mainGame);
+	saveMaps(mainMap);
+	savePlayer(players);
 }
 
 void SaveReload::saveMaps
 (
-	GamePlayScreen& mainGame
+	const MainMap& mainMap
 )
 {
 	try
 	{
 		std::ofstream ofs{ std::format("{}{:04}/{}",
 				R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-				mainGame.getSaveReload()->GETcurrentSave(),
+				m_currentSave,
 				R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() )};
 
 		if (!ofs) { throw std::runtime_error("Failed to open file for writing."); }
 	
-		jsoncons::encode_json(mainGame.GETmainMap().saveToOjson(), ofs, jsoncons::indenting::indent);
+		jsoncons::encode_json(mainMap.saveToOjson(), ofs, jsoncons::indenting::indent);
 	}
 	catch (const std::exception& e)
 	{
@@ -97,19 +98,19 @@ void SaveReload::saveMaps
 
 void SaveReload::savePlayer
 (
-	GamePlayScreen& mainGame
+	const Players& players
 )
 {
 	try
 	{
 		std::ofstream ofs((std::format("{}{:04}/{}",
 			R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-			mainGame.getSaveReload()->GETcurrentSave(),
+			m_currentSave,
 			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str()));
 
 		if (!ofs) { throw std::runtime_error("Failed to open file for writing."); }
 
-		jsoncons::encode_json(mainGame.GETPlayers().saveToOjson(), ofs, jsoncons::indenting::indent);
+		jsoncons::encode_json(players.saveToOjson(), ofs, jsoncons::indenting::indent);
 	}
 	catch (const std::exception& e)
 	{
@@ -125,8 +126,8 @@ void SaveReload::reload
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::START);
 
-	loadMaps(mainGame);
-	loadPlayer(mainGame);
+	loadMaps(mainGame.GETmainMap());
+	loadPlayer(mainGame.GETPlayers());
 
 	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
 	mainGame.GETPlayers().SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
@@ -139,17 +140,17 @@ void SaveReload::reload
 
 void SaveReload::loadMaps
 (
-	GamePlayScreen& mainGame
+	MainMap& mainMap
 )
 {
 	try
 	{
 		const std::string text{ R2D::ResourceManager::loadFileToString((std::format("{}{:04}/{}",
 			R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-			mainGame.getSaveReload()->GETcurrentSave(),
+			m_currentSave,
 			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()).c_str())) };
 
-		mainGame.GETmainMap().loadFromOjson(jsoncons::ojson::parse(text));
+		mainMap.loadFromOjson(jsoncons::ojson::parse(text));
 	}
 	catch (const std::exception& e)
 	{
@@ -159,17 +160,17 @@ void SaveReload::loadMaps
 
 void SaveReload::loadPlayer
 (
-	GamePlayScreen& mainGame
+	Players& players
 )
 {
 	try
 	{
 		const std::string text{ R2D::ResourceManager::loadFileToString((std::format("{}{:04}/{}",
 		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-		mainGame.getSaveReload()->GETcurrentSave(),
+		m_currentSave,
 		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str())) };
 
-		mainGame.GETPlayers().loadFromOjson(jsoncons::ojson::parse(text));
+		players.loadFromOjson(jsoncons::ojson::parse(text));
 	}
 	catch (const std::exception& e)
 	{
