@@ -31,12 +31,9 @@
 #include "Unit.h"
 #include "T_NewGameScreen.h"
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/Log.h> 
-#include <R2D/src/tinyXml2.h> 
 
 GamePlayScreen::GamePlayScreen
 (
