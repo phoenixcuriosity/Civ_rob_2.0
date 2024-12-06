@@ -81,16 +81,8 @@ const e_Files tab_e_Files[]=
 	e_Files::texts_Reload
 };
 
-struct Text
-{
-	std::string text;
-	double x;
-	double y;
-	float size;
-	float alpha;
-	R2D::ColorRGBA8 color;
-	R2D::Justification justification;
-};
+constexpr size_t NUMBER_OF_FILEPATH = sizeof(tab_e_Files) / sizeof(tab_e_Files[0]);
+
 
 
 class File

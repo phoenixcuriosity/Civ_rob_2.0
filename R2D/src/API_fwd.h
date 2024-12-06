@@ -35,7 +35,7 @@ namespace R2D
 {
 	struct ColorRGBA8;
 	struct dot2D;
-	struct Text;
+	struct Text_t;
 	struct UV;
 	struct Vertex;
 
@@ -57,6 +57,7 @@ namespace R2D
 	class CScreen;
 	class ScreenList;
 	class SpriteBatch;
+	class Text;
 	class TextureCache;
 	class tinyXml2;
 	class WidgetLabel;
@@ -74,7 +75,7 @@ namespace R2D
 	typedef std::map<CardinalDirections, CardinalDirection> CardinalDirectionMapping;
 	typedef std::map<std::string, ColorRGBA8> ColorRGBA8Map;
 	typedef std::unordered_map<std::string, GLuint> IdMap;
-	typedef std::map<std::string, Text> MapTexts;
+	typedef std::map<std::string, Text_t> MapTexts;
 	typedef std::vector<GLuint> VectID;
 }
 

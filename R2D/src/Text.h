@@ -20,37 +20,71 @@
 
 */
 
-#include "tinyXml2.h"
+#ifndef Text_H
+#define Text_H
 
-using namespace R2D;
+#include "API_fwd.h"
+
+#include "ColorRGBA8.h"
+#include "Window.h"
 
 
-tinyxml2::XMLElement* tinyXml2::getFirstElement
-(
-	/* IN */
-	tinyxml2::XMLDocument& parentNode,
-	const uint8_t maxLevel
-)
+namespace R2D
 {
-	uint8_t currentLevel{ 0 };
-	tinyxml2::XMLElement* node{ parentNode.FirstChildElement()};
 
-	while (nullptr != node)
-	{
-		/* Timeout return */
-		if (maxLevel <= currentLevel)
-		{
-			return nullptr;
-		}
+/// For text justification
+enum class Justification
+{
+	LEFT, MIDDLE, RIGHT
+};
 
-		if (NULL != node->GetText())
-		{
-			return node;
-		}
+
+struct Text_t
+{
+	std::string text;
+	double x;
+	double y;
+	float size;
+	float alpha;
+	R2D::ColorRGBA8 color;
+	R2D::Justification justification;
+};
+
+struct Text_json
+{
+	std::string text;
+	double x;
+	double y;
+	float size;
+	float alpha;
+	std::string color;
+	std::string justification;
+};
+
+class Text
+{
+public:
 	
-		node = node->FirstChildElement();
+	Text() {};
+	~Text() {};
 
-		currentLevel++;
-	}
-	return nullptr;
+public:
+
+	static void getTextFromFile
+	(
+		const e_Files name,
+		MapTexts& mapTexts
+	);
+
+	static void displayTextFromFile
+	(
+		const MapTexts& mapTexts,
+		const Window& window,
+		SpriteBatch& spriteBatchHUDStatic
+	);
+};
+
 }
+
+#endif // !Text_H
+

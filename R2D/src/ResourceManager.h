@@ -24,13 +24,13 @@
 #define ResourceManager_H
 
 #include "API_fwd.h"
-#include "TextureCache.h"
+
 #include "Files.h"
-#include "SpriteFont.h"
 #include "GLSLProgram.h"
 #include "LoadingFileToString.h"
-
-#define EXTENSION_PNG ".png"
+#include "SpriteFont.h"
+#include "Text.h"
+#include "TextureCache.h"
 
 namespace R2D
 {
@@ -56,11 +56,9 @@ namespace R2D
 		static SpriteFont_PtrT& getSpriteFont();
 		static GLSLProgram& getGLSLProgram();
 
-		static bool getTextFromFile
+		static void getTextFromFile
 		(
-			/* IN */
 			const e_Files name,
-			/* OUT */
 			MapTexts& mapTexts
 		);
 
@@ -101,6 +99,7 @@ namespace R2D
 	private:
 		static TextureCache m_textureCache;
 		static Files m_files;
+		static Text m_Text;
 		static FileTools m_fileTools;
 		static SpriteFont_PtrT m_spriteFont;
 		static GLSLProgram m_gLSLProgram;

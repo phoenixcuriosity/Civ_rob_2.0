@@ -33,6 +33,7 @@ namespace logS
 	{
 		constexpr char TEXTURE[] = "[TEXTURE]";
 		constexpr char FILE[] = "[FILE]";
+		constexpr char TEXT[] = "[TEXT]";
 	};
 	namespace DATA
 	{
@@ -43,6 +44,8 @@ namespace logS
 		constexpr char ERROR_OPEN_FILE[] = "ERROR_OPEN_FILE : {}";
 		constexpr char ERROR_EMPTY_FILE[] = "ERROR_EMPTY_FILE : {}";
 		constexpr char ERROR_SIZE_FILE[] = "ERROR_SIZE_FILE : {}";
+
+		constexpr char ERROR_KEY_TEXT_MISSING[] = "ERROR_KEY_TEXT_MISSING : {}";
 	};
 };
 
