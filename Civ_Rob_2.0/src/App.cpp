@@ -24,26 +24,25 @@
 
 #include "CityScreen.h"
 #include "GamePlayScreen.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMenuScreen.h"
 #include "NewGameScreen.h"
 #include "ReloadMenuScreen.h"
 
-#include <tinyxml2/tinyxml2.h>
-
+#include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/Log.h> 
 #include <R2D/src/ExitFromError.h> 
-#include <R2D/src/SpriteFont.h> 
-#include <R2D/src/tinyXml2.h> 
+#include <R2D/src/SpriteFont.h>
 #include <R2D/src/ScreenList.h>
 
 namespace FILE_APP
 {
 	namespace PATH
 	{
-		constexpr char CONFIG[] = "bin/filePath.xml";
+		constexpr char CONFIG[] = "bin/filePath.json";
 		constexpr char LOG[] = "bin/log/log.txt";
 	}
 }
@@ -171,36 +170,41 @@ void App::initMain()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::START);
 
-	tinyxml2::XMLDocument config{};
-	config.LoadFile(FILE_APP::PATH::CONFIG);
-
-	if (config.ErrorID() == 0)
+	try
 	{
-		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
+		const std::string text{ R2D::ResourceManager::loadFileToString(FILE_APP::PATH::CONFIG) };
 
-		for (const R2D::e_Files it_e_files : R2D::tab_e_Files)
+		const jsoncons::ojson configuration = jsoncons::ojson::parse(text);
+
+		if (configuration.contains(jsonloader::KEY_FILE_PATH) && configuration[jsonloader::KEY_FILE_PATH].is_array())
 		{
-			if (nullptr != node)
-			{
-				R2D::ResourceManager::initializeFilePath
-				(
-					it_e_files,
-					node->GetText()
-				);
+			const auto filepaths = configuration[jsonloader::KEY_FILE_PATH].as<std::vector<std::string>>();
 
-				node = node->NextSiblingElement();
+			if (filepaths.size() == R2D::NUMBER_OF_FILEPATH)
+			{
+				for (size_t i{0}; i < R2D::NUMBER_OF_FILEPATH; i++)
+				{
+					R2D::ResourceManager::initializeFilePath
+					(
+						R2D::tab_e_Files[i],
+						filepaths[i]
+					);
+				}
 			}
 			else
 			{
-				LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::MISSING_PATH_FILE, FILE_APP::PATH::CONFIG);
-				throw("Missing path for a file " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
+				throw("Diff between code and json");
 			}
 		}
+		else
+		{
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::MISSING_KEY_JSON,
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_FILE_PATH);
+		}
 	}
-	else
+	catch (const std::exception& e)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, FILE_APP::PATH::CONFIG);
-		throw("Impossible d'ouvrir le fichier " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::END);

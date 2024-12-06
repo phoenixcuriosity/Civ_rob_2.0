@@ -36,6 +36,7 @@ constexpr char KEY_MAP[]				= "Map";
 constexpr char KEY_MATRICE_MAP[]		= "MatriceMap";
 constexpr char KEY_PLAYERS[]			= "Players";
 constexpr char KEY_UNIT_TEMPLATE[]		= "Units";
+constexpr char KEY_FILE_PATH[]			= "FilePaths";
 
 struct Unit_Template
 {
