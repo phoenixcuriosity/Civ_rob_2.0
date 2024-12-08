@@ -28,7 +28,6 @@
 #include "MainMap.h"
 #include "Player.h"
 #include "Players.h"
-#include "T_Unit.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/CardinalDirection.h> 
@@ -46,8 +45,6 @@ namespace UNITC
 	constexpr unsigned int ZERO_LIFE = 0;
 
 	constexpr unsigned int ZERO_BLIT = 0;
-
-	constexpr unsigned int ZERO_NUMBER_OF_ATTACK = 0;
 
 	constexpr bool DEAD_UNIT = false;
 
@@ -69,12 +66,6 @@ namespace UNITC
 	*/
 	constexpr unsigned int COEF_DIV_LEVELUP = 4;
 
-	/*
-		use as 1/x
-		Use for screen_refresh_rate/BLIT_RATE
-		default = 2
-	*/
-	constexpr unsigned int BLIT_RATE = 2;
 
 	constexpr int FOOD_ADD_BY_IRRAGATION = 2;
 	constexpr int GOLD_ADD_BY_IRRAGATION = 1;
@@ -93,7 +84,7 @@ unsigned int Unit::searchUnitByName
 			return p;
 		}
 	}
-	return 0;
+	throw("searchUnitByName : no identical name");
 }
 
 bool Unit::searchUnitTile
@@ -103,24 +94,29 @@ bool Unit::searchUnitTile
 	Select_Type* select
 )
 {
+	if (select == nullptr) { throw std::invalid_argument("Null pointer passed to searchUnitTile"); }
+
 	if (SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId())
 	{
 		PlayerPtrT selPlayer(players.GETselectedPlayerPtr());
+		if (selPlayer == nullptr) { throw std::invalid_argument("Null pointer passed to searchUnitTile"); }
 
-		for (unsigned int i(0); i < selPlayer->GETtabUnit().size(); i++)
+		int loopIndex{ 0 };
+		for (auto& unit : selPlayer->GETtabUnit())
 		{
-			if (selPlayer->GETtabUnit()[i]->testPos(mouseCoorNorm.x, mouseCoorNorm.y))
+			if (unit->testPos(mouseCoorNorm.x, mouseCoorNorm.y))
 			{
-				selPlayer->SETselectedUnit(i);
+				selPlayer->SETselectedUnit(loopIndex);
 
-				selPlayer->GETtabUnit()[i]->SETshow(true);
+				unit->SETshow(true);
 				*select = Select_Type::selectmove;
 
 				LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::SEARCH_UNIT_TILE, logS::DATA::SEARCH_UNIT_TILE,
-					i, selPlayer->GETtabUnit()[i]->GETname(), selPlayer->GETname());
+					loopIndex, unit->GETname(), selPlayer->GETname());
 
 				return true;
 			}
+			loopIndex++;
 		}
 		selPlayer.reset();
 	}
@@ -138,6 +134,7 @@ void Unit::tryToMove
 	if (players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED)
 	{
 		const PlayerPtrT selPlayer(players.GETselectedPlayerPtr());
+		if (selPlayer == nullptr) { throw std::invalid_argument("Null pointer passed to tryToMove"); }
 		int playerToAttack(SELECTION::NO_PLAYER_SELECTED), unitToAttack(SELECTION::NO_UNIT_SELECTED), selectunit(selPlayer->GETselectedUnit());
 
 		switch (searchToMove(maps, players, cardinalDirection, &playerToAttack, &unitToAttack))
@@ -190,21 +187,14 @@ Move_Type Unit::searchToMove
 	int* const unitToAttack
 )
 {
-
-	/* --------------------------------------------------------------------------------------- */
-	/* conditions de mouvement :														 	   */
-	/*	- que la case cible soit du ground si l'Unit et de type ground						   */
-	/*	- ou que la case cible soit de l'air ou water et si l'Unit et de type air		   	   */
-	/*	- ou que la case cible soit de la water et si l'Unit et de type water				   */
-	/*	- ou que la case cible soit de la deepwater ou water et si l'Unit et de type deepwater */
-	/*		- que la case cible est libre													   */
-	/*		- ou que la case cible est occup�e par un ennemi								   */
-	/*		  susceptible de mourrir par l'attaque											   */
-	/* --------------------------------------------------------------------------------------- */
+	if (playerToAttack == nullptr || unitToAttack == nullptr) 
+	{
+		throw std::invalid_argument("Null pointer passed to searchToMove.");
+	}
 
 	const PlayerPtrT selPlayer(players.GETselectedPlayerPtr());
+	if (selPlayer == nullptr) { throw std::invalid_argument("Null pointer passed to searchToMove."); }
 	const UnitPtrT unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
-
 
 	bool nextTileValidToMove(false);
 	const unsigned int xIndex
@@ -257,55 +247,44 @@ Move_Type Unit::searchToMove
 	}
 	else
 	{
-		/* ---------------------------------------------------------------------- */
-		/* nextTileValidToMove = false : Unit cannot move						  */
-		/* ---------------------------------------------------------------------- */
-
 		/* N/A */
 	}
 
-
-
-	bool condition(false);
+	const int currentPlayerId{ players.GETselectedPlayerId() };
+	int loopPlayerIndex{ 0 }, loopUnitIndex{ 0 };
+	bool condition{ false };
 	if (nextTileValidToMove)
 	{
-		/* ---------------------------------------------------------------------- */
-		/* Next Tile is a ground Tile 											  */
-		/* ---------------------------------------------------------------------- */
-
-		for (unsigned int i{0}; i < players.GETvectPlayer().size(); i++)
+		for (const auto& player_l : players.GETvectPlayer())
 		{
-			for (unsigned int j{0}; j < players.GETvectPlayer()[i]->GETtabUnit().size(); j++)
+			for (const auto& unit_l : player_l->GETtabUnit())
 			{
 				condition = checkUnitNextTile
-					(
-						*unit,
-						*(players.GETvectPlayer()[i]->GETtabUnit()[j]),
-						cardinalDirection.GETpixelValueEW(),
-						cardinalDirection.GETpixelValueNS()
-					);
-				if (true == condition)
+				(
+					*unit, *unit_l,
+					cardinalDirection.GETpixelValueEW(), cardinalDirection.GETpixelValueNS()
+				);
+
+				if (condition)
 				{
-					if (players.GETselectedPlayerId() == (int)i)
+					if (currentPlayerId == loopPlayerIndex)
 					{
 						return Move_Type::cannotMove;
 					}
 					else
 					{
-						*playerToAttack = (int)i;
-						*unitToAttack = (int)j;
+						*playerToAttack = loopPlayerIndex;
+						*unitToAttack = loopUnitIndex;
 						return Move_Type::attackMove;
 					}
 				}
+				loopUnitIndex++;
 			}
+			loopPlayerIndex++;
 		}
 	}
 	else
 	{
-		/* ---------------------------------------------------------------------- */
-		/* Next Tile is not a ground Tile 										  */
-		/* ---------------------------------------------------------------------- */
-
 		return Move_Type::cannotMove;
 	}
 	return Move_Type::canMove;
@@ -317,7 +296,7 @@ bool Unit::checkUnitNextTile
 	const Unit& to,
 	const int x,
 	const int y
-)
+) noexcept
 {
 	if ((from.GETx() + x) == to.GETx())
 	{
@@ -329,13 +308,13 @@ bool Unit::checkUnitNextTile
 	return false;
 }
 
-bool Unit::checkNextTile
+bool Unit::checkNextTile 
 (
 	const Unit& from,
 	const Tile& to,
 	const int x,
 	const int y
-)
+) noexcept
 {
 	if ((from.GETx() + x) == (to.tile_x))
 	{
@@ -497,104 +476,35 @@ void Unit::heal
 
 	if (SELECTION::NO_APPARTENANCE == tiles[i][j].appartenance)
 	{
-		m_life += (unsigned int)ceil(m_maxlife / UNITC::COEF_DIV_HEAL_NO_APPARTENANCE);
+		m_life += m_maxlife / UNITC::COEF_DIV_HEAL_NO_APPARTENANCE;
 		if (m_life > m_maxlife)
 		{
 			m_life = m_maxlife;
 		}
-		return;
 	}
-	else if (tiles[i][j].appartenance == (int)selectplayer)
+	else if (tiles[i][j].appartenance == static_cast<int>(selectplayer))
 	{
-		m_life += (unsigned int)ceil(m_maxlife / UNITC::COEF_DIV_HEAL_APPARTENANCE);
+		m_life += m_maxlife / UNITC::COEF_DIV_HEAL_APPARTENANCE;
 		if (m_life > m_maxlife)
 		{
 			m_life = m_maxlife;
 		}
-		return;
 	}
 	else
 	{
-		return;
+		/* Do nothing */
 	}
 }
 
-void Unit::levelup()
+void Unit::levelup() noexcept
 {
 	m_level++;
 
-	m_maxlife += (int)ceil(m_maxlife / UNITC::COEF_DIV_LEVELUP);
+	m_maxlife += m_maxlife / UNITC::COEF_DIV_LEVELUP;
 	m_life = m_maxlife;
 
 	/* Todo */
 	//heal();
-}
-
-void Unit::RESETmovement()
-{
-	m_movement = m_maxmovement;
-}
-
-void Unit::RESETnumberOfAttack()
-{
-	m_numberOfAttack = m_maxNumberOfAttack;
-}
-
-bool Unit::testPos
-(
-	const unsigned int mouse_x,
-	const unsigned int mouse_y
-)
-{
-	if (
-		(unsigned __int64)m_x == mouse_x
-		&&
-		(unsigned __int64)m_y == mouse_y
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Unit::isGroundMovement_Type()
-{
-	return m_movementType == Unit_Movement_Type::ground ? true : false;
-}
-
-bool Unit::isAirMovement_Type()
-{
-	return m_movementType == Unit_Movement_Type::air ? true : false;
-}
-
-bool Unit::isWaterMovement_Type()
-{
-	return m_movementType == Unit_Movement_Type::water ? true : false;
-}
-
-bool Unit::isDeepWaterMovement_Type()
-{
-	return m_movementType == Unit_Movement_Type::deepwater ? true : false;
-}
-
-bool Unit::isPossibleToAttack()
-{
-	return m_numberOfAttack > UNITC::ZERO_NUMBER_OF_ATTACK ? true : false;
-}
-
-bool Unit::isThisUnitType
-(
-	const std::string& nameToCompare
-)
-{
-	if (m_name.compare(nameToCompare) == STRINGS::IDENTICAL)
-	{
-		return true;
-	}
-	return false;
 }
 
 bool Unit::irrigate
@@ -603,6 +513,8 @@ bool Unit::irrigate
 )
 {
 	Tile& tileToIrragate{ map[MainMap::convertPosXToIndex(m_x)][MainMap::convertPosXToIndex(m_y)] };
+
+	if(m_owner == nullptr) { throw std::invalid_argument("Null pointer passed to irrigate."); }
 
 	if	(
 			(UNITC::NO_MOVEMENT < m_movement)
@@ -618,21 +530,6 @@ bool Unit::irrigate
 		return true;
 	}
 	return false;
-}
-
-void Unit::cmpblit()
-{
-	/* ---------------------------------------------------------------------- */
-	/* 50% off 50% on , environ 1s le cycle									  */
-	/* ---------------------------------------------------------------------- */
-	if ((++m_blit %= (R2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO::ZERO)
-	{
-		m_show = !m_show;
-	}
-	else
-	{
-		/* N/A */
-	}
 }
 
 jsoncons::ojson Unit::saveToOjson()const

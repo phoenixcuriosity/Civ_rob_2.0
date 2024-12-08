@@ -80,11 +80,10 @@ public:
 		Players& players
 	);
 
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
+	static constexpr bool assertSize(size_t size, unsigned int index) noexcept 
+	{
+		return index < size;
+	}
 
 
 	template <typename T>

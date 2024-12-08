@@ -42,6 +42,8 @@ bool Utility::checkPlayerUnitSelection
 	Players& players
 )
 {
+	if (players.GETselectedPlayerPtr() == nullptr) { throw std::invalid_argument("Null pointer passed to checkPlayerCitieSelection."); }
+
 	if	(
 			SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId()
 			&&
@@ -70,6 +72,8 @@ bool Utility::checkPlayerCitieSelection
 	Players& players
 )
 {
+	if (players.GETselectedPlayerPtr() == nullptr) { throw std::invalid_argument("Null pointer passed to checkPlayerCitieSelection."); }
+
 	if	(
 			SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId()
 			&&
@@ -115,17 +119,6 @@ bool Utility::conditionTryToMove
 	{
 		return false;
 	}
-}
-
-
-
-bool Utility::assertSize
-(
-	size_t size,
-	unsigned int index
-)
-{
-	return index < size ? true : false;
 }
 
 /*

@@ -25,8 +25,24 @@
 
 #include "LIB.h"
 
+#include "T_Unit.h"
+
 #include <R2D/src/API_fwd.h>
+#include <R2D/src/Window.h>
+
 #include <glm/glm.hpp>
+
+namespace UNITC
+{
+	constexpr unsigned int ZERO_NUMBER_OF_ATTACK = 0;
+
+	/*
+		use as 1/x
+		Use for screen_refresh_rate/BLIT_RATE
+		default = 2
+	*/
+	constexpr unsigned int BLIT_RATE = 2;
+}
 
 class Unit
 {
@@ -109,7 +125,7 @@ private:
 		const Unit& to,
 		const int x,
 		const int y
-	);
+	) noexcept;
 
 	/* NAME : checkNextTile																   */
 	/* ROLE : Check des �qualit�s des positions des Units avec + x et +y				   */
@@ -124,7 +140,7 @@ private:
 		const Tile& to,
 		const int x,
 		const int y
-	);
+	) noexcept;
 	
 
 public:
@@ -158,6 +174,14 @@ public:
 	);
 
 	virtual ~Unit();
+
+	// Delete copy constructor and copy assignment operator
+	Unit(const Unit& other) = delete;
+	Unit& operator=(const Unit& other) = delete;
+
+	// Delete move constructor and move assignment operator
+	Unit(Unit&& other) noexcept = delete;
+	Unit& operator=(Unit&& other) noexcept = delete;
 
 private:
 
@@ -211,22 +235,15 @@ public:
 	/* ROLE : Incr�mentation de 1 de level												   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE    : void															   */
-	virtual void levelup();
+	virtual void levelup() noexcept;
 
-	/* NAME : RESETmovement																   */
-	/* ROLE : Reset du nombre de mouvement disponible pour un tour						   */
-	/* INPUT : void																	       */
-	/* RETURNED VALUE    : void															   */
-	virtual void RESETmovement();
+	inline virtual void RESETmovement()			noexcept {m_movement = m_maxmovement;};
 
-	virtual void RESETnumberOfAttack();
+	inline virtual void RESETnumberOfAttack()	noexcept {m_numberOfAttack = m_maxNumberOfAttack;};
 
 	/* ROLE : 	TODO																	   */
 	/* RETURNED VALUE : bool															   */
-	virtual bool irrigate
-	(
-		MatriceMap& map
-	);
+	virtual bool irrigate(MatriceMap& map);
 
 private:
 
@@ -235,48 +252,22 @@ private:
 	/* INPUT : unsigned int mouse_x : position x										   */
 	/* INPUT : unsigned int mouse_y : position y										   */
 	/* RETURNED VALUE    : int : 0 : pas s�lection� / 1 : s�lectionn�					   */
-	virtual bool testPos
-	(
-		const unsigned int mouse_x,
-		const unsigned int mouse_y
-	);
+	inline virtual bool testPos(const unsigned int mouse_x, const unsigned int mouse_y) const noexcept
+	{ return ((m_x == mouse_x) && (m_y == mouse_y));};
 
-	/* NAME : isGroundMovement_Type														   */
-	/* ROLE : Check if the movement type of the Unit is	ground							   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not ground						   */
-	/* RETURNED VALUE : bool : true -> movement type is ground							   */
-	virtual bool isGroundMovement_Type();
+	inline virtual bool isGroundMovement_Type()			const noexcept { return m_movementType == Unit_Movement_Type::ground;};
 
-	/* NAME : isAirMovement_Type														   */
-	/* ROLE : Check if the movement type of the Unit is	air								   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not air						   */
-	/* RETURNED VALUE : bool : true -> movement type is air								   */
-	virtual bool isAirMovement_Type();
+	inline virtual bool isAirMovement_Type()			const noexcept { return m_movementType == Unit_Movement_Type::air;};
 
-	/* NAME : isWaterMovement_Type														   */
-	/* ROLE : Check if the movement type of the Unit is	water							   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not water						   */
-	/* RETURNED VALUE : bool : true -> movement type is water							   */
-	virtual bool isWaterMovement_Type();
+	inline virtual bool isWaterMovement_Type()			const noexcept { return m_movementType == Unit_Movement_Type::water;};
 
-	/* NAME : isDeepWaterMovement_Type													   */
-	/* ROLE : Check if the movement type of the Unit is	DeepWater						   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not DeepWater					   */
-	/* RETURNED VALUE : bool : true -> movement type is DeepWater						   */
-	virtual bool isDeepWaterMovement_Type();
+	inline virtual bool isDeepWaterMovement_Type()		const noexcept { return m_movementType == Unit_Movement_Type::deepwater;};
 
-	virtual bool isPossibleToAttack();
+	inline virtual bool isPossibleToAttack()			const noexcept { return m_numberOfAttack > UNITC::ZERO_NUMBER_OF_ATTACK;};
 
 public:
 
-	virtual bool isThisUnitType
-	(
-		const std::string& nameToCompare
-	);
+	inline virtual bool isThisUnitType(const std::string& nameToCompare) const noexcept { return (m_name.compare(nameToCompare) == STRINGS::IDENTICAL);}
 
 public:
 
@@ -285,8 +276,8 @@ public:
 	/* ROLE : Attention : bas� sur SCREEN_REFRESH_RATE									   */
 	/* INPUT : void																		   */
 	/* RETURNED VALUE    : void															   */
-	virtual void cmpblit();
-
+	inline virtual void cmpblit() noexcept { if ((++m_blit %= (R2D::SCREEN_REFRESH_RATE / UNITC::BLIT_RATE)) == MODULO::ZERO) m_show = !m_show;};
+	
 public:
 
 	jsoncons::ojson saveToOjson()const;
@@ -295,32 +286,32 @@ public:
 
 public:
 
-	inline const std::string& GETname()				const { return m_name; };
-	inline unsigned int GETx()						const { return m_x; };
-	inline unsigned int GETy()						const { return m_y; };
-	inline Unit_Movement_Type GETmovementType()		const { return m_movementType; };
-	inline int GETmaxlife()							const { return m_maxlife; };
-	inline int GETmaxatq()							const { return m_maxatq; };
-	inline int GETmaxdef()							const { return m_maxdef; };
-	inline int GETmaxmovement()						const { return m_maxmovement; };
-	inline int GETmaxNumberOfAttack()				const { return m_maxNumberOfAttack; };
-	inline int GETmaxlevel()						const { return m_maxlevel; };
-	inline int GETlife()							const { return m_life; };
-	inline int GETatq()								const { return m_atq; };
-	inline int GETdef()								const { return m_def; };
-	inline int GETmovement()						const { return m_movement; };
-	inline int GETnumberOfAttack()					const { return m_numberOfAttack; };
-	inline int GETlevel()							const { return m_level; };
-	inline bool GETalive()							const { return m_alive; };
-	inline double GETmaintenance()					const { return m_maintenance; }
-	inline unsigned int GETblit()					const { return m_blit; };
-	inline bool GETshow()							const { return m_show; };
-	inline bool GETshowStats()						const { return m_showStats; };
-	inline Player* GETowner()							  { return m_owner; };
+	inline const std::string& GETname()				const noexcept { return m_name; } ;
+	inline unsigned int GETx()						const noexcept { return m_x; };
+	inline unsigned int GETy()						const noexcept { return m_y; };
+	inline Unit_Movement_Type GETmovementType()		const noexcept { return m_movementType; };
+	inline int GETmaxlife()							const noexcept { return m_maxlife; };
+	inline int GETmaxatq()							const noexcept { return m_maxatq; };
+	inline int GETmaxdef()							const noexcept { return m_maxdef; };
+	inline int GETmaxmovement()						const noexcept { return m_maxmovement; };
+	inline int GETmaxNumberOfAttack()				const noexcept { return m_maxNumberOfAttack; };
+	inline int GETmaxlevel()						const noexcept { return m_maxlevel; };
+	inline int GETlife()							const noexcept { return m_life; };
+	inline int GETatq()								const noexcept { return m_atq; };
+	inline int GETdef()								const noexcept { return m_def; };
+	inline int GETmovement()						const noexcept { return m_movement; };
+	inline int GETnumberOfAttack()					const noexcept { return m_numberOfAttack; };
+	inline int GETlevel()							const noexcept { return m_level; };
+	inline bool GETalive()							const noexcept { return m_alive; };
+	inline double GETmaintenance()					const noexcept { return m_maintenance; }
+	inline unsigned int GETblit()					const noexcept { return m_blit; };
+	inline bool GETshow()							const noexcept { return m_show; };
+	inline bool GETshowStats()						const noexcept { return m_showStats; };
+	inline Player* GETowner()							  noexcept { return m_owner; };
 
-	inline void SETmovement(int movement) { m_movement = movement; };
-	inline void SETshow(bool show) { m_show = show; };
-	inline void SETowner(Player* owner) { m_owner = owner; };
+	inline void SETmovement(int movement)				  noexcept { m_movement = movement; };
+	inline void SETshow(bool show)						  noexcept { m_show = show; };
+	inline void SETowner(Player* owner)					  noexcept { m_owner = owner; };
 
 private:
 
