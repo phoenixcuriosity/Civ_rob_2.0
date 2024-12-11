@@ -154,6 +154,7 @@ typedef std::shared_ptr<NewGameScreen>		NewGameScreenPtrT;
 typedef std::shared_ptr<ReloadMenuScreen>	ReloadMenuScreenPtrT;
 
 typedef std::vector<Tile> VectMap;
+typedef std::vector<Tile*> VectMapPtr;
 typedef std::vector<VectMap> MatriceMap;
 typedef std::vector<CitizenPtrT> VectCitizen;
 typedef std::vector<CityPtrT> VectCity;
