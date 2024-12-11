@@ -28,6 +28,8 @@ namespace CITY_INFLUENCE
 	/* taille de la carte transpos�e dans la citiemap */
 	constexpr unsigned int INIT_SIZE_VIEW = 9;
 
+	const int INIT_SIZE_VIEW_DIV = static_cast<int>(ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2));
+
 	constexpr unsigned int INIT_AREA_VIEW = INIT_SIZE_VIEW * INIT_SIZE_VIEW;
 
 	/* Minimal influence level in City */

@@ -61,7 +61,7 @@ public: /* STATIC */
 		const unsigned int middletileX,
 		const unsigned int middletileY,
 		const unsigned int selectplayer,
-		MainMap& mainMap,
+		MatriceMap& matriceMap,
 		VectMapPtr& tabtile,
 		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);

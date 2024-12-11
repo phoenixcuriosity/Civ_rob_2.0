@@ -83,48 +83,20 @@ void City::createCity
 	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
 	PlayerPtrT splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
-	UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
+	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-	/* ---------------------------------------------------------------------- */
-	/* 1� : Recherche du nom de la nouvelle Citie 							  */
-	/*    : Recherche dans le tableau global des noms de Citie				  */
-	/*  : En fonction du nombre de Citie d�j� cr�es et de MAX_CITY_PER_PLAYER */
-	/* ---------------------------------------------------------------------- */
+	const std::string name(mainGame.GETPlayers().GETvectCityName()[(selectedPlayer * CityC::MAX_CITY_PER_PLAYER) + splayer->GETtabCity().size()]);
 
-	const std::string name(mainGame.GETPlayers().GETvectCityName()
-		[
-			(size_t)
-			(
-				((size_t)selectedPlayer * CityC::MAX_CITY_PER_PLAYER)
-				+
-				splayer->GETtabCity().size()
-				)
-		]);
-
-	std::vector<Tile> tabtile;
-	tabtile.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
-
-	/* ---------------------------------------------------------------------- */
-	/* 4� : Remplisage tableau de tile Citie			 					  */
-	/* ---------------------------------------------------------------------- */
+	VectMapPtr tabtiles;
+	tabtiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 
 	fillCitieTiles
 	(
-		MainMap::convertPosXToIndex(sUnit->GETx()),
-		MainMap::convertPosYToIndex(sUnit->GETy()),
-		selectedPlayer,
-		mainGame.GETmainMap(),
-		tabtile,
-		influenceLevel
+		MainMap::convertPosXToIndex(sUnit->GETx()), MainMap::convertPosYToIndex(sUnit->GETy()),
+		selectedPlayer, mainGame.GETmainMap().GETmatriceMap(), tabtiles, influenceLevel
 	);
 
-	/* ---------------------------------------------------------------------- */
-	/* 5� : Cr�ation d'un ptr et passage au tableau de Citie du joueur		  */
-	/*    : Destruction ptr de l'Unit										  */
-	/*    : Aucune Unit n'est s�l�ctionn�e et aucune Unit � bouger	 		  */
-	/* ---------------------------------------------------------------------- */
-
-	splayer->addCity(name, sUnit->GETx(), sUnit->GETy(), tabtile);
+	splayer->addCity(name, sUnit->GETx(), sUnit->GETy(), tabtiles);
 
 	splayer->deleteUnit(selectedUnit);
 	splayer->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);
@@ -133,7 +105,7 @@ void City::createCity
 	mainGame.GETPlayers().SETneedToUpdateDrawCity(true);
 
 	splayer.reset();
-	sUnit.reset();
+}
 }
 
 void City::fillCitieTiles
@@ -141,21 +113,23 @@ void City::fillCitieTiles
 	const unsigned int middletileX,
 	const unsigned int middletileY,
 	const unsigned int selectplayer,
-	MainMap& mainMap,
+	MatriceMap& matriceMap,
 	VectMapPtr& tabtile,
 	const unsigned int influenceLevel
 )
 {
 	unsigned int k(0);
-	
-	for (int o(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); o <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); o++)
+	for (int o(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); o <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; o++)
 	{
-		for (int p(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); p <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); p++)
-		{
+		if (middletileX + o < 0 || middletileX + o >= matriceMap.size()) continue;
+	
+		for (int p(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); p <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; p++)
+	{
+			if (middletileY + p < 0 || middletileY + p >= matriceMap[0].size()) continue;
+
 			if (initSizeInfluenceCondition(o, p, influenceLevel))
 			{
-				mainMap.GETmatriceMap()[(unsigned int)((double)middletileX + o)][(unsigned int)((double)middletileY + p)]
-					.appartenance = (int)selectplayer;
+				matriceMap[middletileX + o][middletileY + p].appartenance = selectplayer;
 			}
 
 			tabtile[k] = &matriceMap[middletileX + o][middletileY + p];
@@ -171,25 +145,17 @@ bool City::initSizeInfluenceCondition
 	const unsigned int influenceLevel
 )
 {
-	if (
-		o >= (int16_t)(-(int16_t)CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
-		&&
-		o <= (int16_t)(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
-		&&
-		p >= (int16_t)(-(int16_t)CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
-		&&
-		p <= (int16_t)(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
+	const int bound{ static_cast<int>(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * influenceLevel) };
+	if  (
+			o >= -bound && o <= bound && p >= -bound && p <= bound 
 		&&
 		cornerCheck(o, p, influenceLevel)
 		)
 	{
 		return true;
 	}
-	else
-	{
 		return false;
 	}
-}
 
 bool City::cornerCheck
 (
@@ -437,29 +403,10 @@ void City::convertFoodSurplusToGold
 jsoncons::ojson City::saveToOjson()const
 {
 	jsoncons::ojson value;
-	jsoncons::ojson tiles{ jsoncons::ojson::make_array() };
-
-	for (const auto& tile : m_tile)
-	{
-		jsoncons::ojson oTile;
-		oTile.insert_or_assign("indexX", tile.indexX);
-		oTile.insert_or_assign("indexY", tile.indexY);
-		oTile.insert_or_assign("tile_x", tile.tile_x);
-		oTile.insert_or_assign("tile_y", tile.tile_y);
-		oTile.insert_or_assign("tile_ground", static_cast<size_t>(tile.tile_ground));
-		oTile.insert_or_assign("tile_spec", static_cast<size_t>(tile.tile_spec));
-		oTile.insert_or_assign("appartenance", tile.appartenance);
-		oTile.insert_or_assign("food", tile.food);
-		oTile.insert_or_assign("work", tile.work);
-		oTile.insert_or_assign("gold", tile.gold);
-		tiles.push_back(oTile);
-	}
-
 	value.insert_or_assign("m_image", m_image);
 	value.insert_or_assign("m_name", m_name);
 	value.insert_or_assign("m_x", m_x);
 	value.insert_or_assign("m_y", m_y);
-	value.insert_or_assign("VectMap", tiles);
 	value.insert_or_assign("m_influenceLevel", m_influenceLevel);
 	value.insert_or_assign("m_atq", m_atq);
 	value.insert_or_assign("m_def", m_def);
