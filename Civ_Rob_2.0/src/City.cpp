@@ -106,6 +106,22 @@ void City::createCity
 
 	splayer.reset();
 }
+
+void City::loadCity
+(
+	MatriceMap& matriceMap,
+	const unsigned int selectplayer,
+	CityPtrT& city
+)
+{
+	VectMapPtr tiles;
+	tiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
+	City::fillCitieTiles
+	(
+		MainMap::convertPosXToIndex(city->GETx()), MainMap::convertPosYToIndex(city->GETy()),
+		selectplayer, matriceMap, tiles, city->GETinfluenceLevel()
+	);
+	city->SETVectMapPtr(tiles);
 }
 
 void City::fillCitieTiles
@@ -122,9 +138,9 @@ void City::fillCitieTiles
 	for (int o(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); o <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; o++)
 	{
 		if (middletileX + o < 0 || middletileX + o >= matriceMap.size()) continue;
-	
+
 		for (int p(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); p <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; p++)
-	{
+		{
 			if (middletileY + p < 0 || middletileY + p >= matriceMap[0].size()) continue;
 
 			if (initSizeInfluenceCondition(o, p, influenceLevel))
@@ -148,14 +164,14 @@ bool City::initSizeInfluenceCondition
 	const int bound{ static_cast<int>(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * influenceLevel) };
 	if  (
 			o >= -bound && o <= bound && p >= -bound && p <= bound 
-		&&
-		cornerCheck(o, p, influenceLevel)
+			&&
+			cornerCheck(o, p, influenceLevel)
 		)
 	{
 		return true;
 	}
-		return false;
-	}
+	return false;
+}
 
 bool City::cornerCheck
 (

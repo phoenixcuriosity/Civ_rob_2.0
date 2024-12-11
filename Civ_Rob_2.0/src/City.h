@@ -46,6 +46,13 @@ public: /* STATIC */
 		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
+	static void loadCity
+	(
+		MatriceMap& matriceMap,
+		const unsigned int selectplayer,
+		CityPtrT& city
+	);
+
 	/**
 	 * Fill the tabtile from mainmap
 	 * @param[in]		  window x and y screen size

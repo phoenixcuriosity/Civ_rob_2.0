@@ -117,7 +117,7 @@ public:
 		const std::string&,
 		const unsigned int,
 		const unsigned int,
-		VectMap& tiles
+		VectMapPtr& tiles
 	);
 
 private:
@@ -169,7 +169,7 @@ public:
 
 	jsoncons::ojson saveToOjson()const;
 
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
 
 public:
 
