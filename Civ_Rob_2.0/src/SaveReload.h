@@ -88,6 +88,7 @@ private:
 	/* RETURNED VALUE    : void																					  */
 	void loadPlayer
 	(
+	    MatriceMap& matriceMap,
 		Players& players
 	);
 

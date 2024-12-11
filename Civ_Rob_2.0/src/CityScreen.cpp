@@ -328,14 +328,11 @@ void CityScreen::initCoorVectTilePos()
 {
 	const unsigned int screenWidth{ static_cast<unsigned int>(m_game->getWindow().GETscreenWidth()) };
 	const unsigned int screenHeight{ static_cast<unsigned int>(m_game->getWindow().GETscreenHeight()) };
-
 	unsigned int k(0);
-
-	for (int o(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); o <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); o++)
+	for (int o(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); o <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; o++)
 	{
-		for (int p(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); p <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); p++)
+		for (int p(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); p <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; p++)
 		{
-			
 			m_displayTileVect[k].x = (screenWidth / 2) - (-o * *m_tileSize) - *m_tileSize / 2;
 			m_displayTileVect[k].y = (screenHeight / 2) - (-p * *m_tileSize) - *m_tileSize / 2;
 			k++;
@@ -405,7 +402,7 @@ void CityScreen::drawTile(const size_t kTile)
 {
 	GLuint id(CitySC::UNUSED_ID);
 
-	switch (m_players->GETSelectedCity()->GETtile()[kTile].tile_ground)
+	switch (m_players->GETSelectedCity()->GETtile()[kTile]->tile_ground)
 	{
 	case Ground_Type::grass:
 		id = m_idTexture[CityScreenEnumTexture::grass];
@@ -439,7 +436,7 @@ void CityScreen::drawTileSpec(const size_t kTile)
 {
 	GLuint id(CitySC::UNUSED_ID);
 
-	switch (m_players->GETSelectedCity()->GETtile()[kTile].tile_spec)
+	switch (m_players->GETSelectedCity()->GETtile()[kTile]->tile_spec)
 	{
 	case GroundSpec_Type::coal:
 		id = m_idTexture[CityScreenEnumTexture::coal];
@@ -477,7 +474,7 @@ void CityScreen::drawTileSpec(const size_t kTile)
 }
 void CityScreen::drawTileApp(const size_t kTile)
 {
-	if (m_players->GETSelectedCity()->GETtile()[kTile].appartenance != SELECTION::NO_APPARTENANCE)
+	if (m_players->GETSelectedCity()->GETtile()[kTile]->appartenance != SELECTION::NO_APPARTENANCE)
 	{
 		m_spriteBatchHUDStatic.draw
 		(
@@ -489,7 +486,7 @@ void CityScreen::drawTileApp(const size_t kTile)
 				*m_tileSize
 			),
 			R2D::FULL_RECT,
-			m_idTexture[static_cast<CityScreenEnumTexture>(static_cast<size_t>(CityScreenEnumTexture::ColorPlayer0) + m_players->GETSelectedCity()->GETtile()[kTile].appartenance)],
+			m_idTexture[static_cast<CityScreenEnumTexture>(static_cast<size_t>(CityScreenEnumTexture::ColorPlayer0) + m_players->GETSelectedCity()->GETtile()[kTile]->appartenance)],
 			0.5f,
 			R2D::COLOR_WHITE_T25
 		);

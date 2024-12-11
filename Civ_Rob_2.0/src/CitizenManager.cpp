@@ -38,7 +38,7 @@
 #include <R2D/src/Log.h> 
 
 
-CitizenManager::CitizenManager(const VectMap& tiles)
+CitizenManager::CitizenManager(const VectMapPtr& tiles)
 : 
 m_tiles(tiles),
 m_citizens(),
@@ -110,7 +110,7 @@ unsigned int CitizenManager::placeCitizen
 
 	for (unsigned int i(0); (i < m_tiles.size()) && (true == continuer); i++)
 	{
-		if (m_tiles[i].appartenance == m_tiles[m_citizens[0]->GETtileOccupied()].appartenance)
+		if (m_tiles[i]->appartenance == m_tiles[m_citizens[0]->GETtileOccupied()]->appartenance)
 		{
 			checkcondition = 0;
 			for (unsigned int p(0); (p < condition) && (true == continuer); p++)
@@ -137,9 +137,9 @@ unsigned int CitizenManager::placeCitizen
 		}
 	}
 
-	m_food = m_tiles[place].food;
-	m_work = m_tiles[place].work;
-	m_gold = m_tiles[place].gold;
+	m_food = m_tiles[place]->food;
+	m_work = m_tiles[place]->work;
+	m_gold = m_tiles[place]->gold;
 	return place;
 }
 
@@ -149,7 +149,7 @@ void CitizenManager::removeCitizen()
 	int selectedCitizen{ -1 };
 	for (size_t c(0); c < m_citizens.size(); c++)
 	{
-		if (m_citizens[c]->GETplace() && ((curV = tileValue(m_tiles[m_citizens[c]->GETtileOccupied()])) < minValueTile))
+		if (m_citizens[c]->GETplace() && ((curV = tileValue(*m_tiles[m_citizens[c]->GETtileOccupied()])) < minValueTile))
 		{
 			minValueTile = curV;
 			selectedCitizen = (int)c;

@@ -26,6 +26,7 @@
 #include "City.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
+#include "MainMap.h"
 #include "Unit.h"
 #include "Utility.h"
 
@@ -164,7 +165,7 @@ void Player::addCity
 	const std::string& name,
 	const unsigned int x,
 	const unsigned int y,
-	VectMap& tiles
+	VectMapPtr& tiles
 )
 {
 	m_tabCity.push_back(std::make_shared<City>(name, x, y, tiles));
@@ -296,7 +297,7 @@ jsoncons::ojson Player::saveToOjson()const
 	return value;
 }
 
-void Player::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap)
 {
 	if (
 			jsonLoad.contains("m_tabUnit") && jsonLoad["m_tabUnit"].is_array() &&
@@ -322,7 +323,9 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		for (const auto& city : jsonLoad["m_tabCity"].array_range())
 		{
 			addEmptyCity();
-			m_tabCity.back()->loadFromOjson(city);
+			CityPtrT city_l{ m_tabCity.back() };
+			city_l->loadFromOjson(city);
+			City::loadCity(matriceMap, m_id, city_l);
 		}
 	}
 	else

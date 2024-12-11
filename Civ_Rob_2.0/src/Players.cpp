@@ -360,7 +360,7 @@ jsoncons::ojson Players::saveToOjson()const
 	return value;
 }
 
-void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void Players::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap)
 {
 	if (jsonLoad.contains(jsonloader::KEY_PLAYERS) && jsonLoad[jsonloader::KEY_PLAYERS].is_array())
 	{
@@ -369,7 +369,7 @@ void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
 			if (player.contains("m_name") && player.contains("m_id"))
 			{
 				addPlayer(player["m_name"].as_string(), player["m_id"].as<int32_t>());
-				m_vectPlayer.back()->loadFromOjson(player);
+				m_vectPlayer.back()->loadFromOjson(player, matriceMap);
 			}
 			else
 			{

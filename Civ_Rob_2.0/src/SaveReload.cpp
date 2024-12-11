@@ -127,7 +127,7 @@ void SaveReload::reload
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::START);
 
 	loadMaps(mainGame.GETmainMap());
-	loadPlayer(mainGame.GETPlayers());
+	loadPlayer(mainGame.GETmainMap().GETmatriceMap(), mainGame.GETPlayers());
 
 	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
 	mainGame.GETPlayers().SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
@@ -160,6 +160,7 @@ void SaveReload::loadMaps
 
 void SaveReload::loadPlayer
 (
+	MatriceMap& matriceMap,
 	Players& players
 )
 {
@@ -170,7 +171,7 @@ void SaveReload::loadPlayer
 		m_currentSave,
 		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str())) };
 
-		players.loadFromOjson(jsoncons::ojson::parse(text));
+		players.loadFromOjson(jsoncons::ojson::parse(text), matriceMap);
 	}
 	catch (const std::exception& e)
 	{

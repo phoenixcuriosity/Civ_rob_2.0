@@ -103,7 +103,7 @@ public:
 
 	jsoncons::ojson saveToOjson()const;
 
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
 
 private:
 
