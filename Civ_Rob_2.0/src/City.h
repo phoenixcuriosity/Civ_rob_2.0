@@ -62,7 +62,7 @@ public: /* STATIC */
 		const unsigned int middletileY,
 		const unsigned int selectplayer,
 		MainMap& mainMap,
-		VectMap& tabtile,
+		VectMapPtr& tabtile,
 		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
 	);
 
@@ -114,7 +114,7 @@ public:
 		const std::string& name,
 		unsigned int x,
 		unsigned int y,
-		VectMap& tiles
+		VectMapPtr& tiles
 	);
 
 	/**
@@ -219,7 +219,7 @@ public:
 	/* const & */
 	inline virtual const std::string& GETimage()const		{ return m_image; };
 	inline virtual const std::string& GETname()const		{ return m_name; };
-	inline virtual const VectMap& GETtile()const			{ return m_tile; };
+	inline virtual const VectMapPtr& GETtile()const			{ return m_tileMap; };
 	inline virtual const VectCitizen& GETcitizens()const	{ return m_citizenManager.getCitizens(); };
 	inline virtual const FoodManager& GETFoodManager()const { return m_foodManager; };
 	inline virtual const dequeBuild& GETbuildQueue()const	{ return m_buildManager.getBuildQueue(); };
@@ -231,6 +231,10 @@ public:
 	inline virtual size_t GETnbpop()const					{ return m_citizenManager.getCitizens().size(); };
 	inline virtual unsigned int GETx()const					{ return m_x; };
 	inline virtual unsigned int GETy()const					{ return m_y; };
+	inline virtual unsigned int GETinfluenceLevel()const	{ return m_influenceLevel; };
+
+
+	inline virtual void SETVectMapPtr(const VectMapPtr& tileMap)	{ m_tileMap = tileMap; };
 
 private:
 
@@ -238,7 +242,7 @@ private:
 	std::string m_name;
 	unsigned int m_x;
 	unsigned int m_y;
-	VectMap m_tile;
+	VectMapPtr m_tileMap;
 	unsigned int m_influenceLevel;
 	unsigned int m_atq;
 	unsigned int m_def;

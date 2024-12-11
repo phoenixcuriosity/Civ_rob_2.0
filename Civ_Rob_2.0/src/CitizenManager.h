@@ -29,7 +29,7 @@ class CitizenManager
 {
 public:
 
-	CitizenManager(const VectMap& tiles);
+	CitizenManager(const VectMapPtr& tiles);
 	~CitizenManager();
 
 public:
@@ -92,7 +92,7 @@ public:
 
 private:
 
-	const VectMap& m_tiles;
+	const VectMapPtr& m_tiles;
 
 	VectCitizen m_citizens;
 	unsigned int m_emotion;

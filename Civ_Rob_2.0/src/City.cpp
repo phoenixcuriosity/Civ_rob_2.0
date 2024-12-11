@@ -142,7 +142,7 @@ void City::fillCitieTiles
 	const unsigned int middletileY,
 	const unsigned int selectplayer,
 	MainMap& mainMap,
-	VectMap& tabtile,
+	VectMapPtr& tabtile,
 	const unsigned int influenceLevel
 )
 {
@@ -158,7 +158,7 @@ void City::fillCitieTiles
 					.appartenance = (int)selectplayer;
 			}
 
-			tabtile[k] = mainMap.GETmatriceMap()[(unsigned int)((double)middletileX + o)][(unsigned int)((double)middletileY + p)];
+			tabtile[k] = &matriceMap[middletileX + o][middletileY + p];
 			k++;
 		}
 	}
@@ -237,13 +237,13 @@ m_image("EMPTY"),
 m_name("EMPTY"),
 m_x(0),
 m_y(0),
-m_tile(),
+m_tileMap(),
 m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
 m_atq(0),
 m_def(0),
 m_nbstructurebuild(0),
 m_conversionToApply(conversionSurplus_Type::No_Conversion),
-m_citizenManager(m_tile),
+m_citizenManager(m_tileMap),
 m_foodManager(m_citizenManager),
 m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
 m_goldBalance(0.0)
@@ -257,20 +257,20 @@ City::City
 	const std::string& name,
 	unsigned int x,
 	unsigned int y,
-	VectMap& tiles
+	VectMapPtr& tiles
 )
 	: 
 	m_image("citie.png"),
 	m_name(name),
 	m_x(x),
 	m_y(y),
-	m_tile(tiles),
+	m_tileMap(tiles),
 	m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
 	m_atq(0),
 	m_def(0),
 	m_nbstructurebuild(0),
 	m_conversionToApply(conversionSurplus_Type::No_Conversion),
-	m_citizenManager(m_tile),
+	m_citizenManager(m_tileMap),
 	m_foodManager(m_citizenManager),
 	m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
 	m_goldBalance(0.0)
@@ -476,38 +476,17 @@ void City::loadFromOjson(const jsoncons::ojson& jsonLoad)
 			jsonLoad.contains("m_image") && jsonLoad.contains("m_name") && jsonLoad.contains("m_x") &&
 			jsonLoad.contains("m_y") && jsonLoad.contains("m_influenceLevel") && jsonLoad.contains("m_atq") &&
 			jsonLoad.contains("m_def") && jsonLoad.contains("m_nbstructurebuild") && jsonLoad.contains("Citizens") &&
-			jsonLoad.contains("Food") && jsonLoad.contains("BuildQueue") &&
-			jsonLoad.contains("VectMap") && jsonLoad["VectMap"].is_array()
+			jsonLoad.contains("Food") && jsonLoad.contains("BuildQueue")
 		)
 	{
 		m_image = jsonLoad["m_image"].as_string();
 		m_name = jsonLoad["m_name"].as_string();
 		m_x = jsonLoad["m_x"].as<unsigned int>();
 		m_y = jsonLoad["m_y"].as<unsigned int>();
-
-		const std::vector<jsonloader::Tile> mapTile = jsonLoad["VectMap"].as<std::vector<jsonloader::Tile>>();
-		m_tile.resize(mapTile.size());
-		size_t loopIndex{ 0 };
-		for (const auto& tile : mapTile)
-		{
-			m_tile[loopIndex].indexX = tile.indexX;
-			m_tile[loopIndex].indexY = tile.indexY;
-			m_tile[loopIndex].tile_x = tile.tile_x;
-			m_tile[loopIndex].tile_y = tile.tile_y;
-			m_tile[loopIndex].tile_ground = static_cast<Ground_Type>(tile.tile_ground);
-			m_tile[loopIndex].tile_spec = static_cast<GroundSpec_Type>(tile.tile_spec);
-			m_tile[loopIndex].appartenance = tile.appartenance;
-			m_tile[loopIndex].food = tile.food;
-			m_tile[loopIndex].work = tile.work;
-			m_tile[loopIndex].gold = tile.gold;
-			loopIndex++;
-		}
-
 		m_influenceLevel = jsonLoad["m_influenceLevel"].as<unsigned int>();
 		m_atq = jsonLoad["m_atq"].as<unsigned int>();
 		m_def = jsonLoad["m_def"].as<unsigned int>();
 		m_nbstructurebuild = jsonLoad["m_nbstructurebuild"].as<unsigned int>();
-	
 		m_citizenManager.loadFromOjson(jsonLoad["Citizens"]);
 		m_foodManager.loadFromOjson(jsonLoad["Food"]);
 		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"]);
