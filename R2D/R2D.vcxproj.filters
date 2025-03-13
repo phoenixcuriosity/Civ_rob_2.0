@@ -36,6 +36,7 @@
     <ClInclude Include="src\LogSentences.h" />
     <ClInclude Include="src\LoadingFileToString.h" />
     <ClInclude Include="src\Text.h" />
+    <ClInclude Include="src\FileSystem.h" />
     <ClInclude Include="src\ILoadable.h" />
   </ItemGroup>
   <ItemGroup>

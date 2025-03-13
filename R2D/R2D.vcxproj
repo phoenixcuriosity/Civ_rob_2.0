@@ -166,6 +166,7 @@
     <ClInclude Include="src\ErrorLog.h" />
     <ClInclude Include="src\ExitFromError.h" />
     <ClInclude Include="src\Files.h" />
+    <ClInclude Include="src\FileSystem.h" />
     <ClInclude Include="src\GameEngine.h" />
     <ClInclude Include="src\GLSLProgram.h" />
     <ClInclude Include="src\GLTexture.h" />
