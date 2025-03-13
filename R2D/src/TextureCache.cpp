@@ -28,14 +28,7 @@
 
 #include <filesystem>
 
-using namespace R2D;
-
-TextureCache::TextureCache()
-{
-
-}
-
-TextureCache::~TextureCache()
+R2D::TextureCache::~TextureCache()
 {
 	for (auto& n : m_textureMap)
 	{
@@ -44,7 +37,9 @@ TextureCache::~TextureCache()
 	m_textureMap.clear();
 }
 
-std::unique_ptr<GLTexture>& TextureCache::getTexture(const std::string& name)
+R2D::TextureCache::GLTextureUptr& 
+R2D::TextureCache
+::getTexture(const std::string& name)
 {
 	auto it =  m_textureMap.find(name);
 
@@ -56,7 +51,9 @@ std::unique_ptr<GLTexture>& TextureCache::getTexture(const std::string& name)
 	return it->second;
 }
 
-void TextureCache::loadTextureFromDir(const std::string& path)
+void 
+R2D::TextureCache
+::loadTextureFromDir(const std::string& path)
 {
 	if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
 	{
@@ -82,7 +79,9 @@ void TextureCache::loadTextureFromDir(const std::string& path)
 	}	
 }
 
-GLuint TextureCache::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
+GLuint 
+R2D::TextureCache
+::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
 {
 	if (auto search = idMap.find(key); search != idMap.end())
 	{

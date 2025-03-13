@@ -23,63 +23,52 @@
 #include "Timing.h"
 #include <iostream>
 
-namespace R2D
-{
-
-	
-FpsLimiter::FpsLimiter()
-:m_fps(0.0f), m_maxFPS(0.0f), m_frameTime(0), m_startTicks(0)
-{
-
-}
-FpsLimiter::~FpsLimiter()
-{
-
-}
-
-void FpsLimiter::init
-(
-	float maxFps
-)
+void 
+R2D::FpsLimiter
+::init(const float maxFps)
 {
 	setMaxFPS(maxFps);
 }
-void FpsLimiter::setMaxFPS
-(
-	float maxFps
-)
+
+void 
+R2D::FpsLimiter
+::setMaxFPS(const float maxFps)
 {
 	m_maxFPS = maxFps;
 }
 
-void FpsLimiter::begin()
+void 
+R2D::FpsLimiter
+::begin()
 {
 	m_startTicks = SDL_GetTicks();
 }
 
-float FpsLimiter::end()
+float 
+R2D::FpsLimiter
+::end()
 {
 	calculateFPS();
 
-	
 	Uint32 frameTicks(SDL_GetTicks() - m_startTicks);
-	if ((1000.0f / m_maxFPS) > frameTicks)
+	if ((COEF / m_maxFPS) > frameTicks)
 	{
-		SDL_Delay((Uint32)((1000.0f / m_maxFPS) - frameTicks));
+		SDL_Delay((Uint32)((COEF / m_maxFPS) - frameTicks));
 	}
 
 	return m_fps;
 }
 
-void FpsLimiter::calculateFPS()
+void 
+R2D::FpsLimiter
+::calculateFPS()
 {
-	static const int NUM_SAMPLES(10);
 	static Uint32 frameTimes[NUM_SAMPLES];
 	static int currentFrame(0);
 
 	static Uint32 prevTicks(SDL_GetTicks());
 
-	Uint32 currentTicks(SDL_GetTicks());
+	const Uint32 currentTicks(SDL_GetTicks());
 
 	m_frameTime = currentTicks - prevTicks;
 	frameTimes[currentFrame % NUM_SAMPLES] = m_frameTime;
@@ -107,14 +96,11 @@ void FpsLimiter::calculateFPS()
 
 	if (frameTimeAverage > 0.0f)
 	{
-		m_fps = 1000.0f / frameTimeAverage;
+		m_fps = COEF / frameTimeAverage;
 	}
 	else
 	{
 		m_fps = 10000.0f;
 	}
-}
-
-
 }
 

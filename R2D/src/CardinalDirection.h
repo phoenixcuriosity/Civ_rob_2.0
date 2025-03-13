@@ -25,71 +25,60 @@
 
 namespace R2D
 {
-	namespace CARDINAL
-	{
-		namespace PIXEL
-		{
-			const unsigned int DEFAULT = 0;
-		}
-	}
+
+class CardinalDirection
+{
+public:
+
+	static constexpr unsigned int PIXEL_DEFAULT = 0;
 
 	enum class NorthSouth
 	{
-		error	= 0,
-		north	= 1,
+		error = 0,
+		north = 1,
 		neutral = 2,
-		south	= 3
+		south = 3
 	};
 
 	enum class EstWest
 	{
-		error	= 0,
-		est		= 1,
+		error = 0,
+		est = 1,
 		neutral = 2,
-		west	= 3
+		west = 3
 	};
 
-	enum class CardinalDirections
+	enum class Directions
 	{
-		error		= 0,
-		North		= 1,
-		NorthEst	= 2,
-		Est			= 3,
-		SouthEst	= 4,
-		South		= 5,
-		SouthWest	= 6,
-		West	    = 7,
-		NorthWest	= 8
+		error = 0,
+		North = 1,
+		NorthEst = 2,
+		Est = 3,
+		SouthEst = 4,
+		South = 5,
+		SouthWest = 6,
+		West = 7,
+		NorthWest = 8
 	};
+public:
 
-	class CardinalDirection
-	{
-	public:
+	CardinalDirection() = delete;
 
-		CardinalDirection();
+	CardinalDirection(  const NorthSouth NS,
+						const EstWest EW,
+						const int pixelValueNS,
+						const int pixelValueEW) noexcept
+		: m_NS(NS), m_EW(EW), m_pixelValueNS(pixelValueNS), m_pixelValueEW(pixelValueEW){};
 
-		CardinalDirection
-		(
-			/* IN */
-			const NorthSouth NS,
-			const EstWest EW,
-			const int pixelValueNS,
-			const int pixelValueEW
-		);
+public:
 
-		~CardinalDirection() {};
+	const int m_pixelValueNS;
+	const int m_pixelValueEW;
 
-		int GETpixelValueNS()const;
-		int GETpixelValueEW()const;
-		
-	private:
-
-		NorthSouth m_NS;
-		EstWest m_EW;
-
-		int m_pixelValueNS;
-		int m_pixelValueEW;
-	};
+private:
+	const NorthSouth m_NS;
+	const EstWest m_EW;
+};
 
 }
 

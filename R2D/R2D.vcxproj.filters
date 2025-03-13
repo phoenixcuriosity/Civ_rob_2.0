@@ -59,7 +59,6 @@
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />
     <ClCompile Include="src\ValueToScale.cpp" />
-    <ClCompile Include="src\CardinalDirection.cpp" />
     <ClCompile Include="src\Screen.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\LoadingFileToString.cpp" />

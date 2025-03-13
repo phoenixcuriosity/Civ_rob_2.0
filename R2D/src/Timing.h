@@ -25,24 +25,19 @@
 
 #include <SDL/SDL.h>
 
+#include <ratio>
+
 namespace R2D
 {
 
 class FpsLimiter
 {
 public:
-	FpsLimiter();
-	~FpsLimiter();
+	FpsLimiter() : m_fps(0.0f), m_maxFPS(0.0f), m_frameTime(0), m_startTicks(0) {};
 
-	void init
-	(
-		float maxFps
-	);
+	void init(const float maxFps);
 
-	void setMaxFPS
-	(
-		float maxFps
-	);
+	void setMaxFPS(const float maxFps);
 
 	void begin();
 
@@ -52,6 +47,9 @@ private:
 
 	void calculateFPS();
 
+private:
+	static constexpr int NUM_SAMPLES = 10;
+	static constexpr float COEF = 1000.f;
 private:
 	float m_fps;
 	float m_maxFPS;

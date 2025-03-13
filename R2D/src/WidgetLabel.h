@@ -39,15 +39,15 @@ namespace R2D
 class WidgetLabel
 {
 public:
-	WidgetLabel() {};
-	WidgetLabel(CEGUI::Window* w, const std::string& text, float scale) :
-		widget(w), text(text), scale(scale) {};
+	WidgetLabel(): widget(nullptr), text(""), color(COLOR_WHITE), scale(0.7f) {};
+	WidgetLabel(CEGUI::Window* w, const std::string& text, float scale): widget(w), text(text), scale(scale) {};
 	void draw(SpriteBatch& sb, SpriteFont& sf, Window& w);
 
-	CEGUI::Window* widget = nullptr;
-	std::string text = "";
-	ColorRGBA8 color = COLOR_WHITE;
-	float scale = 0.7f;
+private:
+	CEGUI::Window* widget;
+	std::string text;
+	ColorRGBA8 color;
+	float scale;
 };
 
 }

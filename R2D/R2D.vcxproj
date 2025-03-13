@@ -195,7 +195,6 @@
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
     <ClCompile Include="src\Camera2D.cpp" />
-    <ClCompile Include="src\CardinalDirection.cpp" />
     <ClCompile Include="src\ColorRGBA8.cpp" />
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />

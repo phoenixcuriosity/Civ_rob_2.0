@@ -25,46 +25,38 @@
 #include "IGameScreen.h"
 #include "IMainGame.h"
 
-namespace R2D
+R2D::ScreenList::IGameScreenPtr
+R2D::ScreenList
+::moveNext()
 {
-
-ScreenList::ScreenList(IMainGame* game):
-m_game(game), m_currentScreenIndex(R2D::SCREEN_INDEX::INIT)
-{
-}
-
-ScreenList::~ScreenList()
-{
-	destroy();
-}
-
-std::shared_ptr<IGameScreen> ScreenList::moveNext()
-{
-	std::shared_ptr<IGameScreen> currentScreen = getCurrent();
+	const IGameScreenPtr currentScreen = getCurrent();
 	if (currentScreen->getNextScreenIndex() != R2D::SCREEN_INDEX::INIT)
 	{
 		m_currentScreenIndex = currentScreen->getNextScreenIndex();
 	}
-	currentScreen.reset();
 	return getCurrent();
 }
 
-std::shared_ptr<IGameScreen> ScreenList::movePrevious()
+R2D::ScreenList::IGameScreenPtr
+R2D::ScreenList
+::movePrevious()
 {
-	std::shared_ptr<IGameScreen> currentScreen = getCurrent();
+	const IGameScreenPtr currentScreen = getCurrent();
 	if (currentScreen->getPreviousScreenIndex() != R2D::SCREEN_INDEX::INIT)
 	{
 		m_currentScreenIndex = currentScreen->getPreviousScreenIndex();
 	}
-	currentScreen.reset();
 	return getCurrent();
 }
 
-void ScreenList::setScreen(int nextScreen)
+void
+R2D::ScreenList
+::setScreen(int nextScreen)
 {
 	m_currentScreenIndex = nextScreen;
 }
-void ScreenList::addScreen(std::shared_ptr<IGameScreen> newScreen)
+
+void R2D::ScreenList::addScreen(ScreenList::IGameScreenPtr newScreen)
 {
 	newScreen->setScreenIndex((int)m_screens.size());
 	m_screens.push_back(newScreen);
@@ -72,7 +64,9 @@ void ScreenList::addScreen(std::shared_ptr<IGameScreen> newScreen)
 	newScreen->setParentGame(m_game);
 }
 
-void ScreenList::destroy()
+void 
+R2D::ScreenList
+::destroy()
 {
 	for (auto s : m_screens)
 	{
@@ -84,10 +78,10 @@ void ScreenList::destroy()
 	m_currentScreenIndex = R2D::SCREEN_INDEX::INIT;
 }
 
-std::shared_ptr<IGameScreen> ScreenList::getCurrent()
+R2D::ScreenList::IGameScreenPtr
+R2D::ScreenList
+::getCurrent()
 {
 	if (R2D::SCREEN_INDEX::INIT == m_currentScreenIndex) return nullptr;
 	return m_screens[m_currentScreenIndex];
-}
-
 }

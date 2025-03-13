@@ -30,12 +30,6 @@
 namespace R2D
 {
 
-/* Define initial screen index -> Default Screen */
-namespace SCREEN_INDEX
-{
-	const int INIT = -1;
-}
-
 enum class ScreenState
 {
 	NONE,

@@ -25,6 +25,7 @@
 
 #include "API_fwd.h"
 
+#include "CardinalDirection.h"
 #include "Files.h"
 #include "GLSLProgram.h"
 #include "LoadingFileToString.h"
@@ -35,77 +36,55 @@
 namespace R2D
 {
 
-	/* STATIC CLASS */
-	class ResourceManager
-	{
+/* STATIC CLASS */
+class ResourceManager
+{
+	ResourceManager() = delete;
+	~ResourceManager() = delete;
+	ResourceManager(const ResourceManager& src) = delete;
+public:
+	static void loadTextureFromDir(const std::string& path);
+	static void copyIdMap(IdMap& dest);
+	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
 
-	public:
-		static void loadTextureFromDir(const std::string& path);
-		static void copyIdMap(IdMap& dest);
-		static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
+	static File* getFile(const e_Files name);
+	static void initializeFilePath(const e_Files name,const std::string& path);
 
-		static File* getFile(const e_Files name);
-		static void initializeFilePath
-		(
-			const e_Files name,
-			const std::string& path
-		);
+	static std::string loadFileToString(const std::string& path);
 
-		static std::string loadFileToString(const std::string& path);
+	static SpriteFont_PtrT& getSpriteFont();
+	static GLSLProgram& getGLSLProgram();
 
-		static SpriteFont_PtrT& getSpriteFont();
-		static GLSLProgram& getGLSLProgram();
+	static void getTextFromFile(const e_Files name,MapTexts& mapTexts);
 
-		static void getTextFromFile
-		(
-			const e_Files name,
-			MapTexts& mapTexts
-		);
-
-		static void displayTextFromFile
-		(
-			/* IN */
-			const MapTexts& mapTexts,
-			const Window& window,
-			/* INOUT */
-			SpriteBatch& spriteBatchHUDStatic
-		);
+	static void 
+	displayTextFromFile(const MapTexts& mapTexts,
+						const Window& window,
+						SpriteBatch& spriteBatchHUDStatic);
 		
-		static void initializeRGBA8Map();
-		static ColorRGBA8& getRGBA8Color
-		(
-			/* IN */
-			const std::string& colorName
-		);
+	static void initializeRGBA8Map();
+	static ColorRGBA8& getRGBA8Color(const std::string& colorName);
 
-		static Justification getJustification
-		(
-			/* in */
-			const std::string& justificationN
-		);
+	static Justification getJustification(const std::string& justificationN);
 
-		static void InitializeCardinalDirectionMapping
-		(
-			/* IN */
-			const unsigned int tileSize
-		);
+	static void InitializeCardinalDirectionMapping(const unsigned int tileSize);
 
-		static CardinalDirection& getCardinalDirection
-		(
-			/* IN */
-			const CardinalDirections cardinalDirections
-		);
+	static const CardinalDirection& getCardinalDirection(const CardinalDirection::Directions cardinalDirections);
 
-	private:
-		static TextureCache m_textureCache;
-		static Files m_files;
-		static Text m_Text;
-		static FileTools m_fileTools;
-		static SpriteFont_PtrT m_spriteFont;
-		static GLSLProgram m_gLSLProgram;
-		static ColorRGBA8C m_colorsRGBA8;
-		static CardinalDirectionMapping m_cardinalDirectionMapping;
-	};
+private:
+
+	using CardinalDirectionMapping = std::map<CardinalDirection::Directions, CardinalDirection>;
+
+private:
+	static TextureCache m_textureCache;
+	static Files m_files;
+	static Text m_Text;
+	static FileTools m_fileTools;
+	static SpriteFont_PtrT m_spriteFont;
+	static GLSLProgram m_gLSLProgram;
+	static ColorRGBA8C m_colorsRGBA8;
+	static CardinalDirectionMapping m_cardinalDirectionMapping;
+};
 }
 
 #endif // !ResourceManager_H
