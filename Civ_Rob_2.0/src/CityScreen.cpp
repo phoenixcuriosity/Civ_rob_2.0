@@ -118,7 +118,6 @@ static size_t START_ICON_INDEX = 0;
 /* ----------------------------------------------------------------------------------- */
 CityScreen::CityScreen
 (
-	SaveReloadPtrT const SaveReload,
 	Players* const players,
 	unsigned int* const tileSize
 )
@@ -129,7 +128,6 @@ m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_indexCycleBuilds(0),
 m_buttonBuild(),
 m_idTexture(),
-m_SaveReload(SaveReload),
 m_players(players),
 m_displayTileVect(),
 m_tileSize(tileSize),

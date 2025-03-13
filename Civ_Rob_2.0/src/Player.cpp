@@ -27,6 +27,7 @@
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
+#include "SaveReload.h"
 #include "Unit.h"
 #include "Utility.h"
 
@@ -35,10 +36,6 @@
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/Log.h> 
-
- /* *********************************************************
-  *				START Player::METHODS					   *
-  ********************************************************* */
 
 Player::Player() :
 	m_name("NoName"),
@@ -73,38 +70,6 @@ Player::Player
 Player::~Player()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_PLAYER, logS::DATA::DESTRUCTOR_PLAYER, saveToOjson().as_string());
-	deletePlayer();
-}
-
-Player& Player::operator=
-(
-	const Player& player
-)
-{
-	if (this != &player)
-	{
-		deletePlayer();
-		m_name = player.GETname();
-		m_tabUnit = player.GETtabUnit();
-		m_tabCity = player.GETtabCity();
-		m_goldStats = player.GETgoldStats();
-	}
-	return *this;
-}
-
-void Player::deletePlayer()
-{
-	for (auto& u : m_tabUnit)
-	{
-		u.reset();
-	}
-	m_tabUnit.clear();
-
-	for (auto& c : m_tabCity)
-	{
-		c.reset();
-	}
-	m_tabCity.clear();
 }
 
 void Player::addEmptyUnit()
@@ -117,7 +82,7 @@ void Player::addUnit
 	const std::string& name,
 	unsigned int x,
 	unsigned int y,
-	Unit_Movement_Type movementType,
+	Unit::Movement_Type movementType,
 	unsigned int life,
 	unsigned int atq,
 	unsigned int def,
@@ -325,7 +290,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 			addEmptyCity();
 			CityPtrT city_l{ m_tabCity.back() };
 			city_l->loadFromOjson(city);
-			City::loadCity(matriceMap, m_id, city_l);
+			City::loadCity(matriceMap, m_id, city_l, modifAppartenance_Type::dontModify);
 		}
 	}
 	else

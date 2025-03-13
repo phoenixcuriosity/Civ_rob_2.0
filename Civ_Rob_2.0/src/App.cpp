@@ -78,6 +78,8 @@ void App::onInit()
 
 	initMain();
 
+	SaveReload::getInstance().init();
+
 	m_window.SETscreenWidth(R2D::Window::getHorizontal());
 	m_window.SETscreenHeight(R2D::Window::getVertical());
 }
@@ -121,31 +123,11 @@ void App::onExit()
 
 void App::addScreens()
 {
-	/* Create shared Ptr */
 	m_mainMenuScreen = std::make_shared<MainMenuScreen>();
-
 	m_newGameScreen = std::make_shared<NewGameScreen>();
-
-	SaveReloadPtrT saveReload = std::make_shared<SaveReload>();
-	saveReload->init();
-
-	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>
-		(
-			saveReload
-		);
-
-	m_gamePlayScreen = std::make_shared<GamePlayScreen>
-		(
-			saveReload,
-			m_newGameScreen->getUserInputNewGame()
-		);
-
-	m_CityScreen = std::make_shared<CityScreen>
-		(
-			saveReload,
-			&m_gamePlayScreen->GETPlayers(),
-			m_gamePlayScreen->GETmainMap().GETtileSizePtr()
-		);
+	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>();
+	m_gamePlayScreen = std::make_shared<GamePlayScreen>(m_newGameScreen->getUserInputNewGame());
+	m_CityScreen = std::make_shared<CityScreen>(&m_gamePlayScreen->GETPlayers(), m_gamePlayScreen->GETmainMap().GETtileSizePtr());
 
 	/* Add Screen to listed Screen */
 	m_screenList->addScreen(m_mainMenuScreen);

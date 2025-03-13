@@ -26,13 +26,21 @@
 #include "LIB.h"
 
 #include "GamePlayScreenEnumTexture.h"
+#include "Unit.h"
 
+#include <R2D/src/ISaveable.h>
+#include <R2D/src/ILoadable.h>
 #include <R2D/src/WidgetLabel.h>
 
-class Players
+#include <jsoncons/json.hpp>
+
+class Players : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
+private:
+	using MatriceMapPtrT = MatriceMap*;
+	using VectUnitTemplate = std::vector<Unit::Template>;
 public:
-	Players();
+	Players(MatriceMapPtrT matriceMapPtrT);
 	~Players();
 
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
@@ -100,10 +108,11 @@ public:
 	);
 
 public:
-
+	jsoncons::ojson save()const override { return saveToOjson(); };
 	jsoncons::ojson saveToOjson()const;
 
-	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
+	void load(jsoncons::ojson f)override { loadFromOjson(f); };
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 
@@ -133,6 +142,8 @@ private:
 	bool m_needToUpdateDrawCity;
 
 	R2D::SpriteBatch m_spriteBatchCityDynamic;
+
+	MatriceMapPtrT m_matriceMapPtrT;
 };
 
 #endif /* Players_H */

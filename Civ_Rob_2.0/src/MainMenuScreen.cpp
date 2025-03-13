@@ -34,9 +34,7 @@
 #include <R2D/src/Log.h> 
 #include <R2D/src/SpriteFont.h> 
 
-MainMenuScreen::MainMenuScreen
-(
-)
+MainMenuScreen::MainMenuScreen()
 : 
 R2D::IGameScreen(),
 R2D::CScreen(),

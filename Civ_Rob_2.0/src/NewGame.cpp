@@ -60,22 +60,13 @@ void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::START);
 	
-	gamePlayScreen.getSaveReload()->createSave();
+	SaveReload::getInstance().createSave();
 
 	pushNewPlayer(gamePlayScreen.getUserInputNewGame()->vectPlayerName, gamePlayScreen.GETPlayers());
 
 	newGameSettlerSpawn(gamePlayScreen.GETPlayers(), gamePlayScreen.GETmainMap());
 
-	try
-	{
-		gamePlayScreen.getSaveReload()->save(gamePlayScreen.GETmainMap(), gamePlayScreen.GETPlayers());
-	}
-	catch (const std::exception e)
-	{
-		LOG(R2D::LogLevelType::error, 0, "[new game]", "[save]", "{}", e.what());
-	}
-
-	/* ### Don't put code below here ### */
+	SaveReload::getInstance().save();
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::END);
 }

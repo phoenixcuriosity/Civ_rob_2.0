@@ -30,11 +30,10 @@
 #include "Player.h"
 #include "Unit.h"
 #include "Utility.h"
-#include "T_Unit.h"
 
 #include <jsoncons/json.hpp>
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
@@ -50,7 +49,7 @@ namespace
 	constexpr unsigned int CITY_TYPE = 1;
 }
 
-Players::Players()
+Players::Players(MatriceMapPtrT matriceMapPtrT)
 :
 m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
@@ -63,13 +62,18 @@ m_idTexture(),
 m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
 m_spriteBatchCity(),
-m_needToUpdateDrawCity(true)
+m_needToUpdateDrawCity(true),
+m_matriceMapPtrT(matriceMapPtrT)
 {
+	SaveReload::getInstance().registerSaveable(R2D::e_Files::savePlayers, this);
+	SaveReload::getInstance().registerLoadable(R2D::e_Files::savePlayers, this);
 	m_spriteBatchCityDynamic.init();
 }
 
 Players::~Players()
 {
+	SaveReload::getInstance().unregisterSaveable(this);
+	SaveReload::getInstance().unregisterLoadable(this);
 	deleteAllPlayers();
 }
 
@@ -224,7 +228,7 @@ void Players::drawUnit
 								R2D::COLOR_WHITE
 							);
 						}
-						
+
 
 						/* Appartenance Texture */
 						m_spriteBatchUnit.draw
@@ -273,7 +277,7 @@ void Players::drawCity
 			{
 				CityPtrT city(m_vectPlayer[i]->GETtabCity()[j]);
 
-				
+
 				if	(
 						camera.isBoxInView
 						(
@@ -360,7 +364,7 @@ jsoncons::ojson Players::saveToOjson()const
 	return value;
 }
 
-void Players::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap)
+void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if (jsonLoad.contains(jsonloader::KEY_PLAYERS) && jsonLoad[jsonloader::KEY_PLAYERS].is_array())
 	{
@@ -368,8 +372,12 @@ void Players::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matrice
 		{
 			if (player.contains("m_name") && player.contains("m_id"))
 			{
-				addPlayer(player["m_name"].as_string(), player["m_id"].as<int32_t>());
-				m_vectPlayer.back()->loadFromOjson(player, matriceMap);
+				assert(m_matriceMapPtrT);
+				if (m_matriceMapPtrT)
+				{
+					addPlayer(player["m_name"].as_string(), player["m_id"].as<int32_t>());
+					m_vectPlayer.back()->loadFromOjson(player, *m_matriceMapPtrT);
+				}
 			}
 			else
 			{

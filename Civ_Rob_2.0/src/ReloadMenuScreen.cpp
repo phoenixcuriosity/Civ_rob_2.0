@@ -37,17 +37,13 @@ namespace IHM_SAVE_BUTTON
 	constexpr unsigned int MAX_VISISBLE = 10;
 }
 
-ReloadMenuScreen::ReloadMenuScreen
-(
-	SaveReloadPtrT SaveReload
-)
+ReloadMenuScreen::ReloadMenuScreen()
 :
 R2D::IGameScreen(),
 R2D::CScreen(),
 m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
 m_vectSavesRadioButton(),
 m_widgetLabels(),
-m_SaveReload(SaveReload),
 m_isInitialize(false)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::RELOAD_MENU, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
@@ -182,7 +178,7 @@ void ReloadMenuScreen::radioButtonDisplay()
 
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
-	m_vectSavesRadioButton.resize(m_SaveReload->GETtabSave().size());
+	m_vectSavesRadioButton.resize(SaveReload::getInstance().getSaveSize());
 	m_widgetLabels.resize(m_vectSavesRadioButton.size());
 	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
 	{
@@ -192,7 +188,7 @@ void ReloadMenuScreen::radioButtonDisplay()
 				"TaharezLook/RadioButton",
 				glm::vec4(X_POS, Y_POS += PADDING, 0.0f, 0.0f),
 				glm::vec4(0.0f, 0.0f, DIMS_PIXELS, DIMS_PIXELS),
-				"Save " + std::to_string(m_SaveReload->GETtabSave()[i])));
+				"Save " + std::to_string(SaveReload::getInstance().getSave(i))));
 
 		m_vectSavesRadioButton[i]->setSelected(false);
 
@@ -213,7 +209,7 @@ void ReloadMenuScreen::radioButtonDisplay()
 
 		m_widgetLabels[i] = R2D::WidgetLabel(
 			m_vectSavesRadioButton[i],
-			"Save " + std::to_string(m_SaveReload->GETtabSave()[i]),
+			"Save " + std::to_string(SaveReload::getInstance().getSave(i)),
 			TEXT_SCALE);
 
 	}
@@ -238,7 +234,7 @@ void ReloadMenuScreen::updateRadioButtonPosition()
 
 		m_widgetLabels[i] = R2D::WidgetLabel(
 			m_vectSavesRadioButton[i],
-			"Save " + std::to_string(m_SaveReload->GETtabSave()[i]),
+			"Save " + std::to_string(SaveReload::getInstance().getSave(i)),
 			TEXT_SCALE);
 
 	}
@@ -279,7 +275,7 @@ void ReloadMenuScreen::update()
 
 void ReloadMenuScreen::updateVisibilityIfSaveSelected()
 {
-	if (m_SaveReload->isSelectCurrentSave())
+	if (SaveReload::getInstance().isSelectCurrentSave())
 	{
 		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("LoadSelectedSave")))->show();
 		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("removeSelectedSaveButton")))->show();
@@ -302,7 +298,7 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 			/* erase "Save ", keep after the space */
 			dummy.erase(0, 5);
 
-			m_SaveReload->SETcurrentSave((int)std::stoul(dummy));
+			SaveReload::getInstance().setCurrentSave((int)std::stoul(dummy));
 
 			updateVisibilityIfSaveSelected();
 
@@ -314,7 +310,7 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 
 bool ReloadMenuScreen::onLoadSave(const CEGUI::EventArgs& /* e */)
 {
-	if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
+	if (SaveReload::getInstance().isSelectCurrentSave())
 	{
 		m_nextScreenIndexMenu = SCREEN_INDEX::GAMEPLAY;
 		m_currentState = R2D::ScreenState::CHANGE_NEXT;
@@ -329,7 +325,7 @@ bool ReloadMenuScreen::onClearASaveCliked(const CEGUI::EventArgs& /* e */)
 	{
 		if (button->isSelected())
 		{
-			m_SaveReload->removeSave();
+			SaveReload::getInstance().removeSave();
 
 			m_gui.destroyWidget(button);
 
@@ -356,7 +352,7 @@ bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
 	
-	m_SaveReload->clearSave();
+	SaveReload::getInstance().clearSave();
 
 	updateVisibilityIfSaveSelected();
 

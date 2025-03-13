@@ -35,11 +35,7 @@
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/Log.h> 
 
-GamePlayScreen::GamePlayScreen
-(
-	SaveReloadPtrT SaveReload,
-	UserInputNewGame* userInputNewGame
-)
+GamePlayScreen::GamePlayScreen(UserInputNewGame* userInputNewGame)
 : 
 R2D::IGameScreen(),
 R2D::CScreen(),
@@ -47,8 +43,7 @@ m_screen(),
 m_var(),
 m_mainMap(),
 m_nextTurn(),
-m_players(),
-m_SaveReload(SaveReload),
+m_players(&m_mainMap.GETmatriceMap()),
 m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
@@ -112,9 +107,9 @@ bool GamePlayScreen::onEntry()
 			m_mainMap.initMainMap(m_camera, m_screen.m_idTexture);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
-			if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
+			if (SaveReload::getInstance().isSelectCurrentSave())
 			{
-				m_SaveReload->reload(*this);
+				SaveReload::getInstance().reload(*this);
 			}
 			else
 			{
@@ -425,7 +420,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::EXIT_BUTTON);
-	this->getSaveReload()->save(m_mainMap, m_players);
+	SaveReload::getInstance().save();
 
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;

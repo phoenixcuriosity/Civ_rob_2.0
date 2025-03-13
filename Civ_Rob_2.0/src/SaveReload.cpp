@@ -31,24 +31,20 @@
 #include "NewGameScreen.h"
 #include "Player.h"
 #include "Unit.h"
-#include "T_Unit.h"
 
 #include <jsoncons/json.hpp>
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/ExitFromError.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/ExitFromError.h>
+#include <R2D/src/Log.h>
 
 #include <filesystem>
 #include <algorithm> // For std::max_element
 #include <execution> // For std::execution::par
 
-namespace SAVE
-{
-	constexpr size_t OFFSET_INDEX = 1;
-}
-
-void SaveReload::init()
+void
+SaveReload
+::init()
 {
 	const std::string filePath{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath() };
 	if (std::filesystem::exists(filePath) && std::filesystem::is_directory(filePath))
@@ -63,59 +59,57 @@ void SaveReload::init()
 	}
 }
 
-void SaveReload::save
-(
-	const MainMap& mainMap,
-	const Players& players
-)
+void
+SaveReload
+::registerSaveable(R2D::e_Files file, SaveableSptr saveable)
 {
-	saveMaps(mainMap);
-	savePlayer(players);
+	m_saveableSptrVector.push_back({ file, saveable });
 }
 
-void SaveReload::saveMaps
-(
-	const MainMap& mainMap
-)
+void
+SaveReload
+::registerLoadable(R2D::e_Files file, LoadableSptr loadable)
+{
+	m_loadableSptrVector.push_back({ file, loadable });
+}
+
+void
+SaveReload
+::unregisterSaveable(SaveableSptr saveable)
+{
+	std::erase_if(m_saveableSptrVector, [saveable](const SaveableSptrFile& pair)
+		{
+			return pair.second == saveable;
+		});
+}
+
+void
+SaveReload
+::unregisterLoadable(LoadableSptr loadable)
+{
+	std::erase_if(m_loadableSptrVector, [loadable](const LoadableSptrFile& pair)
+		{
+			return pair.second == loadable;
+		});
+}
+
+
+void SaveReload::save()
 {
 	try
 	{
-		std::ofstream ofs{ std::format("{}{:04}/{}",
-				R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-				m_currentSave,
-				R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath() )};
+		assert(m_fileSysteme);
 
-		if (!ofs) { throw std::runtime_error("Failed to open file for writing."); }
-	
-		jsoncons::encode_json(mainMap.saveToOjson(), ofs, jsoncons::indenting::indent);
+		std::for_each(std::begin(m_saveableSptrVector), std::end(m_saveableSptrVector),
+			[this](SaveableSptrFile& saveable)
+			{
+				assert(saveable.second);
+				m_fileSysteme->writeDataInFile(getSaveFilePath(saveable.first), saveable.second->save());
+			});
 	}
 	catch (const std::exception& e)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
-			e.what());
-	}
-}
-
-void SaveReload::savePlayer
-(
-	const Players& players
-)
-{
-	try
-	{
-		std::ofstream ofs((std::format("{}{:04}/{}",
-			R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-			m_currentSave,
-			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str()));
-
-		if (!ofs) { throw std::runtime_error("Failed to open file for writing."); }
-
-		jsoncons::encode_json(players.saveToOjson(), ofs, jsoncons::indenting::indent);
-	}
-	catch (const std::exception& e)
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE,
-			e.what());
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, e.what());
 	}
 }
 
@@ -126,57 +120,29 @@ void SaveReload::reload
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::START);
 
-	loadMaps(mainGame.GETmainMap());
-	loadPlayer(mainGame.GETmainMap().GETmatriceMap(), mainGame.GETPlayers());
+	try
+	{
+		assert(m_fileSysteme);
+
+		std::for_each(std::begin(m_loadableSptrVector), std::end(m_loadableSptrVector),
+			[this](LoadableSptrFile& loadable)
+			{
+				assert(loadable.second);
+				loadable.second->load(m_fileSysteme->readDataFromFile(getSaveFilePath(loadable.first), true));
+			});
+	}
+	catch (const std::exception& e)
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
+	}
 
 	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
 	mainGame.GETPlayers().SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
-	
+
 	mainGame.makePlayersButtons();
 	mainGame.GETmainMap().initMainMapTexture(mainGame.GETscreen().m_idTexture);
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::END);
-}
-
-void SaveReload::loadMaps
-(
-	MainMap& mainMap
-)
-{
-	try
-	{
-		const std::string text{ R2D::ResourceManager::loadFileToString((std::format("{}{:04}/{}",
-			R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-			m_currentSave,
-			R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath()).c_str())) };
-
-		mainMap.loadFromOjson(jsoncons::ojson::parse(text));
-	}
-	catch (const std::exception& e)
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
-	}
-}
-
-void SaveReload::loadPlayer
-(
-	MatriceMap& matriceMap,
-	Players& players
-)
-{
-	try
-	{
-		const std::string text{ R2D::ResourceManager::loadFileToString((std::format("{}{:04}/{}",
-		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-		m_currentSave,
-		R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath()).c_str())) };
-
-		players.loadFromOjson(jsoncons::ojson::parse(text), matriceMap);
-	}
-	catch (const std::exception& e)
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
-	}
 }
 
 void SaveReload::createSave()
@@ -186,11 +152,11 @@ void SaveReload::createSave()
 	const auto max_it = std::max_element(std::execution::par, m_tabSave.begin(), m_tabSave.end());
 	if (max_it != m_tabSave.end())
 	{
-		m_currentSave = (*max_it) + SAVE::OFFSET_INDEX;
+		m_currentSave = (*max_it) + OFFSET_INDEX;
 	}
 	else
 	{
-		m_currentSave = SAVE::OFFSET_INDEX;
+		m_currentSave = OFFSET_INDEX;
 	}
 	m_tabSave.push_back(m_currentSave);
 
@@ -201,12 +167,7 @@ void SaveReload::createSave()
 
 void SaveReload::createSaveDir()
 {
-	const std::string dir{ std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(), m_currentSave) };
-
-	if (!std::filesystem::create_directory(dir))
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_DIR, logS::DATA::ERROR_CREATE_DIR, dir);
-	}
+	m_fileSysteme->createDirectory(std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(), m_currentSave));
 }
 
 void SaveReload::removeSave()
@@ -245,7 +206,7 @@ void SaveReload::clearSave()
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CLEAR_SAVES, logS::DATA::END);
 }
 
-void SaveReload::removeSaveDir(const size_t index)
+void SaveReload::removeSaveDir(const SaveId& index)
 {
 	const std::string dir{ std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(), index) };
 	removeSaveFile(dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
@@ -255,17 +216,10 @@ void SaveReload::removeSaveDir(const size_t index)
 
 void SaveReload::removeSaveFile(const std::string& file)
 {
-	if (!std::filesystem::remove(file))
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE_FILE, logS::DATA::ERROR_DELETE_SAVE_FILE, file);
-	}
-	else
-	{
-		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE_FILE, logS::DATA::ERROR_DELETE_SAVE_FILE, file + " successfully remove");
-	}
+	m_fileSysteme->removeFile(file);
 }
 
-void SaveReload::removeIndex(const size_t index)
+void SaveReload::removeIndex(const SaveId& index)
 {
 	const auto itFound = std::find(m_tabSave.begin(), m_tabSave.end(), index);
 	if (itFound != m_tabSave.end())
@@ -278,19 +232,19 @@ void SaveReload::removeIndex(const size_t index)
 	}
 }
 
-void SaveReload::unselectCurrentSave()
+void SaveReload::unselectCurrentSave() noexcept
 {
-	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
+	m_currentSave = NO_CURRENT_SAVE_SELECTED;
 }
 
-bool SaveReload::isSelectCurrentSave()
+bool SaveReload::isSelectCurrentSave() const noexcept
 {
-	return m_currentSave != SELECTION::NO_CURRENT_SAVE_SELECTED;
+	return m_currentSave != NO_CURRENT_SAVE_SELECTED;
 }
 
-bool SaveReload::isSelectCurrentSaveInTab()
+bool SaveReload::isSelectCurrentSaveInTab() const noexcept
 {
-	const auto findCurrentSave = std::find(m_tabSave.begin(), m_tabSave.end(), static_cast<size_t>(m_currentSave));
+	const auto findCurrentSave = std::find(m_tabSave.begin(), m_tabSave.end(), m_currentSave);
 	if (findCurrentSave != m_tabSave.end())
 	{
 		return true;
@@ -298,20 +252,19 @@ bool SaveReload::isSelectCurrentSaveInTab()
 	return false;
 }
 
-SaveReload::SaveReload() 
-: 
-m_tabSave(),
-m_currentSave(SELECTION::NO_CURRENT_SAVE_SELECTED)
+void SaveReload::resetCurrentSave() noexcept
 {
+	m_currentSave = NO_CURRENT_SAVE_SELECTED;
 }
 
-SaveReload::~SaveReload()
+SaveReload::FilePath
+SaveReload
+::getSaveFilePath(const R2D::e_Files file)
 {
-}
-
-void SaveReload::resetCurrentSave()
-{
-	m_currentSave = SELECTION::NO_CURRENT_SAVE_SELECTED;
+	return std::format("{}{:04}/{}",
+		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
+		m_currentSave,
+		R2D::ResourceManager::getFile(file)->getPath());
 }
 
  /*

@@ -38,11 +38,7 @@ class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 
-	GamePlayScreen
-	(
-		SaveReloadPtrT saveReload,
-		UserInputNewGame* userInputNewGame
-	);
+	GamePlayScreen(UserInputNewGame* userInputNewGame);
 
 	~GamePlayScreen();
 
@@ -109,7 +105,6 @@ public:
 	MainMap& GETmainMap()						{ return m_mainMap; };
 	Players& GETPlayers()						{ return m_players; };
 	NextTurn& getNextTurn()						{ return m_nextTurn; };
-	SaveReloadPtrT getSaveReload()				{ return m_SaveReload; };
 	UserInputNewGame* getUserInputNewGame()		{ return m_userInputNewGame; };
 	R2D::Window& getParentWindow()				{ return m_game->getWindow(); };
 	R2D::InputManager& getInputManager()		{ return m_game->getInputManager(); };
@@ -135,7 +130,6 @@ private:
 
 	Players m_players;
 
-	SaveReloadPtrT m_SaveReload;
 	UserInputNewGame* m_userInputNewGame;
 
 	bool m_isInitialize;
