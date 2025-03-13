@@ -165,6 +165,7 @@
     <ClCompile Include="src\CityScreen.cpp" />
     <ClCompile Include="src\Civ_Rob_2.0.cpp" />
     <ClCompile Include="src\FileReader.cpp" />
+    <ClCompile Include="src\FileSystemHandler.cpp" />
     <ClCompile Include="src\FoodManager.cpp" />
     <ClCompile Include="src\GameInput.cpp" />
     <ClCompile Include="src\GamePlayScreen.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="src\CityScreen.h" />
     <ClInclude Include="src\CityScreenEnumTexture.h" />
     <ClInclude Include="src\FileReader.h" />
+    <ClInclude Include="src\FileSystemHandler.h" />
     <ClInclude Include="src\FileWriter.h" />
     <ClInclude Include="src\FoodManager.h" />
     <ClInclude Include="src\GameInput.h" />

@@ -64,6 +64,7 @@
     <ClCompile Include="src\InitLoadFromFile.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
+    <ClCompile Include="src\FileSystemHandler.cpp" />
     <ClCompile Include="src\FileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="src\jsonloader.h" />
     <ClInclude Include="src\T_Player.h" />
     <ClInclude Include="src\T_Coor.h" />
+    <ClInclude Include="src\FileSystemHandler.h" />
     <ClInclude Include="src\FileWriter.h" />
     <ClInclude Include="src\FileReader.h" />
   </ItemGroup>
