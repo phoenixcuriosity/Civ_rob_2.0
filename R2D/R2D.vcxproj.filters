@@ -9,6 +9,7 @@
     <ClInclude Include="src\GLTexture.h" />
     <ClInclude Include="src\IGameScreen.h" />
     <ClInclude Include="src\IMainGame.h" />
+    <ClInclude Include="src\ISaveable.h" />
     <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\RealEngineError.h" />
     <ClInclude Include="src\ResourceManager.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="src\LogSentences.h" />
     <ClInclude Include="src\LoadingFileToString.h" />
     <ClInclude Include="src\Text.h" />
+    <ClInclude Include="src\ILoadable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />

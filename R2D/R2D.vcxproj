@@ -171,8 +171,10 @@
     <ClInclude Include="src\GLTexture.h" />
     <ClInclude Include="src\GUI.h" />
     <ClInclude Include="src\IGameScreen.h" />
+    <ClInclude Include="src\ILoadable.h" />
     <ClInclude Include="src\IMainGame.h" />
     <ClInclude Include="src\InputManager.h" />
+    <ClInclude Include="src\ISaveable.h" />
     <ClInclude Include="src\LoadingFileToString.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\LogLevel.h" />
