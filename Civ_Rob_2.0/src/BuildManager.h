@@ -27,10 +27,14 @@
 
 #include "CitizenManager.h"
 #include "FoodManager.h"
+#include "Unit.h"
 #include "T_CityScreen.h"
 
 class BuildManager
 {
+private:
+
+	using VectUnitTemplate = std::vector<Unit::Template>;
 public:
 
 	BuildManager

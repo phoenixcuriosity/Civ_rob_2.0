@@ -32,8 +32,6 @@
 #include "Utility.h"
 #include "T_Citizen.h"
 #include "T_MainMap.h"
-#include "T_Unit.h"
-
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/Log.h>

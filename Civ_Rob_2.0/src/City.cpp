@@ -77,7 +77,7 @@ namespace CityC
 void City::createCity
 (
 	GamePlayScreen& mainGame,
-	const unsigned int influenceLevel
+	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */
 )
 {
 	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
@@ -111,15 +111,18 @@ void City::loadCity
 (
 	MatriceMap& matriceMap,
 	const unsigned int selectplayer,
-	CityPtrT& city
+	CityPtrT& city,
+	const modifAppartenance_Type modAppartenance /* = modifAppartenance_Type::modify */
 )
 {
+	assert(city);
+
 	VectMapPtr tiles;
 	tiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 	City::fillCitieTiles
 	(
 		MainMap::convertPosXToIndex(city->GETx()), MainMap::convertPosYToIndex(city->GETy()),
-		selectplayer, matriceMap, tiles, city->GETinfluenceLevel()
+		selectplayer, matriceMap, tiles, city->GETinfluenceLevel(), modAppartenance
 	);
 	city->SETVectMapPtr(tiles);
 }
@@ -131,7 +134,8 @@ void City::fillCitieTiles
 	const unsigned int selectplayer,
 	MatriceMap& matriceMap,
 	VectMapPtr& tabtile,
-	const unsigned int influenceLevel
+	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */,
+	const modifAppartenance_Type modAppartenance /* = modifAppartenance_Type::modify */
 )
 {
 	unsigned int k(0);
@@ -143,7 +147,7 @@ void City::fillCitieTiles
 		{
 			if (middletileY + p < 0 || middletileY + p >= matriceMap[0].size()) continue;
 
-			if (initSizeInfluenceCondition(o, p, influenceLevel))
+			if ((modAppartenance == modifAppartenance_Type::modify) && (initSizeInfluenceCondition(o, p, influenceLevel)))
 			{
 				matriceMap[middletileX + o][middletileY + p].appartenance = selectplayer;
 			}

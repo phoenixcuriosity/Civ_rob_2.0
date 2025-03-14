@@ -25,8 +25,14 @@
 
 #include "LIB.h"
 
+#include "Unit.h"
+
 class InitLoadFromFile
 {
+private:
+
+	using VectUnitTemplate = std::vector<Unit::Template>;
+
 public:
 
 	static void loadMainMapConfig(MainMap& mainMap);

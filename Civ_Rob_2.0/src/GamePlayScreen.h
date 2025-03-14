@@ -29,7 +29,6 @@
 #include "NextTurn.h"
 #include "Players.h"
 #include "T_GamePlayScreen.h"
-#include "T_Unit.h"
 
 #include <R2D/src/IMainGame.h>
 #include <R2D/src/Screen.h>

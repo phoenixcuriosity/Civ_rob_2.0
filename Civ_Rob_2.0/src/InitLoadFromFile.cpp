@@ -25,7 +25,7 @@
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
-#include "T_Unit.h"
+#include "Unit.h"
 
 #include <R2D/src/ResourceManager.h> 
 #include <R2D/src/Log.h>
@@ -78,11 +78,11 @@ void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 		{
 			const std::vector<jsonloader::Unit_Template> units = configuration[jsonloader::KEY_UNIT_TEMPLATE].as<std::vector<jsonloader::Unit_Template>>();
 
-			Unit_Template currentUnit;
+			Unit::Template currentUnit;
 			for (const auto& unit : units)
 			{
 				currentUnit.name = unit.name;
-				currentUnit.type = static_cast<Unit_Movement_Type>(unit.type);
+				currentUnit.type = static_cast<Unit::Movement_Type>(unit.type);
 				currentUnit.life = unit.life;
 				currentUnit.atq = unit.atq;
 				currentUnit.def = unit.def;

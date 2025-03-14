@@ -74,8 +74,6 @@ namespace SELECTION
 	constexpr int NO_APPARTENANCE = -1;
 
 	constexpr auto NO_OWNER = nullptr;
-
-	constexpr int NO_CURRENT_SAVE_SELECTED = -1;
 }
 
  // Define all State of the game, relate to screen
@@ -107,7 +105,6 @@ struct GoldStats;
 struct randomPos;
 struct Screen;
 struct Tile;
-struct Unit_Template;
 struct UserInputNewGame;
 struct Var;
 
@@ -134,10 +131,8 @@ enum class conversionSurplus_Type : unsigned int;
 enum class Emotion_Type;
 enum class Ground_Type;
 enum class GroundSpec_Type;
-enum class Move_Type;
 enum class Religion_Type;
 enum class resizeUnitTexture_Type : unsigned int;
-enum class Unit_Movement_Type;
 
 typedef std::deque<buildGUI> dequeBuild;
 
@@ -149,7 +144,6 @@ typedef std::shared_ptr<SaveReload> SaveReloadPtrT;
 
 typedef std::shared_ptr<CityScreen>			CityScreenPtrT;
 typedef std::shared_ptr<GamePlayScreen>		GamePlayScreenPtrT;
-typedef std::shared_ptr<MainMenuScreen>		MainMenuScreenPtrT;
 typedef std::shared_ptr<NewGameScreen>		NewGameScreenPtrT;
 typedef std::shared_ptr<ReloadMenuScreen>	ReloadMenuScreenPtrT;
 
@@ -162,7 +156,6 @@ typedef std::vector<std::string> VectCityName;
 typedef std::vector<PlayerPtrT> VectPlayer;
 typedef std::vector<std::string> VectPlayerName;
 typedef std::vector<UnitPtrT> VectUnit;
-typedef std::vector<Unit_Template> VectUnitTemplate;
 
 namespace jsoncons
 {

@@ -119,9 +119,6 @@
     <ClInclude Include="src\CityScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\T_Unit.h">
-      <Filter>T_struct</Filter>
-    </ClInclude>
     <ClInclude Include="src\T_City.h">
       <Filter>T_struct</Filter>
     </ClInclude>

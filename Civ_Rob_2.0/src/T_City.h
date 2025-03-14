@@ -90,6 +90,12 @@ enum class resizeUnitTexture_Type : unsigned int
 	city
 };
 
+enum class modifAppartenance_Type : bool
+{
+	modify = true,
+	dontModify = false
+};
+
 #endif
 
 /*

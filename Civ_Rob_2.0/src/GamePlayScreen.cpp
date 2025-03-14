@@ -31,12 +31,12 @@
 #include "Unit.h"
 #include "T_NewGameScreen.h"
 
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 
 GamePlayScreen::GamePlayScreen(UserInputNewGame* userInputNewGame)
-: 
+:
 R2D::IGameScreen(),
 R2D::CScreen(),
 m_screen(),
@@ -396,7 +396,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 			{
 				/* Reset if needed SHOW for the unit previously selected */
 				if (m_players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED && m_players.GETselectedPlayerPtr() != nullptr)
-				{			
+				{
 					if (m_players.GETselectedPlayerPtr()->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 					{
 						m_players.GETselectedPlayerPtr()->GETSelectedUnitPtr()->SETshow(true);
@@ -410,7 +410,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 				m_players.SETselectedPlayerId((int)i);
 				m_players.SETselectedPlayerPtr(m_players.GETvectPlayer()[i]);
 			}
-			
+
 			return true;
 		}
 	}
