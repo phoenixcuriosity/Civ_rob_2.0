@@ -25,7 +25,8 @@
 #include <fstream>
 #include <jsoncons/json.hpp>
 
-
+namespace R2D
+{
 class FileWriter
 {
 public:
@@ -65,3 +66,4 @@ public:
 private:
     std::ofstream m_file;
 };
+}

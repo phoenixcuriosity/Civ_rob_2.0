@@ -19,19 +19,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#pragma once
 
-#include <R2D/src/FileSystem.h>
+#include "IRegister.h"
+#include "ResourceManager.h"
 
-class FileSystemHandler : public R2D::IFileSystem
+void
+R2D::IRegister
+::save()
 {
-public:
-    void createDirectory(const Path& path) override;
-    void removeFile(const FileName& file) override;
-	void writeDataInFile(const FileName& file, const Data& data) override;
-	void writeDataInFile(const FileName& file, const jsoncons::ojson& data) override;
-	Data readDataFromFile(const FileName& file) override;
-	jsoncons::ojson readDataFromFile(const FileName& file, const bool dummy = false) override;
-    virtual ~FileSystemHandler() = default;
-};
+	assert(m_fileSysteme);
 
+	std::for_each(std::begin(m_saveableSptrVector), std::end(m_saveableSptrVector),
+		[this](const SaveableSptrFile& saveable)
+		{
+			assert(saveable.second);
+			m_fileSysteme->writeDataInFile(ResourceManager::getFile(saveable.first), saveable.second->save());
+		});
+};

@@ -26,6 +26,8 @@
 #include <jsoncons/json.hpp>
 #include <filesystem>
 
+namespace R2D
+{
 class FileReader
 {
 private:
@@ -41,3 +43,4 @@ public:
 private:
     std::ifstream m_file;
 };
+}

@@ -21,43 +21,20 @@
 */
 #pragma once
 
-#include "FileReader.h"
+#include "FileSystem.h"
 
-FileReader
-::FileReader(const FilePath& filename)
-: m_file(filename, std::ios::in)
+namespace R2D
 {
-    if (!m_file)
-    {
-        throw std::runtime_error("Unable to open file: " + filename);
-    }
-}
-
-FileReader::Data
-FileReader
-::read(const FilePath& filename)
+class FileSystemHandler : public R2D::IFileSystem
 {
-    std::error_code ec;
-    const uintmax_t length = std::filesystem::file_size(filename, ec);
-    if (ec)
-    {
-        throw std::runtime_error(ec.message());
-    }
-    Data buffer(length, '\0');
-    m_file.read(buffer.data(), length);
-
-    const Data text{ std::string(buffer.c_str(), strlen(buffer.c_str())) };
-    if (text.empty())
-    {
-        throw std::runtime_error("Empty file");
-    }
-
-    return text;
-}
-
-jsoncons::ojson
-FileReader
-::readJson(const FilePath& filename)
-{
-    return jsoncons::ojson::parse(read(filename));
+public:
+    void createDirectory(const Path& path) override;
+    void removeFile(const FileName& file) override;
+	void writeDataInFile(const FileName& file, const Data& data) override;
+	void writeDataInFile(const FileName& file, const jsoncons::ojson& data) override;
+	Data readDataFromFile(const FileName& file) override;
+	jsoncons::ojson readDataFromFile(const FileName& file, const bool dummy = false) override;
+    virtual ~FileSystemHandler() = default;
 };
+}
+

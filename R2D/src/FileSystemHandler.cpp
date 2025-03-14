@@ -26,42 +26,42 @@
 #include "FileReader.h"
 #include "LogSentences.h"
 
-#include <R2D/src/ErrorLog.h>
-#include <R2D/src/ExitFromError.h>
-#include <R2D/src/Log.h>
+#include "ErrorLog.h"
+#include "ExitFromError.h"
+#include "Log.h"
 
 #include <filesystem>
 
 void
-FileSystemHandler
+R2D::FileSystemHandler
 ::createDirectory(const Path& path)
 {
 	if (!std::filesystem::create_directory(path))
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_DIR, logS::DATA::ERROR_CREATE_DIR, path);
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::REGISTER, logS::WHAT::REGISTER_DIRECTORY, logS::DATA::ERROR_DIR, " : createDirectory");
 	}
 	else
 	{
-		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_DIR, logS::DATA::ERROR_CREATE_DIR, path + " successfully remove");
+		LOG(R2D::LogLevelType::info, 0, logS::WHO::REGISTER, logS::WHAT::REGISTER_DIRECTORY, logS::DATA::NO_ERROR_DIR, " : createDirectory");
 	}
 }
 
 void
-FileSystemHandler
+R2D::FileSystemHandler
 ::removeFile(const FileName& file)
 {
 	if (!std::filesystem::remove(file))
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE_FILE, logS::DATA::ERROR_DELETE_SAVE_FILE, file);
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::REGISTER, logS::WHAT::REGISTER_DIRECTORY, logS::DATA::ERROR_DIR, " : removeFile");
 	}
 	else
 	{
-		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_SAVE_FILE, logS::DATA::ERROR_DELETE_SAVE_FILE, file + " successfully remove");
+		LOG(R2D::LogLevelType::info, 0, logS::WHO::REGISTER, logS::WHAT::REGISTER_DIRECTORY, logS::DATA::NO_ERROR_DIR, " : removeFile");
 	}
 }
 
 void
-FileSystemHandler
+R2D::FileSystemHandler
 ::writeDataInFile(const FileName& file, const Data& data)
 {
 	FileWriter writer(file);
@@ -69,15 +69,15 @@ FileSystemHandler
 }
 
 void
-FileSystemHandler
+R2D::FileSystemHandler
 ::writeDataInFile(const FileName& file, const jsoncons::ojson& data)
 {
 	FileWriter writer(file);
 	writer.write(data);
 }
 
-FileSystemHandler::Data
-FileSystemHandler
+R2D::FileSystemHandler::Data
+R2D::FileSystemHandler
 ::readDataFromFile(const FileName& file)
 {
 	FileReader reader(file);
@@ -85,7 +85,7 @@ FileSystemHandler
 }
 
 jsoncons::ojson
-FileSystemHandler
+R2D::FileSystemHandler
 ::readDataFromFile(const FileName& file, const bool /* dummy = false */)
 {
 	FileReader reader(file);
