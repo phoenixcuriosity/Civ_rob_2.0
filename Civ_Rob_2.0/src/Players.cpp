@@ -28,6 +28,7 @@
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "Player.h"
+#include "SaveReload.h"
 #include "Unit.h"
 #include "Utility.h"
 

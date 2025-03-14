@@ -29,6 +29,7 @@
 #include "NewGame.h"
 #include "ScreenIndices.h"
 #include "Unit.h"
+#include "SaveReload.h"
 #include "T_NewGameScreen.h"
 
 #include <R2D/src/ResourceManager.h>

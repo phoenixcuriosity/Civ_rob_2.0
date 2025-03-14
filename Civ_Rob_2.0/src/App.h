@@ -25,12 +25,17 @@
 
 #include "LIB.h"
 
-#include "SaveReload.h"
+
 
 #include <R2D/src/IMainGame.h>
 
 class App : public R2D::IMainGame
 {
+	using MainMenuScreenPtrT = std::shared_ptr<MainMenuScreen>;
+	using NewGameScreenPtrT = std::shared_ptr<NewGameScreen>;
+	using ReloadMenuScreenPtrT = std::shared_ptr<ReloadMenuScreen>;
+	using GamePlayScreenPtrT = std::shared_ptr<GamePlayScreen>;
+	using CityScreenPtrT = std::shared_ptr<CityScreen>;
 public:
 	App();
 	~App();

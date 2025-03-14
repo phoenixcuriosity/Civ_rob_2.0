@@ -29,12 +29,13 @@
 #include "MainMenuScreen.h"
 #include "NewGameScreen.h"
 #include "ReloadMenuScreen.h"
+#include "SaveReload.h"
 
 #include <jsoncons/json.hpp>
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
-#include <R2D/src/ExitFromError.h> 
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
+#include <R2D/src/ExitFromError.h>
 #include <R2D/src/SpriteFont.h>
 #include <R2D/src/ScreenList.h>
 
