@@ -26,10 +26,11 @@
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "Player.h"
+#include "SaveReload.h"
 
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
-#include <R2D/src/Log.h> 
+#include <R2D/src/Log.h>
 
 namespace MAP_GEN
 {
@@ -103,11 +104,15 @@ m_needToUpdateDraw(true),
 m_spriteBatch()
 {
 	setStaticPtrTileSize();
+	SaveReload::getInstance().registerSaveable(R2D::e_Files::saveMaps, this);
+	SaveReload::getInstance().registerLoadable(R2D::e_Files::saveMaps, this);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::MAINMAP);
 }
 
 MainMap::~MainMap()
 {
+	SaveReload::getInstance().unregisterSaveable(this);
+	SaveReload::getInstance().unregisterLoadable(this);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::MAINMAP);
 }
 
@@ -136,7 +141,7 @@ void MainMap::initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& id
 	{
 		LOG(R2D::LogLevelType::warning, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::MSG_DATA, msg.what());
 	}
-	
+
 
 	initMainMapTexture(idTexture);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::END);
@@ -736,8 +741,8 @@ void MainMap::updateOffsetY
 	}
 	else
 	{
-		m_offsetMapCameraYmax = 
-			m_offsetMapCameraYmin 
+		m_offsetMapCameraYmax =
+			m_offsetMapCameraYmin
 			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_mainMapConfig.m_tileSize * camera.GETscale()))
 			- buffer
 			+ MAPCamera::MIN_BORDER;
@@ -956,6 +961,7 @@ void MainMap::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAIN_MAP, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
 }
+
 
 /*
 *	End Of File : GamePlay.cpp

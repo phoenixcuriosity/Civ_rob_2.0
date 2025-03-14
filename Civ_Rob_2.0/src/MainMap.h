@@ -30,128 +30,54 @@
 
 #include <R2D/src/Camera2D.h>
 #include <R2D/src/SpriteBatch.h>
+#include <R2D/src/ISaveable.h>
+#include <R2D/src/ILoadable.h>
 
-class MainMap
+#include <jsoncons/json.hpp>
+
+class MainMap : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
 public:
-
-	/* NAME : getPtrTileSize															   */
-	/* ROLE : Initialize ptr on tileSize from sysinfo									   */
-	/* INPUT : unsigned int* const : ptr on tileSize									   */
-	/* RETURNED VALUE : void															   */
 	void setStaticPtrTileSize();
 
 public:
-
-	/* NAME : convertIndexToPosX														   */
-	/* ROLE : Convert the index of the matrix Map to a position on X axis in pixel		   */
-	/* ROLE : Offset by toolBar size													   */
-	/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
-	/* INPUT : unsigned int index : index to convert									   */
-	/* RETURNED VALUE : unsigned int : position on X axis in pixel						   */
-	static unsigned int convertIndexToPosX
-	(
-		const unsigned int index
-	);
-
-	/* NAME : convertPosXToIndex														   */
-	/* ROLE : Convert position on X axis in pixel of the matrix Map to a index			   */
-	/* ROLE : Offset by toolBar size													   */
-	/* ROLE : Use 2 input static const ptr : s_tileSize and s_screenWidth				   */
-	/* INPUT : unsigned int index : position on X axis in pixel	to convert				   */
-	/* RETURNED VALUE : unsigned int : index											   */
-	static unsigned int convertPosXToIndex
-	(
-		const double posX
-	);
-
-	/* NAME : convertIndexToPosY														   */
-	/* ROLE : Convert the index of the matrix Map to a position on Y axis in pixel		   */
-	/* ROLE : Use 1 input static const ptr : s_tileSize									   */
-	/* INPUT : unsigned int index : index to convert									   */
-	/* RETURNED VALUE : unsigned int : position on Y axis in pixel						   */
-	static unsigned int convertIndexToPosY
-	(
-		const unsigned int index
-	);
-
-	/* NAME : convertPosXToIndex														   */
-	/* ROLE : Convert position on Y axis in pixel of the matrix Map to a index			   */
-	/* ROLE : Use 1 input static const ptr : s_tileSize									   */
-	/* INPUT : unsigned int index : position on Y axis in pixel	to convert				   */
-	/* RETURNED VALUE : unsigned int : index											   */
-	static unsigned int convertPosYToIndex
-	(
-		const double posY
-	);
-
-	/* NAME : assertRangeMapIndex														   */
-	/* ROLE : assert that the index provided is between 0 and size						   */
-	/* INPUT : unsigned int indexToTest : index to compare to size						   */
-	/* INPUT : size_t size : reference size								 				   */
-	/* RETURNED VALUE : bool : false -> indexToTest is equal or > than size				   */
-	/* RETURNED VALUE : bool : true -> indexToTest is <	than size						   */
-	static bool assertRangeMapIndex
-	(
-		const unsigned int indexToTest,
-		const size_t size
-	);
+	static unsigned int convertIndexToPosX(const unsigned int index);
+	static unsigned int convertPosXToIndex(const double posX);
+	static unsigned int convertIndexToPosY(const unsigned int index);
+	static unsigned int convertPosYToIndex(const double posY);
+	static bool assertRangeMapIndex(const unsigned int indexToTest, const size_t size);
 
 public:
-
 	MainMap();
-	~MainMap();
+	virtual ~MainMap();
 
 	void initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture);
-
 	void initMainMapTexture(const GamePlayScreenTexture& idTexture);
 
 private:
-
 	void initTile();
-
 	void generateMap();
-
-	void setMinMaxScale
-	(
-		R2D::Camera2D& camera
-	);
-
-	void updateOffset
-	(
+	void setMinMaxScale(R2D::Camera2D& camera);
+	void updateOffset(
 		const double x0,
 		const double y0,
 		const unsigned int windowWidth,
 		const unsigned int windowHeight,
-		R2D::Camera2D& camera
-	);
-
-	void updateOffsetX
-	(
+		R2D::Camera2D& camera);
+	void updateOffsetX(
 		const double x0,
 		const unsigned int windowWidth,
-		R2D::Camera2D& camera
-	);
-
-	void updateOffsetY
-	(
+		R2D::Camera2D& camera);
+	void updateOffsetY(
 		const double y0,
 		const unsigned int windowHeight,
-		R2D::Camera2D& camera
-	);
+		R2D::Camera2D& camera);
 
 public:
-
-	void drawMap
-	(
-		R2D::Camera2D& camera,
-		R2D::Window& window
-	);
-
+	void drawMap(R2D::Camera2D& camera, R2D::Window& window);
 	void renderMap();
 
 public:
-
 	inline unsigned int* GETtileSizePtr()			  { return &m_mainMapConfig.m_tileSize; };
 	inline unsigned int GETtileSize()			const { return m_mainMapConfig.m_tileSize; };
 	inline unsigned int GETtoolBarSize()		const { return m_toolBarSize; };
@@ -166,72 +92,27 @@ public:
 	inline void SETneedToUpdateDraw(bool needToUpdateDraw) { m_needToUpdateDraw = needToUpdateDraw; };
 
 private:
-
-	/* NAME : mapBordersConditions														   */
-	/* ROLE : Boucle For de conditions													   */
-	/* ROLE : Nombre de conditions = (MAP_BORDER_MAX - MAP_BORDER_MIN) * 2				   */
-	/* INPUT : const Map& map : structure de la MAP										   */
-	/* INPUT : unsigned int i : index en X												   */
-	/* INPUT : unsigned int j : index en Y												   */
-	/* RETURNED VALUE : bool : valid = true / not valid = false							   */
-	bool mapBordersConditions
-	(
-		const unsigned int i,
-		const unsigned int j
-	);
-
-	/* NAME : mapBorders																   */
-	/* ROLE : Affectation des caract�ristiques de la case en fonction ...				   */
-	/* ROLE : ... de la fonction rand, dans la bordure de la map entre ...				   */
-	/* ROLE : ... MAP_BORDER_MIN et MAP_BORDER_MAX										   */
-	/* OUTPUT : Tile& tile : tile � affecter											   */
-	/* RETURNED VALUE : void															   */
-	void mapBorders
-	(
-		Tile& tile
-	);
-
-	/* NAME : mapIntern																	   */
-	/* ROLE : Affectation des caract�ristiques de la case en fonction ...				   */
-	/* ROLE : ... de la fonction rand, dans le reste de la map							   */
-	/* ROLE : Si la case est de type water alors cr�ation de 2 autres ...				   */
-	/* ROLE : ... cases de type water pour obtenir une forme en L						   */
-	/* INPUT/OUTPUT : std::vector<std::vector<Tile>>& maps : matrice de la map			   */
-	/* INPUT : unsigned int i : index en X												   */
-	/* INPUT : unsigned int j : index en Y												   */
-	/* RETURNED VALUE    : void															   */
-	void mapIntern
-	(
+	bool mapBordersConditions(const unsigned int i, const unsigned int j);
+	void mapBorders(Tile& tile);
+	void mapIntern(
 		MatriceMap& maps,
 		const unsigned int i,
-		const unsigned int j
-	);
-
-	/* NAME : tileAffectation															   */
-	/* ROLE : Affectation des caract�ristiques � une case								   */
-	/* OUTPUT : Tile& tile, : la case � affecter										   */
-	/* INPUT : unsigned int tile_ground, std::string tile_stringground,					   */
-	/* INPUT : unsigned int tile_spec, std::string tile_stringspec,						   */
-	/* INPUT : int food, int work, int gold												   */
-	/* RETURNED VALUE : void															   */
-	void tileAffectation
-	(
+		const unsigned int j);
+	void tileAffectation(
 		Tile& tile,
 		const Ground_Type tile_ground,
 		const GroundSpec_Type tile_spec,
 		const int food,
 		const int work,
-		const int gold
-	);
+		const int gold);
 
 public:
-
+	jsoncons::ojson save()const override { return saveToOjson(); };
 	jsoncons::ojson saveToOjson()const;
-
+	void load(jsoncons::ojson f)override { loadFromOjson(f); };
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
-
 	unsigned int* GETtileSizePtr()const { return (unsigned int*)&m_mainMapConfig.m_tileSize; };
 
 private:
