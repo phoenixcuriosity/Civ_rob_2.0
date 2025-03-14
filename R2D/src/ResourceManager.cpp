@@ -57,9 +57,9 @@ GLuint R2D::ResourceManager::searchKeyInIdMap(const R2D::IdMap& idMap, const std
 	return TextureCache::searchKeyInIdMap(idMap, key);
 }
 
-R2D::File* R2D::ResourceManager::getFile(const R2D::e_Files name)
+const R2D::ResourceManager::FIlePath& R2D::ResourceManager::getFile(const R2D::e_Files name)
 {
-	return m_files.getFile(name);
+	return m_files.getFile(name)->m_path;
 }
 
 void R2D::ResourceManager::initializeFilePath
@@ -69,6 +69,11 @@ void R2D::ResourceManager::initializeFilePath
 )
 {
 	m_files.initializePath(name, path);
+}
+
+void R2D::ResourceManager::ModifyFilePath(const e_Files name, const std::string& path)
+{
+	m_files.modifyPath(name, path);
 }
 
 std::string R2D::ResourceManager::loadFileToString
@@ -89,14 +94,14 @@ R2D::GLSLProgram& R2D::ResourceManager::getGLSLProgram()
 	return m_gLSLProgram;
 }
 
-void 
+void
 R2D::ResourceManager
 ::getTextFromFile(const e_Files name, MapTexts& mapTexts)
 {
 	m_Text.getTextFromFile(name, mapTexts);
 }
 
-void 
+void
 R2D::ResourceManager
 ::displayTextFromFile(	const R2D::MapTexts& mapTexts,
 						const R2D::Window& window,
@@ -142,7 +147,7 @@ R2D::ResourceManager
 	}
 }
 
-void 
+void
 R2D::ResourceManager
 ::InitializeCardinalDirectionMapping(const unsigned int tileSize)
 {
@@ -248,11 +253,11 @@ const R2D::CardinalDirection&
 R2D::ResourceManager
 ::getCardinalDirection(const CardinalDirection::Directions cardinalDirections)
 {
-	try 
+	try
 	{
 		return m_cardinalDirectionMapping.at(cardinalDirections);
 	}
-	catch (const std::out_of_range& e) 
+	catch (const std::out_of_range& e)
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::DIRECTION, logS::DATA::ERROR_DIRECTION, e.what());
 		throw std::runtime_error("Direction not found");

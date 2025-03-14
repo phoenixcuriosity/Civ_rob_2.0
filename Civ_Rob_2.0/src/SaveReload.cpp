@@ -46,7 +46,7 @@ void
 SaveReload
 ::init()
 {
-	const std::string filePath{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath() };
+	const std::string filePath{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo) };
 	if (std::filesystem::exists(filePath) && std::filesystem::is_directory(filePath))
 	{
 		for (const auto& entry : std::filesystem::directory_iterator(filePath))
@@ -61,26 +61,9 @@ SaveReload
 
 void
 SaveReload
-::registerSaveable(R2D::e_Files file, SaveableSptr saveable)
-{
-	m_saveableSptrVector.push_back({ file, saveable });
-}
-
-void
-SaveReload
 ::registerLoadable(R2D::e_Files file, LoadableSptr loadable)
 {
 	m_loadableSptrVector.push_back({ file, loadable });
-}
-
-void
-SaveReload
-::unregisterSaveable(SaveableSptr saveable)
-{
-	std::erase_if(m_saveableSptrVector, [saveable](const SaveableSptrFile& pair)
-		{
-			return pair.second == saveable;
-		});
 }
 
 void
@@ -91,26 +74,6 @@ SaveReload
 		{
 			return pair.second == loadable;
 		});
-}
-
-
-void SaveReload::save()
-{
-	try
-	{
-		assert(m_fileSysteme);
-
-		std::for_each(std::begin(m_saveableSptrVector), std::end(m_saveableSptrVector),
-			[this](SaveableSptrFile& saveable)
-			{
-				assert(saveable.second);
-				m_fileSysteme->writeDataInFile(getSaveFilePath(saveable.first), saveable.second->save());
-			});
-	}
-	catch (const std::exception& e)
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, e.what());
-	}
 }
 
 void SaveReload::reload
@@ -160,6 +123,9 @@ void SaveReload::createSave()
 	}
 	m_tabSave.push_back(m_currentSave);
 
+	R2D::ResourceManager::ModifyFilePath(R2D::e_Files::saveMaps, getSaveFilePath(R2D::e_Files::saveMaps));
+	R2D::ResourceManager::ModifyFilePath(R2D::e_Files::savePlayers, getSaveFilePath(R2D::e_Files::savePlayers));
+
 	createSaveDir();
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_SAVE, logS::DATA::END);
@@ -167,7 +133,7 @@ void SaveReload::createSave()
 
 void SaveReload::createSaveDir()
 {
-	m_fileSysteme->createDirectory(std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(), m_currentSave));
+	m_fileSysteme->createDirectory(std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo), m_currentSave));
 }
 
 void SaveReload::removeSave()
@@ -208,9 +174,9 @@ void SaveReload::clearSave()
 
 void SaveReload::removeSaveDir(const SaveId& index)
 {
-	const std::string dir{ std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(), index) };
-	removeSaveFile(dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::saveMaps)->getPath());
-	removeSaveFile(dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath());
+	const std::string dir{ std::format("{}{:04}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo), index) };
+	removeSaveFile(dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::saveMaps));
+	removeSaveFile(dir + "/" + R2D::ResourceManager::getFile(R2D::e_Files::savePlayers));
 	removeSaveFile(dir);
 }
 
@@ -261,10 +227,7 @@ SaveReload::FilePath
 SaveReload
 ::getSaveFilePath(const R2D::e_Files file)
 {
-	return std::format("{}{:04}/{}",
-		R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath(),
-		m_currentSave,
-		R2D::ResourceManager::getFile(file)->getPath());
+	return std::format("{}{:04}/{}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo), m_currentSave, R2D::ResourceManager::getFile(file));
 }
 
  /*

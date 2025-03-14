@@ -27,16 +27,16 @@
 #include "MainMap.h"
 #include "Unit.h"
 
-#include <R2D/src/ResourceManager.h> 
+#include <R2D/src/ResourceManager.h>
 #include <R2D/src/Log.h>
 
 void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::START);
 
-	try 
+	try
 	{
-		const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath()) };
+		const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::mainMap)) };
 
 		const jsoncons::ojson configuration = jsoncons::ojson::parse(text);
 
@@ -47,14 +47,14 @@ void InitLoadFromFile::loadMainMapConfig(MainMap& mainMap)
 		else
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::MISSING_KEY_JSON,
-				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_MAP);
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap), jsonloader::KEY_MAP);
 		}
 	}
 	catch (const std::exception& e)
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
-	
+
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::END);
 }
 
@@ -70,7 +70,7 @@ void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::START);
 	try
 	{
-		const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::units)->getPath()) };
+		const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::units)) };
 
 		const jsoncons::json configuration = jsoncons::json::parse(text);
 
@@ -98,7 +98,7 @@ void InitLoadFromFile::loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate)
 		else
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::MISSING_KEY_JSON,
-				R2D::ResourceManager::getFile(R2D::e_Files::units)->getPath(), jsonloader::KEY_UNIT_TEMPLATE);
+				R2D::ResourceManager::getFile(R2D::e_Files::units), jsonloader::KEY_UNIT_TEMPLATE);
 		}
 	}
 	catch (const std::exception& e)
@@ -112,11 +112,11 @@ void InitLoadFromFile::loadCitiesNames(VectCityName& vectCityName)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_CITY_NAME, logS::DATA::START);
 
-	const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)->getPath()) };
+	const std::string text{ R2D::ResourceManager::loadFileToString(R2D::ResourceManager::getFile(R2D::e_Files::citiesNames)) };
 
 	const jsoncons::json configuration = jsoncons::json::parse(text);
 
-	for (const auto& country : configuration.object_range()) 
+	for (const auto& country : configuration.object_range())
 	{
 		for (const auto& city : country.value().array_range())
 		{

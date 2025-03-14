@@ -24,7 +24,7 @@
 
 #include "ResourceManager.h"
 
-bool 
+bool
 R2D::CScreen
 ::init(const int width, const int height)
 {
@@ -38,14 +38,14 @@ R2D::CScreen
 		m_spriteBatchHUDDynamic.init();
 		m_spriteBatchHUDStatic.init();
 
-		m_gui.init(ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(ResourceManager::getFile(e_Files::GUIPath));
 	}
 
 	initAll();
 	return true;
 }
 
-bool 
+bool
 R2D::CScreen
 ::end()
 {
@@ -53,7 +53,7 @@ R2D::CScreen
 	return true;
 }
 
-void 
+void
 R2D::CScreen
 ::initAll()
 {
@@ -62,7 +62,7 @@ R2D::CScreen
 	initHUDText();
 }
 
-void 
+void
 R2D::CScreen
 ::initUI()
 {
@@ -81,11 +81,11 @@ R2D::CScreen
 
 		m_isInitialized = true;
 	}
-	
+
 	doInitUI();
 }
 
-void 
+void
 R2D::CScreen
 ::initHUDText()
 {
@@ -96,7 +96,7 @@ R2D::CScreen
 	m_spriteBatchHUDStatic.end();
 }
 
-void 
+void
 R2D::CScreen
 ::drawAll()
 {
@@ -148,7 +148,7 @@ R2D::CScreen
 	m_gui.draw();
 }
 
-void 
+void
 R2D::CScreen
 ::updateInputManager(SDL_Event& ev, InputManager& resourceManager)
 {

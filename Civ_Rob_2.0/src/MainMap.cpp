@@ -32,6 +32,28 @@
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/Log.h>
 
+#include <format>
+
+MainMapConfig::MainMapConfig() { };
+
+void MainMapConfig::load(jsoncons::ojson f)
+{
+	try
+	{
+
+
+		if (f.contains(jsonloader::KEY_MAP))
+		{
+			*this = f[jsonloader::KEY_MAP].as<MainMapConfig>();
+		}
+
+	}
+	catch (const std::exception& e)
+	{
+
+	}
+};
+
 namespace MAP_GEN
 {
 	/* MAP -> Max size - Min size of the map for sea borders */
@@ -111,7 +133,7 @@ m_spriteBatch()
 
 MainMap::~MainMap()
 {
-	SaveReload::getInstance().unregisterSaveable(this);
+	//SaveReload::getInstance().unregisterSaveable(this);
 	SaveReload::getInstance().unregisterLoadable(this);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::MAINMAP);
 }
@@ -953,7 +975,7 @@ void MainMap::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		else
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAIN_MAP, logS::DATA::MISSING_KEY_JSON,
-				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_MATRICE_MAP);
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap), jsonloader::KEY_MATRICE_MAP);
 		}
 	}
 	catch (const std::exception& e)

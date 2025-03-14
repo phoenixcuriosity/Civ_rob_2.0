@@ -39,17 +39,10 @@
 #include <R2D/src/SpriteFont.h>
 #include <R2D/src/ScreenList.h>
 
-namespace FILE_APP
-{
-	namespace PATH
-	{
-		constexpr char CONFIG[] = "bin/filePath.json";
-		constexpr char LOG[] = "bin/log/log.txt";
-	}
-}
+#include <R2D/src/FileReader.h>
 
-App::App()
-:
+App
+::App():
 R2D::IMainGame(),
 m_mainMenuScreen(nullptr),
 m_newGameScreen(nullptr),
@@ -60,23 +53,16 @@ m_CityScreen(nullptr)
 	R2D::ResourceManager::initializeRGBA8Map();
 }
 
-App::~App()
+App
+::~App()
 {
-	m_mainMenuScreen.reset();
-	m_newGameScreen.reset();
-	m_reloadMenuScreen.reset();
-	m_gamePlayScreen.reset();
-	m_CityScreen.reset();
 	R2D::ExitFromError::deleteAll();
 }
 
-void App::onInit()
+void
+App
+::onInit()
 {
-	/* Set location of logging file */
-	R2D::ResourceManager::initializeFilePath(R2D::e_Files::log, FILE_APP::PATH::LOG);
-	R2D::ErrorLog::initializeLog();
-	R2D::Logger::instance().init(R2D::LogLevelType::info, R2D::FileLineFunctionType::dont_show);
-
 	initMain();
 
 	SaveReload::getInstance().init();
@@ -85,22 +71,14 @@ void App::onInit()
 	m_window.SETscreenHeight(R2D::Window::getVertical());
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initShaders																   */
-/* ROLE : Init shaders for OpenGL													   */
-/* ROLE : 2 files : colorShadingVert and colorShadingFrag							   */
-/* ROLE : 3 parameters : vertexPosition	, vertexColor , vertexUV					   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::InitShaders()
+void
+App
+::InitShaders()
 {
 	R2D::ResourceManager::getGLSLProgram().compileShaders
 	(
-		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingVert)->getPath(),
-		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingFrag)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingVert),
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingFrag)
 	);
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
@@ -111,18 +89,23 @@ void App::InitShaders()
 		(R2D::FONT::GUI::NAME.c_str(), R2D::FONT::GUI::SIZE::DEFAULT);
 }
 
-void App::InitTexture()
+void
+App
+::InitTexture()
 {
-	R2D::ResourceManager::loadTextureFromDir(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
+	R2D::ResourceManager::loadTextureFromDir(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath));
 }
 
-
-void App::onExit()
+void
+App
+::onExit()
 {
 	/* Do nothing */
 }
 
-void App::addScreens()
+void
+App
+::addScreens()
 {
 	m_mainMenuScreen = std::make_shared<MainMenuScreen>();
 	m_newGameScreen = std::make_shared<NewGameScreen>();
@@ -141,23 +124,16 @@ void App::addScreens()
 	m_screenList->setScreen(m_mainMenuScreen->GETscreenIndex());
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initMain																	   */
-/* ROLE : Chargement des informations de la configuration du jeu					   */
-/* INPUT : struct Sysinfo& : structure globale du programme							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::initMain()
+void
+App
+::initMain()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::START);
 
 	try
 	{
-		const std::string text{ R2D::ResourceManager::loadFileToString(FILE_APP::PATH::CONFIG) };
-
-		const jsoncons::ojson configuration = jsoncons::ojson::parse(text);
+		R2D::FileReader reader(FILE_PATH_CONFIG);
+		const jsoncons::ojson configuration = reader.readJson(FILE_PATH_CONFIG);
 
 		if (configuration.contains(jsonloader::KEY_FILE_PATH) && configuration[jsonloader::KEY_FILE_PATH].is_array())
 		{
@@ -182,7 +158,7 @@ void App::initMain()
 		else
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::MISSING_KEY_JSON,
-				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_FILE_PATH);
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap), jsonloader::KEY_FILE_PATH);
 		}
 	}
 	catch (const std::exception& e)
@@ -193,10 +169,9 @@ void App::initMain()
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::END);
 }
 
-
-//----------------------------------------------------------Destroy----------------------------------------------------------------//
-
-void App::destroy()
+void
+App
+::destroy()
 {
 	R2D::ExitFromError::deleteAll();
 }

@@ -35,6 +35,22 @@
 
 #include <jsoncons/json.hpp>
 
+
+
+
+class MainMapConfig : public R2D::ILoadable<jsoncons::ojson>
+{
+public:
+	unsigned int m_tileSize = 0;
+	Coor m_mapSizePix;
+public:
+	MainMapConfig();
+	void load(jsoncons::ojson f)override;
+};
+
+
+JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
+
 class MainMap : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
 public:

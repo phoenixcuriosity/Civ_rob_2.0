@@ -34,8 +34,8 @@
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 
 Player::Player() :
 	m_name("NoName"),
@@ -53,7 +53,7 @@ Player::Player
 (
 	const std::string& name,
 	const int id
-) 
+)
 :
 	m_name(name),
 	m_id(id),
@@ -296,7 +296,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 	else
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
-			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
 	}
 }
 

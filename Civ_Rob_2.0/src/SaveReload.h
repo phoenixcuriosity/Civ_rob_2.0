@@ -25,18 +25,19 @@
 
 #include "LIB.h"
 
-#include "FileSystemHandler.h"
+#include <R2D/src/FileSystemHandler.h>
 
 #include <R2D/src/API_fwd.h>
 #include <R2D/src/Files.h>
 #include <R2D/src/ISaveable.h>
 #include <R2D/src/ILoadable.h>
+#include <R2D/src/IRegister.h>
 #include <limits>
 
 
 
 
-class SaveReload
+class SaveReload : public R2D::IRegister
 {
 private:
 	using SaveId = size_t;
@@ -47,10 +48,6 @@ private:
 
 	using FileSystemeSptr = std::shared_ptr<R2D::IFileSystem>;
 	using FilePath = std::string;
-
-	using SaveableSptr = R2D::ISaveable<jsoncons::ojson>*;
-	using SaveableSptrFile = std::pair<R2D::e_Files, SaveableSptr>;
-	using SaveableSptrFileVector = std::vector<SaveableSptrFile>;
 
 	using LoadableSptr = R2D::ILoadable<jsoncons::ojson>*;
 	using LoadableSptrFile = std::pair<R2D::e_Files, LoadableSptr>;
@@ -63,16 +60,14 @@ public:
 		return instance;
 	}
 
-	SaveReload() noexcept : m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED), m_fileSysteme(std::make_shared<FileSystemHandler>()) {}
+	SaveReload() noexcept : m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
 	SaveReload(const SaveReload&) = delete;
 
 public:
 	void init();
-	void registerSaveable(R2D::e_Files file, SaveableSptr saveable);
 	void registerLoadable(R2D::e_Files file, LoadableSptr loadable);
-	void unregisterSaveable(SaveableSptr saveable);
 	void unregisterLoadable(LoadableSptr saveable);
-	void save();
+	//void save();
 	void reload(GamePlayScreen& mainGame);
 
 public:
@@ -107,8 +102,6 @@ private:
 	SaveIdVect m_tabSave;
 	SaveId m_currentSave;
 
-	FileSystemeSptr m_fileSysteme;
-	SaveableSptrFileVector m_saveableSptrVector;
 	LoadableSptrFileVector m_loadableSptrVector;
 };
 

@@ -69,7 +69,7 @@ struct Tile
 }
 
 JSONCONS_ALL_MEMBER_NAME_TRAITS(Coor, (x, "x"), (y, "y"))
-JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
+//JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
 JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::Unit_Template,
 	(name, "Name"),
 	(type, "MovementType"),

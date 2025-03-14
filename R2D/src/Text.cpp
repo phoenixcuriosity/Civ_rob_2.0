@@ -50,7 +50,7 @@ void Text::getTextFromFile
 {
 	try
 	{
-		const std::string textFromFile{ ResourceManager::loadFileToString(ResourceManager::getFile(name)->getPath()) };
+		const std::string textFromFile{ ResourceManager::loadFileToString(ResourceManager::getFile(name)) };
 
 		const jsoncons::ojson configuration = jsoncons::ojson::parse(textFromFile);
 

@@ -29,8 +29,8 @@
 #include "SaveReload.h"
 #include <string>
 
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/Log.h>
 
 namespace IHM_SAVE_BUTTON
 {
@@ -285,7 +285,7 @@ void ReloadMenuScreen::updateVisibilityIfSaveSelected()
 		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("LoadSelectedSave")))->hide();
 		(static_cast<CEGUI::PushButton*>(m_gui.getWidget("removeSelectedSaveButton")))->hide();
 	}
-	
+
 }
 
 bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
@@ -293,7 +293,7 @@ bool ReloadMenuScreen::onOneSaveCliked(const CEGUI::EventArgs& /* e */)
 	for (size_t i(0); i < m_vectSavesRadioButton.size(); i++)
 	{
 		if	(m_vectSavesRadioButton[i]->isSelected())
-		{	
+		{
 			std::string dummy(m_vectSavesRadioButton[i]->getName().c_str());
 			/* erase "Save ", keep after the space */
 			dummy.erase(0, 5);
@@ -351,7 +351,7 @@ bool ReloadMenuScreen::onClearSavesCliked(const CEGUI::EventArgs& /* e */)
 	}
 	m_vectSavesRadioButton.clear();
 	m_widgetLabels.clear();
-	
+
 	SaveReload::getInstance().clearSave();
 
 	updateVisibilityIfSaveSelected();

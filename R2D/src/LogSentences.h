@@ -28,6 +28,7 @@ namespace logS
 	namespace WHO
 	{
 		constexpr char RESSOURCES_MANAGER[] = "[RESSOURCES_MANAGER]";
+		constexpr char REGISTER[] = "[REGISTER]";
 	};
 	namespace WHAT
 	{
@@ -35,6 +36,8 @@ namespace logS
 		constexpr char FILE[] = "[FILE]";
 		constexpr char TEXT[] = "[TEXT]";
 		constexpr char DIRECTION[] = "[DIRECTION]";
+
+		constexpr char REGISTER_DIRECTORY[] = "[REGISTER_DIRECTORY]";
 	};
 	namespace DATA
 	{
@@ -49,6 +52,9 @@ namespace logS
 		constexpr char ERROR_KEY_TEXT_MISSING[] = "ERROR_KEY_TEXT_MISSING : {}";
 
 		constexpr char ERROR_DIRECTION[] = "[ERROR : {}]";
+
+		constexpr char ERROR_DIR[] = "[ERROR : {}]";
+		constexpr char NO_ERROR_DIR[] = "[OK : {}]";
 	};
 };
 

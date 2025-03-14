@@ -95,11 +95,7 @@ struct Tile
 	int gold = -1;
 };
 
-struct MainMapConfig
-{
-	unsigned int m_tileSize = 0;
-	Coor m_mapSizePix;
-};
+
 
 #endif // !T_MainMap_H
 

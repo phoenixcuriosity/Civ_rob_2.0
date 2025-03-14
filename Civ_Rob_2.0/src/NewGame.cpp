@@ -31,7 +31,7 @@
 #include "Unit.h"
 
 #include <R2D/src/GUI.h>
-#include <R2D/src/Log.h> 
+#include <R2D/src/Log.h>
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
@@ -58,7 +58,7 @@ namespace NGC
 void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::START);
-	
+
 	SaveReload::getInstance().createSave();
 
 	pushNewPlayer(gamePlayScreen.getUserInputNewGame()->vectPlayerName, gamePlayScreen.GETPlayers());

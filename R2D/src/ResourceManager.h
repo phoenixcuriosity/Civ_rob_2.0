@@ -39,6 +39,9 @@ namespace R2D
 /* STATIC CLASS */
 class ResourceManager
 {
+	using FilePtrT = std::shared_ptr<File>;
+	using FIlePath = std::string;
+
 	ResourceManager() = delete;
 	~ResourceManager() = delete;
 	ResourceManager(const ResourceManager& src) = delete;
@@ -47,8 +50,9 @@ public:
 	static void copyIdMap(IdMap& dest);
 	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
 
-	static File* getFile(const e_Files name);
+	static const FIlePath& getFile(const e_Files name);
 	static void initializeFilePath(const e_Files name,const std::string& path);
+	static void ModifyFilePath(const e_Files name,const std::string& path);
 
 	static std::string loadFileToString(const std::string& path);
 
@@ -57,11 +61,11 @@ public:
 
 	static void getTextFromFile(const e_Files name,MapTexts& mapTexts);
 
-	static void 
+	static void
 	displayTextFromFile(const MapTexts& mapTexts,
 						const Window& window,
 						SpriteBatch& spriteBatchHUDStatic);
-		
+
 	static void initializeRGBA8Map();
 	static ColorRGBA8& getRGBA8Color(const std::string& colorName);
 

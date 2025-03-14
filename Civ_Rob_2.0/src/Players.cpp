@@ -73,7 +73,7 @@ m_matriceMapPtrT(matriceMapPtrT)
 
 Players::~Players()
 {
-	SaveReload::getInstance().unregisterSaveable(this);
+	//SaveReload::getInstance().unregisterSaveable(this);
 	SaveReload::getInstance().unregisterLoadable(this);
 	deleteAllPlayers();
 }
@@ -383,14 +383,14 @@ void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
 			else
 			{
 				LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
-					R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+					R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
 			}
 		}
 	}
 	else
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
-			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
 	}
 }
 
