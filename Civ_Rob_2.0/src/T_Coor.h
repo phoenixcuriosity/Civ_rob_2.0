@@ -24,13 +24,14 @@
 #define T_Coor_H
 
 #include "LIB.h"
+#include <jsoncons/json.hpp>
 
 struct Coor
 {
 	unsigned int x = 0;
 	unsigned int y = 0;
 };
-
+JSONCONS_ALL_MEMBER_NAME_TRAITS(Coor, (x, "x"), (y, "y"))
 typedef std::vector<Coor> VectCoor;
 
 #endif // !T_Coor_H

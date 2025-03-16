@@ -23,7 +23,6 @@
 #ifndef jsonloader_H
 #define jsonloader_H
 
-#include "T_Coor.h"
 #include "T_Player.h"
 #include "T_MainMap.h"
 
@@ -32,25 +31,9 @@
 namespace jsonloader
 {
 
-constexpr char KEY_MAP[]				= "Map";
 constexpr char KEY_MATRICE_MAP[]		= "MatriceMap";
 constexpr char KEY_PLAYERS[]			= "Players";
-constexpr char KEY_UNIT_TEMPLATE[]		= "Units";
 constexpr char KEY_FILE_PATH[]			= "FilePaths";
-
-struct Unit_Template
-{
-	std::string name;
-	size_t type;
-	unsigned int life;
-	unsigned int atq;
-	unsigned int def;
-	unsigned int movement;
-	unsigned int numberOfAttack;
-	unsigned int level;
-	double workToBuild;
-	double maintenance;
-};
 
 struct Tile
 {
@@ -68,19 +51,6 @@ struct Tile
 
 }
 
-JSONCONS_ALL_MEMBER_NAME_TRAITS(Coor, (x, "x"), (y, "y"))
-//JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
-JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::Unit_Template,
-	(name, "Name"),
-	(type, "MovementType"),
-	(life, "Life"),
-	(atq, "Atq"),
-	(def, "Def"),
-	(movement, "Mouvement"),
-	(numberOfAttack, "NumberOfAttack"),
-	(level, "Level"),
-	(workToBuild, "WorkToBuild"),
-	(maintenance, "Maintenance"))
 JSONCONS_ALL_MEMBER_NAME_TRAITS(jsonloader::Tile,
 	(indexX, "indexX"),
 	(indexY, "indexY"),

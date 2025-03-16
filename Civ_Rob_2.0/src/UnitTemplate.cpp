@@ -47,9 +47,9 @@ UnitTemplate
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::START);
 	try
 	{
-		if (f.contains(jsonloader::KEY_UNIT_TEMPLATE))
+		if (f.contains(KEY_UNIT_TEMPLATE))
 		{
-			const std::vector<jsonloader::Unit_Template> units = f[jsonloader::KEY_UNIT_TEMPLATE].as<std::vector<jsonloader::Unit_Template>>();
+			const std::vector<UnitTemplate::TemplateJson> units = f[KEY_UNIT_TEMPLATE].as<std::vector<UnitTemplate::TemplateJson>>();
 
 			Template currentUnit;
 			for (const auto& unit : units)
@@ -71,7 +71,7 @@ UnitTemplate
 		else
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::MISSING_KEY_JSON,
-				R2D::ResourceManager::getFile(R2D::e_Files::units), jsonloader::KEY_UNIT_TEMPLATE);
+				R2D::ResourceManager::getFile(R2D::e_Files::units), KEY_UNIT_TEMPLATE);
 		}
 	}
 	catch (const std::exception& e)

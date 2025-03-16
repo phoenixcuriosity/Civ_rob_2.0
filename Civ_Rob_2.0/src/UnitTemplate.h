@@ -56,6 +56,25 @@ public:
 	using TemplateVect = std::vector<Template>;
 
 public:
+	struct TemplateJson
+	{
+		UnitName name;
+		size_t type;
+		unsigned int life;
+		unsigned int atq;
+		unsigned int def;
+		unsigned int movement;
+		unsigned int numberOfAttack;
+		unsigned int level;
+		unsigned int nbturnToBuild;
+		double workToBuild;
+		double maintenance;
+	};
+
+private:
+	static constexpr char KEY_UNIT_TEMPLATE[] = "Units";
+
+public:
 	UnitTemplate() noexcept : m_vectUnitTemplate(), initialized(false) {};
 	UnitTemplate(R2D::RegisterPairVector& registerLoad);
 	virtual ~UnitTemplate() = default;
@@ -70,3 +89,15 @@ protected:
 	TemplateVect m_vectUnitTemplate;
 	bool initialized;
 };
+
+JSONCONS_ALL_MEMBER_NAME_TRAITS(UnitTemplate::TemplateJson,
+	(name, "Name"),
+	(type, "MovementType"),
+	(life, "Life"),
+	(atq, "Atq"),
+	(def, "Def"),
+	(movement, "Mouvement"),
+	(numberOfAttack, "NumberOfAttack"),
+	(level, "Level"),
+	(workToBuild, "WorkToBuild"),
+	(maintenance, "Maintenance"))

@@ -50,9 +50,9 @@ void MainMapConfig::load(jsoncons::ojson f)
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::START);
 	try
 	{
-		if (f.contains(jsonloader::KEY_MAP))
+		if (f.contains(KEY_MAP))
 		{
-			*this = f[jsonloader::KEY_MAP].as<MainMapConfig>();
+			*this = f[KEY_MAP].as<MainMapConfig>();
 		}
 	}
 	catch (const std::exception& e)
