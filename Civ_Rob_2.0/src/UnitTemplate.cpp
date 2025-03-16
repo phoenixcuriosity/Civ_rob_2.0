@@ -49,24 +49,23 @@ UnitTemplate
 	{
 		if (f.contains(KEY_UNIT_TEMPLATE))
 		{
-			const std::vector<UnitTemplate::TemplateJson> units = f[KEY_UNIT_TEMPLATE].as<std::vector<UnitTemplate::TemplateJson>>();
+			const TemplateJsonVect units = f[KEY_UNIT_TEMPLATE].as<TemplateJsonVect>();
 
-			Template currentUnit;
-			for (const auto& unit : units)
-			{
-				currentUnit.name = unit.name;
-				currentUnit.type = static_cast<Movement_Type>(unit.type);
-				currentUnit.life = unit.life;
-				currentUnit.atq = unit.atq;
-				currentUnit.def = unit.def;
-				currentUnit.movement = unit.movement;
-				currentUnit.numberOfAttack = unit.numberOfAttack;
-				currentUnit.level = unit.level;
-				currentUnit.workToBuild = unit.workToBuild;
-				currentUnit.maintenance = unit.maintenance;
-
-				m_vectUnitTemplate.push_back(currentUnit);
-			}
+			std::transform(units.begin(), units.end(), std::back_inserter(m_vectUnitTemplate), [](const auto& unit) {
+				return Template{
+					unit.name,
+					static_cast<Movement_Type>(unit.type),
+					unit.life,
+					unit.atq,
+					unit.def,
+					unit.movement,
+					unit.numberOfAttack,
+					unit.level,
+					unit.nbturnToBuild,
+					unit.workToBuild,
+					unit.maintenance
+				};
+				});
 		}
 		else
 		{

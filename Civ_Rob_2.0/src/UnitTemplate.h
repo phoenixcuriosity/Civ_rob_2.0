@@ -30,7 +30,7 @@ class UnitTemplate : public R2D::ILoadable<jsoncons::ojson>
 public:
 	using UnitName = std::string;
 
-	enum class Movement_Type
+	enum class Movement_Type : size_t
 	{
 		ground,			/* The Unit can move on ground (dirt,grass,...) */
 		air,			/* The Unit can move on ground (dirt,grass,...) or on water */
@@ -59,7 +59,7 @@ public:
 	struct TemplateJson
 	{
 		UnitName name;
-		size_t type;
+		std::underlying_type_t<Movement_Type> type;
 		unsigned int life;
 		unsigned int atq;
 		unsigned int def;
@@ -70,6 +70,7 @@ public:
 		double workToBuild;
 		double maintenance;
 	};
+	using TemplateJsonVect = std::vector<TemplateJson>;
 
 private:
 	static constexpr char KEY_UNIT_TEMPLATE[] = "Units";
