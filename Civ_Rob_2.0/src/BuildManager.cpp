@@ -45,7 +45,7 @@ BuildManager::BuildManager
 	const unsigned int& y,
 	const conversionSurplus_Type& conversionToApplyf
 )
-: 
+:
 m_citizenManager(citizenManager),
 m_foodManager(foodManager),
 m_x(x),
@@ -98,7 +98,7 @@ void BuildManager::computeWork()
 void BuildManager::computeWorkToBuild
 (
 	Player& player,
-	const VectUnitTemplate& vectUnitTemplate,
+	const UnitTemplate& vectUnitTemplate,
 	bool* needToUpdateDrawUnit
 )
 {
@@ -114,21 +114,21 @@ void BuildManager::computeWorkToBuild
 			{
 			case build_Type::unit:
 			{
-				unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.front().buildQ.name, vectUnitTemplate));
+				unsigned int unitToBuild(vectUnitTemplate.searchUnitByName(m_buildQueue.front().buildQ.name));
 
 				player.addUnit
 				(
 					m_buildQueue.front().buildQ.name,
 					m_x,
 					m_y,
-					vectUnitTemplate[unitToBuild].type,
-					vectUnitTemplate[unitToBuild].life,
-					vectUnitTemplate[unitToBuild].atq,
-					vectUnitTemplate[unitToBuild].def,
-					vectUnitTemplate[unitToBuild].movement,
-					vectUnitTemplate[unitToBuild].numberOfAttack,
-					vectUnitTemplate[unitToBuild].level,
-					vectUnitTemplate[unitToBuild].maintenance
+					vectUnitTemplate.getTemplateVect()[unitToBuild].type,
+					vectUnitTemplate.getTemplateVect()[unitToBuild].life,
+					vectUnitTemplate.getTemplateVect()[unitToBuild].atq,
+					vectUnitTemplate.getTemplateVect()[unitToBuild].def,
+					vectUnitTemplate.getTemplateVect()[unitToBuild].movement,
+					vectUnitTemplate.getTemplateVect()[unitToBuild].numberOfAttack,
+					vectUnitTemplate.getTemplateVect()[unitToBuild].level,
+					vectUnitTemplate.getTemplateVect()[unitToBuild].maintenance
 				);
 				*needToUpdateDrawUnit = true;
 

@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include "UnitTemplate.h"
+
 #include <R2D/src/API_fwd.h>
 #include <R2D/src/Window.h>
 #include <glm/glm.hpp>
@@ -40,34 +42,7 @@ public:
 		attackMove		/* The Unit can move to the next Tile and attack the other Unit standing on the this Tile */
 	};
 
-	/* Define movement type of the Unit */
-	enum class Movement_Type
-	{
-		ground,			/* The Unit can move on ground (dirt,grass,...) */
-		air,			/* The Unit can move on ground (dirt,grass,...) or on water */
-		water,			/* The Unit can move on water */
-		deepwater		/* The Unit can move on deepwater or on water */
-	};
-
-	struct Template
-	{
-		std::string name;
-		Movement_Type type = Movement_Type::ground;
-		unsigned int life = 0;
-		unsigned int atq = 0;
-		unsigned int def = 0;
-		unsigned int movement = 0;
-		unsigned int numberOfAttack = 0;
-		unsigned int level = 0;
-		unsigned int nbturnToBuild = 0;
-		double workToBuild = 0.0;
-		double maintenance = 0.0;
-	};
-
 private:
-
-	using TemplateVect = std::vector<Template>;
-
 	static constexpr char DEFAULT_UNIT_NAME[] = "DEFAULT_UNIT_NAME";
 	static constexpr unsigned int NO_MOVEMENT = 0;
 	static constexpr unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
@@ -81,16 +56,12 @@ private:
 	static constexpr int GOLD_ADD_BY_IRRAGATION = 1;
 
 public:
-
-	static unsigned int
-	searchUnitByName(const std::string& name, 
-					 const TemplateVect& tabUnit_Template);
-	static bool 
+	static bool
 	searchUnitTile(	Players& players,
 					const glm::i32vec2& mouseCoorNorm,
 					Select_Type* select);
 
-	static void 
+	static void
 	tryToMove(	const MatriceMap& maps,
 				Players& players,
 				Select_Type select,
@@ -105,25 +76,25 @@ private:
 				 int* const playerToAttack,
 				 int* const unitToAttack);
 
-	static bool 
+	static bool
 	checkUnitNextTile(const Unit& from,
 					  const Unit& to,
 					  const int x,
 					  const int y);
 
-	static bool 
+	static bool
 	checkNextTile(const Unit& from,
 				  const Tile& to,
 				  const int x,
 				  const int y);
-	
+
 public:
 
 	Unit();
 	Unit(const std::string& name,
 		unsigned int x,
 		unsigned int y,
-		Movement_Type movementType,
+		UnitTemplate::Movement_Type movementType,
 		unsigned int life,
 		unsigned int atq,
 		unsigned int def,
@@ -143,27 +114,27 @@ private:
 	virtual void
 	defend(const int dmg);
 
-	virtual void 
+	virtual void
 	move(Select_Type& select,
 		 int& selectunit,
 		 const R2D::CardinalDirection& cardinalDirection);
 
 public:
 
-	virtual void 
+	virtual void
 	heal(const MatriceMap& tiles,
 		 const unsigned int selectplayer);
 
-	virtual void 
+	virtual void
 	levelup();
 
-	virtual void 
+	virtual void
 	RESETmovement() noexcept { m_movement = m_maxmovement; };
 
-	virtual void 
+	virtual void
 	RESETnumberOfAttack() noexcept { m_numberOfAttack = m_maxNumberOfAttack; };
 
-	virtual bool 
+	virtual bool
 	irrigate(MatriceMap& map);
 
 private:
@@ -173,10 +144,10 @@ private:
 	virtual bool testPos(const unsigned int mouse_x, const unsigned int mouse_y) const noexcept
 	{return (m_x == mouse_x && m_y == mouse_y);};
 
-	virtual bool isGroundMovement_Type() const noexcept		{ return m_movementType == Movement_Type::ground; };
-	virtual bool isAirMovement_Type() const noexcept		{ return m_movementType == Movement_Type::air; };
-	virtual bool isWaterMovement_Type()	const noexcept		{ return m_movementType == Movement_Type::water; };
-	virtual bool isDeepWaterMovement_Type() const noexcept	{ return m_movementType == Movement_Type::deepwater; };
+	virtual bool isGroundMovement_Type() const noexcept		{ return m_movementType == UnitTemplate::Movement_Type::ground; };
+	virtual bool isAirMovement_Type() const noexcept		{ return m_movementType == UnitTemplate::Movement_Type::air; };
+	virtual bool isWaterMovement_Type()	const noexcept		{ return m_movementType == UnitTemplate::Movement_Type::water; };
+	virtual bool isDeepWaterMovement_Type() const noexcept	{ return m_movementType == UnitTemplate::Movement_Type::deepwater; };
 	virtual bool isPossibleToAttack()const noexcept			{ return m_numberOfAttack > ZERO_NUMBER_OF_ATTACK; };
 
 public:
@@ -200,7 +171,7 @@ public:
 	inline const std::string& GETname()				const { return m_name; };
 	inline unsigned int GETx()						const { return m_x; };
 	inline unsigned int GETy()						const { return m_y; };
-	inline Movement_Type GETmovementType()			const { return m_movementType; };
+	inline UnitTemplate::Movement_Type GETmovementType()			const { return m_movementType; };
 	inline int GETmaxlife()							const { return m_maxlife; };
 	inline int GETmaxatq()							const { return m_maxatq; };
 	inline int GETmaxdef()							const { return m_maxdef; };
@@ -229,7 +200,7 @@ private:
 	std::string m_name;
 	unsigned int m_x;
 	unsigned int m_y;
-	Movement_Type m_movementType;
+	UnitTemplate::Movement_Type m_movementType;
 
 	int m_maxlife;
 	int m_maxatq;

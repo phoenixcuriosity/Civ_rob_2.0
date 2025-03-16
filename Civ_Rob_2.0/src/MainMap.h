@@ -27,29 +27,16 @@
 
 #include "GamePlayScreenEnumTexture.h"
 #include "T_MainMap.h"
+#include "MainMapConfig.h"
 
 #include <R2D/src/Camera2D.h>
 #include <R2D/src/SpriteBatch.h>
 #include <R2D/src/ISaveable.h>
 #include <R2D/src/ILoadable.h>
+#include <R2D/src/IRegister.h>
 
 #include <jsoncons/json.hpp>
 
-
-
-
-class MainMapConfig : public R2D::ILoadable<jsoncons::ojson>
-{
-public:
-	unsigned int m_tileSize = 0;
-	Coor m_mapSizePix;
-public:
-	MainMapConfig();
-	void load(jsoncons::ojson f)override;
-};
-
-
-JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
 
 class MainMap : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
@@ -64,7 +51,8 @@ public:
 	static bool assertRangeMapIndex(const unsigned int indexToTest, const size_t size);
 
 public:
-	MainMap();
+	MainMap() = delete;
+	MainMap(R2D::RegisterPairVector& registerLoad);
 	virtual ~MainMap();
 
 	void initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture);

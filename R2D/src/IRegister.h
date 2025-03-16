@@ -24,10 +24,13 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <typeindex>
+
 
 #include "FileSystem.h"
 #include "FileSystemHandler.h"
 #include "ISaveable.h"
+#include "ILoadable.h"
 #include "Files.h"
 
 #include <jsoncons/json.hpp>
@@ -37,23 +40,58 @@ namespace R2D
 
 class IRegister
 {
-private:
-    using FilePath = e_Files;
+protected:
     using FileSystemHandlerPtrT = std::shared_ptr<IFileSystem>;
-
-    using SaveableSptr = R2D::ISaveable<jsoncons::ojson>*;
-    using SaveableSptrFile = std::pair<FilePath, const SaveableSptr>;
-    using SaveableSptrFileVector = std::vector<SaveableSptrFile>;
 
 public:
     IRegister() : m_fileSysteme(std::make_shared<FileSystemHandler>()) {}
-    void registerSaveable(const FilePath& file, const SaveableSptr loadable) { m_saveableSptrVector.push_back({ file , loadable }); };
-    void save();
+	virtual ~IRegister() = default;
 
 protected:
     FileSystemHandlerPtrT m_fileSysteme;
+};
+
+class IRegisterSaveAble : virtual public IRegister
+{
+private:
+    using FilePath = e_Files;
+    using SaveableSptr = ISaveable<jsoncons::ojson>*;
+    using SaveableSptrFile = std::pair<FilePath, SaveableSptr>;
+    using SaveableSptrFileVector = std::vector<SaveableSptrFile>;
+
+public:
+	IRegisterSaveAble() {};
+	virtual ~IRegisterSaveAble() = default;
+    void registerSaveable(const FilePath& file, const SaveableSptr saveable);
+    void unRegisterSaveable(const FilePath& file, const SaveableSptr saveable);
+    void save();
+
+protected:
     SaveableSptrFileVector m_saveableSptrVector;
 };
+
+class IRegisterLoadAble : virtual public IRegister
+{
+private:
+    using FilePath = e_Files;
+	using LoadableSptr = ILoadable<jsoncons::ojson>*;
+	using LoadableSptrFile = std::pair<FilePath, LoadableSptr>;
+	using LoadableSptrFileVector = std::vector<LoadableSptrFile>;
+
+public:
+	IRegisterLoadAble() {};
+	virtual ~IRegisterLoadAble() = default;
+    void registerLoadable(const FilePath& file, const LoadableSptr loadable);
+	void unRegisterLoadable(const FilePath& file, const LoadableSptr loadable);
+    virtual void load();
+
+protected:
+	LoadableSptrFileVector m_loadableSptrVector;
+};
+
+using RegisterPtrT = R2D::IRegisterLoadAble*;
+using RegisterPair = std::pair<RegisterPtrT, std::type_index>;
+using RegisterPairVector = std::vector<RegisterPair>;
 
 
 }

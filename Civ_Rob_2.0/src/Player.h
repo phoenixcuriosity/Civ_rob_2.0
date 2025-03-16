@@ -34,7 +34,7 @@ namespace PlayerH
 	constexpr unsigned int NB_MAX_PLAYER = 9;
 
 	constexpr double INITIAL_GOLD = 100.0;
-	
+
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
@@ -51,7 +51,7 @@ public:
 		const std::string& name,
 		unsigned int x,
 		unsigned int y,
-		Unit::Movement_Type movementType,
+		UnitTemplate::Movement_Type movementType,
 		unsigned int life,
 		unsigned int atq,
 		unsigned int def,

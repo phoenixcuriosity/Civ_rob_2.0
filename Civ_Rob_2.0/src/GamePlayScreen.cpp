@@ -23,7 +23,6 @@
 #include "GamePlayScreen.h"
 
 #include "App.h"
-#include "InitLoadFromFile.h"
 #include "LogSentences.h"
 #include "Player.h"
 #include "NewGame.h"
@@ -36,19 +35,27 @@
 #include <R2D/src/ErrorLog.h>
 #include <R2D/src/Log.h>
 
-GamePlayScreen::GamePlayScreen(UserInputNewGame* userInputNewGame)
-:
+GamePlayScreen::GamePlayScreen(UserInputNewGame* userInputNewGame):
 R2D::IGameScreen(),
 R2D::CScreen(),
+R2D::IRegisterLoadAble(),
+R2D::IRegister(),
+m_loadSub(addSubscriber()),
 m_screen(),
 m_var(),
-m_mainMap(),
+m_mainMap(m_loadSub),
 m_nextTurn(),
-m_players(&m_mainMap.GETmatriceMap()),
+m_players(m_loadSub, &m_mainMap.GETmatriceMap()),
 m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
+}
+
+R2D::RegisterPairVector GamePlayScreen::addSubscriber()
+{
+	R2D::RegisterPairVector registerLoad{ };
+	return registerLoad;
 }
 
 GamePlayScreen::~GamePlayScreen()
@@ -89,7 +96,7 @@ bool GamePlayScreen::onEntry()
 	{
 		try
 		{
-			InitLoadFromFile::loadMainMapConfig(m_mainMap);
+			IRegisterLoadAble::load();
 
 			R2D::ResourceManager::InitializeCardinalDirectionMapping
 			(m_mainMap.GETtileSize());
@@ -100,8 +107,6 @@ bool GamePlayScreen::onEntry()
 
 			initOpenGLScreen();
 
-			InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
-
 			/* Need to be after loadUnitAndSpec */
 			m_players.init(m_screen.m_idTexture);
 
@@ -110,7 +115,13 @@ bool GamePlayScreen::onEntry()
 
 			if (SaveReload::getInstance().isSelectCurrentSave())
 			{
-				SaveReload::getInstance().reload(*this);
+				SaveReload::getInstance().load();
+
+				m_var.cinState = CinState_Type::cinMainMap;
+				m_players.SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
+
+				makePlayersButtons();
+				m_mainMap.initMainMapTexture(m_screen.m_idTexture);
 			}
 			else
 			{

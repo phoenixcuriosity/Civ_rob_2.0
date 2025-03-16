@@ -29,15 +29,10 @@
 
 #include <R2D/src/API_fwd.h>
 #include <R2D/src/Files.h>
-#include <R2D/src/ISaveable.h>
-#include <R2D/src/ILoadable.h>
 #include <R2D/src/IRegister.h>
 #include <limits>
 
-
-
-
-class SaveReload : public R2D::IRegister
+class SaveReload : public R2D::IRegisterSaveAble, public R2D::IRegisterLoadAble
 {
 private:
 	using SaveId = size_t;
@@ -60,15 +55,13 @@ public:
 		return instance;
 	}
 
-	SaveReload() noexcept : m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
+	SaveReload() : IRegisterSaveAble(), IRegisterLoadAble(), IRegister(), m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
 	SaveReload(const SaveReload&) = delete;
+	virtual ~SaveReload() = default;
 
-public:
 	void init();
-	void registerLoadable(R2D::e_Files file, LoadableSptr loadable);
-	void unregisterLoadable(LoadableSptr saveable);
-	//void save();
-	void reload(GamePlayScreen& mainGame);
+
+	void load() override;
 
 public:
 	void createSave();
@@ -88,6 +81,7 @@ public:
 
 private:
 	FilePath getSaveFilePath(const R2D::e_Files file);
+	void ModifySaveFileLocationToCurrent();
 
 public:
 	inline const SaveId& getSave(const SaveId& saveId) const noexcept { return m_tabSave[saveId]; };
@@ -101,8 +95,6 @@ public:
 private:
 	SaveIdVect m_tabSave;
 	SaveId m_currentSave;
-
-	LoadableSptrFileVector m_loadableSptrVector;
 };
 
 

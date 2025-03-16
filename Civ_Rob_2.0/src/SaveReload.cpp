@@ -59,53 +59,10 @@ SaveReload
 	}
 }
 
-void
-SaveReload
-::registerLoadable(R2D::e_Files file, LoadableSptr loadable)
+void SaveReload::load()
 {
-	m_loadableSptrVector.push_back({ file, loadable });
-}
-
-void
-SaveReload
-::unregisterLoadable(LoadableSptr loadable)
-{
-	std::erase_if(m_loadableSptrVector, [loadable](const LoadableSptrFile& pair)
-		{
-			return pair.second == loadable;
-		});
-}
-
-void SaveReload::reload
-(
-	GamePlayScreen& mainGame
-)
-{
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::START);
-
-	try
-	{
-		assert(m_fileSysteme);
-
-		std::for_each(std::begin(m_loadableSptrVector), std::end(m_loadableSptrVector),
-			[this](LoadableSptrFile& loadable)
-			{
-				assert(loadable.second);
-				loadable.second->load(m_fileSysteme->readDataFromFile(getSaveFilePath(loadable.first), true));
-			});
-	}
-	catch (const std::exception& e)
-	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAINMAP_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
-	}
-
-	mainGame.GETvar().cinState = CinState_Type::cinMainMap;
-	mainGame.GETPlayers().SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
-
-	mainGame.makePlayersButtons();
-	mainGame.GETmainMap().initMainMapTexture(mainGame.GETscreen().m_idTexture);
-
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::RELOAD, logS::DATA::END);
+	ModifySaveFileLocationToCurrent();
+	IRegisterLoadAble::load();
 }
 
 void SaveReload::createSave()
@@ -123,8 +80,7 @@ void SaveReload::createSave()
 	}
 	m_tabSave.push_back(m_currentSave);
 
-	R2D::ResourceManager::ModifyFilePath(R2D::e_Files::saveMaps, getSaveFilePath(R2D::e_Files::saveMaps));
-	R2D::ResourceManager::ModifyFilePath(R2D::e_Files::savePlayers, getSaveFilePath(R2D::e_Files::savePlayers));
+	ModifySaveFileLocationToCurrent();
 
 	createSaveDir();
 
@@ -228,6 +184,14 @@ SaveReload
 ::getSaveFilePath(const R2D::e_Files file)
 {
 	return std::format("{}{:04}/{}", R2D::ResourceManager::getFile(R2D::e_Files::saveInfo), m_currentSave, R2D::ResourceManager::getFile(file));
+}
+
+void
+SaveReload
+::ModifySaveFileLocationToCurrent()
+{
+	R2D::ResourceManager::ModifyFilePath(R2D::e_Files::saveMaps, getSaveFilePath(R2D::e_Files::saveMaps));
+	R2D::ResourceManager::ModifyFilePath(R2D::e_Files::savePlayers, getSaveFilePath(R2D::e_Files::savePlayers));
 }
 
  /*

@@ -82,7 +82,7 @@ void Player::addUnit
 	const std::string& name,
 	unsigned int x,
 	unsigned int y,
-	Unit::Movement_Type movementType,
+	UnitTemplate::Movement_Type movementType,
 	unsigned int life,
 	unsigned int atq,
 	unsigned int def,

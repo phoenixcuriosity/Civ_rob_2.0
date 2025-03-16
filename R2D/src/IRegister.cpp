@@ -23,16 +23,84 @@
 #include "IRegister.h"
 #include "ResourceManager.h"
 
+#include "ErrorLog.h"
+#include "log.h"
+#include "LogSentences.h"
+
 void
-R2D::IRegister
+R2D::IRegisterSaveAble
+::registerSaveable(const FilePath& file, const SaveableSptr saveable)
+{
+	m_saveableSptrVector.push_back({ file , saveable });
+};
+
+void
+R2D::IRegisterSaveAble
+::unRegisterSaveable(const FilePath& file, const SaveableSptr saveable)
+{
+	std::erase_if(m_saveableSptrVector, [file, saveable](const SaveableSptrFile& pair)
+		{
+			return ((pair.first == file) && (pair.second == saveable));
+		});
+};
+
+
+void
+R2D::IRegisterSaveAble
 ::save()
 {
 	assert(m_fileSysteme);
 
-	std::for_each(std::begin(m_saveableSptrVector), std::end(m_saveableSptrVector),
+	try
+	{
+		std::for_each(std::begin(m_saveableSptrVector), std::end(m_saveableSptrVector),
 		[this](const SaveableSptrFile& saveable)
 		{
 			assert(saveable.second);
 			m_fileSysteme->writeDataInFile(ResourceManager::getFile(saveable.first), saveable.second->save());
 		});
+	}
+	catch (const std::exception& e)
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::REGISTER, logS::WHAT::REGISTER_DIRECTORY, logS::DATA::ERROR_DIR, e.what());
+	}
+};
+
+void
+R2D::IRegisterLoadAble
+::registerLoadable(const FilePath& file, const LoadableSptr loadable)
+{
+	m_loadableSptrVector.push_back({ file , loadable });
+};
+
+void
+R2D::IRegisterLoadAble
+::unRegisterLoadable(const FilePath& file, const LoadableSptr loadable)
+{
+	std::erase_if(m_loadableSptrVector, [file, loadable](const LoadableSptrFile& pair)
+		{
+			return ((pair.first == file) && (pair.second == loadable));
+		});
+};
+
+void
+R2D::IRegisterLoadAble
+::load()
+{
+	assert(m_fileSysteme);
+
+	try
+	{
+		std::for_each(std::begin(m_loadableSptrVector), std::end(m_loadableSptrVector),
+			[this](const LoadableSptrFile& loadable)
+			{
+				assert(loadable.second);
+				loadable.second->load(m_fileSysteme->readDataFromFile(ResourceManager::getFile(loadable.first), true));
+			});
+	}
+	catch (const std::exception& e)
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::REGISTER, logS::WHAT::REGISTER_DIRECTORY, logS::DATA::ERROR_DIR, e.what());
+	}
+
 };

@@ -30,19 +30,26 @@
 #include "Players.h"
 #include "T_GamePlayScreen.h"
 
+#include <R2D/src/IRegister.h>
 #include <R2D/src/IMainGame.h>
 #include <R2D/src/Screen.h>
 
-class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen
+
+
+#include <R2D/src/ILoadable.h>
+
+
+class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen, public R2D::IRegisterLoadAble
 {
 public:
-
+	GamePlayScreen() = delete;
 	GamePlayScreen(UserInputNewGame* userInputNewGame);
+	virtual ~GamePlayScreen();
 
-	~GamePlayScreen();
+protected:
+	R2D::RegisterPairVector addSubscriber();
 
 public: /* Override from R2D::IGameScreen */
-
 	int getNextScreenIndex()const override;
 	int getPreviousScreenIndex()const override;
 
@@ -56,49 +63,25 @@ public: /* Override from R2D::IGameScreen */
 	void draw() override;
 
 private: /* Override from R2D::CScreen */
-
 	void doInitOptimizeTexture()override;
 	void doInitUI() override;
 	void doInitHUDText() override;
 	void doDrawAll() override;
 
 private:
-
-	/* NAME : initStructs																   */
-	/* ROLE : Initialisation des donn�es par d�faut des structures						   */
-	/* INPUT : struct Sysinfo& : structure globale du programme							   */
-	/* RETURNED VALUE    : void															   */
 	void initStructsNULL();
-
-	/* NAME : computeSize																   */
-	/* ROLE : Calcul des diff�rentes tailles de fenetre en fonction de tileSize			   */
-	/* INPUT/OUTPUT : Screen& screen : longueur et hauteur �cran						   */
-	/* INPUT/OUTPUT : struct Sysinfo& : diff�rentes tailles de fenetre					   */
-	/* RETURNED VALUE    : void															   */
 	void computeSize();
-
-	/* NAME : initOpenGLScreen															   */
-	/* ROLE : Init m_screen.openGLScreen and m_mainMap									   */
-	/* RETURNED VALUE    : void															   */
 	void initOpenGLScreen();
 
 
 public:
-
-	/* NAME : makePlayersButtons														   */
-	/* ROLE : Create for p, number of players, a radio button 							   */
-	/* ROLE : Button will be arrange in vertical axis and by p order					   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : void														       */
 	void makePlayersButtons();
 
 private:
-
 	bool onPlayerButtonClicked(const CEGUI::EventArgs& e);
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
 public:
-
 	Screen& GETscreen()							{ return m_screen; };
 	Var& GETvar()								{ return m_var; };
 	MainMap& GETmainMap()						{ return m_mainMap; };
@@ -113,22 +96,14 @@ public:
 	const MainMap& GETmainMap()const	{ return m_mainMap; };
 	const Players& GETPlayers()const	{ return m_players; };
 
-	void SETvar(Var& var)				{ m_var = var; };
-	void SETmainMap(MainMap& mainMap)	{ m_mainMap = mainMap; };
-	void SETPlayers(Players& players)	{ m_players = players; };
-
 private:
+	R2D::RegisterPairVector m_loadSub;
 
 	Screen m_screen;
-
 	Var m_var;
-
 	MainMap m_mainMap;
-
 	NextTurn m_nextTurn;
-
 	Players m_players;
-
 	UserInputNewGame* m_userInputNewGame;
 
 	bool m_isInitialize;

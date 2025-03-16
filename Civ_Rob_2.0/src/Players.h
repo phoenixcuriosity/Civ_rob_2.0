@@ -27,10 +27,13 @@
 
 #include "GamePlayScreenEnumTexture.h"
 #include "Unit.h"
+#include "UnitTemplate.h"
+#include "CityNameTemplate.h"
 
 #include <R2D/src/ISaveable.h>
 #include <R2D/src/ILoadable.h>
 #include <R2D/src/WidgetLabel.h>
+#include <R2D/src/IRegister.h>
 
 #include <jsoncons/json.hpp>
 
@@ -38,15 +41,14 @@ class Players : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<js
 {
 private:
 	using MatriceMapPtrT = MatriceMap*;
-	using VectUnitTemplate = std::vector<Unit::Template>;
 public:
-	Players(MatriceMapPtrT matriceMapPtrT);
+	Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT);
 	~Players();
 
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
 	inline PlayerPtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
-	inline VectCityName& GETvectCityName() { return m_vectCityName; };
-	inline VectUnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
+	inline CityNameTemplate::Vect& GETvectCityName() { return m_vectCityName.getVect(); };
+	inline UnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
 	inline CityPtrT& GETSelectedCity() { return m_selectedCity; };
@@ -124,11 +126,8 @@ private:
 	/* Ptr to the selected City */
 	CityPtrT m_selectedCity;
 
-	VectCityName m_vectCityName;
-
-	// tableau des statistiques par défauts des unités
-	VectUnitTemplate m_vectUnitTemplate;
-	VectUnitTemplate m_vectCityTemplate;
+	CityNameTemplate m_vectCityName;
+	UnitTemplate m_vectUnitTemplate;
 
 	GamePlayScreenTexture m_idTexture;
 

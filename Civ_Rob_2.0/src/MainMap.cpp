@@ -34,26 +34,6 @@
 
 #include <format>
 
-MainMapConfig::MainMapConfig() { };
-
-void MainMapConfig::load(jsoncons::ojson f)
-{
-	try
-	{
-
-
-		if (f.contains(jsonloader::KEY_MAP))
-		{
-			*this = f[jsonloader::KEY_MAP].as<MainMapConfig>();
-		}
-
-	}
-	catch (const std::exception& e)
-	{
-
-	}
-};
-
 namespace MAP_GEN
 {
 	/* MAP -> Max size - Min size of the map for sea borders */
@@ -113,8 +93,8 @@ void MainMap::setStaticPtrTileSize()
 }
 
 
-MainMap::MainMap():
-m_mainMapConfig(),
+MainMap::MainMap(R2D::RegisterPairVector& registerLoad):
+m_mainMapConfig(registerLoad),
 m_toolBarSize(0),
 m_offsetMapCameraXmin(0),
 m_offsetMapCameraXmax(0),
@@ -133,8 +113,8 @@ m_spriteBatch()
 
 MainMap::~MainMap()
 {
-	//SaveReload::getInstance().unregisterSaveable(this);
-	SaveReload::getInstance().unregisterLoadable(this);
+	SaveReload::getInstance().unRegisterSaveable(R2D::e_Files::saveMaps, this);
+	SaveReload::getInstance().unRegisterLoadable(R2D::e_Files::saveMaps, this);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::MAINMAP);
 }
 

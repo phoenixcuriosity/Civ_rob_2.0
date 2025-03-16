@@ -61,9 +61,9 @@
     <ClCompile Include="src\Players.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\InitLoadFromFile.cpp">
-      <Filter>Class GamePlayScreen</Filter>
-    </ClCompile>
+    <ClCompile Include="src\MainMapConfig.cpp" />
+    <ClCompile Include="src\UnitTemplate.cpp" />
+    <ClCompile Include="src\CityNameTemplate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -147,9 +147,6 @@
     <ClInclude Include="src\Players.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\InitLoadFromFile.h">
-      <Filter>Class GamePlayScreen</Filter>
-    </ClInclude>
     <ClInclude Include="src\T_NewGameScreen.h">
       <Filter>T_struct</Filter>
     </ClInclude>
@@ -166,6 +163,9 @@
     <ClInclude Include="src\jsonloader.h" />
     <ClInclude Include="src\T_Player.h" />
     <ClInclude Include="src\T_Coor.h" />
+    <ClInclude Include="src\MainMapConfig.h" />
+    <ClInclude Include="src\UnitTemplate.h" />
+    <ClInclude Include="src\CityNameTemplate.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

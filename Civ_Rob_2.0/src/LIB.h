@@ -147,7 +147,6 @@ typedef std::vector<Tile*> VectMapPtr;
 typedef std::vector<VectMap> MatriceMap;
 typedef std::vector<CitizenPtrT> VectCitizen;
 typedef std::vector<CityPtrT> VectCity;
-typedef std::vector<std::string> VectCityName;
 typedef std::vector<PlayerPtrT> VectPlayer;
 typedef std::vector<std::string> VectPlayerName;
 typedef std::vector<UnitPtrT> VectUnit;

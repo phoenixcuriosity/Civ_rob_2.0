@@ -33,9 +33,6 @@
 
 class City
 {
-private:
-
-	using VectUnitTemplate = std::vector<Unit::Template>;
 public: /* STATIC */
 
 	/**
@@ -152,7 +149,7 @@ public:
 	virtual void computeWork
 	(
 		Player& player,
-		const VectUnitTemplate& vectUnitTemplate,
+		const UnitTemplate& vectUnitTemplate,
 		bool* needToUpdateDrawUnit
 	);
 
@@ -226,7 +223,7 @@ public:
 	jsoncons::ojson saveToOjson()const;
 
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
-	
+
 public:
 	/* const & */
 	inline virtual const std::string& GETimage()const		{ return m_image; };

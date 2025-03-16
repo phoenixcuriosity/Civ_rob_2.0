@@ -79,7 +79,7 @@ void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 /* ------------------------------------------------------------------------------------*/
 void NewGameManager::pushNewPlayer
 (
-	const VectCityName& vectCityName,
+	const PlayerNameVector& vectCityName,
 	Players& players
 )
 {
@@ -110,7 +110,7 @@ void NewGameManager::newGameSettlerSpawn
 	/* association des vecteurs de position (x,y)							  */
 	/* avec les settlers de départ											  */
 	/* ---------------------------------------------------------------------- */
-	const size_t selectunit{ Unit::searchUnitByName("settler", players.GETvectUnitTemplate()) };
+	const size_t selectunit{ players.GETvectUnitTemplate().searchUnitByName("settler") };
 
 	std::vector<randomPos> tabRandom;
 	for (size_t i(0); i < players.GETvectPlayer().size(); i++)
@@ -122,13 +122,13 @@ void NewGameManager::newGameSettlerSpawn
 		("settler",
 			tabRandom[i].x,
 			tabRandom[i].y,
-			players.GETvectUnitTemplate()[selectunit].type,
-			players.GETvectUnitTemplate()[selectunit].life,
-			players.GETvectUnitTemplate()[selectunit].atq,
-			players.GETvectUnitTemplate()[selectunit].def,
-			players.GETvectUnitTemplate()[selectunit].movement,
-			players.GETvectUnitTemplate()[selectunit].numberOfAttack,
-			players.GETvectUnitTemplate()[selectunit].level,
+			players.GETvectUnitTemplate().getTemplateVect()[selectunit].type,
+			players.GETvectUnitTemplate().getTemplateVect()[selectunit].life,
+			players.GETvectUnitTemplate().getTemplateVect()[selectunit].atq,
+			players.GETvectUnitTemplate().getTemplateVect()[selectunit].def,
+			players.GETvectUnitTemplate().getTemplateVect()[selectunit].movement,
+			players.GETvectUnitTemplate().getTemplateVect()[selectunit].numberOfAttack,
+			players.GETvectUnitTemplate().getTemplateVect()[selectunit].level,
 			NGC::MAINTENANCE_COST_1TH_SETTLER);
 	}
 }

@@ -225,8 +225,7 @@ void CityScreen::doInitUI()
 	/* --- Add static city context --- */
 	if (!m_isInitialize)
 	{
-		/* Check Errors / Critical Error */
-		if (m_players->GETvectUnitTemplate().size() < (size_t)CitySC::MIN_INDEX_CYCLE_BUILDS)
+		if (m_players->GETvectUnitTemplate().isInitialized())
 		{
 			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
 		}
@@ -246,7 +245,7 @@ void CityScreen::doInitUI()
 		);
 
 		unsigned int i{ 0 };
-		for (const auto& p : m_players->GETvectUnitTemplate())
+		for (const auto& p : m_players->GETvectUnitTemplate().getTemplateVect())
 		{
 			m_buttonBuild.push_back
 			(
@@ -737,7 +736,7 @@ void CityScreen::updatePositionCycleButton(const bool dir)
 		m_buttonBuild[m_indexCycleBuilds + CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->enable();
 		m_buttonBuild[m_indexCycleBuilds + CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->setVisible(CitySC::SHOW_BUTTON);
 	}
-	
+
 	/* Update Y positions */
 	for (auto& c : m_buttonBuild)
 	{

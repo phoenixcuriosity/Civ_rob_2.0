@@ -30,26 +30,11 @@
 #include "Players.h"
 
 #include <jsoncons/json.hpp>
-#include <R2D/src/CardinalDirection.h> 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/CardinalDirection.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 
-unsigned int 
-Unit
-::searchUnitByName( const std::string& name,
-					const TemplateVect& tabUnit_Template)
-{
-	for (unsigned int p(0); p < tabUnit_Template.size(); p++)
-	{
-		if (tabUnit_Template[p].name.compare(name) == STRINGS::IDENTICAL)
-		{
-			return p;
-		}
-	}
-	return 0;
-}
-
-bool 
+bool
 Unit
 ::searchUnitTile(Players& players,
 				 const glm::i32vec2& mouseCoorNorm,
@@ -79,7 +64,7 @@ Unit
 	return false;
 }
 
-void 
+void
 Unit
 ::tryToMove(const MatriceMap& maps,
 			Players& players,
@@ -117,7 +102,7 @@ Unit
 					tryToMove(maps, players, select, cardinalDirection);
 				}
 			}
-			
+
 			/* Cannot move further for this turn */
 			attackUnit->SETmovement(NO_MOVEMENT);
 			break;
@@ -295,18 +280,18 @@ bool Unit::checkNextTile
 }
 
 Unit::Unit()
-: 
+:
 m_name(DEFAULT_UNIT_NAME),
 m_x(0),
 m_y(0),
-m_movementType(Movement_Type::ground),
+m_movementType(UnitTemplate::Movement_Type::ground),
 m_maxlife(100),
 m_maxatq(10),
 m_maxdef(5),
 m_maxmovement(1),
 m_maxNumberOfAttack(1),
 m_maxlevel(100),
-m_life(100), 
+m_life(100),
 m_atq(10),
 m_def(5),
 m_movement(1),
@@ -328,7 +313,7 @@ Unit::Unit
 	const std::string& name,
 	unsigned int x,
 	unsigned int y,
-	Movement_Type movementType,
+	UnitTemplate::Movement_Type movementType,
 	unsigned int life,
 	unsigned int atq,
 	unsigned int def,
@@ -351,7 +336,7 @@ m_maxNumberOfAttack(numberOfAttack),
 m_maxlevel(level),
 m_life(life),
 m_atq(atq),
-m_def(def), 
+m_def(def),
 m_movement(move),
 m_numberOfAttack(numberOfAttack),
 m_level(level),
@@ -534,7 +519,7 @@ void Unit::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		m_name = jsonLoad["m_name"].as_string();
 		m_x = jsonLoad["m_x"].as<unsigned int>();
 		m_y = jsonLoad["m_y"].as<unsigned int>();
-		m_movementType = static_cast<Movement_Type>(jsonLoad["m_movementType"].as<size_t>());
+		m_movementType = static_cast<UnitTemplate::Movement_Type>(jsonLoad["m_movementType"].as<size_t>());
 		m_maxlife = jsonLoad["m_maxlife"].as<int>();
 		m_maxatq = jsonLoad["m_maxatq"].as<int>();
 		m_maxdef = jsonLoad["m_maxdef"].as<int>();

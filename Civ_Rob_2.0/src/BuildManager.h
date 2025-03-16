@@ -32,9 +32,6 @@
 
 class BuildManager
 {
-private:
-
-	using VectUnitTemplate = std::vector<Unit::Template>;
 public:
 
 	BuildManager
@@ -71,7 +68,7 @@ public:
 	void computeWorkToBuild
 	(
 		Player& player,
-		const VectUnitTemplate& vectUnitTemplate,
+		const UnitTemplate& vectUnitTemplate,
 		bool* needToUpdateDrawUnit
 	);
 
@@ -129,7 +126,7 @@ public:
 	const dequeBuild& getBuildQueue()const	{ return m_buildQueue; };
 
 public:
-	
+
 	jsoncons::ojson saveToOjson()const;
 
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);

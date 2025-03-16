@@ -50,14 +50,13 @@ namespace
 	constexpr unsigned int CITY_TYPE = 1;
 }
 
-Players::Players(MatriceMapPtrT matriceMapPtrT)
+Players::Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT)
 :
 m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
-m_vectCityName(),
-m_vectUnitTemplate(),
-m_vectCityTemplate(),
+m_vectCityName(registerLoad),
+m_vectUnitTemplate(registerLoad),
 m_vectPlayer(),
 m_idTexture(),
 m_spriteBatchUnit(),
@@ -73,8 +72,8 @@ m_matriceMapPtrT(matriceMapPtrT)
 
 Players::~Players()
 {
-	//SaveReload::getInstance().unregisterSaveable(this);
-	SaveReload::getInstance().unregisterLoadable(this);
+	SaveReload::getInstance().unRegisterSaveable(R2D::e_Files::savePlayers, this);
+	SaveReload::getInstance().unRegisterLoadable(R2D::e_Files::savePlayers, this);
 	deleteAllPlayers();
 }
 
@@ -193,7 +192,7 @@ void Players::drawUnit
 						)
 					{
 
-						auto fes = static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::battleoids) + Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate));
+						auto fes = static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::battleoids) + m_vectUnitTemplate.searchUnitByName(unit->GETname()));
 
 						/* Unit Texture */
 						m_spriteBatchUnit.draw
