@@ -225,7 +225,7 @@ void CityScreen::doInitUI()
 	/* --- Add static city context --- */
 	if (!m_isInitialize)
 	{
-		if (m_players->GETvectUnitTemplate().isInitialized())
+		if (!m_players->GETvectUnitTemplate().isInitialized())
 		{
 			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
 		}
