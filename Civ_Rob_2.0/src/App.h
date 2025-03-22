@@ -44,12 +44,6 @@ private:
     using GamePlayScreenPtrT = std::shared_ptr<GamePlayScreen>; ///< Type alias for a shared pointer to GamePlayScreen.
     using CityScreenPtrT = std::shared_ptr<CityScreen>; ///< Type alias for a shared pointer to CityScreen.
 
-    using FileSystemeSptr = std::shared_ptr<R2D::IFileSystem>;
-
-    using LoadableSptr = R2D::ILoadable<jsoncons::ojson>*;
-    using LoadableSptrFile = std::pair<R2D::e_Files, LoadableSptr>;
-    using LoadableSptrFileVector = std::vector<LoadableSptrFile>;
-
 public:
     /**
      * @brief Constructor for the App class.

@@ -36,7 +36,6 @@
     <ClInclude Include="src\LogSentences.h" />
     <ClInclude Include="src\LoadingFileToString.h" />
     <ClInclude Include="src\Text.h" />
-    <ClInclude Include="src\FileSystem.h" />
     <ClInclude Include="src\ILoadable.h" />
     <ClInclude Include="src\FileReader.h" />
     <ClInclude Include="src\FileSystemHandler.h" />
@@ -70,8 +69,5 @@
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\LoadingFileToString.cpp" />
     <ClCompile Include="src\Text.cpp" />
-    <ClCompile Include="src\FileReader.cpp" />
-    <ClCompile Include="src\FileSystemHandler.cpp" />
-    <ClCompile Include="src\IRegister.cpp" />
   </ItemGroup>
 </Project>

@@ -35,9 +35,9 @@ std::string FileTools::loadFileToString(const std::string& path)
 	const uintmax_t length = std::filesystem::file_size(path, ec);
 	if (ec)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_SIZE_FILE, ec.message());
+		LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::FILE, logR::DATA::ERROR_SIZE_FILE, ec.message());
 	}
-	std::string buffer(length, '\0'); 
+	std::string buffer(length, '\0');
 	std::ifstream stream(path, std::ios::in);
 	stream.read(buffer.data(), length);
 	stream.close();
@@ -45,7 +45,7 @@ std::string FileTools::loadFileToString(const std::string& path)
 	const std::string text{ std::string(buffer.c_str(), strlen(buffer.c_str())) };
 	if (text.empty())
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_EMPTY_FILE, path);
+		LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::FILE, logR::DATA::ERROR_EMPTY_FILE, path);
 	}
 
 	return text;

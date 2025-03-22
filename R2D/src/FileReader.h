@@ -28,6 +28,8 @@
 
 namespace R2D
 {
+
+template <typename Format>
 class FileReader
 {
 private:
@@ -35,12 +37,51 @@ private:
     using Data = std::string;
 
 public:
-	FileReader(const FilePath& filename);
-    Data read(const FilePath& filename);
-    jsoncons::ojson readJson(const FilePath& filename);
-    ~FileReader() = default;
+	FileReader(const FilePath& filename) : m_file(filename, std::ios::in)
+	{
+		if (!m_file)
+		{
+			throw std::runtime_error("Unable to open file: " + filename);
+		};
+	}
+
+	Format read(const FilePath & filename)
+	{
+		std::error_code ec;
+		const uintmax_t length = std::filesystem::file_size(filename, ec);
+		if (ec)
+		{
+			throw std::runtime_error(ec.message());
+		}
+		Data buffer(length, '\0');
+		m_file.read(buffer.data(), length);
+
+		const Data text{ std::string(buffer.c_str(), strlen(buffer.c_str())) };
+		if (text.empty())
+		{
+			throw std::runtime_error("Empty file");
+		}
+
+		if constexpr (std::is_same_v<Format, std::string>)
+		{
+			return text;
+		}
+		else if constexpr (std::is_same_v<Format, jsoncons::ojson>)
+		{
+			return jsoncons::ojson::parse(text);
+		}
+		else
+		{
+			static_assert(sizeof(Format) == 0, "Unsupported type for FileWriter.");
+
+			return text;
+		}
+	};
+
+    virtual ~FileReader() = default;
 
 private:
     std::ifstream m_file;
 };
+
 }

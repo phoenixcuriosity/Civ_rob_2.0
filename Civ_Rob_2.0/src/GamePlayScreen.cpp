@@ -38,7 +38,7 @@
 GamePlayScreen::GamePlayScreen(UserInputNewGame* userInputNewGame):
 R2D::IGameScreen(),
 R2D::CScreen(),
-R2D::IRegisterLoadAble(),
+R2D::IRegisterLoadAble<jsoncons::ojson>(),
 R2D::IRegister(),
 m_loadSub(addSubscriber()),
 m_screen(),

@@ -32,22 +32,15 @@
 #include <R2D/src/IRegister.h>
 #include <limits>
 
-class SaveReload : public R2D::IRegisterSaveAble, public R2D::IRegisterLoadAble
+class SaveReload : public R2D::IRegisterSaveAble<jsoncons::ojson>, public R2D::IRegisterLoadAble<jsoncons::ojson>
 {
 private:
+	using FilePath = std::string;
 	using SaveId = size_t;
 	using SaveIdVect = std::vector<SaveId>;
 
 	static constexpr SaveId OFFSET_INDEX = 1;
 	static constexpr SaveId NO_CURRENT_SAVE_SELECTED = std::numeric_limits<size_t>::max();
-
-	using FileSystemeSptr = std::shared_ptr<R2D::IFileSystem>;
-	using FilePath = std::string;
-
-	using LoadableSptr = R2D::ILoadable<jsoncons::ojson>*;
-	using LoadableSptrFile = std::pair<R2D::e_Files, LoadableSptr>;
-	using LoadableSptrFileVector = std::vector<LoadableSptrFile>;
-
 public:
 	static SaveReload& getInstance()
 	{
@@ -55,7 +48,7 @@ public:
 		return instance;
 	}
 
-	SaveReload() : IRegisterSaveAble(), IRegisterLoadAble(), IRegister(), m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
+	SaveReload() : IRegisterSaveAble<jsoncons::ojson>(), IRegisterLoadAble<jsoncons::ojson>(), IRegister() , m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
 	SaveReload(const SaveReload&) = delete;
 	virtual ~SaveReload() = default;
 

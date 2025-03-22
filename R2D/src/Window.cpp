@@ -33,7 +33,7 @@ R2D::Window
 	m_sdlWindow = nullptr;
 }
 
-int 
+int
 R2D::Window
 ::create(const std::string& name,
 		 const int screenWidth,

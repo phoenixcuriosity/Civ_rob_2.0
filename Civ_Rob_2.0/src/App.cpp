@@ -132,8 +132,8 @@ App
 
 	try
 	{
-		R2D::FileReader reader(FILE_PATH_CONFIG);
-		const jsoncons::ojson configuration = reader.readJson(FILE_PATH_CONFIG);
+		R2D::FileReader<jsoncons::ojson> reader(FILE_PATH_CONFIG);
+		const jsoncons::ojson configuration = reader.read(FILE_PATH_CONFIG);
 
 		if (configuration.contains(jsonloader::KEY_FILE_PATH) && configuration[jsonloader::KEY_FILE_PATH].is_array())
 		{

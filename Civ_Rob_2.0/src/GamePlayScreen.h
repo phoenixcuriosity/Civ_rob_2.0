@@ -39,7 +39,7 @@
 #include <R2D/src/ILoadable.h>
 
 
-class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen, public R2D::IRegisterLoadAble
+class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen, public R2D::IRegisterLoadAble<jsoncons::ojson>
 {
 public:
 	GamePlayScreen() = delete;

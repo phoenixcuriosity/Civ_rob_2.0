@@ -21,19 +21,59 @@
 */
 #pragma once
 
-#include "FileSystem.h"
+#include "FileReader.h"
+#include "FileWriter.h"
+
+#include "ErrorLog.h"
+#include "log.h"
+#include "LogSentences.h"
+
+
+#include <filesystem>
 
 namespace R2D
 {
-class FileSystemHandler : public R2D::IFileSystem
+template <typename Format>
+class FileSystemHandler
 {
+	using Path = std::string;
+	using FileName = std::string;
+	using Data = std::string;
 public:
-    void createDirectory(const Path& path) override;
-    void removeFile(const FileName& file) override;
-	void writeDataInFile(const FileName& file, const Data& data) override;
-	void writeDataInFile(const FileName& file, const jsoncons::ojson& data) override;
-	Data readDataFromFile(const FileName& file) override;
-	jsoncons::ojson readDataFromFile(const FileName& file, const bool dummy = false) override;
+    void createDirectory(const Path& path) {
+		if (!std::filesystem::create_directory(path))
+		{
+			LOG(R2D::LogLevelType::error, 0, logR::WHO::REGISTER, logR::WHAT::REGISTER_DIRECTORY, logR::DATA::ERROR_DIR, " : createDirectory");
+		}
+		else
+		{
+			LOG(R2D::LogLevelType::info, 0, logR::WHO::REGISTER, logR::WHAT::REGISTER_DIRECTORY, logR::DATA::NO_ERROR_DIR, " : createDirectory");
+		}
+	}
+
+    void removeFile(const FileName& file) {
+		if (!std::filesystem::remove(file))
+		{
+			LOG(R2D::LogLevelType::error, 0, logR::WHO::REGISTER, logR::WHAT::REGISTER_DIRECTORY, logR::DATA::ERROR_DIR, " : removeFile");
+		}
+		else
+		{
+			LOG(R2D::LogLevelType::info, 0, logR::WHO::REGISTER, logR::WHAT::REGISTER_DIRECTORY, logR::DATA::NO_ERROR_DIR, " : removeFile");
+		}
+	}
+
+	void writeDataInFile(const FileName& file, const Format& data)
+	{
+		FileWriter<Format> writer(file);
+		writer.write(data);
+	}
+
+	Format readDataFromFile(const FileName& file)
+	{
+		FileReader<Format> reader(file);
+		return reader.read(file);
+	}
+
     virtual ~FileSystemHandler() = default;
 };
 }

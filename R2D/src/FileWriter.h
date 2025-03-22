@@ -27,6 +27,8 @@
 
 namespace R2D
 {
+
+template <typename Format>
 class FileWriter
 {
 public:
@@ -39,20 +41,19 @@ public:
         }
     }
 
-    template <typename T>
-    void write(const T& data)
+    void write(const Format& data)
     {
-        if constexpr (std::is_same_v<T, std::string>)
+        if constexpr (std::is_same_v<Format, std::string>)
         {
             m_file.write(data.data(), data.size());
         }
-        else if constexpr (std::is_same_v<T, jsoncons::ojson>)
+        else if constexpr (std::is_same_v<Format, jsoncons::ojson>)
         {
             jsoncons::encode_json(data, m_file, jsoncons::indenting::indent);
         }
         else
         {
-            static_assert(sizeof(T) == 0, "Unsupported type for FileWriter.");
+            static_assert(sizeof(Format) == 0, "Unsupported type for FileWriter.");
         }
 
         if (!m_file)

@@ -259,7 +259,7 @@ R2D::ResourceManager
 	}
 	catch (const std::out_of_range& e)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::DIRECTION, logS::DATA::ERROR_DIRECTION, e.what());
+		LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::DIRECTION, logR::DATA::ERROR_DIRECTION, e.what());
 		throw std::runtime_error("Direction not found");
 	}
 }

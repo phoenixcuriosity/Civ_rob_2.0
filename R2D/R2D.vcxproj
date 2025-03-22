@@ -167,7 +167,6 @@
     <ClInclude Include="src\ExitFromError.h" />
     <ClInclude Include="src\FileReader.h" />
     <ClInclude Include="src\Files.h" />
-    <ClInclude Include="src\FileSystem.h" />
     <ClInclude Include="src\FileSystemHandler.h" />
     <ClInclude Include="src\FileWriter.h" />
     <ClInclude Include="src\GameEngine.h" />
@@ -205,16 +204,13 @@
     <ClCompile Include="src\ColorRGBA8.cpp" />
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />
-    <ClCompile Include="src\FileReader.cpp" />
     <ClCompile Include="src\Files.cpp" />
-    <ClCompile Include="src\FileSystemHandler.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\GLSLProgram.cpp" />
     <ClCompile Include="src\GLTexture.cpp" />
     <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\IMainGame.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
-    <ClCompile Include="src\IRegister.cpp" />
     <ClCompile Include="src\LoadingFileToString.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\RealEngineError.cpp" />

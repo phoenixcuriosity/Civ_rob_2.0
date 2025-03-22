@@ -26,12 +26,11 @@
 #include <vector>
 #include <typeindex>
 
-
-#include "FileSystem.h"
 #include "FileSystemHandler.h"
 #include "ISaveable.h"
 #include "ILoadable.h"
 #include "Files.h"
+#include "ResourceManager.h"
 
 #include <jsoncons/json.hpp>
 
@@ -41,55 +40,116 @@ namespace R2D
 class IRegister
 {
 protected:
-    using FileSystemHandlerPtrT = std::shared_ptr<IFileSystem>;
+    using FileSystemHandlerPtrT = std::shared_ptr<FileSystemHandler<jsoncons::ojson>>;
 
 public:
-    IRegister() : m_fileSysteme(std::make_shared<FileSystemHandler>()) {}
+    IRegister() : m_fileSysteme(std::make_shared<FileSystemHandler<jsoncons::ojson>>()) {}
 	virtual ~IRegister() = default;
 
 protected:
     FileSystemHandlerPtrT m_fileSysteme;
 };
 
+template<typename T>
 class IRegisterSaveAble : virtual public IRegister
 {
 private:
     using FilePath = e_Files;
-    using SaveableSptr = ISaveable<jsoncons::ojson>*;
+    using SaveableSptr = ISaveable<T>*;
     using SaveableSptrFile = std::pair<FilePath, SaveableSptr>;
     using SaveableSptrFileVector = std::vector<SaveableSptrFile>;
 
 public:
 	IRegisterSaveAble() {};
 	virtual ~IRegisterSaveAble() = default;
-    void registerSaveable(const FilePath& file, const SaveableSptr saveable);
-    void unRegisterSaveable(const FilePath& file, const SaveableSptr saveable);
-    void save();
+
+    void registerSaveable(const FilePath& file, const SaveableSptr saveable)
+	{
+		m_saveableSptrVector.push_back({ file , saveable });
+	}
+
+    void unRegisterSaveable(const FilePath& file, const SaveableSptr saveable)
+	{
+		std::erase_if(m_saveableSptrVector, [file, saveable](const SaveableSptrFile& pair)
+			{
+				return ((pair.first == file) && (pair.second == saveable));
+			});
+	}
+
+    void save()
+	{
+		assert(m_fileSysteme);
+
+		try
+		{
+			std::for_each(std::begin(m_saveableSptrVector), std::end(m_saveableSptrVector),
+				[this](const SaveableSptrFile& saveable)
+				{
+					assert(saveable.second);
+					m_fileSysteme->writeDataInFile(ResourceManager::getFile(saveable.first), saveable.second->save());
+				});
+		}
+		catch (const std::exception& e)
+		{
+			LOG(R2D::LogLevelType::error, 0, logR::WHO::REGISTER, logR::WHAT::REGISTER_DIRECTORY, logR::DATA::ERROR_DIR, e.what());
+		}
+	};
 
 protected:
     SaveableSptrFileVector m_saveableSptrVector;
 };
 
+template<typename T>
 class IRegisterLoadAble : virtual public IRegister
 {
 private:
     using FilePath = e_Files;
-	using LoadableSptr = ILoadable<jsoncons::ojson>*;
+	using LoadableSptr = ILoadable<T>*;
 	using LoadableSptrFile = std::pair<FilePath, LoadableSptr>;
 	using LoadableSptrFileVector = std::vector<LoadableSptrFile>;
 
 public:
 	IRegisterLoadAble() {};
 	virtual ~IRegisterLoadAble() = default;
-    void registerLoadable(const FilePath& file, const LoadableSptr loadable);
-	void unRegisterLoadable(const FilePath& file, const LoadableSptr loadable);
-    virtual void load();
+
+    void registerLoadable(const FilePath& file, const LoadableSptr loadable)
+	{
+		m_loadableSptrVector.push_back({ file , loadable });
+	}
+
+	void unRegisterLoadable(const FilePath& file, const LoadableSptr loadable)
+	{
+		std::erase_if(m_loadableSptrVector, [file, loadable](const LoadableSptrFile& pair)
+			{
+				return ((pair.first == file) && (pair.second == loadable));
+			});
+	}
+
+    virtual void load()
+	{
+		assert(m_fileSysteme);
+
+		try
+		{
+			std::for_each(std::begin(m_loadableSptrVector), std::end(m_loadableSptrVector),
+				[this](const LoadableSptrFile& loadable)
+				{
+					assert(loadable.second);
+					loadable.second->load(m_fileSysteme->readDataFromFile(ResourceManager::getFile(loadable.first)));
+				});
+		}
+		catch (const std::exception& e)
+		{
+			LOG(R2D::LogLevelType::error, 0, logR::WHO::REGISTER, logR::WHAT::REGISTER_DIRECTORY, logR::DATA::ERROR_DIR, e.what());
+		}
+
+	}
 
 protected:
 	LoadableSptrFileVector m_loadableSptrVector;
 };
 
-using RegisterPtrT = R2D::IRegisterLoadAble*;
+using RegisterPtrT = R2D::IRegisterLoadAble<jsoncons::ojson>*;
 using RegisterPair = std::pair<RegisterPtrT, std::type_index>;
 using RegisterPairVector = std::vector<RegisterPair>;
 

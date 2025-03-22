@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef LogSentences_H
-#define LogSentences_H
+#pragma once
 
 namespace logS
 {
@@ -140,9 +138,5 @@ namespace logS
 		constexpr char MISSING_KEY_JSON[] = "[MISSING_KEY_JSON] : {} : {}";
 	};
 };
-
-
-
-#endif // !LogSentences_H
 
 

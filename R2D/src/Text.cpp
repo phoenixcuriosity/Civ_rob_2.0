@@ -72,13 +72,13 @@ void Text::getTextFromFile
 		}
 		else
 		{
-			LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_KEY_TEXT_MISSING,
+			LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::FILE, logR::DATA::ERROR_KEY_TEXT_MISSING,
 				KEY_TEXTS);
 		}
 	}
 	catch (const std::exception& e)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::FILE, logS::DATA::ERROR_KEY_TEXT_MISSING, e.what());
+		LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::FILE, logR::DATA::ERROR_KEY_TEXT_MISSING, e.what());
 	}
 }
 

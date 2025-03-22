@@ -37,7 +37,7 @@ R2D::TextureCache::~TextureCache()
 	m_textureMap.clear();
 }
 
-R2D::TextureCache::GLTextureUptr& 
+R2D::TextureCache::GLTextureUptr&
 R2D::TextureCache
 ::getTexture(const std::string& name)
 {
@@ -51,24 +51,24 @@ R2D::TextureCache
 	return it->second;
 }
 
-void 
+void
 R2D::TextureCache
 ::loadTextureFromDir(const std::string& path)
 {
 	if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
 	{
-		for (const auto& entry : std::filesystem::directory_iterator(path)) 
+		for (const auto& entry : std::filesystem::directory_iterator(path))
 		{
 			if (entry.is_directory() == false)
 			{
 				auto result = m_idMap.try_emplace(entry.path().stem().string(), getTexture(entry.path().generic_string())->GETid());
 				if (result.second)
 				{
-					LOG(R2D::LogLevelType::info, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::TEXTURE, logS::DATA::LOAD_TEXTURE, entry.path().generic_string());
+					LOG(R2D::LogLevelType::info, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::TEXTURE, logR::DATA::LOAD_TEXTURE, entry.path().generic_string());
 				}
 				else
 				{
-					LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::TEXTURE, logS::DATA::ERROR_LOAD_TEXTURE, entry.path().generic_string());
+					LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::TEXTURE, logR::DATA::ERROR_LOAD_TEXTURE, entry.path().generic_string());
 				}
 			}
 			else
@@ -76,10 +76,10 @@ R2D::TextureCache
 				loadTextureFromDir(entry.path().generic_string());
 			}
 		}
-	}	
+	}
 }
 
-GLuint 
+GLuint
 R2D::TextureCache
 ::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
 {
@@ -89,7 +89,7 @@ R2D::TextureCache
 	}
 	else
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::RESSOURCES_MANAGER, logS::WHAT::TEXTURE, logS::DATA::ERROR_FIND_TEXTURE, key);
+		LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::TEXTURE, logR::DATA::ERROR_FIND_TEXTURE, key);
 		return 0;
 	}
 }

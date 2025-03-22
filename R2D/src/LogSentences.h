@@ -23,7 +23,7 @@
 #ifndef LogSentences_H
 #define LogSentences_H
 
-namespace logS
+namespace logR
 {
 	namespace WHO
 	{
