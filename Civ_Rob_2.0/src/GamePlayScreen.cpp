@@ -411,7 +411,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 				{
 					if (m_players.GETselectedPlayerPtr()->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 					{
-						m_players.GETselectedPlayerPtr()->GETSelectedUnitPtr()->SETshow(true);
+						m_players.GETselectedPlayerPtr()->GETSelectedUnitPtr()->m_show = true;
 						m_players.SETneedToUpdateDrawUnit(true);
 
 						m_players.GETselectedPlayerPtr()->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);

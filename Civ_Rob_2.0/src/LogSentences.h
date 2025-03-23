@@ -95,7 +95,7 @@ namespace logS
 		constexpr char CONSTRUCTOR_PLAYER[] = " : {}";
 		constexpr char DESTRUCTOR_PLAYER[] = " : {}";
 
-		constexpr char CONSTRUCTOR_UNIT[] = " -> m_name : {} , m_x : {} , m_y : {}";
+		constexpr char CONSTRUCTOR_UNIT[] = " -> m_name : {}";
 		constexpr char DESTRUCTOR_UNIT[] = " -> m_name {}";
 
 		constexpr char ERROR_DELETE_TAB_UNIT[] = "[ERROR_DELETE_TAB_UNIT]";

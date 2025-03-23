@@ -41,6 +41,8 @@
     <ClInclude Include="src\FileSystemHandler.h" />
     <ClInclude Include="src\FileWriter.h" />
     <ClInclude Include="src\IRegister.h" />
+    <ClInclude Include="src\IBlick.h" />
+    <ClInclude Include="src\IMove.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />

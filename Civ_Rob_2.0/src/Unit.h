@@ -25,13 +25,16 @@
 
 #include "LIB.h"
 
+#include "UnitStats.h"
 #include "UnitTemplate.h"
 
 #include <R2D/src/API_fwd.h>
-#include <R2D/src/Window.h>
+#include <R2D/src/IBlick.h>
+#include <R2D/src/IMove.h>
+
 #include <glm/glm.hpp>
 
-class Unit
+class Unit : public R2D::IBlickable, public R2D::IMoveable, public UnitStats
 {
 public:
 	/* Define movement for the Unit in case of tryToMove */
@@ -44,16 +47,15 @@ public:
 
 private:
 	static constexpr char DEFAULT_UNIT_NAME[] = "DEFAULT_UNIT_NAME";
-	static constexpr unsigned int NO_MOVEMENT = 0;
 	static constexpr unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
 	static constexpr unsigned int ZERO_LIFE = 0;
-	static constexpr unsigned int ZERO_BLIT = 0;
 	static constexpr bool DEAD_UNIT = false;
-	static constexpr unsigned int COEF_DIV_HEAL_NO_APPARTENANCE = 20;
-	static constexpr unsigned int COEF_DIV_HEAL_APPARTENANCE = 5;
-	static constexpr unsigned int COEF_DIV_LEVELUP = 4;
 	static constexpr int FOOD_ADD_BY_IRRAGATION = 2;
 	static constexpr int GOLD_ADD_BY_IRRAGATION = 1;
+	static constexpr unsigned int BLIT_RATE = 2;
+
+	using UnitName = std::string;
+	using MovementType = UnitTemplate::Movement_Type;
 
 public:
 	static bool
@@ -68,7 +70,6 @@ public:
 				const R2D::CardinalDirection& cardinalDirection);
 
 private:
-
 	static Move_Type
 	searchToMove(const MatriceMap& maps,
 				 Players& players,
@@ -107,7 +108,6 @@ public:
 	virtual ~Unit();
 
 private:
-
 	virtual void
 	attack(Unit& defender);
 
@@ -120,108 +120,32 @@ private:
 		 const R2D::CardinalDirection& cardinalDirection);
 
 public:
-
 	virtual void
 	heal(const MatriceMap& tiles,
 		 const unsigned int selectplayer);
 
-	virtual void
-	levelup();
-
-	virtual void
-	RESETmovement() noexcept { m_movement = m_maxmovement; };
-
-	virtual void
-	RESETnumberOfAttack() noexcept { m_numberOfAttack = m_maxNumberOfAttack; };
-
 	virtual bool
 	irrigate(MatriceMap& map);
 
-private:
-	static constexpr unsigned int ZERO_NUMBER_OF_ATTACK = 0;
-private:
-
-	virtual bool testPos(const unsigned int mouse_x, const unsigned int mouse_y) const noexcept
-	{return (m_x == mouse_x && m_y == mouse_y);};
-
-	virtual bool isGroundMovement_Type() const noexcept		{ return m_movementType == UnitTemplate::Movement_Type::ground; };
-	virtual bool isAirMovement_Type() const noexcept		{ return m_movementType == UnitTemplate::Movement_Type::air; };
-	virtual bool isWaterMovement_Type()	const noexcept		{ return m_movementType == UnitTemplate::Movement_Type::water; };
-	virtual bool isDeepWaterMovement_Type() const noexcept	{ return m_movementType == UnitTemplate::Movement_Type::deepwater; };
-	virtual bool isPossibleToAttack()const noexcept			{ return m_numberOfAttack > ZERO_NUMBER_OF_ATTACK; };
-
 public:
-
 	virtual bool isThisUnitType(const std::string& nameToCompare) const noexcept { return m_name == nameToCompare; };
 
-private:
-	static constexpr unsigned int BLIT_RATE = 2;
 public:
-
-	virtual void cmpblit() noexcept { if ((++m_blit %= (R2D::SCREEN_REFRESH_RATE / BLIT_RATE)) == MODULO::ZERO){ m_show = !m_show;}};
-
-public:
-
 	jsoncons::ojson saveToOjson()const;
-
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
-
 	inline const std::string& GETname()				const { return m_name; };
-	inline unsigned int GETx()						const { return m_x; };
-	inline unsigned int GETy()						const { return m_y; };
-	inline UnitTemplate::Movement_Type GETmovementType()			const { return m_movementType; };
-	inline int GETmaxlife()							const { return m_maxlife; };
-	inline int GETmaxatq()							const { return m_maxatq; };
-	inline int GETmaxdef()							const { return m_maxdef; };
-	inline int GETmaxmovement()						const { return m_maxmovement; };
-	inline int GETmaxNumberOfAttack()				const { return m_maxNumberOfAttack; };
-	inline int GETmaxlevel()						const { return m_maxlevel; };
-	inline int GETlife()							const { return m_life; };
-	inline int GETatq()								const { return m_atq; };
-	inline int GETdef()								const { return m_def; };
-	inline int GETmovement()						const { return m_movement; };
-	inline int GETnumberOfAttack()					const { return m_numberOfAttack; };
-	inline int GETlevel()							const { return m_level; };
 	inline bool GETalive()							const { return m_alive; };
 	inline double GETmaintenance()					const { return m_maintenance; }
-	inline unsigned int GETblit()					const { return m_blit; };
-	inline bool GETshow()							const { return m_show; };
-	inline bool GETshowStats()						const { return m_showStats; };
 	inline Player* GETowner()							  { return m_owner; };
 
-	inline void SETmovement(int movement) { m_movement = movement; };
-	inline void SETshow(bool show) { m_show = show; };
 	inline void SETowner(Player* owner) { m_owner = owner; };
 
 private:
-
-	std::string m_name;
-	unsigned int m_x;
-	unsigned int m_y;
-	UnitTemplate::Movement_Type m_movementType;
-
-	int m_maxlife;
-	int m_maxatq;
-	int m_maxdef;
-	int m_maxmovement;
-	int m_maxNumberOfAttack;
-	int m_maxlevel;
-
-	int m_life;
-	int m_atq;
-	int m_def;
-	int m_movement;
-	int m_numberOfAttack;
-	int m_level;
+	UnitName m_name;
 	bool m_alive;
-
 	double m_maintenance;
-
-	unsigned int m_blit;
-	bool m_show;
-	bool m_showStats;
 
 	Player* m_owner;
 };

@@ -50,7 +50,7 @@ Unit
 			{
 				selPlayer->SETselectedUnit(i);
 
-				selPlayer->GETtabUnit()[i]->SETshow(true);
+				selPlayer->GETtabUnit()[i]->makeShow();
 				*select = Select_Type::selectmove;
 
 				LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::SEARCH_UNIT_TILE, logS::DATA::SEARCH_UNIT_TILE,
@@ -104,7 +104,7 @@ Unit
 			}
 
 			/* Cannot move further for this turn */
-			attackUnit->SETmovement(NO_MOVEMENT);
+			attackUnit->Blockmovement();
 			break;
 		}
 		case Move_Type::cannotMove:
@@ -141,8 +141,8 @@ Unit
 	const UnitPtrT unit(selPlayer->GETtabUnit()[selPlayer->GETselectedUnit()]);
 
 	bool nextTileValidToMove(false);
-	const unsigned int xIndex (MainMap::convertPosXToIndex(unit->GETx() + cardinalDirection.m_pixelValueEW));
-	const unsigned int yIndex(MainMap::convertPosYToIndex(unit->GETy() + cardinalDirection.m_pixelValueNS));
+	const unsigned int xIndex (MainMap::convertPosXToIndex(unit->getX() + cardinalDirection.m_pixelValueEW));
+	const unsigned int yIndex(MainMap::convertPosYToIndex(unit->getX() + cardinalDirection.m_pixelValueNS));
 
 	if	(
 			unit->isGroundMovement_Type()
@@ -251,9 +251,9 @@ bool Unit::checkUnitNextTile
 	const int y
 )
 {
-	if ((from.GETx() + x) == to.GETx())
+	if ((from.getX() + x) == to.getX())
 	{
-		if ((from.GETy() + y) == to.GETy())
+		if ((from.getY() + y) == to.getY())
 		{
 			return true;
 		}
@@ -269,9 +269,9 @@ bool Unit::checkNextTile
 	const int y
 )
 {
-	if ((from.GETx() + x) == (to.tile_x))
+	if ((from.getX() + x) == (to.tile_x))
 	{
-		if ((from.GETy() + y) == (to.tile_y))
+		if ((from.getY() + y) == (to.tile_y))
 		{
 			return true;
 		}
@@ -281,31 +281,15 @@ bool Unit::checkNextTile
 
 Unit::Unit()
 :
+R2D::IBlickable(BLIT_RATE),
+R2D::IMoveable(),
+UnitStats(),
 m_name(DEFAULT_UNIT_NAME),
-m_x(0),
-m_y(0),
-m_movementType(UnitTemplate::Movement_Type::ground),
-m_maxlife(100),
-m_maxatq(10),
-m_maxdef(5),
-m_maxmovement(1),
-m_maxNumberOfAttack(1),
-m_maxlevel(100),
-m_life(100),
-m_atq(10),
-m_def(5),
-m_movement(1),
-m_numberOfAttack(1),
-m_level(1),
 m_alive(true),
 m_maintenance(1.0),
-m_blit(ZERO_BLIT),
-m_show(true),
-m_showStats(false),
 m_owner(SELECTION::NO_OWNER)
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT,
-		m_name, m_x, m_y);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT, m_name);
 }
 
 Unit::Unit
@@ -324,31 +308,15 @@ Unit::Unit
 	Player* ptrToPlayer
 )
 :
+R2D::IBlickable(BLIT_RATE),
+R2D::IMoveable(x, y),
+UnitStats(movementType, life, atq, def, move, numberOfAttack, level),
 m_name(name),
-m_x(x),
-m_y(y),
-m_movementType(movementType),
-m_maxlife(life),
-m_maxatq(atq),
-m_maxdef(def),
-m_maxmovement(move),
-m_maxNumberOfAttack(numberOfAttack),
-m_maxlevel(level),
-m_life(life),
-m_atq(atq),
-m_def(def),
-m_movement(move),
-m_numberOfAttack(numberOfAttack),
-m_level(level),
 m_alive(true),
 m_maintenance(maintenance),
-m_blit(ZERO_BLIT),
-m_show(true),
-m_showStats(false),
 m_owner(ptrToPlayer)
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT,
-		m_name, m_x, m_y);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT, m_name);
 }
 
 Unit::~Unit()
@@ -362,12 +330,12 @@ void Unit::attack
 	Unit& cible
 )
 {
-	m_numberOfAttack--;
+	numberOfAttack--;
 
-	if (m_movement > NO_MOVEMENT)
+	if (canMove())
 	{
 		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::ATTACK, m_name, cible.GETname());
-		cible.defend(m_atq);
+		cible.defend(atq);
 	}
 }
 
@@ -376,19 +344,19 @@ void Unit::defend
 	const int dmg
 )
 {
-	if (dmg > m_def)
+	if (dmg > static_cast<int>(def))
 	{
-		const int damageReceive{ (dmg - m_def) };
-		if ((m_life - damageReceive) <= ENOUGH_DAMAGE_TO_KILL)
+		const int damageReceive{ (dmg - static_cast<int>(def)) };
+		if ((life - damageReceive) <= ENOUGH_DAMAGE_TO_KILL)
 		{
-			m_life = ZERO_LIFE;
+			life = ZERO_LIFE;
 			m_alive = false;
 			LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::DIE_FROM_ATTACK, m_name, damageReceive);
 		}
 		else
 		{
-			m_life -= damageReceive;
-			LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::DMG_FROM_ATTACK, m_name, damageReceive, m_life);
+			life -= damageReceive;
+			LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::DMG_FROM_ATTACK, m_name, damageReceive, life);
 		}
 	}
 }
@@ -400,20 +368,19 @@ void Unit::move
 	const R2D::CardinalDirection& cardinalDirection
 )
 {
-	if (NO_MOVEMENT < m_movement)
+	if (canMove())
 	{
-		m_x += cardinalDirection.m_pixelValueEW;
-		m_y += cardinalDirection.m_pixelValueNS;
-		m_movement--;
-		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::MOVE, m_name, m_movement);
+		moveX(cardinalDirection.m_pixelValueEW);
+		moveY(cardinalDirection.m_pixelValueNS);
+		movement--;
+		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::MOVE, m_name, movement);
 	}
 
-	if (NO_MOVEMENT == m_movement)
+	if (!canMove())
 	{
 		select = Select_Type::selectnothing;
 		selectunit = SELECTION::NO_UNIT_SELECTED;
-		m_blit = ZERO_BLIT;
-		m_show = true;
+		makeShow();
 		LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::UNIT, logS::DATA::FINISH_MOVING, m_name);
 	}
 }
@@ -424,42 +391,21 @@ void Unit::heal
 	const unsigned int selectplayer
 )
 {
-	const int i(MainMap::convertPosXToIndex(m_x));
-	const int j(MainMap::convertPosYToIndex(m_y));
+	const int i(MainMap::convertPosXToIndex(getX()));
+	const int j(MainMap::convertPosYToIndex(getY()));
 
 	if (SELECTION::NO_APPARTENANCE == tiles[i][j].appartenance)
 	{
-		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_NO_APPARTENANCE);
-		if (m_life > m_maxlife)
-		{
-			m_life = m_maxlife;
-		}
-		return;
+		healNeutral();
 	}
-	else if (tiles[i][j].appartenance == (int)selectplayer)
+	else if (tiles[i][j].appartenance == static_cast<int>(selectplayer))
 	{
-		m_life += (unsigned int)ceil(m_maxlife / COEF_DIV_HEAL_APPARTENANCE);
-		if (m_life > m_maxlife)
-		{
-			m_life = m_maxlife;
-		}
-		return;
+		healFriendly();
 	}
 	else
 	{
-		return;
+		/* Do nothing*/
 	}
-}
-
-void Unit::levelup()
-{
-	m_level++;
-
-	m_maxlife += (int)ceil(m_maxlife / COEF_DIV_LEVELUP);
-	m_life = m_maxlife;
-
-	/* Todo */
-	//heal();
 }
 
 bool Unit::irrigate
@@ -467,10 +413,10 @@ bool Unit::irrigate
 	MatriceMap& map
 )
 {
-	Tile& tileToIrragate{ map[MainMap::convertPosXToIndex(m_x)][MainMap::convertPosXToIndex(m_y)] };
+	Tile& tileToIrragate{ map[MainMap::convertPosXToIndex(getX())][MainMap::convertPosXToIndex(getY())] };
 
 	if	(
-			(NO_MOVEMENT < m_movement)
+			(canMove())
 			&&
 			(tileToIrragate.tile_spec == GroundSpec_Type::nothing)
 			&&
@@ -489,19 +435,19 @@ jsoncons::ojson Unit::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_name", m_name);
-	value.insert_or_assign("m_x", m_x);
-	value.insert_or_assign("m_y", m_y);
-	value.insert_or_assign("m_movementType", static_cast<size_t>(m_movementType));
-	value.insert_or_assign("m_maxlife", m_maxlife);
-	value.insert_or_assign("m_maxatq", m_maxatq);
-	value.insert_or_assign("m_maxdef", m_maxdef);
-	value.insert_or_assign("m_maxmovement", m_maxmovement);
-	value.insert_or_assign("m_maxlevel", m_maxlevel);
-	value.insert_or_assign("m_life", m_life);
-	value.insert_or_assign("m_atq", m_atq);
-	value.insert_or_assign("m_def", m_def);
-	value.insert_or_assign("m_movement", m_movement);
-	value.insert_or_assign("m_level", m_level);
+	value.insert_or_assign("m_x", m_coor.x);
+	value.insert_or_assign("m_y", m_coor.y);
+	value.insert_or_assign("m_movementType", static_cast<std::underlying_type_t<UnitTemplate::Movement_Type>>(movementType));
+	value.insert_or_assign("m_maxlife", stats_max.life);
+	value.insert_or_assign("m_maxatq", stats_max.atq);
+	value.insert_or_assign("m_maxdef", stats_max.def);
+	value.insert_or_assign("m_maxmovement", stats_max.movement);
+	value.insert_or_assign("m_maxlevel", stats_max.level);
+	value.insert_or_assign("m_life", life);
+	value.insert_or_assign("m_atq", atq);
+	value.insert_or_assign("m_def", def);
+	value.insert_or_assign("m_movement", movement);
+	value.insert_or_assign("m_level", level);
 	value.insert_or_assign("m_maintenance", m_maintenance);
 	return value;
 }
@@ -517,19 +463,19 @@ void Unit::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		)
 	{
 		m_name = jsonLoad["m_name"].as_string();
-		m_x = jsonLoad["m_x"].as<unsigned int>();
-		m_y = jsonLoad["m_y"].as<unsigned int>();
-		m_movementType = static_cast<UnitTemplate::Movement_Type>(jsonLoad["m_movementType"].as<size_t>());
-		m_maxlife = jsonLoad["m_maxlife"].as<int>();
-		m_maxatq = jsonLoad["m_maxatq"].as<int>();
-		m_maxdef = jsonLoad["m_maxdef"].as<int>();
-		m_maxmovement = jsonLoad["m_maxmovement"].as<int>();
-		m_maxlevel = jsonLoad["m_maxlevel"].as<int>();
-		m_life = jsonLoad["m_life"].as<int>();
-		m_atq = jsonLoad["m_atq"].as<int>();
-		m_def = jsonLoad["m_def"].as<int>();
-		m_movement = jsonLoad["m_movement"].as<int>();
-		m_level = jsonLoad["m_level"].as<int>();
+		m_coor.x = jsonLoad["m_x"].as<unsigned int>();
+		m_coor.y = jsonLoad["m_y"].as<unsigned int>();
+		movementType = static_cast<UnitTemplate::Movement_Type>(jsonLoad["m_movementType"].as<std::underlying_type_t<UnitTemplate::Movement_Type>>());
+		stats_max.life = jsonLoad["m_maxlife"].as<int>();
+		stats_max.atq = jsonLoad["m_maxatq"].as<int>();
+		stats_max.def = jsonLoad["m_maxdef"].as<int>();
+		stats_max.movement = jsonLoad["m_maxmovement"].as<int>();
+		stats_max.level = jsonLoad["m_maxlevel"].as<int>();
+		life = jsonLoad["m_life"].as<int>();
+		atq = jsonLoad["m_atq"].as<int>();
+		def = jsonLoad["m_def"].as<int>();
+		movement = jsonLoad["m_movement"].as<int>();
+		level = jsonLoad["m_level"].as<int>();
 		m_maintenance = jsonLoad["m_maintenance"].as<int>();
 	}
 	else

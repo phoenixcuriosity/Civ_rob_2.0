@@ -92,11 +92,11 @@ void City::createCity
 
 	fillCitieTiles
 	(
-		MainMap::convertPosXToIndex(sUnit->GETx()), MainMap::convertPosYToIndex(sUnit->GETy()),
+		MainMap::convertPosXToIndex(sUnit->getX()), MainMap::convertPosYToIndex(sUnit->getY()),
 		selectedPlayer, mainGame.GETmainMap().GETmatriceMap(), tabtiles, influenceLevel
 	);
 
-	splayer->addCity(name, sUnit->GETx(), sUnit->GETy(), tabtiles);
+	splayer->addCity(name, sUnit->getX(), sUnit->getY(), tabtiles);
 
 	splayer->deleteUnit(selectedUnit);
 	splayer->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);

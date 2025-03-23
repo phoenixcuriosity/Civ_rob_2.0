@@ -173,9 +173,11 @@
     <ClInclude Include="src\GLSLProgram.h" />
     <ClInclude Include="src\GLTexture.h" />
     <ClInclude Include="src\GUI.h" />
+    <ClInclude Include="src\IBlick.h" />
     <ClInclude Include="src\IGameScreen.h" />
     <ClInclude Include="src\ILoadable.h" />
     <ClInclude Include="src\IMainGame.h" />
+    <ClInclude Include="src\IMove.h" />
     <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\IRegister.h" />
     <ClInclude Include="src\ISaveable.h" />

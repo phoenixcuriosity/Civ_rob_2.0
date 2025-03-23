@@ -129,9 +129,9 @@ void Players::clickToSelectUnit
 		for (const auto& u : p->GETtabUnit())
 		{
 			if	(
-					u->GETx() == x
+					u->getX() == x
 					&&
-					u->GETy() == y
+					u->getY() == y
 				)
 			{
 				p->SETselectedUnit(i);
@@ -153,9 +153,9 @@ void Players::isAUnitSelected()
 		if (p->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 		{
 			UnitPtrT u{ p->GETtabUnit()[p->GETselectedUnit()] };
-			bool prevShow{ u->GETshow() };
+			bool prevShow{ u->m_show };
 			u->cmpblit();
-			if (prevShow != u->GETshow())
+			if (prevShow != u->m_show)
 			{
 				m_needToUpdateDrawUnit = true;
 			}
@@ -180,12 +180,12 @@ void Players::drawUnit
 			{
 				UnitPtrT unit(m_vectPlayer[i]->GETtabUnit()[j]);
 
-				if (unit->GETshow())
+				if (unit->m_show)
 				{
 					if	(
 							camera.isBoxInView
 							(
-								{ unit->GETx(), unit->GETy() },
+								{ unit->getX(), unit->getY() },
 								{ tileSize , tileSize },
 								mainMap.GETtoolBarSize() * tileSize
 							)
@@ -197,7 +197,7 @@ void Players::drawUnit
 						/* Unit Texture */
 						m_spriteBatchUnit.draw
 						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
+							glm::vec4(unit->getX(), unit->getY(), tileSize, tileSize),
 							R2D::FULL_RECT,
 							m_idTexture[fes],
 							0.0f,
@@ -205,11 +205,11 @@ void Players::drawUnit
 						);
 
 						/* Lifebar Texture */
-						if (unit->GETlife() == unit->GETmaxlife())
+						if (unit->isFullLife())
 						{
 							m_spriteBatchUnit.draw
 							(
-								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								glm::vec4(unit->getX() + tileSize / 4, unit->getY(), tileSize / 2, 3),
 								R2D::FULL_RECT,
 								m_idTexture[GamePlayScreenEnumTexture::maxlife],
 								0.0f,
@@ -220,7 +220,7 @@ void Players::drawUnit
 						{
 							m_spriteBatchUnit.draw
 							(
-								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								glm::vec4(unit->getX() + tileSize / 4, unit->getY(), tileSize / 2, 3),
 								R2D::FULL_RECT,
 								m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::life0) +
 									std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, 9.99)))],
@@ -233,7 +233,7 @@ void Players::drawUnit
 						/* Appartenance Texture */
 						m_spriteBatchUnit.draw
 						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
+							glm::vec4(unit->getX(), unit->getY(), tileSize / 8, tileSize / 8),
 							R2D::FULL_RECT,
 							m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::ColorPlayer0) + i)],
 							0.0f,

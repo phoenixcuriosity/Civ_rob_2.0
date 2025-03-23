@@ -64,6 +64,7 @@
     <ClCompile Include="src\MainMapConfig.cpp" />
     <ClCompile Include="src\UnitTemplate.cpp" />
     <ClCompile Include="src\CityNameTemplate.cpp" />
+    <ClCompile Include="src\UnitStats.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="src\MainMapConfig.h" />
     <ClInclude Include="src\UnitTemplate.h" />
     <ClInclude Include="src\CityNameTemplate.h" />
+    <ClInclude Include="src\UnitStats.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">
