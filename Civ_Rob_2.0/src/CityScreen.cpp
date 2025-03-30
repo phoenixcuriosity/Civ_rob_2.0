@@ -225,11 +225,6 @@ void CityScreen::doInitUI()
 	/* --- Add static city context --- */
 	if (!m_isInitialize)
 	{
-		if (!m_players->GETvectUnitTemplate().isInitialized())
-		{
-			throw("Error : CityScreen::onEntry : m_players->GETvectUnitTemplate().size() < MIN_INDEX_CYCLE_BUILDS");
-		}
-
 		CEGUI::PushButton* returnToMap = static_cast<CEGUI::PushButton*>
 			(m_gui.createWidget(
 				"AlfiskoSkin/Button",
@@ -244,8 +239,9 @@ void CityScreen::doInitUI()
 			CEGUI::Event::Subscriber(&CityScreen::onReturnToMapClicked, this)
 		);
 
+
 		unsigned int i{ 0 };
-		for (const auto& p : m_players->GETvectUnitTemplate().getTemplateVect())
+		for (const auto& p : UnitTemplate::getSingleton().getTemplateMap())
 		{
 			m_buttonBuild.push_back
 			(
@@ -262,28 +258,28 @@ void CityScreen::doInitUI()
 								CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_Y
 							},
 							R2D::NOT_BY_PERCENT,
-							p.name
+							p.second.name
 						)
 					),
 					{
-						p.name,
+						p.second.name,
 						build_Type::unit,
-						p.workToBuild,
-						p.workToBuild
+						p.second.workToBuild,
+						p.second.workToBuild
 					}
 				}
 			);
 			m_buttonBuild.back().buildG
-				->setText(p.name + " : "
-					+ std::to_string(p.life)
+				->setText(p.second.name + " : "
+					+ std::to_string(p.second.life)
 					+ "/"
-					+ std::to_string(p.atq)
+					+ std::to_string(p.second.atq)
 					+ "/"
-					+ std::to_string(p.def)
+					+ std::to_string(p.second.def)
 					+ "/"
-					+ std::to_string(p.movement)
+					+ std::to_string(p.second.movement)
 					+ "/"
-					+ Utility::to_string_with_precision(p.maintenance, 1)
+					+ Utility::to_string_with_precision(p.second.maintenance, 1)
 				);
 			m_buttonBuild.back().buildG->subscribeEvent
 			(

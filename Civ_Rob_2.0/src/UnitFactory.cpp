@@ -22,6 +22,13 @@
 
 #include "UnitFactory.h"
 
+UnitFactory
+::UnitFactory() : IRegisterLoadAble(), IRegister()
+{
+	UnitTemplate::getSingleton(addSubscriber());
+	IRegisterLoadAble::load();
+};
+
 R2D::RegisterPairVector
 UnitFactory
 ::addSubscriber()
@@ -30,12 +37,11 @@ UnitFactory
 	return registerLoad;
 };
 
-
 UnitFactory::UnitPtrT
 UnitFactory
 ::createUnit(const Unit::UnitName& name, const Unit::Coor& coor, Player* owner)
 {
-	const unsigned int unitToBuild(m_vectUnitTemplate.searchUnitByName(name));
+	const UnitTemplate::Template unitToBuild{ UnitTemplate::getSingleton().getTemplate(name) };
 
 	return std::make_shared<Unit>
 		(
@@ -43,15 +49,15 @@ UnitFactory
 			coor,
 			UnitTemplate::UnitStat
 			{
-				m_vectUnitTemplate.getTemplateVect()[unitToBuild].type,
-				m_vectUnitTemplate.getTemplateVect()[unitToBuild].life,
-				m_vectUnitTemplate.getTemplateVect()[unitToBuild].atq,
-				m_vectUnitTemplate.getTemplateVect()[unitToBuild].def,
-				m_vectUnitTemplate.getTemplateVect()[unitToBuild].movement,
-				m_vectUnitTemplate.getTemplateVect()[unitToBuild].numberOfAttack,
-				m_vectUnitTemplate.getTemplateVect()[unitToBuild].level
+				unitToBuild.type,
+				unitToBuild.life,
+				unitToBuild.atq,
+				unitToBuild.def,
+				unitToBuild.movement,
+				unitToBuild.numberOfAttack,
+				unitToBuild.level
 			},
-			m_vectUnitTemplate.getTemplateVect()[unitToBuild].maintenance,
+			unitToBuild.maintenance,
 			owner);
 }
 

@@ -29,15 +29,11 @@ class UnitFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
 {
 private:
 	using UnitPtrT = std::shared_ptr<Unit>;
-
-	R2D::RegisterPairVector m_loadSub;
 	R2D::RegisterPairVector addSubscriber();
+
 public:
-	UnitFactory() : IRegisterLoadAble(), IRegister(), m_loadSub(addSubscriber()), m_vectUnitTemplate(m_loadSub) { IRegisterLoadAble::load(); };
+	UnitFactory();
 
 	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, Player* owner);
 	UnitPtrT createUnit();
-
-private:
-	UnitTemplate m_vectUnitTemplate;
 };

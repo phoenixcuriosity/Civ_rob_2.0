@@ -51,20 +51,22 @@ UnitTemplate
 		{
 			const TemplateJsonVect units = f[KEY_UNIT_TEMPLATE].as<TemplateJsonVect>();
 
-			std::transform(units.begin(), units.end(), std::back_inserter(m_vectUnitTemplate), [](const auto& unit) {
-				return Template{
-					unit.name,
-					static_cast<Movement_Type>(unit.type),
-					unit.life,
-					unit.atq,
-					unit.def,
-					unit.movement,
-					unit.numberOfAttack,
-					unit.level,
-					unit.nbturnToBuild,
-					unit.workToBuild,
-					unit.maintenance
-				};
+			std::transform(units.begin(), units.end(), std::inserter(m_mapUnitTemplate, m_mapUnitTemplate.end()), [](const auto& unit)
+				{
+					return std::make_pair(unit.name,
+						Template{
+							unit.name,
+							static_cast<Movement_Type>(unit.type),
+							unit.life,
+							unit.atq,
+							unit.def,
+							unit.movement,
+							unit.numberOfAttack,
+							unit.level,
+							unit.nbturnToBuild,
+							unit.workToBuild,
+							unit.maintenance
+						});
 				});
 		}
 		else
@@ -77,7 +79,6 @@ UnitTemplate
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
-	initialized = true;
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::END);
 }
@@ -86,14 +87,26 @@ unsigned int
 UnitTemplate
 ::searchUnitByName(const std::string& name)const
 {
-	auto it = std::find_if(std::begin(m_vectUnitTemplate), std::end(m_vectUnitTemplate),
-		[&name](const auto& unit) { return unit.name == name; });
+	const auto it{ m_mapUnitTemplate.find(name) };
 
-	if (it != std::end(m_vectUnitTemplate))
+	if (it != m_mapUnitTemplate.end())
 	{
-		return static_cast<unsigned int>(std::distance(std::begin(m_vectUnitTemplate), it));
+		return std::distance(m_mapUnitTemplate.begin(), it);
 	}
 
 	throw std::runtime_error("Unit name not found: " + name);
 }
 
+const UnitTemplate::Template&
+UnitTemplate
+::getTemplate(const UnitName& unitName)const
+{
+	try
+	{
+		return m_mapUnitTemplate.at(unitName);
+	}
+	catch (const std::out_of_range& e)
+	{
+		throw std::runtime_error("Unit key not found in m_mapUnitTemplate: " + std::string(e.what()));
+	}
+}
