@@ -279,8 +279,7 @@ bool Unit::checkNextTile
 	return false;
 }
 
-Unit::Unit()
-:
+Unit::Unit():
 R2D::IBlickable(BLIT_RATE),
 R2D::IMoveable(),
 UnitStats(),
@@ -292,25 +291,14 @@ m_owner(SELECTION::NO_OWNER)
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT, m_name);
 }
 
-Unit::Unit
-(
-	const std::string& name,
-	unsigned int x,
-	unsigned int y,
-	UnitTemplate::Movement_Type movementType,
-	unsigned int life,
-	unsigned int atq,
-	unsigned int def,
-	unsigned int move,
-	unsigned int numberOfAttack,
-	unsigned int level,
-	double maintenance,
-	Player* ptrToPlayer
-)
-:
+Unit::Unit(	const UnitName& name,
+			const Coor& coor,
+			const UnitStat& unitStat,
+			double maintenance,
+			Player* ptrToPlayer):
 R2D::IBlickable(BLIT_RATE),
-R2D::IMoveable(x, y),
-UnitStats(movementType, life, atq, def, move, numberOfAttack, level),
+R2D::IMoveable(coor),
+UnitStats(unitStat),
 m_name(name),
 m_alive(true),
 m_maintenance(maintenance),

@@ -119,15 +119,16 @@ void BuildManager::computeWorkToBuild
 				player.addUnit
 				(
 					m_buildQueue.front().buildQ.name,
-					m_x,
-					m_y,
-					vectUnitTemplate.getTemplateVect()[unitToBuild].type,
-					vectUnitTemplate.getTemplateVect()[unitToBuild].life,
-					vectUnitTemplate.getTemplateVect()[unitToBuild].atq,
-					vectUnitTemplate.getTemplateVect()[unitToBuild].def,
-					vectUnitTemplate.getTemplateVect()[unitToBuild].movement,
-					vectUnitTemplate.getTemplateVect()[unitToBuild].numberOfAttack,
-					vectUnitTemplate.getTemplateVect()[unitToBuild].level,
+					{ m_x, m_y },
+					{
+						vectUnitTemplate.getTemplateVect()[unitToBuild].type,
+						vectUnitTemplate.getTemplateVect()[unitToBuild].life,
+						vectUnitTemplate.getTemplateVect()[unitToBuild].atq,
+						vectUnitTemplate.getTemplateVect()[unitToBuild].def,
+						vectUnitTemplate.getTemplateVect()[unitToBuild].movement,
+						vectUnitTemplate.getTemplateVect()[unitToBuild].numberOfAttack,
+						vectUnitTemplate.getTemplateVect()[unitToBuild].level,
+					},
 					vectUnitTemplate.getTemplateVect()[unitToBuild].maintenance
 				);
 				*needToUpdateDrawUnit = true;

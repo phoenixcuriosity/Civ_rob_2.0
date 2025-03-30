@@ -28,7 +28,6 @@
 #include "Unit.h"
 #include "T_Player.h"
 
-
 namespace PlayerH
 {
 	constexpr unsigned int NB_MAX_PLAYER = 9;
@@ -47,18 +46,10 @@ public:
 	Player(const std::string& name, const int id);
 	virtual ~Player();
 
-	virtual void addUnit(
-		const std::string& name,
-		unsigned int x,
-		unsigned int y,
-		UnitTemplate::Movement_Type movementType,
-		unsigned int life,
-		unsigned int atq,
-		unsigned int def,
-		unsigned int move,
-		unsigned int numberOfAttack,
-		unsigned int level,
-		double maintenance);
+	virtual void addUnit(const Unit::UnitName& name,
+						 const Unit::Coor coor,
+						 const Unit::UnitStat& unitStat,
+						 double maintenance);
 
 private:
 	virtual void addEmptyUnit();

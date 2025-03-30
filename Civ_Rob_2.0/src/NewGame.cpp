@@ -120,15 +120,16 @@ void NewGameManager::newGameSettlerSpawn
 
 		players.GETvectPlayer()[i]->addUnit
 		("settler",
-			tabRandom[i].x,
-			tabRandom[i].y,
-			players.GETvectUnitTemplate().getTemplateVect()[selectunit].type,
-			players.GETvectUnitTemplate().getTemplateVect()[selectunit].life,
-			players.GETvectUnitTemplate().getTemplateVect()[selectunit].atq,
-			players.GETvectUnitTemplate().getTemplateVect()[selectunit].def,
-			players.GETvectUnitTemplate().getTemplateVect()[selectunit].movement,
-			players.GETvectUnitTemplate().getTemplateVect()[selectunit].numberOfAttack,
-			players.GETvectUnitTemplate().getTemplateVect()[selectunit].level,
+			{ tabRandom[i].x, tabRandom[i].y},
+			{
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].type,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].life,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].atq,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].def,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].movement,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].numberOfAttack,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].level,
+			},
 			NGC::MAINTENANCE_COST_1TH_SETTLER);
 	}
 }

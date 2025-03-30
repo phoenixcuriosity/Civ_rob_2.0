@@ -79,26 +79,13 @@ void Player::addEmptyUnit()
 
 void Player::addUnit
 (
-	const std::string& name,
-	unsigned int x,
-	unsigned int y,
-	UnitTemplate::Movement_Type movementType,
-	unsigned int life,
-	unsigned int atq,
-	unsigned int def,
-	unsigned int move,
-	unsigned int numberOfAttack,
-	unsigned int level,
+	const Unit::UnitName& name,
+	const Unit::Coor coor,
+	const Unit::UnitStat& unitStat,
 	double maintenance
 )
 {
-	m_tabUnit.push_back
-	(
-		std::make_shared<Unit>
-		(
-			name, x, y, movementType, life, atq, def, move, numberOfAttack, level, maintenance, this
-		)
-	);
+	m_tabUnit.push_back(std::make_shared<Unit>(name, coor, unitStat, maintenance, this));
 }
 
 void Player::deleteUnit

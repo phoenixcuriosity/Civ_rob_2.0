@@ -44,6 +44,8 @@ public:
 		UnitStat(const Movement_Type qtype, const unsigned int qlife, const unsigned int qatq, const unsigned int qdef,
 				 const unsigned int qmovement, const unsigned int qnumberOfAttack, const unsigned int qlevel) noexcept
 		: movementType(qtype), life(qlife), atq(qatq), def(qdef), movement(qmovement), numberOfAttack(qnumberOfAttack), level(qlevel) {};
+		UnitStat(const UnitStat& src) noexcept
+			: movementType(src.movementType), life(src.life), atq(src.atq), def(src.def), movement(src.movement), numberOfAttack(src.numberOfAttack), level(src.level) {};
 		void set(const Movement_Type qtype, const unsigned int qlife, const unsigned int qatq, const unsigned int qdef,
 				 const unsigned int qmovement, const unsigned int qnumberOfAttack, const unsigned int qlevel) noexcept
 		{

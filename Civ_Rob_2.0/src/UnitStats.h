@@ -34,6 +34,7 @@ private:
 	static constexpr unsigned int NO_MOVEMENT = 0;
 public:
 	UnitStats()noexcept : UnitStat(), stats_max() {};
+	UnitStats(const UnitStat& unitStat)noexcept : UnitStat(unitStat), stats_max(unitStat) {};
 	UnitStats(const MovementType qtype, const unsigned int qlife, const unsigned int qatq, const unsigned int qdef,
 				const unsigned int qmovement, const unsigned int qnumberOfAttack, const unsigned int qlevel)
 		:   UnitStat(qtype, qlife, qatq, qdef, qmovement, qnumberOfAttack, qlevel),

@@ -32,6 +32,8 @@ class IMoveable
 protected:
 	using Position = unsigned int;
 	using DeltaPosition = int;
+
+public:
 	struct Coor
 	{
 		Coor() : x(0), y(0) {};
@@ -42,6 +44,7 @@ protected:
 
 public:
 	IMoveable() : m_coor() {};
+	IMoveable(const Coor& coor) : m_coor(coor) {};
 	IMoveable(const Position& posX, const Position& posY) : m_coor(posX, posY) {};
 	virtual ~IMoveable() = default;
 

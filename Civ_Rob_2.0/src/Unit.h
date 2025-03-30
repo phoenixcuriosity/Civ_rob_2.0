@@ -45,6 +45,10 @@ public:
 		attackMove		/* The Unit can move to the next Tile and attack the other Unit standing on the this Tile */
 	};
 
+	using Coor = R2D::IMoveable::Coor;
+	using UnitStat = UnitTemplate::UnitStat;
+	using UnitName = std::string;
+
 private:
 	static constexpr char DEFAULT_UNIT_NAME[] = "DEFAULT_UNIT_NAME";
 	static constexpr unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
@@ -53,8 +57,6 @@ private:
 	static constexpr int FOOD_ADD_BY_IRRAGATION = 2;
 	static constexpr int GOLD_ADD_BY_IRRAGATION = 1;
 	static constexpr unsigned int BLIT_RATE = 2;
-
-	using UnitName = std::string;
 	using MovementType = UnitTemplate::Movement_Type;
 
 public:
@@ -92,18 +94,11 @@ private:
 public:
 
 	Unit();
-	Unit(const std::string& name,
-		unsigned int x,
-		unsigned int y,
-		UnitTemplate::Movement_Type movementType,
-		unsigned int life,
-		unsigned int atq,
-		unsigned int def,
-		unsigned int move,
-		unsigned int numberOfAttack,
-		unsigned int level,
-		double maintenance,
-		Player* ptrToPlayer);
+	Unit(const UnitName& name,
+		 const Coor& coor,
+		 const UnitStat& unitStat,
+		 double maintenance,
+		 Player* ptrToPlayer);
 
 	virtual ~Unit();
 
