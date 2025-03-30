@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,21 +19,30 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef T_Coor_H
-#define T_Coor_H
-
-#include "LIB.h"
 #include <jsoncons/json.hpp>
+#include <R2D/src/ILoadable.h>
+#include <R2D/src/IRegister.h>
 
-struct Coor
+class CityNameTemplate : public R2D::ILoadable<jsoncons::ojson>
 {
-	unsigned int x = 0;
-	unsigned int y = 0;
+public:
+	using CityName = std::string;
+
+	using Vect = std::vector<CityName>;
+
+public:
+	CityNameTemplate() noexcept : m_vectTemplate(), initialized(false) {};
+	CityNameTemplate(R2D::RegisterPairVector& registerLoad);
+	virtual ~CityNameTemplate() = default;
+
+	void load(jsoncons::ojson f)override;
+
+	bool isInitialized()const noexcept { return initialized; };
+	Vect& getVect() noexcept { return m_vectTemplate; };
+	const Vect& getVect()const noexcept { return m_vectTemplate; };
+protected:
+	Vect m_vectTemplate;
+	bool initialized;
 };
-JSONCONS_ALL_MEMBER_NAME_TRAITS(Coor, (x, "x"), (y, "y"))
-typedef std::vector<Coor> VectCoor;
-
-#endif // !T_Coor_H
-
-

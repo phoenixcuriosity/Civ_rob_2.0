@@ -24,25 +24,9 @@
 
 #include "ResourceManager.h"
 
-using namespace R2D;
-
-CScreen::CScreen()
-:
-m_camera(),
-m_cameraHUD(),
-m_spriteBatchHUDDynamic(),
-m_spriteBatchHUDStatic(),
-m_gui(),
-m_isInitialized(false)
-{
-}
-
-CScreen::~CScreen()
-{
-
-}
-
-bool CScreen::init(const int width, const int height)
+bool
+R2D::CScreen
+::init(const int width, const int height)
 {
 	if (!m_isInitialized)
 	{
@@ -54,36 +38,42 @@ bool CScreen::init(const int width, const int height)
 		m_spriteBatchHUDDynamic.init();
 		m_spriteBatchHUDStatic.init();
 
-		m_gui.init(ResourceManager::getFile(e_Files::GUIPath)->getPath());
+		m_gui.init(ResourceManager::getFile(e_Files::GUIPath));
 	}
 
 	initAll();
 	return true;
 }
 
-bool CScreen::end()
+bool
+R2D::CScreen
+::end()
 {
 	m_gui.destroy();
 	return true;
 }
 
-void CScreen::initAll()
+void
+R2D::CScreen
+::initAll()
 {
 	doInitOptimizeTexture();
 	initUI();
 	initHUDText();
 }
 
-void CScreen::initUI()
+void
+R2D::CScreen
+::initUI()
 {
 	if (!m_isInitialized)
 	{
-		m_gui.loadScheme("AlfiskoSkin.scheme");
-		m_gui.loadScheme("TaharezLook.scheme");
+		m_gui.loadScheme(GUI_SCHEME_A);
+		m_gui.loadScheme(GUI_SCHEME_B);
 
-		m_gui.setFont("DejaVuSans-10");
+		m_gui.setFont(GUI_FONT);
 
-		m_gui.setMouseCursor("AlfiskoSkin/MouseArrow");
+		m_gui.setMouseCursor(GUI_MOUSE_CURSOR);
 		m_gui.showMouseCursor();
 
 		/* HIDE normal mouse cursor */
@@ -91,11 +81,13 @@ void CScreen::initUI()
 
 		m_isInitialized = true;
 	}
-	
+
 	doInitUI();
 }
 
-void CScreen::initHUDText()
+void
+R2D::CScreen
+::initHUDText()
 {
 	m_spriteBatchHUDStatic.begin();
 
@@ -104,7 +96,9 @@ void CScreen::initHUDText()
 	m_spriteBatchHUDStatic.end();
 }
 
-void CScreen::drawAll()
+void
+R2D::CScreen
+::drawAll()
 {
 	m_camera.update();
 	m_cameraHUD.update();
@@ -121,13 +115,13 @@ void CScreen::drawAll()
 	glActiveTexture(GL_TEXTURE0);
 
 	const GLint textureLocation
-		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("mySampler");
+		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation(GLSL_SAMPLER);
 	glUniform1i(textureLocation, 0);
 
 	/* --- camera --- */
 	/* GL - get parameter P */
 	const GLint pLocation
-		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation("P");
+		= R2D::ResourceManager::getGLSLProgram().getUnitformLocation(GLSL_SAMPLER_UNIFORM);
 
 	/* Copy camera matrix */
 	glm::mat4 cameraMatrix = m_camera.GETcameraMatrix();
@@ -154,7 +148,9 @@ void CScreen::drawAll()
 	m_gui.draw();
 }
 
-void CScreen::updateInputManager(SDL_Event& ev, InputManager& resourceManager)
+void
+R2D::CScreen
+::updateInputManager(SDL_Event& ev, InputManager& resourceManager)
 {
 	m_gui.onSDLEvent(ev, resourceManager);
 }

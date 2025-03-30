@@ -50,7 +50,8 @@ public: /* STATIC */
 	(
 		MatriceMap& matriceMap,
 		const unsigned int selectplayer,
-		CityPtrT& city
+		CityPtrT& city,
+		const modifAppartenance_Type modAppartenance = modifAppartenance_Type::modify
 	);
 
 	/**
@@ -70,7 +71,8 @@ public: /* STATIC */
 		const unsigned int selectplayer,
 		MatriceMap& matriceMap,
 		VectMapPtr& tabtile,
-		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL,
+		const modifAppartenance_Type modAppartenance = modifAppartenance_Type::modify
 	);
 
 private:
@@ -147,7 +149,7 @@ public:
 	virtual void computeWork
 	(
 		Player& player,
-		const VectUnitTemplate& vectUnitTemplate,
+		const UnitTemplate& vectUnitTemplate,
 		bool* needToUpdateDrawUnit
 	);
 
@@ -221,7 +223,7 @@ public:
 	jsoncons::ojson saveToOjson()const;
 
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
-	
+
 public:
 	/* const & */
 	inline virtual const std::string& GETimage()const		{ return m_image; };

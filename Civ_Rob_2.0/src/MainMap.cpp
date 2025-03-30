@@ -26,10 +26,13 @@
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "Player.h"
+#include "SaveReload.h"
 
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
-#include <R2D/src/Log.h> 
+#include <R2D/src/Log.h>
+
+#include <format>
 
 namespace MAP_GEN
 {
@@ -90,8 +93,8 @@ void MainMap::setStaticPtrTileSize()
 }
 
 
-MainMap::MainMap():
-m_mainMapConfig(),
+MainMap::MainMap(R2D::RegisterPairVector& registerLoad):
+m_mainMapConfig(registerLoad),
 m_toolBarSize(0),
 m_offsetMapCameraXmin(0),
 m_offsetMapCameraXmax(0),
@@ -103,11 +106,15 @@ m_needToUpdateDraw(true),
 m_spriteBatch()
 {
 	setStaticPtrTileSize();
+	SaveReload::getInstance().registerSaveable(R2D::e_Files::saveMaps, this);
+	SaveReload::getInstance().registerLoadable(R2D::e_Files::saveMaps, this);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::MAINMAP);
 }
 
 MainMap::~MainMap()
 {
+	SaveReload::getInstance().unRegisterSaveable(R2D::e_Files::saveMaps, this);
+	SaveReload::getInstance().unRegisterLoadable(R2D::e_Files::saveMaps, this);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DESTRUCTOR, logS::DATA::MAINMAP);
 }
 
@@ -136,7 +143,7 @@ void MainMap::initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& id
 	{
 		LOG(R2D::LogLevelType::warning, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::MSG_DATA, msg.what());
 	}
-	
+
 
 	initMainMapTexture(idTexture);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::INIT_MAINMAP, logS::DATA::END);
@@ -736,8 +743,8 @@ void MainMap::updateOffsetY
 	}
 	else
 	{
-		m_offsetMapCameraYmax = 
-			m_offsetMapCameraYmin 
+		m_offsetMapCameraYmax =
+			m_offsetMapCameraYmin
 			+ (unsigned int)std::ceil((double)windowHeight / ((double)m_mainMapConfig.m_tileSize * camera.GETscale()))
 			- buffer
 			+ MAPCamera::MIN_BORDER;
@@ -948,7 +955,7 @@ void MainMap::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		else
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAIN_MAP, logS::DATA::MISSING_KEY_JSON,
-				R2D::ResourceManager::getFile(R2D::e_Files::mainMap)->getPath(), jsonloader::KEY_MATRICE_MAP);
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap), jsonloader::KEY_MATRICE_MAP);
 		}
 	}
 	catch (const std::exception& e)
@@ -956,6 +963,7 @@ void MainMap::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_MAIN_MAP, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
 }
+
 
 /*
 *	End Of File : GamePlay.cpp

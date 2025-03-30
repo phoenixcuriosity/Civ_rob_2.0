@@ -25,330 +25,122 @@
 
 #include "LIB.h"
 
+#include "UnitStats.h"
+#include "UnitTemplate.h"
+
 #include <R2D/src/API_fwd.h>
+#include <R2D/src/IBlick.h>
+#include <R2D/src/IMove.h>
+
 #include <glm/glm.hpp>
 
-class Unit
+class Unit : public R2D::IBlickable, public R2D::IMoveable, public UnitStats
 {
 public:
+	/* Define movement for the Unit in case of tryToMove */
+	enum class Move_Type
+	{
+		cannotMove,		/* The Unit cannot move to the next Tile */
+		canMove,		/* The Unit can move to the next Tile */
+		attackMove		/* The Unit can move to the next Tile and attack the other Unit standing on the this Tile */
+	};
 
-	 /* NAME : searchUnitByName															   */
-	 /* ROLE : Search the unit in vector template by name								   */
-	 /* INPUT : std::string name : name to compared										   */
-	 /* INPUT : std::vector<Unit_Template>& : vector of template unit 					   */
-	 /* RETURNED VALUE : unsigned int : index of the unit								   */
-	static unsigned int searchUnitByName
-	(
-		const std::string& name,
-		const VectUnitTemplate& tabUnit_Template
-	);
-
-	/* NAME : searchUnitTile															   */
-	/* ROLE : Cherche l'unit� �tant dans la case s�l�ctionn�							   */
-	/* INPUT/OUTPUT : SubcatPlayer& s_player : structure concernant un joueur			   */
-	/* INPUT : const KeyboardMouse& mouse : donn�es g�n�rale des entr�es utilisateur	   */
-	/* INPUT/OUTPUT : std::vector<Player*>& tabplayer : Vecteur de joueurs				   */
-	/* OUTPUT : Select_Type* select : type de s�lection									   */
-	/* RETURNED VALUE    : void															   */
-	static bool searchUnitTile
-	(
-		Players& players,
-		const glm::i32vec2& mouseCoorNorm,
-		Select_Type* select
-	);
-
-	/* NAME : tryToMove*																	   */
-	/* ROLE : Recherche � faire bouger l'unit� selon le contexte						   */
-	/* ROLE : Attention : contient un rappel r�cursif									   */
-	/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la MAP				   */
-	/* INPUT/OUTPUT : Struct SubcatPlayer& : structure concernant un joueur				   */
-	/* INPUT/OUTPUT : std::vector<Player*>& : Vecteur de joueurs						   */
-	/* INPUT : Select_Type : �tat de la s�lection du joueur (enum Select_Type : unsigned int)	   */
-	/* INPUT : int x : pos X															   */
-	/* INPUT : int y : pos Y															   */
-	/* RETURNED VALUE    : void															   */
-	static void tryToMove
-	(
-		const MatriceMap& maps,
-		Players& players,
-		Select_Type select,
-		const R2D::CardinalDirection& cardinalDirection
-	);
+	using Coor = R2D::IMoveable::Coor;
+	using UnitStat = UnitTemplate::UnitStat;
+	using UnitName = std::string;
 
 private:
+	static constexpr char DEFAULT_UNIT_NAME[] = "DEFAULT_UNIT_NAME";
+	static constexpr unsigned int ENOUGH_DAMAGE_TO_KILL = 0;
+	static constexpr unsigned int ZERO_LIFE = 0;
+	static constexpr bool DEAD_UNIT = false;
+	static constexpr int FOOD_ADD_BY_IRRAGATION = 2;
+	static constexpr int GOLD_ADD_BY_IRRAGATION = 1;
+	static constexpr unsigned int BLIT_RATE = 2;
+	using MovementType = UnitTemplate::Movement_Type;
 
-	/* NAME : searchToMove																   */
-	/* ROLE : Recherche � faire bouger l'unit� selon le contexte						   */
-	/* ROLE : Action conditionnelle (case libre, ennemi, amis)							   */
-	/* INPUT : const std::vector<std::vector<Tile>>& : Matrice de la MAP			   	   */
-	/* INPUT : Struct SubcatPlayer& : structure concernant un joueur					   */
-	/* INPUT : const std::vector<Player*>& : Vecteur de joueurs							   */
-	/* INPUT : int x : pos X														   	   */
-	/* INPUT : int y : pos Y															   */
-	/* RETURNED VALUE : Move_Type : / 0 : ne bouge pas / 1 : case libre : peut bouger	   */
-	/* RETURNED VALUE : Move_Type : / 2 : ennemi : ne bouge pas							   */
-	static Move_Type searchToMove
-	(
-		const MatriceMap& maps,
-		Players& players,
-		const R2D::CardinalDirection& cardinalDirection,
-		int* const playerToAttack,
-		int* const unitToAttack
-	);
+public:
+	static bool
+	searchUnitTile(	Players& players,
+					const glm::i32vec2& mouseCoorNorm,
+					Select_Type* select);
 
-	/* NAME : checkUnitNextTile															   */
-	/* ROLE : Check des �qualit�s des positions des Units avec + x et +y				   */
-	/* INPUT : const Unit* from : Unit avec un mouvement possible + x + y				   */
-	/* INPUT : const Unit* from : Unit aux positions + x + y							   */
-	/* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
-	/* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
-	/* RETURNED VALUE : bool : false->position diff�rente / true->m�me positions		   */
-	static bool checkUnitNextTile
-	(
-		const Unit& from,
-		const Unit& to,
-		const int x,
-		const int y
-	);
+	static void
+	tryToMove(	const MatriceMap& maps,
+				Players& players,
+				Select_Type select,
+				const R2D::CardinalDirection& cardinalDirection);
 
-	/* NAME : checkNextTile																   */
-	/* ROLE : Check des �qualit�s des positions des Units avec + x et +y				   */
-	/* INPUT : const Unit* from : Unit aux positions + x + y							   */
-	/* INPUT : const Tile& to : Tile � tester											   */
-	/* INPUT : int x : delta horizontal tileSize en fonction du cardinal				   */
-	/* INPUT : int y : delta vertical tileSize en fonction du cardinal					   */
-	/* RETURNED VALUE : bool : false->position diff�rente / true->m�me positions		   */
-	static bool checkNextTile
-	(
-		const Unit& from,
-		const Tile& to,
-		const int x,
-		const int y
-	);
-	
+private:
+	static Move_Type
+	searchToMove(const MatriceMap& maps,
+				 Players& players,
+				 const R2D::CardinalDirection& cardinalDirection,
+				 int* const playerToAttack,
+				 int* const unitToAttack);
+
+	static bool
+	checkUnitNextTile(const Unit& from,
+					  const Unit& to,
+					  const int x,
+					  const int y);
+
+	static bool
+	checkNextTile(const Unit& from,
+				  const Tile& to,
+				  const int x,
+				  const int y);
 
 public:
 
 	Unit();
-
-	/* NAME : Unit																		   */
-	/* ROLE : Constructeur par complet													   */
-	/* INPUT : const std::string &name : nom											   */
-	/* INPUT : unsigned int x :	position en x sur la map								   */
-	/* INPUT : unsigned int y : position en y sur la map								   */
-	/* INPUT : unsigned int life : vie max												   */
-	/* INPUT : unsigned int atq	: atq max												   */
-	/* INPUT : unsigned int def	: def max												   */
-	/* INPUT : unsigned int move : move max												   */
-	/* INPUT : unsigned int level : level 1												   */
-	Unit
-	(
-		const std::string& name,
-		unsigned int x,
-		unsigned int y,
-		Unit_Movement_Type movementType,
-		unsigned int life,
-		unsigned int atq,
-		unsigned int def,
-		unsigned int move,
-		unsigned int numberOfAttack,
-		unsigned int level,
-		double maintenance,
-		Player* ptrToPlayer
-	);
+	Unit(const UnitName& name,
+		 const Coor& coor,
+		 const UnitStat& unitStat,
+		 double maintenance,
+		 Player* ptrToPlayer);
 
 	virtual ~Unit();
 
 private:
+	virtual void
+	attack(Unit& defender);
 
-	/* NAME : attack																	   */
-	/* ROLE : Attaque la cible avec les dommages appliqu�s de l'unit�					   */
-	/* INPUT/OUTPUT : Units* : pointeur vers l'unit� qui doit se d�fendre				   */
-	/* RETURNED VALUE    : void															   */
-	virtual void attack
-	(
-		Unit&
-	);
+	virtual void
+	defend(const int dmg);
 
-	/* NAME : defend																	   */
-	/* ROLE : D�fense de l'unit� face � une attaque										   */
-	/* INPUT : unsigned int : dommage appliqu� par l'attaque							   */
-	/* RETURNED VALUE    : void															   */
-	virtual void defend
-	(
-		const int dmg
-	);
-
-	/* NAME : move																		   */
-	/* ROLE : Application du mouvement � l'unit�										   */
-	/* ROLE : Si l'unit� n'a plus de mouvement disponible alors arret					   */
-	/* INPUT : unsigned int& : enum Select_Type												   */
-	/* INPUT : int& : unit� s�l�ctionn�e												   */
-	/* INPUT : int x : incrementation coor x											   */
-	/* INPUT : int y : incrementation coor y											   */
-	/* RETURNED VALUE    : void															   */
-	virtual void move
-	(
-		Select_Type& select,
-		int& selectunit,
-		const R2D::CardinalDirection& cardinalDirection
-	);
+	virtual void
+	move(Select_Type& select,
+		 int& selectunit,
+		 const R2D::CardinalDirection& cardinalDirection);
 
 public:
+	virtual void
+	heal(const MatriceMap& tiles,
+		 const unsigned int selectplayer);
 
-	/* NAME : heal																		   */
-	/* ROLE : Soigne l'unit� en fonction du territoire sur lequel elle se trouve		   */
-	/* INPUT : const std::vector<std::vector<Tile>>& tiles : tableau de cases			   */
-	/* INPUT : unsigned int : donn�es g�n�rale de la map : joueur s�lectionn�			   */
-	/* RETURNED VALUE    : void															   */
-	virtual void heal
-	(
-		const MatriceMap& tiles,
-		const unsigned int selectplayer
-	);
-
-	/* NAME : levelup																	   */
-	/* ROLE : Incr�mentation de 1 de level												   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
-	virtual void levelup();
-
-	/* NAME : RESETmovement																   */
-	/* ROLE : Reset du nombre de mouvement disponible pour un tour						   */
-	/* INPUT : void																	       */
-	/* RETURNED VALUE    : void															   */
-	virtual void RESETmovement();
-
-	virtual void RESETnumberOfAttack();
-
-	/* ROLE : 	TODO																	   */
-	/* RETURNED VALUE : bool															   */
-	virtual bool irrigate
-	(
-		MatriceMap& map
-	);
-
-private:
-
-	/* NAME : testPos																	   */
-	/* ROLE : Test sur les positions de la souris et de l'unit�							   */
-	/* INPUT : unsigned int mouse_x : position x										   */
-	/* INPUT : unsigned int mouse_y : position y										   */
-	/* RETURNED VALUE    : int : 0 : pas s�lection� / 1 : s�lectionn�					   */
-	virtual bool testPos
-	(
-		const unsigned int mouse_x,
-		const unsigned int mouse_y
-	);
-
-	/* NAME : isGroundMovement_Type														   */
-	/* ROLE : Check if the movement type of the Unit is	ground							   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not ground						   */
-	/* RETURNED VALUE : bool : true -> movement type is ground							   */
-	virtual bool isGroundMovement_Type();
-
-	/* NAME : isAirMovement_Type														   */
-	/* ROLE : Check if the movement type of the Unit is	air								   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not air						   */
-	/* RETURNED VALUE : bool : true -> movement type is air								   */
-	virtual bool isAirMovement_Type();
-
-	/* NAME : isWaterMovement_Type														   */
-	/* ROLE : Check if the movement type of the Unit is	water							   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not water						   */
-	/* RETURNED VALUE : bool : true -> movement type is water							   */
-	virtual bool isWaterMovement_Type();
-
-	/* NAME : isDeepWaterMovement_Type													   */
-	/* ROLE : Check if the movement type of the Unit is	DeepWater						   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : bool : false -> movement type is not DeepWater					   */
-	/* RETURNED VALUE : bool : true -> movement type is DeepWater						   */
-	virtual bool isDeepWaterMovement_Type();
-
-	virtual bool isPossibleToAttack();
+	virtual bool
+	irrigate(MatriceMap& map);
 
 public:
-
-	virtual bool isThisUnitType
-	(
-		const std::string& nameToCompare
-	);
+	virtual bool isThisUnitType(const std::string& nameToCompare) const noexcept { return m_name == nameToCompare; };
 
 public:
-
-	/* NAME : cmpblit																	   */
-	/* ROLE : Compteur permettant de faire clignoter l'unit�							   */
-	/* ROLE : Attention : bas� sur SCREEN_REFRESH_RATE									   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
-	virtual void cmpblit();
-
-public:
-
 	jsoncons::ojson saveToOjson()const;
-
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
-
 	inline const std::string& GETname()				const { return m_name; };
-	inline unsigned int GETx()						const { return m_x; };
-	inline unsigned int GETy()						const { return m_y; };
-	inline Unit_Movement_Type GETmovementType()		const { return m_movementType; };
-	inline int GETmaxlife()							const { return m_maxlife; };
-	inline int GETmaxatq()							const { return m_maxatq; };
-	inline int GETmaxdef()							const { return m_maxdef; };
-	inline int GETmaxmovement()						const { return m_maxmovement; };
-	inline int GETmaxNumberOfAttack()				const { return m_maxNumberOfAttack; };
-	inline int GETmaxlevel()						const { return m_maxlevel; };
-	inline int GETlife()							const { return m_life; };
-	inline int GETatq()								const { return m_atq; };
-	inline int GETdef()								const { return m_def; };
-	inline int GETmovement()						const { return m_movement; };
-	inline int GETnumberOfAttack()					const { return m_numberOfAttack; };
-	inline int GETlevel()							const { return m_level; };
 	inline bool GETalive()							const { return m_alive; };
 	inline double GETmaintenance()					const { return m_maintenance; }
-	inline unsigned int GETblit()					const { return m_blit; };
-	inline bool GETshow()							const { return m_show; };
-	inline bool GETshowStats()						const { return m_showStats; };
 	inline Player* GETowner()							  { return m_owner; };
 
-	inline void SETmovement(int movement) { m_movement = movement; };
-	inline void SETshow(bool show) { m_show = show; };
 	inline void SETowner(Player* owner) { m_owner = owner; };
 
 private:
-
-	std::string m_name;
-	unsigned int m_x;
-	unsigned int m_y;
-	Unit_Movement_Type m_movementType;
-
-	int m_maxlife;
-	int m_maxatq;
-	int m_maxdef;
-	int m_maxmovement;
-	int m_maxNumberOfAttack;
-	int m_maxlevel;
-
-	int m_life;
-	int m_atq;
-	int m_def;
-	int m_movement;
-	int m_numberOfAttack;
-	int m_level;
+	UnitName m_name;
 	bool m_alive;
-
 	double m_maintenance;
-
-	unsigned int m_blit;
-	bool m_show;
-	bool m_showStats;
 
 	Player* m_owner;
 };

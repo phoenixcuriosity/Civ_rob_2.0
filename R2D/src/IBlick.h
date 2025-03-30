@@ -1,7 +1,7 @@
-﻿/*
+/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,26 +19,40 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef InitLoadFromFile_H
-#define InitLoadFromFile_H
+#include "Window.h"
 
-#include "LIB.h"
-
-class InitLoadFromFile
+namespace R2D
 {
+
+class IBlickable
+{
+private:
+	using BlickingUnit = unsigned int;
+	static constexpr BlickingUnit ZERO_BLICKING = 0;
+
 public:
+	IBlickable() = delete;
+	IBlickable(const BlickingUnit& blickingRate) noexcept : m_show(true), m_blicking(ZERO_BLICKING), m_blickingRate(blickingRate) {};
+	virtual ~IBlickable() = default;
 
-	static void loadMainMapConfig(MainMap& mainMap);
+	virtual void cmpblit() noexcept { if ((++m_blicking %= (SCREEN_REFRESH_RATE / m_blickingRate)) == ZERO_BLICKING) { m_show = !m_show; } };
 
-	static void initFromFile(VectUnitTemplate& vectUnitTemplate, VectCityName& vectCityName);
+protected:
+	void makeShow() noexcept
+	{
+		m_blicking = ZERO_BLICKING;
+		m_show = true;
+	};
+
+public:
+	bool m_show;
 
 private:
-
-	static void loadUnitAndSpec(VectUnitTemplate& vectUnitTemplate);
-
-	static void loadCitiesNames(VectCityName& vectCityName);
-
+	BlickingUnit m_blicking;
+	const BlickingUnit m_blickingRate;
 };
 
-#endif /* InitLoadFromFile_H */
+
+}

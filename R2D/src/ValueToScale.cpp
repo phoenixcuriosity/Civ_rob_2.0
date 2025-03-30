@@ -22,30 +22,14 @@
 
 #include "ValueToScale.h"
 
-using namespace R2D;
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : computeValueToScale																		    	  */
-/* ROLE : Scale a value from an initial range to a target range											      */
-/* ROLE : Error management : Throw error if checkMinMaxValidityRange return false						      */
-/* IN : double value : The value to scale																      */
-/* IN : double minValue : The minimum value	of the initial range										      */
-/* IN : double maxValue : The maximum value	of the initial range										      */
-/* IN : double minScale : The minimum value	of the target range											      */
-/* IN : double maxScale : The maximum value	of the target range											      */
-/* IN : int divToScaleSize : A factor to scale the initial value, default value is 1					      */
-/* RETURNED VALUE : double : result the value in the target range											  */
-/* ---------------------------------------------------------------------------------------------------------- */
-double ValueToScale::computeValueToScale
-(
-	/* IN */
-	const double value,
-	const double minValue,
-	const double maxValue,
-	const double minScale,
-	const double maxScale,
-	const int divToScaleSize
-)
+double 
+R2D::ValueToScale
+::computeValueToScale(const double value,
+					  const double minValue,
+					  const double maxValue,
+					  const double minScale,
+					  const double maxScale,
+					  const int divToScaleSize)
 {
 	if (checkMinMaxValidityRange(minValue, maxValue) && checkMinMaxValidityRange(minScale, maxScale))
 	{
@@ -71,21 +55,10 @@ double ValueToScale::computeValueToScale
 	}
 }
 
-
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : protectedDiv																				    	  */
-/* ROLE : Check if the denominator is lower than PRECISION_DIV then throw error, else do the division.		  */
-/* IN : double num : The numerator																		      */
-/* IN : double den : The denominator																	      */
-/* RETURNED VALUE : double -> result from division															  */
-/* ---------------------------------------------------------------------------------------------------------- */
-double ValueToScale::protectedDiv
-( 
-	/* IN */
-	const double num,
-	const double den
-)
+double 
+R2D::ValueToScale
+::protectedDiv( const double num,
+				const double den)
 {
 	if (den > VALUE_PRECISION::DIV)
 	{
@@ -97,24 +70,10 @@ double ValueToScale::protectedDiv
 	}
 }
 
-
-
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* NAME : checkMinMaxValidityRange																	    	  */
-/* ROLE : Check if the min value is strictly lower than max value										      */
-/* IN : double min : The minimum value																	      */
-/* IN : double max : The maximum value																	      */
-/* RETURNED VALUE : bool : false -> min is greater than or equal to max										  */
-/* RETURNED VALUE : bool : true -> min strictly lower than max value										  */
-/* ---------------------------------------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------------------------------------- */
-bool ValueToScale::checkMinMaxValidityRange
-(
-	/* IN */
-	const double min,
-	const double max
-)
+bool 
+R2D::ValueToScale
+::checkMinMaxValidityRange(const double min,
+						   const double max)
 {
 	if (min < max)
 	{

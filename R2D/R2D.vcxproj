@@ -165,14 +165,22 @@
     <ClInclude Include="src\ColorRGBA8.h" />
     <ClInclude Include="src\ErrorLog.h" />
     <ClInclude Include="src\ExitFromError.h" />
+    <ClInclude Include="src\FileReader.h" />
     <ClInclude Include="src\Files.h" />
+    <ClInclude Include="src\FileSystemHandler.h" />
+    <ClInclude Include="src\FileWriter.h" />
     <ClInclude Include="src\GameEngine.h" />
     <ClInclude Include="src\GLSLProgram.h" />
     <ClInclude Include="src\GLTexture.h" />
     <ClInclude Include="src\GUI.h" />
+    <ClInclude Include="src\IBlick.h" />
     <ClInclude Include="src\IGameScreen.h" />
+    <ClInclude Include="src\ILoadable.h" />
     <ClInclude Include="src\IMainGame.h" />
+    <ClInclude Include="src\IMove.h" />
     <ClInclude Include="src\InputManager.h" />
+    <ClInclude Include="src\IRegister.h" />
+    <ClInclude Include="src\ISaveable.h" />
     <ClInclude Include="src\LoadingFileToString.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\LogLevel.h" />
@@ -195,7 +203,6 @@
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
     <ClCompile Include="src\Camera2D.cpp" />
-    <ClCompile Include="src\CardinalDirection.cpp" />
     <ClCompile Include="src\ColorRGBA8.cpp" />
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />

@@ -31,7 +31,7 @@
 
 namespace R2D
 {
-	
+
 enum class FileLineFunctionType
 {
 	show = true,
@@ -55,7 +55,7 @@ public:
 private:
     Logger();
     ~Logger() = default;
-   
+
 private:
 
     std::string GetCurTime(); ///< @return date time as ISO8601 strings("YYYY-MM-DD HH:MM:SS.SSS").

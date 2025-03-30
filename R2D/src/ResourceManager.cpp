@@ -33,47 +33,50 @@
 #include <iostream>
 #include <stdexcept>
 
-using namespace R2D;
+R2D::TextureCache R2D::ResourceManager::m_textureCache;
+R2D::Files R2D::ResourceManager::m_files;
+R2D::Text R2D::ResourceManager::m_Text;
+R2D::FileTools R2D::ResourceManager::m_fileTools;
+std::shared_ptr<R2D::SpriteFont> R2D::ResourceManager::m_spriteFont;
+R2D::GLSLProgram R2D::ResourceManager::m_gLSLProgram;
+R2D::ColorRGBA8C R2D::ResourceManager::m_colorsRGBA8;
+R2D::ResourceManager::CardinalDirectionMapping R2D::ResourceManager::m_cardinalDirectionMapping;
 
-TextureCache ResourceManager::m_textureCache;
-Files ResourceManager::m_files;
-Text ResourceManager::m_Text;
-FileTools ResourceManager::m_fileTools;
-std::shared_ptr<SpriteFont> ResourceManager::m_spriteFont;
-GLSLProgram ResourceManager::m_gLSLProgram;
-ColorRGBA8C ResourceManager::m_colorsRGBA8;
-CardinalDirectionMapping ResourceManager::m_cardinalDirectionMapping;
-
-void ResourceManager::loadTextureFromDir(const std::string& path)
+void R2D::ResourceManager::loadTextureFromDir(const std::string& path)
 {
 	m_textureCache.loadTextureFromDir(path);
 }
 
-void ResourceManager::copyIdMap(IdMap& dest)
+void R2D::ResourceManager::copyIdMap(R2D::IdMap& dest)
 {
 	m_textureCache.copyIdMap(dest);
 }
 
-GLuint ResourceManager::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
+GLuint R2D::ResourceManager::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
 {
 	return TextureCache::searchKeyInIdMap(idMap, key);
 }
 
-File* ResourceManager::getFile(const e_Files name)
+const R2D::ResourceManager::FIlePath& R2D::ResourceManager::getFile(const R2D::e_Files name)
 {
-	return m_files.getFile(name);
+	return m_files.getFile(name)->m_path;
 }
 
-void ResourceManager::initializeFilePath
+void R2D::ResourceManager::initializeFilePath
 (
-	const e_Files name,
+	const R2D::e_Files name,
 	const std::string& path
 )
 {
 	m_files.initializePath(name, path);
 }
 
-std::string ResourceManager::loadFileToString
+void R2D::ResourceManager::ModifyFilePath(const e_Files name, const std::string& path)
+{
+	m_files.modifyPath(name, path);
+}
+
+std::string R2D::ResourceManager::loadFileToString
 (
 	const std::string& path
 )
@@ -81,43 +84,38 @@ std::string ResourceManager::loadFileToString
 	return m_fileTools.loadFileToString(path);
 }
 
-std::shared_ptr<SpriteFont>& ResourceManager::getSpriteFont()
+std::shared_ptr<R2D::SpriteFont>& R2D::ResourceManager::getSpriteFont()
 {
 	return m_spriteFont;
 }
 
-GLSLProgram& ResourceManager::getGLSLProgram()
+R2D::GLSLProgram& R2D::ResourceManager::getGLSLProgram()
 {
 	return m_gLSLProgram;
 }
 
-void ResourceManager::getTextFromFile
-(
-	const e_Files name,
-	MapTexts& mapTexts
-)
+void
+R2D::ResourceManager
+::getTextFromFile(const e_Files name, MapTexts& mapTexts)
 {
 	m_Text.getTextFromFile(name, mapTexts);
 }
 
-void ResourceManager::displayTextFromFile
-(
-	/* IN */
-	const MapTexts& mapTexts,
-	const Window& window,
-	/* INOUT */
-	SpriteBatch& spriteBatchHUDStatic
-)
+void
+R2D::ResourceManager
+::displayTextFromFile(	const R2D::MapTexts& mapTexts,
+						const R2D::Window& window,
+						R2D::SpriteBatch& spriteBatchHUDStatic)
 {
 	m_Text.displayTextFromFile(mapTexts, window, spriteBatchHUDStatic);
 }
 
-void ResourceManager::initializeRGBA8Map()
+void R2D::ResourceManager::initializeRGBA8Map()
 {
 	m_colorsRGBA8.initializeRGBA8Map();
 }
 
-ColorRGBA8& ResourceManager::getRGBA8Color
+R2D::ColorRGBA8& R2D::ResourceManager::getRGBA8Color
 (
 	const std::string& colorName
 )
@@ -125,11 +123,9 @@ ColorRGBA8& ResourceManager::getRGBA8Color
 	return m_colorsRGBA8.getRGBA8Color(colorName);
 }
 
-Justification ResourceManager::getJustification
-(
-	/* in */
-	const std::string& justificationN
-)
+R2D::Justification
+R2D::ResourceManager
+::getJustification(const std::string& justificationN)
 {
 	if (justificationN.compare("LEFT"))
 	{
@@ -151,33 +147,29 @@ Justification ResourceManager::getJustification
 	}
 }
 
-
-void ResourceManager::InitializeCardinalDirectionMapping
-(
-	/* IN */
-	const unsigned int tileSize
-)
+void
+R2D::ResourceManager
+::InitializeCardinalDirectionMapping(const unsigned int tileSize)
 {
-	;
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::North,
+			CardinalDirection::Directions::North,
 			{
-				NorthSouth::north,
-				EstWest::neutral,
+				CardinalDirection::NorthSouth::north,
+				CardinalDirection::EstWest::neutral,
 				int(tileSize),
-				CARDINAL::PIXEL::DEFAULT
+				CardinalDirection::PIXEL_DEFAULT
 			}
 		}
 	);
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::NorthEst,
+			CardinalDirection::Directions::NorthEst,
 			{
-				NorthSouth::north,
-				EstWest::est,
+				CardinalDirection::NorthSouth::north,
+				CardinalDirection::EstWest::est,
 				int(tileSize),
 				int(tileSize)
 			}
@@ -186,11 +178,11 @@ void ResourceManager::InitializeCardinalDirectionMapping
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::Est,
+			CardinalDirection::Directions::Est,
 			{
-				NorthSouth::neutral,
-				EstWest::est,
-				CARDINAL::PIXEL::DEFAULT,
+				CardinalDirection::NorthSouth::neutral,
+				CardinalDirection::EstWest::est,
+				CardinalDirection::PIXEL_DEFAULT,
 				int(tileSize)
 			}
 		}
@@ -198,10 +190,10 @@ void ResourceManager::InitializeCardinalDirectionMapping
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::SouthEst,
+			CardinalDirection::Directions::SouthEst,
 			{
-				NorthSouth::south,
-				EstWest::est,
+				CardinalDirection::NorthSouth::south,
+				CardinalDirection::EstWest::est,
 				-int(tileSize),
 				int(tileSize)
 			}
@@ -210,22 +202,22 @@ void ResourceManager::InitializeCardinalDirectionMapping
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::South,
+			CardinalDirection::Directions::South,
 			{
-				NorthSouth::south,
-				EstWest::neutral,
+				CardinalDirection::NorthSouth::south,
+				CardinalDirection::EstWest::neutral,
 				-int(tileSize),
-				CARDINAL::PIXEL::DEFAULT
+				CardinalDirection::PIXEL_DEFAULT
 			}
 		}
 	);
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::SouthWest,
+			CardinalDirection::Directions::SouthWest,
 			{
-				NorthSouth::south,
-				EstWest::west,
+				CardinalDirection::NorthSouth::south,
+				CardinalDirection::EstWest::west,
 				-int(tileSize),
 				-int(tileSize)
 			}
@@ -234,11 +226,11 @@ void ResourceManager::InitializeCardinalDirectionMapping
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::West,
+			CardinalDirection::Directions::West,
 			{
-				NorthSouth::neutral,
-				EstWest::west,
-				CARDINAL::PIXEL::DEFAULT,
+				CardinalDirection::NorthSouth::neutral,
+				CardinalDirection::EstWest::west,
+				CardinalDirection::PIXEL_DEFAULT,
 				-int(tileSize)
 			}
 		}
@@ -246,10 +238,10 @@ void ResourceManager::InitializeCardinalDirectionMapping
 	m_cardinalDirectionMapping.insert
 	(
 		{
-			CardinalDirections::NorthWest,
+			CardinalDirection::Directions::NorthWest,
 			{
-				NorthSouth::north,
-				EstWest::west,
+				CardinalDirection::NorthSouth::north,
+				CardinalDirection::EstWest::west,
 				int(tileSize),
 				-int(tileSize)
 			}
@@ -257,11 +249,17 @@ void ResourceManager::InitializeCardinalDirectionMapping
 	);
 }
 
-CardinalDirection& ResourceManager::getCardinalDirection
-(
-	/* IN */
-	const CardinalDirections cardinalDirections
-)
+const R2D::CardinalDirection&
+R2D::ResourceManager
+::getCardinalDirection(const CardinalDirection::Directions cardinalDirections)
 {
-	return m_cardinalDirectionMapping[cardinalDirections];
+	try
+	{
+		return m_cardinalDirectionMapping.at(cardinalDirections);
+	}
+	catch (const std::out_of_range& e)
+	{
+		LOG(R2D::LogLevelType::error, 0, logR::WHO::RESSOURCES_MANAGER, logR::WHAT::DIRECTION, logR::DATA::ERROR_DIRECTION, e.what());
+		throw std::runtime_error("Direction not found");
+	}
 }

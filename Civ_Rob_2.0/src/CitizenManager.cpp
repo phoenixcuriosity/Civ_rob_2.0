@@ -37,6 +37,8 @@
 #include <R2D/src/ErrorLog.h> 
 #include <R2D/src/Log.h> 
 
+#include <execution>
+
 
 CitizenManager::CitizenManager(const VectMapPtr& tiles)
 : 
@@ -175,12 +177,8 @@ double CitizenManager::tileValue
 
 void CitizenManager::computeEmotion()
 {
-	double result{ 0.0 };
-
-	for (const auto& c : m_citizens)
-	{
-		result += (double)c->GEThappiness();
-	}
+	const double result = std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
+		[](const CitizenPtrT& c) { return static_cast<double>(c->GEThappiness()); });
 
 	try
 	{
@@ -217,32 +215,20 @@ void CitizenManager::computeEmotion()
 
 double CitizenManager::getWorkFromCitizen()const
 {
-	double rValue{0.0};
-	for (const auto& c : m_citizens)
-	{
-		rValue += (double)c->GETwork();
-	}
-	return rValue;
+	return std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
+		[](const CitizenPtrT& c) { return static_cast<double>(c->GETwork()); });
 }
 
 double CitizenManager::getGoldFromCitizen()const
 {
-	double rValue{ 0.0 };
-	for (const auto& c : m_citizens)
-	{
-		rValue += (double)c->GETgold();
-	}
-	return rValue;
+	return std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
+		[](const CitizenPtrT& c) { return static_cast<double>(c->GETgold()); });
 }
 
 double CitizenManager::getFoodFromCitizen()const
 {
-	double rValue{ 0.0 };
-	for (const auto& c : m_citizens)
-	{
-		rValue += (double)c->GETfood();
-	}
-	return rValue;
+	return std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
+		[](const CitizenPtrT& c) { return static_cast<double>(c->GETfood()); });
 }
 
 jsoncons::ojson CitizenManager::saveToOjson()const

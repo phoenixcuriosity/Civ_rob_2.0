@@ -25,6 +25,7 @@
 
 #include "LIB.h"
 
+#include "Unit.h"
 #include "T_Player.h"
 
 namespace PlayerH
@@ -32,7 +33,7 @@ namespace PlayerH
 	constexpr unsigned int NB_MAX_PLAYER = 9;
 
 	constexpr double INITIAL_GOLD = 100.0;
-	
+
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
@@ -41,138 +42,42 @@ class Player
 {
 public:
 
-	/* NAME : Player																	   */
-	/* ROLE : Constructeur par défaut													   */
-	/* INPUT : void																		   */
 	Player();
-
-	/* NAME : Player																	   */
-	/* ROLE : Constructeur par nom du joueur											   */
-	/* INPUT : const std::string&														   */
-	Player
-	(
-		const std::string& name,
-		const int id
-	);
-
-	/* NAME : ~Player																	   */
-	/* ROLE : Initialisation d'une Unit vide											   */
+	Player(const std::string& name, const int id);
 	virtual ~Player();
 
-	/* NAME : operator=																	   */
-	/* ROLE : Redéfinition de l'opérateur =												   */
-	/* INPUT : const Player& player : l'objet à copier									   */
-	/* RETURNED VALUE : Player&	: l'objet recopié										   */
-	Player& operator=
-	(
-		const Player& player
-	);
-
-	/* NAME : deletePlayer																   */
-	/* ROLE : Destruction de l'objet et de ses ptr										   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
-	virtual void deletePlayer();
-
-	/* NAME : addUnit																	   */
-	/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
-	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-	/* RETURNED VALUE    : void															   */
-	virtual void addUnit
-	(
-		const std::string& name,
-		unsigned int x,
-		unsigned int y,
-		Unit_Movement_Type movementType,
-		unsigned int life,
-		unsigned int atq,
-		unsigned int def,
-		unsigned int move,
-		unsigned int numberOfAttack,
-		unsigned int level,
-		double maintenance
-	);
+	virtual void addUnit(const Unit::UnitName& name,
+						 const Unit::Coor coor,
+						 const Unit::UnitStat& unitStat,
+						 double maintenance);
 
 private:
-
 	virtual void addEmptyUnit();
 
 public:
-	
-	/* NAME : deleteUnit																   */
-	/* ROLE : Suppression d'une Unit du joueur											   */
-	/* INPUT : unsigned int : index de Unit dans le tableau								   */
-	/* RETURNED VALUE    : void															   */
-	virtual void deleteUnit
-	(
-		const unsigned int index
-	);
-	
-	/* NAME : addCity																	   */
-	/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
-	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-	/* RETURNED VALUE    : void															   */
-	virtual void addCity
-	(
+	virtual void deleteUnit(const unsigned int index);
+	virtual void addCity(
 		const std::string&,
 		const unsigned int,
 		const unsigned int,
-		VectMapPtr& tiles
-	);
+		VectMapPtr& tiles);
 
 private:
-
 	virtual void addEmptyCity();
 
 public:
-
-	/* NAME : deleteCity																   */
-	/* ROLE : Suppression d'une City du joueur											   */
-	/* INPUT : unsigned int : index de City dans le tableau								   */
-	/* RETURNED VALUE    : void															   */
-	virtual void deleteCity
-	(
-		const unsigned int index
-	);
-
-	virtual CityPtrT* searchCity
-	(
-		const unsigned int indexX,
-		const unsigned int indexY
-	);
-
-	/* NAME : computeGold																   */
-	/* ROLE : Compute income and cost then the balance between the two					   */
-	/* ROLE : Add balance to the player gold											   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
+	virtual void deleteCity(const unsigned int index);
+	virtual CityPtrT* searchCity(const unsigned int indexX, const unsigned int indexY);
 	virtual void computeGold();
-
 	virtual void computeMaintenanceCostUnit();
-
-	/* NAME : resetGoldStats															   */
-	/* ROLE : Reset all stats of m_goldStats except gold									   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
 	virtual void resetGoldStats();
-
-	/* NAME : resetGoldStats															   */
-	/* ROLE : Reset all stats of m_goldStats except gold									   */
-	/* INPUT : double goldToAdd	: gold to add in goldConversionSurplus					   */
-	/* RETURNED VALUE    : void															   */
-	virtual void addGoldToGoldConversionSurplus
-	(
-		const double goldToAdd
-	);
+	virtual void addGoldToGoldConversionSurplus(const double goldToAdd);
 
 public:
-
 	jsoncons::ojson saveToOjson()const;
-
 	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
 
 public:
-
 	inline virtual const std::string& GETname()			const { return m_name; };
 	inline virtual const VectUnit& GETtabUnit()			const { return m_tabUnit; };
 	inline virtual const VectCity& GETtabCity()			const { return m_tabCity; };

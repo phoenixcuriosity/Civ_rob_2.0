@@ -27,18 +27,15 @@
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
+#include "SaveReload.h"
 #include "Unit.h"
 #include "Utility.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
-
- /* *********************************************************
-  *				START Player::METHODS					   *
-  ********************************************************* */
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 
 Player::Player() :
 	m_name("NoName"),
@@ -56,7 +53,7 @@ Player::Player
 (
 	const std::string& name,
 	const int id
-) 
+)
 :
 	m_name(name),
 	m_id(id),
@@ -73,38 +70,6 @@ Player::Player
 Player::~Player()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_PLAYER, logS::DATA::DESTRUCTOR_PLAYER, saveToOjson().as_string());
-	deletePlayer();
-}
-
-Player& Player::operator=
-(
-	const Player& player
-)
-{
-	if (this != &player)
-	{
-		deletePlayer();
-		m_name = player.GETname();
-		m_tabUnit = player.GETtabUnit();
-		m_tabCity = player.GETtabCity();
-		m_goldStats = player.GETgoldStats();
-	}
-	return *this;
-}
-
-void Player::deletePlayer()
-{
-	for (auto& u : m_tabUnit)
-	{
-		u.reset();
-	}
-	m_tabUnit.clear();
-
-	for (auto& c : m_tabCity)
-	{
-		c.reset();
-	}
-	m_tabCity.clear();
 }
 
 void Player::addEmptyUnit()
@@ -114,26 +79,13 @@ void Player::addEmptyUnit()
 
 void Player::addUnit
 (
-	const std::string& name,
-	unsigned int x,
-	unsigned int y,
-	Unit_Movement_Type movementType,
-	unsigned int life,
-	unsigned int atq,
-	unsigned int def,
-	unsigned int move,
-	unsigned int numberOfAttack,
-	unsigned int level,
+	const Unit::UnitName& name,
+	const Unit::Coor coor,
+	const Unit::UnitStat& unitStat,
 	double maintenance
 )
 {
-	m_tabUnit.push_back
-	(
-		std::make_shared<Unit>
-		(
-			name, x, y, movementType, life, atq, def, move, numberOfAttack, level, maintenance, this
-		)
-	);
+	m_tabUnit.push_back(std::make_shared<Unit>(name, coor, unitStat, maintenance, this));
 }
 
 void Player::deleteUnit
@@ -325,13 +277,13 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 			addEmptyCity();
 			CityPtrT city_l{ m_tabCity.back() };
 			city_l->loadFromOjson(city);
-			City::loadCity(matriceMap, m_id, city_l);
+			City::loadCity(matriceMap, m_id, city_l, modifAppartenance_Type::dontModify);
 		}
 	}
 	else
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
-			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
 	}
 }
 

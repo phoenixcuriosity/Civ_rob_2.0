@@ -46,8 +46,8 @@ void NextTurn::nextTurn(GamePlayScreen& mainGame)
 		player->resetGoldStats();
 		for (auto& unit : player->GETtabUnit())
 		{
-			unit->RESETmovement();
-			unit->RESETnumberOfAttack();
+			unit->resetMovement();
+			unit->resetNumberOfAttack();
 			unit->heal(mainGame.GETmainMap().GETmatriceMap(), indexPlayer);
 		}
 		for (auto& city : player->GETtabCity())

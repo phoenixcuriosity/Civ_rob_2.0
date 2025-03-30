@@ -201,7 +201,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::SouthWest)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::SouthWest)
 			);
 		}
 		else
@@ -213,7 +213,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::South)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::South)
 			);
 		}
 		else
@@ -225,7 +225,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::SouthEst)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::SouthEst)
 			);
 		}
 		else
@@ -237,7 +237,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::West)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::West)
 			);
 		}
 		/* NO SDLK_KP_5 : Useless */
@@ -250,7 +250,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::Est)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::Est)
 			);
 		}
 		else
@@ -262,7 +262,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::NorthWest)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::NorthWest)
 			);
 		}
 		else
@@ -274,7 +274,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::North)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::North)
 			);
 		}
 		else
@@ -286,7 +286,7 @@ void GameInput::actionByKey
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
 				Select_Type::selectmove,
-				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirections::NorthEst)
+				R2D::ResourceManager::getCardinalDirection(R2D::CardinalDirection::Directions::NorthEst)
 			);
 		}
 		else

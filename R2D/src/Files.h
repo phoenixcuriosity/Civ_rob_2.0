@@ -35,7 +35,7 @@ enum class e_Files
 {
 	error				= 0,
 
-	log					= 1, 
+	log					= 1,
 
 	readme				= 10,
 
@@ -87,45 +87,28 @@ constexpr size_t NUMBER_OF_FILEPATH = sizeof(tab_e_Files) / sizeof(tab_e_Files[0
 
 class File
 {
+	using FilePath = std::string;
 public:
 	File() = delete;
-	File(const std::string& path);
-	~File();
+	File(const FilePath& path) : m_path(path), m_isInitilize(true) {};
 
-public:
-
-	std::string& getPath() { return m_path; };
-	bool isInitilize() { return m_isInitilize; };
-	void modifyPath(const std::string& path) { m_path = path; };
-
-private:
-
-	std::string m_path;
+	FilePath m_path;
 	bool m_isInitilize;
-
 };
 
 class Files
 {
+	using FilePtrT = std::shared_ptr<File>;
+	using FilePath = std::string;
+	using EfileMap = std::map<e_Files, FilePtrT>;
 
 public:
-
-	Files();
-	~Files();
-
-public:
-
-	bool initializePath
-	(
-		const e_Files name,
-		const std::string& path
-	);
-
-	File* getFile(const e_Files name);
+	bool initializePath(const e_Files name, const FilePath& path);
+	void modifyPath(const e_Files name, const FilePath& path);
+	FilePtrT getFile(const e_Files name);
 
 private:
-
-	std::map<e_Files, File*> m_map_FileConf;
+	EfileMap m_map_FileConf;
 };
 
 }

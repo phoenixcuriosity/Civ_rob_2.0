@@ -29,10 +29,9 @@
 #include "Player.h"
 #include "SaveReload.h"
 #include "Unit.h"
-#include "T_Unit.h"
 
 #include <R2D/src/GUI.h>
-#include <R2D/src/Log.h> 
+#include <R2D/src/Log.h>
 
 //----------------------------------------------------------NewGame----------------------------------------------------------------//
 
@@ -59,23 +58,14 @@ namespace NGC
 void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::START);
-	
-	gamePlayScreen.getSaveReload()->createSave();
+
+	SaveReload::getInstance().createSave();
 
 	pushNewPlayer(gamePlayScreen.getUserInputNewGame()->vectPlayerName, gamePlayScreen.GETPlayers());
 
 	newGameSettlerSpawn(gamePlayScreen.GETPlayers(), gamePlayScreen.GETmainMap());
 
-	try
-	{
-		gamePlayScreen.getSaveReload()->save(gamePlayScreen.GETmainMap(), gamePlayScreen.GETPlayers());
-	}
-	catch (const std::exception e)
-	{
-		LOG(R2D::LogLevelType::error, 0, "[new game]", "[save]", "{}", e.what());
-	}
-
-	/* ### Don't put code below here ### */
+	SaveReload::getInstance().save();
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::END);
 }
@@ -89,7 +79,7 @@ void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 /* ------------------------------------------------------------------------------------*/
 void NewGameManager::pushNewPlayer
 (
-	const VectCityName& vectCityName,
+	const PlayerNameVector& vectCityName,
 	Players& players
 )
 {
@@ -120,7 +110,7 @@ void NewGameManager::newGameSettlerSpawn
 	/* association des vecteurs de position (x,y)							  */
 	/* avec les settlers de départ											  */
 	/* ---------------------------------------------------------------------- */
-	const size_t selectunit{ Unit::searchUnitByName("settler", players.GETvectUnitTemplate()) };
+	const size_t selectunit{ players.GETvectUnitTemplate().searchUnitByName("settler") };
 
 	std::vector<randomPos> tabRandom;
 	for (size_t i(0); i < players.GETvectPlayer().size(); i++)
@@ -130,15 +120,16 @@ void NewGameManager::newGameSettlerSpawn
 
 		players.GETvectPlayer()[i]->addUnit
 		("settler",
-			tabRandom[i].x,
-			tabRandom[i].y,
-			players.GETvectUnitTemplate()[selectunit].type,
-			players.GETvectUnitTemplate()[selectunit].life,
-			players.GETvectUnitTemplate()[selectunit].atq,
-			players.GETvectUnitTemplate()[selectunit].def,
-			players.GETvectUnitTemplate()[selectunit].movement,
-			players.GETvectUnitTemplate()[selectunit].numberOfAttack,
-			players.GETvectUnitTemplate()[selectunit].level,
+			{ tabRandom[i].x, tabRandom[i].y},
+			{
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].type,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].life,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].atq,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].def,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].movement,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].numberOfAttack,
+				players.GETvectUnitTemplate().getTemplateVect()[selectunit].level,
+			},
 			NGC::MAINTENANCE_COST_1TH_SETTLER);
 	}
 }

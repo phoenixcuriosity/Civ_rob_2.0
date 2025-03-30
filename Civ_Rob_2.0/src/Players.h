@@ -26,19 +26,29 @@
 #include "LIB.h"
 
 #include "GamePlayScreenEnumTexture.h"
+#include "Unit.h"
+#include "UnitTemplate.h"
+#include "CityNameTemplate.h"
 
+#include <R2D/src/ISaveable.h>
+#include <R2D/src/ILoadable.h>
 #include <R2D/src/WidgetLabel.h>
+#include <R2D/src/IRegister.h>
 
-class Players
+#include <jsoncons/json.hpp>
+
+class Players : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
+private:
+	using MatriceMapPtrT = MatriceMap*;
 public:
-	Players();
+	Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT);
 	~Players();
 
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
 	inline PlayerPtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
-	inline VectCityName& GETvectCityName() { return m_vectCityName; };
-	inline VectUnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
+	inline CityNameTemplate::Vect& GETvectCityName() { return m_vectCityName.getVect(); };
+	inline UnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
 	inline CityPtrT& GETSelectedCity() { return m_selectedCity; };
@@ -100,10 +110,11 @@ public:
 	);
 
 public:
-
+	jsoncons::ojson save()const override { return saveToOjson(); };
 	jsoncons::ojson saveToOjson()const;
 
-	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
+	void load(jsoncons::ojson f)override { loadFromOjson(f); };
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 
@@ -115,11 +126,8 @@ private:
 	/* Ptr to the selected City */
 	CityPtrT m_selectedCity;
 
-	VectCityName m_vectCityName;
-
-	// tableau des statistiques par défauts des unités
-	VectUnitTemplate m_vectUnitTemplate;
-	VectUnitTemplate m_vectCityTemplate;
+	CityNameTemplate m_vectCityName;
+	UnitTemplate m_vectUnitTemplate;
 
 	GamePlayScreenTexture m_idTexture;
 
@@ -133,6 +141,8 @@ private:
 	bool m_needToUpdateDrawCity;
 
 	R2D::SpriteBatch m_spriteBatchCityDynamic;
+
+	MatriceMapPtrT m_matriceMapPtrT;
 };
 
 #endif /* Players_H */

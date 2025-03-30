@@ -1,7 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,42 +19,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef WidgetLabel_H
-#define WidgetLabel_H
-
-#include "API_fwd.h"
-
-#include <glm/glm.hpp>
-#include <CEGUI/CEGUI.h>
-
-#include "ColorRGBA8.h"
-#include "SpriteBatch.h"
-#include "SpriteFont.h"
-#include "Window.h"
+#pragma once
 
 namespace R2D
 {
 
-class WidgetLabel
+template <typename T>
+class ISaveable
 {
 public:
-	WidgetLabel(): widget(nullptr), text(""), color(COLOR_WHITE), scale(0.7f) {};
-	WidgetLabel(CEGUI::Window* w, const std::string& text, float scale): widget(w), text(text), scale(scale) {};
-	void draw(SpriteBatch& sb, SpriteFont& sf, Window& w);
-
-private:
-	CEGUI::Window* widget;
-	std::string text;
-	ColorRGBA8 color;
-	float scale;
+    virtual ~ISaveable() = default;
+    virtual T save() const = 0;
 };
 
+
 }
-
-#endif // !WidgetLabel_H
-
-
-
-
-

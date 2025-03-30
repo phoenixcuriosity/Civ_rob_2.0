@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,21 +19,36 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef T_Coor_H
-#define T_Coor_H
+#pragma once
 
 #include "LIB.h"
+
+#include "GamePlayScreenEnumTexture.h"
+#include "T_MainMap.h"
+#include "T_Coor.h"
+
+
+#include <R2D/src/Camera2D.h>
+#include <R2D/src/SpriteBatch.h>
+#include <R2D/src/ISaveable.h>
+#include <R2D/src/ILoadable.h>
+#include <R2D/src/IRegister.h>
+
 #include <jsoncons/json.hpp>
 
-struct Coor
+class MainMapConfig : public R2D::ILoadable<jsoncons::ojson>
 {
-	unsigned int x = 0;
-	unsigned int y = 0;
+private:
+	static constexpr char KEY_MAP[] = "Map";
+public:
+	unsigned int m_tileSize = 0;
+	Coor m_mapSizePix;
+public:
+	MainMapConfig() = default;
+	MainMapConfig(R2D::RegisterPairVector& registerLoad);
+	~MainMapConfig() = default;
+	void load(jsoncons::ojson f)override;
 };
-JSONCONS_ALL_MEMBER_NAME_TRAITS(Coor, (x, "x"), (y, "y"))
-typedef std::vector<Coor> VectCoor;
 
-#endif // !T_Coor_H
-
+JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
 

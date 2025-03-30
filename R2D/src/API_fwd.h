@@ -33,6 +33,12 @@
 
 namespace R2D
 {
+	/* Define initial screen index -> Default Screen */
+	namespace SCREEN_INDEX
+	{
+		const int INIT = -1;
+	}
+
 	struct ColorRGBA8;
 	struct dot2D;
 	struct Text_t;
@@ -65,14 +71,12 @@ namespace R2D
 
 	enum WindowFlags : unsigned int;
 
-	enum class CardinalDirections;
 	enum class e_Files;
 	enum class EstWest;
 	enum class GlyphSortType;
 	enum class NorthSouth;
 	enum class ScreenState;
 
-	typedef std::map<CardinalDirections, CardinalDirection> CardinalDirectionMapping;
 	typedef std::map<std::string, ColorRGBA8> ColorRGBA8Map;
 	typedef std::unordered_map<std::string, GLuint> IdMap;
 	typedef std::map<std::string, Text_t> MapTexts;

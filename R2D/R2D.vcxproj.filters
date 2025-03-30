@@ -9,6 +9,7 @@
     <ClInclude Include="src\GLTexture.h" />
     <ClInclude Include="src\IGameScreen.h" />
     <ClInclude Include="src\IMainGame.h" />
+    <ClInclude Include="src\ISaveable.h" />
     <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\RealEngineError.h" />
     <ClInclude Include="src\ResourceManager.h" />
@@ -35,6 +36,13 @@
     <ClInclude Include="src\LogSentences.h" />
     <ClInclude Include="src\LoadingFileToString.h" />
     <ClInclude Include="src\Text.h" />
+    <ClInclude Include="src\ILoadable.h" />
+    <ClInclude Include="src\FileReader.h" />
+    <ClInclude Include="src\FileSystemHandler.h" />
+    <ClInclude Include="src\FileWriter.h" />
+    <ClInclude Include="src\IRegister.h" />
+    <ClInclude Include="src\IBlick.h" />
+    <ClInclude Include="src\IMove.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />
@@ -59,7 +67,6 @@
     <ClCompile Include="src\ErrorLog.cpp" />
     <ClCompile Include="src\ExitFromError.cpp" />
     <ClCompile Include="src\ValueToScale.cpp" />
-    <ClCompile Include="src\CardinalDirection.cpp" />
     <ClCompile Include="src\Screen.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\LoadingFileToString.cpp" />

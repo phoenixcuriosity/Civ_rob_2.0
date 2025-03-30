@@ -31,12 +31,15 @@ namespace R2D
 class TextureCache
 {
 public:
-	TextureCache();
+	using GLTextureUptr = std::unique_ptr<GLTexture>;
+	using GLTextureUptrMap = std::map<std::string, GLTextureUptr>;
+public:
+	TextureCache() = default;
 	~TextureCache();
 
 private:
 
-	std::unique_ptr<GLTexture>& getTexture(const std::string& name);
+	GLTextureUptr& getTexture(const std::string& name);
 
 public:
 
@@ -49,7 +52,7 @@ public:
 	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
 
 private:
-	std::map<std::string, std::unique_ptr<GLTexture>> m_textureMap;
+	GLTextureUptrMap m_textureMap;
 	IdMap m_idMap;
 };
 

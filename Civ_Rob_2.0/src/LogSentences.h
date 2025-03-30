@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef LogSentences_H
-#define LogSentences_H
+#pragma once
 
 namespace logS
 {
@@ -97,7 +95,7 @@ namespace logS
 		constexpr char CONSTRUCTOR_PLAYER[] = " : {}";
 		constexpr char DESTRUCTOR_PLAYER[] = " : {}";
 
-		constexpr char CONSTRUCTOR_UNIT[] = " -> m_name : {} , m_x : {} , m_y : {}";
+		constexpr char CONSTRUCTOR_UNIT[] = " -> m_name : {}";
 		constexpr char DESTRUCTOR_UNIT[] = " -> m_name {}";
 
 		constexpr char ERROR_DELETE_TAB_UNIT[] = "[ERROR_DELETE_TAB_UNIT]";
@@ -140,9 +138,5 @@ namespace logS
 		constexpr char MISSING_KEY_JSON[] = "[MISSING_KEY_JSON] : {} : {}";
 	};
 };
-
-
-
-#endif // !LogSentences_H
 
 

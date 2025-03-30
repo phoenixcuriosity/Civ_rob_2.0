@@ -28,13 +28,13 @@
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "Player.h"
+#include "SaveReload.h"
 #include "Unit.h"
 #include "Utility.h"
-#include "T_Unit.h"
 
 #include <jsoncons/json.hpp>
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
@@ -50,26 +50,30 @@ namespace
 	constexpr unsigned int CITY_TYPE = 1;
 }
 
-Players::Players()
+Players::Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT)
 :
 m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
-m_vectCityName(),
-m_vectUnitTemplate(),
-m_vectCityTemplate(),
+m_vectCityName(registerLoad),
+m_vectUnitTemplate(registerLoad),
 m_vectPlayer(),
 m_idTexture(),
 m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
 m_spriteBatchCity(),
-m_needToUpdateDrawCity(true)
+m_needToUpdateDrawCity(true),
+m_matriceMapPtrT(matriceMapPtrT)
 {
+	SaveReload::getInstance().registerSaveable(R2D::e_Files::savePlayers, this);
+	SaveReload::getInstance().registerLoadable(R2D::e_Files::savePlayers, this);
 	m_spriteBatchCityDynamic.init();
 }
 
 Players::~Players()
 {
+	SaveReload::getInstance().unRegisterSaveable(R2D::e_Files::savePlayers, this);
+	SaveReload::getInstance().unRegisterLoadable(R2D::e_Files::savePlayers, this);
 	deleteAllPlayers();
 }
 
@@ -125,9 +129,9 @@ void Players::clickToSelectUnit
 		for (const auto& u : p->GETtabUnit())
 		{
 			if	(
-					u->GETx() == x
+					u->getX() == x
 					&&
-					u->GETy() == y
+					u->getY() == y
 				)
 			{
 				p->SETselectedUnit(i);
@@ -149,9 +153,9 @@ void Players::isAUnitSelected()
 		if (p->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 		{
 			UnitPtrT u{ p->GETtabUnit()[p->GETselectedUnit()] };
-			bool prevShow{ u->GETshow() };
+			bool prevShow{ u->m_show };
 			u->cmpblit();
-			if (prevShow != u->GETshow())
+			if (prevShow != u->m_show)
 			{
 				m_needToUpdateDrawUnit = true;
 			}
@@ -176,24 +180,24 @@ void Players::drawUnit
 			{
 				UnitPtrT unit(m_vectPlayer[i]->GETtabUnit()[j]);
 
-				if (unit->GETshow())
+				if (unit->m_show)
 				{
 					if	(
 							camera.isBoxInView
 							(
-								{ unit->GETx(), unit->GETy() },
+								{ unit->getX(), unit->getY() },
 								{ tileSize , tileSize },
 								mainMap.GETtoolBarSize() * tileSize
 							)
 						)
 					{
 
-						auto fes = static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::battleoids) + Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate));
+						auto fes = static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::battleoids) + m_vectUnitTemplate.searchUnitByName(unit->GETname()));
 
 						/* Unit Texture */
 						m_spriteBatchUnit.draw
 						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
+							glm::vec4(unit->getX(), unit->getY(), tileSize, tileSize),
 							R2D::FULL_RECT,
 							m_idTexture[fes],
 							0.0f,
@@ -201,11 +205,11 @@ void Players::drawUnit
 						);
 
 						/* Lifebar Texture */
-						if (unit->GETlife() == unit->GETmaxlife())
+						if (unit->isFullLife())
 						{
 							m_spriteBatchUnit.draw
 							(
-								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								glm::vec4(unit->getX() + tileSize / 4, unit->getY(), tileSize / 2, 3),
 								R2D::FULL_RECT,
 								m_idTexture[GamePlayScreenEnumTexture::maxlife],
 								0.0f,
@@ -216,7 +220,7 @@ void Players::drawUnit
 						{
 							m_spriteBatchUnit.draw
 							(
-								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								glm::vec4(unit->getX() + tileSize / 4, unit->getY(), tileSize / 2, 3),
 								R2D::FULL_RECT,
 								m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::life0) +
 									std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, 9.99)))],
@@ -224,12 +228,12 @@ void Players::drawUnit
 								R2D::COLOR_WHITE
 							);
 						}
-						
+
 
 						/* Appartenance Texture */
 						m_spriteBatchUnit.draw
 						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
+							glm::vec4(unit->getX(), unit->getY(), tileSize / 8, tileSize / 8),
 							R2D::FULL_RECT,
 							m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::ColorPlayer0) + i)],
 							0.0f,
@@ -273,7 +277,7 @@ void Players::drawCity
 			{
 				CityPtrT city(m_vectPlayer[i]->GETtabCity()[j]);
 
-				
+
 				if	(
 						camera.isBoxInView
 						(
@@ -360,7 +364,7 @@ jsoncons::ojson Players::saveToOjson()const
 	return value;
 }
 
-void Players::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap)
+void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if (jsonLoad.contains(jsonloader::KEY_PLAYERS) && jsonLoad[jsonloader::KEY_PLAYERS].is_array())
 	{
@@ -368,20 +372,24 @@ void Players::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matrice
 		{
 			if (player.contains("m_name") && player.contains("m_id"))
 			{
-				addPlayer(player["m_name"].as_string(), player["m_id"].as<int32_t>());
-				m_vectPlayer.back()->loadFromOjson(player, matriceMap);
+				assert(m_matriceMapPtrT);
+				if (m_matriceMapPtrT)
+				{
+					addPlayer(player["m_name"].as_string(), player["m_id"].as<int32_t>());
+					m_vectPlayer.back()->loadFromOjson(player, *m_matriceMapPtrT);
+				}
 			}
 			else
 			{
 				LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
-					R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+					R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
 			}
 		}
 	}
 	else
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
-			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers)->getPath(), jsonloader::KEY_PLAYERS);
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
 	}
 }
 

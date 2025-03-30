@@ -33,7 +33,7 @@
 #include "Utility.h"
 
 #include <jsoncons/json.hpp>
-#include <R2D/src/Log.h> 
+#include <R2D/src/Log.h>
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/Window.h>
 
@@ -77,7 +77,7 @@ namespace CityC
 void City::createCity
 (
 	GamePlayScreen& mainGame,
-	const unsigned int influenceLevel
+	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */
 )
 {
 	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
@@ -92,11 +92,11 @@ void City::createCity
 
 	fillCitieTiles
 	(
-		MainMap::convertPosXToIndex(sUnit->GETx()), MainMap::convertPosYToIndex(sUnit->GETy()),
+		MainMap::convertPosXToIndex(sUnit->getX()), MainMap::convertPosYToIndex(sUnit->getY()),
 		selectedPlayer, mainGame.GETmainMap().GETmatriceMap(), tabtiles, influenceLevel
 	);
 
-	splayer->addCity(name, sUnit->GETx(), sUnit->GETy(), tabtiles);
+	splayer->addCity(name, sUnit->getX(), sUnit->getY(), tabtiles);
 
 	splayer->deleteUnit(selectedUnit);
 	splayer->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);
@@ -111,15 +111,18 @@ void City::loadCity
 (
 	MatriceMap& matriceMap,
 	const unsigned int selectplayer,
-	CityPtrT& city
+	CityPtrT& city,
+	const modifAppartenance_Type modAppartenance /* = modifAppartenance_Type::modify */
 )
 {
+	assert(city);
+
 	VectMapPtr tiles;
 	tiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 	City::fillCitieTiles
 	(
 		MainMap::convertPosXToIndex(city->GETx()), MainMap::convertPosYToIndex(city->GETy()),
-		selectplayer, matriceMap, tiles, city->GETinfluenceLevel()
+		selectplayer, matriceMap, tiles, city->GETinfluenceLevel(), modAppartenance
 	);
 	city->SETVectMapPtr(tiles);
 }
@@ -131,7 +134,8 @@ void City::fillCitieTiles
 	const unsigned int selectplayer,
 	MatriceMap& matriceMap,
 	VectMapPtr& tabtile,
-	const unsigned int influenceLevel
+	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */,
+	const modifAppartenance_Type modAppartenance /* = modifAppartenance_Type::modify */
 )
 {
 	unsigned int k(0);
@@ -143,7 +147,7 @@ void City::fillCitieTiles
 		{
 			if (middletileY + p < 0 || middletileY + p >= matriceMap[0].size()) continue;
 
-			if (initSizeInfluenceCondition(o, p, influenceLevel))
+			if ((modAppartenance == modifAppartenance_Type::modify) && (initSizeInfluenceCondition(o, p, influenceLevel)))
 			{
 				matriceMap[middletileX + o][middletileY + p].appartenance = selectplayer;
 			}
@@ -163,7 +167,7 @@ bool City::initSizeInfluenceCondition
 {
 	const int bound{ static_cast<int>(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * influenceLevel) };
 	if  (
-			o >= -bound && o <= bound && p >= -bound && p <= bound 
+			o >= -bound && o <= bound && p >= -bound && p <= bound
 			&&
 			cornerCheck(o, p, influenceLevel)
 		)
@@ -200,7 +204,7 @@ bool City::searchCityTile
 )
 {
 	if	(
-			MainMap::convertPosXToIndex(m_x) == indexX 
+			MainMap::convertPosXToIndex(m_x) == indexX
 			&&
 			MainMap::convertPosXToIndex(m_y) == indexY
 		)
@@ -241,7 +245,7 @@ City::City
 	unsigned int y,
 	VectMapPtr& tiles
 )
-	: 
+	:
 	m_image("citie.png"),
 	m_name(name),
 	m_x(x),
@@ -333,7 +337,7 @@ void City::computefood
 void City::computeWork
 (
 	Player& player,
-	const VectUnitTemplate& vectUnitTemplate,
+	const UnitTemplate& vectUnitTemplate,
 	bool* needToUpdateDrawUnit
 )
 {
@@ -393,7 +397,7 @@ void City::computeGold()
 {
 	/* Sum gold from citizen */
 	m_goldBalance = m_citizenManager.getGoldFromCitizen();
-	
+
 	/* Applying Emotion multiplier */
 	m_goldBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
 }

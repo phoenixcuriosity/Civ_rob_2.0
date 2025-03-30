@@ -1,7 +1,7 @@
 /*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,44 +19,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#include "CardinalDirection.h"
-
-using namespace R2D;
-
-
-
-CardinalDirection::CardinalDirection()
-:
-m_NS(NorthSouth::error),
-m_EW(EstWest::error),
-m_pixelValueNS(CARDINAL::PIXEL::DEFAULT),
-m_pixelValueEW(CARDINAL::PIXEL::DEFAULT)
+namespace R2D
 {
-}
 
-CardinalDirection::CardinalDirection
-(
-	/* IN */
-	const NorthSouth NS,
-	const EstWest EW,
-	const int pixelValueNS,
-	const int pixelValueEW
-)
-:
-m_NS(NS),
-m_EW(EW),
-m_pixelValueNS(pixelValueNS),
-m_pixelValueEW(pixelValueEW)
+template <typename T>
+class ILoadable
 {
-}
+public:
+    virtual ~ILoadable() = default;
+    virtual void load(T) = 0;
+};
 
-int CardinalDirection::GETpixelValueNS()const
-{
-	return m_pixelValueNS;
-}
 
-int CardinalDirection::GETpixelValueEW()const
-{
-	return m_pixelValueEW;
 }
