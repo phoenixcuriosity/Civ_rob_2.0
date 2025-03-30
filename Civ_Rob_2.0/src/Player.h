@@ -26,6 +26,7 @@
 #include "LIB.h"
 
 #include "Unit.h"
+#include "UnitManager.h"
 #include "T_Player.h"
 
 namespace PlayerH
@@ -42,14 +43,12 @@ class Player
 {
 public:
 
-	Player();
+	Player() = delete;
 	Player(const std::string& name, const int id);
 	virtual ~Player();
 
 	virtual void addUnit(const Unit::UnitName& name,
-						 const Unit::Coor coor,
-						 const Unit::UnitStat& unitStat,
-						 double maintenance);
+						 const Unit::Coor coor);
 
 private:
 	virtual void addEmptyUnit();
@@ -79,11 +78,11 @@ public:
 
 public:
 	inline virtual const std::string& GETname()			const { return m_name; };
-	inline virtual const VectUnit& GETtabUnit()			const { return m_tabUnit; };
+	inline virtual const VectUnit& GETtabUnit()			const { return m_unitManager.getUnits(); };
 	inline virtual const VectCity& GETtabCity()			const { return m_tabCity; };
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
-	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_tabUnit[m_selectedUnit]; }
+	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_unitManager.getUnits()[m_selectedUnit]; }
 
 	inline virtual int GETid()							const { return m_id; };
 	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
@@ -102,12 +101,13 @@ private:
 	std::string m_name;
 	int m_id;
 
-	VectUnit m_tabUnit;
+	UnitManager m_unitManager;
 	VectCity m_tabCity;
 	int m_selectedUnit;
 	int m_selectedCity;
 	GoldStats m_goldStats;
 	OnOffDisplay m_onOffDisplay;
+
 };
 
 #endif /* Player_H */

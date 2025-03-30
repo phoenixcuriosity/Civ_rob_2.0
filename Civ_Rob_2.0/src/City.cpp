@@ -337,7 +337,6 @@ void City::computefood
 void City::computeWork
 (
 	Player& player,
-	const UnitTemplate& vectUnitTemplate,
 	bool* needToUpdateDrawUnit
 )
 {
@@ -352,7 +351,7 @@ void City::computeWork
 	case conversionSurplus_Type::GoldToFood:
 	case conversionSurplus_Type::GoldToWork:
 
-		m_buildManager.computeWorkToBuild(player, vectUnitTemplate, needToUpdateDrawUnit);
+		m_buildManager.computeWorkToBuild(player, needToUpdateDrawUnit);
 
 		break;
 	default:

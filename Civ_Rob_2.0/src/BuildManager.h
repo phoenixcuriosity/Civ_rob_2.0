@@ -68,7 +68,6 @@ public:
 	void computeWorkToBuild
 	(
 		Player& player,
-		const UnitTemplate& vectUnitTemplate,
 		bool* needToUpdateDrawUnit
 	);
 

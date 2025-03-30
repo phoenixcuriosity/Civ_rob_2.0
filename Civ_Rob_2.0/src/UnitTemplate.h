@@ -83,6 +83,7 @@ public:
 	};
 
 	using TemplateVect = std::vector<Template>;
+	using TemplateMap = std::map<UnitName, Template>;
 
 public:
 	struct TemplateJson
@@ -105,19 +106,26 @@ private:
 	static constexpr char KEY_UNIT_TEMPLATE[] = "Units";
 
 public:
-	UnitTemplate() noexcept : m_vectUnitTemplate(), initialized(false) {};
+
+	static UnitTemplate& getSingleton(std::optional<R2D::RegisterPairVector> registerLoad = std::nullopt)
+	{
+		static UnitTemplate unitTemplate{ registerLoad.value() };
+		return unitTemplate;
+	};
+
+	UnitTemplate() noexcept : m_mapUnitTemplate() {};
 	UnitTemplate(R2D::RegisterPairVector& registerLoad);
 	virtual ~UnitTemplate() = default;
 
 	void load(jsoncons::ojson f)override;
 
 	unsigned int searchUnitByName(const std::string& name) const;
-	bool isInitialized()const noexcept { return initialized; };
-	TemplateVect& getTemplateVect() noexcept { return m_vectUnitTemplate; };
-	const TemplateVect& getTemplateVect()const noexcept { return m_vectUnitTemplate; };
+
+	const Template& getTemplate(const UnitName& unitName)const;
+	const TemplateMap& getTemplateMap()const { return m_mapUnitTemplate; };
+
 protected:
-	TemplateVect m_vectUnitTemplate;
-	bool initialized;
+	TemplateMap m_mapUnitTemplate;
 };
 
 JSONCONS_ALL_MEMBER_NAME_TRAITS(UnitTemplate::TemplateJson,

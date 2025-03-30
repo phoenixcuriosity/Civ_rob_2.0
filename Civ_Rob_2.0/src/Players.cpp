@@ -29,7 +29,6 @@
 #include "MainMap.h"
 #include "Player.h"
 #include "SaveReload.h"
-#include "Unit.h"
 #include "Utility.h"
 
 #include <jsoncons/json.hpp>
@@ -56,14 +55,14 @@ m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
 m_vectCityName(registerLoad),
-m_vectUnitTemplate(registerLoad),
 m_vectPlayer(),
 m_idTexture(),
 m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
 m_spriteBatchCity(),
 m_needToUpdateDrawCity(true),
-m_matriceMapPtrT(matriceMapPtrT)
+m_matriceMapPtrT(matriceMapPtrT),
+m_registerLoad(registerLoad)
 {
 	SaveReload::getInstance().registerSaveable(R2D::e_Files::savePlayers, this);
 	SaveReload::getInstance().registerLoadable(R2D::e_Files::savePlayers, this);
@@ -192,14 +191,18 @@ void Players::drawUnit
 						)
 					{
 
-						auto fes = static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::battleoids) + m_vectUnitTemplate.searchUnitByName(unit->GETname()));
+						const GamePlayScreenEnumTexture idTunit
+							{ static_cast<GamePlayScreenEnumTexture>(
+								static_cast<size_t>(GamePlayScreenEnumTexture::battleoids)
+								+ UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
+							};
 
 						/* Unit Texture */
 						m_spriteBatchUnit.draw
 						(
 							glm::vec4(unit->getX(), unit->getY(), tileSize, tileSize),
 							R2D::FULL_RECT,
-							m_idTexture[fes],
+							m_idTexture[idTunit],
 							0.0f,
 							R2D::COLOR_WHITE
 						);

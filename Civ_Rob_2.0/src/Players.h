@@ -26,8 +26,6 @@
 #include "LIB.h"
 
 #include "GamePlayScreenEnumTexture.h"
-#include "Unit.h"
-#include "UnitTemplate.h"
 #include "CityNameTemplate.h"
 
 #include <R2D/src/ISaveable.h>
@@ -48,7 +46,6 @@ public:
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
 	inline PlayerPtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
 	inline CityNameTemplate::Vect& GETvectCityName() { return m_vectCityName.getVect(); };
-	inline UnitTemplate& GETvectUnitTemplate() { return m_vectUnitTemplate; };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
 	inline CityPtrT& GETSelectedCity() { return m_selectedCity; };
@@ -127,7 +124,6 @@ private:
 	CityPtrT m_selectedCity;
 
 	CityNameTemplate m_vectCityName;
-	UnitTemplate m_vectUnitTemplate;
 
 	GamePlayScreenTexture m_idTexture;
 
@@ -143,6 +139,8 @@ private:
 	R2D::SpriteBatch m_spriteBatchCityDynamic;
 
 	MatriceMapPtrT m_matriceMapPtrT;
+
+	R2D::RegisterPairVector& m_registerLoad;
 };
 
 #endif /* Players_H */

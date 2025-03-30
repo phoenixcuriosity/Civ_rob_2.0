@@ -62,13 +62,6 @@ BuildManager::~BuildManager()
 	clearDynamicContextBuildToQueue();
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeWork																   */
-/* ROLE : Calculate the work for the turn											   */
-/* INPUT : void																		   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::computeWork()
 {
 	/* Sum work from citizen */
@@ -84,21 +77,9 @@ void BuildManager::computeWork()
 	m_workSurplusPreviousTurn = RESOURCES::WORK::ZERO;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeWorkToBuild														   */
-/* ROLE : Compute the remaining work to build a building or unit					   */
-/* ROLE : if the remaining work is zero then the building or unit is created		   */
-/* ROLE : if the build is created and there work Surplus then either apply it ...	   */
-/* ROLE : ... to next build or convert it to food									   */
-/* OUT : Player* : ptr to the selected player										   */
-/* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::computeWorkToBuild
 (
 	Player& player,
-	const UnitTemplate& vectUnitTemplate,
 	bool* needToUpdateDrawUnit
 )
 {
@@ -113,28 +94,9 @@ void BuildManager::computeWorkToBuild
 			switch (m_buildQueue.front().buildQ.type)
 			{
 			case build_Type::unit:
-			{
-				unsigned int unitToBuild(vectUnitTemplate.searchUnitByName(m_buildQueue.front().buildQ.name));
-
-				player.addUnit
-				(
-					m_buildQueue.front().buildQ.name,
-					{ m_x, m_y },
-					{
-						vectUnitTemplate.getTemplateVect()[unitToBuild].type,
-						vectUnitTemplate.getTemplateVect()[unitToBuild].life,
-						vectUnitTemplate.getTemplateVect()[unitToBuild].atq,
-						vectUnitTemplate.getTemplateVect()[unitToBuild].def,
-						vectUnitTemplate.getTemplateVect()[unitToBuild].movement,
-						vectUnitTemplate.getTemplateVect()[unitToBuild].numberOfAttack,
-						vectUnitTemplate.getTemplateVect()[unitToBuild].level,
-					},
-					vectUnitTemplate.getTemplateVect()[unitToBuild].maintenance
-				);
+				player.addUnit(m_buildQueue.front().buildQ.name, { m_x, m_y });
 				*needToUpdateDrawUnit = true;
-
 				break;
-			}
 			case build_Type::building:
 
 				/* TODO */
@@ -164,13 +126,6 @@ void BuildManager::computeWorkToBuild
 	}
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertWorkSurplusToFood													   */
-/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
-/* INPUT : double workSurplus : food surplus to convert into work					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::convertFoodSurplusToWork
 (
 	const double foodSurplus
@@ -179,16 +134,6 @@ void BuildManager::convertFoodSurplusToWork
 	m_workSurplusPreviousTurn = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_WORK;
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : addBuildToQueue															   */
-/* ROLE : Push build to buildQueue													   */
-/* IN : build buildToQueue : build to push into buildQueue							   */
-/* OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* INPUT : SDL_Renderer*& renderer : ptr SDL_renderer								   */
-/* INPUT : TTF_Font* font[] : array of SDL font										   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::addBuildToQueue
 (
 	const buildGUI& buildToQueue
@@ -197,12 +142,6 @@ void BuildManager::addBuildToQueue
 	m_buildQueue.push_back(buildToQueue);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : removeBuildToQueueFront													   */
-/* ROLE : Pop build to buildQueue													   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::removeBuildToQueueFront()
 {
 	if (m_buildQueue.front().buildG != nullptr)
@@ -213,13 +152,6 @@ void BuildManager::removeBuildToQueueFront()
 	m_buildQueue.pop_front();
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : removeBuildToQueue														   */
-/* ROLE : remove build to buildQueue at index										   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* IN : unsigned int index : index to remove										   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::removeBuildToQueue
 (
 	const size_t index
@@ -309,7 +241,3 @@ void BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		}
 	}
 }
-
-/*
-*	End Of File : BuildManager.cpp
-*/

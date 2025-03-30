@@ -33,8 +33,6 @@
 #include <R2D/src/GUI.h>
 #include <R2D/src/Log.h>
 
-//----------------------------------------------------------NewGame----------------------------------------------------------------//
-
 namespace NGC
 {
 	/* Minimum space beetween two or more settlers */
@@ -46,15 +44,6 @@ namespace NGC
 	constexpr double MAINTENANCE_COST_1TH_SETTLER = 0.0;
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : newGame																	   */
-/* ROLE : Create a new save with new spaw settlers		 							   */
-/* ROLE : Players names are associate to radio button		 						   */
-/* ROLE : Save the new game set								 						   */
-/* INPUT : void																		   */
-/* RETURNED VALUE : void														       */
-/* ------------------------------------------------------------------------------------*/
 void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::START);
@@ -70,13 +59,6 @@ void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::NEWGAME, logS::DATA::END);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : pushNewPlayer															   	   */
-/* ROLE : For every name in struct UserInputNewGame push new player in m_players	   */
-/* attribut in : UserInputNewGame* m_userInputNewGame								   */
-/* attribut out : m_players															   */
-/* RETURNED VALUE : void														       */
-/* ------------------------------------------------------------------------------------*/
 void NewGameManager::pushNewPlayer
 (
 	const PlayerNameVector& vectCityName,
@@ -91,60 +73,20 @@ void NewGameManager::pushNewPlayer
 	}
 }
 
-
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : newGameSettlerSpawn														   */
-/* ROLE : Création des position pour les settlers de chaque joueurs					   */
-/* IN/OUT : Players& players			   */
-/* IN : const MainMap& mainMap												   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
 void NewGameManager::newGameSettlerSpawn
 (
 	Players& players,
 	const MainMap& mainMap
 )
 {
-	/* ---------------------------------------------------------------------- */
-	/* association des vecteurs de position (x,y)							  */
-	/* avec les settlers de départ											  */
-	/* ---------------------------------------------------------------------- */
-	const size_t selectunit{ players.GETvectUnitTemplate().searchUnitByName("settler") };
-
 	std::vector<randomPos> tabRandom;
 	for (size_t i(0); i < players.GETvectPlayer().size(); i++)
 	{
-
 		makeRandomPosTab(mainMap, tabRandom);
-
-		players.GETvectPlayer()[i]->addUnit
-		("settler",
-			{ tabRandom[i].x, tabRandom[i].y},
-			{
-				players.GETvectUnitTemplate().getTemplateVect()[selectunit].type,
-				players.GETvectUnitTemplate().getTemplateVect()[selectunit].life,
-				players.GETvectUnitTemplate().getTemplateVect()[selectunit].atq,
-				players.GETvectUnitTemplate().getTemplateVect()[selectunit].def,
-				players.GETvectUnitTemplate().getTemplateVect()[selectunit].movement,
-				players.GETvectUnitTemplate().getTemplateVect()[selectunit].numberOfAttack,
-				players.GETvectUnitTemplate().getTemplateVect()[selectunit].level,
-			},
-			NGC::MAINTENANCE_COST_1TH_SETTLER);
+		players.GETvectPlayer()[i]->addUnit("settler", { tabRandom[i].x, tabRandom[i].y} );
 	}
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : makeRandomPosTab															   */
-/* ROLE : WHILE new positions are not valid, create new ones						   */
-/* ROLE : --- create new positions with matriceMap & tileSize						   */
-/* ROLE : --- IF positions are valid - on ground THEN quit loop						   */
-/* ROLE : --- IF IN_DEBUG && iteration loop > MAX_RANDOM_POS_ITERATION THEN THROW	   */
-/* ROLE : Push new valid position to vector of new positions						   */
-/* IN : const Map& map : struct main map : map & tileSize							   */
-/* IN/OUT : std::vector<randomPos>& : New vector positions							   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
 void NewGameManager::makeRandomPosTab
 (
 	const MainMap& mainMap,
@@ -178,16 +120,6 @@ void NewGameManager::makeRandomPosTab
 	tabRandom.push_back(RandomPOS);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : makeRandomPos																   */
-/* ROLE : Create random positions between matriceMap								   */
-/* ROLE : pos === size - 2 * MAP_BORDER_MAX * tileSize								   */
-/* ROLE : Ceil value with tileSize													   */
-/* OUT : randomPos& RandomPOS :	New random positions								   */
-/* IN : const MatriceMap& matriceMap : matriceMap for size							   */
-/* IN : const unsigned int tileSize	: Globale tileSize								   */
-/* RETURNED VALUE    : void															   */
-/* ------------------------------------------------------------------------------------*/
 void NewGameManager::makeRandomPos
 (
 	randomPos& RandomPOS,
@@ -204,19 +136,6 @@ void NewGameManager::makeRandomPos
 	RandomPOS.y = (unsigned int)ceil(y / tileSize) * tileSize;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : conditionspace															   */
-/* ROLE : IF empty tab return TRUE													   */
-/* ROLE : ELSE test every positions with new positions  							   */
-/* ROLE : --- IF new position is in a square of spaceBetweenSettler THEN return FALSE  */
-/* ROLE : --- ELSE new position is not in a square with every positions				   */
-/* ROLE : ---			of spaceBetweenSettler THEN return TRUE						   */
-/* INPUT : const randomPos& RandomPOS : Positions to test							   */
-/* INPUT : const std::vector<randomPos>& tabRandom : tab of positions				   */
-/* INPUT : unsigned int tileSize : Globale tileSize									   */
-/* RETURNED VALUE : TRUE -> New positions valid									       */
-/* RETURNED VALUE : FALSE -> New positions not valid						           */
-/* ------------------------------------------------------------------------------------*/
 bool NewGameManager::conditionspace
 (
 	const randomPos& RandomPOS,
@@ -252,16 +171,6 @@ bool NewGameManager::conditionspace
 	return condition;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : conditionground															   */
-/* ROLE : Convert new positions to index											   */
-/* ROLE : IF Assert index to maticeMap size && tile index is ground THEN return TRUE   */
-/* ROLE : ELSE return FALSE															   */
-/* INPUT : const MatriceMap& matriceMap	: Map matrice								   */
-/* INPUT : const randomPos& RandomPOS :	New positions								   */
-/* RETURNED VALUE : TRUE -> New positions valid									       */
-/* RETURNED VALUE : FALSE -> New positions not valid						           */
-/* ------------------------------------------------------------------------------------*/
 bool NewGameManager::conditionground
 (
 	const MatriceMap& matriceMap,
