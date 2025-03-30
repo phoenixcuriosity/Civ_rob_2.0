@@ -63,7 +63,8 @@ m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
 m_spriteBatchCity(),
 m_needToUpdateDrawCity(true),
-m_matriceMapPtrT(matriceMapPtrT)
+m_matriceMapPtrT(matriceMapPtrT),
+m_registerLoad(registerLoad)
 {
 	SaveReload::getInstance().registerSaveable(R2D::e_Files::savePlayers, this);
 	SaveReload::getInstance().registerLoadable(R2D::e_Files::savePlayers, this);

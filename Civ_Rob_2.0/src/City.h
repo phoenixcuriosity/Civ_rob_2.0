@@ -149,7 +149,6 @@ public:
 	virtual void computeWork
 	(
 		Player& player,
-		const UnitTemplate& vectUnitTemplate,
 		bool* needToUpdateDrawUnit
 	);
 

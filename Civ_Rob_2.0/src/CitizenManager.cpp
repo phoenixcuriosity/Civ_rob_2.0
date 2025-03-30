@@ -20,10 +20,6 @@
 
 */
 
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
-
 #include "CitizenManager.h"
 
 #include "Citizen.h"
@@ -34,14 +30,14 @@
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ValueToScale.h>
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 
 #include <execution>
 
 
 CitizenManager::CitizenManager(const VectMapPtr& tiles)
-: 
+:
 m_tiles(tiles),
 m_citizens(),
 m_emotion((unsigned int)EMOTION_RANGE::MEAN)
@@ -58,11 +54,6 @@ CitizenManager::~CitizenManager()
 	resetTabCitizen();
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : resetTabCitizen															   */
-/* ROLE : Remove all Citizens in the City											   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void CitizenManager::resetTabCitizen()
 {
 	for (auto& n : m_citizens)
@@ -89,7 +80,6 @@ void CitizenManager::addCitizen(const Tile& tile)
 {
 	m_citizens.push_back(std::make_shared<Citizen>(tile));
 }
-
 
 unsigned int CitizenManager::placeCitizen
 (
@@ -248,8 +238,8 @@ jsoncons::ojson CitizenManager::saveToOjson()const
 void CitizenManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if	(
-			jsonLoad.contains("Emotion") && 
-			jsonLoad.contains("Citizens") && 
+			jsonLoad.contains("Emotion") &&
+			jsonLoad.contains("Citizens") &&
 			jsonLoad["Citizens"].is_array()
 		)
 	{
@@ -262,8 +252,3 @@ void CitizenManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		}
 	}
 }
-
-
-/*
-*	End Of File : CitizenManager.cpp
-*/

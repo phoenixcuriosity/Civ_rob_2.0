@@ -37,18 +37,6 @@
 #include <R2D/src/ErrorLog.h>
 #include <R2D/src/Log.h>
 
-Player::Player() :
-	m_name("NoName"),
-	m_tabUnit(),
-	m_tabCity(),
-	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
-	m_selectedCity(SELECTION::NO_CITY_SELECTED),
-	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
-	m_onOffDisplay{ false }
-{
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, saveToOjson().as_string());
-}
-
 Player::Player
 (
 	const std::string& name,
@@ -57,12 +45,12 @@ Player::Player
 :
 	m_name(name),
 	m_id(id),
-	m_tabUnit(),
 	m_tabCity(),
 	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
 	m_selectedCity(SELECTION::NO_CITY_SELECTED),
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
-	m_onOffDisplay{ false }
+	m_onOffDisplay{ false },
+	m_unitManager()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, saveToOjson().as_string());
 }
@@ -74,18 +62,16 @@ Player::~Player()
 
 void Player::addEmptyUnit()
 {
-	m_tabUnit.push_back(std::make_shared<Unit>());
+	m_unitManager.addEmptyUnit();
 }
 
 void Player::addUnit
 (
 	const Unit::UnitName& name,
-	const Unit::Coor coor,
-	const Unit::UnitStat& unitStat,
-	double maintenance
+	const Unit::Coor coor
 )
 {
-	m_tabUnit.push_back(std::make_shared<Unit>(name, coor, unitStat, maintenance, this));
+	m_unitManager.addUnit(name, coor, this);
 }
 
 void Player::deleteUnit
@@ -93,23 +79,7 @@ void Player::deleteUnit
 	const unsigned int index
 )
 {
-	if (Utility::assertSize(m_tabUnit.size(), index))
-	{
-		if (nullptr != m_tabUnit[index])
-		{
-			m_tabUnit[index].reset();
-			if (m_tabUnit.size() > 1 && index < m_tabUnit.size() - 1)
-			{
-				for (unsigned int i(index); i < (m_tabUnit.size() - 1); i++)
-					m_tabUnit[i] = m_tabUnit[(unsigned __int64)i + 1];
-			}
-			m_tabUnit.pop_back();
-		}
-		else
-		{
-			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_TAB_UNIT, logS::DATA::ERROR_DELETE_TAB_UNIT);
-		}
-	}
+	m_unitManager.removeUnit(index);
 }
 
 void Player::addCity
@@ -218,7 +188,7 @@ jsoncons::ojson Player::saveToOjson()const
 	jsoncons::ojson cities{ jsoncons::ojson::make_array() };
 	jsoncons::ojson goldStats;
 
-	for (const auto& unit : m_tabUnit)
+	for (const auto& unit : m_unitManager.getUnits())
 	{
 		units.push_back(unit->saveToOjson());
 	}
@@ -269,7 +239,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 		for (const auto& unit : jsonLoad["m_tabUnit"].array_range())
 		{
 			addEmptyUnit();
-			m_tabUnit.back()->loadFromOjson(unit);
+			m_unitManager.getUnits().back()->loadFromOjson(unit);
 		}
 
 		for (const auto& city : jsonLoad["m_tabCity"].array_range())

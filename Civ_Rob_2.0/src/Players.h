@@ -143,6 +143,8 @@ private:
 	R2D::SpriteBatch m_spriteBatchCityDynamic;
 
 	MatriceMapPtrT m_matriceMapPtrT;
+
+	R2D::RegisterPairVector& m_registerLoad;
 };
 
 #endif /* Players_H */

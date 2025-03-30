@@ -98,8 +98,7 @@ bool GamePlayScreen::onEntry()
 		{
 			IRegisterLoadAble::load();
 
-			R2D::ResourceManager::InitializeCardinalDirectionMapping
-			(m_mainMap.GETtileSize());
+			R2D::ResourceManager::InitializeCardinalDirectionMapping(m_mainMap.GETtileSize());
 
 			initStructsNULL();
 
