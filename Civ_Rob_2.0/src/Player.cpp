@@ -39,6 +39,7 @@
 
 Player::Player
 (
+	Private,
 	const std::string& name,
 	const int id
 )
@@ -71,7 +72,7 @@ void Player::addUnit
 	const Unit::Coor coor
 )
 {
-	m_unitManager.addUnit(name, coor, this);
+	m_unitManager.addUnit(name, coor, shared_from_this());
 }
 
 void Player::deleteUnit

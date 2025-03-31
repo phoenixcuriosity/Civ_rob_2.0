@@ -295,7 +295,7 @@ Unit::Unit(	const UnitName& name,
 			const Coor& coor,
 			const UnitStat& unitStat,
 			double maintenance,
-			Player* ptrToPlayer):
+			PlayerPtrT ptrToPlayer):
 R2D::IBlickable(BLIT_RATE),
 R2D::IMoveable(coor),
 UnitStats(unitStat),

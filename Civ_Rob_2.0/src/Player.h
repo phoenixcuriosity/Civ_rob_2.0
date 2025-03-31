@@ -38,13 +38,19 @@ namespace PlayerH
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
-
-class Player
+class Player : public std::enable_shared_from_this<Player>
 {
+	struct Private { explicit Private() = default; };
+
 public:
+	Player(Private, const std::string& name, const int id);
+
+	static std::shared_ptr<Player> create(const std::string& name, const int id)
+	{
+		return std::make_shared<Player>(Private(), name, id);
+	}
 
 	Player() = delete;
-	Player(const std::string& name, const int id);
 	virtual ~Player();
 
 	virtual void addUnit(const Unit::UnitName& name,

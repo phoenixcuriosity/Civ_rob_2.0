@@ -119,7 +119,7 @@ public:
 
 	void load(jsoncons::ojson f)override;
 
-	unsigned int searchUnitByName(const std::string& name) const;
+	int64_t searchUnitByName(const std::string& name) const;
 
 	const Template& getTemplate(const UnitName& unitName)const;
 	const TemplateMap& getTemplateMap()const { return m_mapUnitTemplate; };

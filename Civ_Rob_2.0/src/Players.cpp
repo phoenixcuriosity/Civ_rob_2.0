@@ -89,7 +89,7 @@ void Players::addPlayer
 	const int id
 )
 {
-	m_vectPlayer.push_back(std::make_shared<Player>(name, id));
+	m_vectPlayer.push_back(Player::create(name, id));
 }
 
 void Players::deleteAllPlayers()
@@ -194,8 +194,8 @@ void Players::drawUnit
 						const GamePlayScreenEnumTexture idTunit
 							{ static_cast<GamePlayScreenEnumTexture>(
 								static_cast<size_t>(GamePlayScreenEnumTexture::battleoids)
-								+ UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
-							};
+								+ static_cast<size_t>(UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
+							)};
 
 						/* Unit Texture */
 						m_spriteBatchUnit.draw

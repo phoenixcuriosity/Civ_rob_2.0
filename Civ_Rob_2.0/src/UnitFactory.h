@@ -25,15 +25,18 @@
 #include "Unit.h"
 #include <R2D/src/IRegister.h>
 
+class Player;
+
 class UnitFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
 {
 private:
 	using UnitPtrT = std::shared_ptr<Unit>;
+	using PlayerPtrT = std::shared_ptr<Player>;
 	R2D::RegisterPairVector addSubscriber();
 
 public:
 	UnitFactory();
 
-	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, Player* owner);
+	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
 	UnitPtrT createUnit();
 };

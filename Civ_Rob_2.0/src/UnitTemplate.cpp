@@ -83,7 +83,7 @@ UnitTemplate
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::END);
 }
 
-unsigned int
+int64_t
 UnitTemplate
 ::searchUnitByName(const std::string& name)const
 {
