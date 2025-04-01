@@ -43,15 +43,15 @@ Player::Player
 	const std::string& name,
 	const int id
 )
-:
+	:
 	m_name(name),
 	m_id(id),
-	m_tabCity(),
 	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
 	m_selectedCity(SELECTION::NO_CITY_SELECTED),
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
 	m_onOffDisplay{ false },
-	m_unitManager()
+	m_unitManager(),
+	m_CityManager()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, saveToOjson().as_string());
 }
@@ -91,12 +91,12 @@ void Player::addCity
 	VectMapPtr& tiles
 )
 {
-	m_tabCity.push_back(std::make_shared<City>(name, x, y, tiles));
+	m_CityManager.addCity(name, { x, y }, tiles);
 }
 
 void Player::addEmptyCity()
 {
-	m_tabCity.push_back(std::make_shared<City>());
+	m_CityManager.addEmptyCity();
 }
 
 void Player::deleteCity
@@ -104,24 +104,7 @@ void Player::deleteCity
 	const unsigned int index
 )
 {
-
-	if (Utility::assertSize(m_tabCity.size(), index))
-	{
-		if (nullptr != m_tabCity[index])
-		{
-			m_tabCity[index].reset();
-			if (m_tabCity.size() > 1 && index < m_tabCity.size() - 1)
-			{
-				for (unsigned int i(index); i < (m_tabCity.size() - 1); i++)
-					m_tabCity[i] = m_tabCity[(unsigned __int64)i + 1];
-			}
-			m_tabCity.pop_back();
-		}
-		else
-		{
-			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_TAB_CITY, logS::DATA::ERROR_DELETE_TAB_CITY);
-		}
-	}
+	m_CityManager.removeCity(index);
 }
 
 CityPtrT* Player::searchCity
@@ -130,7 +113,7 @@ CityPtrT* Player::searchCity
 	const unsigned int indexY
 )
 {
-	for (auto &c : m_tabCity)
+	for (auto &c : m_CityManager.getCities())
 	{
 		if (c->searchCityTile(indexX, indexY)) return &c;
 	}
@@ -194,7 +177,7 @@ jsoncons::ojson Player::saveToOjson()const
 		units.push_back(unit->saveToOjson());
 	}
 
-	for (const auto& city : m_tabCity)
+	for (const auto& city : m_CityManager.getCities())
 	{
 		cities.push_back(city->saveToOjson());
 	}
@@ -246,7 +229,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 		for (const auto& city : jsonLoad["m_tabCity"].array_range())
 		{
 			addEmptyCity();
-			CityPtrT city_l{ m_tabCity.back() };
+			CityPtrT city_l{ m_CityManager.getCities().back() };
 			city_l->loadFromOjson(city);
 			City::loadCity(matriceMap, m_id, city_l, modifAppartenance_Type::dontModify);
 		}
