@@ -98,7 +98,7 @@ public:
 		 const Coor& coor,
 		 const UnitStat& unitStat,
 		 double maintenance,
-		 Player* ptrToPlayer);
+		 PlayerPtrT ptrToPlayer);
 
 	virtual ~Unit();
 
@@ -133,16 +133,16 @@ public:
 	inline const std::string& GETname()				const { return m_name; };
 	inline bool GETalive()							const { return m_alive; };
 	inline double GETmaintenance()					const { return m_maintenance; }
-	inline Player* GETowner()							  { return m_owner; };
+	inline PlayerPtrT GETowner()							  { return m_owner; };
 
-	inline void SETowner(Player* owner) { m_owner = owner; };
+	inline void SETowner(PlayerPtrT owner) { m_owner = owner; };
 
 private:
 	UnitName m_name;
 	bool m_alive;
 	double m_maintenance;
 
-	Player* m_owner;
+	PlayerPtrT m_owner;
 };
 
 #endif /* Unit_H */

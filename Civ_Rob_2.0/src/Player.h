@@ -25,7 +25,7 @@
 
 #include "LIB.h"
 
-#include "Unit.h"
+#include "CityManager.h"
 #include "UnitManager.h"
 #include "T_Player.h"
 
@@ -38,13 +38,19 @@ namespace PlayerH
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
-
-class Player
+class Player : public std::enable_shared_from_this<Player>
 {
+	struct Private { explicit Private() = default; };
+
 public:
+	Player(Private, const std::string& name, const int id);
+
+	static std::shared_ptr<Player> create(const std::string& name, const int id)
+	{
+		return std::make_shared<Player>(Private(), name, id);
+	}
 
 	Player() = delete;
-	Player(const std::string& name, const int id);
 	virtual ~Player();
 
 	virtual void addUnit(const Unit::UnitName& name,
@@ -79,7 +85,7 @@ public:
 public:
 	inline virtual const std::string& GETname()			const { return m_name; };
 	inline virtual const VectUnit& GETtabUnit()			const { return m_unitManager.getUnits(); };
-	inline virtual const VectCity& GETtabCity()			const { return m_tabCity; };
+	inline virtual const VectCity& GETtabCity()			const { return m_CityManager.getCities(); };
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
 	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_unitManager.getUnits()[m_selectedUnit]; }
@@ -102,7 +108,7 @@ private:
 	int m_id;
 
 	UnitManager m_unitManager;
-	VectCity m_tabCity;
+	CityManager m_CityManager;
 	int m_selectedUnit;
 	int m_selectedCity;
 	GoldStats m_goldStats;

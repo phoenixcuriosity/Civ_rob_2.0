@@ -30,10 +30,13 @@
 #include "T_MainMap.h"
 
 #include "R2D/src/API_fwd.h"
+#include <R2D/src/IMove.h>
 
-class City
+class City : public R2D::IMoveable
 {
 public: /* STATIC */
+
+	using Coor = R2D::IMoveable::Coor;
 
 	/**
 	 * Create a City from a Settler on the map
@@ -121,8 +124,7 @@ public:
 	City
 	(
 		const std::string& name,
-		unsigned int x,
-		unsigned int y,
+		const Coor coor,
 		VectMapPtr& tiles
 	);
 
@@ -165,19 +167,6 @@ public:
 	);
 
 public:
-
-	/**
-	 * Search if the City is at those coor
-	 * @param[in] indexX x tile
-	 * @param[in] indexY y tile
-	 * @return  true if the City is at those coor, else false
-	 */
-	virtual bool testPos
-	(
-		const unsigned int x,
-		const unsigned int y
-	);
-
 	/* NAME : computeGold																   */
 	/* ROLE : Calculate the gold for the turn											   */
 	/* INPUT : void																		   */
@@ -237,8 +226,6 @@ public:
 
 	/* implicit const */
 	inline virtual size_t GETnbpop()const					{ return m_citizenManager.getCitizens().size(); };
-	inline virtual unsigned int GETx()const					{ return m_x; };
-	inline virtual unsigned int GETy()const					{ return m_y; };
 	inline virtual unsigned int GETinfluenceLevel()const	{ return m_influenceLevel; };
 
 
@@ -248,8 +235,6 @@ private:
 
 	std::string m_image;
 	std::string m_name;
-	unsigned int m_x;
-	unsigned int m_y;
 	VectMapPtr m_tileMap;
 	unsigned int m_influenceLevel;
 	unsigned int m_atq;

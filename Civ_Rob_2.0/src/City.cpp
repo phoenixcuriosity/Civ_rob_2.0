@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "Citizen.h"
+#include "CityNameTemplate.h"
 #include "GameplayScreen.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
@@ -85,7 +86,7 @@ void City::createCity
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
 	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-	const std::string name(mainGame.GETPlayers().GETvectCityName()[(selectedPlayer * CityC::MAX_CITY_PER_PLAYER) + splayer->GETtabCity().size()]);
+	const std::string name(CityNameTemplate::getSingleton().getCityName(selectedPlayer, splayer->GETtabCity().size()));
 
 	VectMapPtr tabtiles;
 	tabtiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
@@ -121,7 +122,7 @@ void City::loadCity
 	tiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 	City::fillCitieTiles
 	(
-		MainMap::convertPosXToIndex(city->GETx()), MainMap::convertPosYToIndex(city->GETy()),
+		MainMap::convertPosXToIndex(city->getCoor().x), MainMap::convertPosYToIndex(city->getCoor().y),
 		selectplayer, matriceMap, tiles, city->GETinfluenceLevel(), modAppartenance
 	);
 	city->SETVectMapPtr(tiles);
@@ -204,9 +205,9 @@ bool City::searchCityTile
 )
 {
 	if	(
-			MainMap::convertPosXToIndex(m_x) == indexX
+			MainMap::convertPosXToIndex(getCoor().x) == indexX
 			&&
-			MainMap::convertPosXToIndex(m_y) == indexY
+			MainMap::convertPosXToIndex(getCoor().y) == indexY
 		)
 	{
 		return true;
@@ -219,10 +220,9 @@ bool City::searchCityTile
 
 City::City()
 :
+IMoveable(),
 m_image("EMPTY"),
 m_name("EMPTY"),
-m_x(0),
-m_y(0),
 m_tileMap(),
 m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
 m_atq(0),
@@ -231,7 +231,7 @@ m_nbstructurebuild(0),
 m_conversionToApply(conversionSurplus_Type::No_Conversion),
 m_citizenManager(m_tileMap),
 m_foodManager(m_citizenManager),
-m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
+m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
 m_goldBalance(0.0)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
@@ -241,15 +241,13 @@ m_goldBalance(0.0)
 City::City
 (
 	const std::string& name,
-	unsigned int x,
-	unsigned int y,
+	const Coor coor,
 	VectMapPtr& tiles
 )
 	:
+	IMoveable(coor),
 	m_image("citie.png"),
 	m_name(name),
-	m_x(x),
-	m_y(y),
 	m_tileMap(tiles),
 	m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
 	m_atq(0),
@@ -258,7 +256,7 @@ City::City
 	m_conversionToApply(conversionSurplus_Type::No_Conversion),
 	m_citizenManager(m_tileMap),
 	m_foodManager(m_citizenManager),
-	m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
+	m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
 	m_goldBalance(0.0)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
@@ -375,23 +373,6 @@ void City::computeWork
 	}
 }
 
-bool City::testPos
-(
-	const unsigned int mouse_x,
-	const unsigned int mouse_y
-)
-{
-	if (
-		m_x == mouse_x
-		&&
-		m_y == mouse_y
-		)
-	{
-		return true;
-	}
-	return false;
-}
-
 void City::computeGold()
 {
 	/* Sum gold from citizen */
@@ -424,8 +405,8 @@ jsoncons::ojson City::saveToOjson()const
 	jsoncons::ojson value;
 	value.insert_or_assign("m_image", m_image);
 	value.insert_or_assign("m_name", m_name);
-	value.insert_or_assign("m_x", m_x);
-	value.insert_or_assign("m_y", m_y);
+	value.insert_or_assign("m_x", m_coor.x);
+	value.insert_or_assign("m_y", m_coor.y);
 	value.insert_or_assign("m_influenceLevel", m_influenceLevel);
 	value.insert_or_assign("m_atq", m_atq);
 	value.insert_or_assign("m_def", m_def);
@@ -447,8 +428,8 @@ void City::loadFromOjson(const jsoncons::ojson& jsonLoad)
 	{
 		m_image = jsonLoad["m_image"].as_string();
 		m_name = jsonLoad["m_name"].as_string();
-		m_x = jsonLoad["m_x"].as<unsigned int>();
-		m_y = jsonLoad["m_y"].as<unsigned int>();
+		m_coor.x = jsonLoad["m_x"].as<unsigned int>();
+		m_coor.y = jsonLoad["m_y"].as<unsigned int>();
 		m_influenceLevel = jsonLoad["m_influenceLevel"].as<unsigned int>();
 		m_atq = jsonLoad["m_atq"].as<unsigned int>();
 		m_def = jsonLoad["m_def"].as<unsigned int>();

@@ -22,6 +22,8 @@
 
 #include "UnitFactory.h"
 
+#include "Player.h"
+
 UnitFactory
 ::UnitFactory() : IRegisterLoadAble(), IRegister()
 {
@@ -39,7 +41,7 @@ UnitFactory
 
 UnitFactory::UnitPtrT
 UnitFactory
-::createUnit(const Unit::UnitName& name, const Unit::Coor& coor, Player* owner)
+::createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
 {
 	const UnitTemplate::Template unitToBuild{ UnitTemplate::getSingleton().getTemplate(name) };
 

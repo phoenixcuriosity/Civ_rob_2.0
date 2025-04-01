@@ -45,7 +45,6 @@ public:
 
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
 	inline PlayerPtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
-	inline CityNameTemplate::Vect& GETvectCityName() { return m_vectCityName.getVect(); };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
 	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
 	inline CityPtrT& GETSelectedCity() { return m_selectedCity; };
@@ -122,8 +121,6 @@ private:
 
 	/* Ptr to the selected City */
 	CityPtrT m_selectedCity;
-
-	CityNameTemplate m_vectCityName;
 
 	GamePlayScreenTexture m_idTexture;
 

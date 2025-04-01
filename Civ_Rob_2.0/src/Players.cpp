@@ -54,7 +54,6 @@ Players::Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMa
 m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
-m_vectCityName(registerLoad),
 m_vectPlayer(),
 m_idTexture(),
 m_spriteBatchUnit(),
@@ -89,7 +88,7 @@ void Players::addPlayer
 	const int id
 )
 {
-	m_vectPlayer.push_back(std::make_shared<Player>(name, id));
+	m_vectPlayer.push_back(Player::create(name, id));
 }
 
 void Players::deleteAllPlayers()
@@ -194,8 +193,8 @@ void Players::drawUnit
 						const GamePlayScreenEnumTexture idTunit
 							{ static_cast<GamePlayScreenEnumTexture>(
 								static_cast<size_t>(GamePlayScreenEnumTexture::battleoids)
-								+ UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
-							};
+								+ static_cast<size_t>(UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
+							)};
 
 						/* Unit Texture */
 						m_spriteBatchUnit.draw
@@ -284,7 +283,7 @@ void Players::drawCity
 				if	(
 						camera.isBoxInView
 						(
-							{ city->GETx(), city->GETy() },
+							{ city->getCoor().x, city->getCoor().y },
 							{ tileSize , tileSize },
 							mainMap.GETtoolBarSize() * tileSize
 						)
@@ -293,7 +292,7 @@ void Players::drawCity
 					/* City Texture */
 					m_spriteBatchCity.draw
 					(
-						glm::vec4(city->GETx(), city->GETy(), tileSize, tileSize),
+						glm::vec4(city->getCoor().x, city->getCoor().y, tileSize, tileSize),
 						R2D::FULL_RECT,
 						m_idTexture[GamePlayScreenEnumTexture::city],
 						0.0f,
@@ -307,8 +306,8 @@ void Players::drawCity
 						city->GETname().c_str(),
 						glm::vec2
 						(
-							static_cast<float>(city->GETx()),
-							static_cast<float>(city->GETy())
+							static_cast<float>(city->getCoor().x),
+							static_cast<float>(city->getCoor().y)
 						), // offset pos
 						glm::vec2(0.32f), // size
 						0.0f,

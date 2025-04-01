@@ -50,17 +50,13 @@ CityNameTemplate
 	{
 		for (const auto& country : f.object_range())
 		{
-			for (const auto& city : country.value().array_range())
-			{
-				m_vectTemplate.push_back(city.as_string());
-			}
+			m_vectTemplate.push_back(country.value().as<VectCityName>());
 		}
 	}
 	catch (const std::exception& e)
 	{
 		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
-	initialized = true;
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_CITY_NAME, logS::DATA::END);
 }
