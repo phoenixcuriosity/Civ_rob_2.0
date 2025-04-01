@@ -66,6 +66,7 @@
     <ClCompile Include="src\CityNameTemplate.cpp" />
     <ClCompile Include="src\UnitStats.cpp" />
     <ClCompile Include="src\UnitFactory.cpp" />
+    <ClCompile Include="src\CityFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -171,6 +172,8 @@
     <ClInclude Include="src\UnitStats.h" />
     <ClInclude Include="src\UnitFactory.h" />
     <ClInclude Include="src\UnitManager.h" />
+    <ClInclude Include="src\CityFactory.h" />
+    <ClInclude Include="src\CityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">
