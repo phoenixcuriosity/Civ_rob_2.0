@@ -30,14 +30,7 @@
 namespace R2D
 {
 
-enum WindowFlags : unsigned int
-{
-	INVISIBLE = 0x1,
-	FULLSCREEN = 0x2,
-	BORDERLESS = 0x4
-};
-
-// Donne la fréquence de rafraichissement de l'écran en Hz
+///< Donne la fréquence de rafraichissement de l'écran en Hz
 inline unsigned int getRefreshRate()
 {
 	DEVMODE screen;
@@ -48,23 +41,20 @@ inline unsigned int getRefreshRate()
 	}
 	return 0;
 }
-// fréquence de rafraichissement de l'écran en Hz
-const unsigned int SCREEN_REFRESH_RATE = getRefreshRate();
 
+///< fréquence de rafraichissement de l'écran en Hz
+static const unsigned int SCREEN_REFRESH_RATE = getRefreshRate();
 
 class Window
 {
 public:
-	Window();
+	Window() : m_sdlWindow(nullptr), m_screenWidth(0), m_screenHeight(0) {};
 	~Window();
 
-	int create
-	(
-		const std::string& name,
-		int screenWidth,
-		int screenHeight,
-		unsigned int currentFlags
-	);
+	int create(const std::string& name,
+			   const int screenWidth,
+			   const int screenHeight,
+			   const unsigned int currentFlags);
 
 	void swap();
 
@@ -74,17 +64,9 @@ public:
 	void SETscreenWidth(int screenWidth) { m_screenWidth = screenWidth; };
 	void SETscreenHeight(int screenHeight) { m_screenHeight = screenHeight; };
 
-	double getWidthPositionScaleToWindow
-	(
-		/* IN */
-		const double position2Scale
-	)const;
+	double getWidthPositionScaleToWindow(const double position2Scale)const;
 
-	double getHeightPositionScaleToWindow
-	(
-		/* IN */
-		const double position2Scale
-	)const;
+	double getHeightPositionScaleToWindow(const double position2Scale)const;
 
 
 public:
@@ -107,9 +89,23 @@ public:
 
 private:
 
+	enum Flags : unsigned int
+	{
+		INVISIBLE = 0x1,
+		FULLSCREEN = 0x2,
+		BORDERLESS = 0x4
+	};
+
+	static constexpr double WINDOW_SCALE_PERCENT_MIN = 0.0;
+	static constexpr double WINDOW_SCALE_PERCENT_MAX = 100.0;
+	static constexpr double WINDOW_SCALE_SCREEN_WIDTH_MIN = 0.0;
+	static constexpr double WINDOW_SCALE_SCREEN_HEIGHT_MIN = 0.0;
+
+private:
+
 	SDL_Window* m_sdlWindow;
-	int m_screenWidth = 0;
-	int m_screenHeight = 0;
+	int m_screenWidth;
+	int m_screenHeight;
 };
 
 }

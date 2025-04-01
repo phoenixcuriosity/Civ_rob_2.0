@@ -67,7 +67,11 @@ public:
 	/* ----------------------------------------------------------------------------------- */
 	virtual ~Citizen();
 
+public:
 
+	jsoncons::ojson saveToOjson()const;
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
 	/* *********************************************************

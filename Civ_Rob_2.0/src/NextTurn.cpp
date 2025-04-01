@@ -46,8 +46,8 @@ void NextTurn::nextTurn(GamePlayScreen& mainGame)
 		player->resetGoldStats();
 		for (auto& unit : player->GETtabUnit())
 		{
-			unit->RESETmovement();
-			unit->RESETnumberOfAttack();
+			unit->resetMovement();
+			unit->resetNumberOfAttack();
 			unit->heal(mainGame.GETmainMap().GETmatriceMap(), indexPlayer);
 		}
 		for (auto& city : player->GETtabCity())
@@ -56,9 +56,7 @@ void NextTurn::nextTurn(GamePlayScreen& mainGame)
 			city->computeEmotion();
 
 			city->computefood(player->GETgoldStats());
-			city->computeWork(*player,
-				mainGame.GETPlayers().GETvectUnitTemplate(),
-				mainGame.GETPlayers().GETneedToUpdateDrawUnitPtr());
+			city->computeWork(*player, mainGame.GETPlayers().GETneedToUpdateDrawUnitPtr());
 			city->computeGold();
 			city->addCityGoldToTaxIncome(player->GETgoldStats());
 		}

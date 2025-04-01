@@ -35,9 +35,9 @@ struct randomPos
 	unsigned int y;
 };
 
-class NewGameManager 
+class NewGameManager
 {
-
+	using PlayerNameVector = std::vector<std::string>;
 public:
 
 	static void newGame(GamePlayScreen& gamePlayScreen);
@@ -49,7 +49,7 @@ private:
 	/* attribut in : UserInputNewGame* m_userInputNewGame								   */
 	/* attribut out : m_players															   */
 	/* RETURNED VALUE : void														       */
-	static void pushNewPlayer(const VectCityName& vectCityName, Players& players);
+	static void pushNewPlayer(const PlayerNameVector& vectCityName, Players& players);
 
 
 	/* NAME : newGameSettlerSpawn														   */

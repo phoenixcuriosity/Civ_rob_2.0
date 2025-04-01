@@ -26,50 +26,19 @@
 #include "RealEngineError.h"
 #include "ValueToScale.h"
 
-namespace WINDOW_SCALE
-{
-	namespace PERCENT
-	{
-		const double MIN = 0.0;
-		const double MAX = 100.0;
-	}
-
-	namespace SCREEN
-	{
-		namespace WIDTH
-		{
-			const double MIN = 0.0;
-		}
-
-		namespace HEIGHT
-		{
-			const double MIN = 0.0;
-		}
-	}
-}
-
-
-namespace R2D 
-{
-
-Window::Window()
-	: m_sdlWindow(nullptr), m_screenWidth(0), m_screenHeight(0)
-{
-}
-
-Window::~Window()
+R2D::Window
+::~Window()
 {
 	SDL_DestroyWindow(m_sdlWindow);
 	m_sdlWindow = nullptr;
 }
 
-int Window::create
-(
-	const std::string& name,
-	int screenWidth,
-	int screenHeight,
-	unsigned int currentFlags
-)
+int
+R2D::Window
+::create(const std::string& name,
+		 const int screenWidth,
+		 const int screenHeight,
+		 const unsigned int currentFlags)
 {
 	Uint32 flags = SDL_WINDOW_OPENGL;
 
@@ -91,7 +60,7 @@ int Window::create
 
 	m_sdlWindow = SDL_CreateWindow(name.c_str(),
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		screenWidth, screenHeight,
+		m_screenWidth, m_screenHeight,
 		SDL_WINDOW_OPENGL);
 
 	if (nullptr == m_sdlWindow)
@@ -131,55 +100,44 @@ int Window::create
 	return 0;
 }
 
-void  Window::swap()
+void
+R2D::Window
+::swap()
 {
 	SDL_GL_SwapWindow(m_sdlWindow);
 }
 
-double Window::getWidthPositionScaleToWindow
-(
-	/* IN */
-	const double position2Scale
-)const
+double
+R2D::Window
+::getWidthPositionScaleToWindow(const double position2Scale)const
 {
 	return ValueToScale::computeValueToScale
 	(
 		position2Scale,
-		WINDOW_SCALE::PERCENT::MIN,
-		WINDOW_SCALE::PERCENT::MAX,
-		WINDOW_SCALE::SCREEN::WIDTH::MIN,
+		WINDOW_SCALE_PERCENT_MIN,
+		WINDOW_SCALE_PERCENT_MAX,
+		WINDOW_SCALE_SCREEN_WIDTH_MIN,
 		m_screenWidth
 	);
 }
 
-double Window::getHeightPositionScaleToWindow
-(
-	/* IN */
-	const double position2Scale
-)const
+double
+R2D::Window
+::getHeightPositionScaleToWindow(const double position2Scale)const
 {
 	return ValueToScale::computeValueToScale
 	(
 		position2Scale,
-		WINDOW_SCALE::PERCENT::MIN,
-		WINDOW_SCALE::PERCENT::MAX,
-		WINDOW_SCALE::SCREEN::HEIGHT::MIN,
+		WINDOW_SCALE_PERCENT_MIN,
+		WINDOW_SCALE_PERCENT_MAX,
+		WINDOW_SCALE_SCREEN_HEIGHT_MIN,
 		m_screenHeight
 	);
 }
 
-
-
-
-//----------------------------------------------------------Screen width/height----------------------------------------------------------------//
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : getHorizontal																   */
-/* ROLE : Calcul de la longueur en pixels de la fenetre								   */
-/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-Uint16 Window::getHorizontal()
+Uint16
+R2D::Window
+::getHorizontal()
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
@@ -187,19 +145,12 @@ Uint16 Window::getHorizontal()
 	return (Uint16)desktop.right;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : getVertical																   */
-/* ROLE : Calcul de la hauteur en pixels de la fenetre								   */
-/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-Uint16 Window::getVertical()
+Uint16
+R2D::Window
+::getVertical()
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
 	return (Uint16)desktop.bottom;
-}
-
-
 }

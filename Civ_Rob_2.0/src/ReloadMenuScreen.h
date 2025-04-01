@@ -35,10 +35,7 @@
 class ReloadMenuScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
-	ReloadMenuScreen
-	(
-		SaveReloadPtrT SaveReload
-	);
+	ReloadMenuScreen();
 	~ReloadMenuScreen();
 
 private: /* Override from R2D::IGameScreen */
@@ -86,8 +83,6 @@ private:
 
 	std::vector<CEGUI::RadioButton*> m_vectSavesRadioButton;
 	std::vector<R2D::WidgetLabel> m_widgetLabels;
-
-	const SaveReloadPtrT m_SaveReload;
 
 	bool m_isInitialize;
 };

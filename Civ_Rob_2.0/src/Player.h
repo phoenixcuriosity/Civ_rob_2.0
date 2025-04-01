@@ -25,182 +25,70 @@
 
 #include "LIB.h"
 
+#include "CityManager.h"
+#include "UnitManager.h"
+#include "T_Player.h"
+
 namespace PlayerH
 {
 	constexpr unsigned int NB_MAX_PLAYER = 9;
 
 	constexpr double INITIAL_GOLD = 100.0;
-	
+
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
-enum class MajorAge
+class Player : public std::enable_shared_from_this<Player>
 {
-	Nomade,
-	Farming,
-	Stone,
-	Bronze,
-	Iron,
-	Antiquity,
-	Vikings,
-	Crusade,
-	Renaissance,
-	Colonization,
-	Enlightenment,
-	Industrial,
-	Modern,
-	Cyber,
-	Stellar,
-	Galactic
-};
+	struct Private { explicit Private() = default; };
 
-struct GoldStats
-{
-	double gold;
-	double goldBalance;
-	double income;
-	double cost;
-
-	double taxIncome;
-	double commerceIncome;
-	double goldConversionSurplus;
-
-	double armiesCost;
-	double buildingsCost;
-};
-
-struct OnOffDisplay
-{
-	bool showContextGoldStats;
-};
-
-class Player
-{
 public:
+	Player(Private, const std::string& name, const int id);
 
-	/* NAME : Player																	   */
-	/* ROLE : Constructeur par défaut													   */
-	/* INPUT : void																		   */
-	Player();
+	static std::shared_ptr<Player> create(const std::string& name, const int id)
+	{
+		return std::make_shared<Player>(Private(), name, id);
+	}
 
-	/* NAME : Player																	   */
-	/* ROLE : Constructeur par nom du joueur											   */
-	/* INPUT : const std::string&														   */
-	Player
-	(
-		const std::string& name,
-		const int id
-	);
-
-	/* NAME : ~Player																	   */
-	/* ROLE : Initialisation d'une Unit vide											   */
+	Player() = delete;
 	virtual ~Player();
 
-	/* NAME : operator=																	   */
-	/* ROLE : Redéfinition de l'opérateur =												   */
-	/* INPUT : const Player& player : l'objet à copier									   */
-	/* RETURNED VALUE : Player&	: l'objet recopié										   */
-	Player& operator=
-	(
-		const Player& player
-	);
+	virtual void addUnit(const Unit::UnitName& name,
+						 const Unit::Coor coor);
 
-	/* NAME : deletePlayer																   */
-	/* ROLE : Destruction de l'objet et de ses ptr										   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
-	virtual void deletePlayer();
-
-	/* NAME : addUnit																	   */
-	/* ROLE : Ajout une Unit avec les spécifications demandées (nom, positions, ...)	   */
-	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-	/* RETURNED VALUE    : void															   */
-	virtual void addUnit
-	(
-		const std::string& name,
-		unsigned int x,
-		unsigned int y,
-		Unit_Movement_Type movementType,
-		unsigned int life,
-		unsigned int atq,
-		unsigned int def,
-		unsigned int move,
-		unsigned int numberOfAttack,
-		unsigned int level,
-		double maintenance
-	);
-
+private:
 	virtual void addEmptyUnit();
-	
-	/* NAME : deleteUnit																   */
-	/* ROLE : Suppression d'une Unit du joueur											   */
-	/* INPUT : unsigned int : index de Unit dans le tableau								   */
-	/* RETURNED VALUE    : void															   */
-	virtual void deleteUnit
-	(
-		const unsigned int index
-	);
-	
-	/* NAME : addCity																	   */
-	/* ROLE : Ajout une City avec les spécifications demandées (nom, positions, ...)	   */
-	/* INPUT : Spécifications demandées (nom, positions, ...)							   */
-	/* RETURNED VALUE    : void															   */
-	virtual void addCity
-	(
+
+public:
+	virtual void deleteUnit(const unsigned int index);
+	virtual void addCity(
 		const std::string&,
 		const unsigned int,
 		const unsigned int,
-		VectMap& tiles
-	);
+		VectMapPtr& tiles);
 
-	/* NAME : deleteCity																   */
-	/* ROLE : Suppression d'une City du joueur											   */
-	/* INPUT : unsigned int : index de City dans le tableau								   */
-	/* RETURNED VALUE    : void															   */
-	virtual void deleteCity
-	(
-		const unsigned int index
-	);
-
-	virtual CityPtrT* searchCity
-	(
-		const unsigned int indexX,
-		const unsigned int indexY
-	);
-
-	/* NAME : computeGold																   */
-	/* ROLE : Compute income and cost then the balance between the two					   */
-	/* ROLE : Add balance to the player gold											   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
-	virtual void computeGold();
-
-	virtual void computeMaintenanceCostUnit();
-
-	/* NAME : resetGoldStats															   */
-	/* ROLE : Reset all stats of m_goldStats except gold									   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE    : void															   */
-	virtual void resetGoldStats();
-
-	/* NAME : resetGoldStats															   */
-	/* ROLE : Reset all stats of m_goldStats except gold									   */
-	/* INPUT : double goldToAdd	: gold to add in goldConversionSurplus					   */
-	/* RETURNED VALUE    : void															   */
-	virtual void addGoldToGoldConversionSurplus
-	(
-		const double goldToAdd
-	);
-
+private:
+	virtual void addEmptyCity();
 
 public:
+	virtual void deleteCity(const unsigned int index);
+	virtual CityPtrT* searchCity(const unsigned int indexX, const unsigned int indexY);
+	virtual void computeGold();
+	virtual void computeMaintenanceCostUnit();
+	virtual void resetGoldStats();
+	virtual void addGoldToGoldConversionSurplus(const double goldToAdd);
 
+public:
+	jsoncons::ojson saveToOjson()const;
+	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
+
+public:
 	inline virtual const std::string& GETname()			const { return m_name; };
-	inline virtual const VectUnit& GETtabUnit()			const { return m_tabUnit; };
-	inline virtual const VectCity& GETtabCity()			const { return m_tabCity; };
+	inline virtual const VectUnit& GETtabUnit()			const { return m_unitManager.getUnits(); };
+	inline virtual const VectCity& GETtabCity()			const { return m_CityManager.getCities(); };
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
-	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_tabUnit[m_selectedUnit]; }
+	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_unitManager.getUnits()[m_selectedUnit]; }
 
 	inline virtual int GETid()							const { return m_id; };
 	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
@@ -219,12 +107,13 @@ private:
 	std::string m_name;
 	int m_id;
 
-	VectUnit m_tabUnit;
-	VectCity m_tabCity;
+	UnitManager m_unitManager;
+	CityManager m_CityManager;
 	int m_selectedUnit;
 	int m_selectedCity;
 	GoldStats m_goldStats;
 	OnOffDisplay m_onOffDisplay;
+
 };
 
 #endif /* Player_H */

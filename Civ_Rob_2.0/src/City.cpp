@@ -24,14 +24,17 @@
 
 #include "App.h"
 #include "Citizen.h"
+#include "CityNameTemplate.h"
 #include "GameplayScreen.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "Player.h"
 #include "Players.h"
 #include "Unit.h"
 #include "Utility.h"
 
-#include <R2D/src/Log.h> 
+#include <jsoncons/json.hpp>
+#include <R2D/src/Log.h>
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/Window.h>
 
@@ -75,55 +78,26 @@ namespace CityC
 void City::createCity
 (
 	GamePlayScreen& mainGame,
-	const unsigned int influenceLevel
+	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */
 )
 {
 	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
 	PlayerPtrT splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
-	UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
+	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-	/* ---------------------------------------------------------------------- */
-	/* 1� : Recherche du nom de la nouvelle Citie 							  */
-	/*    : Recherche dans le tableau global des noms de Citie				  */
-	/*  : En fonction du nombre de Citie d�j� cr�es et de MAX_CITY_PER_PLAYER */
-	/* ---------------------------------------------------------------------- */
+	const std::string name(CityNameTemplate::getSingleton().getCityName(selectedPlayer, splayer->GETtabCity().size()));
 
-	const std::string name(mainGame.GETPlayers().GETvectCityName()
-		[
-			(size_t)
-			(
-				((size_t)selectedPlayer * CityC::MAX_CITY_PER_PLAYER)
-				+
-				splayer->GETtabCity().size()
-				)
-		]);
-
-	std::vector<Tile> tabtile;
-	tabtile.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
-
-	/* ---------------------------------------------------------------------- */
-	/* 4� : Remplisage tableau de tile Citie			 					  */
-	/* ---------------------------------------------------------------------- */
+	VectMapPtr tabtiles;
+	tabtiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 
 	fillCitieTiles
 	(
-		mainGame.getParentWindow(),
-		MainMap::convertPosXToIndex(sUnit->GETx()),
-		MainMap::convertPosYToIndex(sUnit->GETy()),
-		selectedPlayer,
-		mainGame.GETmainMap(),
-		tabtile,
-		influenceLevel
+		MainMap::convertPosXToIndex(sUnit->getX()), MainMap::convertPosYToIndex(sUnit->getY()),
+		selectedPlayer, mainGame.GETmainMap().GETmatriceMap(), tabtiles, influenceLevel
 	);
 
-	/* ---------------------------------------------------------------------- */
-	/* 5� : Cr�ation d'un ptr et passage au tableau de Citie du joueur		  */
-	/*    : Destruction ptr de l'Unit										  */
-	/*    : Aucune Unit n'est s�l�ctionn�e et aucune Unit � bouger	 		  */
-	/* ---------------------------------------------------------------------- */
-
-	splayer->addCity(name, sUnit->GETx(), sUnit->GETy(), tabtile);
+	splayer->addCity(name, sUnit->getX(), sUnit->getY(), tabtiles);
 
 	splayer->deleteUnit(selectedUnit);
 	splayer->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);
@@ -132,45 +106,54 @@ void City::createCity
 	mainGame.GETPlayers().SETneedToUpdateDrawCity(true);
 
 	splayer.reset();
-	sUnit.reset();
+}
+
+void City::loadCity
+(
+	MatriceMap& matriceMap,
+	const unsigned int selectplayer,
+	CityPtrT& city,
+	const modifAppartenance_Type modAppartenance /* = modifAppartenance_Type::modify */
+)
+{
+	assert(city);
+
+	VectMapPtr tiles;
+	tiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
+	City::fillCitieTiles
+	(
+		MainMap::convertPosXToIndex(city->getCoor().x), MainMap::convertPosYToIndex(city->getCoor().y),
+		selectplayer, matriceMap, tiles, city->GETinfluenceLevel(), modAppartenance
+	);
+	city->SETVectMapPtr(tiles);
 }
 
 void City::fillCitieTiles
 (
-	const R2D::Window& window,
 	const unsigned int middletileX,
 	const unsigned int middletileY,
 	const unsigned int selectplayer,
-	MainMap& mainMap,
-	VectMap& tabtile,
-	const unsigned int influenceLevel
+	MatriceMap& matriceMap,
+	VectMapPtr& tabtile,
+	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */,
+	const modifAppartenance_Type modAppartenance /* = modifAppartenance_Type::modify */
 )
 {
 	unsigned int k(0);
-	
-	for (int o(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); o <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); o++)
+	for (int o(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); o <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; o++)
 	{
-		for (int p(-(int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2)); p <= (int)ceil(CITY_INFLUENCE::INIT_SIZE_VIEW / 2); p++)
+		if (middletileX + o < 0 || middletileX + o >= matriceMap.size()) continue;
+
+		for (int p(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); p <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; p++)
 		{
-			if (initSizeInfluenceCondition(o, p, influenceLevel))
+			if (middletileY + p < 0 || middletileY + p >= matriceMap[0].size()) continue;
+
+			if ((modAppartenance == modifAppartenance_Type::modify) && (initSizeInfluenceCondition(o, p, influenceLevel)))
 			{
-				mainMap.GETmatriceMap()[(unsigned int)((double)middletileX + o)]
-					[(unsigned int)((double)middletileY + p)]
-				.appartenance = (int)selectplayer;
-			}
-			else
-			{
-				/* N/A */
+				matriceMap[middletileX + o][middletileY + p].appartenance = selectplayer;
 			}
 
-			/* ---------------------------------------------------------------------- */
-			/* Remplissage du tableau de Tile								 		  */
-			/* ---------------------------------------------------------------------- */
-			tabtile[k] = mainMap.GETmatriceMap()
-				[(unsigned int)((double)middletileX + o)]
-			[(unsigned int)((double)middletileY + p)];
-			tabtile[k].tileXCityScreen = (window.GETscreenWidth() / 2) - (-o * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
-			tabtile[k].tileYCityScreen = (window.GETscreenHeight() / 2) - (-p * mainMap.GETtileSize()) - mainMap.GETtileSize() / 2;
+			tabtile[k] = &matriceMap[middletileX + o][middletileY + p];
 			k++;
 		}
 	}
@@ -183,24 +166,16 @@ bool City::initSizeInfluenceCondition
 	const unsigned int influenceLevel
 )
 {
-	if (
-		o >= (int16_t)(-(int16_t)CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
-		&&
-		o <= (int16_t)(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
-		&&
-		p >= (int16_t)(-(int16_t)CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
-		&&
-		p <= (int16_t)(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * (int16_t)influenceLevel)
-		&&
-		cornerCheck(o, p, influenceLevel)
+	const int bound{ static_cast<int>(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * influenceLevel) };
+	if  (
+			o >= -bound && o <= bound && p >= -bound && p <= bound
+			&&
+			cornerCheck(o, p, influenceLevel)
 		)
 	{
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 bool City::cornerCheck
@@ -230,9 +205,9 @@ bool City::searchCityTile
 )
 {
 	if	(
-			MainMap::convertPosXToIndex(m_x) == indexX 
+			MainMap::convertPosXToIndex(getCoor().x) == indexX
 			&&
-			MainMap::convertPosXToIndex(m_y) == indexY
+			MainMap::convertPosXToIndex(getCoor().y) == indexY
 		)
 	{
 		return true;
@@ -243,31 +218,49 @@ bool City::searchCityTile
 	}
 }
 
+City::City()
+:
+IMoveable(),
+m_image("EMPTY"),
+m_name("EMPTY"),
+m_tileMap(),
+m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
+m_atq(0),
+m_def(0),
+m_nbstructurebuild(0),
+m_conversionToApply(conversionSurplus_Type::No_Conversion),
+m_citizenManager(m_tileMap),
+m_foodManager(m_citizenManager),
+m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
+m_goldBalance(0.0)
+{
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
+		saveToOjson().as_string());
+}
+
 City::City
 (
 	const std::string& name,
-	unsigned int x,
-	unsigned int y,
-	VectMap& tiles
+	const Coor coor,
+	VectMapPtr& tiles
 )
-	: 
+	:
+	IMoveable(coor),
 	m_image("citie.png"),
 	m_name(name),
-	m_x(x),
-	m_y(y),
-	m_tile(tiles),
+	m_tileMap(tiles),
 	m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
 	m_atq(0),
 	m_def(0),
 	m_nbstructurebuild(0),
 	m_conversionToApply(conversionSurplus_Type::No_Conversion),
-	m_citizenManager(m_tile),
+	m_citizenManager(m_tileMap),
 	m_foodManager(m_citizenManager),
-	m_buildManager(m_citizenManager, m_foodManager, m_x, m_y, m_conversionToApply),
+	m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
 	m_goldBalance(0.0)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
-		m_image, m_name, m_x, m_y, m_influenceLevel);
+		saveToOjson().as_string());
 }
 
 City::~City()
@@ -342,7 +335,6 @@ void City::computefood
 void City::computeWork
 (
 	Player& player,
-	const VectUnitTemplate& vectUnitTemplate,
 	bool* needToUpdateDrawUnit
 )
 {
@@ -357,7 +349,7 @@ void City::computeWork
 	case conversionSurplus_Type::GoldToFood:
 	case conversionSurplus_Type::GoldToWork:
 
-		m_buildManager.computeWorkToBuild(player, vectUnitTemplate, needToUpdateDrawUnit);
+		m_buildManager.computeWorkToBuild(player, needToUpdateDrawUnit);
 
 		break;
 	default:
@@ -381,28 +373,11 @@ void City::computeWork
 	}
 }
 
-bool City::testPos
-(
-	const unsigned int mouse_x,
-	const unsigned int mouse_y
-)
-{
-	if (
-		m_x == mouse_x
-		&&
-		m_y == mouse_y
-		)
-	{
-		return true;
-	}
-	return false;
-}
-
 void City::computeGold()
 {
 	/* Sum gold from citizen */
 	m_goldBalance = m_citizenManager.getGoldFromCitizen();
-	
+
 	/* Applying Emotion multiplier */
 	m_goldBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
 }
@@ -423,6 +398,46 @@ void City::convertFoodSurplusToGold
 )
 {
 	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_GOLD;
+}
+
+jsoncons::ojson City::saveToOjson()const
+{
+	jsoncons::ojson value;
+	value.insert_or_assign("m_image", m_image);
+	value.insert_or_assign("m_name", m_name);
+	value.insert_or_assign("m_x", m_coor.x);
+	value.insert_or_assign("m_y", m_coor.y);
+	value.insert_or_assign("m_influenceLevel", m_influenceLevel);
+	value.insert_or_assign("m_atq", m_atq);
+	value.insert_or_assign("m_def", m_def);
+	value.insert_or_assign("m_nbstructurebuild", m_nbstructurebuild);
+	value.insert_or_assign("Citizens", m_citizenManager.saveToOjson());
+	value.insert_or_assign("Food", m_foodManager.saveToOjson());
+	value.insert_or_assign("BuildQueue", m_buildManager.saveToOjson());
+	return value;
+}
+
+void City::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if	(
+			jsonLoad.contains("m_image") && jsonLoad.contains("m_name") && jsonLoad.contains("m_x") &&
+			jsonLoad.contains("m_y") && jsonLoad.contains("m_influenceLevel") && jsonLoad.contains("m_atq") &&
+			jsonLoad.contains("m_def") && jsonLoad.contains("m_nbstructurebuild") && jsonLoad.contains("Citizens") &&
+			jsonLoad.contains("Food") && jsonLoad.contains("BuildQueue")
+		)
+	{
+		m_image = jsonLoad["m_image"].as_string();
+		m_name = jsonLoad["m_name"].as_string();
+		m_coor.x = jsonLoad["m_x"].as<unsigned int>();
+		m_coor.y = jsonLoad["m_y"].as<unsigned int>();
+		m_influenceLevel = jsonLoad["m_influenceLevel"].as<unsigned int>();
+		m_atq = jsonLoad["m_atq"].as<unsigned int>();
+		m_def = jsonLoad["m_def"].as<unsigned int>();
+		m_nbstructurebuild = jsonLoad["m_nbstructurebuild"].as<unsigned int>();
+		m_citizenManager.loadFromOjson(jsonLoad["Citizens"]);
+		m_foodManager.loadFromOjson(jsonLoad["Food"]);
+		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"]);
+	}
 }
 
  /*

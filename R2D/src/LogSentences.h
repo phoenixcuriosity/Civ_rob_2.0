@@ -23,15 +23,21 @@
 #ifndef LogSentences_H
 #define LogSentences_H
 
-namespace logS
+namespace logR
 {
 	namespace WHO
 	{
 		constexpr char RESSOURCES_MANAGER[] = "[RESSOURCES_MANAGER]";
+		constexpr char REGISTER[] = "[REGISTER]";
 	};
 	namespace WHAT
 	{
 		constexpr char TEXTURE[] = "[TEXTURE]";
+		constexpr char FILE[] = "[FILE]";
+		constexpr char TEXT[] = "[TEXT]";
+		constexpr char DIRECTION[] = "[DIRECTION]";
+
+		constexpr char REGISTER_DIRECTORY[] = "[REGISTER_DIRECTORY]";
 	};
 	namespace DATA
 	{
@@ -39,6 +45,16 @@ namespace logS
 		constexpr char LOAD_TEXTURE[] = "[LOAD_TEXTURE] : {}";
 
 		constexpr char ERROR_FIND_TEXTURE[] = "[TEXTURE] : {}";
+		constexpr char ERROR_OPEN_FILE[] = "ERROR_OPEN_FILE : {}";
+		constexpr char ERROR_EMPTY_FILE[] = "ERROR_EMPTY_FILE : {}";
+		constexpr char ERROR_SIZE_FILE[] = "ERROR_SIZE_FILE : {}";
+
+		constexpr char ERROR_KEY_TEXT_MISSING[] = "ERROR_KEY_TEXT_MISSING : {}";
+
+		constexpr char ERROR_DIRECTION[] = "[ERROR : {}]";
+
+		constexpr char ERROR_DIR[] = "[ERROR : {}]";
+		constexpr char NO_ERROR_DIR[] = "[OK : {}]";
 	};
 };
 

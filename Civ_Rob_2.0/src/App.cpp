@@ -24,32 +24,25 @@
 
 #include "CityScreen.h"
 #include "GamePlayScreen.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMenuScreen.h"
 #include "NewGameScreen.h"
 #include "ReloadMenuScreen.h"
+#include "SaveReload.h"
 
-#include <tinyxml2/tinyxml2.h>
-
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
-#include <R2D/src/ExitFromError.h> 
-#include <R2D/src/SpriteFont.h> 
-#include <R2D/src/tinyXml2.h> 
+#include <jsoncons/json.hpp>
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
+#include <R2D/src/ExitFromError.h>
+#include <R2D/src/SpriteFont.h>
 #include <R2D/src/ScreenList.h>
 
-namespace FILE_APP
-{
-	namespace PATH
-	{
-		constexpr char CONFIG[] = "bin/filePath.xml";
-		constexpr char LOG[] = "bin/log/log.txt";
-	}
-}
+#include <R2D/src/FileReader.h>
 
-App::App()
-:
+App
+::App():
 R2D::IMainGame(),
 m_mainMenuScreen(nullptr),
 m_newGameScreen(nullptr),
@@ -60,45 +53,32 @@ m_CityScreen(nullptr)
 	R2D::ResourceManager::initializeRGBA8Map();
 }
 
-App::~App()
+App
+::~App()
 {
-	m_mainMenuScreen.reset();
-	m_newGameScreen.reset();
-	m_reloadMenuScreen.reset();
-	m_gamePlayScreen.reset();
-	m_CityScreen.reset();
 	R2D::ExitFromError::deleteAll();
 }
 
-void App::onInit()
+void
+App
+::onInit()
 {
-	/* Set location of logging file */
-	R2D::ResourceManager::initializeFilePath(R2D::e_Files::log, FILE_APP::PATH::LOG);
-	R2D::ErrorLog::initializeLog();
-	R2D::Logger::instance().init(R2D::LogLevelType::info, R2D::FileLineFunctionType::dont_show);
-
 	initMain();
+
+	SaveReload::getInstance().init();
 
 	m_window.SETscreenWidth(R2D::Window::getHorizontal());
 	m_window.SETscreenHeight(R2D::Window::getVertical());
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initShaders																   */
-/* ROLE : Init shaders for OpenGL													   */
-/* ROLE : 2 files : colorShadingVert and colorShadingFrag							   */
-/* ROLE : 3 parameters : vertexPosition	, vertexColor , vertexUV					   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::InitShaders()
+void
+App
+::InitShaders()
 {
 	R2D::ResourceManager::getGLSLProgram().compileShaders
 	(
-		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingVert)->getPath(),
-		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingFrag)->getPath()
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingVert),
+		R2D::ResourceManager::getFile(R2D::e_Files::colorShadingFrag)
 	);
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexPosition");
 	R2D::ResourceManager::getGLSLProgram().addAttribut("vertexColor");
@@ -109,44 +89,29 @@ void App::InitShaders()
 		(R2D::FONT::GUI::NAME.c_str(), R2D::FONT::GUI::SIZE::DEFAULT);
 }
 
-void App::InitTexture()
+void
+App
+::InitTexture()
 {
-	R2D::ResourceManager::loadTextureFromDir(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath)->getPath());
+	R2D::ResourceManager::loadTextureFromDir(R2D::ResourceManager::getFile(R2D::e_Files::imagesPath));
 }
 
-
-void App::onExit()
+void
+App
+::onExit()
 {
 	/* Do nothing */
 }
 
-void App::addScreens()
+void
+App
+::addScreens()
 {
-	/* Create shared Ptr */
 	m_mainMenuScreen = std::make_shared<MainMenuScreen>();
-
 	m_newGameScreen = std::make_shared<NewGameScreen>();
-
-	SaveReloadPtrT saveReload = std::make_shared<SaveReload>();
-	saveReload->init(R2D::ResourceManager::getFile(R2D::e_Files::saveInfo)->getPath());
-
-	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>
-		(
-			saveReload
-		);
-
-	m_gamePlayScreen = std::make_shared<GamePlayScreen>
-		(
-			saveReload,
-			m_newGameScreen->getUserInputNewGame()
-		);
-
-	m_CityScreen = std::make_shared<CityScreen>
-		(
-			saveReload,
-			&m_gamePlayScreen->GETPlayers(),
-			m_gamePlayScreen->GETmainMap().GETtileSizePtr()
-		);
+	m_reloadMenuScreen = std::make_shared<ReloadMenuScreen>();
+	m_gamePlayScreen = std::make_shared<GamePlayScreen>(m_newGameScreen->getUserInputNewGame());
+	m_CityScreen = std::make_shared<CityScreen>(&m_gamePlayScreen->GETPlayers(), m_gamePlayScreen->GETmainMap().GETtileSizePtr());
 
 	/* Add Screen to listed Screen */
 	m_screenList->addScreen(m_mainMenuScreen);
@@ -159,57 +124,54 @@ void App::addScreens()
 	m_screenList->setScreen(m_mainMenuScreen->GETscreenIndex());
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-/* NAME : initMain																	   */
-/* ROLE : Chargement des informations de la configuration du jeu					   */
-/* INPUT : struct Sysinfo& : structure globale du programme							   */
-/* RETURNED VALUE    : void															   */
-/* ----------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------- */
-void App::initMain()
+void
+App
+::initMain()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::START);
 
-	tinyxml2::XMLDocument config{};
-	config.LoadFile(FILE_APP::PATH::CONFIG);
-
-	if (config.ErrorID() == 0)
+	try
 	{
-		tinyxml2::XMLElement* node = R2D::tinyXml2::getFirstElement(config);
+		R2D::FileReader<jsoncons::ojson> reader(FILE_PATH_CONFIG);
+		const jsoncons::ojson configuration = reader.read(FILE_PATH_CONFIG);
 
-		for (const R2D::e_Files it_e_files : R2D::tab_e_Files)
+		if (configuration.contains(jsonloader::KEY_FILE_PATH) && configuration[jsonloader::KEY_FILE_PATH].is_array())
 		{
-			if (nullptr != node)
-			{
-				R2D::ResourceManager::initializeFilePath
-				(
-					it_e_files,
-					node->GetText()
-				);
+			const auto filepaths = configuration[jsonloader::KEY_FILE_PATH].as<std::vector<std::string>>();
 
-				node = node->NextSiblingElement();
+			if (filepaths.size() == R2D::NUMBER_OF_FILEPATH)
+			{
+				for (size_t i{0}; i < R2D::NUMBER_OF_FILEPATH; i++)
+				{
+					R2D::ResourceManager::initializeFilePath
+					(
+						R2D::tab_e_Files[i],
+						filepaths[i]
+					);
+				}
 			}
 			else
 			{
-				LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::MISSING_PATH_FILE, FILE_APP::PATH::CONFIG);
-				throw("Missing path for a file " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
+				throw("Diff between code and json");
 			}
 		}
+		else
+		{
+			LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::MISSING_KEY_JSON,
+				R2D::ResourceManager::getFile(R2D::e_Files::mainMap), jsonloader::KEY_FILE_PATH);
+		}
 	}
-	else
+	catch (const std::exception& e)
 	{
-		LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::OPEN_FILE, logS::DATA::ERROR_OPEN_FILE, FILE_APP::PATH::CONFIG);
-		throw("Impossible d'ouvrir le fichier " + static_cast<std::string>(FILE_APP::PATH::CONFIG));
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::ERROR_KEY_JSON, e.what());
 	}
 
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::APP, logS::WHAT::INIT_MAIN, logS::DATA::END);
 }
 
-
-//----------------------------------------------------------Destroy----------------------------------------------------------------//
-
-void App::destroy()
+void
+App
+::destroy()
 {
 	R2D::ExitFromError::deleteAll();
 }

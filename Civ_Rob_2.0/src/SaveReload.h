@@ -25,233 +25,69 @@
 
 #include "LIB.h"
 
+#include <R2D/src/FileSystemHandler.h>
+
 #include <R2D/src/API_fwd.h>
+#include <R2D/src/Files.h>
+#include <R2D/src/IRegister.h>
+#include <limits>
 
-#include <tinyxml2/tinyxml2.h>
-
-class SaveReload
+class SaveReload : public R2D::IRegisterSaveAble<jsoncons::ojson>, public R2D::IRegisterLoadAble<jsoncons::ojson>
 {
-public:
-
-	void init(const std::string& filePath);
-
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	 /* NAME : reload																					    	   */
-	 /* ROLE : Chargement de la partie � patir des fichiers de sauvegarde									       */
-	 /* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							       */
-	 /* RETURNED VALUE    : void																				   */
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	static void save
-	(
-		GamePlayScreen& mainGame
-	);
-
 private:
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : savemaps																					    	  */
-	/* ROLE : Sauvegardes des sys map.map et map.screen														      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void																	    			  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void saveMaps
-	(
-		GamePlayScreen& mainGame
-	);
+	using FilePath = std::string;
+	using SaveId = size_t;
+	using SaveIdVect = std::vector<SaveId>;
 
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : savePlayer																				    	  */
-	/* ROLE : Sauvegarde des joueurs (units et cities) dans SavePlayer.txt									      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void 																				  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void savePlayer
-	(
-		GamePlayScreen& mainGame
-	);
+	static constexpr SaveId OFFSET_INDEX = 1;
+	static constexpr SaveId NO_CURRENT_SAVE_SELECTED = std::numeric_limits<size_t>::max();
+public:
+	static SaveReload& getInstance()
+	{
+		static SaveReload instance;
+		return instance;
+	}
+
+	SaveReload() : IRegisterSaveAble<jsoncons::ojson>(), IRegisterLoadAble<jsoncons::ojson>(), IRegister() , m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
+	SaveReload(const SaveReload&) = delete;
+	virtual ~SaveReload() = default;
+
+	void init();
+
+	void load() override;
 
 public:
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : reload																					    	  */
-	/* ROLE : Chargement de la partie � patir des fichiers de sauvegarde									      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void reload
-	(
-		GamePlayScreen& mainGame
-	);
-
-private:
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : loadMaps																					    	  */
-	/* ROLE : Chargement des sys map.map et map.screen														      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void								    												  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void loadMaps
-	(
-		GamePlayScreen& mainGame
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : loadPlayer																				    	  */
-	/* ROLE : Chargement des joueurs (units et cities) dans SavePlayer.txt									      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void loadPlayer
-	(
-		GamePlayScreen& mainGame
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : loadGoldStatsXML																			    	  */
-	/* ROLE : Load Gold Stats reference to Player															      */
-	/* ROLE : Player->GETgoldStats() should be used instead of Player->GETgoldStatsConst()						  */
-	/* ROLE : Data type : double ; use std::stod															      */
-	/* INPUT/OUTPUT : GoldStats& goldStats : Structure of the Player's gold stats 							      */
-	/* INPUT/OUTPUT : tinyxml2::XMLNode* nGoldStats : Ptr on the GoldStats node in the XML document			      */
-	/* RETURNED VALUE    : void								    												  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void loadGoldStatsXML
-	(
-		GoldStats& goldStats,
-		tinyxml2::XMLNode* nGoldStats
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : loadUnitXML																				    	  */
-	/* ROLE : Load Unit reference to Player																	      */
-	/* ROLE : While Loop : load all Units to a Player														      */
-	/* INPUT/OUTPUT : MainGame& mainGame sysinfo : General struct							 				      */
-	/* INPUT/OUTPUT : tinyxml2::XMLNode* nUnit : Ptr on the Unit node in the XML document					      */
-	/* RETURNED VALUE    : void								    												  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void loadUnitXML
-	(
-		GamePlayScreen& mainGame,
-		tinyxml2::XMLNode* nUnit
-	);
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : loadCityXML																				    	  */
-	/* ROLE : Load City reference to Player																	      */
-	/* ROLE : While Loop : load all Cities to a Player														      */
-	/* INPUT/OUTPUT : MainGame& mainGame sysinfo : General struct							 				      */
-	/* INPUT/OUTPUT : tinyxml2::XMLNode* nCity : Ptr on the City node in the XML document					      */
-	/* RETURNED VALUE    : void								    												  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	static void loadCityXML
-	(
-		GamePlayScreen& mainGame,
-		tinyxml2::XMLNode* nCity
-	);
-
-public:
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : createSave																				    	  */
-	/* ROLE : Cr�ation d'un emplacement de fichier de sauvegarde (courant)									      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	void createSave();
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : removeSave																				    	  */
-	/* ROLE : Supprime une sauvegarde du dossier de sauvegarde												      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	void removeSave();
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : clearSave																					    	  */
-	/* ROLE : Supprime toutes les sauvegardes du dossier													      */
-	/* INPUT/OUTPUT : struct MainGame& mainGame : structure globale du programme							      */
-	/* RETURNED VALUE    : void																					  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	void clearSave();
 
-
-
-public:
-
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	 /* NAME : SaveReload																				    	   */
-	 /* ROLE : Constructeur par d�faut																		       */
-	 /* INPUT : void																							   */
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	 /* ---------------------------------------------------------------------------------------------------------- */
-	SaveReload();
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : ~SaveReload																				    	  */
-	/* ROLE : Destructeur par d�faut																		      */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	~SaveReload();
-
 private:
-
 	void createSaveDir();
-
-	void removeSaveDir(const size_t index);
-
+	void removeSaveDir(const SaveId& index);
 	void removeSaveFile(const std::string& file);
-
-	void unselectCurrentSave();
-
-	bool isSelectCurrentSaveInTab();
-
-	void rewriteSaveInfoFile();
-
-	size_t searchIndexToRemove();
+	void removeIndex(const SaveId& index);
+	void unselectCurrentSave() noexcept;
+	bool isSelectCurrentSaveInTab() const noexcept;
 
 public:
-
-	bool isSelectCurrentSave();
-
-public:
-
-	inline std::vector<unsigned int>& GETtabSave() { return m_tabSave; };
-	inline int GETcurrentSave()const { return m_currentSave; };
-
-	inline void SETtabSave(std::vector<unsigned int>& tab) { m_tabSave = tab; };
-	inline void SETcurrentSave(int currentSave) { m_currentSave = currentSave; };
-
-	inline void resetCurrentSave();
+	bool isSelectCurrentSave() const noexcept;
 
 private:
+	FilePath getSaveFilePath(const R2D::e_Files file);
+	void ModifySaveFileLocationToCurrent();
 
-	R2D::VectID m_tabSave;
-	int m_currentSave;
+public:
+	inline const SaveId& getSave(const SaveId& saveId) const noexcept { return m_tabSave[saveId]; };
+	inline size_t getSaveSize() const noexcept { return m_tabSave.size(); };
+	inline const SaveId& getCurrentSave()const noexcept { return m_currentSave; };
+
+	inline void setCurrentSave(const SaveId& currentSave) noexcept { m_currentSave = currentSave; };
+
+	inline void resetCurrentSave() noexcept;
+
+private:
+	SaveIdVect m_tabSave;
+	SaveId m_currentSave;
 };
 
 

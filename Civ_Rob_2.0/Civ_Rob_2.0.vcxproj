@@ -123,17 +123,18 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4275;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\jsoncons\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;tinyxml2.lib;picopng.lib;opengl32.lib;glew32.lib;R2D.lib;CEGUIBase-0_d.lib;CEGUIOpenGLRenderer-0_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;picopng.lib;opengl32.lib;glew32.lib;R2D.lib;CEGUIBase-0_d.lib;CEGUIOpenGLRenderer-0_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,13 +162,15 @@
     <ClCompile Include="src\Citizen.cpp" />
     <ClCompile Include="src\CitizenManager.cpp" />
     <ClCompile Include="src\City.cpp" />
+    <ClCompile Include="src\CityFactory.cpp" />
+    <ClCompile Include="src\CityNameTemplate.cpp" />
     <ClCompile Include="src\CityScreen.cpp" />
     <ClCompile Include="src\Civ_Rob_2.0.cpp" />
     <ClCompile Include="src\FoodManager.cpp" />
     <ClCompile Include="src\GameInput.cpp" />
     <ClCompile Include="src\GamePlayScreen.cpp" />
-    <ClCompile Include="src\InitLoadFromFile.cpp" />
     <ClCompile Include="src\MainMap.cpp" />
+    <ClCompile Include="src\MainMapConfig.cpp" />
     <ClCompile Include="src\MainMapGen.cpp" />
     <ClCompile Include="src\MainMenuScreen.cpp" />
     <ClCompile Include="src\NewGame.cpp" />
@@ -178,8 +181,10 @@
     <ClCompile Include="src\ReloadMenuScreen.cpp" />
     <ClCompile Include="src\SaveReload.cpp" />
     <ClCompile Include="src\Unit.cpp" />
+    <ClCompile Include="src\UnitFactory.cpp" />
+    <ClCompile Include="src\UnitStats.cpp" />
+    <ClCompile Include="src\UnitTemplate.cpp" />
     <ClCompile Include="src\Utility.cpp" />
-    <ClCompile Include="src\XmlConvertValue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -188,16 +193,20 @@
     <ClInclude Include="src\Citizen.h" />
     <ClInclude Include="src\CitizenManager.h" />
     <ClInclude Include="src\City.h" />
+    <ClInclude Include="src\CityFactory.h" />
+    <ClInclude Include="src\CityManager.h" />
+    <ClInclude Include="src\CityNameTemplate.h" />
     <ClInclude Include="src\CityScreen.h" />
     <ClInclude Include="src\CityScreenEnumTexture.h" />
     <ClInclude Include="src\FoodManager.h" />
     <ClInclude Include="src\GameInput.h" />
     <ClInclude Include="src\GamePlayScreen.h" />
     <ClInclude Include="src\GamePlayScreenEnumTexture.h" />
-    <ClInclude Include="src\InitLoadFromFile.h" />
+    <ClInclude Include="src\jsonloader.h" />
     <ClInclude Include="src\LIB.h" />
     <ClInclude Include="src\LogSentences.h" />
     <ClInclude Include="src\MainMap.h" />
+    <ClInclude Include="src\MainMapConfig.h" />
     <ClInclude Include="src\MainMapGen.h" />
     <ClInclude Include="src\MainMenuScreen.h" />
     <ClInclude Include="src\NewGame.h" />
@@ -212,13 +221,17 @@
     <ClInclude Include="src\T_Citizen.h" />
     <ClInclude Include="src\T_City.h" />
     <ClInclude Include="src\T_CityScreen.h" />
+    <ClInclude Include="src\T_Coor.h" />
     <ClInclude Include="src\T_GamePlayScreen.h" />
     <ClInclude Include="src\T_MainMap.h" />
     <ClInclude Include="src\T_NewGameScreen.h" />
-    <ClInclude Include="src\T_Unit.h" />
+    <ClInclude Include="src\T_Player.h" />
     <ClInclude Include="src\Unit.h" />
+    <ClInclude Include="src\UnitFactory.h" />
+    <ClInclude Include="src\UnitManager.h" />
+    <ClInclude Include="src\UnitStats.h" />
+    <ClInclude Include="src\UnitTemplate.h" />
     <ClInclude Include="src\Utility.h" />
-    <ClInclude Include="src\XmlConvertValue.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Civ_Rob_2.0.rc" />

@@ -37,8 +37,6 @@ public:
 
 	static void initializeLog();
 
-	static void closeLog();
-
 	static void logEvent
 	(
 		const std::string& evt

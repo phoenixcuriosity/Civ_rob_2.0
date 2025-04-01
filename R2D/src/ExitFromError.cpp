@@ -31,26 +31,8 @@ using namespace R2D;
 void ExitFromError::deleteAll()
 {
 	LOG(R2D::LogLevelType::info, 0, "[CIV_ROB]", "[START]","*********_________ DeleteAll _________*********");
-
-
-
-	/* *********************************************************
-	 *				 START delete SDL						   *
-	 ********************************************************* */
-
-
 	SDL_Quit();
-
-	/* *********************************************************
-	 *				 END delete SDL							   *
-	 ********************************************************* */
-
-	 /* ### Don't put code below here ### */
-
-
 	LOG(R2D::LogLevelType::info, 0, "[CIV_ROB]", "[N/A]", "SDL_Quit");
-	LOG(R2D::LogLevelType::info, 0, "[CIV_ROB]", "[n/A]", "________PROGRAMME FINISH________");
-	ErrorLog::closeLog();
 }
 
 void ExitFromError::exitFromError
@@ -61,6 +43,5 @@ void ExitFromError::exitFromError
 	LOG(R2D::LogLevelType::error, 0, "[CIV_ROB]", "[CRASH]", "{}", errorMsg);
 	deleteAll();
 	LOG(R2D::LogLevelType::error, 0, "[CIV_ROB]", "[CRASH]", "Last msg before exitError : {}", errorMsg);
-	ErrorLog::closeLog();
 	exit(EXIT_FAILURE);
 }

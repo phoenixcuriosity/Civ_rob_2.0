@@ -24,15 +24,16 @@
 
 #include "App.h"
 #include "City.h"
+#include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "Player.h"
-#include "Unit.h"
+#include "SaveReload.h"
 #include "Utility.h"
-#include "T_Unit.h"
 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
+#include <jsoncons/json.hpp>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ValueToScale.h>
@@ -48,26 +49,29 @@ namespace
 	constexpr unsigned int CITY_TYPE = 1;
 }
 
-Players::Players()
+Players::Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT)
 :
 m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
-m_vectCityName(),
-m_vectUnitTemplate(),
-m_vectCityTemplate(),
 m_vectPlayer(),
 m_idTexture(),
 m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
 m_spriteBatchCity(),
-m_needToUpdateDrawCity(true)
+m_needToUpdateDrawCity(true),
+m_matriceMapPtrT(matriceMapPtrT),
+m_registerLoad(registerLoad)
 {
+	SaveReload::getInstance().registerSaveable(R2D::e_Files::savePlayers, this);
+	SaveReload::getInstance().registerLoadable(R2D::e_Files::savePlayers, this);
 	m_spriteBatchCityDynamic.init();
 }
 
 Players::~Players()
 {
+	SaveReload::getInstance().unRegisterSaveable(R2D::e_Files::savePlayers, this);
+	SaveReload::getInstance().unRegisterLoadable(R2D::e_Files::savePlayers, this);
 	deleteAllPlayers();
 }
 
@@ -84,7 +88,7 @@ void Players::addPlayer
 	const int id
 )
 {
-	m_vectPlayer.push_back(std::make_shared<Player>(name, id));
+	m_vectPlayer.push_back(Player::create(name, id));
 }
 
 void Players::deleteAllPlayers()
@@ -123,9 +127,9 @@ void Players::clickToSelectUnit
 		for (const auto& u : p->GETtabUnit())
 		{
 			if	(
-					u->GETx() == x
+					u->getX() == x
 					&&
-					u->GETy() == y
+					u->getY() == y
 				)
 			{
 				p->SETselectedUnit(i);
@@ -147,9 +151,9 @@ void Players::isAUnitSelected()
 		if (p->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 		{
 			UnitPtrT u{ p->GETtabUnit()[p->GETselectedUnit()] };
-			bool prevShow{ u->GETshow() };
+			bool prevShow{ u->m_show };
 			u->cmpblit();
-			if (prevShow != u->GETshow())
+			if (prevShow != u->m_show)
 			{
 				m_needToUpdateDrawUnit = true;
 			}
@@ -174,36 +178,40 @@ void Players::drawUnit
 			{
 				UnitPtrT unit(m_vectPlayer[i]->GETtabUnit()[j]);
 
-				if (unit->GETshow())
+				if (unit->m_show)
 				{
 					if	(
 							camera.isBoxInView
 							(
-								{ unit->GETx(), unit->GETy() },
+								{ unit->getX(), unit->getY() },
 								{ tileSize , tileSize },
 								mainMap.GETtoolBarSize() * tileSize
 							)
 						)
 					{
 
-						auto fes = static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::battleoids) + Unit::searchUnitByName(unit->GETname(), m_vectUnitTemplate));
+						const GamePlayScreenEnumTexture idTunit
+							{ static_cast<GamePlayScreenEnumTexture>(
+								static_cast<size_t>(GamePlayScreenEnumTexture::battleoids)
+								+ static_cast<size_t>(UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
+							)};
 
 						/* Unit Texture */
 						m_spriteBatchUnit.draw
 						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize, tileSize),
+							glm::vec4(unit->getX(), unit->getY(), tileSize, tileSize),
 							R2D::FULL_RECT,
-							m_idTexture[fes],
+							m_idTexture[idTunit],
 							0.0f,
 							R2D::COLOR_WHITE
 						);
 
 						/* Lifebar Texture */
-						if (unit->GETlife() == unit->GETmaxlife())
+						if (unit->isFullLife())
 						{
 							m_spriteBatchUnit.draw
 							(
-								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								glm::vec4(unit->getX() + tileSize / 4, unit->getY(), tileSize / 2, 3),
 								R2D::FULL_RECT,
 								m_idTexture[GamePlayScreenEnumTexture::maxlife],
 								0.0f,
@@ -214,7 +222,7 @@ void Players::drawUnit
 						{
 							m_spriteBatchUnit.draw
 							(
-								glm::vec4(unit->GETx() + tileSize / 4, unit->GETy(), tileSize / 2, 3),
+								glm::vec4(unit->getX() + tileSize / 4, unit->getY(), tileSize / 2, 3),
 								R2D::FULL_RECT,
 								m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::life0) +
 									std::floor(R2D::ValueToScale::computeValueToScale(unit->GETlife(), 0, unit->GETmaxlife(), 0.0, 9.99)))],
@@ -222,12 +230,12 @@ void Players::drawUnit
 								R2D::COLOR_WHITE
 							);
 						}
-						
+
 
 						/* Appartenance Texture */
 						m_spriteBatchUnit.draw
 						(
-							glm::vec4(unit->GETx(), unit->GETy(), tileSize / 8, tileSize / 8),
+							glm::vec4(unit->getX(), unit->getY(), tileSize / 8, tileSize / 8),
 							R2D::FULL_RECT,
 							m_idTexture[static_cast<GamePlayScreenEnumTexture>(static_cast<size_t>(GamePlayScreenEnumTexture::ColorPlayer0) + i)],
 							0.0f,
@@ -271,11 +279,11 @@ void Players::drawCity
 			{
 				CityPtrT city(m_vectPlayer[i]->GETtabCity()[j]);
 
-				
+
 				if	(
 						camera.isBoxInView
 						(
-							{ city->GETx(), city->GETy() },
+							{ city->getCoor().x, city->getCoor().y },
 							{ tileSize , tileSize },
 							mainMap.GETtoolBarSize() * tileSize
 						)
@@ -284,7 +292,7 @@ void Players::drawCity
 					/* City Texture */
 					m_spriteBatchCity.draw
 					(
-						glm::vec4(city->GETx(), city->GETy(), tileSize, tileSize),
+						glm::vec4(city->getCoor().x, city->getCoor().y, tileSize, tileSize),
 						R2D::FULL_RECT,
 						m_idTexture[GamePlayScreenEnumTexture::city],
 						0.0f,
@@ -298,8 +306,8 @@ void Players::drawCity
 						city->GETname().c_str(),
 						glm::vec2
 						(
-							static_cast<float>(city->GETx()),
-							static_cast<float>(city->GETy())
+							static_cast<float>(city->getCoor().x),
+							static_cast<float>(city->getCoor().y)
 						), // offset pos
 						glm::vec2(0.32f), // size
 						0.0f,
@@ -341,6 +349,50 @@ bool Players::searchCity
 		}
 	}
 	return false;
+}
+
+jsoncons::ojson Players::saveToOjson()const
+{
+	jsoncons::ojson value;
+	jsoncons::ojson players{ jsoncons::ojson::make_array() };;
+
+	for (const auto& player : m_vectPlayer)
+	{
+		players.push_back(player->saveToOjson());
+	}
+
+	value.insert_or_assign(jsonloader::KEY_PLAYERS, players);
+
+	return value;
+}
+
+void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if (jsonLoad.contains(jsonloader::KEY_PLAYERS) && jsonLoad[jsonloader::KEY_PLAYERS].is_array())
+	{
+		for (const auto& player : jsonLoad[jsonloader::KEY_PLAYERS].array_range())
+		{
+			if (player.contains("m_name") && player.contains("m_id"))
+			{
+				assert(m_matriceMapPtrT);
+				if (m_matriceMapPtrT)
+				{
+					addPlayer(player["m_name"].as_string(), player["m_id"].as<int32_t>());
+					m_vectPlayer.back()->loadFromOjson(player, *m_matriceMapPtrT);
+				}
+			}
+			else
+			{
+				LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
+					R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
+			}
+		}
+	}
+	else
+	{
+		LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_SAVE_PLAYER, logS::DATA::MISSING_KEY_JSON,
+			R2D::ResourceManager::getFile(R2D::e_Files::savePlayers), jsonloader::KEY_PLAYERS);
+	}
 }
 
  /*

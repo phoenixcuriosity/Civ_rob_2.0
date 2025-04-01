@@ -1,0 +1,40 @@
+{
+  "Texts": [
+    {
+      "Text": "CIVILIZATION",
+      "X": 50.0,
+      "Y": 80.0,
+      "Size": 3.2,
+      "Alpha": 0,
+      "Color": "GOLD",
+      "Justification": "LEFT"
+    },
+    {
+      "Text": "Master version : 0.24.1.0",
+      "X": 0.5,
+      "Y": 4.5,
+      "Size": 1.6,
+      "Alpha": 0,
+      "Color": "WHITE",
+      "Justification": "MIDDLE"
+    },
+    {
+      "Text": "OpenGl version : 0.25.8.0",
+      "X": 0.5,
+      "Y": 2.5,
+      "Size": 1.6,
+      "Alpha": 0,
+      "Color": "WHITE",
+      "Justification": "MIDDLE"
+    },
+    {
+      "Text": "Game dev in c++ with SDL2.0.8",
+      "X": 0.5,
+      "Y": 0.5,
+      "Size": 1.6,
+      "Alpha": 0,
+      "Color": "WHITE",
+      "Justification": "MIDDLE"
+    }
+  ]
+}

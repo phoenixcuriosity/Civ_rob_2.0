@@ -25,8 +25,8 @@
 #include "Player.h"
 #include "Unit.h"
 #include "T_CityScreen.h"
-#include "T_Unit.h"
 
+#include <jsoncons/json.hpp>
 
 namespace RESOURCES
 {
@@ -45,7 +45,7 @@ BuildManager::BuildManager
 	const unsigned int& y,
 	const conversionSurplus_Type& conversionToApplyf
 )
-: 
+:
 m_citizenManager(citizenManager),
 m_foodManager(foodManager),
 m_x(x),
@@ -62,13 +62,6 @@ BuildManager::~BuildManager()
 	clearDynamicContextBuildToQueue();
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeWork																   */
-/* ROLE : Calculate the work for the turn											   */
-/* INPUT : void																		   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::computeWork()
 {
 	/* Sum work from citizen */
@@ -84,21 +77,9 @@ void BuildManager::computeWork()
 	m_workSurplusPreviousTurn = RESOURCES::WORK::ZERO;
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : computeWorkToBuild														   */
-/* ROLE : Compute the remaining work to build a building or unit					   */
-/* ROLE : if the remaining work is zero then the building or unit is created		   */
-/* ROLE : if the build is created and there work Surplus then either apply it ...	   */
-/* ROLE : ... to next build or convert it to food									   */
-/* OUT : Player* : ptr to the selected player										   */
-/* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::computeWorkToBuild
 (
 	Player& player,
-	const VectUnitTemplate& vectUnitTemplate,
 	bool* needToUpdateDrawUnit
 )
 {
@@ -113,27 +94,9 @@ void BuildManager::computeWorkToBuild
 			switch (m_buildQueue.front().buildQ.type)
 			{
 			case build_Type::unit:
-			{
-				unsigned int unitToBuild(Unit::searchUnitByName(m_buildQueue.front().buildQ.name, vectUnitTemplate));
-
-				player.addUnit
-				(
-					m_buildQueue.front().buildQ.name,
-					m_x,
-					m_y,
-					vectUnitTemplate[unitToBuild].type,
-					vectUnitTemplate[unitToBuild].life,
-					vectUnitTemplate[unitToBuild].atq,
-					vectUnitTemplate[unitToBuild].def,
-					vectUnitTemplate[unitToBuild].movement,
-					vectUnitTemplate[unitToBuild].numberOfAttack,
-					vectUnitTemplate[unitToBuild].level,
-					vectUnitTemplate[unitToBuild].maintenance
-				);
+				player.addUnit(m_buildQueue.front().buildQ.name, { m_x, m_y });
 				*needToUpdateDrawUnit = true;
-
 				break;
-			}
 			case build_Type::building:
 
 				/* TODO */
@@ -163,13 +126,6 @@ void BuildManager::computeWorkToBuild
 	}
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : convertWorkSurplusToFood													   */
-/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
-/* INPUT : double workSurplus : food surplus to convert into work					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::convertFoodSurplusToWork
 (
 	const double foodSurplus
@@ -178,16 +134,6 @@ void BuildManager::convertFoodSurplusToWork
 	m_workSurplusPreviousTurn = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_WORK;
 }
 
-
-/* ----------------------------------------------------------------------------------- */
-/* NAME : addBuildToQueue															   */
-/* ROLE : Push build to buildQueue													   */
-/* IN : build buildToQueue : build to push into buildQueue							   */
-/* OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* INPUT : SDL_Renderer*& renderer : ptr SDL_renderer								   */
-/* INPUT : TTF_Font* font[] : array of SDL font										   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::addBuildToQueue
 (
 	const buildGUI& buildToQueue
@@ -196,12 +142,6 @@ void BuildManager::addBuildToQueue
 	m_buildQueue.push_back(buildToQueue);
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : removeBuildToQueueFront													   */
-/* ROLE : Pop build to buildQueue													   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::removeBuildToQueueFront()
 {
 	if (m_buildQueue.front().buildG != nullptr)
@@ -212,13 +152,6 @@ void BuildManager::removeBuildToQueueFront()
 	m_buildQueue.pop_front();
 }
 
-/* ----------------------------------------------------------------------------------- */
-/* NAME : removeBuildToQueue														   */
-/* ROLE : remove build to buildQueue at index										   */
-/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-/* IN : unsigned int index : index to remove										   */
-/* RETURNED VALUE : void															   */
-/* ----------------------------------------------------------------------------------- */
 void BuildManager::removeBuildToQueue
 (
 	const size_t index
@@ -265,8 +198,46 @@ double BuildManager::GETBuildPerc()const
 	return RESOURCES::WORK::ZERO;
 };
 
+jsoncons::ojson BuildManager::saveToOjson()const
+{
+	jsoncons::ojson value;
+	jsoncons::ojson builds{ jsoncons::ojson::make_array() };
 
+	for (const auto build : m_buildQueue)
+	{
+		jsoncons::ojson b;
+		b.insert_or_assign("name", build.buildQ.name);
+		b.insert_or_assign("type", static_cast<size_t>(build.buildQ.type));
+		b.insert_or_assign("work", build.buildQ.work);
+		b.insert_or_assign("remainingWork", build.buildQ.remainingWork);
+		builds.push_back(b);
+	}
 
-/*
-*	End Of File : BuildManager.cpp
-*/
+	value.insert_or_assign("m_workBalance", m_workBalance);
+	value.insert_or_assign("m_workSurplusPreviousTurn", m_workSurplusPreviousTurn);
+	value.insert_or_assign("m_buildQueue", builds);
+
+	return value;
+}
+
+void BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+{
+	if	(
+			jsonLoad.contains("m_workBalance") && jsonLoad.contains("m_workSurplusPreviousTurn") && jsonLoad.contains("m_buildQueue") &&
+			jsonLoad["m_buildQueue"].is_array()
+		)
+	{
+		m_workBalance = jsonLoad["m_workBalance"].as<double>();
+		m_workSurplusPreviousTurn = jsonLoad["m_workSurplusPreviousTurn"].as<double>();
+
+		for (const auto& build : jsonLoad["m_buildQueue"].array_range())
+		{
+			buildGUI buildToQueue;
+			buildToQueue.buildQ.name = build["name"].as_string();
+			buildToQueue.buildQ.type = static_cast<build_Type>(build["type"].as<size_t>());
+			buildToQueue.buildQ.work = build["work"].as<double>();
+			buildToQueue.buildQ.remainingWork = build["remainingWork"].as<double>();
+			m_buildQueue.push_back(buildToQueue);
+		}
+	}
+}

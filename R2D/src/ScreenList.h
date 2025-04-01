@@ -31,22 +31,25 @@ namespace R2D
 class ScreenList
 {
 public:
-	ScreenList(IMainGame* game);
-	~ScreenList();
+	using IGameScreenPtr = std::shared_ptr<IGameScreen>;
+	using IGameScreenPtrVector = std::vector<std::shared_ptr<IGameScreen>>;
+public:
+	ScreenList(IMainGame* game) : m_game(game), m_currentScreenIndex(R2D::SCREEN_INDEX::INIT) {};
+	~ScreenList() { destroy(); };
 
-	std::shared_ptr<IGameScreen> moveNext();
-	std::shared_ptr<IGameScreen> movePrevious();
+	IGameScreenPtr moveNext();
+	IGameScreenPtr movePrevious();
 
 	void setScreen(int nextScreen);
-	void addScreen(std::shared_ptr<IGameScreen> newScreen);
+	void addScreen(IGameScreenPtr newScreen);
 
 	void destroy();
 
-	std::shared_ptr<IGameScreen> getCurrent();
+	IGameScreenPtr getCurrent();
 
 protected:
 	IMainGame* m_game;
-	std::vector< std::shared_ptr<IGameScreen>> m_screens;
+	IGameScreenPtrVector m_screens;
 	int m_currentScreenIndex;
 };
 

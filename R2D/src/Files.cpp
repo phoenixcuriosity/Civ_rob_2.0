@@ -22,96 +22,47 @@
 
 #include "Files.h"
 
-using namespace R2D;
-
-File::File()
-:
-m_path(""),
-m_isInitilize(false)
-{
-}
-
-File::File
-(
-	const std::string& path
-)
-:
-m_path(path),
-m_isInitilize(true)
-{
-}
-
-
-File::~File()
-{
-
-}
-
-
-Files::Files()
-{
-
-}
-
-Files::~Files()
-{
-	for (auto& n : m_map_FileConf)
-	{
-		if (n.second != nullptr)
-		{
-			delete n.second;
-			n.second = nullptr;
-		}
-	}
-	m_map_FileConf.clear();
-}
-
-
-bool Files::initializePath
-(
-	const e_Files name,
-	const std::string& path
-)
+bool
+R2D::Files
+::initializePath(const e_Files name,
+				 const FilePath& path)
 {
 	const auto it = m_map_FileConf.find(name);
 
-	if  (
-			it == m_map_FileConf.end()
-			||
-			it->second->isInitilize() == false
-		)
+	if ( it == m_map_FileConf.end()
+		 ||
+		 it->second->m_isInitilize == false)
 	{
-		m_map_FileConf.insert({ name, new File{path} });
+		m_map_FileConf.insert({ name, std::make_shared<File>(path) });
 		return true;
 	}
 	return false;
 }
 
-bool Files::modifyPath
-(
-	const e_Files name,
-	const std::string& path
-)
+void
+R2D::Files
+::modifyPath(const e_Files name,
+			 const FilePath& path)
 {
 	const auto it = m_map_FileConf.find(name);
 
-	if	(it == m_map_FileConf.end())
+	if (it != m_map_FileConf.end()
+		||
+		it->second->m_isInitilize == true)
 	{
-		return false;
+		it->second->m_path = path;
 	}
-	it->second->modifyPath(path);
-	return true;
 }
 
-File* Files::getFile(const e_Files name)
+R2D::Files::FilePtrT
+R2D::Files
+::getFile(const e_Files name)
 {
 	const auto it = m_map_FileConf.find(name);
 
-	if	(
-			it == m_map_FileConf.end()
-			||
-			it->second->isInitilize() == false
-		)
+	if(it == m_map_FileConf.end()
+	   ||
+	   it->second->m_isInitilize == false)
 	{
 		return nullptr;
 	}

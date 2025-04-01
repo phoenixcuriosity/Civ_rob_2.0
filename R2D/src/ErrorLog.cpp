@@ -36,7 +36,7 @@ void ErrorLog::initializeLog()
 	{
 		m_log.open
 		(
-			ResourceManager::getFile(e_Files::log)->getPath(),
+			ResourceManager::getFile(e_Files::log),
 			std::ofstream::out | std::ofstream::trunc
 		);
 
@@ -50,13 +50,6 @@ void ErrorLog::initializeLog()
 		}
 	}
 }
-
-void ErrorLog::closeLog()
-{
-	m_log.close();
-	m_isInitialize = false;
-}
-
 
 /* ----------------------------------------------------------------------------------- */
 /* NAME : logfileconsole															   */
@@ -80,7 +73,7 @@ void ErrorLog::logEvent
 	else
 	{
 #ifdef _DEBUG
-		std::cout << std::endl << "[ERROR]___: Cannot open log file, cannot log event";
+		std::cout << std::endl << "[ERROR]___: Cannot open log file, cannot log event : " << msg;
 #endif // DEBUG_MODE
 	}
 }

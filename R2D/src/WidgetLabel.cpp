@@ -26,12 +26,9 @@
 #include "SpriteFont.h"
 #include "SpriteBatch.h"
 
-namespace R2D
-{
-
-
-
-void WidgetLabel::draw(R2D::SpriteBatch& sb, R2D::SpriteFont& sf, R2D::Window& w)
+void 
+R2D::WidgetLabel
+::draw(R2D::SpriteBatch& sb, R2D::SpriteFont& sf, R2D::Window& w)
 {
 	if (!widget->isVisible()) return;
 	glm::vec2 pos;
@@ -39,6 +36,4 @@ void WidgetLabel::draw(R2D::SpriteBatch& sb, R2D::SpriteFont& sf, R2D::Window& w
 	pos.y = w.GETscreenHeight() - widget->getInnerRectClipper().getPosition().d_y;
 
 	sf.draw(sb, text.c_str(), pos, glm::vec2(0.24f), 0.0f, color, Justification::MIDDLE);
-}
-
 }

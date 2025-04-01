@@ -35,15 +35,13 @@ enum class e_Files
 {
 	error				= 0,
 
-	log					= 1, 
+	log					= 1,
 
 	readme				= 10,
 
 	mainMap				= 12,
-	buildings			= 13,
 	citiesNames			= 14,
 	units				= 15,
-	specNames			= 16,
 
 	saveInfo			= 20,
 
@@ -67,10 +65,8 @@ const e_Files tab_e_Files[]=
 {
 	e_Files::readme,
 	e_Files::mainMap,
-	e_Files::buildings,
 	e_Files::citiesNames,
 	e_Files::units,
-	e_Files::specNames,
 	e_Files::saveInfo,
 	e_Files::saveMaps,
 	e_Files::savePlayers,
@@ -85,65 +81,34 @@ const e_Files tab_e_Files[]=
 	e_Files::texts_Reload
 };
 
-struct Text
-{
-	std::string text;
-	double x;
-	double y;
-	float size;
-	float alpha;
-	R2D::ColorRGBA8 color;
-	R2D::Justification justification;
-};
+constexpr size_t NUMBER_OF_FILEPATH = sizeof(tab_e_Files) / sizeof(tab_e_Files[0]);
+
 
 
 class File
 {
+	using FilePath = std::string;
 public:
-	File();
-	File(const std::string& path);
-	~File();
+	File() = delete;
+	File(const FilePath& path) : m_path(path), m_isInitilize(true) {};
 
-public:
-
-	std::string& getPath() { return m_path; };
-	bool isInitilize() { return m_isInitilize; };
-	void modifyPath(const std::string& path) { m_path = path; };
-
-private:
-
-	std::string m_path;
+	FilePath m_path;
 	bool m_isInitilize;
-
 };
 
 class Files
 {
+	using FilePtrT = std::shared_ptr<File>;
+	using FilePath = std::string;
+	using EfileMap = std::map<e_Files, FilePtrT>;
 
 public:
-
-	Files();
-	~Files();
-
-public:
-
-	bool initializePath
-	(
-		const e_Files name,
-		const std::string& path
-	);
-
-	bool modifyPath
-	(
-		const e_Files name,
-		const std::string& path
-	);
-
-	File* getFile(const e_Files name);
+	bool initializePath(const e_Files name, const FilePath& path);
+	void modifyPath(const e_Files name, const FilePath& path);
+	FilePtrT getFile(const e_Files name);
 
 private:
-
-	std::map<e_Files, File*> m_map_FileConf;
+	EfileMap m_map_FileConf;
 };
 
 }

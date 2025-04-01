@@ -27,6 +27,7 @@
 
 #include "CitizenManager.h"
 #include "FoodManager.h"
+#include "Unit.h"
 #include "T_CityScreen.h"
 
 class BuildManager
@@ -67,7 +68,6 @@ public:
 	void computeWorkToBuild
 	(
 		Player& player,
-		const VectUnitTemplate& vectUnitTemplate,
 		bool* needToUpdateDrawUnit
 	);
 
@@ -123,7 +123,12 @@ public:
 
 	dequeBuild& getBuildQueue()				{ return m_buildQueue; };
 	const dequeBuild& getBuildQueue()const	{ return m_buildQueue; };
-	
+
+public:
+
+	jsoncons::ojson saveToOjson()const;
+
+	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 

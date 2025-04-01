@@ -23,39 +23,39 @@
 #include "GamePlayScreen.h"
 
 #include "App.h"
-#include "InitLoadFromFile.h"
 #include "LogSentences.h"
 #include "Player.h"
 #include "NewGame.h"
 #include "ScreenIndices.h"
 #include "Unit.h"
+#include "SaveReload.h"
 #include "T_NewGameScreen.h"
 
-#include <tinyxml2/tinyxml2.h>
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
 
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
-#include <R2D/src/tinyXml2.h> 
-
-GamePlayScreen::GamePlayScreen
-(
-	SaveReloadPtrT SaveReload,
-	UserInputNewGame* userInputNewGame
-)
-: 
+GamePlayScreen::GamePlayScreen(UserInputNewGame* userInputNewGame):
 R2D::IGameScreen(),
 R2D::CScreen(),
+R2D::IRegisterLoadAble<jsoncons::ojson>(),
+R2D::IRegister(),
+m_loadSub(addSubscriber()),
 m_screen(),
 m_var(),
-m_mainMap(),
+m_mainMap(m_loadSub),
 m_nextTurn(),
-m_players(),
-m_SaveReload(SaveReload),
+m_players(m_loadSub, &m_mainMap.GETmatriceMap()),
 m_isInitialize(false),
 m_userInputNewGame(userInputNewGame)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
+}
+
+R2D::RegisterPairVector GamePlayScreen::addSubscriber()
+{
+	R2D::RegisterPairVector registerLoad{ {this, typeid(MainMapConfig)}, {this, typeid(UnitTemplate)}, {this, typeid(CityNameTemplate)} };
+	return registerLoad;
 }
 
 GamePlayScreen::~GamePlayScreen()
@@ -96,10 +96,9 @@ bool GamePlayScreen::onEntry()
 	{
 		try
 		{
-			InitLoadFromFile::loadMainMapConfig(m_mainMap);
+			IRegisterLoadAble::load();
 
-			R2D::ResourceManager::InitializeCardinalDirectionMapping
-			(m_mainMap.GETtileSize());
+			R2D::ResourceManager::InitializeCardinalDirectionMapping(m_mainMap.GETtileSize());
 
 			initStructsNULL();
 
@@ -107,17 +106,21 @@ bool GamePlayScreen::onEntry()
 
 			initOpenGLScreen();
 
-			InitLoadFromFile::initFromFile(m_players.GETvectUnitTemplate(), m_players.GETvectCityName());
-
 			/* Need to be after loadUnitAndSpec */
 			m_players.init(m_screen.m_idTexture);
 
 			m_mainMap.initMainMap(m_camera, m_screen.m_idTexture);
 			//R2D::Music music = m_screen.audioEngine.loadMusic("sounds/the_field_of_dreams.mp3");
 
-			if (m_SaveReload->GETcurrentSave() != SELECTION::NO_CURRENT_SAVE_SELECTED)
+			if (SaveReload::getInstance().isSelectCurrentSave())
 			{
-				m_SaveReload->reload(*this);
+				SaveReload::getInstance().load();
+
+				m_var.cinState = CinState_Type::cinMainMap;
+				m_players.SETselectedPlayerId(SELECTION::NO_PLAYER_SELECTED);
+
+				makePlayersButtons();
+				m_mainMap.initMainMapTexture(m_screen.m_idTexture);
 			}
 			else
 			{
@@ -220,7 +223,7 @@ void GamePlayScreen::doInitHUDText()
 		m_spriteBatchHUDStatic,
 		buffer.c_str(),
 		glm::vec2(0.0f, 2.0f), // offset pos
-		glm::vec2(R2D::SpriteFont::getScaleFontToScreen(1.28)), // size
+		glm::vec2(R2D::SpriteFont::getScaleFontToScreen(1.28f)), // size
 		0.0f,
 		R2D::COLOR_WHITE
 	);
@@ -404,10 +407,10 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 			{
 				/* Reset if needed SHOW for the unit previously selected */
 				if (m_players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED && m_players.GETselectedPlayerPtr() != nullptr)
-				{			
+				{
 					if (m_players.GETselectedPlayerPtr()->GETselectedUnit() != SELECTION::NO_UNIT_SELECTED)
 					{
-						m_players.GETselectedPlayerPtr()->GETSelectedUnitPtr()->SETshow(true);
+						m_players.GETselectedPlayerPtr()->GETSelectedUnitPtr()->m_show = true;
 						m_players.SETneedToUpdateDrawUnit(true);
 
 						m_players.GETselectedPlayerPtr()->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);
@@ -418,7 +421,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 				m_players.SETselectedPlayerId((int)i);
 				m_players.SETselectedPlayerPtr(m_players.GETvectPlayer()[i]);
 			}
-			
+
 			return true;
 		}
 	}
@@ -428,7 +431,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::BUTTON_CLICK, logS::DATA::EXIT_BUTTON);
-	SaveReload::save(*this);
+	SaveReload::getInstance().save();
 
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;

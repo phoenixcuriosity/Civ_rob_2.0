@@ -34,8 +34,8 @@ namespace R2D
 class CScreen
 {
 public:
-	CScreen();
-	~CScreen();
+	CScreen() : m_camera(), m_cameraHUD(), m_spriteBatchHUDDynamic(),
+		m_spriteBatchHUDStatic(), m_gui(), m_isInitialized(false) {};
 
 public:
 
@@ -61,6 +61,15 @@ private:
 public:
 
 	Camera2D& getCamera() { return m_camera; };
+
+private:
+	static constexpr char GUI_SCHEME_A[] = "AlfiskoSkin.scheme";
+	static constexpr char GUI_SCHEME_B[] = "TaharezLook.scheme";
+	static constexpr char GUI_FONT[] = "DejaVuSans-10";
+	static constexpr char GUI_MOUSE_CURSOR[] = "AlfiskoSkin/MouseArrow";
+
+	static constexpr char GLSL_SAMPLER[] = "mySampler";
+	static constexpr char GLSL_SAMPLER_UNIFORM[] = "P";
 
 protected:
 	Camera2D m_camera;

@@ -27,6 +27,7 @@
 
 #include "CityScreenEnumTexture.h"
 #include "T_CityScreen.h"
+#include "T_Coor.h"
 
 #include <R2D/src/API_fwd.h>
 #include <R2D/src/IGameScreen.h>
@@ -39,7 +40,6 @@ class CityScreen : public R2D::IGameScreen, public R2D::CScreen
 public:
 	CityScreen
 	(
-		SaveReloadPtrT const SaveReload,
 		Players* const players,
 		unsigned int* const tileSize
 	);
@@ -67,6 +67,8 @@ private: /* Override from R2D::CScreen */
 	void doDrawAll() override;
 
 private: /* Helper to Override from R2D::CScreen */
+
+	virtual void initCoorVectTilePos();
 
 	virtual void resetInternalEntry();
 
@@ -114,9 +116,8 @@ private:
 	CityScreenTexture m_idTexture;
 
 	Players* m_players;
+	VectCoor m_displayTileVect;
 	unsigned int* m_tileSize;
-
-	SaveReloadPtrT m_SaveReload;
 
 	CityPtrT m_selectedCity;
 

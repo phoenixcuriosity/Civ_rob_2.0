@@ -27,13 +27,13 @@
  ********************************************************* */
 
 
-#include <fstream>
-#include <iostream>
-#include <filesystem>
-
 #include "LIB.h"
 
 #include "App.h"
+
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/log.h>
 
  /* *********************************************************
   *						MAIN							   *
@@ -43,8 +43,17 @@ int main(int /* argc */, char* /* argv */[])
 {
 	srand((unsigned int)time(NULL));
 
+
+	/* Set location of logging file */
+	R2D::ResourceManager::initializeFilePath(R2D::e_Files::log, "bin/log/log.txt");
+	R2D::ErrorLog::initializeLog();
+	R2D::Logger::instance().init(R2D::LogLevelType::info, R2D::FileLineFunctionType::dont_show);
+
 	App app{};
 	app.run();
+
+
+	LOG(R2D::LogLevelType::info, 0, "[CIV_ROB]", "[n/A]", "________PROGRAMME FINISH________");
 
 	return EXIT_SUCCESS;
 }

@@ -42,9 +42,6 @@
     <ClCompile Include="src\Unit.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\XmlConvertValue.cpp">
-      <Filter>Class GamePlayScreen</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility.cpp" />
     <ClCompile Include="src\CityScreen.cpp">
       <Filter>Screen</Filter>
@@ -64,9 +61,12 @@
     <ClCompile Include="src\Players.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\InitLoadFromFile.cpp">
-      <Filter>Class GamePlayScreen</Filter>
-    </ClCompile>
+    <ClCompile Include="src\MainMapConfig.cpp" />
+    <ClCompile Include="src\UnitTemplate.cpp" />
+    <ClCompile Include="src\CityNameTemplate.cpp" />
+    <ClCompile Include="src\UnitStats.cpp" />
+    <ClCompile Include="src\UnitFactory.cpp" />
+    <ClCompile Include="src\CityFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -120,12 +120,6 @@
     <ClInclude Include="src\CityScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\XmlConvertValue.h">
-      <Filter>Class GamePlayScreen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\T_Unit.h">
-      <Filter>T_struct</Filter>
-    </ClInclude>
     <ClInclude Include="src\T_City.h">
       <Filter>T_struct</Filter>
     </ClInclude>
@@ -156,9 +150,6 @@
     <ClInclude Include="src\Players.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\InitLoadFromFile.h">
-      <Filter>Class GamePlayScreen</Filter>
-    </ClInclude>
     <ClInclude Include="src\T_NewGameScreen.h">
       <Filter>T_struct</Filter>
     </ClInclude>
@@ -172,6 +163,17 @@
     <ClInclude Include="src\TemplateEnumTexture.h">
       <Filter>template</Filter>
     </ClInclude>
+    <ClInclude Include="src\jsonloader.h" />
+    <ClInclude Include="src\T_Player.h" />
+    <ClInclude Include="src\T_Coor.h" />
+    <ClInclude Include="src\MainMapConfig.h" />
+    <ClInclude Include="src\UnitTemplate.h" />
+    <ClInclude Include="src\CityNameTemplate.h" />
+    <ClInclude Include="src\UnitStats.h" />
+    <ClInclude Include="src\UnitFactory.h" />
+    <ClInclude Include="src\UnitManager.h" />
+    <ClInclude Include="src\CityFactory.h" />
+    <ClInclude Include="src\CityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">
