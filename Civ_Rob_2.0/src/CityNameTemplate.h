@@ -33,16 +33,20 @@ public:
 	using Vect = std::vector<CityName>;
 
 public:
-	CityNameTemplate() noexcept : m_vectTemplate(), initialized(false) {};
+
+	static CityNameTemplate& getSingleton(std::optional<R2D::RegisterPairVector> registerLoad = std::nullopt)
+	{
+		static CityNameTemplate CityNameTemplate{ registerLoad.value() };
+		return CityNameTemplate;
+	};
+
+	CityNameTemplate() noexcept : m_vectTemplate() {};
 	CityNameTemplate(R2D::RegisterPairVector& registerLoad);
 	virtual ~CityNameTemplate() = default;
 
 	void load(jsoncons::ojson f)override;
-
-	bool isInitialized()const noexcept { return initialized; };
 	Vect& getVect() noexcept { return m_vectTemplate; };
 	const Vect& getVect()const noexcept { return m_vectTemplate; };
 protected:
 	Vect m_vectTemplate;
-	bool initialized;
 };
