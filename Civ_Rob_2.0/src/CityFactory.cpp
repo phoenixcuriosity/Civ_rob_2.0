@@ -50,6 +50,5 @@ CityFactory::CityPtrT
 CityFactory
 ::CreateCity(const CityName& cityName, const Coor coor, VectMapPtr& tiles)
 {
-	CityNameTemplate::getSingleton().getVect();
 	return std::make_shared<City>(cityName, coor, tiles);
 }

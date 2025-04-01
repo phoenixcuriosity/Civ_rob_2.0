@@ -50,10 +50,7 @@ CityNameTemplate
 	{
 		for (const auto& country : f.object_range())
 		{
-			for (const auto& city : country.value().array_range())
-			{
-				m_vectTemplate.push_back(city.as_string());
-			}
+			m_vectTemplate.push_back(country.value().as<VectCityName>());
 		}
 	}
 	catch (const std::exception& e)

@@ -29,8 +29,9 @@ class CityNameTemplate : public R2D::ILoadable<jsoncons::ojson>
 {
 public:
 	using CityName = std::string;
+	using VectCityName = std::vector<CityName>;
+	using VectPlayerCityName = std::vector<VectCityName>;
 
-	using Vect = std::vector<CityName>;
 
 public:
 
@@ -45,8 +46,8 @@ public:
 	virtual ~CityNameTemplate() = default;
 
 	void load(jsoncons::ojson f)override;
-	Vect& getVect() noexcept { return m_vectTemplate; };
-	const Vect& getVect()const noexcept { return m_vectTemplate; };
+	CityName& getCityName(const size_t indexPlayer, const size_t indexCityName) noexcept { return m_vectTemplate[indexPlayer][indexCityName]; };
+	const CityName& getCityName(const size_t indexPlayer, const size_t indexCityName)const noexcept { return m_vectTemplate[indexPlayer][indexCityName]; };
 protected:
-	Vect m_vectTemplate;
+	VectPlayerCityName m_vectTemplate;
 };

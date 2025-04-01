@@ -86,7 +86,7 @@ void City::createCity
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
 	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-	const std::string name(CityNameTemplate::getSingleton().getVect()[(selectedPlayer * CityC::MAX_CITY_PER_PLAYER) + splayer->GETtabCity().size()]);
+	const std::string name(CityNameTemplate::getSingleton().getCityName(selectedPlayer, splayer->GETtabCity().size()));
 
 	VectMapPtr tabtiles;
 	tabtiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
