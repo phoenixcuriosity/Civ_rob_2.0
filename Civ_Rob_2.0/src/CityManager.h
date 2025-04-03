@@ -30,6 +30,8 @@ private:
 	using Coor = R2D::IMoveable::Coor;
 	using CityName = std::string;
 	using CityPtrTVector = std::vector<std::shared_ptr<City>>;
+	using CityNamePlayerId = CityFactory::CityNamePlayerId;
+
 	CityPtrTVector m_city;
 
 	static CityFactory& getFactory()
@@ -44,23 +46,9 @@ public:
 		getFactory();
 	}
 
-	void addCity(const CityName& cityName, const Coor coor, VectMapPtr& tiles)
-	{
-		m_city.push_back(getFactory().CreateCity(cityName, coor, tiles));
-	}
-
-	void addEmptyCity()
-	{
-		m_city.push_back(getFactory().CreateCity());
-	}
-
-	void removeCity(const size_t index)
-	{
-		if (index < m_city.size())
-		{
-			m_city.erase(m_city.begin() + index);
-		}
-	};
+	void addCity(const int playerId, const Coor coor, VectMapPtr& tiles);
+	void addEmptyCity();
+	void removeCity(const size_t index);
 
 	const CityPtrTVector& getCities() const { return m_city; }
 	CityPtrTVector& getCities() { return m_city; }

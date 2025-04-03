@@ -67,6 +67,8 @@
     <ClCompile Include="src\UnitStats.cpp" />
     <ClCompile Include="src\UnitFactory.cpp" />
     <ClCompile Include="src\CityFactory.cpp" />
+    <ClCompile Include="src\CityManager.cpp" />
+    <ClCompile Include="src\UnitManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
