@@ -19,35 +19,30 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#pragma once
 
-#include <vector>
-#include <memory>
-#include "Unit.h"
-#include "UnitFactory.h"
 
-class UnitManager
+#include "UnitManager.h"
+
+void
+UnitManager
+::addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
 {
-private:
-	std::vector<std::shared_ptr<Unit>> m_units;
-	using PlayerPtrT = std::shared_ptr<Player>;
+	m_units.push_back(getFactory().createUnit(name, coor, owner));
+}
 
-	static UnitFactory& getFactory()
+void
+UnitManager
+::addEmptyUnit()
+{
+	m_units.push_back(getFactory().createUnit());
+}
+
+void
+UnitManager
+::removeUnit(const size_t index)
+{
+	if (index < m_units.size())
 	{
-		static UnitFactory factory;
-		return factory;
+		m_units.erase(m_units.begin() + index);
 	}
-
-public:
-
-	UnitManager() : m_units()
-	{
-		getFactory();
-	}
-
-	void addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
-	void addEmptyUnit();
-	void removeUnit(const size_t index);
-
-	const std::vector<std::shared_ptr<Unit>>& getUnits() const { return m_units; }
 };
