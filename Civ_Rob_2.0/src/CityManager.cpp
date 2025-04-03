@@ -20,29 +20,30 @@
 
 */
 
-#pragma once
+#include "CityManager.h"
 
-#include <R2D/src/IRegister.h>
-#include "City.h"
-
-class CityFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
+void
+CityManager
+::addCity(const int playerId, const Coor coor, VectMapPtr& tiles)
 {
-private:
-	using Coor = R2D::IMoveable::Coor;
-	using CityName = std::string;
-	using CityPtrT = std::shared_ptr<City>;
-	R2D::RegisterPairVector addSubscriber();
-public:
+	const CityNamePlayerId cityNamePlayerId{ playerId, m_city.size() };
+	m_city.push_back(getFactory().CreateCity(cityNamePlayerId, coor, tiles));
+}
 
-	struct CityNamePlayerId
+void
+CityManager
+::addEmptyCity()
+{
+	m_city.push_back(getFactory().CreateCity());
+}
+
+void
+CityManager
+::removeCity(const size_t index)
+{
+	if (index < m_city.size())
 	{
-		int playerId = 0;
-		size_t cityVectSize = 0;
-	};
-
-public:
-	CityFactory();
-
-	CityPtrT CreateCity();
-	CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles);
+		m_city.erase(m_city.begin() + index);
+	}
 };
+

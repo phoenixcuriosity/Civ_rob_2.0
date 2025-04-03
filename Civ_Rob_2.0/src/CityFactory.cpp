@@ -48,7 +48,7 @@ CityFactory
 
 CityFactory::CityPtrT
 CityFactory
-::CreateCity(const CityName& cityName, const Coor coor, VectMapPtr& tiles)
+::CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles)
 {
-	return std::make_shared<City>(cityName, coor, tiles);
+	return std::make_shared<City>(CityNameTemplate::getSingleton().getCityName(id.playerId, id.cityVectSize), coor, tiles);
 }

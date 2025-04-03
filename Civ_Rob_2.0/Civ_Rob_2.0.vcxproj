@@ -163,6 +163,7 @@
     <ClCompile Include="src\CitizenManager.cpp" />
     <ClCompile Include="src\City.cpp" />
     <ClCompile Include="src\CityFactory.cpp" />
+    <ClCompile Include="src\CityManager.cpp" />
     <ClCompile Include="src\CityNameTemplate.cpp" />
     <ClCompile Include="src\CityScreen.cpp" />
     <ClCompile Include="src\Civ_Rob_2.0.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="src\SaveReload.cpp" />
     <ClCompile Include="src\Unit.cpp" />
     <ClCompile Include="src\UnitFactory.cpp" />
+    <ClCompile Include="src\UnitManager.cpp" />
     <ClCompile Include="src\UnitStats.cpp" />
     <ClCompile Include="src\UnitTemplate.cpp" />
     <ClCompile Include="src\Utility.cpp" />
