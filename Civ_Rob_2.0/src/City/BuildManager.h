@@ -23,15 +23,20 @@
 #ifndef BuildManager_H
 #define BuildManager_H
 
-#include "LIB.h"
-
-#include "CitizenManager.h"
-#include "FoodManager.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "T_CityScreen.h"
+
+class CitizenManager;
+class FoodManager;
+
+enum class conversionSurplus_Type : unsigned int;
 
 class BuildManager
 {
+private:
+
+	using dequeBuild = std::deque<buildGUI>;
+
 public:
 
 	BuildManager

@@ -20,14 +20,13 @@
 
 */
 
-#ifndef FoodManager_H
-#define FoodManager_H
+#pragma once
 
 #include "LIB.h"
 
-#include "CitizenManager.h"
+class CitizenManager;
 
-enum class FoodManagerType 
+enum class FoodManagerType
 {
 	famine		= 0,
 	neutral		= 1,
@@ -62,7 +61,7 @@ public:
 
 	inline virtual double GETfoodStockPerc()const
 	{
-		return ((m_foodStock / m_foodToLevelUp) * PERCENTAGE::ONE_HUNDRED); 
+		return ((m_foodStock / m_foodToLevelUp) * PERCENTAGE::ONE_HUNDRED);
 	};
 
 	double getFoodStock() const					{ return m_foodStock; };
@@ -82,7 +81,7 @@ public:
 	(
 		const double workSurplus
 	);
-	
+
 private:
 
 	void updateFoodBalance();
@@ -116,10 +115,3 @@ private:
 
 	FoodManagerType m_foodManagerType;
 };
-
-
-#endif /* FoodManager_H */
-
-/*
-*	End Of File : FoodManager.h
-*/

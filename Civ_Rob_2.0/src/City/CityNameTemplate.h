@@ -21,7 +21,6 @@
 */
 #pragma once
 
-#include <jsoncons/json.hpp>
 #include <R2D/src/ILoadable.h>
 #include <R2D/src/IRegister.h>
 

@@ -25,7 +25,7 @@
 
 #include "LIB.h"
 
-#include "GamePlayScreenEnumTexture.h"
+#include "Screens/GamePlayScreenEnumTexture.h"
 #include "T_MainMap.h"
 #include "MainMapConfig.h"
 
@@ -40,6 +40,10 @@
 
 class MainMap : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
+private:
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 public:
 	void setStaticPtrTileSize();
 

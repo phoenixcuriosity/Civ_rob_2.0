@@ -25,7 +25,7 @@
 
 #include "LIB.h"
 
-#include "CityScreenEnumTexture.h"
+#include "Screens/CityScreenEnumTexture.h"
 #include "T_CityScreen.h"
 #include "T_Coor.h"
 
@@ -35,8 +35,15 @@
 #include <R2D/src/Screen.h>
 #include <R2D/src/SpriteBatch.h>
 
+class City;
+class Players;
+
 class CityScreen : public R2D::IGameScreen, public R2D::CScreen
 {
+private:
+	using dequeBuild = std::deque<buildGUI>;
+	using CityPtrT = std::shared_ptr<City>;
+
 public:
 	CityScreen
 	(
@@ -85,7 +92,7 @@ private:
 	void drawTile(const size_t kTile);
 
 	void drawTileSpec(const size_t kTile);
-	
+
 	void drawTileApp(const size_t kTile);
 
 	void drawFood();

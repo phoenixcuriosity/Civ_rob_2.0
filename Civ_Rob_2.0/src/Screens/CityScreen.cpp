@@ -23,14 +23,14 @@
 #include "CityScreen.h"
 
 #include "App.h"
-#include "Citizen.h"
-#include "City.h"
+#include "City/Citizen.h"
+#include "City/City.h"
 #include "LogSentences.h"
 #include "Player.h"
 #include "Players.h"
 #include "ScreenIndices.h"
 #include "Utility.h"
-#include "T_Citizen.h"
+#include "City/T_Citizen.h"
 #include "T_MainMap.h"
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>

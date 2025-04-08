@@ -34,8 +34,19 @@
 
 #include <glm/glm.hpp>
 
+
+class Player;
+class Players;
+struct Tile;
+
 class Unit : public R2D::IBlickable, public R2D::IMoveable, public UnitStats
 {
+private:
+	using PlayerPtrT = std::shared_ptr<Player>;
+	using UnitPtrT = std::shared_ptr<Unit>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 public:
 	/* Define movement for the Unit in case of tryToMove */
 	enum class Move_Type

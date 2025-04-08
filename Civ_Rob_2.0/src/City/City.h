@@ -26,14 +26,34 @@
 #include "LIB.h"
 
 #include "BuildManager.h"
+#include "CitizenManager.h"
+#include "FoodManager.h"
 #include "T_City.h"
 #include "T_MainMap.h"
 
 #include "R2D/src/API_fwd.h"
 #include <R2D/src/IMove.h>
 
+
+struct GoldStats;
+class GamePlayScreen;
+class Citizen;
+
 class City : public R2D::IMoveable
 {
+private:
+	using dequeBuild = std::deque<buildGUI>;
+	using PlayerPtrT = std::shared_ptr<Player>;
+	using CityPtrT = std::shared_ptr<City>;
+	using CitizenPtrT = std::shared_ptr<Citizen>;
+	using VectCitizen = std::vector<CitizenPtrT>;
+	using UnitPtrT = std::shared_ptr<Unit>;
+
+	using VectMapPtr = std::vector<Tile*>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
+
 public: /* STATIC */
 
 	using Coor = R2D::IMoveable::Coor;

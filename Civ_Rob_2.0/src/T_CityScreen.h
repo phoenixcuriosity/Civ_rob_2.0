@@ -20,12 +20,13 @@
 
 */
 
-#ifndef T_CITYSCREEN_H
-#define T_CITYSCREEN_H
+#pragma once
 
-#include "LIB.h"
+namespace CEGUI
+{
+	class PushButton;
+}
 
-#include "../../Dependencies/CEGUI/widgets/PushButton.h"
 
 /* Define the types of builds that a city can create */
 enum class build_Type : unsigned int
@@ -51,9 +52,3 @@ struct buildGUI
 	CEGUI::PushButton* buildG = nullptr;
 	build buildQ;
 };
-
-#endif
-
-/*
-*	End Of File : T_CITYSCREEN_H.h
-*/

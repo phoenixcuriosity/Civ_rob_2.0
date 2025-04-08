@@ -19,61 +19,28 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Utility_H
-#define Utility_H
-
-#include "LIB.h"
+#pragma once
 
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 
+struct Var;
+class Players;
+
 class Utility
 {
-
 public:
-
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : checkPlayerUnitSelection													   */
-	/* ROLE : Check si un joueur et une unit�e sont selectionn�s						   */
-	/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-	/* RETURNED VALUE : bool : false -> joueur et/ou unit� non selectionn� (==-1)		   */
-	/* RETURNED VALUE : bool : true -> joueur et unit� selectionn� (!=-1)				   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static bool checkPlayerUnitSelection
 	(
 		Players& players
 	);
 
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : checkPlayerCitieSelection													   */
-	/* ROLE : Check si un joueur et une Citie sont selectionn�s							   */
-	/* INPUT : const SubcatPlayer& : structure contenant les infos du joueur 			   */
-	/* RETURNED VALUE : bool : false -> joueur et/ou Citie non selectionn� (==-1)		   */
-	/* RETURNED VALUE : bool : true -> joueur et Citie selectionn� (!=-1)				   */
-	/* ----------------------------------------------------------------------------------- */
-	/* ----------------------------------------------------------------------------------- */
 	static bool checkPlayerCitieSelection
 	(
 		Players& players
 	);
 
-
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* NAME : conditionTryToMove																		    	  */
-	/* ROLE : Condition pour vouloir bouger une Unit														      */
-	/* ROLE : S'il y au moins 1 joueur et qu'une Unit est s�lectionn� et que ...							      */
-	/* ROLE : statescreen =	STATEmainmap et que select = selectmove	alors l'Unit peut essayer de bouger		      */
-	/* INPUT : const Var var : structure des variables de types joueurs et Unit								      */
-	/* RETURNED VALUE : bool -> false : une ou toutes les conditions ne sont pas remplies						  */
-	/* RETURNED VALUE : bool -> true : toutes les conditions sont remplies										  */
-	/* ---------------------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------------------- */
 	static bool conditionTryToMove
 	(
 		const Var var,
@@ -96,10 +63,3 @@ public:
 		return out.str();
 	}
 };
-
-
-#endif /* Utility_H */
-
-/*
-*	End Of File : Utility.h
-*/

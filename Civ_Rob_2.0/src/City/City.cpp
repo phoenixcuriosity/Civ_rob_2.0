@@ -25,12 +25,12 @@
 #include "App.h"
 #include "Citizen.h"
 #include "CityNameTemplate.h"
-#include "GameplayScreen.h"
+#include "Screens/GameplayScreen.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "Player.h"
 #include "Players.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "Utility.h"
 
 #include <jsoncons/json.hpp>

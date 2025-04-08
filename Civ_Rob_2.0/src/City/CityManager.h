@@ -31,6 +31,7 @@ private:
 	using CityName = std::string;
 	using CityPtrTVector = std::vector<std::shared_ptr<City>>;
 	using CityNamePlayerId = CityFactory::CityNamePlayerId;
+	using VectMapPtr = std::vector<Tile*>;
 
 	CityPtrTVector m_city;
 

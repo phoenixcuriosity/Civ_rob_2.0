@@ -6,16 +6,16 @@
     <ClCompile Include="src\App.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
-    <ClCompile Include="src\GamePlayScreen.cpp">
+    <ClCompile Include="src\Screens\GamePlayScreen.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
-    <ClCompile Include="src\MainMenuScreen.cpp">
+    <ClCompile Include="src\Screens\MainMenuScreen.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
-    <ClCompile Include="src\NewGameScreen.cpp">
+    <ClCompile Include="src\Screens\NewGameScreen.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
-    <ClCompile Include="src\ReloadMenuScreen.cpp">
+    <ClCompile Include="src\Screens\ReloadMenuScreen.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
     <ClCompile Include="src\NewGame.cpp">
@@ -33,42 +33,42 @@
     <ClCompile Include="src\GameInput.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\City.cpp">
+    <ClCompile Include="src\City\City.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\Citizen.cpp">
+    <ClCompile Include="src\City\Citizen.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\Unit.cpp">
+    <ClCompile Include="src\Unit\Unit.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility.cpp" />
-    <ClCompile Include="src\CityScreen.cpp">
+    <ClCompile Include="src\Screens\CityScreen.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
     <ClCompile Include="src\MainMapGen.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\FoodManager.cpp">
+    <ClCompile Include="src\City\FoodManager.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\CitizenManager.cpp">
+    <ClCompile Include="src\City\CitizenManager.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
-    <ClCompile Include="src\BuildManager.cpp">
+    <ClCompile Include="src\City\BuildManager.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
     <ClCompile Include="src\Players.cpp">
       <Filter>Class GamePlayScreen</Filter>
     </ClCompile>
     <ClCompile Include="src\MainMapConfig.cpp" />
-    <ClCompile Include="src\UnitTemplate.cpp" />
-    <ClCompile Include="src\CityNameTemplate.cpp" />
-    <ClCompile Include="src\UnitStats.cpp" />
-    <ClCompile Include="src\UnitFactory.cpp" />
-    <ClCompile Include="src\CityFactory.cpp" />
-    <ClCompile Include="src\CityManager.cpp" />
-    <ClCompile Include="src\UnitManager.cpp" />
+    <ClCompile Include="src\Unit\UnitTemplate.cpp" />
+    <ClCompile Include="src\City\CityNameTemplate.cpp" />
+    <ClCompile Include="src\Unit\UnitStats.cpp" />
+    <ClCompile Include="src\Unit\UnitFactory.cpp" />
+    <ClCompile Include="src\City\CityFactory.cpp" />
+    <ClCompile Include="src\City\CityManager.cpp" />
+    <ClCompile Include="src\Unit\UnitManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -76,19 +76,19 @@
     <ClInclude Include="src\App.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\GamePlayScreen.h">
+    <ClInclude Include="src\Screens\GamePlayScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\MainMenuScreen.h">
+    <ClInclude Include="src\Screens\MainMenuScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="src\ScreenIndices.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\ReloadMenuScreen.h">
+    <ClInclude Include="src\Screens\ReloadMenuScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\NewGameScreen.h">
+    <ClInclude Include="src\Screens\NewGameScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -109,20 +109,20 @@
     <ClInclude Include="src\GameInput.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\City.h">
+    <ClInclude Include="src\City\City.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\Citizen.h">
+    <ClInclude Include="src\City\Citizen.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\Unit.h">
+    <ClInclude Include="src\Unit\Unit.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility.h" />
-    <ClInclude Include="src\CityScreen.h">
+    <ClInclude Include="src\Screens\CityScreen.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\T_City.h">
+    <ClInclude Include="src\City\T_City.h">
       <Filter>T_struct</Filter>
     </ClInclude>
     <ClInclude Include="src\T_CityScreen.h">
@@ -131,7 +131,7 @@
     <ClInclude Include="src\T_GamePlayScreen.h">
       <Filter>T_struct</Filter>
     </ClInclude>
-    <ClInclude Include="src\T_Citizen.h">
+    <ClInclude Include="src\City\T_Citizen.h">
       <Filter>T_struct</Filter>
     </ClInclude>
     <ClInclude Include="src\T_MainMap.h">
@@ -140,13 +140,13 @@
     <ClInclude Include="src\MainMapGen.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\FoodManager.h">
+    <ClInclude Include="src\City\FoodManager.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\CitizenManager.h">
+    <ClInclude Include="src\City\CitizenManager.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
-    <ClInclude Include="src\BuildManager.h">
+    <ClInclude Include="src\City\BuildManager.h">
       <Filter>Class GamePlayScreen</Filter>
     </ClInclude>
     <ClInclude Include="src\Players.h">
@@ -156,10 +156,10 @@
       <Filter>T_struct</Filter>
     </ClInclude>
     <ClInclude Include="src\LogSentences.h" />
-    <ClInclude Include="src\CityScreenEnumTexture.h">
+    <ClInclude Include="src\Screens\CityScreenEnumTexture.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="src\GamePlayScreenEnumTexture.h">
+    <ClInclude Include="src\Screens\GamePlayScreenEnumTexture.h">
       <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="src\TemplateEnumTexture.h">
@@ -169,13 +169,13 @@
     <ClInclude Include="src\T_Player.h" />
     <ClInclude Include="src\T_Coor.h" />
     <ClInclude Include="src\MainMapConfig.h" />
-    <ClInclude Include="src\UnitTemplate.h" />
-    <ClInclude Include="src\CityNameTemplate.h" />
-    <ClInclude Include="src\UnitStats.h" />
-    <ClInclude Include="src\UnitFactory.h" />
-    <ClInclude Include="src\UnitManager.h" />
-    <ClInclude Include="src\CityFactory.h" />
-    <ClInclude Include="src\CityManager.h" />
+    <ClInclude Include="src\Unit\UnitTemplate.h" />
+    <ClInclude Include="src\City\CityNameTemplate.h" />
+    <ClInclude Include="src\Unit\UnitStats.h" />
+    <ClInclude Include="src\Unit\UnitFactory.h" />
+    <ClInclude Include="src\Unit\UnitManager.h" />
+    <ClInclude Include="src\City\CityFactory.h" />
+    <ClInclude Include="src\City\CityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

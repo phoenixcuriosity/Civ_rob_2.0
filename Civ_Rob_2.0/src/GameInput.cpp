@@ -23,18 +23,18 @@
 #include "GameInput.h"
 
 #include "App.h"
-#include "City.h"
-#include "GamePlayScreen.h"
+#include "City/City.h"
+#include "Screens/GamePlayScreen.h"
 #include "Player.h"
 #include "ScreenIndices.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "Utility.h"
 
 #include <iostream>
 
 #include <R2D/src/CardinalDirection.h>
 #include <R2D/src/InputManager.h>
-#include <R2D/src/ResourceManager.h> 
+#include <R2D/src/ResourceManager.h>
 
 namespace GInput
 {
@@ -78,7 +78,7 @@ void GameInput::processInput(GamePlayScreen& gamePlayScreen)
 	moveCameraByDeltaTime(gamePlayScreen.getInputManager(), gamePlayScreen.getCamera(), gamePlayScreen.GETmainMap(), gamePlayScreen.GETPlayers());
 }
 
-   
+
 /* ---------------------------------------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------- */
 /* NAME : run_SDL																					    	  */
@@ -105,7 +105,7 @@ void GameInput::inputSDL
 
 	case SDL_KEYDOWN:
 		inputManager.pressKey(ev.key.keysym.sym);
-			
+
 		break;
 	case SDL_KEYUP:
 		inputManager.releaseKey(ev.key.keysym.sym);
@@ -473,7 +473,7 @@ void GameInput::mouseClick
 	R2D::ScreenState& currentState
 )
 {
-	
+
 	if (ev.button.clicks == R2D::GUI_MOUSE::TWO_CLICKS && inputManager.isKeyDown(SDL_BUTTON_LEFT))
 	{
 		if	(
@@ -535,7 +535,7 @@ unsigned int GameInput::getMouseCoorNorm
 	else
 	if (c == 'Y')
 	{
-		return 
+		return
 		(
 			mainMap.GETtileSize()
 			*

@@ -23,12 +23,12 @@
 #include "NewGame.h"
 
 #include "App.h"
-#include "GamePlayScreen.h"
 #include "LogSentences.h"
-#include "NewGameScreen.h"
 #include "Player.h"
 #include "SaveReload.h"
-#include "Unit.h"
+#include "Screens/NewGameScreen.h"
+#include "Screens/GamePlayScreen.h"
+#include "Unit/Unit.h"
 
 #include <R2D/src/GUI.h>
 #include <R2D/src/Log.h>

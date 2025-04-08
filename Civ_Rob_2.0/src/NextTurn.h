@@ -19,33 +19,22 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef NextTurn_H
-#define NextTurn_H
-
-#include "LIB.h"
+class GamePlayScreen;
 
 class NextTurn
 {
 public:
-
 	NextTurn();
 	~NextTurn();
 
 public:
-	
 	void nextTurn(GamePlayScreen& mainGame);
 
 public:
-
 	unsigned int GETnbTurn()const { return m_nbTurn; };
 
 private:
-
 	unsigned int m_nbTurn;
-
 };
-
-
-#endif // !NextTurn_H
-

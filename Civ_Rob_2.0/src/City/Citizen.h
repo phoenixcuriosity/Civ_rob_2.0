@@ -25,6 +25,10 @@
 
 #include "LIB.h"
 
+struct Tile;
+enum class Emotion_Type;
+enum class Religion_Type;
+
 class Citizen
 {
 public:

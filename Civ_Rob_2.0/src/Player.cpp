@@ -23,12 +23,12 @@
 #include "Player.h"
 
 #include "App.h"
-#include "City.h"
+#include "City/City.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "SaveReload.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "Utility.h"
 
 #include <jsoncons/json.hpp>
@@ -101,7 +101,7 @@ void Player::deleteCity
 	m_CityManager.removeCity(index);
 }
 
-CityPtrT* Player::searchCity
+Player::CityPtrT* Player::searchCity
 (
 	const unsigned int indexX,
 	const unsigned int indexY

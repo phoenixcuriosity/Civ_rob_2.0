@@ -25,8 +25,8 @@
 
 #include "LIB.h"
 
-#include "CityManager.h"
-#include "UnitManager.h"
+#include "City/CityManager.h"
+#include "Unit/UnitManager.h"
 #include "T_Player.h"
 
 namespace PlayerH
@@ -41,6 +41,16 @@ namespace PlayerH
 class Player : public std::enable_shared_from_this<Player>
 {
 private:
+	using CityPtrT = std::shared_ptr<City>;
+	using VectCity = std::vector<CityPtrT>;
+
+	using UnitPtrT = std::shared_ptr<Unit>;
+	using VectUnit = std::vector<UnitPtrT>;
+
+	using VectMapPtr = std::vector<Tile*>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 	struct Private { explicit Private() = default; };
 
 public:

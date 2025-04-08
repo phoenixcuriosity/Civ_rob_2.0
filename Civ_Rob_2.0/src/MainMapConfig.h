@@ -23,7 +23,6 @@
 
 #include "LIB.h"
 
-#include "GamePlayScreenEnumTexture.h"
 #include "T_MainMap.h"
 #include "T_Coor.h"
 
@@ -34,7 +33,6 @@
 #include <R2D/src/ILoadable.h>
 #include <R2D/src/IRegister.h>
 
-#include <jsoncons/json.hpp>
 
 class MainMapConfig : public R2D::ILoadable<jsoncons::ojson>
 {
@@ -49,6 +47,3 @@ public:
 	~MainMapConfig() = default;
 	void load(jsoncons::ojson f)override;
 };
-
-JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
-

@@ -23,9 +23,12 @@
 #ifndef GameInput_H
 #define GameInput_H
 
-#include "LIB.h"
 #include <R2D/src/API_fwd.h>
 #include <SDL/SDL.h>
+
+#include <memory>
+#include <string>
+#include <vector>
 
  /* Define input from keyboard in a context */
 enum class CinState_Type : unsigned int
@@ -37,8 +40,18 @@ enum class CinState_Type : unsigned int
 	cinMainMap,						/* Inputs from keyboards are use in Main map */
 };
 
+class Player;
+class Players;
+class MainMap;
+class Unit;
+class GamePlayScreen;
+
 class GameInput
 {
+private:
+	using PlayerPtrT = std::shared_ptr<Player>;
+	using UnitPtrT = std::shared_ptr<Unit>;
+
 public:
 
 	static void updateSDLInputCycle
