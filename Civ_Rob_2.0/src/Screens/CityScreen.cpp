@@ -241,7 +241,7 @@ void CityScreen::doInitUI()
 
 
 		unsigned int i{ 0 };
-		for (const auto& p : UnitTemplate::getSingleton().getTemplateMap())
+		for (const auto& p : unit::UnitTemplate::getSingleton().getTemplateMap())
 		{
 			m_buttonBuild.push_back
 			(

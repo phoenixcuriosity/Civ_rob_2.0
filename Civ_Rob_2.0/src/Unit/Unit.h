@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Unit_H
-#define Unit_H
+#pragma once
 
 #include "LIB.h"
 
@@ -38,6 +36,10 @@
 class Player;
 class Players;
 struct Tile;
+
+namespace unit
+{
+
 
 class Unit : public R2D::IBlickable, public R2D::IMoveable, public UnitStats
 {
@@ -156,8 +158,4 @@ private:
 	PlayerPtrT m_owner;
 };
 
-#endif /* Unit_H */
-
-/*
-*	End Of File : Unit.h
-*/
+}

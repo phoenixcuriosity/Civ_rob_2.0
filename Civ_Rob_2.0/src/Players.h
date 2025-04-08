@@ -39,8 +39,13 @@
 class Player;
 class City;
 class MainMap;
-class Unit;
+
 struct Tile;
+
+namespace unit
+{
+	class Unit;
+}
 
 class Players : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
@@ -51,7 +56,7 @@ private:
 	using PlayerPtrT = std::shared_ptr<Player> ;
 	using VectPlayer = std::vector<PlayerPtrT> ;
 	using CityPtrT = std::shared_ptr<City>;
-	using UnitPtrT = std::shared_ptr<Unit>;
+	using UnitPtrT = std::shared_ptr<unit::Unit>;
 
 public:
 	Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT);

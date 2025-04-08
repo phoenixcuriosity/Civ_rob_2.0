@@ -23,7 +23,7 @@
 #include "UnitStats.h"
 
 void
-UnitStats
+unit::UnitStats
 ::levelup()noexcept
 {
 	level++;
@@ -36,7 +36,7 @@ UnitStats
 }
 
 void
-UnitStats
+unit::UnitStats
 ::healNeutral()noexcept
 {
 	life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_HEAL_NO_APPARTENANCE)));
@@ -47,7 +47,7 @@ UnitStats
 };
 
 void
-UnitStats
+unit::UnitStats
 ::healFriendly()noexcept
 {
 	life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_HEAL_APPARTENANCE)));

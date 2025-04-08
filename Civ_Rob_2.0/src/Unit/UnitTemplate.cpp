@@ -27,7 +27,19 @@
 #include <R2D/src/Log.h>
 #include <R2D/src/ResourceManager.h>
 
-UnitTemplate
+JSONCONS_ALL_MEMBER_NAME_TRAITS(unit::UnitTemplate::TemplateJson,
+	(name, "Name"),
+	(type, "MovementType"),
+	(life, "Life"),
+	(atq, "Atq"),
+	(def, "Def"),
+	(movement, "Mouvement"),
+	(numberOfAttack, "NumberOfAttack"),
+	(level, "Level"),
+	(workToBuild, "WorkToBuild"),
+	(maintenance, "Maintenance"))
+
+unit::UnitTemplate
 ::UnitTemplate(R2D::RegisterPairVector& registerLoad)
 : UnitTemplate()
 {
@@ -41,7 +53,7 @@ UnitTemplate
 }
 
 void
-UnitTemplate
+unit::UnitTemplate
 ::load(jsoncons::ojson f)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_UNIT_CONFIG, logS::DATA::START);
@@ -84,7 +96,7 @@ UnitTemplate
 }
 
 int64_t
-UnitTemplate
+unit::UnitTemplate
 ::searchUnitByName(const std::string& name)const
 {
 	const auto it{ m_mapUnitTemplate.find(name) };
@@ -97,8 +109,8 @@ UnitTemplate
 	throw std::runtime_error("Unit name not found: " + name);
 }
 
-const UnitTemplate::Template&
-UnitTemplate
+const unit::UnitTemplate::Template&
+unit::UnitTemplate
 ::getTemplate(const UnitName& unitName)const
 {
 	try

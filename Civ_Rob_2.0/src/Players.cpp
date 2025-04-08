@@ -193,7 +193,7 @@ void Players::drawUnit
 						const GamePlayScreenEnumTexture idTunit
 							{ static_cast<GamePlayScreenEnumTexture>(
 								static_cast<size_t>(GamePlayScreenEnumTexture::battleoids)
-								+ static_cast<size_t>(UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
+								+ static_cast<size_t>(unit::UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
 							)};
 
 						/* Unit Texture */

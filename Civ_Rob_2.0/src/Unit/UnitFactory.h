@@ -27,6 +27,9 @@
 
 class Player;
 
+namespace unit
+{
+
 class UnitFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
 {
 private:
@@ -40,3 +43,6 @@ public:
 	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
 	UnitPtrT createUnit();
 };
+
+}
+

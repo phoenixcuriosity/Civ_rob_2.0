@@ -26,6 +26,9 @@
 #include "Unit.h"
 #include "UnitFactory.h"
 
+namespace unit
+{
+
 class UnitManager
 {
 private:
@@ -51,3 +54,5 @@ public:
 
 	const std::vector<std::shared_ptr<Unit>>& getUnits() const { return m_units; }
 };
+
+}

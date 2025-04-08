@@ -196,7 +196,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_1))
 		{
 			/* ← + ↓ */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -208,7 +208,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_2))
 		{
 			/* ↓ */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -220,7 +220,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_3))
 		{
 			/* → + ↓ */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -232,7 +232,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_4))
 		{
 			/* ← */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -245,7 +245,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_6))
 		{
 			/* → */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -257,7 +257,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_7))
 		{
 			/* ← + ↑ */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -269,7 +269,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_8))
 		{
 			/* ↑ */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -281,7 +281,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_9))
 		{
 			/* → + ↑ */
-			Unit::tryToMove
+			unit::Unit::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),

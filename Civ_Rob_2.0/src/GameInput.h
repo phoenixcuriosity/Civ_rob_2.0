@@ -43,14 +43,19 @@ enum class CinState_Type : unsigned int
 class Player;
 class Players;
 class MainMap;
-class Unit;
 class GamePlayScreen;
+
+namespace unit
+{
+	class Unit;
+}
+
 
 class GameInput
 {
 private:
 	using PlayerPtrT = std::shared_ptr<Player>;
-	using UnitPtrT = std::shared_ptr<Unit>;
+	using UnitPtrT = std::shared_ptr<unit::Unit>;
 
 public:
 

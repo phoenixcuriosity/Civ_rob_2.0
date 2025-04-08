@@ -24,21 +24,21 @@
 #include "UnitManager.h"
 
 void
-UnitManager
+unit::UnitManager
 ::addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
 {
 	m_units.push_back(getFactory().createUnit(name, coor, owner));
 }
 
 void
-UnitManager
+unit::UnitManager
 ::addEmptyUnit()
 {
 	m_units.push_back(getFactory().createUnit());
 }
 
 void
-UnitManager
+unit::UnitManager
 ::removeUnit(const size_t index)
 {
 	if (index < m_units.size())

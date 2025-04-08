@@ -68,8 +68,8 @@ void Player::addEmptyUnit()
 
 void Player::addUnit
 (
-	const Unit::UnitName& name,
-	const Unit::Coor coor
+	const unit::Unit::UnitName& name,
+	const unit::Unit::Coor coor
 )
 {
 	m_unitManager.addUnit(name, coor, shared_from_this());
@@ -83,7 +83,7 @@ void Player::deleteUnit
 	m_unitManager.removeUnit(index);
 }
 
-void Player::addCity(const Unit::Coor coor, VectMapPtr& tiles)
+void Player::addCity(const unit::Unit::Coor coor, VectMapPtr& tiles)
 {
 	m_CityManager.addCity(m_id, coor, tiles);
 }

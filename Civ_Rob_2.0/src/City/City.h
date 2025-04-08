@@ -39,6 +39,11 @@ struct GoldStats;
 class GamePlayScreen;
 class Citizen;
 
+namespace unit
+{
+	class Unit;
+}
+
 class City : public R2D::IMoveable
 {
 private:
@@ -47,7 +52,7 @@ private:
 	using CityPtrT = std::shared_ptr<City>;
 	using CitizenPtrT = std::shared_ptr<Citizen>;
 	using VectCitizen = std::vector<CitizenPtrT>;
-	using UnitPtrT = std::shared_ptr<Unit>;
+	using UnitPtrT = std::shared_ptr<unit::Unit>;
 
 	using VectMapPtr = std::vector<Tile*>;
 	using VectMap = std::vector<Tile>;
