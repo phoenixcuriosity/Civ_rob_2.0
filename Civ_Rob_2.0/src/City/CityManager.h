@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,49 +19,38 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+
 #pragma once
 
-#include <vector>
-#include <memory>
-#include "Unit.h"
-#include "UnitFactory.h"
+#include "CityFactory.h"
 
-class UnitManager
+class CityManager
 {
 private:
-	std::vector<std::shared_ptr<Unit>> m_units;
-	using PlayerPtrT = std::shared_ptr<Player>;
+	using Coor = R2D::IMoveable::Coor;
+	using CityName = std::string;
+	using CityPtrTVector = std::vector<std::shared_ptr<City>>;
+	using CityNamePlayerId = CityFactory::CityNamePlayerId;
+	using VectMapPtr = std::vector<Tile*>;
 
-	static UnitFactory& getFactory()
+	CityPtrTVector m_city;
+
+	static CityFactory& getFactory()
 	{
-		static UnitFactory factory;
+		static CityFactory factory;
 		return factory;
 	}
 
 public:
-
-	UnitManager() : m_units()
+	CityManager() : m_city()
 	{
 		getFactory();
 	}
 
-	void addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
-	{
-		m_units.push_back(getFactory().createUnit(name, coor, owner));
-	}
+	void addCity(const int playerId, const Coor coor, VectMapPtr& tiles);
+	void addEmptyCity();
+	void removeCity(const size_t index);
 
-	void addEmptyUnit()
-	{
-		m_units.push_back(getFactory().createUnit());
-	}
-
-	void removeUnit(const size_t index)
-	{
-		if (index < m_units.size())
-		{
-			m_units.erase(m_units.begin() + index);
-		}
-	};
-
-	const std::vector<std::shared_ptr<Unit>>& getUnits() const { return m_units; }
+	const CityPtrTVector& getCities() const { return m_city; }
+	CityPtrTVector& getCities() { return m_city; }
 };

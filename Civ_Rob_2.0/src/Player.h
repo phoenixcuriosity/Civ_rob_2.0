@@ -25,24 +25,40 @@
 
 #include "LIB.h"
 
-#include "CityManager.h"
-#include "UnitManager.h"
+#include "City/CityManager.h"
+#include "Unit/UnitManager.h"
 #include "T_Player.h"
 
 namespace PlayerH
 {
-	constexpr unsigned int NB_MAX_PLAYER = 9;
-
 	constexpr double INITIAL_GOLD = 100.0;
 
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
+namespace unit
+{
+	class Unit;
+}
+
 class Player : public std::enable_shared_from_this<Player>
 {
+private:
+	using CityPtrT = std::shared_ptr<City>;
+	using VectCity = std::vector<CityPtrT>;
+
+	using UnitPtrT = std::shared_ptr<unit::Unit>;
+	using VectUnit = std::vector<UnitPtrT>;
+
+	using VectMapPtr = std::vector<Tile*>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 	struct Private { explicit Private() = default; };
 
 public:
+
+
 	Player(Private, const std::string& name, const int id);
 
 	static std::shared_ptr<Player> create(const std::string& name, const int id)
@@ -53,19 +69,15 @@ public:
 	Player() = delete;
 	virtual ~Player();
 
-	virtual void addUnit(const Unit::UnitName& name,
-						 const Unit::Coor coor);
+	virtual void addUnit(const unit::Unit::UnitName& name,
+						 const unit::Unit::Coor coor);
 
 private:
 	virtual void addEmptyUnit();
 
 public:
 	virtual void deleteUnit(const unsigned int index);
-	virtual void addCity(
-		const std::string&,
-		const unsigned int,
-		const unsigned int,
-		VectMapPtr& tiles);
+	virtual void addCity(const unit::Unit::Coor coor, VectMapPtr& tiles);
 
 private:
 	virtual void addEmptyCity();
@@ -107,7 +119,7 @@ private:
 	std::string m_name;
 	int m_id;
 
-	UnitManager m_unitManager;
+	unit::UnitManager m_unitManager;
 	CityManager m_CityManager;
 	int m_selectedUnit;
 	int m_selectedCity;

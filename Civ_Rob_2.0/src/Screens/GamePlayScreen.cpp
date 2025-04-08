@@ -27,7 +27,7 @@
 #include "Player.h"
 #include "NewGame.h"
 #include "ScreenIndices.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "SaveReload.h"
 #include "T_NewGameScreen.h"
 
@@ -54,7 +54,7 @@ m_userInputNewGame(userInputNewGame)
 
 R2D::RegisterPairVector GamePlayScreen::addSubscriber()
 {
-	R2D::RegisterPairVector registerLoad{ {this, typeid(MainMapConfig)}, {this, typeid(UnitTemplate)}, {this, typeid(CityNameTemplate)} };
+	R2D::RegisterPairVector registerLoad{ {this, typeid(MainMapConfig)}, {this, typeid(unit::UnitTemplate)}, {this, typeid(CityNameTemplate)} };
 	return registerLoad;
 }
 

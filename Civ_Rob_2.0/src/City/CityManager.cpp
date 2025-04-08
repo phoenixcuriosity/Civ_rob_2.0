@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -20,39 +20,30 @@
 
 */
 
-#include "UnitStats.h"
+#include "CityManager.h"
 
 void
-UnitStats
-::levelup()noexcept
+CityManager
+::addCity(const int playerId, const Coor coor, VectMapPtr& tiles)
 {
-	level++;
-
-	stats_max.life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_LEVELUP)));
-	life = stats_max.life;
-
-	/* Todo */
-	//heal();
+	const CityNamePlayerId cityNamePlayerId{ playerId, m_city.size() };
+	m_city.push_back(getFactory().CreateCity(cityNamePlayerId, coor, tiles));
 }
 
 void
-UnitStats
-::healNeutral()noexcept
+CityManager
+::addEmptyCity()
 {
-	life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_HEAL_NO_APPARTENANCE)));
-	if (life > stats_max.life)
+	m_city.push_back(getFactory().CreateCity());
+}
+
+void
+CityManager
+::removeCity(const size_t index)
+{
+	if (index < m_city.size())
 	{
-		life = stats_max.life;
+		m_city.erase(m_city.begin() + index);
 	}
 };
 
-void
-UnitStats
-::healFriendly()noexcept
-{
-	life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_HEAL_APPARTENANCE)));
-	if (life > stats_max.life)
-	{
-		life = stats_max.life;
-	}
-};

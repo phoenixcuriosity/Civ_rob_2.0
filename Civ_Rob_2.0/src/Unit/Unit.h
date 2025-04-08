@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Unit_H
-#define Unit_H
+#pragma once
 
 #include "LIB.h"
 
@@ -34,8 +32,23 @@
 
 #include <glm/glm.hpp>
 
+
+class Player;
+class Players;
+struct Tile;
+
+namespace unit
+{
+
+
 class Unit : public R2D::IBlickable, public R2D::IMoveable, public UnitStats
 {
+private:
+	using PlayerPtrT = std::shared_ptr<Player>;
+	using UnitPtrT = std::shared_ptr<Unit>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 public:
 	/* Define movement for the Unit in case of tryToMove */
 	enum class Move_Type
@@ -145,8 +158,4 @@ private:
 	PlayerPtrT m_owner;
 };
 
-#endif /* Unit_H */
-
-/*
-*	End Of File : Unit.h
-*/
+}

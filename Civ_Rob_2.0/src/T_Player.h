@@ -19,12 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef T_Player_H
-#define T_Player_H
-
-#include "LIB.h"
-
+#pragma once
 
 enum class MajorAge
 {
@@ -65,7 +60,3 @@ struct OnOffDisplay
 {
 	bool showContextGoldStats;
 };
-
-#endif // !T_Player_H
-
-

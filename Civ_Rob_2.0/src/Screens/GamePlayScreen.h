@@ -34,10 +34,10 @@
 #include <R2D/src/IMainGame.h>
 #include <R2D/src/Screen.h>
 
-
-
 #include <R2D/src/ILoadable.h>
 
+
+struct UserInputNewGame;
 
 class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen, public R2D::IRegisterLoadAble<jsoncons::ojson>
 {

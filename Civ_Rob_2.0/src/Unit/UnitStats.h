@@ -23,6 +23,9 @@
 
 #include "UnitTemplate.h"
 
+namespace unit
+{
+
 class UnitStats : public UnitTemplate::UnitStat
 {
 private:
@@ -64,3 +67,5 @@ public:
 protected:
 	UnitStat stats_max;
 };
+
+}

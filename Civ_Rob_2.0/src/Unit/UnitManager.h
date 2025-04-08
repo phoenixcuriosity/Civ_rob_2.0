@@ -21,22 +21,38 @@
 */
 #pragma once
 
+#include <vector>
 #include <memory>
 #include "Unit.h"
-#include <R2D/src/IRegister.h>
+#include "UnitFactory.h"
 
-class Player;
+namespace unit
+{
 
-class UnitFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
+class UnitManager
 {
 private:
-	using UnitPtrT = std::shared_ptr<Unit>;
+	std::vector<std::shared_ptr<Unit>> m_units;
 	using PlayerPtrT = std::shared_ptr<Player>;
-	R2D::RegisterPairVector addSubscriber();
+
+	static UnitFactory& getFactory()
+	{
+		static UnitFactory factory;
+		return factory;
+	}
 
 public:
-	UnitFactory();
 
-	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
-	UnitPtrT createUnit();
+	UnitManager() : m_units()
+	{
+		getFactory();
+	}
+
+	void addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
+	void addEmptyUnit();
+	void removeUnit(const size_t index);
+
+	const std::vector<std::shared_ptr<Unit>>& getUnits() const { return m_units; }
 };
+
+}

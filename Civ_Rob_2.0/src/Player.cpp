@@ -23,12 +23,12 @@
 #include "Player.h"
 
 #include "App.h"
-#include "City.h"
+#include "City/City.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "SaveReload.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "Utility.h"
 
 #include <jsoncons/json.hpp>
@@ -68,8 +68,8 @@ void Player::addEmptyUnit()
 
 void Player::addUnit
 (
-	const Unit::UnitName& name,
-	const Unit::Coor coor
+	const unit::Unit::UnitName& name,
+	const unit::Unit::Coor coor
 )
 {
 	m_unitManager.addUnit(name, coor, shared_from_this());
@@ -83,15 +83,9 @@ void Player::deleteUnit
 	m_unitManager.removeUnit(index);
 }
 
-void Player::addCity
-(
-	const std::string& name,
-	const unsigned int x,
-	const unsigned int y,
-	VectMapPtr& tiles
-)
+void Player::addCity(const unit::Unit::Coor coor, VectMapPtr& tiles)
 {
-	m_CityManager.addCity(name, { x, y }, tiles);
+	m_CityManager.addCity(m_id, coor, tiles);
 }
 
 void Player::addEmptyCity()
@@ -107,7 +101,7 @@ void Player::deleteCity
 	m_CityManager.removeCity(index);
 }
 
-CityPtrT* Player::searchCity
+Player::CityPtrT* Player::searchCity
 (
 	const unsigned int indexX,
 	const unsigned int indexY

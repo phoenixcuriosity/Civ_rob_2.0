@@ -22,8 +22,7 @@
 
 #include "FoodManager.h"
 
-#include "Citizen.h"
-#include "MainMap.h"
+#include "CitizenManager.h"
 #include "T_City.h"
 
 #include <jsoncons/json.hpp>
@@ -57,7 +56,7 @@ namespace FOOD_MANAGER
 }
 
 FoodManager::FoodManager(const CitizenManager& citizenManager)
-: 
+:
 m_citizenManager(citizenManager),
 m_foodStock(FOOD_MANAGER::ZERO_FOOD),
 m_foodBalance(FOOD_MANAGER::ZERO_FOOD),
@@ -171,7 +170,7 @@ double FoodManager::getFoodToLevelUpFromPop(const size_t nbPop) const
 	{
 		return FOOD_MANAGER::OFFSET_FOOD_LEVEL;
 	}
-	
+
 }
 
 void FoodManager::updateEmotionCoef()

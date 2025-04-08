@@ -19,14 +19,23 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef CitizenManager_H
-#define CitizenManager_H
+#pragma once
 
 #include "LIB.h"
 
+#include <memory>
+#include <vector>
+
+class Citizen;
+struct Tile;
+
 class CitizenManager
 {
+private:
+	using CitizenPtrT = std::shared_ptr<Citizen>;
+	using VectCitizen = std::vector<CitizenPtrT>;
+	using VectMapPtr = std::vector<Tile*>;
+
 public:
 
 	CitizenManager(const VectMapPtr& tiles);
@@ -58,7 +67,7 @@ public:
 	double getWorkFromCitizen()const;
 	double getGoldFromCitizen()const;
 	double getFoodFromCitizen()const;
-	
+
 private:
 
 	/* ----------------------------------------------------------------------------------- */
@@ -98,10 +107,3 @@ private:
 	unsigned int m_emotion;
 
 };
-
-
-#endif /* CitizenManager_H */
-
-/*
-*	End Of File : CitizenManager.h
-*/

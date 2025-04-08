@@ -31,11 +31,20 @@ private:
 	using Coor = R2D::IMoveable::Coor;
 	using CityName = std::string;
 	using CityPtrT = std::shared_ptr<City>;
+	using VectMapPtr = std::vector<Tile*>;
+
 	R2D::RegisterPairVector addSubscriber();
+public:
+
+	struct CityNamePlayerId
+	{
+		int playerId = 0;
+		size_t cityVectSize = 0;
+	};
 
 public:
 	CityFactory();
 
 	CityPtrT CreateCity();
-	CityPtrT CreateCity(const CityName& cityName, const Coor coor, VectMapPtr& tiles);
+	CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles);
 };

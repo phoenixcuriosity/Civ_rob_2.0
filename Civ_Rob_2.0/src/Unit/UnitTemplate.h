@@ -25,6 +25,9 @@
 #include <R2D/src/ILoadable.h>
 #include <R2D/src/IRegister.h>
 
+namespace unit
+{
+
 class UnitTemplate : public R2D::ILoadable<jsoncons::ojson>
 {
 public:
@@ -128,14 +131,4 @@ protected:
 	TemplateMap m_mapUnitTemplate;
 };
 
-JSONCONS_ALL_MEMBER_NAME_TRAITS(UnitTemplate::TemplateJson,
-	(name, "Name"),
-	(type, "MovementType"),
-	(life, "Life"),
-	(atq, "Atq"),
-	(def, "Def"),
-	(movement, "Mouvement"),
-	(numberOfAttack, "NumberOfAttack"),
-	(level, "Level"),
-	(workToBuild, "WorkToBuild"),
-	(maintenance, "Maintenance"))
+}

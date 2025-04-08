@@ -20,48 +20,35 @@
 
 */
 
-#pragma once
-
 #include "CityFactory.h"
 
-class CityManager
+#include "CityNameTemplate.h"
+
+CityFactory
+::CityFactory() : IRegisterLoadAble(), IRegister()
 {
-private:
-	using Coor = R2D::IMoveable::Coor;
-	using CityName = std::string;
-	using CityPtrTVector = std::vector<std::shared_ptr<City>>;
-	CityPtrTVector m_city;
-
-	static CityFactory& getFactory()
-	{
-		static CityFactory factory;
-		return factory;
-	}
-
-public:
-	CityManager() : m_city()
-	{
-		getFactory();
-	}
-
-	void addCity(const CityName& cityName, const Coor coor, VectMapPtr& tiles)
-	{
-		m_city.push_back(getFactory().CreateCity(cityName, coor, tiles));
-	}
-
-	void addEmptyCity()
-	{
-		m_city.push_back(getFactory().CreateCity());
-	}
-
-	void removeCity(const size_t index)
-	{
-		if (index < m_city.size())
-		{
-			m_city.erase(m_city.begin() + index);
-		}
-	};
-
-	const CityPtrTVector& getCities() const { return m_city; }
-	CityPtrTVector& getCities() { return m_city; }
+	CityNameTemplate::getSingleton(addSubscriber());
+	IRegisterLoadAble::load();
 };
+
+R2D::RegisterPairVector
+CityFactory
+::addSubscriber()
+{
+	R2D::RegisterPairVector registerLoad{ {this, typeid(CityNameTemplate)} };
+	return registerLoad;
+};
+
+CityFactory::CityPtrT
+CityFactory
+::CreateCity()
+{
+	return std::make_shared<City>();
+}
+
+CityFactory::CityPtrT
+CityFactory
+::CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles)
+{
+	return std::make_shared<City>(CityNameTemplate::getSingleton().getCityName(id.playerId, id.cityVectSize), coor, tiles);
+}

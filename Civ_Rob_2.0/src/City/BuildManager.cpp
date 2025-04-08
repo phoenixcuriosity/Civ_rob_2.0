@@ -23,10 +23,11 @@
 #include "BuildManager.h"
 #include "T_City.h"
 #include "Player.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "T_CityScreen.h"
 
 #include <jsoncons/json.hpp>
+#include <CEGUI/widgets/PushButton.h>
 
 namespace RESOURCES
 {

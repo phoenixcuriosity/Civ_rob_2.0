@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,36 +19,30 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#include "CityFactory.h"
+#include <memory>
+#include "Unit.h"
+#include <R2D/src/IRegister.h>
 
-#include "CityNameTemplate.h"
+class Player;
 
-CityFactory
-::CityFactory() : IRegisterLoadAble(), IRegister()
+namespace unit
 {
-	CityNameTemplate::getSingleton(addSubscriber());
-	IRegisterLoadAble::load();
+
+class UnitFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
+{
+private:
+	using UnitPtrT = std::shared_ptr<Unit>;
+	using PlayerPtrT = std::shared_ptr<Player>;
+	R2D::RegisterPairVector addSubscriber();
+
+public:
+	UnitFactory();
+
+	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
+	UnitPtrT createUnit();
 };
 
-R2D::RegisterPairVector
-CityFactory
-::addSubscriber()
-{
-	R2D::RegisterPairVector registerLoad{ {this, typeid(CityNameTemplate)} };
-	return registerLoad;
-};
-
-CityFactory::CityPtrT
-CityFactory
-::CreateCity()
-{
-	return std::make_shared<City>();
 }
 
-CityFactory::CityPtrT
-CityFactory
-::CreateCity(const CityName& cityName, const Coor coor, VectMapPtr& tiles)
-{
-	return std::make_shared<City>(cityName, coor, tiles);
-}

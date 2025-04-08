@@ -24,7 +24,7 @@
 
 #include "Player.h"
 
-UnitFactory
+unit::UnitFactory
 ::UnitFactory() : IRegisterLoadAble(), IRegister()
 {
 	UnitTemplate::getSingleton(addSubscriber());
@@ -32,15 +32,15 @@ UnitFactory
 };
 
 R2D::RegisterPairVector
-UnitFactory
+unit::UnitFactory
 ::addSubscriber()
 {
 	R2D::RegisterPairVector registerLoad{ {this, typeid(UnitTemplate)} };
 	return registerLoad;
 };
 
-UnitFactory::UnitPtrT
-UnitFactory
+unit::UnitFactory::UnitPtrT
+unit::UnitFactory
 ::createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
 {
 	const UnitTemplate::Template unitToBuild{ UnitTemplate::getSingleton().getTemplate(name) };
@@ -63,8 +63,8 @@ UnitFactory
 			owner);
 }
 
-UnitFactory::UnitPtrT
-UnitFactory
+unit::UnitFactory::UnitPtrT
+unit::UnitFactory
 ::createUnit()
 {
 	return std::make_shared<Unit>();

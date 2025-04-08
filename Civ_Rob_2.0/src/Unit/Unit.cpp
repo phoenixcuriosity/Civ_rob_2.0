@@ -35,7 +35,7 @@
 #include <R2D/src/Log.h>
 
 bool
-Unit
+unit::Unit
 ::searchUnitTile(Players& players,
 				 const glm::i32vec2& mouseCoorNorm,
 				 Select_Type* select)
@@ -65,7 +65,7 @@ Unit
 }
 
 void
-Unit
+unit::Unit
 ::tryToMove(const MatriceMap& maps,
 			Players& players,
 			Select_Type select,
@@ -117,8 +117,8 @@ Unit
 	}
 }
 
-Unit::Move_Type
-Unit
+unit::Unit::Move_Type
+unit::Unit
 ::searchToMove(	const MatriceMap& maps,
 				Players& players,
 				const R2D::CardinalDirection& cardinalDirection,
@@ -243,7 +243,7 @@ Unit
 	return Move_Type::canMove;
 }
 
-bool Unit::checkUnitNextTile
+bool unit::Unit::checkUnitNextTile
 (
 	const Unit& from,
 	const Unit& to,
@@ -261,7 +261,7 @@ bool Unit::checkUnitNextTile
 	return false;
 }
 
-bool Unit::checkNextTile
+bool unit::Unit::checkNextTile
 (
 	const Unit& from,
 	const Tile& to,
@@ -279,7 +279,7 @@ bool Unit::checkNextTile
 	return false;
 }
 
-Unit::Unit():
+unit::Unit::Unit():
 R2D::IBlickable(BLIT_RATE),
 R2D::IMoveable(),
 UnitStats(),
@@ -291,7 +291,7 @@ m_owner(SELECTION::NO_OWNER)
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT, m_name);
 }
 
-Unit::Unit(	const UnitName& name,
+unit::Unit::Unit(	const UnitName& name,
 			const Coor& coor,
 			const UnitStat& unitStat,
 			double maintenance,
@@ -307,13 +307,13 @@ m_owner(ptrToPlayer)
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT, m_name);
 }
 
-Unit::~Unit()
+unit::Unit::~Unit()
 {
 	m_owner = nullptr;
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_UNIT, logS::DATA::DESTRUCTOR_UNIT, m_name);
 }
 
-void Unit::attack
+void unit::Unit::attack
 (
 	Unit& cible
 )
@@ -327,7 +327,7 @@ void Unit::attack
 	}
 }
 
-void Unit::defend
+void unit::Unit::defend
 (
 	const int dmg
 )
@@ -349,7 +349,7 @@ void Unit::defend
 	}
 }
 
-void Unit::move
+void unit::Unit::move
 (
 	Select_Type& select,
 	int& selectunit,
@@ -373,7 +373,7 @@ void Unit::move
 	}
 }
 
-void Unit::heal
+void unit::Unit::heal
 (
 	const MatriceMap& tiles,
 	const unsigned int selectplayer
@@ -396,7 +396,7 @@ void Unit::heal
 	}
 }
 
-bool Unit::irrigate
+bool unit::Unit::irrigate
 (
 	MatriceMap& map
 )
@@ -419,7 +419,7 @@ bool Unit::irrigate
 	return false;
 }
 
-jsoncons::ojson Unit::saveToOjson()const
+jsoncons::ojson unit::Unit::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_name", m_name);
@@ -440,7 +440,7 @@ jsoncons::ojson Unit::saveToOjson()const
 	return value;
 }
 
-void Unit::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void unit::Unit::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if	(
 			jsonLoad.contains("m_name") && jsonLoad.contains("m_x") && jsonLoad.contains("m_y") &&
