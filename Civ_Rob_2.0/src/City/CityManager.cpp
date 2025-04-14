@@ -19,47 +19,31 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
+#include "CityManager.h"
 
-struct Var;
-class Players;
-
-class Utility
+void
+city::CityManager
+::addCity(const int playerId, const Coor coor, VectMapPtr& tiles)
 {
-public:
-	static bool checkPlayerUnitSelection
-	(
-		Players& players
-	);
+	const CityNamePlayerId cityNamePlayerId{ playerId, m_city.size() };
+	m_city.push_back(getFactory().CreateCity(cityNamePlayerId, coor, tiles));
+}
 
-	static bool checkPlayerCitieSelection
-	(
-		Players& players
-	);
+void
+city::CityManager
+::addEmptyCity()
+{
+	m_city.push_back(getFactory().CreateCity());
+}
 
-	static bool conditionTryToMove
-	(
-		const Var var,
-		Players& players
-	);
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
-
-	template <typename T>
-	static std::string to_string_with_precision(const T a_value, const int n = 6)
+void
+city::CityManager
+::removeCity(const size_t index)
+{
+	if (index < m_city.size())
 	{
-		std::ostringstream out;
-		out.precision(n);
-		out << std::fixed << a_value;
-		return out.str();
+		m_city.erase(m_city.begin() + index);
 	}
 };
+

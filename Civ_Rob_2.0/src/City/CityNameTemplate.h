@@ -21,28 +21,37 @@
 */
 #pragma once
 
-#include "LIB.h"
-
-#include "T_MainMap.h"
-
-#include <R2D/src/Camera2D.h>
-#include <R2D/src/T_Coor.h>
-#include <R2D/src/SpriteBatch.h>
-#include <R2D/src/ISaveable.h>
 #include <R2D/src/ILoadable.h>
 #include <R2D/src/IRegister.h>
 
-
-class MainMapConfig : public R2D::ILoadable<jsoncons::ojson>
+namespace city
 {
-private:
-	static constexpr char KEY_MAP[] = "Map";
+
+class CityNameTemplate : public R2D::ILoadable<jsoncons::ojson>
+{
 public:
-	unsigned int m_tileSize = 0;
-	R2D::Coor m_mapSizePix;
+	using CityName = std::string;
+	using VectCityName = std::vector<CityName>;
+	using VectPlayerCityName = std::vector<VectCityName>;
+
+
 public:
-	MainMapConfig() = default;
-	MainMapConfig(R2D::RegisterPairVector& registerLoad);
-	~MainMapConfig() = default;
+
+	static CityNameTemplate& getSingleton(std::optional<R2D::RegisterPairVector> registerLoad = std::nullopt)
+	{
+		static CityNameTemplate CityNameTemplate{ registerLoad.value() };
+		return CityNameTemplate;
+	};
+
+	CityNameTemplate() noexcept : m_vectTemplate() {};
+	CityNameTemplate(R2D::RegisterPairVector& registerLoad);
+	virtual ~CityNameTemplate() = default;
+
 	void load(jsoncons::ojson f)override;
+	CityName& getCityName(const size_t indexPlayer, const size_t indexCityName) noexcept { return m_vectTemplate[indexPlayer][indexCityName]; };
+	const CityName& getCityName(const size_t indexPlayer, const size_t indexCityName)const noexcept { return m_vectTemplate[indexPlayer][indexCityName]; };
+protected:
+	VectPlayerCityName m_vectTemplate;
 };
+
+}

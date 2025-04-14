@@ -21,45 +21,18 @@
 */
 #pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
+namespace R2D
+{
 
-struct Var;
-class Players;
-
-class Utility
+class Coor
 {
 public:
-	static bool checkPlayerUnitSelection
-	(
-		Players& players
-	);
-
-	static bool checkPlayerCitieSelection
-	(
-		Players& players
-	);
-
-	static bool conditionTryToMove
-	(
-		const Var var,
-		Players& players
-	);
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
-
-	template <typename T>
-	static std::string to_string_with_precision(const T a_value, const int n = 6)
-	{
-		std::ostringstream out;
-		out.precision(n);
-		out << std::fixed << a_value;
-		return out.str();
-	}
+	using Position = unsigned int;
+public:
+	Coor() : x(0), y(0) {};
+	Coor(const Position& posX, const Position& posY) : x(posX), y(posY) {};
+	Position x;
+	Position y;
 };
+
+}

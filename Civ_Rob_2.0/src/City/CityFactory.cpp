@@ -19,47 +19,36 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
+#include "CityFactory.h"
 
-struct Var;
-class Players;
+#include "CityNameTemplate.h"
 
-class Utility
+city::CityFactory
+::CityFactory() : IRegisterLoadAble(), IRegister()
 {
-public:
-	static bool checkPlayerUnitSelection
-	(
-		Players& players
-	);
-
-	static bool checkPlayerCitieSelection
-	(
-		Players& players
-	);
-
-	static bool conditionTryToMove
-	(
-		const Var var,
-		Players& players
-	);
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
-
-	template <typename T>
-	static std::string to_string_with_precision(const T a_value, const int n = 6)
-	{
-		std::ostringstream out;
-		out.precision(n);
-		out << std::fixed << a_value;
-		return out.str();
-	}
+	CityNameTemplate::getSingleton(addSubscriber());
+	IRegisterLoadAble::load();
 };
+
+R2D::RegisterPairVector
+city::CityFactory
+::addSubscriber()
+{
+	R2D::RegisterPairVector registerLoad{ {this, typeid(CityNameTemplate)} };
+	return registerLoad;
+};
+
+city::CityFactory::CityPtrT
+city::CityFactory
+::CreateCity()
+{
+	return std::make_shared<City>();
+}
+
+city::CityFactory::CityPtrT
+city::CityFactory
+::CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles)
+{
+	return std::make_shared<City>(CityNameTemplate::getSingleton().getCityName(id.playerId, id.cityVectSize), coor, tiles);
+}

@@ -24,7 +24,6 @@
 #define T_GamePlayScreen_H
 
 #include "GameInput.h"
-#include "GamePlayScreenEnumTexture.h"
 
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/Camera2D.h>
@@ -37,7 +36,7 @@
  *						 Structs						   *
  ********************************************************* */
 
-/* 
+/*
 	All R2D objects
 	- Shaders
 	- camera/cameraHUD

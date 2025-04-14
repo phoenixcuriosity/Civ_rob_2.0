@@ -43,6 +43,7 @@
     <ClInclude Include="src\IRegister.h" />
     <ClInclude Include="src\IBlick.h" />
     <ClInclude Include="src\IMove.h" />
+    <ClInclude Include="src\T_Coor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />

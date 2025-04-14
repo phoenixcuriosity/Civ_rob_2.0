@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -19,47 +19,30 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 
-struct Var;
-class Players;
+#include "UnitManager.h"
 
-class Utility
+void
+unit::UnitManager
+::addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
 {
-public:
-	static bool checkPlayerUnitSelection
-	(
-		Players& players
-	);
+	m_units.push_back(getFactory().createUnit(name, coor, owner));
+}
 
-	static bool checkPlayerCitieSelection
-	(
-		Players& players
-	);
+void
+unit::UnitManager
+::addEmptyUnit()
+{
+	m_units.push_back(getFactory().createUnit());
+}
 
-	static bool conditionTryToMove
-	(
-		const Var var,
-		Players& players
-	);
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
-
-	template <typename T>
-	static std::string to_string_with_precision(const T a_value, const int n = 6)
+void
+unit::UnitManager
+::removeUnit(const size_t index)
+{
+	if (index < m_units.size())
 	{
-		std::ostringstream out;
-		out.precision(n);
-		out << std::fixed << a_value;
-		return out.str();
+		m_units.erase(m_units.begin() + index);
 	}
 };

@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -21,45 +21,28 @@
 */
 #pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
+#include <memory>
+#include "Unit.h"
+#include <R2D/src/IRegister.h>
 
-struct Var;
-class Players;
+class Player;
 
-class Utility
+namespace unit
 {
+
+class UnitFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
+{
+private:
+	using UnitPtrT = std::shared_ptr<Unit>;
+	using PlayerPtrT = std::shared_ptr<Player>;
+	R2D::RegisterPairVector addSubscriber();
+
 public:
-	static bool checkPlayerUnitSelection
-	(
-		Players& players
-	);
+	UnitFactory();
 
-	static bool checkPlayerCitieSelection
-	(
-		Players& players
-	);
-
-	static bool conditionTryToMove
-	(
-		const Var var,
-		Players& players
-	);
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
-
-	template <typename T>
-	static std::string to_string_with_precision(const T a_value, const int n = 6)
-	{
-		std::ostringstream out;
-		out.precision(n);
-		out << std::fixed << a_value;
-		return out.str();
-	}
+	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
+	UnitPtrT createUnit();
 };
+
+}
+

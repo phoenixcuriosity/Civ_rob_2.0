@@ -19,30 +19,40 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#pragma once
 
-#include "LIB.h"
+#include "UnitStats.h"
 
-#include "T_MainMap.h"
-
-#include <R2D/src/Camera2D.h>
-#include <R2D/src/T_Coor.h>
-#include <R2D/src/SpriteBatch.h>
-#include <R2D/src/ISaveable.h>
-#include <R2D/src/ILoadable.h>
-#include <R2D/src/IRegister.h>
-
-
-class MainMapConfig : public R2D::ILoadable<jsoncons::ojson>
+void
+unit::UnitStats
+::levelup()noexcept
 {
-private:
-	static constexpr char KEY_MAP[] = "Map";
-public:
-	unsigned int m_tileSize = 0;
-	R2D::Coor m_mapSizePix;
-public:
-	MainMapConfig() = default;
-	MainMapConfig(R2D::RegisterPairVector& registerLoad);
-	~MainMapConfig() = default;
-	void load(jsoncons::ojson f)override;
+	level++;
+
+	stats_max.life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_LEVELUP)));
+	life = stats_max.life;
+
+	/* Todo */
+	//heal();
+}
+
+void
+unit::UnitStats
+::healNeutral()noexcept
+{
+	life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_HEAL_NO_APPARTENANCE)));
+	if (life > stats_max.life)
+	{
+		life = stats_max.life;
+	}
+};
+
+void
+unit::UnitStats
+::healFriendly()noexcept
+{
+	life += static_cast<unsigned int>(ceil(static_cast<double>(stats_max.life) / static_cast<double>(COEF_DIV_HEAL_APPARTENANCE)));
+	if (life > stats_max.life)
+	{
+		life = stats_max.life;
+	}
 };

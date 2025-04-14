@@ -21,45 +21,21 @@
 */
 #pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-
-struct Var;
-class Players;
-
-class Utility
+namespace city
 {
-public:
-	static bool checkPlayerUnitSelection
-	(
-		Players& players
-	);
 
-	static bool checkPlayerCitieSelection
-	(
-		Players& players
-	);
-
-	static bool conditionTryToMove
-	(
-		const Var var,
-		Players& players
-	);
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
-
-	template <typename T>
-	static std::string to_string_with_precision(const T a_value, const int n = 6)
-	{
-		std::ostringstream out;
-		out.precision(n);
-		out << std::fixed << a_value;
-		return out.str();
-	}
+/* Define types of conversion that a city can apply to the ressources */
+enum class conversionSurplus_Type : unsigned int
+{
+	No_Conversion,
+	FoodToWork, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_WORK */
+	FoodToGold, /* Apply MULTIPLIER_CONVERSION_FOOD_TO_GOLD */
+	WorkToFood, /* Apply MULTIPLIER_CONVERSION_WORK_TO_FOOD */
+	WorkToGold, /* Apply MULTIPLIER_CONVERSION_WORK_TO_GOLD */
+	GoldToFood, /* ### Not implemented as of 0.20.3.1 ### */
+	GoldToWork  /* ### Not implemented as of 0.20.3.1 ### */
 };
+
+
+
+}

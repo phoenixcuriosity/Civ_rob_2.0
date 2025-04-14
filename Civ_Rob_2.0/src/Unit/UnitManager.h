@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -21,45 +21,38 @@
 */
 #pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
+#include <vector>
+#include <memory>
+#include "Unit.h"
+#include "UnitFactory.h"
 
-struct Var;
-class Players;
-
-class Utility
+namespace unit
 {
-public:
-	static bool checkPlayerUnitSelection
-	(
-		Players& players
-	);
 
-	static bool checkPlayerCitieSelection
-	(
-		Players& players
-	);
+class UnitManager
+{
+private:
+	std::vector<std::shared_ptr<Unit>> m_units;
+	using PlayerPtrT = std::shared_ptr<Player>;
 
-	static bool conditionTryToMove
-	(
-		const Var var,
-		Players& players
-	);
-
-	static bool assertSize
-	(
-		size_t size,
-		unsigned int index
-	);
-
-
-	template <typename T>
-	static std::string to_string_with_precision(const T a_value, const int n = 6)
+	static UnitFactory& getFactory()
 	{
-		std::ostringstream out;
-		out.precision(n);
-		out << std::fixed << a_value;
-		return out.str();
+		static UnitFactory factory;
+		return factory;
 	}
+
+public:
+
+	UnitManager() : m_units()
+	{
+		getFactory();
+	}
+
+	void addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
+	void addEmptyUnit();
+	void removeUnit(const size_t index);
+
+	const std::vector<std::shared_ptr<Unit>>& getUnits() const { return m_units; }
 };
+
+}
