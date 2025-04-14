@@ -24,6 +24,9 @@
 #include <R2D/src/ILoadable.h>
 #include <R2D/src/IRegister.h>
 
+namespace city
+{
+
 class CityNameTemplate : public R2D::ILoadable<jsoncons::ojson>
 {
 public:
@@ -50,3 +53,5 @@ public:
 protected:
 	VectPlayerCityName m_vectTemplate;
 };
+
+}

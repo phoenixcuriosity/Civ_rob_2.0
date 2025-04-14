@@ -26,8 +26,13 @@
 #include <memory>
 #include <vector>
 
-class Citizen;
+
 struct Tile;
+
+namespace city
+{
+
+class Citizen;
 
 class CitizenManager
 {
@@ -107,3 +112,5 @@ private:
 	unsigned int m_emotion;
 
 };
+
+}

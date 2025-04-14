@@ -19,69 +19,77 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Citizen_H
-#define Citizen_H
+#pragma once
 
 #include "LIB.h"
 
 struct Tile;
-enum class Emotion_Type;
-enum class Religion_Type;
+
+namespace city
+{
 
 class Citizen
 {
 public:
+	enum class Emotion_Type
+	{
+		ecstatic = 2,
+		happy = 1,
+		neutral = 0,
+		sad = -1,
+		angry = -2
+	};
 
-	 /* ----------------------------------------------------------------------------------- */
-	 /* NAME : Citizen																	    */
-	 /* ROLE : Constructeur par d�faut													    */
-	 /* INPUT : void																	    */
-	 /* ----------------------------------------------------------------------------------- */
+	enum class Religion_Type
+	{
+		catholic,
+		protestant,
+		reformed,
+		anglican,
+		orthodox,
+		coptic,
+		sunni,
+		shiite,
+		ibadi,
+		buddhism,
+		vajrayana,
+		mahayana,
+		confucianism,
+		shinto,
+		hinduism,
+		sikhism,
+		animism,
+		shamanism,
+		totemism,
+		inti,
+		nahuatl,
+		jewish,
+		zoroastrian
+	};
+
+	/* Define the maximum range of emotion */
+	static constexpr double EMOTION_MAX = 100.0;
+
+	/* Define the minimum range of emotion */
+	static constexpr double EMOTION_MIN = 0.0;
+
+	/* Define the mean emotion */
+	static constexpr double EMOTION_MEAN = ((EMOTION_MAX + EMOTION_MIN) / 2.0);
+
+public:
 	Citizen();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : Citizen																	   */
-	/* ROLE : Constructeur par une Tile													   */
-	/* INPUT : Tile tile : tile centrale de la Citie									   */
-	/* ----------------------------------------------------------------------------------- */
-	Citizen
-	(
-		const Tile& tile
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : Citizen																	   */
-	/* ROLE : Constructeur par une Tile													   */
-	/* INPUT : std::vector<Tile>& tile : tableau de Tile de la Citie					   */
-	/* INPUT : std::vector<Citizen*>& citizens : tableau de Citizens					   */
-	/* ----------------------------------------------------------------------------------- */
-	Citizen
-	(
-		const unsigned int tileOccupied,
-		const int food,
-		const int work,
-		const int gold
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : ~Citizen																	   */
-	/* ROLE : Destructeur																   */
-	/* INPUT : void																		   */
-	/* ----------------------------------------------------------------------------------- */
+	Citizen(const Tile& tile);
+	Citizen(const unsigned int tileOccupied,
+			const int food,
+			const int work,
+			const int gold);
 	virtual ~Citizen();
 
 public:
-
 	jsoncons::ojson saveToOjson()const;
-
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
-	/* *********************************************************
-	 *				Citizen::METHODS::GET/SET				   *
-	 ********************************************************* */
-
 	inline void SETtileOccupied(unsigned int tileOccupied) { m_tileOccupied = tileOccupied; };
 	inline void SEThappiness(Emotion_Type happiness) { m_happiness = happiness; };
 	inline void SETfood(int food) { m_food = food; };
@@ -101,10 +109,6 @@ public:
 	inline bool GETplace()const { return m_place; };
 
 private:
-	/* *********************************************************
-	 *					Citizen::ATTRIBUTS					   *
-	 ********************************************************* */
-
 	unsigned int m_tileOccupied;
 	Emotion_Type m_happiness;
 	int m_food;
@@ -116,8 +120,4 @@ private:
 	bool m_place;
 };
 
-#endif /* Citizen_H */
-
-/*
-*	End Of File : Citizen.h
-*/
+}

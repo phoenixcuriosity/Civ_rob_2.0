@@ -27,7 +27,7 @@
 #include <R2D/src/Log.h>
 #include <R2D/src/ResourceManager.h>
 
-CityNameTemplate
+city::CityNameTemplate
 ::CityNameTemplate(R2D::RegisterPairVector& registerLoad)
 :CityNameTemplate()
 {
@@ -41,7 +41,7 @@ CityNameTemplate
 }
 
 void
-CityNameTemplate
+city::CityNameTemplate
 ::load(jsoncons::ojson f)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::LOAD_CITY_NAME, logS::DATA::START);

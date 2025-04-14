@@ -38,44 +38,7 @@
 #include <R2D/src/ValueToScale.h>
 #include <R2D/src/Window.h>
 
-namespace POP
-{
-	/* Population maximale dans une Citie */
-	constexpr unsigned int MAX = 50;
-
-	/* Minimal population in City */
-	constexpr unsigned int MIN = 1;
-}
-
-namespace RESOURCES
-{
-	namespace FOOD
-	{
-		/* Define the minimum food in a City */
-		constexpr double ZERO = 0.0;
-
-		/* Define the minimum food to level up */
-		constexpr double MIN_TO_LEVEL_UP = 1.0;
-	}
-
-	namespace GOLD
-	{
-		constexpr double ZERO = 0.0;
-	}
-}
-
-namespace CityC
-{
-	/* Todo : g�n�ralisation : compter nb Citie par player dans CITIENAME.txt */
-
-	/* Nombre de noms de Citie dans CITIENAME.txt */
-	constexpr unsigned int MAX_CITY_PER_PLAYER = 5;
-
-	constexpr unsigned int CITY_IHM_SECOND_INDEX = 1;
-}
-
-
-void City::createCity
+void city::City::createCity
 (
 	GamePlayScreen& mainGame,
 	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */
@@ -87,7 +50,7 @@ void City::createCity
 	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
 	VectMapPtr tabtiles;
-	tabtiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
+	tabtiles.resize(City::INIT_AREA_VIEW);
 
 	fillCitieTiles
 	(
@@ -106,7 +69,7 @@ void City::createCity
 	splayer.reset();
 }
 
-void City::loadCity
+void city::City::loadCity
 (
 	MatriceMap& matriceMap,
 	const unsigned int selectplayer,
@@ -117,7 +80,7 @@ void City::loadCity
 	assert(city);
 
 	VectMapPtr tiles;
-	tiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
+	tiles.resize(City::INIT_AREA_VIEW);
 	City::fillCitieTiles
 	(
 		MainMap::convertPosXToIndex(city->getCoor().x), MainMap::convertPosYToIndex(city->getCoor().y),
@@ -126,23 +89,23 @@ void City::loadCity
 	city->SETVectMapPtr(tiles);
 }
 
-void City::fillCitieTiles
+void city::City::fillCitieTiles
 (
 	const unsigned int middletileX,
 	const unsigned int middletileY,
 	const unsigned int selectplayer,
 	MatriceMap& matriceMap,
 	VectMapPtr& tabtile,
-	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */,
+	const unsigned int influenceLevel /* = MIN_INFLUENCE_LEVEL */,
 	const modifAppartenance_Type modAppartenance /* = modifAppartenance_Type::modify */
 )
 {
 	unsigned int k(0);
-	for (int o(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); o <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; o++)
+	for (int o(-INIT_SIZE_VIEW_DIV); o <= INIT_SIZE_VIEW_DIV; o++)
 	{
 		if (middletileX + o < 0 || middletileX + o >= matriceMap.size()) continue;
 
-		for (int p(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); p <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; p++)
+		for (int p(-INIT_SIZE_VIEW_DIV); p <= INIT_SIZE_VIEW_DIV; p++)
 		{
 			if (middletileY + p < 0 || middletileY + p >= matriceMap[0].size()) continue;
 
@@ -157,14 +120,14 @@ void City::fillCitieTiles
 	}
 }
 
-bool City::initSizeInfluenceCondition
+bool city::City::initSizeInfluenceCondition
 (
 	const int o,
 	const int p,
 	const unsigned int influenceLevel
 )
 {
-	const int bound{ static_cast<int>(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * influenceLevel) };
+	const int bound{ static_cast<int>(MIN_INFLUENCE_LEVEL * influenceLevel) };
 	if  (
 			o >= -bound && o <= bound && p >= -bound && p <= bound
 			&&
@@ -176,7 +139,7 @@ bool City::initSizeInfluenceCondition
 	return false;
 }
 
-bool City::cornerCheck
+bool city::City::cornerCheck
 (
 	const int o,
 	const int p,
@@ -184,11 +147,11 @@ bool City::cornerCheck
 )
 {
 	if	(
-			(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL < influenceLevel)
+			(MIN_INFLUENCE_LEVEL < influenceLevel)
 			&&
 			(std::abs(o) == std::abs(p))
 			&&
-			(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL * influenceLevel) == (unsigned int)std::abs(o)
+			(MIN_INFLUENCE_LEVEL * influenceLevel) == (unsigned int)std::abs(o)
 		)
 	{
 		return false;
@@ -196,7 +159,7 @@ bool City::cornerCheck
 	return true;
 }
 
-bool City::searchCityTile
+bool city::City::searchCityTile
 (
 	const unsigned int indexX,
 	const unsigned int indexY
@@ -216,13 +179,13 @@ bool City::searchCityTile
 	}
 }
 
-City::City()
+city::City::City()
 :
 IMoveable(),
 m_image("EMPTY"),
 m_name("EMPTY"),
 m_tileMap(),
-m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
+m_influenceLevel(MIN_INFLUENCE_LEVEL),
 m_atq(0),
 m_def(0),
 m_nbstructurebuild(0),
@@ -236,7 +199,7 @@ m_goldBalance(0.0)
 		saveToOjson().as_string());
 }
 
-City::City
+city::City::City
 (
 	const std::string& name,
 	const Coor coor,
@@ -247,7 +210,7 @@ City::City
 	m_image("citie.png"),
 	m_name(name),
 	m_tileMap(tiles),
-	m_influenceLevel(CITY_INFLUENCE::MIN_INFLUENCE_LEVEL),
+	m_influenceLevel(MIN_INFLUENCE_LEVEL),
 	m_atq(0),
 	m_def(0),
 	m_nbstructurebuild(0),
@@ -261,21 +224,21 @@ City::City
 		saveToOjson().as_string());
 }
 
-City::~City()
+city::City::~City()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITY, logS::DATA::DESTRUCTOR_CITY, m_name);
 }
 
-void City::computefood
+void city::City::computefood
 (
 	GoldStats& goldStats
 )
 {
 	switch (m_foodManager.updateGetFoodStatus())
 	{
-	case FoodManagerType::famine:
+	case FoodManager::FoodManagerType::famine:
 
-		if (m_citizenManager.getCitizens().size() > POP::MIN)
+		if (m_citizenManager.getCitizens().size() > MIN_POP)
 		{
 			m_citizenManager.removeCitizen();
 
@@ -287,14 +250,14 @@ void City::computefood
 		}
 
 		break;
-	case FoodManagerType::surplus:
+	case FoodManager::FoodManagerType::surplus:
 
 		m_citizenManager.addCitizen();
 
 		m_foodManager.updateFoodStockFromIncreasePop();
 
 		break;
-	case FoodManagerType::neutral:
+	case FoodManager::FoodManagerType::neutral:
 		/* Do Nothing */
 		break;
 	}
@@ -330,7 +293,7 @@ void City::computefood
 	}
 }
 
-void City::computeWork
+void city::City::computeWork
 (
 	Player& player,
 	bool* needToUpdateDrawUnit
@@ -364,23 +327,23 @@ void City::computeWork
 			(
 				m_buildManager.getWorkBalance()
 				*
-				MULTIPLIER::CONVERSION::WORK_TO_GOLD
+				BuildManager::WORK_TO_GOLD
 			);
 
 		break;
 	}
 }
 
-void City::computeGold()
+void city::City::computeGold()
 {
 	/* Sum gold from citizen */
 	m_goldBalance = m_citizenManager.getGoldFromCitizen();
 
 	/* Applying Emotion multiplier */
-	m_goldBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
+	m_goldBalance *= ((double)m_citizenManager.getEmotion() / Citizen::EMOTION_MEAN);
 }
 
-void City::addCityGoldToTaxIncome
+void city::City::addCityGoldToTaxIncome
 (
 	GoldStats& goldStats
 )
@@ -389,16 +352,16 @@ void City::addCityGoldToTaxIncome
 	m_goldBalance = 0.0;
 }
 
-void City::convertFoodSurplusToGold
+void city::City::convertFoodSurplusToGold
 (
 	const double foodSurplus,
 	GoldStats& goldStats
 )
 {
-	goldStats.goldConversionSurplus = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_GOLD;
+	goldStats.goldConversionSurplus = foodSurplus * BuildManager::FOOD_TO_GOLD;
 }
 
-jsoncons::ojson City::saveToOjson()const
+jsoncons::ojson city::City::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_image", m_image);
@@ -415,7 +378,7 @@ jsoncons::ojson City::saveToOjson()const
 	return value;
 }
 
-void City::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void city::City::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if	(
 			jsonLoad.contains("m_image") && jsonLoad.contains("m_name") && jsonLoad.contains("m_x") &&

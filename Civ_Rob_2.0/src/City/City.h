@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef City_H
-#define City_H
+#pragma once
 
 #include "LIB.h"
 
@@ -37,17 +35,34 @@
 
 struct GoldStats;
 class GamePlayScreen;
-class Citizen;
+
 
 namespace unit
 {
 	class Unit;
 }
 
+namespace city
+{
+
+class Citizen;
+
 class City : public R2D::IMoveable
 {
 private:
-	using dequeBuild = std::deque<buildGUI>;
+	/* Minimal population in City */
+	static constexpr unsigned int MIN_POP = 1;
+	/* Minimal influence level in City */
+	static constexpr unsigned int MIN_INFLUENCE_LEVEL = 1;
+
+public:
+	/* taille de la carte transpos�e dans la citiemap */
+	static constexpr unsigned int INIT_SIZE_VIEW = 9;
+	static constexpr int INIT_SIZE_VIEW_DIV = (INIT_SIZE_VIEW + 1) / 2;
+	static constexpr unsigned int INIT_AREA_VIEW = INIT_SIZE_VIEW * INIT_SIZE_VIEW;
+
+private:
+	using dequeBuild = std::deque<BuildManager::buildGUI>;
 	using PlayerPtrT = std::shared_ptr<Player>;
 	using CityPtrT = std::shared_ptr<City>;
 	using CitizenPtrT = std::shared_ptr<Citizen>;
@@ -61,17 +76,17 @@ private:
 
 public: /* STATIC */
 
-	using Coor = R2D::IMoveable::Coor;
+	using Coor = R2D::Coor;
+	enum class modifAppartenance_Type : bool
+	{
+		modify = true,
+		dontModify = false
+	};
 
-	/**
-	 * Create a City from a Settler on the map
-	 * @param[in,out]	mainGame MainGame object to add the City from the settler position
-	 * @param[in] influenceLevel Optional : Level of influence, default value CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
-	 */
 	static void createCity
 	(
 		GamePlayScreen& mainGame,
-		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
 	static void loadCity
@@ -82,16 +97,6 @@ public: /* STATIC */
 		const modifAppartenance_Type modAppartenance = modifAppartenance_Type::modify
 	);
 
-	/**
-	 * Fill the tabtile from mainmap
-	 * @param[in]		  window x and y screen size
-	 * @param[in]	 middletileX X index from mainmap
-	 * @param[in]	 middletileY Y index from mainmap
-	 * @param[in]	selectplayer Selected player index to create the City
-	 * @param[in,out]	 mainMap Main map values to copy from
-	 * @param[out]       tabtile City tile to copy to
-	 * @param[in] influenceLevel Optional : Level of influence, default value CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
-	 */
 	static void fillCitieTiles
 	(
 		const unsigned int middletileX,
@@ -99,35 +104,19 @@ public: /* STATIC */
 		const unsigned int selectplayer,
 		MatriceMap& matriceMap,
 		VectMapPtr& tabtile,
-		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL,
+		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL,
 		const modifAppartenance_Type modAppartenance = modifAppartenance_Type::modify
 	);
 
 private:
 
-	/**
-	 * Condition to fill to create a City
-	 * @param[in]			   o X index from mainmap
-	 * @param[in]			   p Y index from mainmap
-	 * @param[in] influenceLevel Optional : Level of influence, default value CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
-	 * @return false if invalid
-	 * @return  true if valid
-	 */
 	static bool initSizeInfluenceCondition
 	(
 		const int o,
 		const int p,
-		const unsigned int influenceLevel = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL
+		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
-	/**
-	 * Condition to validate a corner to create a City
-	 * @param[in]			   o X index from mainmap
-	 * @param[in]			   p Y index from mainmap
-	 * @param[in] influenceLevel Level of influence
-	 * @return false if invalid
-	 * @return  true if valid
-	 */
 	static bool cornerCheck
 	(
 		const int o,
@@ -138,91 +127,24 @@ private:
 
 public:
 	City();
+	City(const std::string& name,
+		 const Coor coor,
+		 VectMapPtr& tiles);
 
-	/**
-	 * Constructor
-	 * @param[in]  name Name of the City to create
-	 * @param[in]	  x x tile
-	 * @param[in]     y y tile
-	 * @param[in] tiles The City tiles from the MainMap
-	 */
-	City
-	(
-		const std::string& name,
-		const Coor coor,
-		VectMapPtr& tiles
-	);
-
-	/**
-	 * Destructor
-	 */
 	virtual ~City();
 
-	/**
-	 * Compute the current City food stock
-	 * @param[in] goldStats Gold from the player, can be used from gold to food conversion
-	 */
-	virtual void computefood
-	(
-		GoldStats& goldStats
-	);
+	virtual void computefood(GoldStats& goldStats);
+	virtual void computeWork(Player& player, bool* needToUpdateDrawUnit);
 
-	/**
-	 * Compute the current City work stock
-	 * @param[out]               player The player, can be used from gold to work conversion
-	 * @param[in]      vectUnitTemplate Template of all Unit
-	 * @param[out] needToUpdateDrawUnit True if the City is created, else false
-	 */
-	virtual void computeWork
-	(
-		Player& player,
-		bool* needToUpdateDrawUnit
-	);
-
-	/**
-	 * Search if the City is at those coor
-	 * @param[in] indexX x tile
-	 * @param[in] indexY y tile
-	 * @return  true if the City is at those coor, else false
-	 */
-	virtual bool searchCityTile
-	(
-		const unsigned int indexX,
-		const unsigned int indexY
-	);
+	virtual bool searchCityTile(const unsigned int indexX, const unsigned int indexY);
 
 public:
-	/* NAME : computeGold																   */
-	/* ROLE : Calculate the gold for the turn											   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : void															   */
 	virtual void computeGold();
-
-	/* NAME : addCityGoldToTaxIncome													   */
-	/* ROLE : Add m_goldBalance to a player taxIncome 									   */
-	/* OUT : GoldStats& goldStats : struct of player gold								   */
-	/* RETURNED VALUE : void															   */
-	virtual void addCityGoldToTaxIncome
-	(
-		GoldStats& goldStats
-	);
-
-	/* NAME : convertFoodSurplusToGold													   */
-	/* ROLE : Convert food to gold ; Place in goldStats.goldConversionSurplus			   */
-	/* INPUT : double workSurplus : food surplus to convert into work					   */
-	/* OUT : GoldStats& goldStats : gold surplus conversion								   */
-	/* RETURNED VALUE : void															   */
-	virtual void convertFoodSurplusToGold
-	(
-		const double foodSurplus,
-		GoldStats& goldStats
-	);
+	virtual void addCityGoldToTaxIncome(GoldStats& goldStats);
+	virtual void convertFoodSurplusToGold(const double foodSurplus, GoldStats& goldStats);
 
 public:
-
-	/* INTERFACE */
-
-	void addBuildToQueue(const buildGUI& buildToQueue)	{ m_buildManager.addBuildToQueue(buildToQueue); };
+	void addBuildToQueue(const BuildManager::buildGUI& buildToQueue)	{ m_buildManager.addBuildToQueue(buildToQueue); };
 	void removeBuildToQueue(const size_t index)			{ m_buildManager.removeBuildToQueue(index); };
 	void clearDynamicContextBuildToQueue()				{ m_buildManager.clearDynamicContextBuildToQueue(); };
 	double GETBuildPerc()const							{ return m_buildManager.GETBuildPerc(); };
@@ -232,9 +154,7 @@ public:
 	void computeEmotion()								{ m_citizenManager.computeEmotion(); };
 
 public:
-
 	jsoncons::ojson saveToOjson()const;
-
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
@@ -275,11 +195,4 @@ private:
 	double m_goldBalance;
 };
 
-
-
-
-#endif /* City_H */
-
-/*
-*	End Of File : City.h
-*/
+}

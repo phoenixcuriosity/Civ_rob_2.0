@@ -41,10 +41,15 @@ namespace unit
 	class Unit;
 }
 
+namespace city
+{
+	class City;
+}
+
 class Player : public std::enable_shared_from_this<Player>
 {
 private:
-	using CityPtrT = std::shared_ptr<City>;
+	using CityPtrT = std::shared_ptr<city::City>;
 	using VectCity = std::vector<CityPtrT>;
 
 	using UnitPtrT = std::shared_ptr<unit::Unit>;
@@ -120,7 +125,7 @@ private:
 	int m_id;
 
 	unit::UnitManager m_unitManager;
-	CityManager m_CityManager;
+	city::CityManager m_CityManager;
 	int m_selectedUnit;
 	int m_selectedCity;
 	GoldStats m_goldStats;

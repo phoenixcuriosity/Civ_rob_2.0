@@ -24,7 +24,7 @@
 
 #include "CityNameTemplate.h"
 
-CityFactory
+city::CityFactory
 ::CityFactory() : IRegisterLoadAble(), IRegister()
 {
 	CityNameTemplate::getSingleton(addSubscriber());
@@ -32,22 +32,22 @@ CityFactory
 };
 
 R2D::RegisterPairVector
-CityFactory
+city::CityFactory
 ::addSubscriber()
 {
 	R2D::RegisterPairVector registerLoad{ {this, typeid(CityNameTemplate)} };
 	return registerLoad;
 };
 
-CityFactory::CityPtrT
-CityFactory
+city::CityFactory::CityPtrT
+city::CityFactory
 ::CreateCity()
 {
 	return std::make_shared<City>();
 }
 
-CityFactory::CityPtrT
-CityFactory
+city::CityFactory::CityPtrT
+city::CityFactory
 ::CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles)
 {
 	return std::make_shared<City>(CityNameTemplate::getSingleton().getCityName(id.playerId, id.cityVectSize), coor, tiles);

@@ -33,6 +33,10 @@
 
 class NewGameScreen : public R2D::IGameScreen, public R2D::CScreen
 {
+private:
+	static constexpr unsigned int NUMBER_OF_PLAYER_MAX = 9;
+	static constexpr unsigned int NUMBER_OF_PLAYER_INITIAL = 1;
+
 public:
 
 	NewGameScreen();

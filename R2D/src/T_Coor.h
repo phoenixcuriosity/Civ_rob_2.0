@@ -19,46 +19,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef T_Citizen_H
-#define T_Citizen_H
-
-enum class Religion_Type
+namespace R2D
 {
-	catholic,
-	protestant,
-	reformed,
-	anglican,
-	orthodox,
-	coptic,
-	sunni,
-	shiite,
-	ibadi,
-	buddhism,
-	vajrayana,
-	mahayana,
-	confucianism,
-	shinto,
-	hinduism,
-	sikhism,
-	animism,
-	shamanism,
-	totemism,
-	inti,
-	nahuatl,
-	jewish,
-	zoroastrian
+
+class Coor
+{
+public:
+	using Position = unsigned int;
+public:
+	Coor() : x(0), y(0) {};
+	Coor(const Position& posX, const Position& posY) : x(posX), y(posY) {};
+	Position x;
+	Position y;
 };
 
-enum class Emotion_Type
-{
-	ecstatic = 2,
-	happy = 1,
-	neutral = 0,
-	sad = -1,
-	angry = -2
-};
-
-#endif // !T_Citizen_H
-
-
+}

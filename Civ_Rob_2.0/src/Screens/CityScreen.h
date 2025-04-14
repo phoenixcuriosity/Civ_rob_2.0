@@ -26,23 +26,66 @@
 #include "LIB.h"
 
 #include "Screens/CityScreenEnumTexture.h"
-#include "T_CityScreen.h"
-#include "T_Coor.h"
+#include "../City/BuildManager.h"
 
 #include <R2D/src/API_fwd.h>
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
 #include <R2D/src/Screen.h>
 #include <R2D/src/SpriteBatch.h>
+#include <R2D/src/T_Coor.h>
 
-class City;
+
 class Players;
+
+namespace city
+{
+	class City;
+}
 
 class CityScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 private:
-	using dequeBuild = std::deque<buildGUI>;
-	using CityPtrT = std::shared_ptr<City>;
+	using dequeBuild = std::deque<city::BuildManager::buildGUI>;
+	using CityPtrT = std::shared_ptr<city::City>;
+	using VectCoor = std::vector<R2D::Coor>;
+
+	/* Define an ID which is unused */
+	static constexpr GLuint UNUSED_ID = 0;
+
+	static constexpr size_t OFFSET_INDEX_ERASE_BUTTON = 1;
+
+	/* Define minimum size to cycle builds */
+	static constexpr unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
+	static constexpr unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
+	static constexpr bool HIDE_BUTTON = false;
+	static constexpr bool SHOW_BUTTON = true;
+	static constexpr bool CYCLE_BUTTON_DIR_UP = false;
+	static constexpr bool CYCLE_BUTTON_DIR_DOWN = true;
+
+	static constexpr float DIPSLAY_BUILD_LIST_POS_X = 0.75f;
+	static constexpr float DIPSLAY_BUILD_LIST_POS_Y = 0.1f;
+	static constexpr float DIPSLAY_BUILD_LIST_DELTA_X = 0.2f;
+	static constexpr float DIPSLAY_BUILD_LIST_DELTA_Y = 0.026f;
+
+	static constexpr float	DIPSLAY_BUILD_QUEUE_POS_X = 0.8f;
+	static constexpr float	DIPSLAY_BUILD_QUEUE_POS_Y = 0.5f;
+	static constexpr float	DIPSLAY_BUILD_QUEUE_DELTA_X = 0.1f;
+	static constexpr float	DIPSLAY_BUILD_QUEUE_DELTA_Y = 0.026f;
+
+	static constexpr unsigned int DIPSLAY_FOOD_POS_X = 50;
+	static constexpr unsigned int DIPSLAY_FOOD_POS_Y = 300;
+	static constexpr unsigned int DIPSLAY_FOOD_DELTA_X = 32;
+	static constexpr unsigned int DIPSLAY_FOOD_DELTA_Y = 32;
+
+	static constexpr unsigned int DIPSLAY_WORK_POS_X = 50;
+	static constexpr unsigned int DIPSLAY_WORK_POS_Y = 700;
+	static constexpr unsigned int DIPSLAY_WORK_DELTA_X = 32;
+	static constexpr unsigned int DIPSLAY_WORK_DELTA_Y = 32;
+
+	static constexpr unsigned int OFFSET_EMOTION{ 8 };
+
+	static constexpr unsigned int MODULO_TEN{ 10 };
 
 public:
 	CityScreen

@@ -194,6 +194,7 @@
     <ClInclude Include="src\Text.h" />
     <ClInclude Include="src\TextureCache.h" />
     <ClInclude Include="src\Timing.h" />
+    <ClInclude Include="src\T_Coor.h" />
     <ClInclude Include="src\UV.h" />
     <ClInclude Include="src\ValueToScale.h" />
     <ClInclude Include="src\Vertex.h" />

@@ -125,13 +125,7 @@
     <ClInclude Include="src\City\T_City.h">
       <Filter>T_struct</Filter>
     </ClInclude>
-    <ClInclude Include="src\T_CityScreen.h">
-      <Filter>T_struct</Filter>
-    </ClInclude>
     <ClInclude Include="src\T_GamePlayScreen.h">
-      <Filter>T_struct</Filter>
-    </ClInclude>
-    <ClInclude Include="src\City\T_Citizen.h">
       <Filter>T_struct</Filter>
     </ClInclude>
     <ClInclude Include="src\T_MainMap.h">
@@ -167,7 +161,6 @@
     </ClInclude>
     <ClInclude Include="src\jsonloader.h" />
     <ClInclude Include="src\T_Player.h" />
-    <ClInclude Include="src\T_Coor.h" />
     <ClInclude Include="src\MainMapConfig.h" />
     <ClInclude Include="src\Unit\UnitTemplate.h" />
     <ClInclude Include="src\City\CityNameTemplate.h" />

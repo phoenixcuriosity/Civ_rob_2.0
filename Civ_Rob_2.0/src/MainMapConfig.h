@@ -24,10 +24,9 @@
 #include "LIB.h"
 
 #include "T_MainMap.h"
-#include "T_Coor.h"
-
 
 #include <R2D/src/Camera2D.h>
+#include <R2D/src/T_Coor.h>
 #include <R2D/src/SpriteBatch.h>
 #include <R2D/src/ISaveable.h>
 #include <R2D/src/ILoadable.h>
@@ -40,7 +39,7 @@ private:
 	static constexpr char KEY_MAP[] = "Map";
 public:
 	unsigned int m_tileSize = 0;
-	Coor m_mapSizePix;
+	R2D::Coor m_mapSizePix;
 public:
 	MainMapConfig() = default;
 	MainMapConfig(R2D::RegisterPairVector& registerLoad);

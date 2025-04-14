@@ -23,7 +23,7 @@
 #include "CityManager.h"
 
 void
-CityManager
+city::CityManager
 ::addCity(const int playerId, const Coor coor, VectMapPtr& tiles)
 {
 	const CityNamePlayerId cityNamePlayerId{ playerId, m_city.size() };
@@ -31,14 +31,14 @@ CityManager
 }
 
 void
-CityManager
+city::CityManager
 ::addEmptyCity()
 {
 	m_city.push_back(getFactory().CreateCity());
 }
 
 void
-CityManager
+city::CityManager
 ::removeCity(const size_t index)
 {
 	if (index < m_city.size())

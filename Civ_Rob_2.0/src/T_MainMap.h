@@ -25,8 +25,6 @@
 
 #include "LIB.h"
 
-#include "T_Coor.h"
-
 namespace MAPH
 {
 	constexpr unsigned int MAP_BORDER_MAX = 4;

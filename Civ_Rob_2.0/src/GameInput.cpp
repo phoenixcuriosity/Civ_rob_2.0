@@ -173,7 +173,7 @@ void GameInput::actionByKey
 
 			if (sUnit->isThisUnitType("settler"))
 			{
-				City::createCity(gamePlayScreen);
+				city::City::createCity(gamePlayScreen);
 				gamePlayScreen.GETmainMap().SETneedToUpdateDraw(true);
 			}
 		}

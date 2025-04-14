@@ -54,7 +54,7 @@ m_userInputNewGame(userInputNewGame)
 
 R2D::RegisterPairVector GamePlayScreen::addSubscriber()
 {
-	R2D::RegisterPairVector registerLoad{ {this, typeid(MainMapConfig)}, {this, typeid(unit::UnitTemplate)}, {this, typeid(CityNameTemplate)} };
+	R2D::RegisterPairVector registerLoad{ {this, typeid(MainMapConfig)}, {this, typeid(unit::UnitTemplate)}, {this, typeid(city::CityNameTemplate)} };
 	return registerLoad;
 }
 

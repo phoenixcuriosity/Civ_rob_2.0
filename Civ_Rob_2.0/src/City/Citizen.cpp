@@ -25,15 +25,14 @@
 #include "App.h"
 #include "City.h"
 #include "LogSentences.h"
-#include "T_Citizen.h"
 #include "T_MainMap.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
 
-Citizen::Citizen()
+city::Citizen::Citizen()
 	:
-	m_tileOccupied((unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)),
+	m_tileOccupied((unsigned int)ceil(City::INIT_AREA_VIEW / 2)),
 	m_happiness(Emotion_Type::neutral),
 	m_food(2),
 	m_work(1),
@@ -46,12 +45,12 @@ Citizen::Citizen()
 		saveToOjson().as_string());
 }
 
-Citizen::Citizen
+city::Citizen::Citizen
 (
 	const Tile& tile
 )
 	:
-	m_tileOccupied((unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)),
+	m_tileOccupied((unsigned int)ceil(City::INIT_AREA_VIEW / 2)),
 	m_happiness(Emotion_Type::neutral),
 	m_food(tile.food),
 	m_work(tile.work),
@@ -64,7 +63,7 @@ Citizen::Citizen
 		saveToOjson().as_string());
 }
 
-Citizen::Citizen
+city::Citizen::Citizen
 (
 	const unsigned int tileOccupied,
 	const int food,
@@ -85,12 +84,12 @@ Citizen::Citizen
 		saveToOjson().as_string());
 }
 
-Citizen::~Citizen()
+city::Citizen::~Citizen()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITIZEN, logS::DATA::EMPTY_DATA);
 }
 
-jsoncons::ojson Citizen::saveToOjson()const
+jsoncons::ojson city::Citizen::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_tileOccupied", m_tileOccupied);
@@ -104,7 +103,7 @@ jsoncons::ojson Citizen::saveToOjson()const
 	return value;
 }
 
-void Citizen::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void city::Citizen::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if (
 			jsonLoad.contains("m_tileOccupied") && jsonLoad.contains("m_food") && jsonLoad.contains("m_work") &&

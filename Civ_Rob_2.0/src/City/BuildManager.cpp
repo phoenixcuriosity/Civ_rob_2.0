@@ -21,24 +21,15 @@
 */
 
 #include "BuildManager.h"
+#include "Citizen.h"
 #include "T_City.h"
 #include "Player.h"
 #include "Unit/Unit.h"
-#include "T_CityScreen.h"
 
 #include <jsoncons/json.hpp>
 #include <CEGUI/widgets/PushButton.h>
 
-namespace RESOURCES
-{
-	namespace WORK
-	{
-		constexpr double ZERO = 0.0;
-	}
-}
-
-
-BuildManager::BuildManager
+city::BuildManager::BuildManager
 (
 	const CitizenManager& citizenManager,
 	FoodManager& foodManager,
@@ -52,33 +43,33 @@ m_foodManager(foodManager),
 m_x(x),
 m_y(y),
 m_conversionToApply(conversionToApplyf),
-m_workBalance(RESOURCES::WORK::ZERO),
-m_workSurplusPreviousTurn(RESOURCES::WORK::ZERO),
+m_workBalance(RESOURCES_WORK_ZERO),
+m_workSurplusPreviousTurn(RESOURCES_WORK_ZERO),
 m_buildQueue()
 {
 }
 
-BuildManager::~BuildManager()
+city::BuildManager::~BuildManager()
 {
 	clearDynamicContextBuildToQueue();
 }
 
-void BuildManager::computeWork()
+void city::BuildManager::computeWork()
 {
 	/* Sum work from citizen */
 	m_workBalance = m_citizenManager.getWorkFromCitizen();
 
 	/* Applying Emotion multiplier */
-	m_workBalance *= ((double)m_citizenManager.getEmotion() / EMOTION_RANGE::SCALE_MEAN);
+	m_workBalance *= ((double)m_citizenManager.getEmotion() / Citizen::EMOTION_MEAN);
 
 	/* Applying the work which was converted from food in the previous turn */
 	m_workBalance += m_workSurplusPreviousTurn;
 
 	/* Reset m_workSurplusPreviousTurn to CITY_ZERO */
-	m_workSurplusPreviousTurn = RESOURCES::WORK::ZERO;
+	m_workSurplusPreviousTurn = RESOURCES_WORK_ZERO;
 }
 
-void BuildManager::computeWorkToBuild
+void city::BuildManager::computeWorkToBuild
 (
 	Player& player,
 	bool* needToUpdateDrawUnit
@@ -89,8 +80,8 @@ void BuildManager::computeWorkToBuild
 		/* Decrease by m_workBalance the amont of the remainingWork to build */
 		m_buildQueue.front().buildQ.remainingWork -= m_workBalance;
 
-		double workSurplus(RESOURCES::WORK::ZERO);
-		while (m_buildQueue.front().buildQ.remainingWork < RESOURCES::WORK::ZERO)
+		double workSurplus(RESOURCES_WORK_ZERO);
+		while (m_buildQueue.front().buildQ.remainingWork < RESOURCES_WORK_ZERO)
 		{
 			switch (m_buildQueue.front().buildQ.type)
 			{
@@ -127,15 +118,15 @@ void BuildManager::computeWorkToBuild
 	}
 }
 
-void BuildManager::convertFoodSurplusToWork
+void city::BuildManager::convertFoodSurplusToWork
 (
 	const double foodSurplus
 )
 {
-	m_workSurplusPreviousTurn = foodSurplus * MULTIPLIER::CONVERSION::FOOD_TO_WORK;
+	m_workSurplusPreviousTurn = foodSurplus * FOOD_TO_WORK;
 }
 
-void BuildManager::addBuildToQueue
+void city::BuildManager::addBuildToQueue
 (
 	const buildGUI& buildToQueue
 )
@@ -143,7 +134,7 @@ void BuildManager::addBuildToQueue
 	m_buildQueue.push_back(buildToQueue);
 }
 
-void BuildManager::removeBuildToQueueFront()
+void city::BuildManager::removeBuildToQueueFront()
 {
 	if (m_buildQueue.front().buildG != nullptr)
 	{
@@ -153,7 +144,7 @@ void BuildManager::removeBuildToQueueFront()
 	m_buildQueue.pop_front();
 }
 
-void BuildManager::removeBuildToQueue
+void city::BuildManager::removeBuildToQueue
 (
 	const size_t index
 )
@@ -166,7 +157,7 @@ void BuildManager::removeBuildToQueue
 	m_buildQueue.erase(m_buildQueue.begin() + index);
 }
 
-void BuildManager::clearDynamicContextBuildToQueue()
+void city::BuildManager::clearDynamicContextBuildToQueue()
 {
 	for (auto& button : m_buildQueue)
 	{
@@ -178,7 +169,7 @@ void BuildManager::clearDynamicContextBuildToQueue()
 	}
 }
 
-double BuildManager::GETBuildPerc()const
+double city::BuildManager::GETBuildPerc()const
 {
 	if (m_buildQueue.empty() == CONTAINERS::NOT_EMPTY)
 	{
@@ -196,10 +187,10 @@ double BuildManager::GETBuildPerc()const
 				* PERCENTAGE::ONE_HUNDRED
 				);
 	}
-	return RESOURCES::WORK::ZERO;
+	return RESOURCES_WORK_ZERO;
 };
 
-jsoncons::ojson BuildManager::saveToOjson()const
+jsoncons::ojson city::BuildManager::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson builds{ jsoncons::ojson::make_array() };
@@ -221,7 +212,7 @@ jsoncons::ojson BuildManager::saveToOjson()const
 	return value;
 }
 
-void BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if	(
 			jsonLoad.contains("m_workBalance") && jsonLoad.contains("m_workSurplusPreviousTurn") && jsonLoad.contains("m_buildQueue") &&

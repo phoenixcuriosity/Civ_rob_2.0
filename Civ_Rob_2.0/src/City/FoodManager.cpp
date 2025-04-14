@@ -22,47 +22,22 @@
 
 #include "FoodManager.h"
 
+#include "BuildManager.h"
 #include "CitizenManager.h"
+#include "Citizen.h"
 #include "T_City.h"
 
 #include <jsoncons/json.hpp>
 
-namespace FOOD_MANAGER
-{
-	constexpr double ZERO_FOOD = 0.0;
-
-	constexpr double OFFSET_FOOD_LEVEL = 15.0;
-	constexpr double COEF1_MULT_FOOD_LEVEL = 6.0;
-	constexpr double COEF2_MULT_FOOD_LEVEL = 1.8;
-
-	constexpr double MULT_FOOD_CONSUMPTION = 2.0;
-
-	constexpr size_t ONE_POP = 1;
-
-	namespace EMOTION_RANGE
-	{
-		/* Define the maximum range of emotion */
-		constexpr double MAX = 100.0;
-
-		/* Define the minimum range of emotion */
-		constexpr double MIN = 0.0;
-
-		/* Define the mean emotion */
-		constexpr double MEAN = ((MAX + MIN) / 2.0);
-
-		/* Define the mean value of emotion range */
-		const double SCALE_MEAN = ((abs(MAX) + abs(MIN)) / 2.0);
-	}
-}
-
-FoodManager::FoodManager(const CitizenManager& citizenManager)
+city::FoodManager
+::FoodManager(const CitizenManager& citizenManager)
 :
 m_citizenManager(citizenManager),
-m_foodStock(FOOD_MANAGER::ZERO_FOOD),
-m_foodBalance(FOOD_MANAGER::ZERO_FOOD),
-m_foodConsumption(FOOD_MANAGER::ZERO_FOOD),
-m_foodSurplusPreviousTurn(FOOD_MANAGER::ZERO_FOOD),
-m_foodToLevelUp(FOOD_MANAGER::ZERO_FOOD),
+m_foodStock(ZERO_FOOD),
+m_foodBalance(ZERO_FOOD),
+m_foodConsumption(ZERO_FOOD),
+m_foodSurplusPreviousTurn(ZERO_FOOD),
+m_foodToLevelUp(ZERO_FOOD),
 m_emotionCoef(0.0),
 m_foodManagerType(FoodManagerType::neutral)
 {
@@ -70,14 +45,16 @@ m_foodManagerType(FoodManagerType::neutral)
 	updateFoodToLevelUp();
 }
 
-FoodManagerType FoodManager::updateGetFoodStatus()
+city::FoodManager::FoodManagerType
+city::FoodManager
+::updateGetFoodStatus()
 {
 	updateFoodBalance();
 	updateFoodToLevelUp();
 
 	m_foodStock += m_foodBalance;
 
-	if (m_foodStock < FOOD_MANAGER::ZERO_FOOD)
+	if (m_foodStock < ZERO_FOOD)
 	{
 		return FoodManagerType::famine;
 	}
@@ -92,20 +69,20 @@ FoodManagerType FoodManager::updateGetFoodStatus()
 	}
 }
 
-void FoodManager::updateFoodStockFromReducePop()
+void city::FoodManager::updateFoodStockFromReducePop()
 {
 	m_foodToLevelUp = getFoodToLevelUpFromPop(m_citizenManager.getCitizens().size());
 	m_foodStock = m_foodToLevelUp - 1.0;
 }
 
-void FoodManager::updateFoodStockFromIncreasePop()
+void city::FoodManager::updateFoodStockFromIncreasePop()
 {
 	m_foodStock -= m_foodToLevelUp;
 }
 
-void FoodManager::emptyFoodStock()
+void city::FoodManager::emptyFoodStock()
 {
-	m_foodStock = FOOD_MANAGER::ZERO_FOOD;
+	m_foodStock = ZERO_FOOD;
 }
 
 
@@ -115,16 +92,16 @@ void FoodManager::emptyFoodStock()
 /* INPUT : double workSurplus : work surplus to convert into food					   */
 /* RETURNED VALUE : void															   */
 /* ----------------------------------------------------------------------------------- */
-void FoodManager::convertWorkSurplusToFood
+void city::FoodManager::convertWorkSurplusToFood
 (
 	const double workSurplus
 )
 {
-	m_foodSurplusPreviousTurn = workSurplus * MULTIPLIER::CONVERSION::WORK_TO_FOOD;
+	m_foodSurplusPreviousTurn = workSurplus * BuildManager::WORK_TO_FOOD;
 }
 
 
-void FoodManager::updateFoodBalance()
+void city::FoodManager::updateFoodBalance()
 {
 	/* Add Food from Citizen*/
 	m_foodBalance = m_citizenManager.getFoodFromCitizen();
@@ -135,50 +112,50 @@ void FoodManager::updateFoodBalance()
 
 	/* Add Surplus from conversion */
 	m_foodBalance += m_foodSurplusPreviousTurn;
-	m_foodSurplusPreviousTurn = FOOD_MANAGER::ZERO_FOOD;
+	m_foodSurplusPreviousTurn = ZERO_FOOD;
 
 	/* Multiply by emotion */
 	updateEmotionCoef();
 	m_foodBalance *= m_emotionCoef;
 }
 
-void FoodManager::updateFoodConsumption()
+void city::FoodManager::updateFoodConsumption()
 {
 	m_foodConsumption =
-		FOOD_MANAGER::MULT_FOOD_CONSUMPTION
+		MULT_FOOD_CONSUMPTION
 		*
-		(static_cast<double>(m_citizenManager.getCitizens().size()) - FOOD_MANAGER::ONE_POP);
+		(static_cast<double>(m_citizenManager.getCitizens().size()) - ONE_POP);
 }
 
-void FoodManager::updateFoodToLevelUp()
+void city::FoodManager::updateFoodToLevelUp()
 {
 	m_foodToLevelUp = getFoodToLevelUpFromPop(m_citizenManager.getCitizens().size());
 }
 
-double FoodManager::getFoodToLevelUpFromPop(const size_t nbPop) const
+double city::FoodManager::getFoodToLevelUpFromPop(const size_t nbPop) const
 {
-	if (nbPop > FOOD_MANAGER::ONE_POP)
+	if (nbPop > ONE_POP)
 	{
 		return
 			(
-				FOOD_MANAGER::OFFSET_FOOD_LEVEL
-				+ (static_cast<double>(nbPop - FOOD_MANAGER::ONE_POP) * FOOD_MANAGER::COEF1_MULT_FOOD_LEVEL)
-				+ pow((nbPop - FOOD_MANAGER::ONE_POP), FOOD_MANAGER::COEF2_MULT_FOOD_LEVEL)
+				OFFSET_FOOD_LEVEL
+				+ (static_cast<double>(nbPop - ONE_POP) * COEF1_MULT_FOOD_LEVEL)
+				+ pow((nbPop - ONE_POP), COEF2_MULT_FOOD_LEVEL)
 				);
 	}
 	else
 	{
-		return FOOD_MANAGER::OFFSET_FOOD_LEVEL;
+		return OFFSET_FOOD_LEVEL;
 	}
 
 }
 
-void FoodManager::updateEmotionCoef()
+void city::FoodManager::updateEmotionCoef()
 {
-	m_emotionCoef = static_cast<double>(m_citizenManager.getEmotion()) / FOOD_MANAGER::EMOTION_RANGE::SCALE_MEAN;
+	m_emotionCoef = static_cast<double>(m_citizenManager.getEmotion()) / Citizen::EMOTION_MEAN;
 }
 
-jsoncons::ojson FoodManager::saveToOjson()const
+jsoncons::ojson city::FoodManager::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_foodStock", m_foodStock);
@@ -191,7 +168,7 @@ jsoncons::ojson FoodManager::saveToOjson()const
 	return value;
 }
 
-void FoodManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void city::FoodManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if	(
 			jsonLoad.contains("m_foodStock") && jsonLoad.contains("m_foodBalance") && jsonLoad.contains("m_foodConsumption") &&

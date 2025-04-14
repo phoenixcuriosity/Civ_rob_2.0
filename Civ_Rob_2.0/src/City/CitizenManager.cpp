@@ -24,9 +24,9 @@
 
 #include "Citizen.h"
 #include "LogSentences.h"
-#include "T_Citizen.h"
 #include "T_City.h"
 #include "T_MainMap.h"
+#include "City.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ValueToScale.h>
@@ -36,25 +36,25 @@
 #include <execution>
 
 
-CitizenManager::CitizenManager(const VectMapPtr& tiles)
+city::CitizenManager::CitizenManager(const VectMapPtr& tiles)
 :
 m_tiles(tiles),
 m_citizens(),
-m_emotion((unsigned int)EMOTION_RANGE::MEAN)
+m_emotion((unsigned int)Citizen::EMOTION_MEAN)
 {
 	if (!m_tiles.empty())
 	{
 		/* Add initial citizen in the middle case */
-		addCitizen(m_tiles[(unsigned int)ceil(CITY_INFLUENCE::INIT_AREA_VIEW / 2)]);
+		addCitizen(m_tiles[(unsigned int)ceil(City::INIT_AREA_VIEW / 2)]);
 	}
 }
 
-CitizenManager::~CitizenManager()
+city::CitizenManager::~CitizenManager()
 {
 	resetTabCitizen();
 }
 
-void CitizenManager::resetTabCitizen()
+void city::CitizenManager::resetTabCitizen()
 {
 	for (auto& n : m_citizens)
 	{
@@ -64,24 +64,24 @@ void CitizenManager::resetTabCitizen()
 	m_citizens.resize(0);
 }
 
-void CitizenManager::addCitizen()
+void city::CitizenManager::addCitizen()
 {
 	int food{ 0 }, work{ 0 }, gold{ 0 };
 	unsigned int place{ placeCitizen(food, work, gold) };
 	m_citizens.push_back(std::make_shared<Citizen>(place, food, work, gold));
 }
 
-void CitizenManager::addCitizen(bool /* uselessArg */)
+void city::CitizenManager::addCitizen(bool /* uselessArg */)
 {
 	m_citizens.push_back(std::make_shared<Citizen>());
 }
 
-void CitizenManager::addCitizen(const Tile& tile)
+void city::CitizenManager::addCitizen(const Tile& tile)
 {
 	m_citizens.push_back(std::make_shared<Citizen>(tile));
 }
 
-unsigned int CitizenManager::placeCitizen
+unsigned int city::CitizenManager::placeCitizen
 (
 	int& m_food,
 	int& m_work,
@@ -135,7 +135,7 @@ unsigned int CitizenManager::placeCitizen
 	return place;
 }
 
-void CitizenManager::removeCitizen()
+void city::CitizenManager::removeCitizen()
 {
 	double minValueTile{ 999.9 }, curV{ 0.0 };
 	int selectedCitizen{ -1 };
@@ -152,7 +152,7 @@ void CitizenManager::removeCitizen()
 	m_citizens.erase(m_citizens.begin() + selectedCitizen);
 }
 
-double CitizenManager::tileValue
+double city::CitizenManager::tileValue
 (
 	const Tile& tile,
 	const double coefFood,
@@ -165,7 +165,7 @@ double CitizenManager::tileValue
 	return sum;
 }
 
-void CitizenManager::computeEmotion()
+void city::CitizenManager::computeEmotion()
 {
 	const double result = std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
 		[](const CitizenPtrT& c) { return static_cast<double>(c->GEThappiness()); });
@@ -175,10 +175,10 @@ void CitizenManager::computeEmotion()
 		m_emotion = (unsigned int)R2D::ValueToScale::computeValueToScale
 		(
 			result,
-			(double)Emotion_Type::angry,
-			(double)Emotion_Type::ecstatic,
-			EMOTION_RANGE::MIN,
-			EMOTION_RANGE::MAX,
+			(double)Citizen::Emotion_Type::angry,
+			(double)Citizen::Emotion_Type::ecstatic,
+			Citizen::EMOTION_MIN,
+			Citizen::EMOTION_MAX,
 			(int)m_citizens.size()
 		);
 	}
@@ -187,7 +187,7 @@ void CitizenManager::computeEmotion()
 		if (msg.compare("[ERROR]___: protectedDiv: div by 0") == STRINGS::IDENTICAL)
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::COMPUTE_EMOTION, logS::DATA::ERROR_DIV_ZERO, msg);
-			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
+			m_emotion = (unsigned int)Citizen::EMOTION_MEAN;
 #ifdef _DEBUG
 			throw(msg);
 #endif // _DEBUG
@@ -195,7 +195,7 @@ void CitizenManager::computeEmotion()
 		else if (msg.compare("[ERROR]___: computeValueToScale : checkMinMaxValidityRange") == STRINGS::IDENTICAL)
 		{
 			LOG(R2D::LogLevelType::error, 0, logS::WHO::GAMEPLAY, logS::WHAT::COMPUTE_EMOTION, logS::DATA::ERROR_MIN_MAX_RANGE, msg);
-			m_emotion = (unsigned int)EMOTION_RANGE::SCALE_MEAN;
+			m_emotion = (unsigned int)Citizen::EMOTION_MEAN;
 #ifdef _DEBUG
 			throw(msg);
 #endif // _DEBUG
@@ -203,25 +203,25 @@ void CitizenManager::computeEmotion()
 	}
 }
 
-double CitizenManager::getWorkFromCitizen()const
+double city::CitizenManager::getWorkFromCitizen()const
 {
 	return std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
 		[](const CitizenPtrT& c) { return static_cast<double>(c->GETwork()); });
 }
 
-double CitizenManager::getGoldFromCitizen()const
+double city::CitizenManager::getGoldFromCitizen()const
 {
 	return std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
 		[](const CitizenPtrT& c) { return static_cast<double>(c->GETgold()); });
 }
 
-double CitizenManager::getFoodFromCitizen()const
+double city::CitizenManager::getFoodFromCitizen()const
 {
 	return std::transform_reduce(std::execution::par, m_citizens.begin(), m_citizens.end(), 0.0, std::plus<>(),
 		[](const CitizenPtrT& c) { return static_cast<double>(c->GETfood()); });
 }
 
-jsoncons::ojson CitizenManager::saveToOjson()const
+jsoncons::ojson city::CitizenManager::saveToOjson()const
 {
 	jsoncons::ojson value;
 	jsoncons::ojson citizens{ jsoncons::ojson::make_array() };
@@ -235,7 +235,7 @@ jsoncons::ojson CitizenManager::saveToOjson()const
 	return value;
 }
 
-void CitizenManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void city::CitizenManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 {
 	if	(
 			jsonLoad.contains("Emotion") &&

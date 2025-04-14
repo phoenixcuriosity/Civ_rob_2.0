@@ -47,6 +47,11 @@ namespace unit
 	class Unit;
 }
 
+namespace city
+{
+	class City;
+}
+
 class Players : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
 private:
@@ -55,7 +60,7 @@ private:
 	using MatriceMapPtrT = MatriceMap*;
 	using PlayerPtrT = std::shared_ptr<Player> ;
 	using VectPlayer = std::vector<PlayerPtrT> ;
-	using CityPtrT = std::shared_ptr<City>;
+	using CityPtrT = std::shared_ptr<city::City>;
 	using UnitPtrT = std::shared_ptr<unit::Unit>;
 
 public:

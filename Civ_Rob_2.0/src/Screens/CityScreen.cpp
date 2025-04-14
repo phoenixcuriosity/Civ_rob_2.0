@@ -30,80 +30,12 @@
 #include "Players.h"
 #include "ScreenIndices.h"
 #include "Utility.h"
-#include "City/T_Citizen.h"
 #include "T_MainMap.h"
 #include <R2D/src/GLTexture.h>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/Log.h>
 
 #include <format>
-
-
-namespace CITY_IHM
-{
-	namespace DIPSLAY
-	{
-		namespace BUILD
-		{
-			namespace LIST
-			{
-				constexpr float POS_X = 0.75f;
-				constexpr float POS_Y = 0.1f;
-				constexpr float DELTA_X = 0.2f;
-				constexpr float DELTA_Y = 0.026f;
-			}
-
-			namespace QUEUE
-			{
-				constexpr float	POS_X = 0.8f;
-				constexpr float	POS_Y = 0.5f;
-				constexpr float	DELTA_X = 0.1f;
-				constexpr float	DELTA_Y = 0.026f;
-			}
-		}
-
-		namespace FOOD
-		{
-			constexpr unsigned int POS_X = 50;
-			constexpr unsigned int POS_Y = 300;
-			constexpr unsigned int DELTA_X = 32;
-			constexpr unsigned int DELTA_Y = 32;
-		}
-
-		namespace WORK
-		{
-			constexpr unsigned int POS_X = 50;
-			constexpr unsigned int POS_Y = 700;
-			constexpr unsigned int DELTA_X = 32;
-			constexpr unsigned int DELTA_Y = 32;
-		}
-	}
-
-	constexpr unsigned int OFFSET_EMOTION{ 8 };
-
-	constexpr unsigned int MODULO_TEN{ 10 };
-}
-
-namespace CitySC
-{
-	/* Define an ID which is unused */
-	constexpr GLuint UNUSED_ID = 0;
-
-	constexpr size_t OFFSET_INDEX_ERASE_BUTTON = 1;
-
-	/* Define minimum size to cycle builds */
-	constexpr unsigned int MIN_INDEX_CYCLE_BUILDS = 1;
-
-	/*  */
-	constexpr unsigned int MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE = 7;
-
-	constexpr bool HIDE_BUTTON = false;
-
-	constexpr bool SHOW_BUTTON = true;
-
-	constexpr bool CYCLE_BUTTON_DIR_UP = false;
-	constexpr bool CYCLE_BUTTON_DIR_DOWN = true;
-}
 
 static size_t START_APPARTENANCE_INDEX = 0;
 static size_t START_EMOTION_INDEX = 0;
@@ -144,8 +76,8 @@ CityScreen::~CityScreen()
 
 void CityScreen::build()
 {
-	m_displayTileVect.reserve(CITY_INFLUENCE::INIT_AREA_VIEW);
-	m_displayTileVect.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
+	m_displayTileVect.reserve(city::City::INIT_AREA_VIEW);
+	m_displayTileVect.resize(city::City::INIT_AREA_VIEW);
 	m_screenIndex = SCREEN_INDEX::CITY;
 }
 
@@ -245,17 +177,17 @@ void CityScreen::doInitUI()
 		{
 			m_buttonBuild.push_back
 			(
-				{
+				city::BuildManager::buildGUI{
 					static_cast<CEGUI::PushButton*>
 					(
 						m_gui.createWidget
 						(
 							"AlfiskoSkin/Button",
 							{
-								CITY_IHM::DIPSLAY::BUILD::LIST::POS_X,
-								CITY_IHM::DIPSLAY::BUILD::LIST::POS_Y + CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_Y * m_buttonBuild.size(),
-								CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_X,
-								CITY_IHM::DIPSLAY::BUILD::LIST::DELTA_Y
+								DIPSLAY_BUILD_LIST_POS_X,
+								DIPSLAY_BUILD_LIST_POS_Y + DIPSLAY_BUILD_LIST_DELTA_Y * m_buttonBuild.size(),
+								DIPSLAY_BUILD_LIST_DELTA_X,
+								DIPSLAY_BUILD_LIST_DELTA_Y
 							},
 							R2D::NOT_BY_PERCENT,
 							p.second.name
@@ -263,7 +195,7 @@ void CityScreen::doInitUI()
 					),
 					{
 						p.second.name,
-						build_Type::unit,
+						city::BuildManager::build_Type::unit,
 						p.second.workToBuild,
 						p.second.workToBuild
 					}
@@ -288,9 +220,9 @@ void CityScreen::doInitUI()
 			);
 
 			/* Do not render more than MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE */
-			if (i > CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE)
+			if (i > MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE)
 			{
-				m_buttonBuild.back().buildG->setVisible(CitySC::HIDE_BUTTON);
+				m_buttonBuild.back().buildG->setVisible(HIDE_BUTTON);
 				m_buttonBuild.back().buildG->disable();
 			}
 
@@ -320,9 +252,9 @@ void CityScreen::initCoorVectTilePos()
 	const unsigned int screenWidth{ static_cast<unsigned int>(m_game->getWindow().GETscreenWidth()) };
 	const unsigned int screenHeight{ static_cast<unsigned int>(m_game->getWindow().GETscreenHeight()) };
 	unsigned int k(0);
-	for (int o(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); o <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; o++)
+	for (int o(-city::City::INIT_SIZE_VIEW_DIV); o <= city::City::INIT_SIZE_VIEW_DIV; o++)
 	{
-		for (int p(-CITY_INFLUENCE::INIT_SIZE_VIEW_DIV); p <= CITY_INFLUENCE::INIT_SIZE_VIEW_DIV; p++)
+		for (int p(-city::City::INIT_SIZE_VIEW_DIV); p <= city::City::INIT_SIZE_VIEW_DIV; p++)
 		{
 			m_displayTileVect[k].x = (screenWidth / 2) - (-o * *m_tileSize) - *m_tileSize / 2;
 			m_displayTileVect[k].y = (screenHeight / 2) - (-p * *m_tileSize) - *m_tileSize / 2;
@@ -353,10 +285,10 @@ void CityScreen::createDynamicContext()
 					(
 						"AlfiskoSkin/Button",
 						{
-							CITY_IHM::DIPSLAY::BUILD::QUEUE::POS_X,
-							CITY_IHM::DIPSLAY::BUILD::QUEUE::POS_Y + CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y * j,
-							CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_X,
-							CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y
+							DIPSLAY_BUILD_QUEUE_POS_X,
+							DIPSLAY_BUILD_QUEUE_POS_Y + DIPSLAY_BUILD_QUEUE_DELTA_Y * j,
+							DIPSLAY_BUILD_QUEUE_DELTA_X,
+							DIPSLAY_BUILD_QUEUE_DELTA_Y
 						},
 						R2D::NOT_BY_PERCENT,
 						button.buildQ.name + std::to_string(rand())
@@ -391,7 +323,7 @@ void CityScreen::doDrawAll()
 
 void CityScreen::drawTile(const size_t kTile)
 {
-	GLuint id(CitySC::UNUSED_ID);
+	GLuint id(UNUSED_ID);
 
 	switch (m_players->GETSelectedCity()->GETtile()[kTile]->tile_ground)
 	{
@@ -425,7 +357,7 @@ void CityScreen::drawTile(const size_t kTile)
 }
 void CityScreen::drawTileSpec(const size_t kTile)
 {
-	GLuint id(CitySC::UNUSED_ID);
+	GLuint id(UNUSED_ID);
 
 	switch (m_players->GETSelectedCity()->GETtile()[kTile]->tile_spec)
 	{
@@ -457,7 +389,7 @@ void CityScreen::drawTileSpec(const size_t kTile)
 		id = m_idTexture[CityScreenEnumTexture::petroleum];
 		break;
 	case GroundSpec_Type::nothing:
-		id = CitySC::UNUSED_ID;
+		id = UNUSED_ID;
 		break;
 	}
 
@@ -497,10 +429,10 @@ void CityScreen::drawFood()
 		(
 			glm::vec4
 			(
-				CITY_IHM::DIPSLAY::FOOD::POS_X + foodC * CITY_IHM::DIPSLAY::FOOD::DELTA_X,
-				CITY_IHM::DIPSLAY::FOOD::POS_Y - foodL * CITY_IHM::DIPSLAY::FOOD::DELTA_Y,
-				CITY_IHM::DIPSLAY::FOOD::DELTA_X,
-				CITY_IHM::DIPSLAY::FOOD::DELTA_Y
+				DIPSLAY_FOOD_POS_X + foodC * DIPSLAY_FOOD_DELTA_X,
+				DIPSLAY_FOOD_POS_Y - foodL * DIPSLAY_FOOD_DELTA_Y,
+				DIPSLAY_FOOD_DELTA_X,
+				DIPSLAY_FOOD_DELTA_Y
 			),
 			R2D::FULL_RECT,
 			m_idTexture[CityScreenEnumTexture::food],
@@ -509,7 +441,7 @@ void CityScreen::drawFood()
 		);
 
 		foodC++;
-		if ((foodC % CITY_IHM::MODULO_TEN) == 0)
+		if ((foodC % MODULO_TEN) == 0)
 		{
 			foodL++;
 			foodC = 0;
@@ -519,7 +451,7 @@ void CityScreen::drawFood()
 
 void CityScreen::callDraw(const size_t kTile, const GLuint id, const float depth)
 {
-	if (CitySC::UNUSED_ID != id)
+	if (UNUSED_ID != id)
 	{
 		m_spriteBatchHUDStatic.draw
 		(
@@ -552,10 +484,10 @@ void CityScreen::drawBuild()
 		(
 			glm::vec4
 			(
-				CITY_IHM::DIPSLAY::WORK::POS_X + workC * CITY_IHM::DIPSLAY::WORK::DELTA_X,
-				CITY_IHM::DIPSLAY::WORK::POS_Y - workL * CITY_IHM::DIPSLAY::WORK::DELTA_Y,
-				CITY_IHM::DIPSLAY::WORK::DELTA_X,
-				CITY_IHM::DIPSLAY::WORK::DELTA_Y
+				DIPSLAY_WORK_POS_X + workC * DIPSLAY_WORK_DELTA_X,
+				DIPSLAY_WORK_POS_Y - workL * DIPSLAY_WORK_DELTA_Y,
+				DIPSLAY_WORK_DELTA_X,
+				DIPSLAY_WORK_DELTA_Y
 			),
 			R2D::FULL_RECT,
 			m_idTexture[CityScreenEnumTexture::Hammer],
@@ -564,7 +496,7 @@ void CityScreen::drawBuild()
 		);
 
 		workC++;
-		if ((workC % CITY_IHM::MODULO_TEN) == 0)
+		if ((workC % MODULO_TEN) == 0)
 		{
 			workL++;
 			workC = 0;
@@ -574,25 +506,25 @@ void CityScreen::drawBuild()
 
 void CityScreen::drawCitizen()
 {
-	GLuint id(CitySC::UNUSED_ID);
+	GLuint id(UNUSED_ID);
 
 	for (const auto& citizen: m_players->GETSelectedCity()->GETcitizens())
 	{
 		switch (citizen->GEThappiness())
 		{
-		case Emotion_Type::ecstatic:
+		case city::Citizen::Emotion_Type::ecstatic:
 			id = m_idTexture[CityScreenEnumTexture::ecstatic];
 			break;
-		case Emotion_Type::happy:
+		case city::Citizen::Emotion_Type::happy:
 			id = m_idTexture[CityScreenEnumTexture::happy];
 			break;
-		case Emotion_Type::neutral:
+		case city::Citizen::Emotion_Type::neutral:
 			id = m_idTexture[CityScreenEnumTexture::neutral];
 			break;
-		case Emotion_Type::sad:
+		case city::Citizen::Emotion_Type::sad:
 			id = m_idTexture[CityScreenEnumTexture::sad];
 			break;
-		case Emotion_Type::angry:
+		case city::Citizen::Emotion_Type::angry:
 			id = m_idTexture[CityScreenEnumTexture::angry];
 			break;
 		default:
@@ -604,10 +536,10 @@ void CityScreen::drawCitizen()
 		(
 			glm::vec4
 			(
-				m_displayTileVect[citizen->GETtileOccupied()].x + CITY_IHM::OFFSET_EMOTION / 2,
-				m_displayTileVect[citizen->GETtileOccupied()].y + CITY_IHM::OFFSET_EMOTION / 2,
-				*m_tileSize - CITY_IHM::OFFSET_EMOTION,
-				*m_tileSize - CITY_IHM::OFFSET_EMOTION
+				m_displayTileVect[citizen->GETtileOccupied()].x + OFFSET_EMOTION / 2,
+				m_displayTileVect[citizen->GETtileOccupied()].y + OFFSET_EMOTION / 2,
+				*m_tileSize - OFFSET_EMOTION,
+				*m_tileSize - OFFSET_EMOTION
 			),
 			R2D::FULL_RECT,
 			id,
@@ -648,9 +580,9 @@ void CityScreen::drawNbPop()
 void CityScreen::drawTextures()
 {
 	size_t k{ 0 };
-	for (unsigned int i(0); i < CITY_INFLUENCE::INIT_SIZE_VIEW; i++)
+	for (unsigned int i(0); i < city::City::INIT_SIZE_VIEW; i++)
 	{
-		for (unsigned int j(0); j < CITY_INFLUENCE::INIT_SIZE_VIEW; j++)
+		for (unsigned int j(0); j < city::City::INIT_SIZE_VIEW; j++)
 		{
 			drawTile(k);
 
@@ -690,18 +622,18 @@ void CityScreen::input(const SDL_Event& ev)
 {
 	if (R2D::GUI_MOUSE::MOUSE_SCROLL_UP == ev.wheel.y)
 	{
-		if (m_indexCycleBuilds >= CitySC::MIN_INDEX_CYCLE_BUILDS)
+		if (m_indexCycleBuilds >= MIN_INDEX_CYCLE_BUILDS)
 		{
 			m_indexCycleBuilds--;
-			updatePositionCycleButton(CitySC::CYCLE_BUTTON_DIR_UP);
+			updatePositionCycleButton(CYCLE_BUTTON_DIR_UP);
 		}
 	}
 	else if (R2D::GUI_MOUSE::MOUSE_SCROLL_DOWN == ev.wheel.y)
 	{
-		if (m_indexCycleBuilds < (m_buttonBuild.size() - CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE - CitySC::MIN_INDEX_CYCLE_BUILDS))
+		if (m_indexCycleBuilds < (m_buttonBuild.size() - MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE - MIN_INDEX_CYCLE_BUILDS))
 		{
 			m_indexCycleBuilds++;
-			updatePositionCycleButton(CitySC::CYCLE_BUTTON_DIR_DOWN);
+			updatePositionCycleButton(CYCLE_BUTTON_DIR_DOWN);
 		}
 	}
 	else
@@ -716,34 +648,34 @@ void CityScreen::updatePositionCycleButton(const bool dir)
 	CEGUI::UVector2 u{};
 
 	/* Enable and Render new button / Disable and not Render old button */
-	if (dir == CitySC::CYCLE_BUTTON_DIR_UP)
+	if (dir == CYCLE_BUTTON_DIR_UP)
 	{
 		m_buttonBuild[m_indexCycleBuilds].buildG->enable();
-		m_buttonBuild[m_indexCycleBuilds].buildG->setVisible(CitySC::SHOW_BUTTON);
+		m_buttonBuild[m_indexCycleBuilds].buildG->setVisible(SHOW_BUTTON);
 
-		m_buttonBuild[m_indexCycleBuilds + CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + CitySC::MIN_INDEX_CYCLE_BUILDS].buildG->disable();
-		m_buttonBuild[m_indexCycleBuilds + CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + CitySC::MIN_INDEX_CYCLE_BUILDS].buildG->setVisible(CitySC::HIDE_BUTTON);
+		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + MIN_INDEX_CYCLE_BUILDS].buildG->disable();
+		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE + MIN_INDEX_CYCLE_BUILDS].buildG->setVisible(HIDE_BUTTON);
 	}
 	else
 	{
-		m_buttonBuild[m_indexCycleBuilds - CitySC::MIN_INDEX_CYCLE_BUILDS].buildG->disable();
-		m_buttonBuild[m_indexCycleBuilds - CitySC::MIN_INDEX_CYCLE_BUILDS].buildG->setVisible(CitySC::HIDE_BUTTON);
+		m_buttonBuild[m_indexCycleBuilds - MIN_INDEX_CYCLE_BUILDS].buildG->disable();
+		m_buttonBuild[m_indexCycleBuilds - MIN_INDEX_CYCLE_BUILDS].buildG->setVisible(HIDE_BUTTON);
 
-		m_buttonBuild[m_indexCycleBuilds + CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->enable();
-		m_buttonBuild[m_indexCycleBuilds + CitySC::MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->setVisible(CitySC::SHOW_BUTTON);
+		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->enable();
+		m_buttonBuild[m_indexCycleBuilds + MAX_BUTTONS_BUILDS_DISPLAY_AT_ONCE].buildG->setVisible(SHOW_BUTTON);
 	}
 
 	/* Update Y positions */
 	for (auto& c : m_buttonBuild)
 	{
 		u = c.buildG->getPosition();
-		if (dir == CitySC::CYCLE_BUTTON_DIR_UP)
+		if (dir == CYCLE_BUTTON_DIR_UP)
 		{
-			u.d_y.d_scale += CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y;
+			u.d_y.d_scale += DIPSLAY_BUILD_QUEUE_DELTA_Y;
 		}
 		else
 		{
-			u.d_y.d_scale -= CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y;
+			u.d_y.d_scale -= DIPSLAY_BUILD_QUEUE_DELTA_Y;
 		}
 		c.buildG->setPosition(u);
 	}
@@ -765,10 +697,10 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 						(
 							"AlfiskoSkin/Button",
 							{
-								CITY_IHM::DIPSLAY::BUILD::QUEUE::POS_X,
-								CITY_IHM::DIPSLAY::BUILD::QUEUE::POS_Y + CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y * m_selectedCity->GETbuildQueue().size(),
-								CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_X,
-								CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y
+								DIPSLAY_BUILD_QUEUE_POS_X,
+								DIPSLAY_BUILD_QUEUE_POS_Y + DIPSLAY_BUILD_QUEUE_DELTA_Y * m_selectedCity->GETbuildQueue().size(),
+								DIPSLAY_BUILD_QUEUE_DELTA_X,
+								DIPSLAY_BUILD_QUEUE_DELTA_Y
 							},
 							R2D::NOT_BY_PERCENT,
 							button.buildQ.name + std::to_string(rand())
@@ -799,11 +731,11 @@ bool CityScreen::onBuildQueueToBuildClicked(const CEGUI::EventArgs& /* e */)
 		{
 			/* Adjust new Y coor to the rest of deque */
 			CEGUI::UVector2 coor{};
-			changePosIndex = removeIndex + CitySC::OFFSET_INDEX_ERASE_BUTTON;
+			changePosIndex = removeIndex + OFFSET_INDEX_ERASE_BUTTON;
 			for (changePosIndex; changePosIndex < m_selectedCity->GETbuildQueue().size(); changePosIndex++)
 			{
 				coor = m_selectedCity->GETbuildQueue()[changePosIndex].buildG->getPosition();
-				coor.d_y.d_scale -= CITY_IHM::DIPSLAY::BUILD::QUEUE::DELTA_Y;
+				coor.d_y.d_scale -= DIPSLAY_BUILD_QUEUE_DELTA_Y;
 				m_selectedCity->GETbuildQueue()[changePosIndex].buildG->setPosition(coor);
 			}
 

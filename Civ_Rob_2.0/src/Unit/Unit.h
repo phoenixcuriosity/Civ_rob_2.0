@@ -58,7 +58,7 @@ public:
 		attackMove		/* The Unit can move to the next Tile and attack the other Unit standing on the this Tile */
 	};
 
-	using Coor = R2D::IMoveable::Coor;
+	using Coor = R2D::Coor;
 	using UnitStat = UnitTemplate::UnitStat;
 	using UnitName = std::string;
 

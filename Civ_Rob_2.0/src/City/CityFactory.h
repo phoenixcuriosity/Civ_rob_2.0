@@ -25,26 +25,72 @@
 #include <R2D/src/IRegister.h>
 #include "City.h"
 
+namespace city
+{
+
+/**
+ * @class CityFactory
+ * @brief A factory class for creating and managing City objects.
+ *
+ * The CityFactory class provides methods to create new City instances and manage their initialization.
+ * It also interacts with the game map and player data to properly configure cities.
+ */
 class CityFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
 {
 private:
-	using Coor = R2D::IMoveable::Coor;
-	using CityName = std::string;
-	using CityPtrT = std::shared_ptr<City>;
-	using VectMapPtr = std::vector<Tile*>;
+    using Coor = R2D::Coor; ///< Alias for coordinates used in the game.
+    using CityName = std::string; ///< Alias for the name of a city.
+    using CityPtrT = std::shared_ptr<City>; ///< Alias for a shared pointer to a City object.
+    using VectMapPtr = std::vector<Tile*>; ///< Alias for a vector of pointers to Tile objects.
 
-	R2D::RegisterPairVector addSubscriber();
+    /**
+     * @brief Adds a subscriber to the register.
+     *
+     * This method is used internally to manage subscriptions for the factory.
+     *
+     * @return A vector of register pairs.
+     */
+    R2D::RegisterPairVector addSubscriber();
+
 public:
-
-	struct CityNamePlayerId
-	{
-		int playerId = 0;
-		size_t cityVectSize = 0;
-	};
+    /**
+     * @struct CityNamePlayerId
+     * @brief Represents a structure containing player ID and city vector size.
+     *
+     * This structure is used to associate a player with their cities.
+     */
+    struct CityNamePlayerId
+    {
+        int playerId = 0; ///< The ID of the player.
+        size_t cityVectSize = 0; ///< The size of the city vector for the player.
+    };
 
 public:
-	CityFactory();
+    /**
+     * @brief Constructs a new CityFactory object.
+     */
+    CityFactory();
 
-	CityPtrT CreateCity();
-	CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles);
+    /**
+     * @brief Creates a new City object.
+     *
+     * This method creates a new City instance with default parameters.
+     *
+     * @return A shared pointer to the newly created City object.
+     */
+    CityPtrT CreateCity();
+
+    /**
+     * @brief Creates a new City object with specific parameters.
+     *
+     * This method creates a new City instance and initializes it with the given parameters.
+     *
+     * @param id A structure containing the player ID and city vector size.
+     * @param coor The coordinates where the city will be created.
+     * @param tiles A vector of pointers to tiles that the city will occupy.
+     * @return A shared pointer to the newly created City object.
+     */
+    CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles);
 };
+
+}

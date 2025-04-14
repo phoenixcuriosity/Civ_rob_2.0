@@ -28,19 +28,13 @@
 #include "ScreenIndices.h"
 
 #include "App.h"
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/Log.h> 
-
-namespace NUMBER_OF_PLAYER
-{
-	constexpr unsigned int MAX = 9;
-	constexpr unsigned int INITIAL = 1;
-}
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/Log.h>
 
 NewGameScreen::NewGameScreen
 (
 )
-: 
+:
 R2D::IGameScreen(),
 R2D::CScreen(),
 m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
@@ -129,8 +123,8 @@ void NewGameScreen::doInitUI()
 				{ 0,0,0,0 },
 				"nbPlayerSlider")));
 
-		m_vectSlider["nbPlayerSlider"]->setMaxValue(NUMBER_OF_PLAYER::MAX);
-		m_vectSlider["nbPlayerSlider"]->setCurrentValue(NUMBER_OF_PLAYER::INITIAL);
+		m_vectSlider["nbPlayerSlider"]->setMaxValue(NUMBER_OF_PLAYER_MAX);
+		m_vectSlider["nbPlayerSlider"]->setCurrentValue(NUMBER_OF_PLAYER_INITIAL);
 		m_vectSlider["nbPlayerSlider"]->setClickStep(1.0f);
 		m_vectSlider["nbPlayerSlider"]->subscribeEvent
 		(
@@ -166,9 +160,9 @@ void NewGameScreen::draw()
 void NewGameScreen::doDrawAll()
 {
 	/* Do nothing for now
-	* 
+	*
 	*	Place here new display on each cycle
-	* 
+	*
 	*/
 }
 

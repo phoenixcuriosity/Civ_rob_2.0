@@ -24,18 +24,29 @@
 
 #include "LIB.h"
 
-class CitizenManager;
-
-enum class FoodManagerType
+namespace city
 {
-	famine		= 0,
-	neutral		= 1,
-	surplus		= 2
-};
 
+class CitizenManager;
 
 class FoodManager
 {
+private:
+	static constexpr double ZERO_FOOD = 0.0;
+	static constexpr double OFFSET_FOOD_LEVEL = 15.0;
+	static constexpr double COEF1_MULT_FOOD_LEVEL = 6.0;
+	static constexpr double COEF2_MULT_FOOD_LEVEL = 1.8;
+	static constexpr double MULT_FOOD_CONSUMPTION = 2.0;
+	static constexpr size_t ONE_POP = 1;
+
+public:
+	enum class FoodManagerType
+	{
+		famine = 0,
+		neutral = 1,
+		surplus = 2
+	};
+
 public:
 
 	FoodManager(const CitizenManager& citizenManager);
@@ -71,16 +82,7 @@ public:
 	void setFoodStock(double foodStock)								{ m_foodStock = foodStock; };
 	void setFoodToLevelUp(double foodToLevelUp)						{ m_foodToLevelUp = foodToLevelUp; };
 
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : convertWorkSurplusToFood													   */
-	/* ROLE : Convert work to food ; Place in m_foodSurplusPreviousTurn					   */
-	/* INPUT : double workSurplus : work surplus to convert into food					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void convertWorkSurplusToFood
-	(
-		const double workSurplus
-	);
+	void convertWorkSurplusToFood(const double workSurplus);
 
 private:
 
@@ -115,3 +117,5 @@ private:
 
 	FoodManagerType m_foodManagerType;
 };
+
+}

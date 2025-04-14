@@ -19,23 +19,71 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef BuildManager_H
-#define BuildManager_H
+#include "LIB.h"
 
-#include "Unit/Unit.h"
-#include "T_CityScreen.h"
+#include <deque>
+#include <string>
+
+namespace CEGUI
+{
+	class PushButton;
+}
+
+class Player;
+
+namespace city
+{
 
 class CitizenManager;
 class FoodManager;
-
 enum class conversionSurplus_Type : unsigned int;
 
 class BuildManager
 {
 private:
+	static constexpr double RESOURCES_WORK_ZERO = 0.0;
 
+public:
+
+	/* Define the types of builds that a city can create */
+	enum class build_Type : unsigned int
+	{
+		building,	/* ### Not implemented as of 0.20.3.1 ### */
+		unit
+	};
+
+	/*
+		Define a building in a City
+		Use for building Queue
+	*/
+	struct build
+	{
+		std::string name;
+		build_Type type = build_Type::building;
+		double work = 0.0;
+		double remainingWork = 0.0;
+	};
+
+	struct buildGUI
+	{
+		CEGUI::PushButton* buildG = nullptr;
+		build buildQ;
+	};
 	using dequeBuild = std::deque<buildGUI>;
+
+	/* Define the multiplier coefficient to convert work to food */
+	static constexpr double WORK_TO_FOOD = 10.0;
+
+	/* Define the multiplier coefficient to convert food to work */
+	static constexpr double FOOD_TO_WORK = (1.0 / WORK_TO_FOOD);
+
+	/* Define the multiplier coefficient to convert work to gold */
+	static constexpr double WORK_TO_GOLD = (10.0 * WORK_TO_FOOD);
+
+	/* Define the multiplier coefficient to convert food to gold */
+	static constexpr double FOOD_TO_GOLD = (WORK_TO_GOLD / FOOD_TO_WORK);
 
 public:
 
@@ -50,77 +98,12 @@ public:
 	~BuildManager();
 
 public:
-
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : computeWork																   */
-	/* ROLE : Calculate the work for the turn											   */
-	/* INPUT : void																		   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
 	void computeWork();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : computeWorkToBuild														   */
-	/* ROLE : Compute the remaining work to build a building or unit					   */
-	/* ROLE : if the remaining work is zero then the building or unit is created		   */
-	/* ROLE : if the build is created and there work Surplus then either apply it ...	   */
-	/* ROLE : ... to next build or convert it to food									   */
-	/* INPUT : Player* : ptr to the selected player										   */
-	/* INPUT : std::vector<Unit_Template>& : vector of Units template					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void computeWorkToBuild
-	(
-		Player& player,
-		bool* needToUpdateDrawUnit
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : convertWorkSurplusToFood													   */
-	/* ROLE : Convert food to work ; Place in m_workSurplusPreviousTurn					   */
-	/* INPUT : double workSurplus : food surplus to convert into work					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void convertFoodSurplusToWork
-	(
-		const double foodSurplus
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : addBuildToQueue															   */
-	/* ROLE : Push build to buildQueue													   */
-	/* IN : build buildToQueue : build to push into buildQueue							   */
-	/* OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-	/* INPUT : SDL_Renderer*& renderer : ptr SDL_renderer								   */
-	/* INPUT : TTF_Font* font[] : array of SDL font										   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void addBuildToQueue
-	(
-		const buildGUI& buildToQueue
-	);
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : removeBuildToQueueFront													   */
-	/* ROLE : Pop build to buildQueue													   */
-	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
+	void computeWorkToBuild(Player& player, bool* needToUpdateDrawUnit);
+	void convertFoodSurplusToWork(const double foodSurplus);
+	void addBuildToQueue(const buildGUI& buildToQueue);
 	void removeBuildToQueueFront();
-
-	/* ----------------------------------------------------------------------------------- */
-	/* NAME : removeBuildToQueue														   */
-	/* ROLE : remove build to buildQueue at index										   */
-	/* IN/OUT : DequeButtonTexte& : Deque of ButtonTexte for BuildQueue					   */
-	/* IN : unsigned int index : index to remove										   */
-	/* RETURNED VALUE : void															   */
-	/* ----------------------------------------------------------------------------------- */
-	void removeBuildToQueue
-	(
-		const size_t index
-	);
-
+	void removeBuildToQueue(const size_t index);
 	void clearDynamicContextBuildToQueue();
 
 	double GETBuildPerc()const;
@@ -130,13 +113,10 @@ public:
 	const dequeBuild& getBuildQueue()const	{ return m_buildQueue; };
 
 public:
-
 	jsoncons::ojson saveToOjson()const;
-
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
-
 	const CitizenManager& m_citizenManager;
 	FoodManager& m_foodManager;
 	const unsigned int& m_x;
@@ -149,9 +129,4 @@ private:
 	dequeBuild m_buildQueue;
 };
 
-
-#endif /* BuildManager_H */
-
-/*
-*	End Of File : BuildManager.h
-*/
+}

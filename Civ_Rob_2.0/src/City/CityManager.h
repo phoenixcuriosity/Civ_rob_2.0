@@ -24,33 +24,96 @@
 
 #include "CityFactory.h"
 
+namespace city
+{
+
+/**
+ * @class CityManager
+ * @brief Manages a collection of cities in the game.
+ *
+ * The CityManager class provides functionality to add, remove, and retrieve cities.
+ * It interacts with the CityFactory to create new cities and maintains a list of city objects.
+ */
 class CityManager
 {
 private:
-	using Coor = R2D::IMoveable::Coor;
-	using CityName = std::string;
-	using CityPtrTVector = std::vector<std::shared_ptr<City>>;
-	using CityNamePlayerId = CityFactory::CityNamePlayerId;
-	using VectMapPtr = std::vector<Tile*>;
+    using Coor = R2D::Coor; ///< Alias for coordinates used in the game.
+    using CityName = std::string; ///< Alias for the name of a city.
+    using CityPtrTVector = std::vector<std::shared_ptr<City>>; ///< Alias for a vector of shared pointers to City objects.
+    using CityNamePlayerId = CityFactory::CityNamePlayerId; ///< Alias for player ID and city name structure.
+    using VectMapPtr = std::vector<Tile*>; ///< Alias for a vector of pointers to tiles.
 
-	CityPtrTVector m_city;
+    CityPtrTVector m_city; ///< Vector storing shared pointers to City objects.
 
-	static CityFactory& getFactory()
-	{
-		static CityFactory factory;
-		return factory;
-	}
+    /**
+     * @brief Retrieves the singleton instance of the CityFactory.
+     *
+     * This method ensures that only one instance of the CityFactory exists and provides access to it.
+     *
+     * @return A reference to the singleton CityFactory instance.
+     */
+    static CityFactory& getFactory()
+    {
+        static CityFactory factory;
+        return factory;
+    }
 
 public:
-	CityManager() : m_city()
-	{
-		getFactory();
-	}
+    /**
+     * @brief Constructs a CityManager object.
+     *
+     * Initializes the city vector and ensures the CityFactory is instantiated.
+     */
+    CityManager() : m_city()
+    {
+        getFactory();
+    }
 
-	void addCity(const int playerId, const Coor coor, VectMapPtr& tiles);
-	void addEmptyCity();
-	void removeCity(const size_t index);
+    /**
+     * @brief Adds a new city to the manager.
+     *
+     * This method creates a new city for the specified player at the given coordinates
+     * and assigns the provided tiles to the city.
+     *
+     * @param playerId The ID of the player who owns the city.
+     * @param coor The coordinates where the city will be created.
+     * @param tiles A vector of pointers to tiles that the city will occupy.
+     */
+    void addCity(const int playerId, const Coor coor, VectMapPtr& tiles);
 
-	const CityPtrTVector& getCities() const { return m_city; }
-	CityPtrTVector& getCities() { return m_city; }
+    /**
+     * @brief Adds an empty city to the manager.
+     *
+     * This method creates a placeholder city without any specific attributes.
+     */
+    void addEmptyCity();
+
+    /**
+     * @brief Removes a city from the manager.
+     *
+     * This method removes the city at the specified index from the city vector.
+     *
+     * @param index The index of the city to be removed.
+     */
+    void removeCity(const size_t index);
+
+    /**
+     * @brief Retrieves a constant reference to the vector of cities.
+     *
+     * This method provides read-only access to the list of cities managed by the CityManager.
+     *
+     * @return A constant reference to the vector of shared pointers to City objects.
+     */
+    const CityPtrTVector& getCities() const noexcept { return m_city; }
+
+    /**
+     * @brief Retrieves a reference to the vector of cities.
+     *
+     * This method provides read-write access to the list of cities managed by the CityManager.
+     *
+     * @return A reference to the vector of shared pointers to City objects.
+     */
+    CityPtrTVector& getCities() noexcept { return m_city; }
 };
+
+}

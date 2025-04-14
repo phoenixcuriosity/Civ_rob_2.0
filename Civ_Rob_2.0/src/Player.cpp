@@ -225,7 +225,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 			addEmptyCity();
 			CityPtrT city_l{ m_CityManager.getCities().back() };
 			city_l->loadFromOjson(city);
-			City::loadCity(matriceMap, m_id, city_l, modifAppartenance_Type::dontModify);
+			city::City::loadCity(matriceMap, m_id, city_l, city::City::modifAppartenance_Type::dontModify);
 		}
 	}
 	else

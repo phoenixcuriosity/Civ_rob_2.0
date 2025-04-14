@@ -220,10 +220,7 @@
     <ClInclude Include="src\SaveReload.h" />
     <ClInclude Include="src\ScreenIndices.h" />
     <ClInclude Include="src\TemplateEnumTexture.h" />
-    <ClInclude Include="src\City\T_Citizen.h" />
     <ClInclude Include="src\City\T_City.h" />
-    <ClInclude Include="src\T_CityScreen.h" />
-    <ClInclude Include="src\T_Coor.h" />
     <ClInclude Include="src\T_GamePlayScreen.h" />
     <ClInclude Include="src\T_MainMap.h" />
     <ClInclude Include="src\T_NewGameScreen.h" />
