@@ -19,11 +19,7 @@ Original Author: Cristian Zaloj
 Modified By: Benjamin Arnold
 Modified By: Robin Sauter
 */
-
 #pragma once
-
-#ifndef SpriteFont_h__
-#define SpriteFont_h__
 
 #include <SDL/SDL_ttf.h>
 #include <glm/glm.hpp>
@@ -60,7 +56,7 @@ namespace R2D
     class GLTexture;
     class SpriteBatch;
 
-    struct CharGlyph 
+    struct CharGlyph
     {
     public:
         char character;
@@ -78,7 +74,7 @@ namespace R2D
         SpriteFont() {};
         SpriteFont(const char* font, int size, char cs, char ce);
         SpriteFont(const char* font, int size) :
-            SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR) 
+            SpriteFont(font, size, FIRST_PRINTABLE_CHAR, LAST_PRINTABLE_CHAR)
         {
         }
 
@@ -88,7 +84,7 @@ namespace R2D
         /// Destroys the font resources
         void dispose();
 
-        int getFontHeight() const 
+        int getFontHeight() const
         {
             return _fontHeight;
         }
@@ -124,5 +120,3 @@ namespace R2D
 }
 
 typedef std::shared_ptr<R2D::SpriteFont> SpriteFont_PtrT;
-
-#endif // SpriteFont_h__#pragma once

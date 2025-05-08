@@ -19,13 +19,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef IGameScreen_H
-#define IGameScreen_H
-
-#include "API_fwd.h"
+#pragma once
 
 #include <glm\glm.hpp>
+
+#include "ScreenList.h"
 
 namespace R2D
 {
@@ -47,7 +45,7 @@ class IGameScreen
 public:
 	IGameScreen():
 	m_game(nullptr),
-	m_screenIndex(SCREEN_INDEX::INIT),
+	m_screenIndex(ScreenList::SCREEN_INDEX_INIT),
 	m_currentState(ScreenState::NONE)
 	{};
 
@@ -62,7 +60,7 @@ public:
 
 	virtual bool onEntry() = 0;
 	virtual void onExit() = 0;
-	
+
 	virtual void update() = 0;
 	virtual void draw() = 0;
 
@@ -82,7 +80,4 @@ protected:
 };
 
 }
-
-
-#endif // !IGameScreen_H
 

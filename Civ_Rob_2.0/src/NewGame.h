@@ -23,7 +23,13 @@
 #ifndef NewGame_H
 #define NewGame_H
 
-#include "LIB.h"
+#include <string>
+#include <vector>
+
+class GamePlayScreen;
+class MainMap;
+class Players;
+struct Tile;
 
 /* ---------------------------------------------------------------------- */
 /* Structure d'un couple de positions									  */
@@ -37,7 +43,11 @@ struct randomPos
 
 class NewGameManager
 {
+private:
 	using PlayerNameVector = std::vector<std::string>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 public:
 
 	static void newGame(GamePlayScreen& gamePlayScreen);

@@ -19,15 +19,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef GameEngine_H
-#define GameEngine_H
+#pragma once
 
 namespace R2D
 {
 	extern int initSDLOpenGL();
 }
-
-
-#endif // !GameEngine_H
 

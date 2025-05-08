@@ -19,11 +19,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef ResourceManager_H
-#define ResourceManager_H
-
-#include "API_fwd.h"
 
 #include "CardinalDirection.h"
 #include "Files.h"
@@ -39,6 +36,10 @@ namespace R2D
 /* STATIC CLASS */
 class ResourceManager
 {
+public:
+	using IdMap = std::unordered_map<std::string, unsigned int>;
+
+private:
 	using FilePtrT = std::shared_ptr<File>;
 	using FIlePath = std::string;
 
@@ -48,7 +49,7 @@ class ResourceManager
 public:
 	static void loadTextureFromDir(const std::string& path);
 	static void copyIdMap(IdMap& dest);
-	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
+	static unsigned int searchKeyInIdMap(const IdMap& idMap, const std::string& key);
 
 	static const FIlePath& getFile(const e_Files name);
 	static void initializeFilePath(const e_Files name,const std::string& path);
@@ -59,10 +60,10 @@ public:
 	static SpriteFont_PtrT& getSpriteFont();
 	static GLSLProgram& getGLSLProgram();
 
-	static void getTextFromFile(const e_Files name,MapTexts& mapTexts);
+	static void getTextFromFile(const e_Files name, Text::MapTexts& mapTexts);
 
 	static void
-	displayTextFromFile(const MapTexts& mapTexts,
+	displayTextFromFile(const Text::MapTexts& mapTexts,
 						const Window& window,
 						SpriteBatch& spriteBatchHUDStatic);
 
@@ -90,6 +91,3 @@ private:
 	static CardinalDirectionMapping m_cardinalDirectionMapping;
 };
 }
-
-#endif // !ResourceManager_H
-

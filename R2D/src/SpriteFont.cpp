@@ -3,6 +3,7 @@
 #include "SpriteBatch.h"
 #include "ValueToScale.h"
 
+#include <SDL\glew.h>
 #include <SDL/SDL.h>
 #include <iostream>
 #include "Window.h"
@@ -89,7 +90,7 @@ void SpriteFont::init(const char* font, int size, char cs, char ce)
         }
 
         // Check for minimal area
-        if (area >= w * h) 
+        if (area >= w * h)
         {
             if (bestPartition) delete[] bestPartition;
             bestPartition = gr;
@@ -99,7 +100,7 @@ void SpriteFont::init(const char* font, int size, char cs, char ce)
             area = bestWidth * bestHeight;
             rows++;
         }
-        else 
+        else
         {
             delete[] gr;
             break;
@@ -121,10 +122,10 @@ void SpriteFont::init(const char* font, int size, char cs, char ce)
     // Now draw all the glyphs
     SDL_Color fg = { 255, 255, 255, 255 };
     int ly = padding;
-    for (int ri = 0; ri < bestRows; ri++) 
+    for (int ri = 0; ri < bestRows; ri++)
     {
         int lx = padding;
-        for (size_t ci = 0; ci < bestPartition[ri].size(); ci++) 
+        for (size_t ci = 0; ci < bestPartition[ri].size(); ci++)
         {
             int gi = bestPartition[ri][ci];
 
@@ -172,7 +173,7 @@ void SpriteFont::init(const char* font, int size, char cs, char ce)
 
     // Create spriteBatch glyphs
     m_glyphs = new CharGlyph[_regLength + 1];
-    for (i = 0; i < _regLength; i++) 
+    for (i = 0; i < _regLength; i++)
     {
         m_glyphs[i].character = (char)(cs + i);
         m_glyphs[i].size = glm::vec2(glyphRects[i].z, glyphRects[i].w);
@@ -193,14 +194,14 @@ void SpriteFont::init(const char* font, int size, char cs, char ce)
     TTF_CloseFont(f);
 }
 
-void SpriteFont::dispose() 
+void SpriteFont::dispose()
 {
     if (_texID != 0)
     {
         glDeleteTextures(1, &_texID);
         _texID = 0;
     }
-    if (m_glyphs) 
+    if (m_glyphs)
     {
         delete[] m_glyphs;
         m_glyphs = nullptr;
@@ -224,7 +225,7 @@ std::vector<int>* SpriteFont::createRows
     }
 
     // Loop through all glyphs
-    for (int i = 0; i < rectsLength; i++) 
+    for (int i = 0; i < rectsLength; i++)
     {
         // Find row for placement
         int ri = 0;
@@ -240,7 +241,7 @@ std::vector<int>* SpriteFont::createRows
 
     // Find the max width
     w = 0;
-    for (int i = 0; i < r; i++) 
+    for (int i = 0; i < r; i++)
     {
         if (cw[i] > w) w = cw[i];
     }
@@ -255,14 +256,14 @@ glm::vec2 SpriteFont::measure(const char* s)
     for (int si = 0; s[si] != 0; si++)
     {
         char c = s[si];
-        if (s[si] == '\n') 
+        if (s[si] == '\n')
         {
             size.y += _fontHeight;
             if (size.x < cw)
                 size.x = cw;
             cw = 0;
         }
-        else 
+        else
         {
             // Check for correct glyph
             int gi = c - _regStart;
@@ -282,14 +283,14 @@ void SpriteFont::draw
     const char* s,
     glm::vec2 position,
     glm::vec2 scaling,
-    float depth, 
+    float depth,
     ColorRGBA8 tint,
     Justification just /* = Justification::LEFT */
 )
 {
     glm::vec2 tp = position;
     // Apply justification
-    if (just == Justification::MIDDLE) 
+    if (just == Justification::MIDDLE)
     {
         tp.x -= measure(s).x * scaling.x / 2;
     }
@@ -297,10 +298,10 @@ void SpriteFont::draw
     {
         tp.x -= measure(s).x * scaling.x;
     }
-    for (int si = 0; s[si] != 0; si++) 
+    for (int si = 0; s[si] != 0; si++)
     {
         char c = s[si];
-        if (s[si] == '\n') 
+        if (s[si] == '\n')
         {
             tp.y += _fontHeight * scaling.y;
             tp.x = position.x;

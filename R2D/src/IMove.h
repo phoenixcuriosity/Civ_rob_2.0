@@ -21,6 +21,7 @@
 */
 #pragma once
 
+#include "T_Coor.h"
 #include "Window.h"
 #include <jsoncons/json.hpp>
 
@@ -30,17 +31,8 @@ namespace R2D
 class IMoveable
 {
 protected:
-	using Position = unsigned int;
+	using Position = Coor::Position;
 	using DeltaPosition = int;
-
-public:
-	struct Coor
-	{
-		Coor() : x(0), y(0) {};
-		Coor(const Position& posX, const Position& posY) : x(posX), y(posY) {};
-		Position x;
-		Position y;
-	};
 
 public:
 	IMoveable() : m_coor() {};

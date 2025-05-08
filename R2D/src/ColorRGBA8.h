@@ -19,25 +19,25 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef ColorRGBA8_H
-#define ColorRGBA8_H
-
-#include "API_fwd.h"
+#include <map>
+#include <string>
 
 namespace R2D
 {
 
 struct ColorRGBA8
 {
+	using ColorT = unsigned char;
 	ColorRGBA8() : r(0), g(0), b(0), a(255) {};
-	ColorRGBA8(GLubyte R, GLubyte G, GLubyte B, GLubyte A)
+	ColorRGBA8(ColorT R, ColorT G, ColorT B, ColorT A)
 		: r(R), g(G), b(B), a(A) {};
 
-	GLubyte r;
-	GLubyte g;
-	GLubyte b;
-	GLubyte a;
+	ColorT r;
+	ColorT g;
+	ColorT b;
+	ColorT a;
 };
 
 const ColorRGBA8 COLOR_WHITE(255, 255, 255, 255);
@@ -58,6 +58,7 @@ const ColorRGBA8 COLOR_WHITE_T25(255, 255, 255, 64);
 
 class ColorRGBA8C
 {
+	using ColorRGBA8Map = std::map<std::string, ColorRGBA8>;
 public:
 	ColorRGBA8C() {};
 	~ColorRGBA8C() {};
@@ -74,5 +75,3 @@ private:
 };
 
 }
-
-#endif

@@ -21,36 +21,38 @@
 */
 
 #include "Timing.h"
-#include <iostream>
 
-void 
+#include <SDL\glew.h>
+#include <SDL/SDL.h>
+
+void
 R2D::FpsLimiter
 ::init(const float maxFps)
 {
 	setMaxFPS(maxFps);
 }
 
-void 
+void
 R2D::FpsLimiter
 ::setMaxFPS(const float maxFps)
 {
 	m_maxFPS = maxFps;
 }
 
-void 
+void
 R2D::FpsLimiter
 ::begin()
 {
 	m_startTicks = SDL_GetTicks();
 }
 
-float 
+float
 R2D::FpsLimiter
 ::end()
 {
 	calculateFPS();
 
-	Uint32 frameTicks(SDL_GetTicks() - m_startTicks);
+	size_t frameTicks(SDL_GetTicks() - m_startTicks);
 	if ((COEF / m_maxFPS) > frameTicks)
 	{
 		SDL_Delay((Uint32)((COEF / m_maxFPS) - frameTicks));
@@ -59,16 +61,16 @@ R2D::FpsLimiter
 	return m_fps;
 }
 
-void 
+void
 R2D::FpsLimiter
 ::calculateFPS()
 {
-	static Uint32 frameTimes[NUM_SAMPLES];
+	static size_t frameTimes[NUM_SAMPLES];
 	static int currentFrame(0);
 
-	static Uint32 prevTicks(SDL_GetTicks());
+	static size_t prevTicks(SDL_GetTicks());
 
-	const Uint32 currentTicks(SDL_GetTicks());
+	const size_t currentTicks(SDL_GetTicks());
 
 	m_frameTime = currentTicks - prevTicks;
 	frameTimes[currentFrame % NUM_SAMPLES] = m_frameTime;
@@ -92,7 +94,7 @@ R2D::FpsLimiter
 		frameTimeAverage += frameTimes[i];
 	}
 	frameTimeAverage /= count;
-	
+
 
 	if (frameTimeAverage > 0.0f)
 	{

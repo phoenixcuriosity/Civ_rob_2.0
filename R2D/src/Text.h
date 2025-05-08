@@ -19,18 +19,20 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef Text_H
-#define Text_H
-
-#include "API_fwd.h"
+#include <map>
+#include <string>
 
 #include "ColorRGBA8.h"
-#include "Window.h"
 
 
 namespace R2D
 {
+
+class Window;
+class SpriteBatch;
+enum class e_Files;
 
 /// For text justification
 enum class Justification
@@ -64,7 +66,10 @@ struct Text_json
 class Text
 {
 public:
-	
+	using MapTexts = std::map<std::string, Text_t>;
+
+public:
+
 	Text() {};
 	~Text() {};
 
@@ -85,6 +90,3 @@ public:
 };
 
 }
-
-#endif // !Text_H
-
