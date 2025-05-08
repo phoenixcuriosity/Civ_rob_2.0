@@ -19,19 +19,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef LOGLEVEL_H
-#define LOGLEVEL_H
+#pragma once
 
 namespace R2D
 {
-	
+
 enum class LogLevelType
 {
-	info,   
-	debug,  
+	info,
+	debug,
 	warning,
-	error,  
+	error,
 };
 
 constexpr char STR_DEBUG[] = "debug";
@@ -40,8 +38,3 @@ constexpr char STR_WARN[] = "warning";
 constexpr char STR_ERR[] = "error";
 
 }
-
-
-
-#endif // !LOGLEVEL_H
-

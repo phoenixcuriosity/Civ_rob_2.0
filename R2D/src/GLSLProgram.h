@@ -19,11 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef GLSLProgram_H
-#define GLSLProgram_H
-
-#include "API_fwd.h"
+#include <string>
 
 namespace R2D
 {
@@ -48,7 +46,7 @@ namespace R2D
 
 		void addAttribut(const std::string& name);
 
-		GLint getUnitformLocation(const std::string& uniformName);
+		unsigned int getUnitformLocation(const std::string& uniformName);
 
 		void use();
 
@@ -59,17 +57,15 @@ namespace R2D
 		void getFileCompile
 		(
 			const std::string& filePath,
-			GLuint id
+			unsigned int id
 		);
 
 	private:
-		GLuint m_numAttribut;
+		unsigned int m_numAttribut;
 
-		GLuint m_programID;
-		GLuint m_vertexID;
-		GLuint m_fragID;
+		unsigned int m_programID;
+		unsigned int m_vertexID;
+		unsigned int m_fragID;
 
 	};
 }
-
-#endif // !GLSLProgram_H

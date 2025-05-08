@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef LogSentences_H
-#define LogSentences_H
+#pragma once
 
 namespace logR
 {
@@ -57,9 +55,5 @@ namespace logR
 		constexpr char NO_ERROR_DIR[] = "[OK : {}]";
 	};
 };
-
-
-
-#endif // !LogSentences_H
 
 

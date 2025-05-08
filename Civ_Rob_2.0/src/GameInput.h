@@ -23,7 +23,7 @@
 #ifndef GameInput_H
 #define GameInput_H
 
-#include <R2D/src/API_fwd.h>
+#include <SDL\glew.h>
 #include <SDL/SDL.h>
 
 #include <memory>
@@ -50,6 +50,13 @@ namespace unit
 	class Unit;
 }
 
+namespace R2D
+{
+	class Camera2D;
+	class InputManager;
+	enum class ScreenState;
+	class Window;
+}
 
 class GameInput
 {

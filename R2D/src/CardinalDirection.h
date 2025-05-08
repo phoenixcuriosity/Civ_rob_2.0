@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef CardinalDirection_H
-#define CardinalDirection_H
+#pragma once
 
 namespace R2D
 {
@@ -81,5 +79,3 @@ private:
 };
 
 }
-
-#endif //!CardinalDirection

@@ -29,16 +29,16 @@
 
 #include "App.h"
 
-#include <R2D/src/ResourceManager.h> 
-#include <R2D/src/ErrorLog.h> 
-#include <R2D/src/Log.h> 
-#include <R2D/src/SpriteFont.h> 
+#include <R2D/src/ResourceManager.h>
+#include <R2D/src/ErrorLog.h>
+#include <R2D/src/Log.h>
+#include <R2D/src/SpriteFont.h>
 
 MainMenuScreen::MainMenuScreen()
-: 
+:
 R2D::IGameScreen(),
 R2D::CScreen(),
-m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
+m_nextScreenIndexMenu(R2D::ScreenList::SCREEN_INDEX_INIT),
 m_isInitialize(false)
 {
 	build();
@@ -57,7 +57,7 @@ int MainMenuScreen::getNextScreenIndex()const
 }
 int MainMenuScreen::getPreviousScreenIndex()const
 {
-	return R2D::SCREEN_INDEX::INIT;
+	return R2D::ScreenList::SCREEN_INDEX_INIT;
 }
 
 void MainMenuScreen::build()
@@ -153,7 +153,7 @@ void MainMenuScreen::doInitUI()
 
 void MainMenuScreen::doInitHUDText()
 {
-	R2D::MapTexts mapTexts;
+	R2D::Text::MapTexts mapTexts;
 	R2D::ResourceManager::getTextFromFile
 	(
 		R2D::e_Files::texts_MainMenu,
@@ -185,7 +185,7 @@ void MainMenuScreen::draw()
 
 void MainMenuScreen::doDrawAll()
 {
-	
+
 }
 
 

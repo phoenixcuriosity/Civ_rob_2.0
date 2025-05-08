@@ -28,7 +28,6 @@
 #include "Screens/CityScreenEnumTexture.h"
 #include "../City/BuildManager.h"
 
-#include <R2D/src/API_fwd.h>
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
 #include <R2D/src/Screen.h>

@@ -31,6 +31,8 @@
 #include <string>
 #include <vector>
 
+#include <SDL\glew.h>
+
 namespace STRINGS
 {
 	/* Define an empty string */

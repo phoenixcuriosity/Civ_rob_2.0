@@ -29,9 +29,7 @@
 #include "T_City.h"
 #include "T_MainMap.h"
 
-#include "R2D/src/API_fwd.h"
 #include <R2D/src/IMove.h>
-
 
 struct GoldStats;
 class GamePlayScreen;

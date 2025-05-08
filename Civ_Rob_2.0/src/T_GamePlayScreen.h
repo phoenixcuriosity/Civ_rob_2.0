@@ -53,7 +53,7 @@ struct Screen
 
 	GamePlayScreenTexture m_idTexture;
 
-	int m_nextScreenIndexMenu = R2D::SCREEN_INDEX::INIT;
+	int m_nextScreenIndexMenu = R2D::ScreenList::SCREEN_INDEX_INIT;
 };
 
 struct Var

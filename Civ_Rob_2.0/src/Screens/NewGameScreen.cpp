@@ -37,7 +37,7 @@ NewGameScreen::NewGameScreen
 :
 R2D::IGameScreen(),
 R2D::CScreen(),
-m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
+m_nextScreenIndexMenu(R2D::ScreenList::SCREEN_INDEX_INIT),
 m_userInputNewGame(),
 m_vectSlider(),
 m_isInitialize(false)

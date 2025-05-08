@@ -30,7 +30,7 @@ R2D::ScreenList
 ::moveNext()
 {
 	const IGameScreenPtr currentScreen = getCurrent();
-	if (currentScreen->getNextScreenIndex() != R2D::SCREEN_INDEX::INIT)
+	if (currentScreen->getNextScreenIndex() != SCREEN_INDEX_INIT)
 	{
 		m_currentScreenIndex = currentScreen->getNextScreenIndex();
 	}
@@ -42,7 +42,7 @@ R2D::ScreenList
 ::movePrevious()
 {
 	const IGameScreenPtr currentScreen = getCurrent();
-	if (currentScreen->getPreviousScreenIndex() != R2D::SCREEN_INDEX::INIT)
+	if (currentScreen->getPreviousScreenIndex() != SCREEN_INDEX_INIT)
 	{
 		m_currentScreenIndex = currentScreen->getPreviousScreenIndex();
 	}
@@ -64,7 +64,7 @@ void R2D::ScreenList::addScreen(ScreenList::IGameScreenPtr newScreen)
 	newScreen->setParentGame(m_game);
 }
 
-void 
+void
 R2D::ScreenList
 ::destroy()
 {
@@ -75,13 +75,13 @@ R2D::ScreenList
 	}
 	m_screens.resize(0);
 	m_screens.clear();
-	m_currentScreenIndex = R2D::SCREEN_INDEX::INIT;
+	m_currentScreenIndex = SCREEN_INDEX_INIT;
 }
 
 R2D::ScreenList::IGameScreenPtr
 R2D::ScreenList
 ::getCurrent()
 {
-	if (R2D::SCREEN_INDEX::INIT == m_currentScreenIndex) return nullptr;
+	if (SCREEN_INDEX_INIT == m_currentScreenIndex) return nullptr;
 	return m_screens[m_currentScreenIndex];
 }

@@ -27,7 +27,6 @@
 
 #include <R2D/src/FileSystemHandler.h>
 
-#include <R2D/src/API_fwd.h>
 #include <R2D/src/Files.h>
 #include <R2D/src/IRegister.h>
 #include <limits>

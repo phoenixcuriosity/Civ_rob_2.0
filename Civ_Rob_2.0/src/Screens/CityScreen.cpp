@@ -54,7 +54,7 @@ CityScreen::CityScreen
 :
 R2D::IGameScreen(),
 R2D::CScreen(),
-m_nextScreenIndexMenu(R2D::SCREEN_INDEX::INIT),
+m_nextScreenIndexMenu(R2D::ScreenList::SCREEN_INDEX_INIT),
 m_indexCycleBuilds(0),
 m_buttonBuild(),
 m_idTexture(),
@@ -94,7 +94,7 @@ void CityScreen::destroy()
 /* ----------------------------------------------------------------------------------- */
 int CityScreen::getNextScreenIndex()const
 {
-	return R2D::SCREEN_INDEX::INIT;
+	return R2D::ScreenList::SCREEN_INDEX_INIT;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -119,7 +119,7 @@ bool CityScreen::onEntry()
 
 void CityScreen::doInitOptimizeTexture()
 {
-	R2D::IdMap idMap;
+	R2D::ResourceManager::IdMap idMap;
 	R2D::ResourceManager::copyIdMap(idMap);
 
 	m_idTexture[CityScreenEnumTexture::grass] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grass");

@@ -141,7 +141,7 @@ bool GamePlayScreen::onEntry()
 
 void GamePlayScreen::doInitOptimizeTexture()
 {
-	R2D::IdMap idMap;
+	R2D::ResourceManager::IdMap idMap;
 	R2D::ResourceManager::copyIdMap(idMap);
 
 	m_screen.m_idTexture[GamePlayScreenEnumTexture::grass] = R2D::ResourceManager::searchKeyInIdMap(idMap, "grass");

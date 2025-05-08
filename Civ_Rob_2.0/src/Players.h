@@ -30,7 +30,7 @@
 
 #include <R2D/src/ISaveable.h>
 #include <R2D/src/ILoadable.h>
-#include <R2D/src/WidgetLabel.h>
+#include <R2D/src/SpriteBatch.h>
 #include <R2D/src/IRegister.h>
 
 #include <jsoncons/json.hpp>
@@ -50,6 +50,11 @@ namespace unit
 namespace city
 {
 	class City;
+}
+
+namespace R2D
+{
+	class Camera2D;
 }
 
 class Players : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>

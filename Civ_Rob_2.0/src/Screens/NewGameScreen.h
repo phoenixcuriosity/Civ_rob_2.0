@@ -25,6 +25,8 @@
 
 #include "LIB.h"
 
+#include <unordered_map>
+
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
 #include <R2D/src/Screen.h>

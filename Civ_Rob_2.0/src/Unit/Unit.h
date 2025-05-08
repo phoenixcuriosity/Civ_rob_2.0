@@ -26,7 +26,6 @@
 #include "UnitStats.h"
 #include "UnitTemplate.h"
 
-#include <R2D/src/API_fwd.h>
 #include <R2D/src/IBlick.h>
 #include <R2D/src/IMove.h>
 
