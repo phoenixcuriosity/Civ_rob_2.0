@@ -19,17 +19,18 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef IMainGame_H
-#define IMainGame_H
-
-#include "API_fwd.h"
+#include <memory>
 
 #include "Window.h"
 #include "InputManager.h"
 
 namespace R2D
 {
+
+class ScreenList;
+class IGameScreen;
 
 class IMainGame
 {
@@ -45,7 +46,7 @@ public:
 	virtual void addScreens() = 0;
 
 	void onSDLEvent(SDL_Event& ev);
-	
+
 protected:
 
 	virtual void update();
@@ -76,6 +77,4 @@ protected:
 };
 
 }
-
-#endif // !IMainGame_H
 

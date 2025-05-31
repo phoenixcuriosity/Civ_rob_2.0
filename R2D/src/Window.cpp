@@ -22,6 +22,7 @@
 
 #include "Window.h"
 
+#include <SDL\SDL.h>
 #include <SDL\glew.h>
 #include "RealEngineError.h"
 #include "ValueToScale.h"
@@ -135,22 +136,22 @@ R2D::Window
 	);
 }
 
-Uint16
+unsigned int
 R2D::Window
 ::getHorizontal()
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
-	return (Uint16)desktop.right;
+	return desktop.right;
 }
 
-Uint16
+unsigned int
 R2D::Window
 ::getVertical()
 {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &desktop);
-	return (Uint16)desktop.bottom;
+	return desktop.bottom;
 }

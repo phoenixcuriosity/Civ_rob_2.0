@@ -19,13 +19,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef Window_H
-#define Window_H
-
-#include <SDL\SDL.h>
 #include <string>
 #include <Windows.h> // DEVMODE
+
+struct SDL_Window;
 
 namespace R2D
 {
@@ -77,7 +76,7 @@ public:
 	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getHorizontal();
+	static unsigned int getHorizontal();
 
 	/* ----------------------------------------------------------------------------------- */
 	/* NAME : getVertical																   */
@@ -85,7 +84,7 @@ public:
 	/* INPUT : unsigned int tileSize : taille en pixel d'une tile 						   */
 	/* RETURNED VALUE    : void															   */
 	/* ----------------------------------------------------------------------------------- */
-	static Uint16 getVertical();
+	static unsigned int getVertical();
 
 private:
 
@@ -109,6 +108,3 @@ private:
 };
 
 }
-
-#endif // !Window_H
-

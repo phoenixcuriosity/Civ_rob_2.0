@@ -19,11 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef GUI_H
-#define GUI_H
-
-#include "API_fwd.h"
+#pragma once
 
 #include <glm/glm.hpp>
 #include <SDL/SDL.h>
@@ -33,6 +29,8 @@
 
 namespace R2D
 {
+
+class InputManager;
 
 	namespace GUI_MOUSE
 	{
@@ -102,8 +100,6 @@ namespace R2D
 	};
 
 }
-
-#endif // !GUI_H
 
 
 

@@ -149,7 +149,8 @@ protected:
 	LoadableSptrFileVector m_loadableSptrVector;
 };
 
-using RegisterPtrT = R2D::IRegisterLoadAble<jsoncons::ojson>*;
+using RegisterLoadAbleOjson = R2D::IRegisterLoadAble<jsoncons::ojson>;
+using RegisterPtrT = std::shared_ptr<RegisterLoadAbleOjson>;
 using RegisterPair = std::pair<RegisterPtrT, std::type_index>;
 using RegisterPairVector = std::vector<RegisterPair>;
 

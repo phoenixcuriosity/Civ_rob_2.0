@@ -19,12 +19,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef AudioEngine_H
-#define AudioEngine_H
+#include <map>
+#include <string>
 
-#include "API_fwd.h"
-
+#include <SDL\glew.h>
 #include <SDL/SDL_mixer.h>
 
 namespace R2D
@@ -78,6 +78,3 @@ private:
 };
 
 }
-
-#endif // !AudioEngine_H
-

@@ -19,20 +19,24 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef TextureCache_H
-#define TextureCache_H
-
-#include "API_fwd.h"
+#include <map>
+#include <memory>
+#include <string>
+#include <unordered_map>
 
 namespace R2D
 {
+
+class GLTexture;
 
 class TextureCache
 {
 public:
 	using GLTextureUptr = std::unique_ptr<GLTexture>;
 	using GLTextureUptrMap = std::map<std::string, GLTextureUptr>;
+	using IdMap = std::unordered_map<std::string, unsigned int>;
 public:
 	TextureCache() = default;
 	~TextureCache();
@@ -49,7 +53,7 @@ public:
 
 public:
 
-	static GLuint searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key);
+	static unsigned int searchKeyInIdMap(const IdMap& idMap, const std::string& key);
 
 private:
 	GLTextureUptrMap m_textureMap;
@@ -57,4 +61,3 @@ private:
 };
 
 }
-#endif // !TextureCache_H

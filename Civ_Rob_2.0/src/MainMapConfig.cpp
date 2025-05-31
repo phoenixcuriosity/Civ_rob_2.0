@@ -32,7 +32,12 @@
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/Log.h>
 
+#include <jsoncons/json.hpp>
+
 #include <format>
+
+JSONCONS_ALL_MEMBER_NAME_TRAITS(R2D::Coor, (x, "x"), (y, "y"))
+JSONCONS_ALL_MEMBER_NAME_TRAITS(MainMapConfig, (m_tileSize, "TileSize"), (m_mapSizePix, "MapSize"))
 
 MainMapConfig::MainMapConfig(R2D::RegisterPairVector& registerLoad)
 {

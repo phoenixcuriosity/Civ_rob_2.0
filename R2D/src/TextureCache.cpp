@@ -79,9 +79,9 @@ R2D::TextureCache
 	}
 }
 
-GLuint
+unsigned int
 R2D::TextureCache
-::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
+::searchKeyInIdMap(const IdMap& idMap, const std::string& key)
 {
 	if (auto search = idMap.find(key); search != idMap.end())
 	{

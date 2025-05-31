@@ -19,22 +19,28 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef ScreenList_H
-#define ScreenList_H
-
-#include "API_fwd.h"
+#include <memory>
+#include <vector>
 
 namespace R2D
 {
+
+class IGameScreen;
+class IMainGame;
 
 class ScreenList
 {
 public:
 	using IGameScreenPtr = std::shared_ptr<IGameScreen>;
 	using IGameScreenPtrVector = std::vector<std::shared_ptr<IGameScreen>>;
+
+	/* Define initial screen index -> Default Screen */
+	static constexpr int SCREEN_INDEX_INIT = -1;
+
 public:
-	ScreenList(IMainGame* game) : m_game(game), m_currentScreenIndex(R2D::SCREEN_INDEX::INIT) {};
+	ScreenList(IMainGame* game) : m_game(game), m_currentScreenIndex(SCREEN_INDEX_INIT) {};
 	~ScreenList() { destroy(); };
 
 	IGameScreenPtr moveNext();
@@ -54,6 +60,4 @@ protected:
 };
 
 }
-
-#endif // !ScreenList_H
 
