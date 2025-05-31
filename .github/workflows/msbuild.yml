@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: MSBuild
+name: MSBuild + Cppcheck
 
 on:
   push:
@@ -16,8 +16,6 @@ env:
   SOLUTION_FILE_PATH: .
 
   # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
   BUILD_CONFIGURATION: Release
 
 permissions:
@@ -29,6 +27,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install Cppcheck
+      run: choco install cppcheck
+
+    - name: Run Cppcheck
+      run: |
+        cppcheck --enable=all --inconclusive --std=c++20 --platform=win64 --suppress=missingIncludeSystem --inline-suppr --force . 2> cppcheck.txt
+        type cppcheck.txt
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
