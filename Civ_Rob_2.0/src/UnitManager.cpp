@@ -1,7 +1,7 @@
 ﻿/*
 
 	Civ_rob_2
-	Copyright SAUTER Robin 2017-2024 (robin.sauter@orange.fr)
+	Copyright SAUTER Robin 2017-2025 (robin.sauter@orange.fr)
 
 	You can check for update on github.com -> https://github.com/phoenixcuriosity/Civ_rob_2.0
 
@@ -20,29 +20,29 @@
 
 */
 
-#pragma once
 
-#include <R2D/src/IRegister.h>
-#include "City.h"
+#include "UnitManager.h"
 
-class CityFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
+void
+UnitManager
+::addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
 {
-private:
-	using Coor = R2D::IMoveable::Coor;
-	using CityName = std::string;
-	using CityPtrT = std::shared_ptr<City>;
-	R2D::RegisterPairVector addSubscriber();
-public:
+	m_units.push_back(getFactory().createUnit(name, coor, owner));
+}
 
-	struct CityNamePlayerId
+void
+UnitManager
+::addEmptyUnit()
+{
+	m_units.push_back(getFactory().createUnit());
+}
+
+void
+UnitManager
+::removeUnit(const size_t index)
+{
+	if (index < m_units.size())
 	{
-		int playerId = 0;
-		size_t cityVectSize = 0;
-	};
-
-public:
-	CityFactory();
-
-	CityPtrT CreateCity();
-	CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles);
+		m_units.erase(m_units.begin() + index);
+	}
 };

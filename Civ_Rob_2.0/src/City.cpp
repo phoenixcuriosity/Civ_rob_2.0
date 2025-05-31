@@ -86,8 +86,6 @@ void City::createCity
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
 	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
-	const std::string name(CityNameTemplate::getSingleton().getCityName(selectedPlayer, splayer->GETtabCity().size()));
-
 	VectMapPtr tabtiles;
 	tabtiles.resize(CITY_INFLUENCE::INIT_AREA_VIEW);
 
@@ -97,7 +95,7 @@ void City::createCity
 		selectedPlayer, mainGame.GETmainMap().GETmatriceMap(), tabtiles, influenceLevel
 	);
 
-	splayer->addCity(name, sUnit->getX(), sUnit->getY(), tabtiles);
+	splayer->addCity(sUnit->getCoor(), tabtiles);
 
 	splayer->deleteUnit(selectedUnit);
 	splayer->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);

@@ -45,23 +45,9 @@ public:
 		getFactory();
 	}
 
-	void addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner)
-	{
-		m_units.push_back(getFactory().createUnit(name, coor, owner));
-	}
-
-	void addEmptyUnit()
-	{
-		m_units.push_back(getFactory().createUnit());
-	}
-
-	void removeUnit(const size_t index)
-	{
-		if (index < m_units.size())
-		{
-			m_units.erase(m_units.begin() + index);
-		}
-	};
+	void addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
+	void addEmptyUnit();
+	void removeUnit(const size_t index);
 
 	const std::vector<std::shared_ptr<Unit>>& getUnits() const { return m_units; }
 };

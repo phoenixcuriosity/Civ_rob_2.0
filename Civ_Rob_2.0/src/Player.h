@@ -40,9 +40,12 @@ namespace PlayerH
 
 class Player : public std::enable_shared_from_this<Player>
 {
+private:
 	struct Private { explicit Private() = default; };
 
 public:
+
+
 	Player(Private, const std::string& name, const int id);
 
 	static std::shared_ptr<Player> create(const std::string& name, const int id)
@@ -61,11 +64,7 @@ private:
 
 public:
 	virtual void deleteUnit(const unsigned int index);
-	virtual void addCity(
-		const std::string&,
-		const unsigned int,
-		const unsigned int,
-		VectMapPtr& tiles);
+	virtual void addCity(const Unit::Coor coor, VectMapPtr& tiles);
 
 private:
 	virtual void addEmptyCity();

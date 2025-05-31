@@ -83,15 +83,9 @@ void Player::deleteUnit
 	m_unitManager.removeUnit(index);
 }
 
-void Player::addCity
-(
-	const std::string& name,
-	const unsigned int x,
-	const unsigned int y,
-	VectMapPtr& tiles
-)
+void Player::addCity(const Unit::Coor coor, VectMapPtr& tiles)
 {
-	m_CityManager.addCity(name, { x, y }, tiles);
+	m_CityManager.addCity(m_id, coor, tiles);
 }
 
 void Player::addEmptyCity()
