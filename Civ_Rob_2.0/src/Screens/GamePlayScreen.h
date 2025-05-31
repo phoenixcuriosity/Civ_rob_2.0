@@ -39,7 +39,7 @@
 
 struct UserInputNewGame;
 
-class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen, public R2D::IRegisterLoadAble<jsoncons::ojson>
+class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	GamePlayScreen() = delete;
@@ -97,8 +97,10 @@ public:
 	const Players& GETPlayers()const	{ return m_players; };
 
 private:
+	R2D::RegisterPtrT m_loader;
 	R2D::RegisterPairVector m_loadSub;
 
+private:
 	Screen m_screen;
 	Var m_var;
 	MainMap m_mainMap;

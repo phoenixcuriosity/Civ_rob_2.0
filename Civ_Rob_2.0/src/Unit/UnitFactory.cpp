@@ -25,17 +25,17 @@
 #include "Player.h"
 
 unit::UnitFactory
-::UnitFactory() : IRegisterLoadAble(), IRegister()
+::UnitFactory() : m_loader(std::make_shared<R2D::RegisterLoadAbleOjson>())
 {
 	UnitTemplate::getSingleton(addSubscriber());
-	IRegisterLoadAble::load();
+	m_loader->load();
 };
 
 R2D::RegisterPairVector
 unit::UnitFactory
 ::addSubscriber()
 {
-	R2D::RegisterPairVector registerLoad{ {this, typeid(UnitTemplate)} };
+	R2D::RegisterPairVector registerLoad{ {m_loader, typeid(UnitTemplate)} };
 	return registerLoad;
 };
 

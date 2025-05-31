@@ -25,17 +25,17 @@
 #include "CityNameTemplate.h"
 
 city::CityFactory
-::CityFactory() : IRegisterLoadAble(), IRegister()
+::CityFactory() : m_loader(std::make_shared<R2D::RegisterLoadAbleOjson>())
 {
 	CityNameTemplate::getSingleton(addSubscriber());
-	IRegisterLoadAble::load();
+	m_loader->load();
 };
 
 R2D::RegisterPairVector
 city::CityFactory
 ::addSubscriber()
 {
-	R2D::RegisterPairVector registerLoad{ {this, typeid(CityNameTemplate)} };
+	R2D::RegisterPairVector registerLoad{ {m_loader, typeid(CityNameTemplate)} };
 	return registerLoad;
 };
 

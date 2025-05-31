@@ -30,7 +30,7 @@ class Player;
 namespace unit
 {
 
-class UnitFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
+class UnitFactory
 {
 private:
 	using UnitPtrT = std::shared_ptr<Unit>;
@@ -42,6 +42,9 @@ public:
 
 	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
 	UnitPtrT createUnit();
+
+private:
+	R2D::RegisterPtrT m_loader;
 };
 
 }

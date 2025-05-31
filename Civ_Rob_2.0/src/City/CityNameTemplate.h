@@ -34,17 +34,15 @@ public:
 	using VectCityName = std::vector<CityName>;
 	using VectPlayerCityName = std::vector<VectCityName>;
 
-
 public:
 
 	static CityNameTemplate& getSingleton(std::optional<R2D::RegisterPairVector> registerLoad = std::nullopt)
 	{
-		static CityNameTemplate CityNameTemplate{ registerLoad.value() };
+		static CityNameTemplate CityNameTemplate{ registerLoad };
 		return CityNameTemplate;
 	};
 
-	CityNameTemplate() noexcept : m_vectTemplate() {};
-	CityNameTemplate(R2D::RegisterPairVector& registerLoad);
+	CityNameTemplate(std::optional<R2D::RegisterPairVector> registerLoad = std::nullopt);
 	virtual ~CityNameTemplate() = default;
 
 	void load(jsoncons::ojson f)override;

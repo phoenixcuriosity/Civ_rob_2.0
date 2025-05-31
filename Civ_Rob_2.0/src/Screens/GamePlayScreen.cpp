@@ -38,8 +38,7 @@
 GamePlayScreen::GamePlayScreen(UserInputNewGame* userInputNewGame):
 R2D::IGameScreen(),
 R2D::CScreen(),
-R2D::IRegisterLoadAble<jsoncons::ojson>(),
-R2D::IRegister(),
+m_loader(std::make_shared<R2D::RegisterLoadAbleOjson>()),
 m_loadSub(addSubscriber()),
 m_screen(),
 m_var(),
@@ -54,7 +53,7 @@ m_userInputNewGame(userInputNewGame)
 
 R2D::RegisterPairVector GamePlayScreen::addSubscriber()
 {
-	R2D::RegisterPairVector registerLoad{ {this, typeid(MainMapConfig)}, {this, typeid(unit::UnitTemplate)}, {this, typeid(city::CityNameTemplate)} };
+	R2D::RegisterPairVector registerLoad{ {m_loader, typeid(MainMapConfig)}, {m_loader, typeid(unit::UnitTemplate)}, {m_loader, typeid(city::CityNameTemplate)} };
 	return registerLoad;
 }
 
@@ -96,7 +95,7 @@ bool GamePlayScreen::onEntry()
 	{
 		try
 		{
-			IRegisterLoadAble::load();
+			m_loader->load();
 
 			R2D::ResourceManager::InitializeCardinalDirectionMapping(m_mainMap.GETtileSize());
 

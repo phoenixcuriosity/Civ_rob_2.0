@@ -28,16 +28,22 @@
 #include <R2D/src/ResourceManager.h>
 
 city::CityNameTemplate
-::CityNameTemplate(R2D::RegisterPairVector& registerLoad)
-:CityNameTemplate()
+::CityNameTemplate(std::optional<R2D::RegisterPairVector> registerLoad /* = std::nullopt */)
+: m_vectTemplate()
 {
-	auto it = std::find_if(std::begin(registerLoad), std::end(registerLoad),
-		[](const auto& pair) { return pair.second == typeid(CityNameTemplate); });
-
-	if (it != std::end(registerLoad))
+	if (registerLoad.has_value())
 	{
-		it->first->registerLoadable(R2D::e_Files::citiesNames, this);
+		auto registerLoadVec = registerLoad.value();
+
+		auto it = std::find_if(std::begin(registerLoadVec), std::end(registerLoadVec),
+			[](const auto& pair) { return pair.second == typeid(CityNameTemplate); });
+
+		if (it != std::end(registerLoadVec))
+		{
+			it->first->registerLoadable(R2D::e_Files::citiesNames, this);
+		}
 	}
+
 }
 
 void

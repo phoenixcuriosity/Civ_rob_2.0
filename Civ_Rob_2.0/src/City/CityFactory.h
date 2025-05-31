@@ -35,7 +35,7 @@ namespace city
  * The CityFactory class provides methods to create new City instances and manage their initialization.
  * It also interacts with the game map and player data to properly configure cities.
  */
-class CityFactory : public R2D::IRegisterLoadAble<jsoncons::ojson>
+class CityFactory
 {
 private:
     using Coor = R2D::Coor; ///< Alias for coordinates used in the game.
@@ -91,6 +91,9 @@ public:
      * @return A shared pointer to the newly created City object.
      */
     CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles);
+
+private:
+    R2D::RegisterPtrT m_loader;
 };
 
 }
