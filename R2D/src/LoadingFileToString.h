@@ -19,11 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef LoadingFileToString_H
-#define LoadingFileToString_H
-
-#include "API_fwd.h"
+#include <string>
 
 namespace R2D
 {
@@ -39,7 +37,4 @@ public:
 
 
 }
-
-
-#endif // !LoadingFileToString_H
 

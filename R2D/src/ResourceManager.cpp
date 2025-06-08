@@ -47,12 +47,12 @@ void R2D::ResourceManager::loadTextureFromDir(const std::string& path)
 	m_textureCache.loadTextureFromDir(path);
 }
 
-void R2D::ResourceManager::copyIdMap(R2D::IdMap& dest)
+void R2D::ResourceManager::copyIdMap(IdMap& dest)
 {
 	m_textureCache.copyIdMap(dest);
 }
 
-GLuint R2D::ResourceManager::searchKeyInIdMap(const R2D::IdMap& idMap, const std::string& key)
+unsigned int R2D::ResourceManager::searchKeyInIdMap(const IdMap& idMap, const std::string& key)
 {
 	return TextureCache::searchKeyInIdMap(idMap, key);
 }
@@ -96,14 +96,14 @@ R2D::GLSLProgram& R2D::ResourceManager::getGLSLProgram()
 
 void
 R2D::ResourceManager
-::getTextFromFile(const e_Files name, MapTexts& mapTexts)
+::getTextFromFile(const e_Files name, Text::MapTexts& mapTexts)
 {
 	m_Text.getTextFromFile(name, mapTexts);
 }
 
 void
 R2D::ResourceManager
-::displayTextFromFile(	const R2D::MapTexts& mapTexts,
+::displayTextFromFile(	const R2D::Text::MapTexts& mapTexts,
 						const R2D::Window& window,
 						R2D::SpriteBatch& spriteBatchHUDStatic)
 {

@@ -22,7 +22,10 @@
 
 #include "Screen.h"
 
+#include <SDL\glew.h>
+
 #include "ResourceManager.h"
+
 
 bool
 R2D::CScreen

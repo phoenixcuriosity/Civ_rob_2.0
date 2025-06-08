@@ -25,6 +25,8 @@
 #include "RealEngineError.h"
 
 #include <fstream>
+#include <vector>
+#include <SDL\glew.h>
 
 using namespace R2D;
 
@@ -68,7 +70,7 @@ void GLSLProgram::compileShaders
 void GLSLProgram::getFileCompile
 (
 	const std::string& filePath,
-	GLuint id
+	unsigned int id
 )
 {
 	std::ifstream vertexFile(filePath);
@@ -124,7 +126,7 @@ void GLSLProgram::getFileCompile
 
 void GLSLProgram::linkShaders()
 {
-	
+
 
 	glAttachShader(m_programID, m_vertexID);
 	glAttachShader(m_programID, m_fragID);
@@ -165,7 +167,7 @@ void GLSLProgram::addAttribut(const std::string& name)
 	glBindAttribLocation( m_programID, m_numAttribut++, name.c_str());
 }
 
-GLint GLSLProgram::getUnitformLocation(const std::string& uniformName)
+unsigned int GLSLProgram::getUnitformLocation(const std::string& uniformName)
 {
 	GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
 	if (location == GL_INVALID_INDEX)

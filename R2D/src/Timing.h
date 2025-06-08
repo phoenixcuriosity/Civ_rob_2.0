@@ -19,13 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Timing_H
-#define Timing_H
-
-#include <SDL/SDL.h>
-
-#include <ratio>
+#pragma once
 
 namespace R2D
 {
@@ -53,11 +47,9 @@ private:
 private:
 	float m_fps;
 	float m_maxFPS;
-	Uint32 m_frameTime;
+	size_t m_frameTime;
 
 	unsigned int m_startTicks;
 };
 
 }
-
-#endif

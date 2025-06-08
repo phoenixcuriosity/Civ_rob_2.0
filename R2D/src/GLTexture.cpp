@@ -24,6 +24,7 @@
 #include <iostream>
 #include <fstream>
 #include <picopng\picoPNG.h>
+#include <SDL\glew.h>
 
 #include "RealEngineError.h"
 

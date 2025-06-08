@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef SCREEN_H
-#define SCREEN_H
+#pragma once
 
 #include "AudioEngine.h"
 #include "Camera2D.h"
@@ -85,5 +83,3 @@ private:
 };
 
 }
-
-#endif /* SCREEN_H */

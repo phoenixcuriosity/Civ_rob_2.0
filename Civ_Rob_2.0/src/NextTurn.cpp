@@ -22,10 +22,10 @@
 
 #include "NextTurn.h"
 
-#include "City.h"
-#include "GamePlayScreen.h"
+#include "City/City.h"
+#include "Screens/GamePlayScreen.h"
 #include "Player.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 
 NextTurn::NextTurn()
 : m_nbTurn(0)

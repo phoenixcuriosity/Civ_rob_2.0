@@ -158,7 +158,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\API_fwd.h" />
     <ClInclude Include="src\AudioEngine.h" />
     <ClInclude Include="src\Camera2D.h" />
     <ClInclude Include="src\CardinalDirection.h" />
@@ -194,6 +193,7 @@
     <ClInclude Include="src\Text.h" />
     <ClInclude Include="src\TextureCache.h" />
     <ClInclude Include="src\Timing.h" />
+    <ClInclude Include="src\T_Coor.h" />
     <ClInclude Include="src\UV.h" />
     <ClInclude Include="src\ValueToScale.h" />
     <ClInclude Include="src\Vertex.h" />

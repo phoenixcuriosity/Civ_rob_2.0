@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef ExitFromError_H
-#define ExitFromError_H
+#pragma once
 
 #include <string>
 
@@ -45,7 +43,3 @@ namespace R2D
 	};
 
 }
-
-
-#endif // !ExitFromError_H
-

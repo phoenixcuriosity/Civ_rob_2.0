@@ -22,14 +22,16 @@
 
 #include "App.h"
 
-#include "CityScreen.h"
-#include "GamePlayScreen.h"
+
 #include "jsonloader.h"
 #include "LogSentences.h"
-#include "MainMenuScreen.h"
-#include "NewGameScreen.h"
-#include "ReloadMenuScreen.h"
 #include "SaveReload.h"
+
+#include "Screens/CityScreen.h"
+#include "Screens/GamePlayScreen.h"
+#include "Screens/MainMenuScreen.h"
+#include "Screens/NewGameScreen.h"
+#include "Screens/ReloadMenuScreen.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>

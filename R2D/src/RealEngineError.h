@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef RealEngineError_H
-#define RealEngineError_H
+#pragma once
 
 #include <string>
 
@@ -29,7 +27,4 @@ namespace R2D
 {
 	extern void fatalError(const std::string& msg);
 }
-
-
-#endif // !RealEngineError_H
 

@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef UV_H
-#define UV_H
+#pragma once
 
 namespace R2D
 {
@@ -32,5 +30,3 @@ struct UV
 	float v;
 };
 }
-
-#endif // !UV_H

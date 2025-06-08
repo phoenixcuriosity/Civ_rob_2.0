@@ -26,7 +26,10 @@
 #include "SpriteFont.h"
 #include "SpriteBatch.h"
 
-void 
+#include <glm/glm.hpp>
+#include <CEGUI/CEGUI.h>
+
+void
 R2D::WidgetLabel
 ::draw(R2D::SpriteBatch& sb, R2D::SpriteFont& sf, R2D::Window& w)
 {

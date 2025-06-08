@@ -19,11 +19,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef GLTexture_H
-#define GLTexture_H
-
-#include "API_fwd.h"
+#include <string>
+#include <vector>
 
 namespace R2D
 {
@@ -33,7 +32,7 @@ namespace R2D
 		GLTexture(const std::string& filePath);
 		~GLTexture();
 
-		inline GLuint& GETid() { return m_id; };
+		inline unsigned int& GETid() { return m_id; };
 
 
 	private:
@@ -49,9 +48,8 @@ namespace R2D
 
 	private:
 
-		GLuint m_id;
+		unsigned int m_id;
 		unsigned long m_width;
 		unsigned long m_height;
 	};
 }
-#endif /* GLTexture_H */

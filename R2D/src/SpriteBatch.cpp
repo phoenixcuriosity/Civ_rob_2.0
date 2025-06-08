@@ -22,6 +22,8 @@
 
 #include "SpriteBatch.h"
 
+#include <SDL\glew.h>
+
 namespace R2D
 {
 
@@ -30,7 +32,7 @@ Glyph::Glyph
 (
 	const glm::vec4& destRec,
 	const  glm::vec4& uvRect,
-	GLuint Texture,
+	unsigned int Texture,
 	float Depth,
 	const  ColorRGBA8& color
 )
@@ -56,9 +58,9 @@ Glyph::Glyph
 
 RenderBatch::RenderBatch
 (
-	GLuint offset,
-	GLuint numVertices,
-	GLuint texture
+	unsigned int offset,
+	unsigned int numVertices,
+	unsigned int texture
 )
 	:_offset(offset), _numVertices(numVertices), _texture(texture)
 {
@@ -67,7 +69,7 @@ RenderBatch::RenderBatch
 
 
 
-	
+
 SpriteBatch::SpriteBatch()
 : m_vbo(0), m_vao(0), m_sortType(GlyphSortType::NONE)
 {
@@ -95,7 +97,7 @@ void SpriteBatch::begin
 void SpriteBatch::end()
 {
 	m_glyphsPtr.resize(m_glyphs.size());
-	
+
 	auto itGptr(m_glyphsPtr.begin());
 	for (auto itG(m_glyphs.begin()); itG != m_glyphs.end(); itG++, itGptr++)
 	{
@@ -110,7 +112,7 @@ void SpriteBatch::draw
 (
 	const glm::vec4& destRec,
 	const  glm::vec4& uvRect,
-	GLuint texture,
+	unsigned int texture,
 	float depth,
 	const  ColorRGBA8& color
 )
@@ -148,7 +150,7 @@ void SpriteBatch::createRenderBatches()
 	vertices[cv++] = m_glyphsPtr[0]->topLeft;
 	offset += 6;
 
-	
+
 
 	for (auto it(m_glyphsPtr.cbegin() + 1); it != m_glyphsPtr.cend(); it++)
 	{

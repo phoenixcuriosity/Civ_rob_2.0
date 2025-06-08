@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Vertex_H
-#define Vertex_H
+#pragma once
 
 #include "ColorRGBA8.h"
 #include "UV.h"
@@ -36,6 +34,9 @@ struct dot2D
 
 struct Vertex
 {
+	using ColorT = unsigned char;
+	using ColorFloat = float;
+
 	dot2D point;
 	ColorRGBA8 color;
 	UV uv;
@@ -44,16 +45,13 @@ struct Vertex
 	{
 		point.x = x; point.y = y;
 	}
-	void setColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a)
+	void setColor(ColorT r, ColorT g, ColorT b, ColorT a)
 	{
 		color.r = r; color.g = g; color.b = b; color.a = a;
 	}
-	void setUV(GLfloat u, GLfloat v)
+	void setUV(ColorFloat u, ColorFloat v)
 	{
 		uv.u = u; uv.v = v;
 	}
 };
 }
-
-#endif // !Vertex_H
-

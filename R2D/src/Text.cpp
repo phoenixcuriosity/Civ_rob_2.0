@@ -25,6 +25,7 @@
 #include "Log.h"
 #include "LogSentences.h"
 #include "ResourceManager.h"
+#include "Window.h"
 
 #include <jsoncons/json.hpp>
 

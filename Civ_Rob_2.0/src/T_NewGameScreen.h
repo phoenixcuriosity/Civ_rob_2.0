@@ -20,14 +20,14 @@
 
 */
 
-#ifndef T_NewGameScreen_H
-#define T_NewGameScreen_H
+#pragma once
 
-#include "LIB.h"
+#include <string>
+#include <vector>
+
+using VectPlayerName = std::vector<std::string>;
 
 struct UserInputNewGame
 {
 	VectPlayerName vectPlayerName;
 };
-
-#endif /* T_NewGameScreen_H */
