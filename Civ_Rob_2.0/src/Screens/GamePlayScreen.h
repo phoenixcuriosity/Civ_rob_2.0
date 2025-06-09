@@ -82,6 +82,9 @@ private:
 	bool onExitClicked(const CEGUI::EventArgs& e);
 
 public:
+	void nextTurn();
+
+public:
 	Screen& GETscreen()							{ return m_screen; };
 	Var& GETvar()								{ return m_var; };
 	MainMap& GETmainMap()						{ return m_mainMap; };

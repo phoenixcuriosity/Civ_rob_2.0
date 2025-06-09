@@ -75,7 +75,7 @@ public:
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
 	inline PlayerPtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
-	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
+	inline bool& GETneedToUpdateDrawUnitPtr() { return m_needToUpdateDrawUnit; };
 	inline CityPtrT& GETSelectedCity() { return m_selectedCity; };
 
 	inline void SETselectedPlayerId(const int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
@@ -133,6 +133,9 @@ public:
 		const unsigned int indexX,
 		const unsigned int indexY
 	);
+
+public:
+	void nextTurn();
 
 public:
 	jsoncons::ojson save()const override { return saveToOjson(); };

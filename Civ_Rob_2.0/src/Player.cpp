@@ -159,6 +159,16 @@ void Player::addGoldToGoldConversionSurplus
 	m_goldStats.goldConversionSurplus += goldToAdd;
 }
 
+void
+Player
+::nextTurn(const unsigned int index, const MatriceMap& matriceMap, bool& needToUpdateDrawUnit)
+{
+	resetGoldStats();
+	m_unitManager.nextTurn(index, matriceMap);
+	m_CityManager.nextTurn(needToUpdateDrawUnit);
+	computeGold();
+}
+
 jsoncons::ojson Player::saveToOjson()const
 {
 	jsoncons::ojson value;
