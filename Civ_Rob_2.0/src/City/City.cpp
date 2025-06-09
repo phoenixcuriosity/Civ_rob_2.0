@@ -101,11 +101,11 @@ void city::City::fillCitieTiles
 )
 {
 	unsigned int k(0);
-	for (int o(-INIT_SIZE_VIEW_DIV); o <= INIT_SIZE_VIEW_DIV; o++)
+	for (int o(-INIT_SIZE_VIEW_DIV + 1); o < INIT_SIZE_VIEW_DIV; o++)
 	{
 		if (middletileX + o < 0 || middletileX + o >= matriceMap.size()) continue;
 
-		for (int p(-INIT_SIZE_VIEW_DIV); p <= INIT_SIZE_VIEW_DIV; p++)
+		for (int p(-INIT_SIZE_VIEW_DIV + 1); p < INIT_SIZE_VIEW_DIV; p++)
 		{
 			if (middletileY + p < 0 || middletileY + p >= matriceMap[0].size()) continue;
 
@@ -193,7 +193,8 @@ m_conversionToApply(conversionSurplus_Type::No_Conversion),
 m_citizenManager(m_tileMap),
 m_foodManager(m_citizenManager),
 m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
-m_goldBalance(0.0)
+m_goldBalance(0.0),
+m_owner()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
 		saveToOjson().as_string());
@@ -203,7 +204,8 @@ city::City::City
 (
 	const std::string& name,
 	const Coor coor,
-	VectMapPtr& tiles
+	VectMapPtr& tiles,
+	const PlayerPtrT& player
 )
 	:
 	IMoveable(coor),
@@ -218,7 +220,8 @@ city::City::City
 	m_citizenManager(m_tileMap),
 	m_foodManager(m_citizenManager),
 	m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
-	m_goldBalance(0.0)
+	m_goldBalance(0.0),
+	m_owner(player)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
 		saveToOjson().as_string());
@@ -229,10 +232,20 @@ city::City::~City()
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITY, logS::DATA::DESTRUCTOR_CITY, m_name);
 }
 
-void city::City::computefood
-(
-	GoldStats& goldStats
-)
+void
+city::City
+::nextTurn(bool& needToUpdateDrawUnit)
+{
+	/* computeEmotion must be in first : Emotion use on other computations */
+	computeEmotion();
+
+	computefood();
+	computeWork(needToUpdateDrawUnit);
+	computeGold();
+	addCityGoldToTaxIncome();
+}
+
+void city::City::computefood()
 {
 	switch (m_foodManager.updateGetFoodStatus())
 	{
@@ -272,7 +285,7 @@ void city::City::computefood
 		m_foodManager.ResetFoodBalanceFromConversion();
 		break;
 	case conversionSurplus_Type::FoodToGold:
-		convertFoodSurplusToGold(m_foodManager.getFoodBalanceForConversion(), goldStats);
+		convertFoodSurplusToGold(m_foodManager.getFoodBalanceForConversion());
 		m_foodManager.ResetFoodBalanceFromConversion();
 		break;
 	case conversionSurplus_Type::WorkToFood:
@@ -293,11 +306,7 @@ void city::City::computefood
 	}
 }
 
-void city::City::computeWork
-(
-	Player& player,
-	bool* needToUpdateDrawUnit
-)
+void city::City::computeWork(bool& needToUpdateDrawUnit)
 {
 	m_buildManager.computeWork();
 
@@ -310,7 +319,7 @@ void city::City::computeWork
 	case conversionSurplus_Type::GoldToFood:
 	case conversionSurplus_Type::GoldToWork:
 
-		m_buildManager.computeWorkToBuild(player, needToUpdateDrawUnit);
+		m_buildManager.computeWorkToBuild(m_owner, needToUpdateDrawUnit);
 
 		break;
 	default:
@@ -323,7 +332,7 @@ void city::City::computeWork
 	case conversionSurplus_Type::WorkToGold:
 
 		/* CASE : work conversion to gold */
-		player.addGoldToGoldConversionSurplus
+		m_owner->addGoldToGoldConversionSurplus
 			(
 				m_buildManager.getWorkBalance()
 				*
@@ -343,22 +352,18 @@ void city::City::computeGold()
 	m_goldBalance *= ((double)m_citizenManager.getEmotion() / Citizen::EMOTION_MEAN);
 }
 
-void city::City::addCityGoldToTaxIncome
-(
-	GoldStats& goldStats
-)
+void city::City::addCityGoldToTaxIncome()
 {
-	goldStats.taxIncome += m_goldBalance;
+	m_owner->GETgoldStats().taxIncome += m_goldBalance;
 	m_goldBalance = 0.0;
 }
 
 void city::City::convertFoodSurplusToGold
 (
-	const double foodSurplus,
-	GoldStats& goldStats
+	const double foodSurplus
 )
 {
-	goldStats.goldConversionSurplus = foodSurplus * BuildManager::FOOD_TO_GOLD;
+	m_owner->GETgoldStats().goldConversionSurplus = foodSurplus * BuildManager::FOOD_TO_GOLD;
 }
 
 jsoncons::ojson city::City::saveToOjson()const

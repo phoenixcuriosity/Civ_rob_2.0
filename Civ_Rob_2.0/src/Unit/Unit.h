@@ -105,12 +105,12 @@ private:
 
 public:
 
-	Unit();
+	Unit(const PlayerPtrT& ptrToPlayer);
 	Unit(const UnitName& name,
 		 const Coor& coor,
 		 const UnitStat& unitStat,
 		 double maintenance,
-		 PlayerPtrT ptrToPlayer);
+		 const PlayerPtrT& ptrToPlayer);
 
 	virtual ~Unit();
 
@@ -126,16 +126,19 @@ private:
 		 int& selectunit,
 		 const R2D::CardinalDirection& cardinalDirection);
 
-public:
-	virtual void
+private:
+	void
 	heal(const MatriceMap& tiles,
 		 const unsigned int selectplayer);
 
-	virtual bool
+public:
+	bool
 	irrigate(MatriceMap& map);
 
+	bool isThisUnitType(const std::string& nameToCompare) const noexcept { return m_name == nameToCompare; };
+
 public:
-	virtual bool isThisUnitType(const std::string& nameToCompare) const noexcept { return m_name == nameToCompare; };
+	void nextTurn(const unsigned int  index, const MatriceMap& matriceMap);
 
 public:
 	jsoncons::ojson saveToOjson()const;
@@ -145,7 +148,6 @@ public:
 	inline const std::string& GETname()				const { return m_name; };
 	inline bool GETalive()							const { return m_alive; };
 	inline double GETmaintenance()					const { return m_maintenance; }
-	inline PlayerPtrT GETowner()							  { return m_owner; };
 
 	inline void SETowner(PlayerPtrT owner) { m_owner = owner; };
 

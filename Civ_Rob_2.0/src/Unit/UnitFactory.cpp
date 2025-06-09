@@ -65,7 +65,7 @@ unit::UnitFactory
 
 unit::UnitFactory::UnitPtrT
 unit::UnitFactory
-::createUnit()
+::createUnit(PlayerPtrT owner)
 {
-	return std::make_shared<Unit>();
+	return std::make_shared<Unit>(owner);
 }

@@ -41,7 +41,7 @@ public:
 	UnitFactory();
 
 	UnitPtrT createUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
-	UnitPtrT createUnit();
+	UnitPtrT createUnit(PlayerPtrT owner);
 
 private:
 	R2D::RegisterPtrT m_loader;
