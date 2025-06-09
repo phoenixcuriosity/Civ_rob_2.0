@@ -96,6 +96,9 @@ public:
 	virtual void addGoldToGoldConversionSurplus(const double goldToAdd);
 
 public:
+	void nextTurn(const unsigned int index, const MatriceMap& matriceMap, bool& needToUpdateDrawUnit);
+
+public:
 	jsoncons::ojson saveToOjson()const;
 	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
 

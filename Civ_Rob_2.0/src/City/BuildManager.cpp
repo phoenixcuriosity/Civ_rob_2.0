@@ -71,8 +71,8 @@ void city::BuildManager::computeWork()
 
 void city::BuildManager::computeWorkToBuild
 (
-	Player& player,
-	bool* needToUpdateDrawUnit
+	PlayerPtrT& player,
+	bool& needToUpdateDrawUnit
 )
 {
 	if (!m_buildQueue.empty())
@@ -86,8 +86,8 @@ void city::BuildManager::computeWorkToBuild
 			switch (m_buildQueue.front().buildQ.type)
 			{
 			case build_Type::unit:
-				player.addUnit(m_buildQueue.front().buildQ.name, { m_x, m_y });
-				*needToUpdateDrawUnit = true;
+				player->addUnit(m_buildQueue.front().buildQ.name, { m_x, m_y });
+				needToUpdateDrawUnit = true;
 				break;
 			case build_Type::building:
 

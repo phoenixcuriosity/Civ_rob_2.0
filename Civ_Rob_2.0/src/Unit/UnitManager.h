@@ -26,6 +26,8 @@
 #include "Unit.h"
 #include "UnitFactory.h"
 
+struct Tile;
+
 namespace unit
 {
 
@@ -34,6 +36,9 @@ class UnitManager
 private:
 	std::vector<std::shared_ptr<Unit>> m_units;
 	using PlayerPtrT = std::shared_ptr<Player>;
+
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
 
 	static UnitFactory& getFactory()
 	{
@@ -49,10 +54,12 @@ public:
 	}
 
 	void addUnit(const Unit::UnitName& name, const Unit::Coor& coor, PlayerPtrT owner);
-	void addEmptyUnit();
+	void addEmptyUnit(PlayerPtrT owner);
 	void removeUnit(const size_t index);
 
 	const std::vector<std::shared_ptr<Unit>>& getUnits() const { return m_units; }
+
+	void nextTurn(const unsigned int index, const MatriceMap& matriceMap);
 };
 
 }

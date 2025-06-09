@@ -23,6 +23,7 @@
 #include "CityFactory.h"
 
 #include "CityNameTemplate.h"
+#include "Player.h"
 
 city::CityFactory
 ::CityFactory() : m_loader(std::make_shared<R2D::RegisterLoadAbleOjson>())
@@ -48,7 +49,7 @@ city::CityFactory
 
 city::CityFactory::CityPtrT
 city::CityFactory
-::CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles)
+::CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles, const PlayerPtrT& player)
 {
-	return std::make_shared<City>(CityNameTemplate::getSingleton().getCityName(id.playerId, id.cityVectSize), coor, tiles);
+	return std::make_shared<City>(CityNameTemplate::getSingleton().getCityName(id.playerId, id.cityVectSize), coor, tiles, player);
 }

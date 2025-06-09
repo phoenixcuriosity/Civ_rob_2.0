@@ -435,3 +435,8 @@ bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
 }
+
+void GamePlayScreen::nextTurn()
+{
+	m_players.nextTurn();
+}

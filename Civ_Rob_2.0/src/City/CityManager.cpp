@@ -22,12 +22,14 @@
 
 #include "CityManager.h"
 
+#include "Player.h"
+
 void
 city::CityManager
-::addCity(const int playerId, const Coor coor, VectMapPtr& tiles)
+::addCity(const int playerId, const Coor coor, VectMapPtr& tiles, const PlayerPtrT& player)
 {
 	const CityNamePlayerId cityNamePlayerId{ playerId, m_city.size() };
-	m_city.push_back(getFactory().CreateCity(cityNamePlayerId, coor, tiles));
+	m_city.push_back(getFactory().CreateCity(cityNamePlayerId, coor, tiles, player));
 }
 
 void
@@ -46,4 +48,14 @@ city::CityManager
 		m_city.erase(m_city.begin() + index);
 	}
 };
+
+void
+city::CityManager
+::nextTurn(bool& needToUpdateDrawUnit)
+{
+	for (auto& city : m_city)
+	{
+		city->nextTurn(needToUpdateDrawUnit);
+	}
+}
 

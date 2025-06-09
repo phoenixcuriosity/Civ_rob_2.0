@@ -43,6 +43,8 @@ enum class conversionSurplus_Type : unsigned int;
 class BuildManager
 {
 private:
+	using PlayerPtrT = std::shared_ptr<Player>;
+private:
 	static constexpr double RESOURCES_WORK_ZERO = 0.0;
 
 public:
@@ -99,7 +101,7 @@ public:
 
 public:
 	void computeWork();
-	void computeWorkToBuild(Player& player, bool* needToUpdateDrawUnit);
+	void computeWorkToBuild(PlayerPtrT& player, bool& needToUpdateDrawUnit);
 	void convertFoodSurplusToWork(const double foodSurplus);
 	void addBuildToQueue(const buildGUI& buildToQueue);
 	void removeBuildToQueueFront();
