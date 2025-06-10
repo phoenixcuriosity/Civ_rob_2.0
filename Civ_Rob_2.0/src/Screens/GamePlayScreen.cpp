@@ -29,7 +29,7 @@
 #include "ScreenIndices.h"
 #include "Unit/Unit.h"
 #include "SaveReload.h"
-#include "T_NewGameScreen.h"
+#include "../T_NewGameScreen.h"
 
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ErrorLog.h>
@@ -434,4 +434,9 @@ bool GamePlayScreen::onExitClicked(const CEGUI::EventArgs& /* e */)
 
 	m_currentState = R2D::ScreenState::CHANGE_PREVIOUS;
 	return true;
+}
+
+void GamePlayScreen::nextTurn()
+{
+	m_players.nextTurn();
 }

@@ -252,9 +252,9 @@ void CityScreen::initCoorVectTilePos()
 	const unsigned int screenWidth{ static_cast<unsigned int>(m_game->getWindow().GETscreenWidth()) };
 	const unsigned int screenHeight{ static_cast<unsigned int>(m_game->getWindow().GETscreenHeight()) };
 	unsigned int k(0);
-	for (int o(-city::City::INIT_SIZE_VIEW_DIV); o <= city::City::INIT_SIZE_VIEW_DIV; o++)
+	for (int o(-city::City::INIT_SIZE_VIEW_DIV + 1); o < city::City::INIT_SIZE_VIEW_DIV; o++)
 	{
-		for (int p(-city::City::INIT_SIZE_VIEW_DIV); p <= city::City::INIT_SIZE_VIEW_DIV; p++)
+		for (int p(-city::City::INIT_SIZE_VIEW_DIV + 1); p < city::City::INIT_SIZE_VIEW_DIV; p++)
 		{
 			m_displayTileVect[k].x = (screenWidth / 2) - (-o * *m_tileSize) - *m_tileSize / 2;
 			m_displayTileVect[k].y = (screenHeight / 2) - (-p * *m_tileSize) - *m_tileSize / 2;

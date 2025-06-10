@@ -26,8 +26,7 @@ class GamePlayScreen;
 class NextTurn
 {
 public:
-	NextTurn();
-	~NextTurn();
+	NextTurn() : m_nbTurn(0) {}
 
 public:
 	void nextTurn(GamePlayScreen& mainGame);

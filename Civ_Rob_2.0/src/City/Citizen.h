@@ -21,7 +21,7 @@
 */
 #pragma once
 
-#include "LIB.h"
+#include "../LIB.h"
 
 struct Tile;
 

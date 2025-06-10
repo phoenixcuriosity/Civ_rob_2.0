@@ -25,6 +25,8 @@
 #include <R2D/src/IRegister.h>
 #include "City.h"
 
+class Player;
+
 namespace city
 {
 
@@ -41,6 +43,7 @@ private:
     using Coor = R2D::Coor; ///< Alias for coordinates used in the game.
     using CityName = std::string; ///< Alias for the name of a city.
     using CityPtrT = std::shared_ptr<City>; ///< Alias for a shared pointer to a City object.
+    using PlayerPtrT = std::shared_ptr<Player>;
     using VectMapPtr = std::vector<Tile*>; ///< Alias for a vector of pointers to Tile objects.
 
     /**
@@ -90,7 +93,7 @@ public:
      * @param tiles A vector of pointers to tiles that the city will occupy.
      * @return A shared pointer to the newly created City object.
      */
-    CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles);
+    CityPtrT CreateCity(const CityNamePlayerId& id, const Coor coor, VectMapPtr& tiles, const PlayerPtrT& player);
 
 private:
     R2D::RegisterPtrT m_loader;

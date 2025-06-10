@@ -23,9 +23,9 @@
 #include "CitizenManager.h"
 
 #include "Citizen.h"
-#include "LogSentences.h"
+#include "../LogSentences.h"
 #include "T_City.h"
-#include "T_MainMap.h"
+#include "../T_MainMap.h"
 #include "City.h"
 
 #include <jsoncons/json.hpp>

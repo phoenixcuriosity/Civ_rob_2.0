@@ -21,9 +21,9 @@
 */
 
 #include "UnitTemplate.h"
-#include "jsonloader.h"
+#include "../jsonloader.h"
+#include "../LogSentences.h"
 
-#include "LogSentences.h"
 #include <R2D/src/Log.h>
 #include <R2D/src/ResourceManager.h>
 

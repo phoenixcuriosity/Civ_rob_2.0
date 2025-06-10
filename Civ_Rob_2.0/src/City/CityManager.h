@@ -24,6 +24,8 @@
 
 #include "CityFactory.h"
 
+class Player;
+
 namespace city
 {
 
@@ -41,6 +43,7 @@ private:
     using CityName = std::string; ///< Alias for the name of a city.
     using CityPtrTVector = std::vector<std::shared_ptr<City>>; ///< Alias for a vector of shared pointers to City objects.
     using CityNamePlayerId = CityFactory::CityNamePlayerId; ///< Alias for player ID and city name structure.
+    using PlayerPtrT = std::shared_ptr<Player>;
     using VectMapPtr = std::vector<Tile*>; ///< Alias for a vector of pointers to tiles.
 
     CityPtrTVector m_city; ///< Vector storing shared pointers to City objects.
@@ -79,7 +82,7 @@ public:
      * @param coor The coordinates where the city will be created.
      * @param tiles A vector of pointers to tiles that the city will occupy.
      */
-    void addCity(const int playerId, const Coor coor, VectMapPtr& tiles);
+    void addCity(const int playerId, const Coor coor, VectMapPtr& tiles, const PlayerPtrT& player);
 
     /**
      * @brief Adds an empty city to the manager.
@@ -114,6 +117,8 @@ public:
      * @return A reference to the vector of shared pointers to City objects.
      */
     CityPtrTVector& getCities() noexcept { return m_city; }
+
+    void nextTurn(bool& needToUpdateDrawUnit);
 };
 
 }

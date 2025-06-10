@@ -22,10 +22,10 @@
 
 #include "Citizen.h"
 
-#include "App.h"
+#include "../App.h"
 #include "City.h"
-#include "LogSentences.h"
-#include "T_MainMap.h"
+#include "../LogSentences.h"
+#include "../T_MainMap.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
