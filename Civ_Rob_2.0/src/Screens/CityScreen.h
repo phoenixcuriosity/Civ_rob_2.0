@@ -23,9 +23,9 @@
 #ifndef CityScreen_H
 #define CityScreen_H
 
-#include "LIB.h"
+#include "../LIB.h"
 
-#include "Screens/CityScreenEnumTexture.h"
+#include "../Screens/CityScreenEnumTexture.h"
 #include "../City/BuildManager.h"
 
 #include <R2D/src/IGameScreen.h>

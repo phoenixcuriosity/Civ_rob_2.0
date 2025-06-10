@@ -23,7 +23,7 @@
 #ifndef MainMenuScreen_H
 #define MainMenuScreen_H
 
-#include "LIB.h"
+#include "../LIB.h"
 
 #include <R2D\src\Camera2D.h>
 #include <R2D/src/GUI.h>

@@ -23,8 +23,8 @@
 #include "BuildManager.h"
 #include "Citizen.h"
 #include "T_City.h"
-#include "Player.h"
-#include "Unit/Unit.h"
+#include "../Player.h"
+#include "../Unit/Unit.h"
 
 #include <jsoncons/json.hpp>
 #include <CEGUI/widgets/PushButton.h>

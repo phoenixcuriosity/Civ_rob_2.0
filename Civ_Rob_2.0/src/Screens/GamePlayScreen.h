@@ -23,12 +23,12 @@
 #ifndef GamePlayScreen_H
 #define GamePlayScreen_H
 
-#include "LIB.h"
+#include "../LIB.h"
 
 #include "MainMap.h"
 #include "NextTurn.h"
 #include "Players.h"
-#include "T_GamePlayScreen.h"
+#include "../T_GamePlayScreen.h"
 
 #include <R2D/src/IRegister.h>
 #include <R2D/src/IMainGame.h>

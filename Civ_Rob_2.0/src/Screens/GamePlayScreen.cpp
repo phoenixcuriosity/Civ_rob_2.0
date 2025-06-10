@@ -29,7 +29,7 @@
 #include "ScreenIndices.h"
 #include "Unit/Unit.h"
 #include "SaveReload.h"
-#include "T_NewGameScreen.h"
+#include "../T_NewGameScreen.h"
 
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ErrorLog.h>
