@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Players_H
-#define Players_H
+#pragma once
 
 #include "LIB.h"
 
@@ -171,9 +169,3 @@ private:
 
 	R2D::RegisterPairVector& m_registerLoad;
 };
-
-#endif /* Players_H */
-
-/*
-*	End Of File : Players.h
-*/

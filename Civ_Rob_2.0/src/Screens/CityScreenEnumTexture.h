@@ -19,11 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef CityScreenEnumTexture_H
-#define CityScreenEnumTexture_H
-
-#include "TemplateEnumTexture.h"
+#include "../TemplateEnumTexture.h"
 
 enum class CityScreenEnumTexture
 {
@@ -59,5 +57,3 @@ enum class CityScreenEnumTexture
 };
 
 typedef EnumArray<CityScreenEnumTexture, CityScreenEnumTexture::deepwater, CityScreenEnumTexture::Hammer> CityScreenTexture;
-
-#endif // !CityScreenEnumTexture_H

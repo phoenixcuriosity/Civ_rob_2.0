@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef NewGameScreen_H
-#define NewGameScreen_H
+#pragma once
 
 #include "../LIB.h"
 
@@ -85,8 +83,3 @@ private:
 
 	bool m_isInitialize;
 };
-
-#endif // !NewGameScreen_H
-
-
-

@@ -21,13 +21,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef MainMapGen_H
-#define MainMapGen_H
-
-/* *********************************************************
- *						Includes						   *
- ********************************************************* */
+#pragma once
 
 #include "LIB.h"
 
@@ -49,9 +43,3 @@ public:
 private:
 	MapGenRandomRange m_range;
 };
-
-#endif /* MainMapGen_H */
-
-/*
-*	End Of File : MainMap.h
-*/

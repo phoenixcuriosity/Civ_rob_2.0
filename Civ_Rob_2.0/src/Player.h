@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Player_H
-#define Player_H
+#pragma once
 
 #include "LIB.h"
 
@@ -135,9 +133,3 @@ private:
 	OnOffDisplay m_onOffDisplay;
 
 };
-
-#endif /* Player_H */
-
-/*
-*	End Of File : Player.h
-*/

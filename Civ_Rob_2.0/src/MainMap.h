@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef MainMap_H
-#define MainMap_H
+#pragma once
 
 #include "LIB.h"
 
@@ -151,9 +149,3 @@ private:
 
 	static unsigned int* s_tileSize;
 };
-
-#endif /* MainMap_H */
-
-/*
-*	End Of File : MainMap.h
-*/

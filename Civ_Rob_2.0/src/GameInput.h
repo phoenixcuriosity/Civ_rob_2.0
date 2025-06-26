@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef GameInput_H
-#define GameInput_H
+#pragma once
 
 #include <SDL\glew.h>
 #include <SDL/SDL.h>
@@ -163,9 +161,3 @@ private:
 	);
 
 };
-
-#endif /* GameInput_H */
-
-/*
-*	End Of File : GameInput.h
-*/

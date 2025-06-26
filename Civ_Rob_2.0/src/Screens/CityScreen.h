@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef CityScreen_H
-#define CityScreen_H
+#pragma once
 
 #include "../LIB.h"
 
@@ -172,5 +170,3 @@ private:
 
 	bool m_isInitialize;
 };
-
-#endif // !CityScreen_H

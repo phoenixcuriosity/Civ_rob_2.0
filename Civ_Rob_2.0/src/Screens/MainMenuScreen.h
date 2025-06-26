@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef MainMenuScreen_H
-#define MainMenuScreen_H
+#pragma once
 
 #include "../LIB.h"
 
@@ -68,8 +66,3 @@ private:
 
 	bool m_isInitialize;
 };
-
-#endif // !MainMenuScreen_H
-
-
-
