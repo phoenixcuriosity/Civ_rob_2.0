@@ -23,9 +23,9 @@
 
 #include "../LIB.h"
 
-#include "MainMap.h"
-#include "NextTurn.h"
-#include "Players.h"
+#include "../MainMap.h"
+#include "../NextTurn.h"
+#include "../Players.h"
 #include "../T_GamePlayScreen.h"
 
 #include <R2D/src/IRegister.h>
