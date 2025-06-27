@@ -22,13 +22,13 @@
 
 #include "GamePlayScreen.h"
 
-#include "App.h"
-#include "LogSentences.h"
-#include "Player.h"
-#include "NewGame.h"
-#include "ScreenIndices.h"
-#include "Unit/Unit.h"
-#include "SaveReload.h"
+#include "../App.h"
+#include "../LogSentences.h"
+#include "../Player.h"
+#include "../NewGame.h"
+#include "../ScreenIndices.h"
+#include "../Unit/Unit.h"
+#include "../SaveReload.h"
 #include "../T_NewGameScreen.h"
 
 #include <R2D/src/ResourceManager.h>

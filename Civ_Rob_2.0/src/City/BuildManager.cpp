@@ -195,7 +195,7 @@ jsoncons::ojson city::BuildManager::saveToOjson()const
 	jsoncons::ojson value;
 	jsoncons::ojson builds{ jsoncons::ojson::make_array() };
 
-	for (const auto build : m_buildQueue)
+	for (const auto& build : m_buildQueue)
 	{
 		jsoncons::ojson b;
 		b.insert_or_assign("name", build.buildQ.name);

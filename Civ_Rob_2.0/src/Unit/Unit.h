@@ -105,8 +105,9 @@ private:
 
 public:
 
-	Unit(const PlayerPtrT& ptrToPlayer);
-	Unit(const UnitName& name,
+	Unit() = delete;
+	explicit Unit(const PlayerPtrT& ptrToPlayer);
+	explicit Unit(const UnitName& name,
 		 const Coor& coor,
 		 const UnitStat& unitStat,
 		 double maintenance,

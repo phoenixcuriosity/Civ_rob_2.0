@@ -49,8 +49,8 @@ public:
 
 public:
 
+	FoodManager() = delete;
 	FoodManager(const CitizenManager& citizenManager);
-	~FoodManager() {};
 
 public:
 
@@ -70,7 +70,7 @@ public:
 		m_foodSurplusPreviousTurn = foodSurplusPreviousTurn;
 	};
 
-	inline virtual double GETfoodStockPerc()const
+	inline double GETfoodStockPerc()const
 	{
 		return ((m_foodStock / m_foodToLevelUp) * PERCENTAGE::ONE_HUNDRED);
 	};

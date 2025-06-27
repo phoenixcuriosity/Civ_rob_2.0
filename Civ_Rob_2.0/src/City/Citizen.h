@@ -77,13 +77,13 @@ public:
 	static constexpr double EMOTION_MEAN = ((EMOTION_MAX + EMOTION_MIN) / 2.0);
 
 public:
-	Citizen();
-	Citizen(const Tile& tile);
-	Citizen(const unsigned int tileOccupied,
+	explicit Citizen();
+	explicit Citizen(const Tile& tile);
+	explicit Citizen(const unsigned int tileOccupied,
 			const int food,
 			const int work,
 			const int gold);
-	virtual ~Citizen();
+	~Citizen();
 
 public:
 	jsoncons::ojson saveToOjson()const;

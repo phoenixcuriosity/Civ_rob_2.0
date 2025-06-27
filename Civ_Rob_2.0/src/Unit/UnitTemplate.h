@@ -43,11 +43,11 @@ public:
 
 	struct UnitStat
 	{
-		UnitStat() noexcept : movementType(Movement_Type::ground), life(0), atq(0), def(0), movement(0), numberOfAttack(0), level(0) {};
-		UnitStat(const Movement_Type qtype, const unsigned int qlife, const unsigned int qatq, const unsigned int qdef,
+		explicit UnitStat() noexcept : movementType(Movement_Type::ground), life(0), atq(0), def(0), movement(0), numberOfAttack(0), level(0) {};
+		explicit UnitStat(const Movement_Type qtype, const unsigned int qlife, const unsigned int qatq, const unsigned int qdef,
 				 const unsigned int qmovement, const unsigned int qnumberOfAttack, const unsigned int qlevel) noexcept
 		: movementType(qtype), life(qlife), atq(qatq), def(qdef), movement(qmovement), numberOfAttack(qnumberOfAttack), level(qlevel) {};
-		UnitStat(const UnitStat& src) noexcept
+		explicit UnitStat(const UnitStat& src) noexcept
 			: movementType(src.movementType), life(src.life), atq(src.atq), def(src.def), movement(src.movement), numberOfAttack(src.numberOfAttack), level(src.level) {};
 		void set(const Movement_Type qtype, const unsigned int qlife, const unsigned int qatq, const unsigned int qdef,
 				 const unsigned int qmovement, const unsigned int qnumberOfAttack, const unsigned int qlevel) noexcept
@@ -116,8 +116,8 @@ public:
 		return unitTemplate;
 	};
 
-	UnitTemplate() noexcept : m_mapUnitTemplate() {};
-	UnitTemplate(R2D::RegisterPairVector& registerLoad);
+	explicit UnitTemplate() noexcept : m_mapUnitTemplate() {};
+	explicit UnitTemplate(R2D::RegisterPairVector& registerLoad);
 	virtual ~UnitTemplate() = default;
 
 	void load(jsoncons::ojson f)override;

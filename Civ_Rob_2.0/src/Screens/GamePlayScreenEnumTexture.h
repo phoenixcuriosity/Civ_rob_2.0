@@ -21,7 +21,7 @@
 */
 #pragma once
 
-#include "TemplateEnumTexture.h"
+#include "../TemplateEnumTexture.h"
 
 enum class GamePlayScreenEnumTexture
 {

@@ -43,7 +43,8 @@ private:
 
 public:
 
-	CitizenManager(const VectMapPtr& tiles);
+	CitizenManager() = delete;
+	explicit CitizenManager(const VectMapPtr& tiles);
 	~CitizenManager();
 
 public:
