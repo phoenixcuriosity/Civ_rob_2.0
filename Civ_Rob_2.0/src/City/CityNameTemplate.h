@@ -42,8 +42,7 @@ public:
 		return CityNameTemplate;
 	};
 
-	CityNameTemplate(std::optional<R2D::RegisterPairVector> registerLoad = std::nullopt);
-	virtual ~CityNameTemplate() = default;
+	explicit CityNameTemplate(std::optional<R2D::RegisterPairVector> registerLoad = std::nullopt);
 
 	void load(jsoncons::ojson f)override;
 	CityName& getCityName(const size_t indexPlayer, const size_t indexCityName) noexcept { return m_vectTemplate[indexPlayer][indexCityName]; };

@@ -50,7 +50,7 @@ public:
 public:
 
 	FoodManager() = delete;
-	FoodManager(const CitizenManager& citizenManager);
+	explicit FoodManager(const CitizenManager& citizenManager);
 
 public:
 

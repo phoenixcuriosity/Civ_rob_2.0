@@ -91,7 +91,7 @@ private:
 		int& m_gold
 	);
 
-	virtual double tileValue
+	double tileValue
 	(
 		const Tile& tile,
 		const double coefFood = 1.0,

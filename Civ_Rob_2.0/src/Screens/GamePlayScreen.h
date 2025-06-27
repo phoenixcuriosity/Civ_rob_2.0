@@ -41,8 +41,8 @@ class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	GamePlayScreen() = delete;
-	GamePlayScreen(UserInputNewGame* userInputNewGame);
-	virtual ~GamePlayScreen();
+	explicit GamePlayScreen(UserInputNewGame* userInputNewGame);
+	~GamePlayScreen();
 
 protected:
 	R2D::RegisterPairVector addSubscriber();

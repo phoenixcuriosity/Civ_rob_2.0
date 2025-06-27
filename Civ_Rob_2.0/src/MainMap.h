@@ -54,8 +54,8 @@ public:
 
 public:
 	MainMap() = delete;
-	MainMap(R2D::RegisterPairVector& registerLoad);
-	virtual ~MainMap();
+	explicit MainMap(R2D::RegisterPairVector& registerLoad);
+	~MainMap();
 
 	void initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture);
 	void initMainMapTexture(const GamePlayScreenTexture& idTexture);
