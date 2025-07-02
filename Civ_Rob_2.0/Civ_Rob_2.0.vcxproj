@@ -184,6 +184,7 @@
     <ClCompile Include="src\Unit\Unit.cpp" />
     <ClCompile Include="src\Unit\UnitFactory.cpp" />
     <ClCompile Include="src\Unit\UnitManager.cpp" />
+    <ClCompile Include="src\Unit\UnitService.cpp" />
     <ClCompile Include="src\Unit\UnitStats.cpp" />
     <ClCompile Include="src\Unit\UnitTemplate.cpp" />
     <ClCompile Include="src\Utility.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="src\Unit\Unit.h" />
     <ClInclude Include="src\Unit\UnitFactory.h" />
     <ClInclude Include="src\Unit\UnitManager.h" />
+    <ClInclude Include="src\Unit\UnitService.h" />
     <ClInclude Include="src\Unit\UnitStats.h" />
     <ClInclude Include="src\Unit\UnitTemplate.h" />
     <ClInclude Include="src\Utility.h" />

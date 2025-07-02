@@ -69,6 +69,7 @@
     <ClCompile Include="src\City\CityFactory.cpp" />
     <ClCompile Include="src\City\CityManager.cpp" />
     <ClCompile Include="src\Unit\UnitManager.cpp" />
+    <ClCompile Include="src\Unit\UnitService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="src\Unit\UnitManager.h" />
     <ClInclude Include="src\City\CityFactory.h" />
     <ClInclude Include="src\City\CityManager.h" />
+    <ClInclude Include="src\Unit\UnitService.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">
