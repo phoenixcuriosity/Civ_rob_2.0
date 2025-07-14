@@ -83,17 +83,19 @@ public:
 
 	virtual ~Unit();
 
-private:
+public:
 	virtual void
 	attack(Unit& defender);
-
-	virtual void
-	defend(const int dmg);
 
 	virtual void
 	move(Select_Type& select,
 		 int& selectunit,
 		 const R2D::CardinalDirection& cardinalDirection);
+
+private:
+	virtual void
+	defend(const int dmg);
+
 
 private:
 	void

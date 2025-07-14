@@ -26,36 +26,6 @@
 #include "../Player.h"
 #include "../Players.h"
 
-bool
-unit::UnitService
-::searchUnitTile(Players& players,
-	const glm::i32vec2& mouseCoorNorm,
-	Select_Type* select)
-{
-	if (SELECTION::NO_PLAYER_SELECTED < players.GETselectedPlayerId())
-	{
-		PlayerPtrT selPlayer(players.GETselectedPlayerPtr());
-
-		for (unsigned int i(0); i < selPlayer->GETtabUnit().size(); i++)
-		{
-			if (selPlayer->GETtabUnit()[i]->testPos(mouseCoorNorm.x, mouseCoorNorm.y))
-			{
-				selPlayer->SETselectedUnit(i);
-
-				selPlayer->GETtabUnit()[i]->makeShow();
-				*select = Select_Type::selectmove;
-
-				LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::SEARCH_UNIT_TILE, logS::DATA::SEARCH_UNIT_TILE,
-					i, selPlayer->GETtabUnit()[i]->GETname(), selPlayer->GETname());
-
-				return true;
-			}
-		}
-		selPlayer.reset();
-	}
-	return false;
-}
-
 void
 unit::UnitService
 ::tryToMove(const MatriceMap& maps,
@@ -88,7 +58,7 @@ unit::UnitService
 				attackUnit->attack(*(defenderUnit.get()));
 
 				/* if the opposite Unit is destroy, try to move to its position */
-				if (defenderUnit->GETalive() == DEAD_UNIT)
+				if (defenderUnit->GETalive() == false)
 				{
 					attackPlayer->deleteUnit(unitToAttack);
 					tryToMove(maps, players, select, cardinalDirection);
@@ -212,13 +182,13 @@ unit::UnitService
 				{
 					if (players.GETselectedPlayerId() == (int)i)
 					{
-						return Move_Type::cannotMove;
+						return Unit::Move_Type::cannotMove;
 					}
 					else
 					{
 						*playerToAttack = (int)i;
 						*unitToAttack = (int)j;
-						return Move_Type::attackMove;
+						return Unit::Move_Type::attackMove;
 					}
 				}
 			}
@@ -230,9 +200,9 @@ unit::UnitService
 		/* Next Tile is not a ground Tile 										  */
 		/* ---------------------------------------------------------------------- */
 
-		return Move_Type::cannotMove;
+		return Unit::Move_Type::cannotMove;
 	}
-	return Move_Type::canMove;
+	return Unit::Move_Type::canMove;
 }
 
 bool unit::UnitService::checkUnitNextTile

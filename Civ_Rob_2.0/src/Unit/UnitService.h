@@ -34,9 +34,11 @@ private:
 	using UnitPtrT = std::shared_ptr<Unit>;
 	using VectMap = std::vector<Tile>;
 	using MatriceMap = std::vector<VectMap>;
+
 public:
-    static bool searchUnitTile(Players& players, const glm::i32vec2& mouseCoorNorm, Select_Type* select);
     static void tryToMove(const MatriceMap& maps, Players& players, Select_Type select, const R2D::CardinalDirection& cardinalDirection);
+
+private:
     static Unit::Move_Type searchToMove(const MatriceMap& maps, Players& players, const R2D::CardinalDirection& cardinalDirection, int* const playerToAttack, int* const unitToAttack);
     static bool checkUnitNextTile(const Unit& from, const Unit& to, const int x, const int y);
     static bool checkNextTile(const Unit& from, const Tile& to, const int x, const int y);
