@@ -72,6 +72,7 @@
     <ClCompile Include="src\Unit\UnitService.cpp" />
     <ClCompile Include="src\City\Build.cpp" />
     <ClCompile Include="src\City\BuildUnit.cpp" />
+    <ClCompile Include="src\City\BuildFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="src\City\IBuild.h" />
     <ClInclude Include="src\City\Build.h" />
     <ClInclude Include="src\City\BuildUnit.h" />
+    <ClInclude Include="src\City\BuildFactory.h" />
     <ClInclude Include="src\City\TBuild.h" />
   </ItemGroup>
   <ItemGroup>
