@@ -70,6 +70,7 @@
     <ClCompile Include="src\City\CityManager.cpp" />
     <ClCompile Include="src\Unit\UnitManager.cpp" />
     <ClCompile Include="src\Unit\UnitService.cpp" />
+    <ClCompile Include="src\City\Build.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\City\CityManager.h" />
     <ClInclude Include="src\Unit\UnitService.h" />
     <ClInclude Include="src\City\IBuild.h" />
+    <ClInclude Include="src\City\Build.h" />
     <ClInclude Include="src\City\TBuild.h" />
   </ItemGroup>
   <ItemGroup>
