@@ -199,6 +199,8 @@
     <ClInclude Include="src\City\CityFactory.h" />
     <ClInclude Include="src\City\CityManager.h" />
     <ClInclude Include="src\City\CityNameTemplate.h" />
+    <ClInclude Include="src\City\IBuild.h" />
+    <ClInclude Include="src\City\TBuild.h" />
     <ClInclude Include="src\Screens\CityScreen.h" />
     <ClInclude Include="src\Screens\CityScreenEnumTexture.h" />
     <ClInclude Include="src\City\FoodManager.h" />
