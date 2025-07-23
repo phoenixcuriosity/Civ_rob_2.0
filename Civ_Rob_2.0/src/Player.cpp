@@ -63,7 +63,7 @@ Player::~Player()
 
 void Player::addEmptyUnit()
 {
-	m_unitManager.addEmptyUnit();
+	m_unitManager.addEmptyUnit(shared_from_this());
 }
 
 void Player::addUnit
@@ -85,7 +85,7 @@ void Player::deleteUnit
 
 void Player::addCity(const unit::Unit::Coor coor, VectMapPtr& tiles)
 {
-	m_CityManager.addCity(m_id, coor, tiles);
+	m_CityManager.addCity(m_id, coor, tiles, shared_from_this());
 }
 
 void Player::addEmptyCity()
@@ -157,6 +157,16 @@ void Player::addGoldToGoldConversionSurplus
 )
 {
 	m_goldStats.goldConversionSurplus += goldToAdd;
+}
+
+void
+Player
+::nextTurn(const unsigned int index, const MatriceMap& matriceMap, bool& needToUpdateDrawUnit)
+{
+	resetGoldStats();
+	m_unitManager.nextTurn(index, matriceMap);
+	m_CityManager.nextTurn(needToUpdateDrawUnit);
+	computeGold();
 }
 
 jsoncons::ojson Player::saveToOjson()const

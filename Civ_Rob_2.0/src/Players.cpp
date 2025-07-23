@@ -395,6 +395,14 @@ void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
 	}
 }
 
- /*
- *	End Of File : Players.cpp
- */
+void
+Players
+::nextTurn()
+{
+	unsigned int indexPlayer{ 0 };
+	for (auto& player : m_vectPlayer)
+	{
+		player->nextTurn(indexPlayer, *m_matriceMapPtrT, m_needToUpdateDrawCity);
+		indexPlayer++;
+	}
+}

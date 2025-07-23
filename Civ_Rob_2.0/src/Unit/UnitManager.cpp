@@ -20,8 +20,9 @@
 
 */
 
-
 #include "UnitManager.h"
+
+#include "T_MainMap.h"
 
 void
 unit::UnitManager
@@ -32,9 +33,9 @@ unit::UnitManager
 
 void
 unit::UnitManager
-::addEmptyUnit()
+::addEmptyUnit(PlayerPtrT owner)
 {
-	m_units.push_back(getFactory().createUnit());
+	m_units.push_back(getFactory().createUnit(owner));
 }
 
 void
@@ -46,3 +47,13 @@ unit::UnitManager
 		m_units.erase(m_units.begin() + index);
 	}
 };
+
+void
+unit::UnitManager
+::nextTurn(const unsigned int index, const MatriceMap& matriceMap)
+{
+	for (auto& unit : m_units)
+	{
+		unit->nextTurn(index, matriceMap);
+	}
+}

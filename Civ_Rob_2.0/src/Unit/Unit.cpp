@@ -279,14 +279,14 @@ bool unit::Unit::checkNextTile
 	return false;
 }
 
-unit::Unit::Unit():
+unit::Unit::Unit(const PlayerPtrT& ptrToPlayer):
 R2D::IBlickable(BLIT_RATE),
 R2D::IMoveable(),
 UnitStats(),
 m_name(DEFAULT_UNIT_NAME),
 m_alive(true),
 m_maintenance(1.0),
-m_owner(SELECTION::NO_OWNER)
+m_owner(ptrToPlayer)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_UNIT, logS::DATA::CONSTRUCTOR_UNIT, m_name);
 }
@@ -295,7 +295,7 @@ unit::Unit::Unit(	const UnitName& name,
 			const Coor& coor,
 			const UnitStat& unitStat,
 			double maintenance,
-			PlayerPtrT ptrToPlayer):
+			const PlayerPtrT& ptrToPlayer):
 R2D::IBlickable(BLIT_RATE),
 R2D::IMoveable(coor),
 UnitStats(unitStat),
@@ -417,6 +417,15 @@ bool unit::Unit::irrigate
 		return true;
 	}
 	return false;
+}
+
+void
+unit::Unit
+::nextTurn(const unsigned int index, const MatriceMap& matriceMap)
+{
+	resetMovement();
+	resetNumberOfAttack();
+	heal(matriceMap, index);
 }
 
 jsoncons::ojson unit::Unit::saveToOjson()const

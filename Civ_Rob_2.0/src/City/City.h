@@ -127,19 +127,23 @@ public:
 	City();
 	City(const std::string& name,
 		 const Coor coor,
-		 VectMapPtr& tiles);
+		 VectMapPtr& tiles,
+		 const PlayerPtrT& player);
 
 	virtual ~City();
-
-	virtual void computefood(GoldStats& goldStats);
-	virtual void computeWork(Player& player, bool* needToUpdateDrawUnit);
 
 	virtual bool searchCityTile(const unsigned int indexX, const unsigned int indexY);
 
 public:
+	void nextTurn(bool& needToUpdateDrawUnit);
+
+private:
+	virtual void computefood();
+	virtual void computeWork(bool& needToUpdateDrawUnit);
 	virtual void computeGold();
-	virtual void addCityGoldToTaxIncome(GoldStats& goldStats);
-	virtual void convertFoodSurplusToGold(const double foodSurplus, GoldStats& goldStats);
+	virtual void addCityGoldToTaxIncome();
+
+	virtual void convertFoodSurplusToGold(const double foodSurplus);
 
 public:
 	void addBuildToQueue(const BuildManager::buildGUI& buildToQueue)	{ m_buildManager.addBuildToQueue(buildToQueue); };
@@ -157,7 +161,6 @@ public:
 
 public:
 	/* const & */
-	inline virtual const std::string& GETimage()const		{ return m_image; };
 	inline virtual const std::string& GETname()const		{ return m_name; };
 	inline virtual const VectMapPtr& GETtile()const			{ return m_tileMap; };
 	inline virtual const VectCitizen& GETcitizens()const	{ return m_citizenManager.getCitizens(); };
@@ -191,6 +194,8 @@ private:
 	BuildManager m_buildManager;
 
 	double m_goldBalance;
+
+	PlayerPtrT m_owner;
 };
 
 }
