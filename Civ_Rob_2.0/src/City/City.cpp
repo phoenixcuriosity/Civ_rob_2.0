@@ -192,7 +192,7 @@ m_nbstructurebuild(0),
 m_conversionToApply(conversionSurplus_Type::No_Conversion),
 m_citizenManager(m_tileMap),
 m_foodManager(m_citizenManager),
-m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
+m_buildManager(m_citizenManager, m_foodManager, m_coor, m_conversionToApply),
 m_goldBalance(0.0),
 m_owner()
 {
@@ -219,7 +219,7 @@ city::City::City
 	m_conversionToApply(conversionSurplus_Type::No_Conversion),
 	m_citizenManager(m_tileMap),
 	m_foodManager(m_citizenManager),
-	m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
+	m_buildManager(m_citizenManager, m_foodManager, m_coor, m_conversionToApply),
 	m_goldBalance(0.0),
 	m_owner(player)
 {

@@ -23,6 +23,8 @@
 #include "CityScreen.h"
 
 #include "../App.h"
+#include "../City/BuildUnit.h"
+#include "../City/BuildFactory.h"
 #include "../City/Citizen.h"
 #include "../City/City.h"
 #include "../LogSentences.h"
@@ -177,7 +179,7 @@ void CityScreen::doInitUI()
 		{
 			m_buttonBuild.push_back
 			(
-				city::BuildManager::buildGUI{
+				buildGUI{
 					static_cast<CEGUI::PushButton*>
 					(
 						m_gui.createWidget
@@ -195,7 +197,7 @@ void CityScreen::doInitUI()
 					),
 					{
 						p.second.name,
-						city::BuildManager::build_Type::unit,
+						city::build_Type::unit,
 						p.second.workToBuild,
 						p.second.workToBuild
 					}
@@ -291,11 +293,11 @@ void CityScreen::createDynamicContext()
 							DIPSLAY_BUILD_QUEUE_DELTA_Y
 						},
 						R2D::NOT_BY_PERCENT,
-						button.buildQ.name + std::to_string(rand())
+						button.name + std::to_string(rand())
 					)
 					);
 
-			button.buildG->setText(button.buildQ.name);
+			button.buildG->setText(button.name);
 			button.buildG->subscribeEvent
 			(
 				CEGUI::PushButton::EventClicked,
@@ -706,7 +708,8 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 							button.buildQ.name + std::to_string(rand())
 						)
 					),
-					button.buildQ
+					std::move(city::BuildFactory::createBuild(button.buildQ)),
+					button.buildQ.name
 				}
 			);
 			m_selectedCity->GETbuildQueue().back().buildG->setText(button.buildQ.name);

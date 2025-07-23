@@ -25,6 +25,7 @@
 
 #include "../Screens/CityScreenEnumTexture.h"
 #include "../City/BuildManager.h"
+#include "../City/TBuild.h"
 
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/GUI.h>
@@ -43,7 +44,15 @@ namespace city
 class CityScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 private:
-	using dequeBuild = std::deque<city::BuildManager::buildGUI>;
+
+	struct buildGUI
+	{
+		CEGUI::PushButton* buildG = nullptr;
+		city::buildT buildQ;
+	};
+	using dequeBuild = std::deque<buildGUI>;
+
+private:
 	using CityPtrT = std::shared_ptr<city::City>;
 	using VectCoor = std::vector<R2D::Coor>;
 
