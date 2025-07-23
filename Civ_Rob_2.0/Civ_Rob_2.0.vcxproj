@@ -160,6 +160,7 @@
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\City\Build.cpp" />
     <ClCompile Include="src\City\BuildManager.cpp" />
+    <ClCompile Include="src\City\BuildUnit.cpp" />
     <ClCompile Include="src\City\Citizen.cpp" />
     <ClCompile Include="src\City\CitizenManager.cpp" />
     <ClCompile Include="src\City\City.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\City\Build.h" />
     <ClInclude Include="src\City\BuildManager.h" />
+    <ClInclude Include="src\City\BuildUnit.h" />
     <ClInclude Include="src\City\Citizen.h" />
     <ClInclude Include="src\City\CitizenManager.h" />
     <ClInclude Include="src\City\City.h" />
