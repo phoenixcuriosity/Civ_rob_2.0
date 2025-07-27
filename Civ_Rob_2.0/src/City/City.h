@@ -177,6 +177,8 @@ public:
 
 	inline virtual void SETVectMapPtr(const VectMapPtr& tileMap)	{ m_tileMap = tileMap; };
 
+	const PlayerPtrT& getOwner()const { return m_owner; }
+
 private:
 
 	std::string m_image;

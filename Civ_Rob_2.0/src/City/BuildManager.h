@@ -88,7 +88,7 @@ public:
 
 public:
 	void computeWork();
-	void computeWorkToBuild(PlayerPtrT& player, bool& needToUpdateDrawUnit);
+	void computeWorkToBuild(bool& needToUpdateDrawUnit);
 	void convertFoodSurplusToWork(const double foodSurplus);
 	void addBuildToQueue(const buildGUI& buildToQueue);
 	void removeBuildToQueueFront();
@@ -103,7 +103,7 @@ public:
 
 public:
 	jsoncons::ojson saveToOjson()const;
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+	void loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner);
 
 private:
 	const CitizenManager& m_citizenManager;

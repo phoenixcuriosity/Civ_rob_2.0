@@ -2,7 +2,6 @@
 
 #include "LIB.h"
 
-#include "../Player.h"
 
 city::Build::Build(const jsoncons::ojson& loadFrom)
 :
@@ -14,9 +13,8 @@ m_remainingWork(loadFrom["remainingWork"].as<double>())
 
 city::IBuild::computeReturnedValue
 city::Build
-::computeWorkToBuild(const double work, PlayerPtrT& player, const R2D::Coor& coor)
+::computeWorkToBuild(const double work, const R2D::Coor& coor)
 {
-	assert(player);
 	bool returnValueBool{ false };
 	double returnValueDouble{ 0.0 };
 
@@ -24,7 +22,7 @@ city::Build
 
 	if (m_remainingWork <= 0.0)
 	{
-		buildInPlayer(player, coor);
+		buildInPlayer(coor);
 		returnValueBool = true;
 		returnValueDouble = -m_remainingWork;
 	}

@@ -25,7 +25,7 @@ protected:
 public:
 	virtual ~IBuild() = default;
 
-	virtual computeReturnedValue computeWorkToBuild(const double work, PlayerPtrT& player, const R2D::Coor& coor) = 0;
+	virtual computeReturnedValue computeWorkToBuild(const double work, const R2D::Coor& coor) = 0;
 
 	virtual void save(jsoncons::ojson& saveTo) = 0;
 

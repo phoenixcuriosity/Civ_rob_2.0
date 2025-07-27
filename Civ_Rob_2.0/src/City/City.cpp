@@ -319,7 +319,7 @@ void city::City::computeWork(bool& needToUpdateDrawUnit)
 	case conversionSurplus_Type::GoldToFood:
 	case conversionSurplus_Type::GoldToWork:
 
-		m_buildManager.computeWorkToBuild(m_owner, needToUpdateDrawUnit);
+		m_buildManager.computeWorkToBuild(needToUpdateDrawUnit);
 
 		break;
 	default:
@@ -402,7 +402,7 @@ void city::City::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		m_nbstructurebuild = jsonLoad["m_nbstructurebuild"].as<unsigned int>();
 		m_citizenManager.loadFromOjson(jsonLoad["Citizens"]);
 		m_foodManager.loadFromOjson(jsonLoad["Food"]);
-		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"]);
+		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"], m_owner);
 	}
 }
 

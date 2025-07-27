@@ -708,7 +708,7 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 							button.buildQ.name + std::to_string(rand())
 						)
 					),
-					std::move(city::BuildFactory::createBuild(button.buildQ)),
+					std::move(city::BuildFactory::createBuild(button.buildQ, m_selectedCity->getOwner())),
 					button.buildQ.name
 				}
 			);

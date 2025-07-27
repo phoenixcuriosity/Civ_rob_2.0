@@ -1,12 +1,10 @@
 #include "BuildUnit.h"
 
-#include "../Player.h"
-
 void
 city::BuildUnit
-::buildInPlayer(PlayerPtrT& player, const R2D::Coor& coor)
+::buildInPlayer(const R2D::Coor& coor)
 {
-	player->addUnit(m_name, coor);
+	m_callback(m_name, coor);
 }
 
 void

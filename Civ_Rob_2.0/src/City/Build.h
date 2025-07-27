@@ -15,7 +15,7 @@ public:
 	Build(const double work, const double remainingWork, const std::string& name) noexcept : m_name(name), m_work(work), m_remainingWork(remainingWork) {}
 	virtual ~Build() = default;
 
-	computeReturnedValue computeWorkToBuild(const double work, PlayerPtrT& player, const R2D::Coor& coor) override;
+	computeReturnedValue computeWorkToBuild(const double work, const R2D::Coor& coor) override;
 
 	double getRemainingWorkoverWork() const override;
 
@@ -23,7 +23,7 @@ public:
 
 protected:
 
-	virtual void buildInPlayer(PlayerPtrT& player, const R2D::Coor& coor) = 0;
+	virtual void buildInPlayer(const R2D::Coor& coor) = 0;
 
 protected:
 	std::string m_name;

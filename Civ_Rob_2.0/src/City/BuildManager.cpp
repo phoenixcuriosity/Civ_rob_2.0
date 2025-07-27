@@ -33,6 +33,8 @@
 #include <jsoncons/json.hpp>
 #include <CEGUI/widgets/PushButton.h>
 
+#include <functional>
+
 city::BuildManager::BuildManager
 (
 	const CitizenManager& citizenManager,
@@ -71,18 +73,16 @@ void city::BuildManager::computeWork()
 	m_workSurplusPreviousTurn = RESOURCES_WORK_ZERO;
 }
 
-void city::BuildManager::computeWorkToBuild
-(
-	PlayerPtrT& player,
-	bool& needToUpdateDrawUnit
-)
+void
+city::BuildManager
+::computeWorkToBuild(bool& needToUpdateDrawUnit)
 {
 	bool loopContinue{ true };
 	double loopComputeWork{ m_workBalance };
 	while (!m_buildQueue.empty() && loopContinue)
 	{
 		std::tie(loopContinue, loopComputeWork) =
-			m_buildQueue.front().buildQ->computeWorkToBuild(loopComputeWork, player, m_coor);
+			m_buildQueue.front().buildQ->computeWorkToBuild(loopComputeWork, m_coor);
 
 		if (loopContinue)
 		{
@@ -171,7 +171,7 @@ jsoncons::ojson city::BuildManager::saveToOjson()const
 	return value;
 }
 
-void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner)
 {
 	if	(
 			jsonLoad.contains("m_workBalance") && jsonLoad.contains("m_workSurplusPreviousTurn") && jsonLoad.contains("m_buildQueue") &&
@@ -184,7 +184,7 @@ void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		for (const auto& build : jsonLoad["m_buildQueue"].array_range())
 		{
 			buildGUI buildToQueue;
-			buildToQueue.buildQ = std::move(BuildFactory::createBuild(build));
+			buildToQueue.buildQ = std::move(BuildFactory::createBuild(build, owner));
 			m_buildQueue.push_back(std::move(buildToQueue));
 		}
 	}
