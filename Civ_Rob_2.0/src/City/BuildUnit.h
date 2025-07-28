@@ -5,6 +5,7 @@
 #include <functional>
 
 #include "Unit/Unit.h"
+#include "BuildUnitCallbackStrategy.h"
 
 namespace city
 {
@@ -12,11 +13,11 @@ namespace city
 class BuildUnit : public Build
 {
 protected:
-	using CallbackT = std::function<void(const unit::Unit::UnitName&, const R2D::Coor&)>;
+	using BuildCallbackStrategyPtr = std::shared_ptr<BuildUnitCallbackStrategy>;
 
 public:
-	BuildUnit(const jsoncons::ojson& loadFrom, CallbackT cb)
-		: Build(loadFrom), m_callback(std::move(cb)) {}
+	BuildUnit(const jsoncons::ojson& loadFrom, BuildCallbackStrategyPtr strategy)
+		: Build(loadFrom), m_strategy(std::move(strategy)) {}
 	~BuildUnit() = default;
 
 public:
@@ -26,7 +27,7 @@ public:
 
 private:
 	const std::string m_type = "Unit";
-	const CallbackT m_callback;
+	const BuildCallbackStrategyPtr m_strategy;
 };
 
 }

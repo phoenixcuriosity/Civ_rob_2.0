@@ -1,10 +1,12 @@
 #include "BuildUnit.h"
 
+#include "UnitBuildStrategy.h"
+
 void
 city::BuildUnit
 ::buildInPlayer(const R2D::Coor& coor)
 {
-	m_callback(m_name, coor);
+	m_strategy->onBuild(m_name, coor);
 }
 
 void

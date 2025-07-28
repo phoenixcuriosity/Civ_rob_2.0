@@ -73,6 +73,7 @@
     <ClCompile Include="src\City\Build.cpp" />
     <ClCompile Include="src\City\BuildUnit.cpp" />
     <ClCompile Include="src\City\BuildFactory.cpp" />
+    <ClCompile Include="src\City\UnitBuildStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -179,6 +180,8 @@
     <ClInclude Include="src\City\BuildUnit.h" />
     <ClInclude Include="src\City\BuildFactory.h" />
     <ClInclude Include="src\City\TBuild.h" />
+    <ClInclude Include="src\City\BuildUnitCallbackStrategy.h" />
+    <ClInclude Include="src\City\UnitBuildStrategy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

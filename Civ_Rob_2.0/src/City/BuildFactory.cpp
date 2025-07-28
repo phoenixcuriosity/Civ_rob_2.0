@@ -2,6 +2,7 @@
 #include "BuildUnit.h"
 #include "Player.h"
 #include "TBuild.h"
+#include "UnitBuildStrategy.h"
 
 
 std::unordered_map<std::string, city::BuildFactory::CreatorFn>&
@@ -36,8 +37,8 @@ city::BuildFactory::IBuildPtrT
 city::BuildFactory
 ::commonUnitBuilder(const jsoncons::ojson& data, const PlayerPtrT& owner)
 {
-    auto callback = [owner](const auto& name, const auto& coor){owner->addUnit(name, coor);};
-    return std::make_shared<BuildUnit>(data, std::move(callback));
+    auto strategy = std::make_shared<UnitBuildStrategy>(owner);
+    return std::make_shared<BuildUnit>(data, std::move(strategy));
 }
 
 city::BuildFactory::IBuildPtrT

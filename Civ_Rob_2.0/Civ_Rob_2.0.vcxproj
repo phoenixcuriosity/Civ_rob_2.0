@@ -168,6 +168,7 @@
     <ClCompile Include="src\City\CityFactory.cpp" />
     <ClCompile Include="src\City\CityManager.cpp" />
     <ClCompile Include="src\City\CityNameTemplate.cpp" />
+    <ClCompile Include="src\City\UnitBuildStrategy.cpp" />
     <ClCompile Include="src\Screens\CityScreen.cpp" />
     <ClCompile Include="src\Civ_Rob_2.0.cpp" />
     <ClCompile Include="src\City\FoodManager.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="src\City\BuildFactory.h" />
     <ClInclude Include="src\City\BuildManager.h" />
     <ClInclude Include="src\City\BuildUnit.h" />
+    <ClInclude Include="src\City\BuildUnitCallbackStrategy.h" />
     <ClInclude Include="src\City\Citizen.h" />
     <ClInclude Include="src\City\CitizenManager.h" />
     <ClInclude Include="src\City\City.h" />
@@ -207,6 +209,7 @@
     <ClInclude Include="src\City\CityNameTemplate.h" />
     <ClInclude Include="src\City\IBuild.h" />
     <ClInclude Include="src\City\TBuild.h" />
+    <ClInclude Include="src\City\UnitBuildStrategy.h" />
     <ClInclude Include="src\Screens\CityScreen.h" />
     <ClInclude Include="src\Screens\CityScreenEnumTexture.h" />
     <ClInclude Include="src\City\FoodManager.h" />
