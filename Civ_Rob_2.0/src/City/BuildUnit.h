@@ -16,20 +16,7 @@ protected:
 
 public:
 	BuildUnit(const jsoncons::ojson& loadFrom, CallbackT cb)
-		: Build(loadFrom), m_callback(std::move(cb))
-	{
-		if (!m_callback) throw std::runtime_error("Missing callback");
-	}
-	BuildUnit(const double work, const std::string& name, CallbackT cb)
-		: Build(work, name), m_callback(std::move(cb))
-	{
-		if (!m_callback) throw std::runtime_error("Missing callback");
-	}
-	BuildUnit(const double work, const double remainingWork, const std::string& name, CallbackT cb)
-		: Build(work, remainingWork, name), m_callback(std::move(cb))
-	{
-		if (!m_callback) throw std::runtime_error("Missing callback");
-	}
+		: Build(loadFrom), m_callback(std::move(cb)) {}
 	~BuildUnit() = default;
 
 public:
@@ -39,7 +26,7 @@ public:
 
 private:
 	const std::string m_type = "Unit";
-	CallbackT m_callback;
+	const CallbackT m_callback;
 };
 
 }
