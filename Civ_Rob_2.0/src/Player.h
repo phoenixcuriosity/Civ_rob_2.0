@@ -107,6 +107,7 @@ public:
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
 	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_unitManager.getUnits()[m_selectedUnit]; }
+	inline virtual const CityPtrT& GETSelectedCityPtr() const { return m_selectedCityPtrT; }
 
 	inline virtual int GETid()							const { return m_id; };
 	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
@@ -129,6 +130,7 @@ private:
 	city::CityManager m_CityManager;
 	int m_selectedUnit;
 	int m_selectedCity;
+	CityPtrT m_selectedCityPtrT;
 	GoldStats m_goldStats;
 	OnOffDisplay m_onOffDisplay;
 
