@@ -25,6 +25,7 @@ private:
     using CreatorFn = std::function<IBuildPtrT(const jsoncons::ojson&, const PlayerPtrT&)>;
 
     static std::unordered_map<std::string, CreatorFn>& getRegistry();
+    static jsoncons::ojson toJson(const city::buildT& build);
 
 public:
     static IBuildPtrT commonUnitBuilder(const jsoncons::ojson& data, const PlayerPtrT& owner);

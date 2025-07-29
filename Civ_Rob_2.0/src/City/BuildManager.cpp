@@ -39,13 +39,11 @@ city::BuildManager::BuildManager
 (
 	const CitizenManager& citizenManager,
 	FoodManager& foodManager,
-	const R2D::Coor& coor,
 	const conversionSurplus_Type& conversionToApplyf
 )
 :
 m_citizenManager(citizenManager),
 m_foodManager(foodManager),
-m_coor(coor),
 m_conversionToApply(conversionToApplyf),
 m_workBalance(RESOURCES_WORK_ZERO),
 m_workSurplusPreviousTurn(RESOURCES_WORK_ZERO),
@@ -82,7 +80,7 @@ city::BuildManager
 	while (!m_buildQueue.empty() && loopContinue)
 	{
 		std::tie(loopContinue, loopComputeWork) =
-			m_buildQueue.front().buildQ->computeWorkToBuild(loopComputeWork, m_coor);
+			m_buildQueue.front().buildQ->computeWorkToBuild(loopComputeWork);
 
 		if (loopContinue)
 		{

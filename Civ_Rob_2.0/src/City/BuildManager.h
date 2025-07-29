@@ -81,7 +81,6 @@ public:
 	(
 		const CitizenManager& citizenManager,
 		FoodManager& foodManager,
-		const R2D::Coor& coor,
 		const conversionSurplus_Type& conversionToApplyf
 	);
 	~BuildManager();
@@ -108,7 +107,6 @@ public:
 private:
 	const CitizenManager& m_citizenManager;
 	FoodManager& m_foodManager;
-	const R2D::Coor& m_coor;
 	const conversionSurplus_Type& m_conversionToApply;
 
 	double m_workBalance;

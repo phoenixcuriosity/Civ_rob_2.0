@@ -23,7 +23,9 @@ std::string toString(city::build_Type type)
     return "Unknown";
 }
 
-static jsoncons::ojson toJson(const city::buildT& build)
+jsoncons::ojson
+city::BuildFactory
+::toJson(const city::buildT& build)
 {
     jsoncons::ojson obj;
     obj.insert_or_assign("name", build.name);
@@ -38,14 +40,15 @@ city::BuildFactory
 ::commonUnitBuilder(const jsoncons::ojson& data, const PlayerPtrT& owner)
 {
     auto strategy = std::make_shared<UnitBuildStrategy>(owner);
-    return std::make_shared<BuildUnit>(data, std::move(strategy));
+    return std::make_shared<BuildUnit>(data, owner->GETSelectedCityPtr()->getCoor(), std::move(strategy));
 }
 
 city::BuildFactory::IBuildPtrT
 city::BuildFactory
 ::createBuild(const buildT& buildTc, const PlayerPtrT& owner)
 {
-    return createBuild(toJson(buildTc), owner);
+    auto d = toJson(buildTc);
+    return createBuild(d, owner);
 }
 
 city::BuildFactory::IBuildPtrT
