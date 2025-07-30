@@ -28,6 +28,7 @@
 #include "Player.h"
 #include "ScreenIndices.h"
 #include "Unit/Unit.h"
+#include "Unit/UnitService.h"
 #include "Utility.h"
 
 #include <iostream>
@@ -196,7 +197,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_1))
 		{
 			/* ← + ↓ */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -208,7 +209,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_2))
 		{
 			/* ↓ */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -220,7 +221,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_3))
 		{
 			/* → + ↓ */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -232,7 +233,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_4))
 		{
 			/* ← */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -245,7 +246,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_6))
 		{
 			/* → */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -257,7 +258,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_7))
 		{
 			/* ← + ↑ */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -269,7 +270,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_8))
 		{
 			/* ↑ */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
@@ -281,7 +282,7 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(SDLK_KP_9))
 		{
 			/* → + ↑ */
-			unit::Unit::tryToMove
+			unit::UnitService::tryToMove
 			(
 				gamePlayScreen.GETmainMap().GETmatriceMap(),
 				gamePlayScreen.GETPlayers(),
