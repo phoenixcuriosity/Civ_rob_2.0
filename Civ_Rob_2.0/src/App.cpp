@@ -33,6 +33,8 @@
 #include "Screens/NewGameScreen.h"
 #include "Screens/ReloadMenuScreen.h"
 
+#include "City/BuildFactory.h"
+
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>
 #include <R2D/src/ErrorLog.h>
@@ -71,6 +73,8 @@ App
 
 	m_window.SETscreenWidth(R2D::Window::getHorizontal());
 	m_window.SETscreenHeight(R2D::Window::getVertical());
+
+	city::BuildFactory::registerType("Unit", city::BuildFactory::commonUnitBuilder);
 }
 
 void

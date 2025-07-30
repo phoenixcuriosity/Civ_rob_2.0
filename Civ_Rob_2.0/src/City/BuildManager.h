@@ -31,11 +31,17 @@ namespace CEGUI
 	class PushButton;
 }
 
+namespace R2D
+{
+	class Coor;
+}
+
 class Player;
 
 namespace city
 {
 
+class IBuild;
 class CitizenManager;
 class FoodManager;
 enum class conversionSurplus_Type : unsigned int;
@@ -48,30 +54,12 @@ private:
 	static constexpr double RESOURCES_WORK_ZERO = 0.0;
 
 public:
-
-	/* Define the types of builds that a city can create */
-	enum class build_Type : unsigned int
-	{
-		building,	/* ### Not implemented as of 0.20.3.1 ### */
-		unit
-	};
-
-	/*
-		Define a building in a City
-		Use for building Queue
-	*/
-	struct build
-	{
-		std::string name;
-		build_Type type = build_Type::building;
-		double work = 0.0;
-		double remainingWork = 0.0;
-	};
-
+	using IBuildPtrT = std::shared_ptr<IBuild>;
 	struct buildGUI
 	{
 		CEGUI::PushButton* buildG = nullptr;
-		build buildQ;
+		IBuildPtrT buildQ;
+		std::string name;
 	};
 	using dequeBuild = std::deque<buildGUI>;
 
@@ -93,15 +81,13 @@ public:
 	(
 		const CitizenManager& citizenManager,
 		FoodManager& foodManager,
-		const unsigned int& x,
-		const unsigned int& y,
 		const conversionSurplus_Type& conversionToApplyf
 	);
 	~BuildManager();
 
 public:
 	void computeWork();
-	void computeWorkToBuild(PlayerPtrT& player, bool& needToUpdateDrawUnit);
+	void computeWorkToBuild(bool& needToUpdateDrawUnit);
 	void convertFoodSurplusToWork(const double foodSurplus);
 	void addBuildToQueue(const buildGUI& buildToQueue);
 	void removeBuildToQueueFront();
@@ -116,13 +102,11 @@ public:
 
 public:
 	jsoncons::ojson saveToOjson()const;
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
+	void loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner);
 
 private:
 	const CitizenManager& m_citizenManager;
 	FoodManager& m_foodManager;
-	const unsigned int& m_x;
-	const unsigned int& m_y;
 	const conversionSurplus_Type& m_conversionToApply;
 
 	double m_workBalance;

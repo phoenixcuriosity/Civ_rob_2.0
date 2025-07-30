@@ -192,7 +192,7 @@ m_nbstructurebuild(0),
 m_conversionToApply(conversionSurplus_Type::No_Conversion),
 m_citizenManager(m_tileMap),
 m_foodManager(m_citizenManager),
-m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
+m_buildManager(m_citizenManager, m_foodManager, m_conversionToApply),
 m_goldBalance(0.0),
 m_owner()
 {
@@ -219,7 +219,7 @@ city::City::City
 	m_conversionToApply(conversionSurplus_Type::No_Conversion),
 	m_citizenManager(m_tileMap),
 	m_foodManager(m_citizenManager),
-	m_buildManager(m_citizenManager, m_foodManager, getCoor().x, getCoor().y, m_conversionToApply),
+	m_buildManager(m_citizenManager, m_foodManager, m_conversionToApply),
 	m_goldBalance(0.0),
 	m_owner(player)
 {
@@ -319,7 +319,7 @@ void city::City::computeWork(bool& needToUpdateDrawUnit)
 	case conversionSurplus_Type::GoldToFood:
 	case conversionSurplus_Type::GoldToWork:
 
-		m_buildManager.computeWorkToBuild(m_owner, needToUpdateDrawUnit);
+		m_buildManager.computeWorkToBuild(needToUpdateDrawUnit);
 
 		break;
 	default:
@@ -402,7 +402,7 @@ void city::City::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		m_nbstructurebuild = jsonLoad["m_nbstructurebuild"].as<unsigned int>();
 		m_citizenManager.loadFromOjson(jsonLoad["Citizens"]);
 		m_foodManager.loadFromOjson(jsonLoad["Food"]);
-		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"]);
+		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"], m_owner);
 	}
 }
 

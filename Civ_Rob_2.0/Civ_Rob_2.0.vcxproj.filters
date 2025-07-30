@@ -70,6 +70,10 @@
     <ClCompile Include="src\City\CityManager.cpp" />
     <ClCompile Include="src\Unit\UnitManager.cpp" />
     <ClCompile Include="src\Unit\UnitService.cpp" />
+    <ClCompile Include="src\City\Build.cpp" />
+    <ClCompile Include="src\City\BuildUnit.cpp" />
+    <ClCompile Include="src\City\BuildFactory.cpp" />
+    <ClCompile Include="src\City\UnitBuildStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -171,6 +175,13 @@
     <ClInclude Include="src\City\CityFactory.h" />
     <ClInclude Include="src\City\CityManager.h" />
     <ClInclude Include="src\Unit\UnitService.h" />
+    <ClInclude Include="src\City\IBuild.h" />
+    <ClInclude Include="src\City\Build.h" />
+    <ClInclude Include="src\City\BuildUnit.h" />
+    <ClInclude Include="src\City\BuildFactory.h" />
+    <ClInclude Include="src\City\TBuild.h" />
+    <ClInclude Include="src\City\BuildUnitCallbackStrategy.h" />
+    <ClInclude Include="src\City\UnitBuildStrategy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

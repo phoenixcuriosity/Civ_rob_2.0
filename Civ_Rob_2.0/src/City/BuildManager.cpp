@@ -21,27 +21,29 @@
 */
 
 #include "BuildManager.h"
+
 #include "Citizen.h"
 #include "T_City.h"
 #include "../Player.h"
 #include "../Unit/Unit.h"
 
+#include "BuildFactory.h"
+#include "BuildUnit.h"
+
 #include <jsoncons/json.hpp>
 #include <CEGUI/widgets/PushButton.h>
+
+#include <functional>
 
 city::BuildManager::BuildManager
 (
 	const CitizenManager& citizenManager,
 	FoodManager& foodManager,
-	const unsigned int& x,
-	const unsigned int& y,
 	const conversionSurplus_Type& conversionToApplyf
 )
 :
 m_citizenManager(citizenManager),
 m_foodManager(foodManager),
-m_x(x),
-m_y(y),
 m_conversionToApply(conversionToApplyf),
 m_workBalance(RESOURCES_WORK_ZERO),
 m_workSurplusPreviousTurn(RESOURCES_WORK_ZERO),
@@ -69,51 +71,21 @@ void city::BuildManager::computeWork()
 	m_workSurplusPreviousTurn = RESOURCES_WORK_ZERO;
 }
 
-void city::BuildManager::computeWorkToBuild
-(
-	PlayerPtrT& player,
-	bool& needToUpdateDrawUnit
-)
+void
+city::BuildManager
+::computeWorkToBuild(bool& needToUpdateDrawUnit)
 {
-	if (!m_buildQueue.empty())
+	bool loopContinue{ true };
+	double loopComputeWork{ m_workBalance };
+	while (!m_buildQueue.empty() && loopContinue)
 	{
-		/* Decrease by m_workBalance the amont of the remainingWork to build */
-		m_buildQueue.front().buildQ.remainingWork -= m_workBalance;
+		std::tie(loopContinue, loopComputeWork) =
+			m_buildQueue.front().buildQ->computeWorkToBuild(loopComputeWork);
 
-		double workSurplus(RESOURCES_WORK_ZERO);
-		while (m_buildQueue.front().buildQ.remainingWork < RESOURCES_WORK_ZERO)
+		if (loopContinue)
 		{
-			switch (m_buildQueue.front().buildQ.type)
-			{
-			case build_Type::unit:
-				player->addUnit(m_buildQueue.front().buildQ.name, { m_x, m_y });
-				needToUpdateDrawUnit = true;
-				break;
-			case build_Type::building:
-
-				/* TODO */
-
-				break;
-			default:
-#ifdef _DEBUG
-				throw("[ERROR]___: computeWorkToBuild : m_buildQueue.front().type == else");
-#endif // _DEBUG
-				break;
-			}
-
-			workSurplus = -m_buildQueue.front().buildQ.remainingWork;
-
 			removeBuildToQueueFront();
-
-			if (!m_buildQueue.empty())
-			{
-				m_buildQueue.front().buildQ.remainingWork -= workSurplus;
-			}
-			else
-			{
-				m_foodManager.convertWorkSurplusToFood(workSurplus);
-				return;
-			}
+			needToUpdateDrawUnit = true;
 		}
 	}
 }
@@ -131,7 +103,7 @@ void city::BuildManager::addBuildToQueue
 	const buildGUI& buildToQueue
 )
 {
-	m_buildQueue.push_back(buildToQueue);
+	m_buildQueue.push_back(std::move(buildToQueue));
 }
 
 void city::BuildManager::removeBuildToQueueFront()
@@ -173,19 +145,7 @@ double city::BuildManager::GETBuildPerc()const
 {
 	if (m_buildQueue.empty() == CONTAINERS::NOT_EMPTY)
 	{
-		return
-			(
-				(
-					(
-						m_buildQueue.front().buildQ.work
-						-
-						m_buildQueue.front().buildQ.remainingWork
-						)
-					/
-					m_buildQueue.front().buildQ.work
-					)
-				* PERCENTAGE::ONE_HUNDRED
-				);
+		return m_buildQueue.front().buildQ->getRemainingWorkoverWork();
 	}
 	return RESOURCES_WORK_ZERO;
 };
@@ -198,10 +158,7 @@ jsoncons::ojson city::BuildManager::saveToOjson()const
 	for (const auto& build : m_buildQueue)
 	{
 		jsoncons::ojson b;
-		b.insert_or_assign("name", build.buildQ.name);
-		b.insert_or_assign("type", static_cast<size_t>(build.buildQ.type));
-		b.insert_or_assign("work", build.buildQ.work);
-		b.insert_or_assign("remainingWork", build.buildQ.remainingWork);
+		build.buildQ->save(b);
 		builds.push_back(b);
 	}
 
@@ -212,7 +169,7 @@ jsoncons::ojson city::BuildManager::saveToOjson()const
 	return value;
 }
 
-void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
+void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner)
 {
 	if	(
 			jsonLoad.contains("m_workBalance") && jsonLoad.contains("m_workSurplusPreviousTurn") && jsonLoad.contains("m_buildQueue") &&
@@ -225,11 +182,8 @@ void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		for (const auto& build : jsonLoad["m_buildQueue"].array_range())
 		{
 			buildGUI buildToQueue;
-			buildToQueue.buildQ.name = build["name"].as_string();
-			buildToQueue.buildQ.type = static_cast<build_Type>(build["type"].as<size_t>());
-			buildToQueue.buildQ.work = build["work"].as<double>();
-			buildToQueue.buildQ.remainingWork = build["remainingWork"].as<double>();
-			m_buildQueue.push_back(buildToQueue);
+			buildToQueue.buildQ = std::move(BuildFactory::createBuild(build, owner));
+			m_buildQueue.push_back(std::move(buildToQueue));
 		}
 	}
 }

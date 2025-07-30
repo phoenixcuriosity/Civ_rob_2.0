@@ -109,7 +109,11 @@ Player::CityPtrT* Player::searchCity
 {
 	for (auto &c : m_CityManager.getCities())
 	{
-		if (c->searchCityTile(indexX, indexY)) return &c;
+		if (c->searchCityTile(indexX, indexY))
+		{
+			m_selectedCityPtrT = c;
+			return &c;
+		}
 	}
 	return nullptr;
 }
