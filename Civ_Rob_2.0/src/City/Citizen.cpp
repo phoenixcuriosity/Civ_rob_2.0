@@ -22,10 +22,10 @@
 
 #include "Citizen.h"
 
-#include "App.h"
+#include "../App.h"
 #include "City.h"
-#include "LogSentences.h"
-#include "T_MainMap.h"
+#include "../LogSentences.h"
+#include "../T_MainMap.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
@@ -72,10 +72,10 @@ city::Citizen::Citizen
 )
 	:
 	m_tileOccupied(tileOccupied),
+	m_happiness(Emotion_Type::neutral),
 	m_food(food),
 	m_work(work),
 	m_gold(gold),
-	m_happiness(Emotion_Type::neutral),
 	m_revolt(0),
 	m_religion(Religion_Type::catholic),
 	m_place(true)
@@ -93,10 +93,10 @@ jsoncons::ojson city::Citizen::saveToOjson()const
 {
 	jsoncons::ojson value;
 	value.insert_or_assign("m_tileOccupied", m_tileOccupied);
+	value.insert_or_assign("m_happiness", static_cast<int>(m_happiness));
 	value.insert_or_assign("m_food", m_food);
 	value.insert_or_assign("m_work", m_work);
 	value.insert_or_assign("m_gold", m_gold);
-	value.insert_or_assign("m_happiness", static_cast<int>(m_happiness));
 	value.insert_or_assign("m_revolt", m_revolt);
 	value.insert_or_assign("m_religion", static_cast<size_t>(m_religion));
 	value.insert_or_assign("m_place", m_place);
@@ -112,10 +112,10 @@ void city::Citizen::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		)
 	{
 		m_tileOccupied = jsonLoad["m_tileOccupied"].as<unsigned int>();
+		m_happiness = static_cast<Emotion_Type>(jsonLoad["m_happiness"].as<int>());
 		m_food = jsonLoad["m_food"].as<int>();
 		m_work = jsonLoad["m_work"].as<int>();
 		m_gold = jsonLoad["m_gold"].as<int>();
-		m_happiness = static_cast<Emotion_Type>(jsonLoad["m_happiness"].as<int>());
 		m_revolt = jsonLoad["m_revolt"].as<int>();
 		m_religion = static_cast<Religion_Type>(jsonLoad["m_religion"].as<size_t>());
 		m_place = jsonLoad["m_place"].as<bool>();

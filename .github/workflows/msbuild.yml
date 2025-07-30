@@ -34,7 +34,7 @@ jobs:
     - name: Run cppcheck
       shell: pwsh
       run: |
-        & "C:\Program Files\Cppcheck\cppcheck.exe" --enable=all --inconclusive --std=c++20 --platform=win64 --suppress=missingIncludeSystem --inline-suppr --force . 2> cppcheck.txt
+        & "C:\Program Files\Cppcheck\cppcheck.exe" --enable=all --inconclusive --std=c++23 --platform=win64 --suppress=missingIncludeSystem --inline-suppr --check-level=exhaustive --force . 2> cppcheck.txt
         Get-Content cppcheck.txt
 
     - name: Add MSBuild to PATH

@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef MainMap_H
-#define MainMap_H
+#pragma once
 
 #include "LIB.h"
 
@@ -56,8 +54,8 @@ public:
 
 public:
 	MainMap() = delete;
-	MainMap(R2D::RegisterPairVector& registerLoad);
-	virtual ~MainMap();
+	explicit MainMap(R2D::RegisterPairVector& registerLoad);
+	~MainMap();
 
 	void initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture);
 	void initMainMapTexture(const GamePlayScreenTexture& idTexture);
@@ -151,9 +149,3 @@ private:
 
 	static unsigned int* s_tileSize;
 };
-
-#endif /* MainMap_H */
-
-/*
-*	End Of File : MainMap.h
-*/

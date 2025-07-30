@@ -19,16 +19,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef GamePlayScreen_H
-#define GamePlayScreen_H
+#include "../LIB.h"
 
-#include "LIB.h"
-
-#include "MainMap.h"
-#include "NextTurn.h"
-#include "Players.h"
-#include "T_GamePlayScreen.h"
+#include "../MainMap.h"
+#include "../NextTurn.h"
+#include "../Players.h"
+#include "../T_GamePlayScreen.h"
 
 #include <R2D/src/IRegister.h>
 #include <R2D/src/IMainGame.h>
@@ -43,8 +41,8 @@ class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	GamePlayScreen() = delete;
-	GamePlayScreen(UserInputNewGame* userInputNewGame);
-	virtual ~GamePlayScreen();
+	explicit GamePlayScreen(UserInputNewGame* userInputNewGame);
+	~GamePlayScreen();
 
 protected:
 	R2D::RegisterPairVector addSubscriber();
@@ -113,7 +111,3 @@ private:
 
 	bool m_isInitialize;
 };
-
-#endif // !GamePlayScreen_H
-
-

@@ -23,7 +23,7 @@
 #include "CityFactory.h"
 
 #include "CityNameTemplate.h"
-#include "Player.h"
+#include "../Player.h"
 
 city::CityFactory
 ::CityFactory() : m_loader(std::make_shared<R2D::RegisterLoadAbleOjson>())

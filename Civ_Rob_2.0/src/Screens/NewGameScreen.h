@@ -19,11 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef NewGameScreen_H
-#define NewGameScreen_H
-
-#include "LIB.h"
+#include "../LIB.h"
 
 #include <unordered_map>
 
@@ -31,7 +29,7 @@
 #include <R2D/src/GUI.h>
 #include <R2D/src/Screen.h>
 
-#include "T_NewGameScreen.h"
+#include "../T_NewGameScreen.h"
 
 class NewGameScreen : public R2D::IGameScreen, public R2D::CScreen
 {
@@ -85,8 +83,3 @@ private:
 
 	bool m_isInitialize;
 };
-
-#endif // !NewGameScreen_H
-
-
-

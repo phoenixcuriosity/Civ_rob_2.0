@@ -21,7 +21,7 @@
 */
 #pragma once
 
-#include "LIB.h"
+#include "../LIB.h"
 
 #include <memory>
 #include <vector>
@@ -43,7 +43,8 @@ private:
 
 public:
 
-	CitizenManager(const VectMapPtr& tiles);
+	CitizenManager() = delete;
+	explicit CitizenManager(const VectMapPtr& tiles);
 	~CitizenManager();
 
 public:
@@ -90,7 +91,7 @@ private:
 		int& m_gold
 	);
 
-	virtual double tileValue
+	double tileValue
 	(
 		const Tile& tile,
 		const double coefFood = 1.0,

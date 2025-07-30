@@ -22,7 +22,7 @@
 
 #include "CityManager.h"
 
-#include "Player.h"
+#include "../Player.h"
 
 void
 city::CityManager

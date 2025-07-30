@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef T_GamePlayScreen_H
-#define T_GamePlayScreen_H
+#pragma once
 
 #include "GameInput.h"
 
@@ -103,7 +101,3 @@ struct Var
 	CinState_Type cinState = CinState_Type::cinNothing;
 
 };
-
-#endif // !T_GamePlayScreen_H
-
-

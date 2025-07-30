@@ -19,12 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-
-#ifndef ReloadMenuScreen_H
-#define ReloadMenuScreen_H
-
-#include "LIB.h"
+#include "../LIB.h"
 
 #include <R2D\src\Camera2D.h>
 #include <R2D\src\GUI.h>
@@ -55,7 +52,7 @@ private: /* Override from R2D::IGameScreen */
 private:
 
 	void updateVisibilityIfSaveSelected();
-	
+
 private: /* Override from R2D::CScreen */
 
 	void doInitOptimizeTexture()override;
@@ -86,8 +83,3 @@ private:
 
 	bool m_isInitialize;
 };
-
-
-#endif // !ReloadMenuScreen_H
-
-

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "LIB.h"
+#include "../LIB.h"
 
 namespace city
 {
@@ -49,8 +49,8 @@ public:
 
 public:
 
-	FoodManager(const CitizenManager& citizenManager);
-	~FoodManager() {};
+	FoodManager() = delete;
+	explicit FoodManager(const CitizenManager& citizenManager);
 
 public:
 
@@ -70,7 +70,7 @@ public:
 		m_foodSurplusPreviousTurn = foodSurplusPreviousTurn;
 	};
 
-	inline virtual double GETfoodStockPerc()const
+	inline double GETfoodStockPerc()const
 	{
 		return ((m_foodStock / m_foodToLevelUp) * PERCENTAGE::ONE_HUNDRED);
 	};

@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef SaveReload_H
-#define SaveReload_H
+#pragma once
 
 #include "LIB.h"
 
@@ -88,10 +86,3 @@ private:
 	SaveIdVect m_tabSave;
 	SaveId m_currentSave;
 };
-
-
-#endif /* SaveReload_H */
-
-/*
-*	End Of File : SaveReload.h
-*/

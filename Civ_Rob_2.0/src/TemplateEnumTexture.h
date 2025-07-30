@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef TemplateEnumTexture_H
-#define TemplateEnumTexture_H
+#pragma once
 
 #include "LIB.h"
 
@@ -31,7 +29,7 @@
 constexpr size_t ARRAY_SIZE_OFFSET = 1;
 
 template <typename Enum, Enum firstValue, Enum lastValue>
-class EnumArray 
+class EnumArray
 {
 	static_assert(std::is_enum_v<Enum>, "Template parameter must be an enum type");
 	static_assert(static_cast<size_t>(firstValue) == 0, "First Enum value must be 0");
@@ -53,6 +51,3 @@ public:
 		return values[static_cast<size_t>(index)];
 	}
 };
-
-
-#endif // !TemplateEnumTexture_H

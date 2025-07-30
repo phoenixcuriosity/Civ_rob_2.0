@@ -19,11 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef MainMenuScreen_H
-#define MainMenuScreen_H
-
-#include "LIB.h"
+#include "../LIB.h"
 
 #include <R2D\src\Camera2D.h>
 #include <R2D/src/GUI.h>
@@ -68,8 +66,3 @@ private:
 
 	bool m_isInitialize;
 };
-
-#endif // !MainMenuScreen_H
-
-
-
