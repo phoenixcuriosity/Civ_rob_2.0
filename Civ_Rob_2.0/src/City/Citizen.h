@@ -28,8 +28,12 @@ struct Tile;
 namespace city
 {
 
+class ICitizenVisitor;
+
 class Citizen
 {
+	friend class JsonCitizenSerializerVisitor;
+
 public:
 	enum class Emotion_Type
 	{
@@ -86,7 +90,7 @@ public:
 	~Citizen();
 
 public:
-	jsoncons::ojson saveToOjson()const;
+	void accept(ICitizenVisitor& visitor) const;
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
