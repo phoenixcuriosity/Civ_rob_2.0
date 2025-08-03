@@ -1,6 +1,7 @@
 #include "BuildUnit.h"
 
 #include "UnitBuildStrategy.h"
+#include "JsonBuildSerializerVisitor.h"
 
 void
 city::BuildUnit
@@ -11,8 +12,8 @@ city::BuildUnit
 
 void
 city::BuildUnit
-::save(jsoncons::ojson& saveTo) const
+::accept(IBuildVisitor& visitor) const
 {
-	saveTo.insert_or_assign("type", m_type);
-	Build::save(saveTo);
+	Build::accept(visitor);
+	visitor.visit(*this);
 }

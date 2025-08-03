@@ -4,7 +4,7 @@
 
 #include <string>
 
-
+#include <jsoncons/json.hpp>
 
 namespace city
 {
@@ -19,11 +19,12 @@ public:
 
 	computeReturnedValue computeWorkToBuild(const double work) override;
 
-	void save(jsoncons::ojson& saveTo) const override;
-
 	double getRemainingWorkoverWork() const noexcept override;
 
+	virtual void accept(IBuildVisitor& visitor) const override;
+
 protected:
+	friend class JsonBuildSerializerVisitor;
 
 	virtual void buildInPlayer() = 0;
 

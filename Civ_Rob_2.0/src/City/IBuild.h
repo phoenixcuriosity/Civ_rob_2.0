@@ -1,11 +1,11 @@
 #pragma once
 
-#include <memory>
-
-#include <jsoncons/json.hpp>
+#include <utility>
 
 namespace city
 {
+
+class IBuildVisitor;
 
 class IBuild
 {
@@ -17,9 +17,9 @@ public:
 
 	virtual computeReturnedValue computeWorkToBuild(const double work) = 0;
 
-	virtual void save(jsoncons::ojson& saveTo) const = 0;
-
 	virtual double getRemainingWorkoverWork() const noexcept = 0;
+
+	virtual void accept(IBuildVisitor& visitor) const = 0;
 };
 
 }
