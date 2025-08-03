@@ -33,6 +33,7 @@
 #include "../Unit/Unit.h"
 #include "../Utility.h"
 #include "ICityVisitor.h"
+#include "JsonCitySerializerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
@@ -180,6 +181,13 @@ bool city::City::searchCityTile
 	}
 }
 
+void logCityConstructor(const city::City& city)
+{
+	city::JsonCitySerializerVisitor visitor;
+	visitor.visit(city);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY, visitor.result.to_string());
+}
+
 city::City::City()
 :
 IMoveable(),
@@ -197,8 +205,7 @@ m_buildManager(m_citizenManager, m_foodManager, m_conversionToApply),
 m_goldBalance(0.0),
 m_owner()
 {
-	//LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
-	//	saveToOjson().as_string());
+	logCityConstructor(*this);
 }
 
 city::City::City
@@ -224,8 +231,7 @@ city::City::City
 	m_goldBalance(0.0),
 	m_owner(player)
 {
-	//LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
-	//	saveToOjson().as_string());
+	logCityConstructor(*this);
 }
 
 city::City::~City()
