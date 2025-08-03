@@ -168,6 +168,7 @@
     <ClCompile Include="src\City\CityFactory.cpp" />
     <ClCompile Include="src\City\CityManager.cpp" />
     <ClCompile Include="src\City\CityNameTemplate.cpp" />
+    <ClCompile Include="src\City\JsonBuildManagerSerializerVisitor.cpp" />
     <ClCompile Include="src\City\JsonBuildSerializerVisitor.cpp" />
     <ClCompile Include="src\City\UnitBuildStrategy.cpp" />
     <ClCompile Include="src\Screens\CityScreen.cpp" />
@@ -209,7 +210,9 @@
     <ClInclude Include="src\City\CityManager.h" />
     <ClInclude Include="src\City\CityNameTemplate.h" />
     <ClInclude Include="src\City\IBuild.h" />
+    <ClInclude Include="src\City\IBuildManagerVisitor.h" />
     <ClInclude Include="src\City\IBuildVisitor.h" />
+    <ClInclude Include="src\City\JsonBuildManagerSerializerVisitor.h" />
     <ClInclude Include="src\City\JsonBuildSerializerVisitor.h" />
     <ClInclude Include="src\City\TBuild.h" />
     <ClInclude Include="src\City\UnitBuildStrategy.h" />

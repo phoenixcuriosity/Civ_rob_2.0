@@ -75,6 +75,7 @@
     <ClCompile Include="src\City\BuildFactory.cpp" />
     <ClCompile Include="src\City\UnitBuildStrategy.cpp" />
     <ClCompile Include="src\City\JsonBuildSerializerVisitor.cpp" />
+    <ClCompile Include="src\City\JsonBuildManagerSerializerVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -184,7 +185,9 @@
     <ClInclude Include="src\City\BuildUnitCallbackStrategy.h" />
     <ClInclude Include="src\City\UnitBuildStrategy.h" />
     <ClInclude Include="src\City\IBuildVisitor.h" />
+    <ClInclude Include="src\City\JsonBuildSerializerVisitor.h" />
     <ClInclude Include="src\City\IBuildManagerVisitor.h" />
+    <ClInclude Include="src\City\JsonBuildManagerSerializerVisitor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

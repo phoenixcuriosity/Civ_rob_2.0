@@ -32,6 +32,7 @@
 #include "../Players.h"
 #include "../Unit/Unit.h"
 #include "../Utility.h"
+#include "JsonBuildManagerSerializerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
@@ -379,7 +380,9 @@ jsoncons::ojson city::City::saveToOjson()const
 	value.insert_or_assign("m_nbstructurebuild", m_nbstructurebuild);
 	value.insert_or_assign("Citizens", m_citizenManager.saveToOjson());
 	value.insert_or_assign("Food", m_foodManager.saveToOjson());
-	value.insert_or_assign("BuildQueue", m_buildManager.saveToOjson());
+	JsonBuildManagerSerializerVisitor visitor;
+	m_buildManager.accept(visitor);
+	value.insert_or_assign("BuildQueue", visitor.result);
 	return value;
 }
 
