@@ -78,6 +78,7 @@
     <ClCompile Include="src\City\JsonBuildManagerSerializerVisitor.cpp" />
     <ClCompile Include="src\City\JsonCitizenManagerSerializerVisitor.cpp" />
     <ClCompile Include="src\City\JsonCitizenSerializerVisitor.cpp" />
+    <ClCompile Include="src\City\JsonFoodManagerSerializerVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LIB.h" />
@@ -194,6 +195,8 @@
     <ClInclude Include="src\City\JsonCitizenManagerSerializerVisitor.h" />
     <ClInclude Include="src\City\ICitizenVisitor.h" />
     <ClInclude Include="src\City\JsonCitizenSerializerVisitor.h" />
+    <ClInclude Include="src\City\IFoodManagerVisitor.h" />
+    <ClInclude Include="src\City\JsonFoodManagerSerializerVisitor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Screen">

@@ -26,6 +26,7 @@
 #include "CitizenManager.h"
 #include "Citizen.h"
 #include "T_City.h"
+#include "IFoodManagerVisitor.h"
 
 #include <jsoncons/json.hpp>
 
@@ -155,17 +156,11 @@ void city::FoodManager::updateEmotionCoef()
 	m_emotionCoef = static_cast<double>(m_citizenManager.getEmotion()) / Citizen::EMOTION_MEAN;
 }
 
-jsoncons::ojson city::FoodManager::saveToOjson()const
+void
+city::FoodManager
+::accept(IFoodManagerVisitor& visitor) const
 {
-	jsoncons::ojson value;
-	value.insert_or_assign("m_foodStock", m_foodStock);
-	value.insert_or_assign("m_foodBalance", m_foodBalance);
-	value.insert_or_assign("m_foodConsumption", m_foodConsumption);
-	value.insert_or_assign("m_foodSurplusPreviousTurn", m_foodSurplusPreviousTurn);
-	value.insert_or_assign("m_foodToLevelUp", m_foodToLevelUp);
-	value.insert_or_assign("m_emotionCoef", m_emotionCoef);
-	value.insert_or_assign("m_foodManagerType", static_cast<size_t>(m_foodManagerType));
-	return value;
+	visitor.visit(*this);
 }
 
 void city::FoodManager::loadFromOjson(const jsoncons::ojson& jsonLoad)

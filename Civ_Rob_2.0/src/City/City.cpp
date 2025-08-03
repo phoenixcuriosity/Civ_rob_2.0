@@ -34,6 +34,7 @@
 #include "../Utility.h"
 #include "JsonBuildManagerSerializerVisitor.h"
 #include "JsonCitizenManagerSerializerVisitor.h"
+#include "JsonFoodManagerSerializerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
@@ -382,7 +383,9 @@ jsoncons::ojson city::City::saveToOjson()const
 	JsonCitizenManagerSerializerVisitor citizenManagerVisitor;
 	citizenManagerVisitor.visit(m_citizenManager);
 	value.insert_or_assign("Citizens", citizenManagerVisitor.result);
-	value.insert_or_assign("Food", m_foodManager.saveToOjson());
+	JsonFoodManagerSerializerVisitor foodManagerVisitor;
+	foodManagerVisitor.visit(m_foodManager);
+	value.insert_or_assign("Food", foodManagerVisitor.result);
 	JsonBuildManagerSerializerVisitor visitor;
 	m_buildManager.accept(visitor);
 	value.insert_or_assign("BuildQueue", visitor.result);

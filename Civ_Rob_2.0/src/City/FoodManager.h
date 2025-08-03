@@ -28,9 +28,12 @@ namespace city
 {
 
 class CitizenManager;
+class IFoodManagerVisitor;
 
 class FoodManager
 {
+	friend class JsonFoodManagerSerializerVisitor;
+
 private:
 	static constexpr double ZERO_FOOD = 0.0;
 	static constexpr double OFFSET_FOOD_LEVEL = 15.0;
@@ -96,7 +99,7 @@ private:
 
 public:
 
-	jsoncons::ojson saveToOjson()const;
+	void accept(IFoodManagerVisitor& visitor) const;
 
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
