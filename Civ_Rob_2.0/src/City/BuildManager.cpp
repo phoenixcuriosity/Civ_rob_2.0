@@ -29,7 +29,7 @@
 
 #include "BuildFactory.h"
 #include "BuildUnit.h"
-#include "JsonBuildManagerSerializerVisitor.h"
+#include "IBuildManagerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <CEGUI/widgets/PushButton.h>
