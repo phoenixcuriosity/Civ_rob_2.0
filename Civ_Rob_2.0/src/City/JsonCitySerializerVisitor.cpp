@@ -19,15 +19,15 @@ void city::JsonCitySerializerVisitor::visit(const City& city)
 	result.insert_or_assign("m_nbstructurebuild", city.m_nbstructurebuild);
 
 	JsonCitizenManagerSerializerVisitor citizenManagerVisitor;
-	citizenManagerVisitor.visit(city.m_citizenManager);
+	city.m_citizenManager.accept(citizenManagerVisitor);
 	result.insert_or_assign("Citizens", citizenManagerVisitor.result);
 
 	JsonFoodManagerSerializerVisitor foodManagerVisitor;
-	foodManagerVisitor.visit(city.m_foodManager);
+	city.m_foodManager.accept(foodManagerVisitor);
 	result.insert_or_assign("Food", foodManagerVisitor.result);
 
 	JsonBuildManagerSerializerVisitor buildManagervisitor;
-	buildManagervisitor.visit(city.m_buildManager);
+	city.m_buildManager.accept(buildManagervisitor);
 	result.insert_or_assign("BuildQueue", buildManagervisitor.result);
 }
 

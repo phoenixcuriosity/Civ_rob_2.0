@@ -189,7 +189,7 @@ jsoncons::ojson Player::saveToOjson()const
 	for (const auto& city : m_CityManager.getCities())
 	{
 		city::JsonCitySerializerVisitor visitor;
-		visitor.visit(*city);
+		city->accept(visitor);
 		cities.push_back(visitor.result);
 	}
 
