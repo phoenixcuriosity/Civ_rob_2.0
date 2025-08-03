@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "City/City.h"
+#include "City/JsonCitySerializerVisitor.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
@@ -187,7 +188,9 @@ jsoncons::ojson Player::saveToOjson()const
 
 	for (const auto& city : m_CityManager.getCities())
 	{
-		cities.push_back(city->saveToOjson());
+		city::JsonCitySerializerVisitor visitor;
+		visitor.visit(*city);
+		cities.push_back(visitor.result);
 	}
 
 	goldStats.insert_or_assign("gold", m_goldStats.gold);
