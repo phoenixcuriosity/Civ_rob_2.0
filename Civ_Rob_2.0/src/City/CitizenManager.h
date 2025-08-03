@@ -33,9 +33,12 @@ namespace city
 {
 
 class Citizen;
+class ICitizenManagerVisitor;
 
 class CitizenManager
 {
+	friend class JsonCitizenManagerSerializerVisitor;
+
 private:
 	using CitizenPtrT = std::shared_ptr<Citizen>;
 	using VectCitizen = std::vector<CitizenPtrT>;
@@ -101,7 +104,7 @@ private:
 
 public:
 
-	jsoncons::ojson saveToOjson()const;
+	void accept(ICitizenManagerVisitor& visitor) const;
 
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
