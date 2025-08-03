@@ -47,7 +47,13 @@ SaveReload
 ::init()
 {
 	const std::string filePath{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo) };
-	if (std::filesystem::exists(filePath) && std::filesystem::is_directory(filePath))
+
+	if (!std::filesystem::exists(filePath))
+	{
+		m_fileSysteme->createDirectory(filePath);
+	}
+
+	if (std::filesystem::is_directory(filePath))
 	{
 		for (const auto& entry : std::filesystem::directory_iterator(filePath))
 		{
