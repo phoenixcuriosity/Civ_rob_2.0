@@ -175,6 +175,7 @@
     <ClCompile Include="src\City\JsonCitizenManagerSerializerVisitor.cpp" />
     <ClCompile Include="src\City\JsonCitizenSerializerVisitor.cpp" />
     <ClCompile Include="src\City\JsonCitySerializerVisitor.cpp" />
+    <ClCompile Include="src\City\JsonFoodManagerDeserializer.cpp" />
     <ClCompile Include="src\City\JsonFoodManagerSerializerVisitor.cpp" />
     <ClCompile Include="src\City\UnitBuildStrategy.cpp" />
     <ClCompile Include="src\Screens\CityScreen.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="src\City\ICitizenManagerVisitor.h" />
     <ClInclude Include="src\City\ICitizenVisitor.h" />
     <ClInclude Include="src\City\ICityVisitor.h" />
+    <ClInclude Include="src\City\IFoodManagerDeserializer.h" />
     <ClInclude Include="src\City\IFoodManagerVisitor.h" />
     <ClInclude Include="src\City\JsonBuildManagerSerializerVisitor.h" />
     <ClInclude Include="src\City\JsonBuildSerializerVisitor.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="src\City\JsonCitizenManagerSerializerVisitor.h" />
     <ClInclude Include="src\City\JsonCitizenSerializerVisitor.h" />
     <ClInclude Include="src\City\JsonCitySerializerVisitor.h" />
+    <ClInclude Include="src\City\JsonFoodManagerDeserializer.h" />
     <ClInclude Include="src\City\JsonFoodManagerSerializerVisitor.h" />
     <ClInclude Include="src\City\TBuild.h" />
     <ClInclude Include="src\City\UnitBuildStrategy.h" />

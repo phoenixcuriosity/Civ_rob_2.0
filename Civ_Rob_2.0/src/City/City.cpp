@@ -35,6 +35,7 @@
 #include "ICityVisitor.h"
 #include "JsonCitySerializerVisitor.h"
 #include "JsonCitizenManagerDeserializer.h"
+#include "JsonFoodManagerDeserializer.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
@@ -400,7 +401,8 @@ void city::City::loadFromOjson(const jsoncons::ojson& jsonLoad)
 		m_nbstructurebuild = jsonLoad["m_nbstructurebuild"].as<unsigned int>();
 		JsonCitizenManagerDeserializer jsonCitizenManagerDeserializer;
 		jsonCitizenManagerDeserializer.deserialize(jsonLoad["Citizens"], m_citizenManager);
-		m_foodManager.loadFromOjson(jsonLoad["Food"]);
+		JsonFoodManagerDeserializer jsonFoodManagerDeserializer;
+		jsonFoodManagerDeserializer.deserialize(jsonLoad["Food"], m_foodManager);
 		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"], m_owner);
 	}
 }

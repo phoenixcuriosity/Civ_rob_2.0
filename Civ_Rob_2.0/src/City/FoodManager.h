@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include "../LIB.h"
 
 namespace city
 {
@@ -32,6 +31,7 @@ class IFoodManagerVisitor;
 
 class FoodManager
 {
+	friend class JsonFoodManagerDeserializer;
 	friend class JsonFoodManagerSerializerVisitor;
 
 private:
@@ -98,10 +98,7 @@ private:
 	void updateEmotionCoef();
 
 public:
-
 	void accept(IFoodManagerVisitor& visitor) const;
-
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 
