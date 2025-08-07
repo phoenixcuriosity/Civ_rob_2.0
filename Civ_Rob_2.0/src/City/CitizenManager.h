@@ -21,7 +21,6 @@
 */
 #pragma once
 
-#include "../LIB.h"
 
 #include <memory>
 #include <vector>
@@ -37,6 +36,7 @@ class ICitizenManagerVisitor;
 
 class CitizenManager
 {
+	friend class JsonCitizenManagerDeserializer;
 	friend class JsonCitizenManagerSerializerVisitor;
 
 private:
@@ -60,7 +60,6 @@ public:
 	void resetTabCitizen();
 
 	void addCitizen();
-	void addCitizen(bool uselessArg);
 	void addCitizen(const Tile& tile);
 
 	void removeCitizen();
@@ -105,8 +104,6 @@ private:
 public:
 
 	void accept(ICitizenManagerVisitor& visitor) const;
-
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 

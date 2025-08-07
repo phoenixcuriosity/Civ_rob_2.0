@@ -40,20 +40,6 @@ void logConstructor(const city::Citizen& citizen)
 		jVisitor.result.as_string());
 }
 
-city::Citizen::Citizen()
-	:
-	m_tileOccupied((unsigned int)ceil(City::INIT_AREA_VIEW / 2)),
-	m_happiness(Emotion_Type::neutral),
-	m_food(2),
-	m_work(1),
-	m_gold(1),
-	m_revolt(0),
-	m_religion(Religion_Type::catholic),
-	m_place(false)
-{
-	logConstructor(*this);
-}
-
 city::Citizen::Citizen
 (
 	const Tile& tile
@@ -91,6 +77,19 @@ city::Citizen::Citizen
 	logConstructor(*this);
 }
 
+city::Citizen::Citizen(const TCitizenData& data)
+: m_tileOccupied(data.tileOccupied),
+m_happiness(data.happiness),
+m_food(data.food),
+m_work(data.work),
+m_gold(data.gold),
+m_revolt(data.revolt),
+m_religion(data.religion),
+m_place(data.place)
+{
+	logConstructor(*this);
+}
+
 city::Citizen::~Citizen()
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITIZEN, logS::DATA::EMPTY_DATA);
@@ -102,30 +101,3 @@ city::Citizen
 {
 	visitor.visit(*this);
 }
-
-void city::Citizen::loadFromOjson(const jsoncons::ojson& jsonLoad)
-{
-	if (
-			jsonLoad.contains("m_tileOccupied") && jsonLoad.contains("m_food") && jsonLoad.contains("m_work") &&
-			jsonLoad.contains("m_gold") && jsonLoad.contains("m_happiness") && jsonLoad.contains("m_revolt") &&
-			jsonLoad.contains("m_religion") && jsonLoad.contains("m_place")
-		)
-	{
-		m_tileOccupied = jsonLoad["m_tileOccupied"].as<unsigned int>();
-		m_happiness = static_cast<Emotion_Type>(jsonLoad["m_happiness"].as<int>());
-		m_food = jsonLoad["m_food"].as<int>();
-		m_work = jsonLoad["m_work"].as<int>();
-		m_gold = jsonLoad["m_gold"].as<int>();
-		m_revolt = jsonLoad["m_revolt"].as<int>();
-		m_religion = static_cast<Religion_Type>(jsonLoad["m_religion"].as<size_t>());
-		m_place = jsonLoad["m_place"].as<bool>();
-	}
-	else
-	{
-		throw("Citizen::loadFromOjson");
-	}
-}
-
- /*
-  *	End Of File : Citizen.cpp
-  */

@@ -154,7 +154,6 @@ public:
 	void clearDynamicContextBuildToQueue()				{ m_buildManager.clearDynamicContextBuildToQueue(); };
 	double GETBuildPerc()const							{ return m_buildManager.GETBuildPerc(); };
 
-	void addCitizen(bool uselessArg)					{ m_citizenManager.addCitizen(uselessArg); };
 	void resetTabCitizen()								{ m_citizenManager.resetTabCitizen(); };
 	void computeEmotion()								{ m_citizenManager.computeEmotion(); };
 
