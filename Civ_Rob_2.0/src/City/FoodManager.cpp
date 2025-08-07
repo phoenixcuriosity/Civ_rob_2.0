@@ -140,7 +140,7 @@ double city::FoodManager::getFoodToLevelUpFromPop(const size_t nbPop) const
 			(
 				OFFSET_FOOD_LEVEL
 				+ (static_cast<double>(nbPop - ONE_POP) * COEF1_MULT_FOOD_LEVEL)
-				+ pow((nbPop - ONE_POP), COEF2_MULT_FOOD_LEVEL)
+				+ pow(static_cast<double>(nbPop - ONE_POP), COEF2_MULT_FOOD_LEVEL)
 				);
 	}
 	else
