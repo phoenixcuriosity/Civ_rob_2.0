@@ -1,14 +1,15 @@
 #pragma once
 
-#include "IFoodManagerDeserializer.h"
+#include <R2D/src/IDeserializer.h>
 
 #include <jsoncons/json.hpp>
-
 
 namespace city
 {
 
-class JsonFoodManagerDeserializer : public IFoodManagerDeserializer<jsoncons::ojson>
+class FoodManager;
+
+class JsonFoodManagerDeserializer : public R2D::IDeserializer<jsoncons::ojson, FoodManager>
 {
 public:
     JsonFoodManagerDeserializer() = default;

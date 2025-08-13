@@ -1,19 +1,20 @@
 #pragma once
 
-#include "ICitizenDeserializer.h"
+#include <R2D/src/IDeserializer.h>
 
 #include <jsoncons/json.hpp>
 
 namespace city
 {
 
-class JsonCitizenDeserializer : public ICitizenDeserializer<jsoncons::ojson>
+class Citizen;
+
+class JsonCitizenDeserializer : public R2D::IDeserializer<jsoncons::ojson, std::shared_ptr<Citizen>>
 {
 public:
-    JsonCitizenDeserializer() = default;
     virtual ~JsonCitizenDeserializer() = default;
 
-    CitizenPtrT deserialize(const jsoncons::ojson& input) const override;
+    void deserialize(const jsoncons::ojson& input, std::shared_ptr<Citizen>& citizen) const override;
 };
 
 }

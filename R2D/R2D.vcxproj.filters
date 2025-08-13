@@ -42,6 +42,7 @@
     <ClInclude Include="src\IBlick.h" />
     <ClInclude Include="src\IMove.h" />
     <ClInclude Include="src\T_Coor.h" />
+    <ClInclude Include="src\IDeserializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />

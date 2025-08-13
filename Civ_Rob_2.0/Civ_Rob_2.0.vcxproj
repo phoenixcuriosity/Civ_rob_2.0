@@ -203,7 +203,6 @@
     <ClCompile Include="src\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\City\ICitizenManagerDeserializer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\City\Build.h" />
@@ -220,11 +219,9 @@
     <ClInclude Include="src\City\IBuild.h" />
     <ClInclude Include="src\City\IBuildManagerVisitor.h" />
     <ClInclude Include="src\City\IBuildVisitor.h" />
-    <ClInclude Include="src\City\ICitizenDeserializer.h" />
     <ClInclude Include="src\City\ICitizenManagerVisitor.h" />
     <ClInclude Include="src\City\ICitizenVisitor.h" />
     <ClInclude Include="src\City\ICityVisitor.h" />
-    <ClInclude Include="src\City\IFoodManagerDeserializer.h" />
     <ClInclude Include="src\City\IFoodManagerVisitor.h" />
     <ClInclude Include="src\City\JsonBuildManagerSerializerVisitor.h" />
     <ClInclude Include="src\City\JsonBuildSerializerVisitor.h" />

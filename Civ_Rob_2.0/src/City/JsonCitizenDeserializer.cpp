@@ -2,9 +2,9 @@
 
 #include "Citizen.h"
 
-city::JsonCitizenDeserializer::CitizenPtrT
+void
 city::JsonCitizenDeserializer
-::deserialize(const jsoncons::ojson& jsonLoad) const
+::deserialize(const jsoncons::ojson& jsonLoad, std::shared_ptr<Citizen>& citizen) const
 {
     if (
         jsonLoad.contains("m_tileOccupied") && jsonLoad.contains("m_food") &&
@@ -23,7 +23,7 @@ city::JsonCitizenDeserializer
         data.religion = static_cast<Citizen::Religion_Type>(jsonLoad["m_religion"].as<size_t>());
         data.place = jsonLoad["m_place"].as<bool>();
 
-        return std::make_shared<Citizen>(data);
+        citizen = std::make_shared<Citizen>(data);
     }
     else
     {

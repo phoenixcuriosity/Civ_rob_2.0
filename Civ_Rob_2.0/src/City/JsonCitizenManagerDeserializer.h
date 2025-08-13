@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ICitizenManagerDeserializer.h"
+#include <R2D/src/IDeserializer.h>
 
 #include <jsoncons/json.hpp>
 
@@ -8,10 +8,11 @@
 namespace city
 {
 
-class JsonCitizenManagerDeserializer : public ICitizenManagerDeserializer<jsoncons::ojson>
+class CitizenManager;
+
+class JsonCitizenManagerDeserializer : public R2D::IDeserializer<jsoncons::ojson, CitizenManager>
 {
 public:
-    JsonCitizenManagerDeserializer() = default;
     virtual ~JsonCitizenManagerDeserializer() = default;
 
     void deserialize(const jsoncons::ojson& input, CitizenManager& citizenManager) const override;

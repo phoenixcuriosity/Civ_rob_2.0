@@ -15,10 +15,12 @@ city::JsonCitizenManagerDeserializer
 	{
 		citizenManager.m_emotion = jsonLoad["Emotion"].as<unsigned int>();
 
-		for (const auto& citizen : jsonLoad["Citizens"].array_range())
+		for (const auto& citizenJson : jsonLoad["Citizens"].array_range())
 		{
+			std::shared_ptr<Citizen> citizenPtrT{nullptr};
 			JsonCitizenDeserializer jsonCitizenDeserializer;
-			citizenManager.m_citizens.push_back(jsonCitizenDeserializer.deserialize(citizen));
+			jsonCitizenDeserializer.deserialize(citizenJson, citizenPtrT),
+			citizenManager.m_citizens.push_back(citizenPtrT);
 		}
 	}
     else

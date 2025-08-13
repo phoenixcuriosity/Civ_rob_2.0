@@ -203,11 +203,8 @@
     <ClInclude Include="src\City\JsonFoodManagerSerializerVisitor.h" />
     <ClInclude Include="src\City\ICityVisitor.h" />
     <ClInclude Include="src\City\JsonCitySerializerVisitor.h" />
-    <ClInclude Include="src\City\ICitizenDeserializer.h" />
     <ClInclude Include="src\City\JsonCitizenDeserializer.h" />
-    <ClInclude Include="src\City\ICitizenManagerDeserializer.h" />
     <ClInclude Include="src\City\JsonCitizenManagerDeserializer.h" />
-    <ClInclude Include="src\City\IFoodManagerDeserializer.h" />
     <ClInclude Include="src\City\JsonFoodManagerDeserializer.h" />
   </ItemGroup>
   <ItemGroup>
