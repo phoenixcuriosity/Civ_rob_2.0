@@ -21,9 +21,8 @@
 */
 #pragma once
 
-#include "../LIB.h"
-
 #include <deque>
+#include <memory>
 #include <string>
 
 namespace CEGUI
@@ -49,6 +48,7 @@ enum class conversionSurplus_Type : unsigned int;
 
 class BuildManager
 {
+	friend class JsonBuildManagerDeserializer;
 	friend class JsonBuildManagerSerializerVisitor;
 
 private:
@@ -105,7 +105,6 @@ public:
 
 public:
 	void accept(IBuildManagerVisitor& visitor) const;
-	void loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner);
 
 private:
 	const CitizenManager& m_citizenManager;

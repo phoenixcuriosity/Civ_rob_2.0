@@ -1,15 +1,14 @@
 #pragma once
 
 #include "Build.h"
-
-#include <functional>
 #include <memory>
 
 #include <R2D/src/T_Coor.h>
-#include "BuildUnitCallbackStrategy.h"
 
 namespace city
 {
+
+class BuildUnitCallbackStrategy;
 
 class BuildUnit : public Build
 {

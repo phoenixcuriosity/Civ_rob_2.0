@@ -23,18 +23,15 @@
 #include "BuildManager.h"
 
 #include "Citizen.h"
+#include "CitizenManager.h"
 #include "T_City.h"
-#include "../Player.h"
-#include "../Unit/Unit.h"
 
 #include "BuildFactory.h"
-#include "BuildUnit.h"
 #include "IBuildManagerVisitor.h"
+#include "IBuild.h"
 
-#include <jsoncons/json.hpp>
 #include <CEGUI/widgets/PushButton.h>
 
-#include <functional>
 
 city::BuildManager::BuildManager
 (
@@ -144,7 +141,7 @@ void city::BuildManager::clearDynamicContextBuildToQueue()
 
 double city::BuildManager::GETBuildPerc()const
 {
-	if (m_buildQueue.empty() == CONTAINERS::NOT_EMPTY)
+	if (!m_buildQueue.empty())
 	{
 		return m_buildQueue.front().buildQ->getRemainingWorkoverWork();
 	}
@@ -156,23 +153,4 @@ city::BuildManager
 ::accept(IBuildManagerVisitor& visitor) const
 {
 	visitor.visit(*this);
-}
-
-void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner)
-{
-	if	(
-			jsonLoad.contains("m_workBalance") && jsonLoad.contains("m_workSurplusPreviousTurn") && jsonLoad.contains("m_buildQueue") &&
-			jsonLoad["m_buildQueue"].is_array()
-		)
-	{
-		m_workBalance = jsonLoad["m_workBalance"].as<double>();
-		m_workSurplusPreviousTurn = jsonLoad["m_workSurplusPreviousTurn"].as<double>();
-
-		for (const auto& build : jsonLoad["m_buildQueue"].array_range())
-		{
-			buildGUI buildToQueue;
-			buildToQueue.buildQ = std::move(BuildFactory::createBuild(build, owner));
-			m_buildQueue.push_back(std::move(buildToQueue));
-		}
-	}
 }
