@@ -21,8 +21,6 @@
 */
 #pragma once
 
-#include "../LIB.h"
-
 #include "BuildManager.h"
 #include "CitizenManager.h"
 #include "FoodManager.h"
@@ -48,6 +46,7 @@ class ICityVisitor;
 
 class City : public R2D::IMoveable
 {
+	friend class JsonCityDeserializer;
 	friend class JsonCitySerializerVisitor;
 
 private:
@@ -159,7 +158,6 @@ public:
 
 public:
 	void accept(ICityVisitor& visitor) const;
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
 	/* const & */

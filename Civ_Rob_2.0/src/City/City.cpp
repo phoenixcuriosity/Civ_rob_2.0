@@ -22,25 +22,14 @@
 
 #include "City.h"
 
-#include "../App.h"
 #include "Citizen.h"
-#include "CityNameTemplate.h"
 #include "../Screens/GameplayScreen.h"
-#include "../jsonloader.h"
 #include "../LogSentences.h"
 #include "../Player.h"
 #include "../Players.h"
-#include "../Unit/Unit.h"
-#include "../Utility.h"
-#include "ICityVisitor.h"
 #include "JsonCitySerializerVisitor.h"
-#include "JsonCitizenManagerDeserializer.h"
-#include "JsonFoodManagerDeserializer.h"
 
-#include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
-#include <R2D/src/ValueToScale.h>
-#include <R2D/src/Window.h>
 
 void city::City::createCity
 (
@@ -381,32 +370,3 @@ city::City
 {
 	visitor.visit(*this);
 }
-
-void city::City::loadFromOjson(const jsoncons::ojson& jsonLoad)
-{
-	if	(
-			jsonLoad.contains("m_image") && jsonLoad.contains("m_name") && jsonLoad.contains("m_x") &&
-			jsonLoad.contains("m_y") && jsonLoad.contains("m_influenceLevel") && jsonLoad.contains("m_atq") &&
-			jsonLoad.contains("m_def") && jsonLoad.contains("m_nbstructurebuild") && jsonLoad.contains("Citizens") &&
-			jsonLoad.contains("Food") && jsonLoad.contains("BuildQueue")
-		)
-	{
-		m_image = jsonLoad["m_image"].as_string();
-		m_name = jsonLoad["m_name"].as_string();
-		m_coor.x = jsonLoad["m_x"].as<unsigned int>();
-		m_coor.y = jsonLoad["m_y"].as<unsigned int>();
-		m_influenceLevel = jsonLoad["m_influenceLevel"].as<unsigned int>();
-		m_atq = jsonLoad["m_atq"].as<unsigned int>();
-		m_def = jsonLoad["m_def"].as<unsigned int>();
-		m_nbstructurebuild = jsonLoad["m_nbstructurebuild"].as<unsigned int>();
-		JsonCitizenManagerDeserializer jsonCitizenManagerDeserializer;
-		jsonCitizenManagerDeserializer.deserialize(jsonLoad["Citizens"], m_citizenManager);
-		JsonFoodManagerDeserializer jsonFoodManagerDeserializer;
-		jsonFoodManagerDeserializer.deserialize(jsonLoad["Food"], m_foodManager);
-		m_buildManager.loadFromOjson(jsonLoad["BuildQueue"], m_owner);
-	}
-}
-
- /*
- *	End Of File City.cpp
- */
