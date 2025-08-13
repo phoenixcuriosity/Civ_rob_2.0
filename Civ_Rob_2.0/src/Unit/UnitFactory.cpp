@@ -22,8 +22,6 @@
 
 #include "UnitFactory.h"
 
-#include "../Player.h"
-
 unit::UnitFactory
 ::UnitFactory() : m_loader(std::make_shared<R2D::RegisterLoadAbleOjson>())
 {

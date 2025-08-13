@@ -25,7 +25,6 @@
 #include "BuildManager.h"
 #include "CitizenManager.h"
 #include "Citizen.h"
-#include "T_City.h"
 #include "IFoodManagerVisitor.h"
 
 

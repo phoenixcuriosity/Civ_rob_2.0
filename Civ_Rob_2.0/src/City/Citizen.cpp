@@ -22,14 +22,11 @@
 
 #include "Citizen.h"
 
-#include "../App.h"
 #include "City.h"
 #include "../LogSentences.h"
 #include "../T_MainMap.h"
 #include "ICitizenVisitor.h"
 #include "JsonCitizenSerializerVisitor.h"
-
-#include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
 
 void logConstructor(const city::Citizen& citizen)

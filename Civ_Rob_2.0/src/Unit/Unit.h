@@ -29,7 +29,6 @@
 #include <R2D/src/IBlick.h>
 #include <R2D/src/IMove.h>
 
-#include <glm/glm.hpp>
 
 
 class Player;

@@ -25,6 +25,7 @@
 #include <memory>
 #include <vector>
 
+#include "Citizen.h"
 
 struct Tile;
 
@@ -41,6 +42,7 @@ class CitizenManager
 
 private:
 	using CitizenPtrT = std::shared_ptr<Citizen>;
+	using CitizenData = Citizen::TCitizenData;
 	using VectCitizen = std::vector<CitizenPtrT>;
 	using VectMapPtr = std::vector<Tile*>;
 
@@ -69,8 +71,6 @@ public:
 
 	const VectCitizen& getCitizens()const { return m_citizens; };
 	unsigned int getEmotion() const { return m_emotion; };
-	unsigned int& getEmotion()		{ return m_emotion; };
-	void setEmotion(unsigned int emotion){ m_emotion = emotion; };
 
 	double getWorkFromCitizen()const;
 	double getGoldFromCitizen()const;

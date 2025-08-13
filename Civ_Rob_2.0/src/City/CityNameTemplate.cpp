@@ -21,11 +21,9 @@
 */
 
 #include "CityNameTemplate.h"
-#include "../jsonloader.h"
 #include "../LogSentences.h"
 
 #include <R2D/src/Log.h>
-#include <R2D/src/ResourceManager.h>
 
 city::CityNameTemplate
 ::CityNameTemplate(std::optional<R2D::RegisterPairVector> registerLoad /* = std::nullopt */)

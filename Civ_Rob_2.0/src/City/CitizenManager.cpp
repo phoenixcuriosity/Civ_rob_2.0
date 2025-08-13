@@ -22,20 +22,15 @@
 
 #include "CitizenManager.h"
 
-#include "Citizen.h"
 #include "../LogSentences.h"
-#include "T_City.h"
 #include "../T_MainMap.h"
 #include "City.h"
 #include "ICitizenManagerVisitor.h"
-#include "JsonCitizenDeserializer.h"
 
 #include <R2D/src/ValueToScale.h>
-#include <R2D/src/ErrorLog.h>
 #include <R2D/src/Log.h>
 
 #include <execution>
-
 
 city::CitizenManager::CitizenManager(const VectMapPtr& tiles)
 :
