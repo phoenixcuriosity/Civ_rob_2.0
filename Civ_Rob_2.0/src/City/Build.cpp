@@ -2,6 +2,7 @@
 
 #include "LIB.h"
 
+#include "JsonBuildSerializerVisitor.h"
 
 city::Build::Build(const jsoncons::ojson& loadFrom)
 :
@@ -30,16 +31,15 @@ city::Build
 	return { returnValueBool , returnValueDouble };
 }
 
-void city::Build::save(jsoncons::ojson& saveTo) const
-{
-	saveTo.insert_or_assign("name", m_name);
-	saveTo.insert_or_assign("work", m_work);
-	saveTo.insert_or_assign("remainingWork", m_remainingWork);
-}
-
-
 double city::Build::getRemainingWorkoverWork() const noexcept
 {
 	return ((m_work - m_remainingWork) / m_work) * PERCENTAGE::ONE_HUNDRED;
+}
+
+void
+city::Build
+::accept(IBuildVisitor& visitor) const
+{
+	visitor.visit(*this);
 }
 

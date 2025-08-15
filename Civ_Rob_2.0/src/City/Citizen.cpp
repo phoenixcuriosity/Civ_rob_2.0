@@ -26,9 +26,19 @@
 #include "City.h"
 #include "../LogSentences.h"
 #include "../T_MainMap.h"
+#include "ICitizenVisitor.h"
+#include "JsonCitizenSerializerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
+
+void logConstructor(const city::Citizen& citizen)
+{
+	city::JsonCitizenSerializerVisitor jVisitor;
+	citizen.accept(jVisitor);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
+		jVisitor.result.as_string());
+}
 
 city::Citizen::Citizen()
 	:
@@ -41,8 +51,7 @@ city::Citizen::Citizen()
 	m_religion(Religion_Type::catholic),
 	m_place(false)
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
-		saveToOjson().as_string());
+	logConstructor(*this);
 }
 
 city::Citizen::Citizen
@@ -59,8 +68,7 @@ city::Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
-		saveToOjson().as_string());
+	logConstructor(*this);
 }
 
 city::Citizen::Citizen
@@ -80,8 +88,7 @@ city::Citizen::Citizen
 	m_religion(Religion_Type::catholic),
 	m_place(true)
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITIZEN, logS::DATA::CONSTRUCTOR_CITIZEN,
-		saveToOjson().as_string());
+	logConstructor(*this);
 }
 
 city::Citizen::~Citizen()
@@ -89,18 +96,11 @@ city::Citizen::~Citizen()
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::DELETE_CITIZEN, logS::DATA::EMPTY_DATA);
 }
 
-jsoncons::ojson city::Citizen::saveToOjson()const
+void
+city::Citizen
+::accept(ICitizenVisitor& visitor) const
 {
-	jsoncons::ojson value;
-	value.insert_or_assign("m_tileOccupied", m_tileOccupied);
-	value.insert_or_assign("m_happiness", static_cast<int>(m_happiness));
-	value.insert_or_assign("m_food", m_food);
-	value.insert_or_assign("m_work", m_work);
-	value.insert_or_assign("m_gold", m_gold);
-	value.insert_or_assign("m_revolt", m_revolt);
-	value.insert_or_assign("m_religion", static_cast<size_t>(m_religion));
-	value.insert_or_assign("m_place", m_place);
-	return value;
+	visitor.visit(*this);
 }
 
 void city::Citizen::loadFromOjson(const jsoncons::ojson& jsonLoad)

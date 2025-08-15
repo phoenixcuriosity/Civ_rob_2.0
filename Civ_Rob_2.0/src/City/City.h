@@ -44,9 +44,12 @@ namespace city
 {
 
 class Citizen;
+class ICityVisitor;
 
 class City : public R2D::IMoveable
 {
+	friend class JsonCitySerializerVisitor;
+
 private:
 	/* Minimal population in City */
 	static constexpr unsigned int MIN_POP = 1;
@@ -156,7 +159,7 @@ public:
 	void computeEmotion()								{ m_citizenManager.computeEmotion(); };
 
 public:
-	jsoncons::ojson saveToOjson()const;
+	void accept(ICityVisitor& visitor) const;
 	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:

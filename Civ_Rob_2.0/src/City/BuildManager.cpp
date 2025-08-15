@@ -29,6 +29,7 @@
 
 #include "BuildFactory.h"
 #include "BuildUnit.h"
+#include "IBuildManagerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <CEGUI/widgets/PushButton.h>
@@ -150,23 +151,11 @@ double city::BuildManager::GETBuildPerc()const
 	return RESOURCES_WORK_ZERO;
 };
 
-jsoncons::ojson city::BuildManager::saveToOjson()const
+void
+city::BuildManager
+::accept(IBuildManagerVisitor& visitor) const
 {
-	jsoncons::ojson value;
-	jsoncons::ojson builds{ jsoncons::ojson::make_array() };
-
-	for (const auto& build : m_buildQueue)
-	{
-		jsoncons::ojson b;
-		build.buildQ->save(b);
-		builds.push_back(b);
-	}
-
-	value.insert_or_assign("m_workBalance", m_workBalance);
-	value.insert_or_assign("m_workSurplusPreviousTurn", m_workSurplusPreviousTurn);
-	value.insert_or_assign("m_buildQueue", builds);
-
-	return value;
+	visitor.visit(*this);
 }
 
 void city::BuildManager::loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner)

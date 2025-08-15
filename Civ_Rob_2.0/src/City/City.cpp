@@ -32,6 +32,8 @@
 #include "../Players.h"
 #include "../Unit/Unit.h"
 #include "../Utility.h"
+#include "ICityVisitor.h"
+#include "JsonCitySerializerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/Log.h>
@@ -179,6 +181,13 @@ bool city::City::searchCityTile
 	}
 }
 
+void logCityConstructor(const city::City& city)
+{
+	city::JsonCitySerializerVisitor visitor;
+	visitor.visit(city);
+	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY, visitor.result.to_string());
+}
+
 city::City::City()
 :
 IMoveable(),
@@ -196,8 +205,7 @@ m_buildManager(m_citizenManager, m_foodManager, m_conversionToApply),
 m_goldBalance(0.0),
 m_owner()
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
-		saveToOjson().as_string());
+	logCityConstructor(*this);
 }
 
 city::City::City
@@ -223,8 +231,7 @@ city::City::City
 	m_goldBalance(0.0),
 	m_owner(player)
 {
-	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY,
-		saveToOjson().as_string());
+	logCityConstructor(*this);
 }
 
 city::City::~City()
@@ -366,21 +373,11 @@ void city::City::convertFoodSurplusToGold
 	m_owner->GETgoldStats().goldConversionSurplus = foodSurplus * BuildManager::FOOD_TO_GOLD;
 }
 
-jsoncons::ojson city::City::saveToOjson()const
+void
+city::City
+::accept(ICityVisitor& visitor) const
 {
-	jsoncons::ojson value;
-	value.insert_or_assign("m_image", m_image);
-	value.insert_or_assign("m_name", m_name);
-	value.insert_or_assign("m_x", m_coor.x);
-	value.insert_or_assign("m_y", m_coor.y);
-	value.insert_or_assign("m_influenceLevel", m_influenceLevel);
-	value.insert_or_assign("m_atq", m_atq);
-	value.insert_or_assign("m_def", m_def);
-	value.insert_or_assign("m_nbstructurebuild", m_nbstructurebuild);
-	value.insert_or_assign("Citizens", m_citizenManager.saveToOjson());
-	value.insert_or_assign("Food", m_foodManager.saveToOjson());
-	value.insert_or_assign("BuildQueue", m_buildManager.saveToOjson());
-	return value;
+	visitor.visit(*this);
 }
 
 void city::City::loadFromOjson(const jsoncons::ojson& jsonLoad)

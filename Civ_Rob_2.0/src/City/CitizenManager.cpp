@@ -27,6 +27,7 @@
 #include "T_City.h"
 #include "../T_MainMap.h"
 #include "City.h"
+#include "ICitizenManagerVisitor.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ValueToScale.h>
@@ -221,18 +222,11 @@ double city::CitizenManager::getFoodFromCitizen()const
 		[](const CitizenPtrT& c) { return static_cast<double>(c->GETfood()); });
 }
 
-jsoncons::ojson city::CitizenManager::saveToOjson()const
+void
+city::CitizenManager
+::accept(ICitizenManagerVisitor& visitor) const
 {
-	jsoncons::ojson value;
-	jsoncons::ojson citizens{ jsoncons::ojson::make_array() };
-
-	for (const auto citizen : m_citizens)
-	{
-		citizens.push_back(citizen->saveToOjson());
-	}
-	value.insert_or_assign("Emotion", m_emotion);
-	value.insert_or_assign("Citizens", citizens);
-	return value;
+	visitor.visit(*this);
 }
 
 void city::CitizenManager::loadFromOjson(const jsoncons::ojson& jsonLoad)

@@ -42,12 +42,15 @@ namespace city
 {
 
 class IBuild;
+class IBuildManagerVisitor;
 class CitizenManager;
 class FoodManager;
 enum class conversionSurplus_Type : unsigned int;
 
 class BuildManager
 {
+	friend class JsonBuildManagerSerializerVisitor;
+
 private:
 	using PlayerPtrT = std::shared_ptr<Player>;
 private:
@@ -101,7 +104,7 @@ public:
 	const dequeBuild& getBuildQueue()const	{ return m_buildQueue; };
 
 public:
-	jsoncons::ojson saveToOjson()const;
+	void accept(IBuildManagerVisitor& visitor) const;
 	void loadFromOjson(const jsoncons::ojson& jsonLoad, const PlayerPtrT owner);
 
 private:

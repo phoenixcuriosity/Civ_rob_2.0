@@ -3,6 +3,7 @@
 #include "Build.h"
 
 #include <functional>
+#include <memory>
 
 #include <R2D/src/T_Coor.h>
 #include "BuildUnitCallbackStrategy.h"
@@ -12,6 +13,7 @@ namespace city
 
 class BuildUnit : public Build
 {
+	friend class JsonBuildSerializerVisitor;
 protected:
 	using BuildCallbackStrategyPtr = std::shared_ptr<BuildUnitCallbackStrategy>;
 	using Coor = R2D::Coor;
@@ -24,7 +26,7 @@ public:
 public:
 	void buildInPlayer() override;
 
-	void save(jsoncons::ojson& saveTo) const override;
+	void accept(IBuildVisitor& visitor) const override;
 
 private:
 	const std::string m_type = "Unit";
