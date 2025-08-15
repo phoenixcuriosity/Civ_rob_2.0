@@ -23,7 +23,7 @@
 #include "Players.h"
 
 #include "App.h"
-#include "City.h"
+#include "City/City.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
@@ -193,7 +193,7 @@ void Players::drawUnit
 						const GamePlayScreenEnumTexture idTunit
 							{ static_cast<GamePlayScreenEnumTexture>(
 								static_cast<size_t>(GamePlayScreenEnumTexture::battleoids)
-								+ static_cast<size_t>(UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
+								+ static_cast<size_t>(unit::UnitTemplate::getSingleton().searchUnitByName(unit->GETname()))
 							)};
 
 						/* Unit Texture */
@@ -395,6 +395,14 @@ void Players::loadFromOjson(const jsoncons::ojson& jsonLoad)
 	}
 }
 
- /*
- *	End Of File : Players.cpp
- */
+void
+Players
+::nextTurn()
+{
+	unsigned int indexPlayer{ 0 };
+	for (auto& player : m_vectPlayer)
+	{
+		player->nextTurn(indexPlayer, *m_matriceMapPtrT, m_needToUpdateDrawCity);
+		indexPlayer++;
+	}
+}

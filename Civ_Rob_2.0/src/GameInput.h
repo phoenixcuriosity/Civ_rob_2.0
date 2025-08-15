@@ -19,13 +19,14 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef GameInput_H
-#define GameInput_H
-
-#include "LIB.h"
-#include <R2D/src/API_fwd.h>
+#include <SDL\glew.h>
 #include <SDL/SDL.h>
+
+#include <memory>
+#include <string>
+#include <vector>
 
  /* Define input from keyboard in a context */
 enum class CinState_Type : unsigned int
@@ -37,8 +38,30 @@ enum class CinState_Type : unsigned int
 	cinMainMap,						/* Inputs from keyboards are use in Main map */
 };
 
+class Player;
+class Players;
+class MainMap;
+class GamePlayScreen;
+
+namespace unit
+{
+	class Unit;
+}
+
+namespace R2D
+{
+	class Camera2D;
+	class InputManager;
+	enum class ScreenState;
+	class Window;
+}
+
 class GameInput
 {
+private:
+	using PlayerPtrT = std::shared_ptr<Player>;
+	using UnitPtrT = std::shared_ptr<unit::Unit>;
+
 public:
 
 	static void updateSDLInputCycle
@@ -138,9 +161,3 @@ private:
 	);
 
 };
-
-#endif /* GameInput_H */
-
-/*
-*	End Of File : GameInput.h
-*/

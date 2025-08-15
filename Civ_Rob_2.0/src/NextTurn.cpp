@@ -22,47 +22,15 @@
 
 #include "NextTurn.h"
 
-#include "City.h"
-#include "GamePlayScreen.h"
+#include "City/City.h"
+#include "Screens/GamePlayScreen.h"
 #include "Player.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 
-NextTurn::NextTurn()
-: m_nbTurn(0)
+void
+NextTurn
+::nextTurn(GamePlayScreen& mainGame)
 {
-
-}
-
-NextTurn::~NextTurn()
-{
-
-}
-
-void NextTurn::nextTurn(GamePlayScreen& mainGame)
-{
-	unsigned int indexPlayer{ 0 };
-	for (auto& player : mainGame.GETPlayers().GETvectPlayer())
-	{
-		player->resetGoldStats();
-		for (auto& unit : player->GETtabUnit())
-		{
-			unit->resetMovement();
-			unit->resetNumberOfAttack();
-			unit->heal(mainGame.GETmainMap().GETmatriceMap(), indexPlayer);
-		}
-		for (auto& city : player->GETtabCity())
-		{
-			/* computeEmotion must be in first : Emotion use on other computations */
-			city->computeEmotion();
-
-			city->computefood(player->GETgoldStats());
-			city->computeWork(*player, mainGame.GETPlayers().GETneedToUpdateDrawUnitPtr());
-			city->computeGold();
-			city->addCityGoldToTaxIncome(player->GETgoldStats());
-		}
-		player->computeGold();
-
-		indexPlayer++;
-	}
+	mainGame.nextTurn();
 	m_nbTurn++;
 }

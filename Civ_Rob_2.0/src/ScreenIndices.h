@@ -21,9 +21,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef ScreenIndices_H
-#define ScreenIndices_H
+#pragma once
 
 namespace SCREEN_INDEX
 {
@@ -33,5 +31,3 @@ namespace SCREEN_INDEX
 	constexpr int GAMEPLAY = 3;
 	constexpr int CITY = 4;
 }
-
-#endif /* ScreenIndices_H */

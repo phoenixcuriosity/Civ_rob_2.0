@@ -19,11 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef InputManager_H
-#define InputManager_H
-
-#include "API_fwd.h"
+#include <unordered_map>
 
 #include <glm/glm.hpp>
 #include <SDL/SDL.h>
@@ -56,7 +54,7 @@ public:
 
 	glm::i32vec2 GETmouseCoords()const { return m_mouseCoords; }
 	glm::i32vec2 GETmouseCoordsTile()const
-	{ 
+	{
 		return glm::i32vec2
 		(
 			std::floor((m_mouseCoords.x / *m_tileSize) * *m_tileSize),
@@ -76,5 +74,3 @@ private:
 	unsigned int* m_tileSize = nullptr;
 };
 }
-
-#endif // !InputManager_H

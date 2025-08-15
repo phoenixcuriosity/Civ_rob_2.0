@@ -22,18 +22,21 @@
 
 #include "App.h"
 
-#include "CityScreen.h"
-#include "GamePlayScreen.h"
+
 #include "jsonloader.h"
 #include "LogSentences.h"
-#include "MainMenuScreen.h"
-#include "NewGameScreen.h"
-#include "ReloadMenuScreen.h"
 #include "SaveReload.h"
+
+#include "Screens/CityScreen.h"
+#include "Screens/GamePlayScreen.h"
+#include "Screens/MainMenuScreen.h"
+#include "Screens/NewGameScreen.h"
+#include "Screens/ReloadMenuScreen.h"
+
+#include "City/BuildFactory.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>
-#include <R2D/src/ErrorLog.h>
 #include <R2D/src/Log.h>
 #include <R2D/src/ExitFromError.h>
 #include <R2D/src/SpriteFont.h>
@@ -69,6 +72,8 @@ App
 
 	m_window.SETscreenWidth(R2D::Window::getHorizontal());
 	m_window.SETscreenHeight(R2D::Window::getVertical());
+
+	city::BuildFactory::registerType("Unit", city::BuildFactory::commonUnitBuilder);
 }
 
 void

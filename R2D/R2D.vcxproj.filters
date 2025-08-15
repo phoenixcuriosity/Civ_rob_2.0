@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="src\API_fwd.h" />
     <ClInclude Include="src\AudioEngine.h" />
     <ClInclude Include="src\Camera2D.h" />
     <ClInclude Include="src\GameEngine.h" />
@@ -29,7 +28,6 @@
     <ClInclude Include="src\ExitFromError.h" />
     <ClInclude Include="src\ValueToScale.h" />
     <ClInclude Include="src\CardinalDirection.h" />
-    <ClInclude Include="src\API_fwd.h" />
     <ClInclude Include="src\Screen.h" />
     <ClInclude Include="src\LogLevel.h" />
     <ClInclude Include="src\Log.h" />
@@ -43,6 +41,8 @@
     <ClInclude Include="src\IRegister.h" />
     <ClInclude Include="src\IBlick.h" />
     <ClInclude Include="src\IMove.h" />
+    <ClInclude Include="src\T_Coor.h" />
+    <ClInclude Include="src\IDeserializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioEngine.cpp" />

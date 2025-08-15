@@ -19,14 +19,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef App_H
-#define App_H
-
-#include "LIB.h"
 #include <R2D/src/IMainGame.h>
-#include <R2D/src/ILoadable.h>
-#include <R2D/src/FileSystemHandler.h>
+
+#include <memory>
+
+class CityScreen;
+class GamePlayScreen;
+class MainMenuScreen;
+class NewGameScreen;
+class ReloadMenuScreen;
 
 /**
  * @class App
@@ -97,5 +100,3 @@ private:
     GamePlayScreenPtrT m_gamePlayScreen; ///< Pointer to the gameplay screen.
     CityScreenPtrT m_CityScreen; ///< Pointer to the city screen.
 };
-
-#endif // !App_H

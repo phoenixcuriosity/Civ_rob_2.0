@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef ValueToScale_H
-#define ValueToScale_H
+#pragma once
 
 namespace VALUE_PRECISION
 {
@@ -92,6 +90,4 @@ namespace R2D
 		);
 	};
 }
-
-#endif // !ValueToScale_H
 

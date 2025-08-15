@@ -19,22 +19,22 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef WidgetLabel_H
-#define WidgetLabel_H
-
-#include "API_fwd.h"
-
-#include <glm/glm.hpp>
-#include <CEGUI/CEGUI.h>
+#pragma once
 
 #include "ColorRGBA8.h"
-#include "SpriteBatch.h"
-#include "SpriteFont.h"
-#include "Window.h"
+#include <string>
+
+namespace CEGUI
+{
+	class Window;
+}
 
 namespace R2D
 {
+
+class SpriteBatch;
+class SpriteFont;
+class Window;
 
 class WidgetLabel
 {
@@ -51,10 +51,3 @@ private:
 };
 
 }
-
-#endif // !WidgetLabel_H
-
-
-
-
-

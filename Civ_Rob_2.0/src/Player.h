@@ -19,30 +19,49 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Player_H
-#define Player_H
+#pragma once
 
 #include "LIB.h"
 
-#include "CityManager.h"
-#include "UnitManager.h"
+#include "City/CityManager.h"
+#include "Unit/UnitManager.h"
 #include "T_Player.h"
 
 namespace PlayerH
 {
-	constexpr unsigned int NB_MAX_PLAYER = 9;
-
 	constexpr double INITIAL_GOLD = 100.0;
 
 	constexpr bool NEED_TO_UPDATE_DRAW_UNIT = true;
 }
 
+namespace unit
+{
+	class Unit;
+}
+
+namespace city
+{
+	class City;
+}
+
 class Player : public std::enable_shared_from_this<Player>
 {
+private:
+	using CityPtrT = std::shared_ptr<city::City>;
+	using VectCity = std::vector<CityPtrT>;
+
+	using UnitPtrT = std::shared_ptr<unit::Unit>;
+	using VectUnit = std::vector<UnitPtrT>;
+
+	using VectMapPtr = std::vector<Tile*>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 	struct Private { explicit Private() = default; };
 
 public:
+
+
 	Player(Private, const std::string& name, const int id);
 
 	static std::shared_ptr<Player> create(const std::string& name, const int id)
@@ -53,19 +72,15 @@ public:
 	Player() = delete;
 	virtual ~Player();
 
-	virtual void addUnit(const Unit::UnitName& name,
-						 const Unit::Coor coor);
+	virtual void addUnit(const unit::Unit::UnitName& name,
+						 const unit::Unit::Coor coor);
 
 private:
 	virtual void addEmptyUnit();
 
 public:
 	virtual void deleteUnit(const unsigned int index);
-	virtual void addCity(
-		const std::string&,
-		const unsigned int,
-		const unsigned int,
-		VectMapPtr& tiles);
+	virtual void addCity(const unit::Unit::Coor coor, VectMapPtr& tiles);
 
 private:
 	virtual void addEmptyCity();
@@ -79,6 +94,9 @@ public:
 	virtual void addGoldToGoldConversionSurplus(const double goldToAdd);
 
 public:
+	void nextTurn(const unsigned int index, const MatriceMap& matriceMap, bool& needToUpdateDrawUnit);
+
+public:
 	jsoncons::ojson saveToOjson()const;
 	void loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceMap);
 
@@ -89,6 +107,7 @@ public:
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
 	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_unitManager.getUnits()[m_selectedUnit]; }
+	inline virtual const CityPtrT& GETSelectedCityPtr() const { return m_selectedCityPtrT; }
 
 	inline virtual int GETid()							const { return m_id; };
 	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
@@ -107,17 +126,12 @@ private:
 	std::string m_name;
 	int m_id;
 
-	UnitManager m_unitManager;
-	CityManager m_CityManager;
+	unit::UnitManager m_unitManager;
+	city::CityManager m_CityManager;
 	int m_selectedUnit;
 	int m_selectedCity;
+	CityPtrT m_selectedCityPtrT;
 	GoldStats m_goldStats;
 	OnOffDisplay m_onOffDisplay;
 
 };
-
-#endif /* Player_H */
-
-/*
-*	End Of File : Player.h
-*/

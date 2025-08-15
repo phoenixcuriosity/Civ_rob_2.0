@@ -23,12 +23,14 @@
 #include "Player.h"
 
 #include "App.h"
-#include "City.h"
+#include "City/City.h"
+#include "City/JsonCitySerializerVisitor.h"
+#include "City/JsonCityDeserializer.h"
 #include "jsonloader.h"
 #include "LogSentences.h"
 #include "MainMap.h"
 #include "SaveReload.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 #include "Utility.h"
 
 #include <jsoncons/json.hpp>
@@ -63,13 +65,13 @@ Player::~Player()
 
 void Player::addEmptyUnit()
 {
-	m_unitManager.addEmptyUnit();
+	m_unitManager.addEmptyUnit(shared_from_this());
 }
 
 void Player::addUnit
 (
-	const Unit::UnitName& name,
-	const Unit::Coor coor
+	const unit::Unit::UnitName& name,
+	const unit::Unit::Coor coor
 )
 {
 	m_unitManager.addUnit(name, coor, shared_from_this());
@@ -83,15 +85,9 @@ void Player::deleteUnit
 	m_unitManager.removeUnit(index);
 }
 
-void Player::addCity
-(
-	const std::string& name,
-	const unsigned int x,
-	const unsigned int y,
-	VectMapPtr& tiles
-)
+void Player::addCity(const unit::Unit::Coor coor, VectMapPtr& tiles)
 {
-	m_CityManager.addCity(name, { x, y }, tiles);
+	m_CityManager.addCity(m_id, coor, tiles, shared_from_this());
 }
 
 void Player::addEmptyCity()
@@ -107,7 +103,7 @@ void Player::deleteCity
 	m_CityManager.removeCity(index);
 }
 
-CityPtrT* Player::searchCity
+Player::CityPtrT* Player::searchCity
 (
 	const unsigned int indexX,
 	const unsigned int indexY
@@ -115,7 +111,11 @@ CityPtrT* Player::searchCity
 {
 	for (auto &c : m_CityManager.getCities())
 	{
-		if (c->searchCityTile(indexX, indexY)) return &c;
+		if (c->searchCityTile(indexX, indexY))
+		{
+			m_selectedCityPtrT = c;
+			return &c;
+		}
 	}
 	return nullptr;
 }
@@ -165,6 +165,16 @@ void Player::addGoldToGoldConversionSurplus
 	m_goldStats.goldConversionSurplus += goldToAdd;
 }
 
+void
+Player
+::nextTurn(const unsigned int index, const MatriceMap& matriceMap, bool& needToUpdateDrawUnit)
+{
+	resetGoldStats();
+	m_unitManager.nextTurn(index, matriceMap);
+	m_CityManager.nextTurn(needToUpdateDrawUnit);
+	computeGold();
+}
+
 jsoncons::ojson Player::saveToOjson()const
 {
 	jsoncons::ojson value;
@@ -179,7 +189,9 @@ jsoncons::ojson Player::saveToOjson()const
 
 	for (const auto& city : m_CityManager.getCities())
 	{
-		cities.push_back(city->saveToOjson());
+		city::JsonCitySerializerVisitor visitor;
+		city->accept(visitor);
+		cities.push_back(visitor.result);
 	}
 
 	goldStats.insert_or_assign("gold", m_goldStats.gold);
@@ -230,8 +242,11 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 		{
 			addEmptyCity();
 			CityPtrT city_l{ m_CityManager.getCities().back() };
-			city_l->loadFromOjson(city);
-			City::loadCity(matriceMap, m_id, city_l, modifAppartenance_Type::dontModify);
+
+			city::JsonCityDeserializer jsonCityDeserializer;
+			jsonCityDeserializer.deserialize(city, city_l);
+
+			city::City::loadCity(matriceMap, m_id, city_l, city::City::modifAppartenance_Type::dontModify);
 		}
 	}
 	else

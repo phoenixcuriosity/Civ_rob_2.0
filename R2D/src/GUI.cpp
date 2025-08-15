@@ -58,7 +58,7 @@ void GUI::init(const std::string& filePath)
 
 		CEGUI::DefaultResourceProvider* rp =
 			static_cast<CEGUI::DefaultResourceProvider*>(CEGUI::System::getSingleton().getResourceProvider());
-	
+
 		rp->setResourceGroupDirectory("imagesets", filePath + "/imagesets/");
 		rp->setResourceGroupDirectory("schemes", filePath + "/schemes/");
 		rp->setResourceGroupDirectory("fonts", filePath + "/fonts/");
@@ -248,11 +248,11 @@ CEGUI::MouseButton GUI::SDLButtonToCEGUI(Uint8 sdlButton)
 {
     switch (sdlButton)
     {
-    case SDL_BUTTON_LEFT: return CEGUI::MouseButton::LeftButton; 
-    case SDL_BUTTON_RIGHT: return CEGUI::MouseButton::RightButton; 
-    case SDL_BUTTON_MIDDLE: return CEGUI::MouseButton::MiddleButton; 
-    case SDL_BUTTON_X1: return CEGUI::MouseButton::X1Button; 
-    case SDL_BUTTON_X2: return CEGUI::MouseButton::X2Button; 
+    case SDL_BUTTON_LEFT: return CEGUI::MouseButton::LeftButton;
+    case SDL_BUTTON_RIGHT: return CEGUI::MouseButton::RightButton;
+    case SDL_BUTTON_MIDDLE: return CEGUI::MouseButton::MiddleButton;
+    case SDL_BUTTON_X1: return CEGUI::MouseButton::X1Button;
+    case SDL_BUTTON_X2: return CEGUI::MouseButton::X2Button;
     default: return CEGUI::MouseButton::NoButton;
     }
 }
@@ -276,13 +276,13 @@ void GUI::onSDLEvent(SDL_Event& ev, InputManager& /* inputManager */)
 		break;
 	case SDL_TEXTINPUT:
     {
-        
+
             std::string evText(ev.text.text);
             std::vector<int> utf32result;
             utf8::utf8to32(ev.text.text, ev.text.text + evText.size(),
                 std::back_inserter(utf32result));
             m_context->injectChar((CEGUI::utf32)utf32result[0]);
-        
+
         break;
     }
 	case SDL_MOUSEBUTTONDOWN:
@@ -326,7 +326,7 @@ CEGUI::Window* GUI::createWidget
 
 void GUI::destroyWidget(CEGUI::Window* widget)
 {
-    try 
+    try
     {
         m_root->removeChild(widget);
         widget->destroy();
@@ -340,7 +340,7 @@ void GUI::destroyWidget(CEGUI::Window* widget)
 
 CEGUI::Window* GUI::getWidget(const std::string& name)
 {
-    try 
+    try
     {
         CEGUI::Window* returnObj{ m_root->getChild(name) };
         if (returnObj)

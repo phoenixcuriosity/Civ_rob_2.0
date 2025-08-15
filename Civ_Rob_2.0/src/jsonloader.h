@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef jsonloader_H
-#define jsonloader_H
+#pragma once
 
 #include "T_Player.h"
 #include "T_MainMap.h"
@@ -72,9 +70,3 @@ JSONCONS_ALL_MEMBER_NAME_TRAITS(GoldStats,
 	(goldConversionSurplus, "goldConversionSurplus"),
 	(armiesCost, "armiesCost"),
 	(buildingsCost, "buildingsCost"))
-
-
-
-
-#endif // !jsonloader_H
-

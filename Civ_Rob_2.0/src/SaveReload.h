@@ -19,15 +19,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef SaveReload_H
-#define SaveReload_H
+#pragma once
 
 #include "LIB.h"
 
 #include <R2D/src/FileSystemHandler.h>
 
-#include <R2D/src/API_fwd.h>
 #include <R2D/src/Files.h>
 #include <R2D/src/IRegister.h>
 #include <limits>
@@ -89,10 +86,3 @@ private:
 	SaveIdVect m_tabSave;
 	SaveId m_currentSave;
 };
-
-
-#endif /* SaveReload_H */
-
-/*
-*	End Of File : SaveReload.h
-*/

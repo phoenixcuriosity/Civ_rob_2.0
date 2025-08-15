@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef SpriteBatch_H
-#define SpriteBatch_H
+#pragma once
 
 #include "Vertex.h"
 #include <glm\glm.hpp>
@@ -49,12 +47,12 @@ public:
 	(
 		const glm::vec4& destRec,
 		const  glm::vec4& uvRect,
-		GLuint Texture,
+		unsigned int Texture,
 		float Depth,
 		const  ColorRGBA8& color
 	);
 
-	GLuint texture;
+	unsigned int texture;
 	float depth;
 
 	Vertex topLeft;
@@ -68,14 +66,14 @@ class RenderBatch
 public:
 	RenderBatch
 	(
-		GLuint offset,
-		GLuint numVertices,
-		GLuint texture
+		unsigned int offset,
+		unsigned int numVertices,
+		unsigned int texture
 	);
 
-	GLuint _offset;
-	GLuint _numVertices;
-	GLuint _texture;
+	unsigned int _offset;
+	unsigned int _numVertices;
+	unsigned int _texture;
 
 };
 
@@ -94,7 +92,7 @@ public:
 	(
 		const glm::vec4& destRec,
 		const  glm::vec4& uvRect,
-		GLuint texture,
+		unsigned int texture,
 		float depth,
 		const  ColorRGBA8& color
 	);
@@ -112,8 +110,8 @@ private:
 
 private:
 
-	GLuint m_vbo;
-	GLuint m_vao;
+	unsigned int m_vbo;
+	unsigned int m_vao;
 	GlyphSortType m_sortType;
 
 	std::vector<Glyph*> m_glyphsPtr;
@@ -122,8 +120,3 @@ private:
 };
 
 }
-
-#endif // !SpriteBatch_H
-
-
-

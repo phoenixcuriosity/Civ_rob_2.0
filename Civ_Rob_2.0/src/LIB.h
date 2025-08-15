@@ -20,8 +20,7 @@
 
 */
 
-#ifndef LIB_H
-#define LIB_H
+#pragma once
 
 #define NOMINMAX // forbid to redifine std::max/min by Windows.h and Visual Studio
 
@@ -31,6 +30,8 @@
 #include <queue>
 #include <string>
 #include <vector>
+
+#include <SDL\glew.h>
 
 namespace STRINGS
 {
@@ -99,58 +100,6 @@ enum class Select_Type
 	selectmoveCitizen		/* ### Not use as of 0.20.0.3 ### */
 };
 
-struct build;
-struct buildGUI;
-struct GoldStats;
-struct randomPos;
-struct Screen;
-struct Tile;
-struct UserInputNewGame;
-struct Var;
-
-class Citizen;
-class City;
-class GameInput;
-class GamePlayScreen;
-class MainMap;
-class NextTurn;
-class Player;
-class Players;
-class SaveReload;
-class Unit;
-
-class CityScreen;
-class GamePlayScreen;
-class MainMenuScreen;
-class NewGameScreen;
-class ReloadMenuScreen;
-
-enum class build_Type : unsigned int;
-enum class CinState_Type : unsigned int;
-enum class conversionSurplus_Type : unsigned int;
-enum class Emotion_Type;
-enum class Ground_Type;
-enum class GroundSpec_Type;
-enum class Religion_Type;
-enum class resizeUnitTexture_Type : unsigned int;
-
-typedef std::deque<buildGUI> dequeBuild;
-
-typedef std::shared_ptr<Player> PlayerPtrT;
-typedef std::shared_ptr<Unit> UnitPtrT;
-typedef std::shared_ptr<City> CityPtrT;
-typedef std::shared_ptr<Citizen> CitizenPtrT;
-typedef std::shared_ptr<SaveReload> SaveReloadPtrT;
-
-typedef std::vector<Tile> VectMap;
-typedef std::vector<Tile*> VectMapPtr;
-typedef std::vector<VectMap> MatriceMap;
-typedef std::vector<CitizenPtrT> VectCitizen;
-typedef std::vector<CityPtrT> VectCity;
-typedef std::vector<PlayerPtrT> VectPlayer;
-typedef std::vector<std::string> VectPlayerName;
-typedef std::vector<UnitPtrT> VectUnit;
-
 namespace jsoncons
 {
 	template <typename CharT, typename Policy, typename Allocator>
@@ -159,10 +108,3 @@ namespace jsoncons
 	struct order_preserving_policy;
 	using ojson = basic_json<char, order_preserving_policy, std::allocator<char>>;
 }
-
-#endif
-
-
-/*
-*	End Of File : LIB.h
-*/

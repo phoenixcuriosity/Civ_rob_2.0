@@ -19,13 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef T_MainMap_H
-#define T_MainMap_H
+#pragma once
 
 #include "LIB.h"
-
-#include "T_Coor.h"
 
 namespace MAPH
 {
@@ -94,9 +90,3 @@ struct Tile
 	// indice financier de la case
 	int gold = -1;
 };
-
-
-
-#endif // !T_MainMap_H
-
-

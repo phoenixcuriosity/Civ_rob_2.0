@@ -19,12 +19,10 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
-
-#ifndef Camera2D_H
-#define Camera2D_H
 
 namespace R2D
 {
@@ -101,7 +99,7 @@ private:
 
 	/* Rate of zoom and deZoom, default : 1.25f */
 	float m_scaleRate;
-	
+
 	/* max camera Zoom */
 	float m_maxScale;
 
@@ -127,5 +125,3 @@ private:
 };
 
 }
-
-#endif /* Camera2D_H */

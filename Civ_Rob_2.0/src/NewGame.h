@@ -19,11 +19,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+#pragma once
 
-#ifndef NewGame_H
-#define NewGame_H
+#include <string>
+#include <vector>
 
-#include "LIB.h"
+class GamePlayScreen;
+class MainMap;
+class Players;
+struct Tile;
 
 /* ---------------------------------------------------------------------- */
 /* Structure d'un couple de positions									  */
@@ -37,7 +41,11 @@ struct randomPos
 
 class NewGameManager
 {
+private:
 	using PlayerNameVector = std::vector<std::string>;
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 public:
 
 	static void newGame(GamePlayScreen& gamePlayScreen);
@@ -127,6 +135,3 @@ private:
 		const randomPos& RandomPOS
 	);
 };
-
-
-#endif // !NewGame_H

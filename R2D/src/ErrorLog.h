@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef ErrorLog_H
-#define ErrorLog_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -50,9 +48,3 @@ private:
 };
 
 }
-
-
-
-
-#endif // !ErrorLog_H
-

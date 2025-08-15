@@ -19,9 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef LOG_H
-#define LOG_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -109,10 +107,3 @@ private:
 }
 
 #define LOG(severity, time, who, what, ...) R2D::Logger::instance().log(__FILE__, __LINE__, __FUNCTION__, severity, time, who, what, __VA_ARGS__)
-
-
-
-
-
-#endif // !LOG_H
-

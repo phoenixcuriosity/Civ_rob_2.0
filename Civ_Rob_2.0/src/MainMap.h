@@ -19,13 +19,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef MainMap_H
-#define MainMap_H
+#pragma once
 
 #include "LIB.h"
 
-#include "GamePlayScreenEnumTexture.h"
+#include "Screens/GamePlayScreenEnumTexture.h"
 #include "T_MainMap.h"
 #include "MainMapConfig.h"
 
@@ -40,6 +38,10 @@
 
 class MainMap : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
+private:
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
+
 public:
 	void setStaticPtrTileSize();
 
@@ -52,8 +54,8 @@ public:
 
 public:
 	MainMap() = delete;
-	MainMap(R2D::RegisterPairVector& registerLoad);
-	virtual ~MainMap();
+	explicit MainMap(R2D::RegisterPairVector& registerLoad);
+	~MainMap();
 
 	void initMainMap(R2D::Camera2D& camera, const GamePlayScreenTexture& idTexture);
 	void initMainMapTexture(const GamePlayScreenTexture& idTexture);
@@ -147,9 +149,3 @@ private:
 
 	static unsigned int* s_tileSize;
 };
-
-#endif /* MainMap_H */
-
-/*
-*	End Of File : MainMap.h
-*/

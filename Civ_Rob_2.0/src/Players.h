@@ -19,26 +19,53 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef Players_H
-#define Players_H
+#pragma once
 
 #include "LIB.h"
 
-#include "GamePlayScreenEnumTexture.h"
-#include "CityNameTemplate.h"
+#include "Screens/GamePlayScreenEnumTexture.h"
+#include "City/CityNameTemplate.h"
 
 #include <R2D/src/ISaveable.h>
 #include <R2D/src/ILoadable.h>
-#include <R2D/src/WidgetLabel.h>
+#include <R2D/src/SpriteBatch.h>
 #include <R2D/src/IRegister.h>
 
 #include <jsoncons/json.hpp>
 
+
+class Player;
+class City;
+class MainMap;
+
+struct Tile;
+
+namespace unit
+{
+	class Unit;
+}
+
+namespace city
+{
+	class City;
+}
+
+namespace R2D
+{
+	class Camera2D;
+}
+
 class Players : public R2D::ISaveable<jsoncons::ojson>, public R2D::ILoadable<jsoncons::ojson>
 {
 private:
+	using VectMap = std::vector<Tile>;
+	using MatriceMap = std::vector<VectMap>;
 	using MatriceMapPtrT = MatriceMap*;
+	using PlayerPtrT = std::shared_ptr<Player> ;
+	using VectPlayer = std::vector<PlayerPtrT> ;
+	using CityPtrT = std::shared_ptr<city::City>;
+	using UnitPtrT = std::shared_ptr<unit::Unit>;
+
 public:
 	Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT);
 	~Players();
@@ -46,7 +73,7 @@ public:
 	inline int GETselectedPlayerId()const { return m_selectedPlayer; };
 	inline PlayerPtrT& GETselectedPlayerPtr() { return m_selectedPlayerPtr; };
 	inline VectPlayer& GETvectPlayer() { return m_vectPlayer; };
-	inline bool* GETneedToUpdateDrawUnitPtr() { return &m_needToUpdateDrawUnit; };
+	inline bool& GETneedToUpdateDrawUnitPtr() { return m_needToUpdateDrawUnit; };
 	inline CityPtrT& GETSelectedCity() { return m_selectedCity; };
 
 	inline void SETselectedPlayerId(const int selectedPlayer) { m_selectedPlayer = selectedPlayer; };
@@ -106,6 +133,9 @@ public:
 	);
 
 public:
+	void nextTurn();
+
+public:
 	jsoncons::ojson save()const override { return saveToOjson(); };
 	jsoncons::ojson saveToOjson()const;
 
@@ -139,9 +169,3 @@ private:
 
 	R2D::RegisterPairVector& m_registerLoad;
 };
-
-#endif /* Players_H */
-
-/*
-*	End Of File : Players.h
-*/

@@ -19,12 +19,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
-#ifndef T_GamePlayScreen_H
-#define T_GamePlayScreen_H
+#pragma once
 
 #include "GameInput.h"
-#include "GamePlayScreenEnumTexture.h"
 
 #include <R2D/src/IGameScreen.h>
 #include <R2D/src/Camera2D.h>
@@ -37,7 +34,7 @@
  *						 Structs						   *
  ********************************************************* */
 
-/* 
+/*
 	All R2D objects
 	- Shaders
 	- camera/cameraHUD
@@ -54,7 +51,7 @@ struct Screen
 
 	GamePlayScreenTexture m_idTexture;
 
-	int m_nextScreenIndexMenu = R2D::SCREEN_INDEX::INIT;
+	int m_nextScreenIndexMenu = R2D::ScreenList::SCREEN_INDEX_INIT;
 };
 
 struct Var
@@ -104,7 +101,3 @@ struct Var
 	CinState_Type cinState = CinState_Type::cinNothing;
 
 };
-
-#endif // !T_GamePlayScreen_H
-
-

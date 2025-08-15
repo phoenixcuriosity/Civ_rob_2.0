@@ -23,14 +23,14 @@
 #include "SaveReload.h"
 
 #include "App.h"
-#include "Citizen.h"
-#include "City.h"
-#include "GamePlayScreen.h"
+#include "City/Citizen.h"
+#include "City/City.h"
+#include "Screens/GamePlayScreen.h"
 #include "LogSentences.h"
 #include "MainMap.h"
-#include "NewGameScreen.h"
+#include "Screens/NewGameScreen.h"
 #include "Player.h"
-#include "Unit.h"
+#include "Unit/Unit.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>
@@ -47,7 +47,13 @@ SaveReload
 ::init()
 {
 	const std::string filePath{ R2D::ResourceManager::getFile(R2D::e_Files::saveInfo) };
-	if (std::filesystem::exists(filePath) && std::filesystem::is_directory(filePath))
+
+	if (!std::filesystem::exists(filePath))
+	{
+		m_fileSysteme->createDirectory(filePath);
+	}
+
+	if (std::filesystem::is_directory(filePath))
 	{
 		for (const auto& entry : std::filesystem::directory_iterator(filePath))
 		{
