@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "City/City.h"
+#include "City/CityService.h"
 #include "City/JsonCitySerializerVisitor.h"
 #include "City/JsonCityDeserializer.h"
 #include "jsonloader.h"
@@ -246,7 +247,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 			city::JsonCityDeserializer jsonCityDeserializer;
 			jsonCityDeserializer.deserialize(city, city_l);
 
-			city::City::loadCity(matriceMap, m_id, city_l, city::City::modifAppartenance_Type::dontModify);
+			city::CityService::loadCity(matriceMap, m_id, city_l, city::CityService::modifAppartenance_Type::dontModify);
 		}
 	}
 	else
