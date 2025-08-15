@@ -173,6 +173,7 @@
     <ClInclude Include="src\GLTexture.h" />
     <ClInclude Include="src\GUI.h" />
     <ClInclude Include="src\IBlick.h" />
+    <ClInclude Include="src\IDeserializer.h" />
     <ClInclude Include="src\IGameScreen.h" />
     <ClInclude Include="src\ILoadable.h" />
     <ClInclude Include="src\IMainGame.h" />

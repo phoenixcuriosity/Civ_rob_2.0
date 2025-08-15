@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include "../LIB.h"
 
 namespace city
 {
@@ -32,6 +31,7 @@ class IFoodManagerVisitor;
 
 class FoodManager
 {
+	friend class JsonFoodManagerDeserializer;
 	friend class JsonFoodManagerSerializerVisitor;
 
 private:
@@ -41,6 +41,7 @@ private:
 	static constexpr double COEF2_MULT_FOOD_LEVEL = 1.8;
 	static constexpr double MULT_FOOD_CONSUMPTION = 2.0;
 	static constexpr size_t ONE_POP = 1;
+	static constexpr double ONE_HUNDRED = 100.0;
 
 public:
 	enum class FoodManagerType
@@ -75,7 +76,7 @@ public:
 
 	inline double GETfoodStockPerc()const
 	{
-		return ((m_foodStock / m_foodToLevelUp) * PERCENTAGE::ONE_HUNDRED);
+		return ((m_foodStock / m_foodToLevelUp) * ONE_HUNDRED);
 	};
 
 	double getFoodStock() const					{ return m_foodStock; };
@@ -98,10 +99,7 @@ private:
 	void updateEmotionCoef();
 
 public:
-
 	void accept(IFoodManagerVisitor& visitor) const;
-
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 

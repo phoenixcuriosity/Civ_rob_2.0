@@ -21,8 +21,6 @@
 */
 #pragma once
 
-#include "../LIB.h"
-
 #include "BuildManager.h"
 #include "CitizenManager.h"
 #include "FoodManager.h"
@@ -48,6 +46,7 @@ class ICityVisitor;
 
 class City : public R2D::IMoveable
 {
+	friend class JsonCityDeserializer;
 	friend class JsonCitySerializerVisitor;
 
 private:
@@ -154,13 +153,11 @@ public:
 	void clearDynamicContextBuildToQueue()				{ m_buildManager.clearDynamicContextBuildToQueue(); };
 	double GETBuildPerc()const							{ return m_buildManager.GETBuildPerc(); };
 
-	void addCitizen(bool uselessArg)					{ m_citizenManager.addCitizen(uselessArg); };
 	void resetTabCitizen()								{ m_citizenManager.resetTabCitizen(); };
 	void computeEmotion()								{ m_citizenManager.computeEmotion(); };
 
 public:
 	void accept(ICityVisitor& visitor) const;
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
 	/* const & */

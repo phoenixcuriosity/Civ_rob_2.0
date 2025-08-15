@@ -22,20 +22,15 @@
 
 #include "CitizenManager.h"
 
-#include "Citizen.h"
 #include "../LogSentences.h"
-#include "T_City.h"
 #include "../T_MainMap.h"
 #include "City.h"
 #include "ICitizenManagerVisitor.h"
 
-#include <jsoncons/json.hpp>
 #include <R2D/src/ValueToScale.h>
-#include <R2D/src/ErrorLog.h>
 #include <R2D/src/Log.h>
 
 #include <execution>
-
 
 city::CitizenManager::CitizenManager(const VectMapPtr& tiles)
 :
@@ -46,7 +41,7 @@ m_emotion((unsigned int)Citizen::EMOTION_MEAN)
 	if (!m_tiles.empty())
 	{
 		/* Add initial citizen in the middle case */
-		addCitizen(m_tiles[(unsigned int)ceil(City::INIT_AREA_VIEW / 2)]);
+		addCitizen(*m_tiles[(unsigned int)ceil(City::INIT_AREA_VIEW / 2)]);
 	}
 }
 
@@ -70,11 +65,6 @@ void city::CitizenManager::addCitizen()
 	int food{ 0 }, work{ 0 }, gold{ 0 };
 	unsigned int place{ placeCitizen(food, work, gold) };
 	m_citizens.push_back(std::make_shared<Citizen>(place, food, work, gold));
-}
-
-void city::CitizenManager::addCitizen(bool /* uselessArg */)
-{
-	m_citizens.push_back(std::make_shared<Citizen>());
 }
 
 void city::CitizenManager::addCitizen(const Tile& tile)
@@ -227,22 +217,4 @@ city::CitizenManager
 ::accept(ICitizenManagerVisitor& visitor) const
 {
 	visitor.visit(*this);
-}
-
-void city::CitizenManager::loadFromOjson(const jsoncons::ojson& jsonLoad)
-{
-	if	(
-			jsonLoad.contains("Emotion") &&
-			jsonLoad.contains("Citizens") &&
-			jsonLoad["Citizens"].is_array()
-		)
-	{
-		m_emotion = jsonLoad["Emotion"].as<unsigned int>();
-
-		for (const auto& citizen : jsonLoad["Citizens"].array_range())
-		{
-			addCitizen(true);
-			m_citizens.back()->loadFromOjson(citizen);
-		}
-	}
 }

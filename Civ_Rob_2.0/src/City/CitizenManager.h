@@ -21,11 +21,11 @@
 */
 #pragma once
 
-#include "../LIB.h"
 
 #include <memory>
 #include <vector>
 
+#include "Citizen.h"
 
 struct Tile;
 
@@ -37,10 +37,12 @@ class ICitizenManagerVisitor;
 
 class CitizenManager
 {
+	friend class JsonCitizenManagerDeserializer;
 	friend class JsonCitizenManagerSerializerVisitor;
 
 private:
 	using CitizenPtrT = std::shared_ptr<Citizen>;
+	using CitizenData = Citizen::TCitizenData;
 	using VectCitizen = std::vector<CitizenPtrT>;
 	using VectMapPtr = std::vector<Tile*>;
 
@@ -60,7 +62,6 @@ public:
 	void resetTabCitizen();
 
 	void addCitizen();
-	void addCitizen(bool uselessArg);
 	void addCitizen(const Tile& tile);
 
 	void removeCitizen();
@@ -70,8 +71,6 @@ public:
 
 	const VectCitizen& getCitizens()const { return m_citizens; };
 	unsigned int getEmotion() const { return m_emotion; };
-	unsigned int& getEmotion()		{ return m_emotion; };
-	void setEmotion(unsigned int emotion){ m_emotion = emotion; };
 
 	double getWorkFromCitizen()const;
 	double getGoldFromCitizen()const;
@@ -105,8 +104,6 @@ private:
 public:
 
 	void accept(ICitizenManagerVisitor& visitor) const;
-
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 private:
 

@@ -37,7 +37,6 @@
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/ResourceManager.h>
-#include <R2D/src/ErrorLog.h>
 #include <R2D/src/Log.h>
 #include <R2D/src/ExitFromError.h>
 #include <R2D/src/SpriteFont.h>

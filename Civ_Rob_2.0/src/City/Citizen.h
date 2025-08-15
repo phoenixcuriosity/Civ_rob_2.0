@@ -21,8 +21,6 @@
 */
 #pragma once
 
-#include "../LIB.h"
-
 struct Tile;
 
 namespace city
@@ -71,6 +69,18 @@ public:
 		zoroastrian
 	};
 
+	struct TCitizenData
+	{
+		unsigned int tileOccupied;
+		Citizen::Emotion_Type happiness;
+		int food;
+		int work;
+		int gold;
+		int revolt;
+		Citizen::Religion_Type religion;
+		bool place;
+	};
+
 	/* Define the maximum range of emotion */
 	static constexpr double EMOTION_MAX = 100.0;
 
@@ -81,17 +91,17 @@ public:
 	static constexpr double EMOTION_MEAN = ((EMOTION_MAX + EMOTION_MIN) / 2.0);
 
 public:
-	explicit Citizen();
+	Citizen() = delete;
 	explicit Citizen(const Tile& tile);
-	explicit Citizen(const unsigned int tileOccupied,
+	Citizen(const unsigned int tileOccupied,
 			const int food,
 			const int work,
 			const int gold);
+	explicit Citizen(const TCitizenData& data);
 	~Citizen();
 
 public:
 	void accept(ICitizenVisitor& visitor) const;
-	void loadFromOjson(const jsoncons::ojson& jsonLoad);
 
 public:
 	inline void SETtileOccupied(unsigned int tileOccupied) { m_tileOccupied = tileOccupied; };

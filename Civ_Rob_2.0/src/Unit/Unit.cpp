@@ -22,16 +22,13 @@
 
 #include "Unit.h"
 
-#include "../App.h"
 #include "../jsonloader.h"
 #include "../LogSentences.h"
 #include "../MainMap.h"
 #include "../Player.h"
-#include "../Players.h"
 
 #include <jsoncons/json.hpp>
 #include <R2D/src/CardinalDirection.h>
-#include <R2D/src/ErrorLog.h>
 #include <R2D/src/Log.h>
 
 unit::Unit::Unit(const PlayerPtrT& ptrToPlayer):

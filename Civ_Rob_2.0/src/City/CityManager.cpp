@@ -22,8 +22,6 @@
 
 #include "CityManager.h"
 
-#include "../Player.h"
-
 void
 city::CityManager
 ::addCity(const int playerId, const Coor coor, VectMapPtr& tiles, const PlayerPtrT& player)
