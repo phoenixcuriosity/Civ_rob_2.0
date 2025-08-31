@@ -106,8 +106,12 @@ public:
 	inline virtual const VectCity& GETtabCity()			const { return m_CityManager.getCities(); };
 	inline virtual const GoldStats& GETgoldStats()		const { return m_goldStats; };
 	inline virtual const OnOffDisplay& GETonOffDisplay()const { return m_onOffDisplay; };
-	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_unitManager.getUnits()[m_selectedUnit]; }
-	inline virtual const CityPtrT& GETSelectedCityPtr() const { return m_selectedCityPtrT; }
+	inline virtual const UnitPtrT& GETSelectedUnitPtr() const { return m_unitManager.getUnits().at(m_selectedUnit); }
+	inline virtual const CityPtrT& GETSelectedCityPtr() const
+	{
+		if (!m_selectedCityPtrT) throw std::runtime_error("No City selected");
+		return m_selectedCityPtrT;
+	}
 
 	inline virtual int GETid()							const { return m_id; };
 	inline virtual int GETselectedUnit()				const { return m_selectedUnit; };
