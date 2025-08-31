@@ -92,7 +92,7 @@ void Player::addCity(const unit::Unit::Coor coor, VectMapPtr& tiles)
 
 void Player::addEmptyCity()
 {
-	m_CityManager.addEmptyCity();
+	m_CityManager.addEmptyCity(shared_from_this());
 }
 
 void Player::deleteCity
@@ -228,25 +228,34 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 			jsonLoad["m_goldStats"].contains("armiesCost") && jsonLoad["m_goldStats"].contains("buildingsCost")
 		)
 	{
-		m_selectedUnit = jsonLoad["m_selectedUnit"].as<int>();
-		m_selectedCity = jsonLoad["m_selectedCity"].as<int>();
-		m_goldStats = jsonLoad["m_goldStats"].as<GoldStats>();
-
-		for (const auto& unit : jsonLoad["m_tabUnit"].array_range())
+		try
 		{
-			addEmptyUnit();
-			m_unitManager.getUnits().back()->loadFromOjson(unit);
+			m_selectedUnit = jsonLoad["m_selectedUnit"].as<int>();
+			m_selectedCity = jsonLoad["m_selectedCity"].as<int>();
+			m_goldStats = jsonLoad["m_goldStats"].as<GoldStats>();
+
+			for (const auto& unit : jsonLoad["m_tabUnit"].array_range())
+			{
+				addEmptyUnit();
+				m_unitManager.getUnits().back()->loadFromOjson(unit);
+			}
+
+			for (const auto& city : jsonLoad["m_tabCity"].array_range())
+			{
+				addEmptyCity();
+				CityPtrT city_l{ m_CityManager.getCities().back() };
+
+				m_selectedCityPtrT = city_l;
+
+				city::JsonCityDeserializer jsonCityDeserializer;
+				jsonCityDeserializer.deserialize(city, city_l);
+
+				city::City::loadCity(matriceMap, m_id, city_l, city::City::modifAppartenance_Type::dontModify);
+			}
 		}
-
-		for (const auto& city : jsonLoad["m_tabCity"].array_range())
+		catch (const std::exception& e)
 		{
-			addEmptyCity();
-			CityPtrT city_l{ m_CityManager.getCities().back() };
-
-			city::JsonCityDeserializer jsonCityDeserializer;
-			jsonCityDeserializer.deserialize(city, city_l);
-
-			city::City::loadCity(matriceMap, m_id, city_l, city::City::modifAppartenance_Type::dontModify);
+			throw std::runtime_error(static_cast<std::string>("Player::loadFromOjson : ") + e.what());
 		}
 	}
 	else

@@ -32,9 +32,9 @@ city::CityManager
 
 void
 city::CityManager
-::addEmptyCity()
+::addEmptyCity(const PlayerPtrT& player)
 {
-	m_city.push_back(getFactory().CreateCity());
+	m_city.push_back(getFactory().CreateCity(player));
 }
 
 void

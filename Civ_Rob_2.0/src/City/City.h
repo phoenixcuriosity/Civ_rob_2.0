@@ -126,7 +126,8 @@ private:
 
 
 public:
-	City();
+	City() = delete;
+	explicit City(const PlayerPtrT& player);
 	City(const std::string& name,
 		 const Coor coor,
 		 VectMapPtr& tiles,

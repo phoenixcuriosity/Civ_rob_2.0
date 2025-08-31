@@ -18,10 +18,17 @@ city::JsonBuildManagerDeserializer
 
 		for (const auto& build : input["m_buildQueue"].array_range())
 		{
+			if(!build.contains("name")) throw std::runtime_error("JsonBuildManagerDeserializer : missing key");
+
 			BuildManager::buildGUI buildToQueue;
+			buildToQueue.name = build["name"].as_string();
 			buildToQueue.buildQ = std::move(BuildFactory::createBuild(build, owner));
 			buildManager.m_buildQueue.push_back(std::move(buildToQueue));
 		}
+	}
+	else
+	{
+		throw std::runtime_error("JsonBuildManagerDeserializer : missing key");
 	}
 }
 
