@@ -44,5 +44,9 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Build Solution
+    - name: Build Debug Solution
       run: msbuild Civ_Rob_2.0.sln /p:Configuration=Debug /p:Platform=x64
+
+    - name: Build Release Solution
+      run: msbuild Civ_Rob_2.0.sln /p:Configuration=Release /p:Platform=x64
+
