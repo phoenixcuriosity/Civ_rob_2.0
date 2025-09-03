@@ -37,8 +37,7 @@ void logCityConstructor(const city::City& city)
 	visitor.visit(city);
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_CITY, logS::DATA::CONSTRUCTOR_CITY, visitor.result.to_string());
 }
-
-city::City::City()
+city::City::City(const PlayerPtrT& player)
 :
 IMoveable(),
 m_image("EMPTY"),
@@ -53,7 +52,7 @@ m_citizenManager(m_tileMap),
 m_foodManager(m_citizenManager),
 m_buildManager(m_citizenManager, m_foodManager, m_conversionToApply),
 m_goldBalance(0.0),
-m_owner()
+m_owner(player)
 {
 	logCityConstructor(*this);
 }

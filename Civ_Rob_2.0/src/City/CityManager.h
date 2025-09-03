@@ -89,7 +89,7 @@ public:
      *
      * This method creates a placeholder city without any specific attributes.
      */
-    void addEmptyCity();
+    void addEmptyCity(const PlayerPtrT& player);
 
     /**
      * @brief Removes a city from the manager.

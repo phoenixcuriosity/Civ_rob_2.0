@@ -81,7 +81,7 @@ public:
      *
      * @return A shared pointer to the newly created City object.
      */
-    CityPtrT CreateCity();
+    CityPtrT CreateCity(const PlayerPtrT& player);
 
     /**
      * @brief Creates a new City object with specific parameters.

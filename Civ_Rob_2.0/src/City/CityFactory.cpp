@@ -41,9 +41,9 @@ city::CityFactory
 
 city::CityFactory::CityPtrT
 city::CityFactory
-::CreateCity()
+::CreateCity(const PlayerPtrT& player)
 {
-	return std::make_shared<City>();
+	return std::make_shared<City>(player);
 }
 
 city::CityFactory::CityPtrT
