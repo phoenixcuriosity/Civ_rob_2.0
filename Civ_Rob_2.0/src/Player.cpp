@@ -86,9 +86,15 @@ void Player::deleteUnit
 	m_unitManager.removeUnit(index);
 }
 
-void Player::addCity(const unit::Unit::Coor coor, VectMapPtr& tiles)
+void Player::addCity(VectMapPtr tiles)
 {
-	m_CityManager.addCity(m_id, coor, tiles, shared_from_this());
+	const R2D::Coor uCoor = m_unitManager.getUnits()[m_selectedUnit]->getCoor();
+
+	/* Remove the Settler used to found the City */
+	m_unitManager.removeUnit(m_selectedUnit);
+	m_selectedUnit = SELECTION::NO_UNIT_SELECTED;
+
+	m_CityManager.addCity(m_id, uCoor, tiles, shared_from_this());
 }
 
 void Player::addEmptyCity()

@@ -1,7 +1,6 @@
 #include "CityService.h"
 
 #include "../MainMap.h"
-#include "../Screens/GameplayScreen.h"
 #include "../Player.h"
 #include "../Players.h"
 
@@ -9,12 +8,13 @@
 
 void city::CityService::createCity
 (
-	GamePlayScreen& mainGame,
+	Players& players,
+	MainMap& mainMap,
 	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */
 )
 {
-	const unsigned int selectedPlayer((unsigned int)mainGame.GETPlayers().GETselectedPlayerId());
-	PlayerPtrT splayer(mainGame.GETPlayers().GETselectedPlayerPtr());
+	const unsigned int selectedPlayer((unsigned int)players.GETselectedPlayerId());
+	PlayerPtrT splayer(players.GETselectedPlayerPtr());
 	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
 	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
 
@@ -24,18 +24,14 @@ void city::CityService::createCity
 	fillCitieTiles
 	(
 		MainMap::convertPosXToIndex(sUnit->getX()), MainMap::convertPosYToIndex(sUnit->getY()),
-		selectedPlayer, mainGame.GETmainMap().GETmatriceMap(), tabtiles, influenceLevel
+		selectedPlayer, mainMap.GETmatriceMap(), tabtiles, influenceLevel
 	);
 
-	splayer->addCity(sUnit->getCoor(), tabtiles);
+	splayer->addCity(std::move(tabtiles));
 
-	splayer->deleteUnit(selectedUnit);
-	splayer->SETselectedUnit(SELECTION::NO_UNIT_SELECTED);
-
-	mainGame.GETPlayers().SETneedToUpdateDrawUnit(true);
-	mainGame.GETPlayers().SETneedToUpdateDrawCity(true);
-
-	splayer.reset();
+	players.SETneedToUpdateDrawUnit(true);
+	players.SETneedToUpdateDrawCity(true);
+	mainMap.SETneedToUpdateDraw(true);
 }
 
 void city::CityService::loadCity

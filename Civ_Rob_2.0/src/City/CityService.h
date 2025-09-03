@@ -3,10 +3,11 @@
 #include <memory>
 #include <vector>
 
+class MainMap;
 class MatriceMap;
 struct Tile;
 class Player;
-class GamePlayScreen;
+class Players;
 
 namespace unit
 {
@@ -52,7 +53,8 @@ public:
 public:
 	static void createCity
 	(
-		GamePlayScreen& mainGame,
+		Players& players,
+		MainMap& mainMap,
 		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 
