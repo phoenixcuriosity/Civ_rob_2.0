@@ -251,7 +251,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 				city::JsonCityDeserializer jsonCityDeserializer;
 				jsonCityDeserializer.deserialize(city, city_l);
 
-				city::CityService::loadCity(matriceMap, m_id, city_l, city::City::modifAppartenance_Type::dontModify);
+				city::CityService::loadCity(matriceMap, m_id, city_l, city::CityService::modifAppartenance_Type::dontModify);
 			}
 		}
 		catch (const std::exception& e)
