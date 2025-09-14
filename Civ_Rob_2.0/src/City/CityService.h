@@ -14,6 +14,11 @@ namespace unit
 	class Unit;
 }
 
+namespace R2D
+{
+	class Coor;
+}
+
 namespace city
 {
 
@@ -50,11 +55,13 @@ public:
 		modify = true,
 		dontModify = false
 	};
+
 public:
 	static void createCity
 	(
 		Players& players,
 		MainMap& mainMap,
+		const R2D::Coor& coor,
 		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
 	);
 

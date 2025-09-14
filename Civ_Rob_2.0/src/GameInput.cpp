@@ -170,16 +170,16 @@ void GameInput::actionByKey
 		if (gamePlayScreen.getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
 		{
 			bool isThisUnitType{ false };
-			{ /* Scope with shared_ptr */
-				PlayerPtrT splayer(gamePlayScreen.GETPlayers().GETselectedPlayerPtr());
-				UnitPtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
-				isThisUnitType = sUnit->isThisUnitType("settler");
-			}
+
+			PlayerPtrT splayer(gamePlayScreen.GETPlayers().GETselectedPlayerPtr());
+			UnitPtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+			isThisUnitType = sUnit->isThisUnitType("settler");
+
 
 			if (isThisUnitType)
 			{
 				city::CityService::createCity
-					(gamePlayScreen.GETPlayers(), gamePlayScreen.GETmainMap());
+					(gamePlayScreen.GETPlayers(), gamePlayScreen.GETmainMap(), sUnit->getCoor());
 			}
 		}
 

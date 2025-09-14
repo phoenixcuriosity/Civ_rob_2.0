@@ -10,24 +10,21 @@ void city::CityService::createCity
 (
 	Players& players,
 	MainMap& mainMap,
+	const R2D::Coor& coor,
 	const unsigned int influenceLevel /* = CITY_INFLUENCE::MIN_INFLUENCE_LEVEL */
 )
 {
-	const unsigned int selectedPlayer((unsigned int)players.GETselectedPlayerId());
-	PlayerPtrT splayer(players.GETselectedPlayerPtr());
-	const unsigned int selectedUnit((unsigned int)splayer->GETselectedUnit());
-	const UnitPtrT sUnit(splayer->GETtabUnit()[selectedUnit]);
-
 	VectMapPtr tabtiles;
 	tabtiles.resize(City::INIT_AREA_VIEW);
 
-	fillCitieTiles
-	(
-		MainMap::convertPosXToIndex(sUnit->getX()), MainMap::convertPosYToIndex(sUnit->getY()),
-		selectedPlayer, mainMap.GETmatriceMap(), tabtiles, influenceLevel
-	);
+	const unsigned int selectedPlayer((unsigned int)players.GETselectedPlayerId());
 
-	splayer->addCity(std::move(tabtiles));
+	fillCitieTiles(
+		MainMap::convertPosXToIndex(coor.x), MainMap::convertPosYToIndex(coor.y),
+		selectedPlayer, mainMap.GETmatriceMap(), tabtiles, influenceLevel);
+
+	PlayerPtrT splayer(players.GETselectedPlayerPtr());
+	splayer->addCity(std::move(tabtiles), coor);
 
 	players.SETneedToUpdateDrawUnit(true);
 	players.SETneedToUpdateDrawCity(true);

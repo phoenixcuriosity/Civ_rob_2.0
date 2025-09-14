@@ -80,7 +80,7 @@ private:
 
 public:
 	virtual void deleteUnit(const unsigned int index);
-	virtual void addCity(VectMapPtr tiles);
+	virtual void addCity(VectMapPtr tiles, const unit::Unit::Coor& coor);
 
 private:
 	virtual void addEmptyCity();
