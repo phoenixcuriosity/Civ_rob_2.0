@@ -5,5 +5,8 @@
   <Project Path="Civ_Rob_2.0/Civ_Rob_2.0.vcxproj" Id="1aebca08-83e5-4d1e-858b-7b681523eece">
     <BuildDependency Project="R2D/R2D.vcxproj" />
   </Project>
-  <Project Path="R2D/R2D.vcxproj" Id="f3d2c9ec-d89c-446a-8c53-186c40785c85" />
+  <Project Path="picoPNG/picoPNG.vcxproj" Id="0cc4d795-b10c-41f5-b6e7-4ee7c13533b7" />
+  <Project Path="R2D/R2D.vcxproj" Id="f3d2c9ec-d89c-446a-8c53-186c40785c85">
+    <BuildDependency Project="picoPNG/picoPNG.vcxproj" />
+  </Project>
 </Solution>
