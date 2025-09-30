@@ -23,10 +23,11 @@
 #include "GLTexture.h"
 #include <iostream>
 #include <fstream>
-#include <picopng\picoPNG.h>
 #include <SDL\glew.h>
 
 #include "RealEngineError.h"
+
+#include <picoPNG/picoPNG.h>
 
 using namespace R2D;
 
