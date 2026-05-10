@@ -38,7 +38,9 @@ jobs:
         Get-Content cppcheck.txt
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v2
+      with:
+        vs-prerelease: true
 
     - name: Build Debug Solution
       run: msbuild Civ_Rob_2.0.slnx /p:Configuration=Debug /p:Platform=x64
