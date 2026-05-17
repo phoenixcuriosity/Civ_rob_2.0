@@ -1,5 +1,8 @@
 <Solution>
   <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Debug_clang" />
+    <BuildType Name="Release" />
     <Platform Name="x64" />
   </Configurations>
   <Project Path="Civ_Rob_2.0/Civ_Rob_2.0.vcxproj" Id="1aebca08-83e5-4d1e-858b-7b681523eece">
