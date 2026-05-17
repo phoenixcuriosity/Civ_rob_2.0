@@ -44,7 +44,9 @@ jobs:
     - name: Install LLVM/Clang VS component
       shell: pwsh
       run: |
-        $"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify `
+        $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" `
+          -latest -property installationPath
+        & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify `
           --installPath "$vsPath" `
           --add Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Llvm.Clang `
           --quiet --norestart --force
