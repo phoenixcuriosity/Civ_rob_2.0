@@ -62,20 +62,15 @@ public:
 
 	CardinalDirection() = delete;
 
-	CardinalDirection(  const NorthSouth NS,
-						const EstWest EW,
+	CardinalDirection(  const NorthSouth /*NS*/,
+						const EstWest /*EW*/,
 						const int pixelValueNS,
 						const int pixelValueEW) noexcept
-		: m_NS(NS), m_EW(EW), m_pixelValueNS(pixelValueNS), m_pixelValueEW(pixelValueEW){};
+		: m_pixelValueNS(pixelValueNS), m_pixelValueEW(pixelValueEW){};
 
 public:
-
 	const int m_pixelValueNS;
 	const int m_pixelValueEW;
-
-private:
-	const NorthSouth m_NS;
-	const EstWest m_EW;
 };
 
 }

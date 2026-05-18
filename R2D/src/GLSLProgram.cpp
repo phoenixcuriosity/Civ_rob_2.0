@@ -169,7 +169,7 @@ void GLSLProgram::addAttribut(const std::string& name)
 
 unsigned int GLSLProgram::getUnitformLocation(const std::string& uniformName)
 {
-	GLint location = glGetUniformLocation(m_programID, uniformName.c_str());
+	GLuint location = glGetUniformLocation(m_programID, uniformName.c_str());
 	if (location == GL_INVALID_INDEX)
 	{
 		fatalError("[ERROR]___: getUnitformLocation : location == GL_INVALID_INDEX");
