@@ -40,9 +40,25 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Build Debug Solution
+       # ── Install Clang toolset for Visual Studio ───────────────────────────────
+    - name: Install LLVM/Clang VS component
+      shell: pwsh
+      run: |
+        $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" `
+          -latest -property installationPath
+        & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify `
+          --installPath "$vsPath" `
+          --add Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Llvm.Clang `
+          --quiet --norestart --force
+
+
+     # ── MSVC builds ───────────────────────────────────────────────────────────
+    - name: Build MSVC Debug
       run: msbuild Civ_Rob_2.0.slnx /p:Configuration=Debug /p:Platform=x64
 
-    - name: Build Release Solution
+    - name: Build MSVC Release
       run: msbuild Civ_Rob_2.0.slnx /p:Configuration=Release /p:Platform=x64
 
+    # ── Clang build ───────────────────────────────────────────────────────────
+    - name: Build Clang Debug
+      run: msbuild Civ_Rob_2.0.slnx /p:Configuration="Debug_clang" /p:Platform=x64
