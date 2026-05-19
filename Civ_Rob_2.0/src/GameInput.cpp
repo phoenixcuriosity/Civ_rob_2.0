@@ -41,8 +41,6 @@ namespace GInput
 {
 	constexpr float KEY_SPEED_MOVE = 2.0f;
 
-	constexpr int UNIT_NO_MOVEMENT = 0;
-
 	constexpr SDL_KeyCode KEY_TO_FOUND_CITY = SDLK_b;
 	constexpr SDL_KeyCode KEY_TO_IRRIGATE = SDLK_i;
 	constexpr SDL_KeyCode KEY_NEXT_TURN = SDLK_SPACE;
@@ -326,7 +324,7 @@ void GameInput::moveCameraByDeltaTime
 	frameTime = newTicks - prevTicks;
 	prevTicks = newTicks;
 	totalDeltaTime = (float)frameTime / DELTA_TIME::TARGET_FRAMETIME;
-	int i{ 0 };
+	unsigned int i{ 0 };
 
 	while (totalDeltaTime > 0.0f && i < DELTA_TIME::MAX_PHYSICS_STEPS)
 	{

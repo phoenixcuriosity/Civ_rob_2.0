@@ -42,7 +42,7 @@ class GamePlayScreen : public R2D::IGameScreen, public R2D::CScreen
 public:
 	GamePlayScreen() = delete;
 	explicit GamePlayScreen(UserInputNewGame* userInputNewGame);
-	~GamePlayScreen();
+	~GamePlayScreen() override;
 
 protected:
 	R2D::RegisterPairVector addSubscriber();

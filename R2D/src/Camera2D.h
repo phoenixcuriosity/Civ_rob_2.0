@@ -112,9 +112,6 @@ private:
 	glm::mat4 m_orthoMatrix;
 	glm::mat4 m_cameraMatrix;
 
-	/* move rate of camera, default : 2.0f */
-	float m_moveRate;
-
 	struct LockMove
 	{
 		bool lockMoveUP;

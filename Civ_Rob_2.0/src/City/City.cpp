@@ -23,7 +23,7 @@
 #include "City.h"
 
 #include "Citizen.h"
-#include "../Screens/GameplayScreen.h"
+#include "../Screens/GamePlayScreen.h"
 #include "../LogSentences.h"
 #include "../Player.h"
 #include "../Players.h"

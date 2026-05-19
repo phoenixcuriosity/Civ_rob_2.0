@@ -9,7 +9,7 @@ void city::JsonCitizenManagerSerializerVisitor::visit(const CitizenManager& citi
 	result.clear();
 	jsoncons::ojson citizens{ jsoncons::ojson::make_array() };
 
-	for (const auto citizen : citizenManager.m_citizens)
+	for (const auto& citizen : citizenManager.m_citizens)
 	{
 		JsonCitizenSerializerVisitor visitor;
 		citizen->accept(visitor);

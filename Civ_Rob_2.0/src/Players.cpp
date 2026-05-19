@@ -39,29 +39,18 @@
 #include <R2D/src/ValueToScale.h>
 
 
-
-namespace
-{
-	constexpr unsigned int LIFE_BAR_NB_SUBDIVISION = 11;
-
-	constexpr unsigned int VECT_SIZE_OFFSET_ID = 1;
-
-	constexpr unsigned int CITY_TYPE = 1;
-}
-
-Players::Players(R2D::RegisterPairVector& registerLoad, MatriceMapPtrT matriceMapPtrT)
+Players::Players(R2D::RegisterPairVector& /*registerLoad*/, MatriceMapPtrT matriceMapPtrT)
 :
 m_selectedPlayer(SELECTION::NO_PLAYER_SELECTED),
 m_selectedPlayerPtr(),
 m_selectedCity(),
-m_vectPlayer(),
 m_idTexture(),
+m_vectPlayer(),
 m_spriteBatchUnit(),
 m_needToUpdateDrawUnit(true),
 m_spriteBatchCity(),
 m_needToUpdateDrawCity(true),
-m_matriceMapPtrT(matriceMapPtrT),
-m_registerLoad(registerLoad)
+m_matriceMapPtrT(matriceMapPtrT)
 {
 	SaveReload::getInstance().registerSaveable(R2D::e_Files::savePlayers, this);
 	SaveReload::getInstance().registerLoadable(R2D::e_Files::savePlayers, this);

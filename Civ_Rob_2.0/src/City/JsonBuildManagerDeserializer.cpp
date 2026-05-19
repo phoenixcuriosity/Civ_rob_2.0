@@ -22,7 +22,7 @@ city::JsonBuildManagerDeserializer
 
 			BuildManager::buildGUI buildToQueue;
 			buildToQueue.name = build["name"].as_string();
-			buildToQueue.buildQ = std::move(BuildFactory::createBuild(build, owner));
+			buildToQueue.buildQ = BuildFactory::createBuild(build, owner);
 			buildManager.m_buildQueue.push_back(std::move(buildToQueue));
 		}
 	}

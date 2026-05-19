@@ -39,10 +39,6 @@
 
 #include <format>
 
-static size_t START_APPARTENANCE_INDEX = 0;
-static size_t START_EMOTION_INDEX = 0;
-static size_t START_ICON_INDEX = 0;
-
 /* ----------------------------------------------------------------------------------- */
 /* NAME : CityScreen																   */
 /* ROLE : CityScreen Constructor													   */
@@ -708,7 +704,7 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 							button.buildQ.name + std::to_string(rand())
 						)
 					),
-					std::move(city::BuildFactory::createBuild(button.buildQ, m_selectedCity->getOwner())),
+					city::BuildFactory::createBuild(button.buildQ, m_selectedCity->getOwner()),
 					button.buildQ.name
 				}
 			);
@@ -727,15 +723,14 @@ bool CityScreen::onBuildQueueClicked(const CEGUI::EventArgs& /* e */)
 
 bool CityScreen::onBuildQueueToBuildClicked(const CEGUI::EventArgs& /* e */)
 {
-	size_t removeIndex{ 0 }, changePosIndex{0};
+	size_t removeIndex{ 0 };
 	for (auto& button : m_selectedCity->GETbuildQueue())
 	{
 		if (button.buildG->isPushed())
 		{
 			/* Adjust new Y coor to the rest of deque */
 			CEGUI::UVector2 coor{};
-			changePosIndex = removeIndex + OFFSET_INDEX_ERASE_BUTTON;
-			for (changePosIndex; changePosIndex < m_selectedCity->GETbuildQueue().size(); changePosIndex++)
+			for (size_t changePosIndex{ removeIndex + OFFSET_INDEX_ERASE_BUTTON }; changePosIndex < m_selectedCity->GETbuildQueue().size(); changePosIndex++)
 			{
 				coor = m_selectedCity->GETbuildQueue()[changePosIndex].buildG->getPosition();
 				coor.d_y.d_scale -= DIPSLAY_BUILD_QUEUE_DELTA_Y;

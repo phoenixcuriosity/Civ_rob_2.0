@@ -62,7 +62,7 @@ R2D::Window
 	m_sdlWindow = SDL_CreateWindow(name.c_str(),
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		m_screenWidth, m_screenHeight,
-		SDL_WINDOW_OPENGL);
+		flags);
 
 	if (nullptr == m_sdlWindow)
 	{

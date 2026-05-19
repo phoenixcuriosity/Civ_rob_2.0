@@ -100,10 +100,10 @@ m_offsetMapCameraXmin(0),
 m_offsetMapCameraXmax(0),
 m_offsetMapCameraYmin(0),
 m_offsetMapCameraYmax(0),
-m_idTexture(),
 m_matriceMap(),
 m_needToUpdateDraw(true),
-m_spriteBatch()
+m_spriteBatch(),
+m_idTexture()
 {
 	setStaticPtrTileSize();
 	SaveReload::getInstance().registerSaveable(R2D::e_Files::saveMaps, this);

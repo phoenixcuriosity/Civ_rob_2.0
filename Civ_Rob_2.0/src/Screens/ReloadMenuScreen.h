@@ -33,7 +33,7 @@ class ReloadMenuScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	ReloadMenuScreen();
-	~ReloadMenuScreen();
+	~ReloadMenuScreen() override;
 
 private: /* Override from R2D::IGameScreen */
 

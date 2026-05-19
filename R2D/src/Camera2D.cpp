@@ -36,7 +36,6 @@ m_minScale(0.0f),
 m_position(0.0f, 0.0f),
 m_orthoMatrix(1),
 m_cameraMatrix(1.0f),
-m_moveRate(2.0f),
 m_lockMove({false, false, false, false})
 {
 

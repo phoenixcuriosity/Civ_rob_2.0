@@ -40,7 +40,7 @@ private:
 public:
 
 	NewGameScreen();
-	~NewGameScreen();
+	~NewGameScreen() override;
 
 public: /* Override from R2D::IGameScreen */
 
@@ -75,7 +75,6 @@ public:
 	UserInputNewGame* getUserInputNewGame() { return &m_userInputNewGame; };
 
 private:
-	int m_nextScreenIndexMenu;
 
 	UserInputNewGame m_userInputNewGame;
 

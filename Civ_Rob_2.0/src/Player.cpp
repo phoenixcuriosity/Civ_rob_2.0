@@ -48,12 +48,13 @@ Player::Player
 	:
 	m_name(name),
 	m_id(id),
+	m_unitManager(),
+	m_CityManager(),
 	m_selectedUnit(SELECTION::NO_UNIT_SELECTED),
 	m_selectedCity(SELECTION::NO_CITY_SELECTED),
+	m_selectedCityPtrT(nullptr),
 	m_goldStats{ PlayerH::INITIAL_GOLD , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 , 0.0 },
-	m_onOffDisplay{ false },
-	m_unitManager(),
-	m_CityManager()
+	m_onOffDisplay{ false }
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CREATE_PLAYER, logS::DATA::CONSTRUCTOR_PLAYER, saveToOjson().as_string());
 }
