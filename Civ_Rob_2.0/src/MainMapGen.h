@@ -41,5 +41,5 @@ class MainMapGen
 public:
 
 private:
-	MapGenRandomRange m_range;
+	//MapGenRandomRange m_range;
 };

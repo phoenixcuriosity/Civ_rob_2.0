@@ -39,9 +39,6 @@ namespace NGC
 	constexpr unsigned int MIN_SPACE_BETWEEN_SETTLER = 8;
 
 	constexpr unsigned int MAX_RANDOM_POS_ITERATION = 10000;
-
-	/* The first settler to spawn in the map for each Player does not cost maintenance */
-	constexpr double MAINTENANCE_COST_1TH_SETTLER = 0.0;
 }
 
 void NewGameManager::newGame(GamePlayScreen& gamePlayScreen)

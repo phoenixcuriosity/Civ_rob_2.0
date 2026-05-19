@@ -33,7 +33,7 @@ class MainMenuScreen : public R2D::IGameScreen, public R2D::CScreen
 {
 public:
 	MainMenuScreen();
-	~MainMenuScreen();
+	~MainMenuScreen() override;
 
 	int getNextScreenIndex()const override;
 	int getPreviousScreenIndex()const override;

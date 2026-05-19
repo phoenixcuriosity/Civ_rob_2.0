@@ -45,8 +45,8 @@ m_var(),
 m_mainMap(m_loadSub),
 m_nextTurn(),
 m_players(m_loadSub, &m_mainMap.GETmatriceMap()),
-m_isInitialize(false),
-m_userInputNewGame(userInputNewGame)
+m_userInputNewGame(userInputNewGame),
+m_isInitialize(false)
 {
 	LOG(R2D::LogLevelType::info, 0, logS::WHO::GAMEPLAY, logS::WHAT::CONSTRUCTOR, logS::DATA::SCREEN);
 }
@@ -402,7 +402,7 @@ bool GamePlayScreen::onPlayerButtonClicked(const CEGUI::EventArgs& /* e */)
 	{
 		if (m_screen.m_vectPlayerRadioButton[i]->isSelected())
 		{
-			if (i != m_players.GETselectedPlayerId())
+			if (i != static_cast<size_t>(m_players.GETselectedPlayerId()))
 			{
 				/* Reset if needed SHOW for the unit previously selected */
 				if (m_players.GETselectedPlayerId() != SELECTION::NO_PLAYER_SELECTED && m_players.GETselectedPlayerPtr() != nullptr)

@@ -45,7 +45,7 @@ public:
 		return instance;
 	}
 
-	SaveReload() : IRegisterSaveAble<jsoncons::ojson>(), IRegisterLoadAble<jsoncons::ojson>(), IRegister() , m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
+	SaveReload() : IRegister(), IRegisterSaveAble<jsoncons::ojson>(), IRegisterLoadAble<jsoncons::ojson>(), m_tabSave(), m_currentSave(NO_CURRENT_SAVE_SELECTED) {}
 	SaveReload(const SaveReload&) = delete;
 	virtual ~SaveReload() = default;
 

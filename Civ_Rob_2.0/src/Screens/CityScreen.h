@@ -99,7 +99,7 @@ public:
 		Players* const players,
 		unsigned int* const tileSize
 	);
-	~CityScreen();
+	~CityScreen() override;
 
 public: /* Override from R2D::IGameScreen */
 
