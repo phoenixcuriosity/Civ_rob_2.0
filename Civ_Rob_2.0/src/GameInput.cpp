@@ -23,7 +23,7 @@
 #include "GameInput.h"
 
 #include "App.h"
-#include "City/City.h"
+#include "City/CityService.h"
 #include "Screens/GamePlayScreen.h"
 #include "Player.h"
 #include "ScreenIndices.h"
@@ -169,13 +169,17 @@ void GameInput::actionByKey
 		/* Found City */
 		if (gamePlayScreen.getInputManager().isKeyDown(GInput::KEY_TO_FOUND_CITY))
 		{
+			bool isThisUnitType{ false };
+
 			PlayerPtrT splayer(gamePlayScreen.GETPlayers().GETselectedPlayerPtr());
 			UnitPtrT sUnit(splayer->GETtabUnit()[splayer->GETselectedUnit()]);
+			isThisUnitType = sUnit->isThisUnitType("settler");
 
-			if (sUnit->isThisUnitType("settler"))
+
+			if (isThisUnitType)
 			{
-				city::City::createCity(gamePlayScreen);
-				gamePlayScreen.GETmainMap().SETneedToUpdateDraw(true);
+				city::CityService::createCity
+					(gamePlayScreen.GETPlayers(), gamePlayScreen.GETmainMap(), sUnit->getCoor());
 			}
 		}
 

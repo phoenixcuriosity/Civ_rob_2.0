@@ -73,56 +73,7 @@ private:
 	using VectMap = std::vector<Tile>;
 	using MatriceMap = std::vector<VectMap>;
 
-
-public: /* STATIC */
-
 	using Coor = R2D::Coor;
-	enum class modifAppartenance_Type : bool
-	{
-		modify = true,
-		dontModify = false
-	};
-
-	static void createCity
-	(
-		GamePlayScreen& mainGame,
-		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
-	);
-
-	static void loadCity
-	(
-		MatriceMap& matriceMap,
-		const unsigned int selectplayer,
-		CityPtrT& city,
-		const modifAppartenance_Type modAppartenance = modifAppartenance_Type::modify
-	);
-
-	static void fillCitieTiles
-	(
-		const unsigned int middletileX,
-		const unsigned int middletileY,
-		const unsigned int selectplayer,
-		MatriceMap& matriceMap,
-		VectMapPtr& tabtile,
-		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL,
-		const modifAppartenance_Type modAppartenance = modifAppartenance_Type::modify
-	);
-
-private:
-
-	static bool initSizeInfluenceCondition
-	(
-		const int o,
-		const int p,
-		const unsigned int influenceLevel = MIN_INFLUENCE_LEVEL
-	);
-
-	static bool cornerCheck
-	(
-		const int o,
-		const int p,
-		const unsigned int influenceLevel
-	);
 
 
 public:

@@ -24,6 +24,7 @@
 
 #include "App.h"
 #include "City/City.h"
+#include "City/CityService.h"
 #include "City/JsonCitySerializerVisitor.h"
 #include "City/JsonCityDeserializer.h"
 #include "jsonloader.h"
@@ -85,8 +86,12 @@ void Player::deleteUnit
 	m_unitManager.removeUnit(index);
 }
 
-void Player::addCity(const unit::Unit::Coor coor, VectMapPtr& tiles)
+void Player::addCity(VectMapPtr tiles, const unit::Unit::Coor& coor)
 {
+	/* Remove the Settler used to found the City */
+	m_unitManager.removeUnit(m_selectedUnit);
+	m_selectedUnit = SELECTION::NO_UNIT_SELECTED;
+
 	m_CityManager.addCity(m_id, coor, tiles, shared_from_this());
 }
 
@@ -250,7 +255,7 @@ void Player::loadFromOjson(const jsoncons::ojson& jsonLoad, MatriceMap& matriceM
 				city::JsonCityDeserializer jsonCityDeserializer;
 				jsonCityDeserializer.deserialize(city, city_l);
 
-				city::City::loadCity(matriceMap, m_id, city_l, city::City::modifAppartenance_Type::dontModify);
+				city::CityService::loadCity(matriceMap, m_id, city_l, city::CityService::modifAppartenance_Type::dontModify);
 			}
 		}
 		catch (const std::exception& e)
